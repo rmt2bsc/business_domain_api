@@ -1,0 +1,26 @@
+cd C:\tools\OpenDS-2.2.1\bat
+cd C:\tools\java\OpenDS\OpenDS\bat
+
+-- At the moment, not able to get this command to work...should be much faster than ldapmodify
+import-ldif -h localhost -p 389 -D "cn=RMT2RootUser" -w "drum7777" -l ../ldif/05-Country.ldif
+
+
+ldapmodify -D "cn=Directory Manager" -w "drum7777" -a -f ../ldif/05-Country.ldif
+
+ldapdelete -D "cn=Directory Manager" -w "drum7777" "uid=*,ou=IPLocation,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net"
+
+ldapdelete -h localhost -p 1389 -D "cn=Directory Manager" -w "drum7777" "ou=IpLocations,o=RMT2BSC,dc=rmt2,dc=net"
+
+
+List Back ends
+===================
+dsconfig  -h localhost -p 4444 -D "cn=directory manager" -w drum7777 -X -n list-backends
+
+
+Listing Indexes
+==========================
+dsconfig -h localhost -D "cn=directory manager" -w drum7777 -X -n list-local-db-indexes --backend-name userRoot
+
+
+java -jar LDAPIpAddress.jar
+

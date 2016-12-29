@@ -1,0 +1,2158 @@
+version: 1
+
+dn: ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: LookupCodes
+
+dn: ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: AppRoles
+ou: AppRole
+
+dn: cn=ProjAdm,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: projecttracker
+appRoleName: Project Admin
+cn: ProjAdm
+description: Administrator of the project tracker application
+roleId: admin
+
+dn: cn=rmt2admin,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: accounting
+appRoleName: RMT2 Admin
+cn: rmt2admin
+description: Adminstrator of RMT2 Webste
+roleId: admin
+
+dn: cn=authadmin,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: authentication
+appRoleName: Security Admin
+cn: authadmin
+description: Security Administrator
+roleId: admin
+
+dn: cn=comadmin,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: common
+appRoleName: Common Admin
+cn: comadmin
+description: Administrator of  Common Application.
+roleId: admin
+
+dn: cn=conadmin,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: contacts
+appRoleName: Contact Adminitstrator
+cn: conadmin
+description: Adminitstrator of the contacts application
+roleId: admin
+
+dn: cn=acctadmin,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: accounting
+appRoleName: Accounting Admin
+cn: acctadmin
+description: Administrator for Account and Financial Transaction App
+roleId: admin
+
+dn: cn=rmt2client,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: rmt2
+appRoleName: Client Tester
+cn: rmt2client
+description: Role for clients to access RMT2 Application Testing Area
+roleId: guest
+
+dn: cn=rmt2guest,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: rmt2
+appRoleName: RMT2 Guest
+cn: rmt2guest
+description: User of RMT2 application with very limited access to rmt2 resou
+ rces and not access to any other applications
+roleId: guest
+
+dn: cn=SecureView,ou=AppRole,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2AppRoles
+appId: authentication
+appRoleName: Security View Only
+cn: SecureView
+description: View-Only mode for typical users
+roleId: user
+
+dn: ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: General
+description: General lookup code groups
+
+dn: ou=PersonTitle,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: PersonTitle
+uid: 26
+description: A list of personal name titles
+
+dn: cn=Mr,ou=PersonTitle,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Mr
+description: Mr
+uid: 243
+
+dn: cn=Ms,ou=PersonTitle,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Ms
+description: Ms
+uid: 245
+
+dn: cn=Mrs,ou=PersonTitle,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Mrs
+description: Mrs
+uid: 244
+
+dn: ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: Timezone
+uid: 28
+description: A list of time zones
+
+dn: cn=Alaska,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Alaska
+description: Alaska
+uid: 9
+
+dn: cn=Somoa,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Somoa
+description: Somoa
+uid: 11
+
+dn: cn=Pacific,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Pacific
+description: Pacific
+uid: 8
+
+dn: cn=Atlantic,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Atlantic
+description: Atlantic
+uid: 4
+
+dn: cn=Central,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Central
+description: Central
+uid: 6
+
+dn: cn=Hawaii-Aleutian,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rm
+ t2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Hawaii-Aleutian
+description: Hawaii-Aleutian
+uid: 10
+
+dn: cn=Mountain,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Mountain
+description: Mountain
+uid: 7
+
+dn: cn=Eastern,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Eastern
+description: Eastern
+uid: 5
+
+dn: cn=Unknown,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Unknown
+description: Unknown
+uid: 0
+
+dn: cn=Chamorro,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Chamorro
+description: Chamorro
+uid: 14
+
+dn: cn=Marshall Islands,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=r
+ mt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Marshall Islands
+description: Marshall Islands
+uid: 13
+
+dn: cn=Palau,ou=Timezone,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Palau
+description: Palau
+uid: 15
+
+dn: ou=BusType,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: BusinessType
+ou: BusType
+uid: 7
+description: A list of business typess
+
+dn: cn=UNKNOWN,ou=BusType,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: UNKNOWN
+description: Unknown
+uid: -100
+
+dn: cn=COOP,ou=BusType,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: COOP
+description: Cooperation
+uid: 27
+
+dn: cn=CORP,ou=BusType,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CORP
+description: Corporation
+uid: 26
+
+dn: cn=SP,ou=BusType,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SP
+description: Sole Proprietorship
+uid: 24
+
+dn: cn=PART,ou=BusType,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PART
+description: Partnership
+uid: 25
+
+dn: ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: Race-Culture
+uid: 15
+description: A list of Races, ethnicities, or cultures
+
+dn: cn=CUBA,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CUBA
+description: Cuban
+uid: 242
+
+dn: cn=White,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: White
+description: Caucasian
+uid: 227
+
+dn: cn=FRCH,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FRCH
+description: French
+uid: 235
+
+dn: cn=AI,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: AI
+description: Asian Indian
+uid: 229
+
+dn: cn=CHI,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CHI
+description: Chinese
+uid: 230
+
+dn: cn=NI,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: NI
+description: Native Indian
+uid: 228
+
+dn: cn=Black,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Black
+description: African American
+uid: 226
+
+dn: cn=ITAL,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ITAL
+description: Italian
+uid: 233
+
+dn: cn=SPAN,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SPAN
+description: Spanish
+uid: 234
+
+dn: cn=AFRN,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: AFRN
+description: African
+uid: 240
+
+dn: cn=JAP,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: JAP
+description: Japanese
+uid: 231
+
+dn: cn=HISP,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HISP
+description: Hispanic
+uid: 236
+
+dn: cn=GER,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GER
+description: German
+uid: 238
+
+dn: cn=KOR,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: KOR
+description: Korean
+uid: 232
+
+dn: cn=RUSS,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: RUSS
+description: Russian
+uid: 239
+
+dn: cn=LAT,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: LAT
+description: Latin
+uid: 241
+
+dn: cn=MEX,ou=Race-Culture,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MEX
+description: Mexican
+uid: 237
+
+dn: ou=Marital,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: Marital
+uid: 5
+description: A list of marital statuses
+
+dn: cn=WID,ou=Marital,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: WID
+description: Widowed
+uid: 21
+
+dn: cn=SNGL,ou=Marital,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SNGL
+description: Single
+uid: 18
+
+dn: cn=MAR,ou=Marital,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MAR
+description: Married
+uid: 19
+
+dn: cn=Other,ou=Marital,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Other
+description: Other
+uid: 329
+
+dn: cn=DIV,ou=Marital,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: DIV
+description: Divorced
+uid: 20
+
+dn: cn=Gay,ou=Marital,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Gay
+description: Gay
+uid: 330
+
+dn: ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: FamilyRelationship
+uid: 25
+description: A list of relationship codes as it pertains to family
+
+dn: cn=GD,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GD
+description: Grand Daughter
+uid: 219
+
+dn: cn=Husband,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=
+ rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Husband
+description: Husband
+uid: 216
+
+dn: cn=Friend,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=r
+ mt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Friend
+description: Friend
+uid: 221
+
+dn: cn=Wife,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt
+ 2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Wife
+description: Wife
+uid: 215
+
+dn: cn=Uncle,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rm
+ t2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Uncle
+description: Uncle
+uid: 213
+
+dn: cn=GF,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GF
+description: Grand Father
+uid: 211
+
+dn: cn=DIL,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: DIL
+description: Daughter-In-Law
+uid: 223
+
+dn: cn=FIL,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FIL
+description: Father-In-Law
+uid: 225
+
+dn: cn=MIL,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MIL
+description: Mother-In-Law
+uid: 224
+
+dn: cn=SIL,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SIL
+description: Son-In-Law
+uid: 222
+
+dn: cn=GM,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GM
+description: Grand Mother
+uid: 210
+
+dn: cn=Cousin,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=r
+ mt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Cousin
+description: Cousin
+uid: 214
+
+dn: cn=Son,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Son
+description: Son
+uid: 217
+
+dn: cn=Father,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=r
+ mt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Father
+description: Father
+uid: 207
+
+dn: cn=Mother,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=r
+ mt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Mother
+description: Mother
+uid: 206
+
+dn: cn=Brother,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=
+ rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Brother
+description: Brother
+uid: 208
+
+dn: cn=Daughter,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc
+ =rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Daughter
+description: Daughter
+uid: 218
+
+dn: cn=Sister,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=r
+ mt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Sister
+description: Sister
+uid: 209
+
+dn: cn=GS,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GS
+description: Grand Son
+uid: 220
+
+dn: cn=Aunt,ou=FamilyRelationship,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt
+ 2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Aunt
+description: Aunt
+uid: 212
+
+dn: ou=Gender,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: Gender
+uid: 6
+description: A list of gender codes
+
+dn: cn=F,ou=Gender,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: F
+description: Female
+uid: 23
+
+dn: cn=M,ou=Gender,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: M
+description: Male
+uid: 22
+
+dn: ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: ContactCategory
+uid: 27
+description: A list of contact categories
+
+dn: cn=IDEA,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: IDEA
+description: Ideas
+uid: 258
+
+dn: cn=GROC,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GROC
+description: Groceries
+uid: 283
+
+dn: cn=MISC,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MISC
+description: Miscellaneous
+uid: 265
+
+dn: cn=MED,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MED
+description: Medical
+uid: 264
+
+dn: cn=CRED,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CRED
+description: Creditor
+uid: 263
+
+dn: cn=REMIND,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: REMIND
+description: Reminder
+uid: 269
+
+dn: cn=SE,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SE
+description: School/Education
+uid: 281
+
+dn: cn=TE,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TE
+description: Time & Expenses
+uid: 273
+
+dn: cn=BFF,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BFF
+description: Friends
+uid: 252
+
+dn: cn=TECH,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TECH
+description: Technical
+uid: 282
+
+dn: cn=HORTI,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HORTI
+description: Landscaping
+uid: 284
+
+dn: cn=HALLMARK,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rm
+ t2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HALLMARK
+description: Holiday Cards
+uid: 256
+
+dn: cn=GOAL,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GOAL
+description: Goals-Objectives
+uid: 254
+
+dn: cn=PHCALL,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PHCALL
+description: Phone Calls
+uid: 268
+
+dn: cn=INTNL,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: INTNL
+description: International
+uid: 259
+
+dn: cn=FAM,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FAM
+description: Family
+uid: 250
+
+dn: cn=PERSON,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PERSON
+description: Personal
+uid: 267
+
+dn: cn=AUTO,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: AUTO
+description: Automotive
+uid: 278
+
+dn: cn=VIP,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: VIP
+description: VIP
+uid: 274
+
+dn: cn=COMP,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: COMP
+description: Competition
+uid: 248
+
+dn: cn=HR,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HR
+description: Home Repair
+uid: 279
+
+dn: cn=BUS,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BUS
+description: Business
+uid: 247
+
+dn: cn=STAT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: STAT
+description: Status
+uid: 271
+
+dn: cn=HOTCNTCT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rm
+ t2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HOTCNTCT
+description: Hot Contact
+uid: 257
+
+dn: cn=GFT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GFT
+description: Gifts
+uid: 253
+
+dn: cn=IT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: IT
+description: IT
+uid: 260
+
+dn: cn=WAIT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: WAIT
+description: Waiting
+uid: 275
+
+dn: cn=ENTRTMT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt
+ 2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ENTRTMT
+description: Entertainment
+uid: 276
+
+dn: cn=ACQUANT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt
+ 2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ACQUANT
+description: Acquaintence
+uid: 277
+
+dn: cn=PYMNT,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PYMNT
+description: Payments
+uid: 266
+
+dn: cn=REST,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: REST
+description: Restaurant
+uid: 270
+
+dn: cn=CUST,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CUST
+description: Customer
+uid: 262
+
+dn: cn=KCUST,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: KCUST
+description: Key Customer
+uid: 261
+
+dn: cn=FAV,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FAV
+description: Favorites
+uid: 251
+
+dn: cn=JEW,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: JEW
+description: Jewelry
+uid: 280
+
+dn: cn=HOLIDAY,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt
+ 2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HOLIDAY
+description: Holiday
+uid: 255
+
+dn: cn=STRGTY,ou=ContactCategory,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: STRGTY
+description: Strategies
+uid: 272
+
+dn: ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+objectClass: uidObject
+ou: BusinessIndustry
+ou: BusIndustry
+uid: 8
+description: A list of business industries
+
+dn: cn=EA,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: EA
+description: Employment Agencies
+uid: 70
+
+dn: cn=TA,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TA
+description: Transmissions-Automobile
+uid: 130
+
+dn: cn=TAAB,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TAAB
+description: Travel Agencies and Bureaus
+uid: 131
+
+dn: cn=BB,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BB
+description: Bail Bonds
+uid: 42
+
+dn: cn=ACCSB,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ACCSB
+description: Air Conditioning Contractors, Systems & Balancing
+uid: 30
+
+dn: cn=C-C,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: C-C
+description: Computer - Contractor/Consultant
+uid: 61
+
+dn: cn=BC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BC
+description: Building Contractors
+uid: 49
+
+dn: cn=RRBC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: RRBC
+description: Remodeling & Repairing-Bldg Contractors
+uid: 114
+
+dn: cn=CC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CC
+description: Cleaners-Clothes
+uid: 57
+
+dn: cn=EC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: EC
+description: Electric Contractors
+uid: 69
+
+dn: cn=FC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FC
+description: Fence Contractors
+uid: 73
+
+dn: cn=HFC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HFC
+description: Health Fitness Clubs
+uid: 78
+
+dn: cn=HC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: HC
+description: Heating Contractors
+uid: 79
+
+dn: cn=SHC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SHC
+description: Storage-Household & Commercial
+uid: 122
+
+dn: cn=LC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: LC
+description: Landscape Contractors
+uid: 83
+
+dn: cn=DCNC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: DCNC
+description: Day Care & Nursery Centers
+uid: 64
+
+dn: cn=ADNC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ADNC
+description: Automobile Dealers-New Cars
+uid: 36
+
+dn: cn=PC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PC
+description: Painting Contractors
+uid: 99
+
+dn: cn=RC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: RC
+description: Roofing Contractors
+uid: 117
+
+dn: cn=PDSC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PDSC
+description: Plumbing-Drain & Sewer Cleaning
+uid: 110
+
+dn: cn=ADUC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ADUC
+description: Automobile Dealers-Used Cars
+uid: 37
+
+dn: cn=CRUC,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CRUC
+description: Carpet, Rug & Upholstery Cleaners
+uid: 53
+
+dn: cn=BD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BD
+description: Boat Dealers
+uid: 47
+
+dn: cn=SPCDD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SPCDD
+description: Swimming Pool Contractors, DLRS & DSGNRS
+uid: 124
+
+dn: cn=OFED,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: OFED
+description: Office Furniture & Equipment-Dealers
+uid: 95
+
+dn: cn=FD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FD
+description: Funeral Directors
+uid: 75
+
+dn: cn=PFD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PFD
+description: Picture Frames-Dealers
+uid: 109
+
+dn: cn=MID,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MID
+description: Musical Instruments-Dealers
+uid: 93
+
+dn: cn=AHMD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: AHMD
+description: Appliances-Household-Major-Dealers
+uid: 32
+
+dn: cn=DOD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: DOD
+description: Door Operating Devices
+uid: 66
+
+dn: cn=CPD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CPD
+description: Chiroptactic Physicians-DC
+uid: 56
+
+dn: cn=MMSD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MMSD
+description: Motorcycles & Motor Scooters-Dealers
+uid: 90
+
+dn: cn=PSD,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PSD
+description: Physicians & Surgeons, DO
+uid: 106
+
+dn: cn=WCBBE,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: WCBBE
+description: Water Companies-Bottled, Bulk, Etc.
+uid: 137
+
+dn: cn=Insurance,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Insurance
+description: Insurance
+uid: 81
+
+dn: cn=RE,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: RE
+description: Real Estate
+uid: 113
+
+dn: cn=UE,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: UE
+description: Utilities-Electric
+uid: 143
+
+dn: cn=VE,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: VE
+description: Video Equipment
+uid: 136
+
+dn: cn=GPWE,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GPWE
+description: Glass-Plate, Window, Etc.
+uid: 77
+
+dn: cn=PSDPF,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PSDPF
+description: Physicians & Surgeons, DPM-Podiatry Foot
+uid: 107
+
+dn: cn=ADG,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ADG
+description: Advertising-Directory & Guide
+uid: 29
+
+dn: cn=UG,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: UG
+description: Utilities-Gas
+uid: 141
+
+dn: cn=CD-H,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CD-H
+description: Computer Dealer - Hardware
+uid: 59
+
+dn: cn=Church,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Church
+description: Church
+uid: 51
+
+dn: cn=NH,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: NH
+description: Nursing Homes
+uid: 94
+
+dn: cn=ECTH,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ECTH
+description: Employment Contractors-Temporary Help
+uid: 71
+
+dn: cn=DI,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: DI
+description: Driving Instruction
+uid: 68
+
+dn: cn=ARAL,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ARAL
+description: Automobile Renting and Leasing
+uid: 40
+
+dn: cn=LL,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: LL
+description: Locks & Locksmiths
+uid: 88
+
+dn: cn=BM,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BM
+description: Building Materials
+uid: 50
+
+dn: cn=CM,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CM
+description: Clinics-Medical
+uid: 58
+
+dn: cn=DCRCM,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: DCRCM
+description: Draperies & Curtains-Retail & Custom Made
+uid: 67
+
+dn: cn=LM,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: LM
+description: Lawn Maintenance
+uid: 84
+
+dn: cn=PSM,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PSM
+description: Physicians & Surgeons-MD
+uid: 108
+
+dn: cn=BDN,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BDN
+description: Bicycles-Dealers-New
+uid: 46
+
+dn: cn=CRDN,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CRDN
+description: Carpet & Rug Dealers-New
+uid: 52
+
+dn: cn=APSN,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: APSN
+description: Automobile Parts & Supplies-New
+uid: 38
+
+dn: cn=Unknown,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Unknown
+description: Unknown
+uid: -110
+
+dn: cn=OO,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: OO
+description: Optometrists-OD
+uid: 97
+
+dn: cn=Zoo,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Zoo
+description: Zoo
+uid: 144
+
+dn: cn=ACP,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ACP
+description: Accountants-Certified Public
+uid: 28
+
+dn: cn=PP,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PP
+description: Photographers-Portrait
+uid: 105
+
+dn: cn=ABRP,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ABRP
+description: Automobile Body Repair & Paint
+uid: 35
+
+dn: cn=TRP,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TRP
+description: Tax Return Preparation
+uid: 126
+
+dn: cn=RAR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: RAR
+description: Radiators-Automotive-Retail
+uid: 112
+
+dn: cn=BSAR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BSAR
+description: Brak Service and Repair
+uid: 48
+
+dn: cn=TSAR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TSAR
+description: Television Service and Repair
+uid: 128
+
+dn: cn=TDR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TDR
+description: Tire Dealers-Retail
+uid: 129
+
+dn: cn=SER,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SER
+description: Stereo Equipment Retail
+uid: 118
+
+dn: cn=MESER,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MESER
+description: Mufflers & Exhaust Systems-Engine-Retail
+uid: 92
+
+dn: cn=FR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FR
+description: Furniture-Retail
+uid: 76
+
+dn: cn=PFR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PFR
+description: Photo Finishing-Retail
+uid: 104
+
+dn: cn=GR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: GR
+description: Glorists-Retail
+uid: 74
+
+dn: cn=OGR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: OGR
+description: Optical Goods-Retail
+uid: 96
+
+dn: cn=SGR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SGR
+description: Sporting Goods-Retail
+uid: 121
+
+dn: cn=JR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: JR
+description: Jewelers-Retail
+uid: 82
+
+dn: cn=MR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: MR
+description: Music-Recording
+uid: 145
+
+dn: cn=LMR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: LMR
+description: Lawn Mowers-Retail
+uid: 85
+
+dn: cn=AHMSR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: AHMSR
+description: Appliances-Household-Major-Sevice & Repair
+uid: 33
+
+dn: cn=APSUR,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: APSUR
+description: Automobile Parts & Supplies-Used & Rebuilt
+uid: 39
+
+dn: cn=CD-S,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CD-S
+description: Computer Dealer - Software
+uid: 60
+
+dn: cn=PSEAS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PSEAS
+description: Paging & Signaling Equipment and Systems
+uid: 98
+
+dn: cn=ARAS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: ARAS
+description: Automobile Repair and Service
+uid: 41
+
+dn: cn=SAS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SAS
+description: Security Alarm Systems
+uid: 119
+
+dn: cn=WAS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: WAS
+description: Wedding Arragement Service
+uid: 138
+
+dn: cn=BS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: BS
+description: Beauty Salons
+uid: 44
+
+dn: cn=PCS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PCS
+description: Pest Control Services
+uid: 101
+
+dn: cn=FES,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: FES
+description: Fax Equipment & Systems
+uid: 72
+
+dn: cn=Mortgages,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Mortgages
+description: Mortgages
+uid: 89
+
+dn: cn=Phamacies,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Phamacies
+description: Phamacies
+uid: 103
+
+dn: cn=Theatres,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Theatres
+description: Theatres
+uid: 134
+
+dn: cn=TES,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TES
+description: Telephone Equipment & Sytems
+uid: 127
+
+dn: cn=CTES,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CTES
+description: Cellular Telephone Equipment & Service
+uid: 55
+
+dn: cn=Taxis,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Taxis
+description: Taxis
+uid: 125
+
+dn: cn=Banks,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Banks
+description: Banks
+uid: 43
+
+dn: cn=LS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: LS
+description: Limousine Service
+uid: 86
+
+dn: cn=Hospitals,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Hospitals
+description: Hospitals
+uid: 80
+
+dn: cn=CMS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CMS
+description: Copy Machines & Supplies
+uid: 62
+
+dn: cn=Veterinarians,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=r
+ mt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Veterinarians
+description: Veterinarians
+uid: 135
+
+dn: cn=Loans,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Loans
+description: Loans
+uid: 87
+
+dn: cn=Signs,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Signs
+description: Signs
+uid: 120
+
+dn: cn=Tuxedos,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Tuxedos
+description: Tuxedos
+uid: 133
+
+dn: cn=PS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: PS
+description: Pet Shops
+uid: 102
+
+dn: cn=Barbers,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc
+ =net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Barbers
+description: Barbers
+uid: 45
+
+dn: cn=Pawnbrokers,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt
+ 2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Pawnbrokers
+description: Pawnbrokers
+uid: 100
+
+dn: cn=Caterers,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Caterers
+description: Caterers
+uid: 54
+
+dn: cn=Printers,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Printers
+description: Printers
+uid: 111
+
+dn: cn=Movers,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=
+ net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Movers
+description: Movers
+uid: 91
+
+dn: cn=SSS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: SSS
+description: Storage-Self Service
+uid: 123
+
+dn: cn=TS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: TS
+description: Tree Service
+uid: 132
+
+dn: cn=Restaurants,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt
+ 2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Restaurants
+description: Restaurants
+uid: 116
+
+dn: cn=Apartments,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2
+ ,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Apartments
+description: Apartments
+uid: 31
+
+dn: cn=Dentists,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,d
+ c=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Dentists
+description: Dentists
+uid: 65
+
+dn: cn=WS,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: WS
+description: Wrecker Service
+uid: 139
+
+dn: cn=Attorneys,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,
+ dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: Attorneys
+description: Attorneys
+uid: 34
+
+dn: cn=CDRAT,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=n
+ et
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: CDRAT
+description: Compact Discs, Records and Tapes
+uid: 63
+
+dn: cn=UT,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: UT
+description: Utilities-Telephone
+uid: 142
+
+dn: cn=UW,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: UW
+description: Utilities-Water
+uid: 140
+
+dn: cn=RSSY,ou=BusIndustry,ou=General,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=ne
+ t
+objectClass: top
+objectClass: account
+objectClass: RMT2LookupCodes
+cn: RSSY
+description: Rental Service Stores & Yards
+uid: 115
+
+dn: ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: Roles
+
+dn: cn=open,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: open
+description: No User Security
+
+dn: cn=admin,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: admin
+description: Administrator
+
+dn: cn=member,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: member
+description: Membership/Subscription Only User
+
+dn: cn=manager,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: manager
+description: General Manager
+
+dn: cn=user,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: user
+description: Application User
+
+dn: cn=power,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: power
+description: Power User
+
+dn: cn=guest,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: guest
+description: Temporary User
+
+dn: cn=security,ou=Roles,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: RMT2Roles
+objectClass: top
+cn: security
+description: Security Manager
+
+dn: ou=UserGroups,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: UserGroups
+
+dn: cn=Internal,ou=UserGroups,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2UserGroups
+cn: Internal
+description: User that is considered to be private and has access to the LAN
+  network
+
+dn: cn=External,ou=UserGroups,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2UserGroups
+cn: External
+description: User that is access to the application from the outside of the 
+ company and does not have access to the LAN network
+
+dn: cn=Temporary,ou=UserGroups,ou=LookupCodes,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: RMT2UserGroups
+cn: Temporary
+description: User that has been granted access to the system or network on a
+  temporary basis
+

@@ -1,0 +1,71 @@
+version: 1
+
+dn: ou=People,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: People
+
+dn: loginid=admin,ou=People,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: person
+objectClass: top
+objectClass: RMT2Person
+objectClass: RMT2User
+cn: Roy Terrell
+dob: 5/17/1966
+fn: Roy
+grp: Internal
+jt: Built-In System Administrator
+loginid: admin
+sn: Terrell
+ssn: xxx-xx-xxxx
+startDate: 08/14/1997
+addr: 2300 Dana Dr
+city: Flower Mound
+description: This is the administrator of the system with GOD like privilege
+ s.
+email: rmt2bsc2@verizon.net
+lc: 0
+phoneFax: 972.335.7125
+phoneHome: 972.691.8810
+phoneOffice: 972.335.7125
+pt: Mr
+state: TX
+userPassword: drum7777
+zip: 75028
+ar: acctadmin
+ar: authadmin
+ar: comadmin
+ar: conadmin
+ar: ProjAdm
+ar: rmt2admin
+
+dn: loginid=timemgr,ou=People,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: person
+objectClass: top
+objectClass: RMT2Person
+objectClass: RMT2User
+cn: Roy Terrell
+dob: 5/17/1966
+fn: Roy
+grp: Internal
+jt: Built-In Project Tracker Manager
+loginid: timemgr
+sn: Terrell
+ssn: xxx-xx-xxxx
+startDate: 08/14/1997
+addr: 2300 Dana Dr
+city: Flower Mound
+description: This is the default manager for the Project Tracker application
+ .  This user has the authority to approve, decline, and invoice timesheets 
+ of his/her employees.
+email: rmt2bsc2@verizon.net
+lc: 0
+phoneFax: 972.335.7125
+phoneHome: 972.691.8810
+phoneOffice: 972.335.7125
+pt: Mr
+state: TX
+userPassword: timemgr
+zip: 75028
+ar: ProjAdm
+

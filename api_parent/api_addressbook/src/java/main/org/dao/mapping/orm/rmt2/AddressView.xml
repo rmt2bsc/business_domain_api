@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="AddressView">
+   <Sql From="address" GroupBy="" Having="" OrderBy="" Select="addr_id, &#xA;&#x9;&#x9;person_id, &#xA;&#x9;&#x9;business_id, &#xA;&#x9;&#x9;addr1, &#xA;&#x9;&#x9;addr2, &#xA;&#x9;&#x9;addr3, &#xA;&#x9;&#x9;addr4, &#xA;&#x9;&#x9;zip, &#xA;&#x9;&#x9;zipext, &#xA;&#x9;&#x9;phone_home, &#xA;&#x9;&#x9;phone_work, &#xA;&#x9;&#x9;phone_ext, &#xA;&#x9;&#x9;phone_main, &#xA;&#x9;&#x9;phone_cell, &#xA;&#x9;&#x9;phone_fax, &#xA;&#x9;&#x9;phone_pager, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id" Where="" />
+   <TableUsage DBName="address" Name="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="addr_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AddrId" PrimaryKey="true" SqlType="integer" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="person_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="PersonId" PrimaryKey="false" SqlType="integer" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="business_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="BusinessId" PrimaryKey="false" SqlType="integer" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="addr1" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Addr1" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="addr2" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Addr2" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="addr3" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Addr3" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="addr4" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Addr4" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="zip" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="Zip" PrimaryKey="false" SqlType="integer" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="zipext" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="Zipext" PrimaryKey="false" SqlType="integer" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="phone_home" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PhoneHome" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="phone_work" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PhoneWork" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="phone_ext" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PhoneExt" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="phone_main" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PhoneMain" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="phone_cell" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PhoneCell" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="phone_fax" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PhoneFax" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="phone_pager" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PhonePager" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateCreated" PrimaryKey="false" SqlType="timestamp" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="AddressTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="AddressTable" Updateable="true" />
+</DataSource>
+

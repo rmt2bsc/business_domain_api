@@ -1,0 +1,13 @@
+version: 1
+
+dn: ou=IpLocations,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: IP-Locations
+description: A list of world IP addresses
+
+dn: ou=Countries,ou=IpLocations,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: IpCountries
+description: A list of IP addresses based on country, region city, postal code, and area code

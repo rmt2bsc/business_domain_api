@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="MimeTypesView">
+   <Sql From="mime_types" GroupBy="" Having="" OrderBy="" Select="mime_type_id, &#xA;&#x9;&#x9;file_ext, &#xA;&#x9;&#x9;media_type" Where="" />
+   <TableUsage DBName="mime_types" Name="MimeTypesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="mime_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="MimeTypeId" PrimaryKey="true" SqlType="integer" TableName="MimeTypesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="file_ext" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="FileExt" PrimaryKey="false" SqlType="varchar" TableName="MimeTypesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="media_type" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="MediaType" PrimaryKey="false" SqlType="varchar" TableName="MimeTypesTable" Updateable="true" />
+</DataSource>
+

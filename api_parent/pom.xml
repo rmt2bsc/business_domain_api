@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.rmt2.api.services</groupId>
+	<artifactId>api-parent</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>rmt2-api-services</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<modules>
+		<module>api_addressbook</module>
+		<module>api_accounting</module>
+		<module>api_media</module>
+		<module>api_projecttracker</module>
+		<module>api_security</module>
+	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.rmt2.framework.suite</groupId>
+				<artifactId>fw-core</artifactId>
+				<version>1.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.rmt2.framework.suite</groupId>
+				<artifactId>fw-messaging</artifactId>
+				<version>2.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.rmt2.messaging.services</groupId>
+				<artifactId>rmt2-web-service-messages</artifactId>
+				<version>1.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>InternalSnapshots</id>
+			<name>Internal Snapshots</name>
+			<url>file://rmtdaldev77/download/repo/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>InternalReleases</id>
+			<name>Internal Releases</name>
+			<url>file://rmtdalsys01/rmt2/repo/releases/</url>
+		</repository>
+	</distributionManagement>
+</project>

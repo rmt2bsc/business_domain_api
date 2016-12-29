@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="ProjEmployeeProjectView">
+   <Sql From="proj_employee_project" GroupBy="" Having="" OrderBy="" Select="emp_proj_id, &#xA;&#x9;&#x9;emp_id, &#xA;&#x9;&#x9;proj_id, &#xA;&#x9;&#x9;effective_date, &#xA;&#x9;&#x9;end_date, &#xA;&#x9;&#x9;hourly_rate, &#xA;&#x9;&#x9;hourly_over_rate, &#xA;&#x9;&#x9;flat_rate, &#xA;&#x9;&#x9;comments, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;ip_created, &#xA;&#x9;&#x9;ip_updated" Where="" />
+   <TableUsage DBName="proj_employee_project" Name="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="emp_proj_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="EmpProjId" PrimaryKey="true" SqlType="integer" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="emp_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="EmpId" PrimaryKey="false" SqlType="integer" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="proj_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ProjId" PrimaryKey="false" SqlType="integer" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="effective_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="EffectiveDate" PrimaryKey="false" SqlType="date" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="end_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="EndDate" PrimaryKey="false" SqlType="date" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="hourly_rate" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="HourlyRate" PrimaryKey="false" SqlType="decimal" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="hourly_over_rate" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="HourlyOverRate" PrimaryKey="false" SqlType="decimal" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="flat_rate" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="FlatRate" PrimaryKey="false" SqlType="decimal" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="comments" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Comments" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateCreated" PrimaryKey="false" SqlType="timestamp" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="IpCreated" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="IpUpdated" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeProjectTable" Updateable="true" />
+</DataSource>
+

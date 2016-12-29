@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VwAppRolesView">
+   <Sql From="vw_app_roles" GroupBy="" Having="" OrderBy="" Select="app_role_id, &#xA;&#x9;&#x9;app_role_code, &#xA;&#x9;&#x9;app_role_name, &#xA;&#x9;&#x9;app_role_description, &#xA;&#x9;&#x9;role_id, &#xA;&#x9;&#x9;role_name, &#xA;&#x9;&#x9;app_name, &#xA;&#x9;&#x9;application_id" Where="" />
+   <TableUsage DBName="vw_app_roles" Name="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="app_role_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AppRoleId" PrimaryKey="false" SqlType="integer" TableName="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="app_role_code" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AppRoleCode" PrimaryKey="false" SqlType="varchar" TableName="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="app_role_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AppRoleName" PrimaryKey="false" SqlType="varchar" TableName="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="app_role_description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AppRoleDescription" PrimaryKey="false" SqlType="varchar" TableName="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="role_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="RoleId" PrimaryKey="false" SqlType="integer" TableName="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="role_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="RoleName" PrimaryKey="false" SqlType="varchar" TableName="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="app_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AppName" PrimaryKey="false" SqlType="varchar" TableName="VwAppRolesTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="application_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ApplicationId" PrimaryKey="false" SqlType="integer" TableName="VwAppRolesTable" Updateable="true" />
+</DataSource>
+

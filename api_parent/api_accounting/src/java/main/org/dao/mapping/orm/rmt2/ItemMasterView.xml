@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="ItemMasterView">
+   <Sql From="item_master" GroupBy="" Having="" OrderBy="" Select="item_id, &#xA;&#x9;&#x9;item_type_id, &#xA;&#x9;&#x9;creditor_id, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;vendor_item_no, &#xA;&#x9;&#x9;item_serial_no, &#xA;&#x9;&#x9;qty_on_hand, &#xA;&#x9;&#x9;unit_cost, &#xA;&#x9;&#x9;markup, &#xA;&#x9;&#x9;retail_price, &#xA;&#x9;&#x9;override_retail, &#xA;&#x9;&#x9;active, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;ip_created, &#xA;&#x9;&#x9;ip_updated" Where="" />
+   <TableUsage DBName="item_master" Name="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ItemId" PrimaryKey="true" SqlType="integer" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ItemTypeId" PrimaryKey="false" SqlType="integer" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="creditor_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="CreditorId" PrimaryKey="false" SqlType="integer" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="vendor_item_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="VendorItemNo" PrimaryKey="false" SqlType="varchar" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_serial_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ItemSerialNo" PrimaryKey="false" SqlType="varchar" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="qty_on_hand" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="QtyOnHand" PrimaryKey="false" SqlType="integer" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="unit_cost" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="UnitCost" PrimaryKey="false" SqlType="decimal" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="markup" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="Markup" PrimaryKey="false" SqlType="decimal" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="retail_price" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="RetailPrice" PrimaryKey="false" SqlType="decimal" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="override_retail" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="OverrideRetail" PrimaryKey="false" SqlType="smallint" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="active" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="Active" PrimaryKey="false" SqlType="smallint" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateCreated" PrimaryKey="false" SqlType="timestamp" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="IpCreated" PrimaryKey="false" SqlType="varchar" TableName="ItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="IpUpdated" PrimaryKey="false" SqlType="varchar" TableName="ItemMasterTable" Updateable="true" />
+</DataSource>
+

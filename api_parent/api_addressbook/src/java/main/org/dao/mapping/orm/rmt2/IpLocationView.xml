@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="IpLocationView">
+   <Sql From="ip_location" GroupBy="" Having="" OrderBy="" Select="loc_id, &#xA;&#x9;&#x9;country, &#xA;&#x9;&#x9;region, &#xA;&#x9;&#x9;city, &#xA;&#x9;&#x9;postal_code, &#xA;&#x9;&#x9;latitude, &#xA;&#x9;&#x9;longitude, &#xA;&#x9;&#x9;metro_code, &#xA;&#x9;&#x9;area_code" Where="" />
+   <TableUsage DBName="ip_location" Name="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="loc_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="LocId" PrimaryKey="false" SqlType="integer" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="country" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Country" PrimaryKey="false" SqlType="varchar" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="region" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Region" PrimaryKey="false" SqlType="varchar" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="city" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="City" PrimaryKey="false" SqlType="varchar" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="postal_code" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PostalCode" PrimaryKey="false" SqlType="varchar" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="latitude" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="Latitude" PrimaryKey="false" SqlType="numeric" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="longitude" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="Longitude" PrimaryKey="false" SqlType="numeric" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="metro_code" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="MetroCode" PrimaryKey="false" SqlType="varchar" TableName="IpLocationTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="area_code" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AreaCode" PrimaryKey="false" SqlType="varchar" TableName="IpLocationTable" Updateable="true" />
+</DataSource>
+

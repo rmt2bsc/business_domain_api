@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="ProjPeriodView">
+   <Sql From="proj_period" GroupBy="" Having="" OrderBy="" Select="proj_period_id, &#xA;&#x9;&#x9;prd_type, &#xA;&#x9;&#x9;max_reg_hrs" Where="" />
+   <TableUsage DBName="proj_period" Name="ProjPeriodTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="proj_period_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="double" Name="ProjPeriodId" PrimaryKey="true" SqlType="numeric" TableName="ProjPeriodTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="prd_type" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="PrdType" PrimaryKey="false" SqlType="varchar" TableName="ProjPeriodTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="max_reg_hrs" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="MaxRegHrs" PrimaryKey="false" SqlType="integer" TableName="ProjPeriodTable" Updateable="true" />
+</DataSource>
+

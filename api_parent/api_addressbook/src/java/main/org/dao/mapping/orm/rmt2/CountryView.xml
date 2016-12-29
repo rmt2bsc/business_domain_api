@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="CountryView">
+   <Sql From="country" GroupBy="" Having="" OrderBy="" Select="country_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;cntry_void_ind, &#xA;&#x9;&#x9;code" Where="" />
+   <TableUsage DBName="country" Name="CountryTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="country_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="CountryId" PrimaryKey="true" SqlType="integer" TableName="CountryTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Name" PrimaryKey="false" SqlType="varchar" TableName="CountryTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="cntry_void_ind" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="CntryVoidInd" PrimaryKey="false" SqlType="varchar" TableName="CountryTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="code" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Code" PrimaryKey="false" SqlType="varchar" TableName="CountryTable" Updateable="true" />
+</DataSource>
+

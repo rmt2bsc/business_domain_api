@@ -1,0 +1,23 @@
+version: 1
+
+dn: o=RMT2BSC,dc=rmt2,dc=net
+objectClass: organization
+objectClass: RMT2Business
+objectClass: top
+bn: RMT2 Business Systems Corp.
+cn: RMT2
+o: RMT2BSC
+taxId: 75-2222222
+businessCategory: Information Technology, Music
+city: Flower Mound
+companyPhone: 2144983935
+country: USA
+description: Conducts business in computer information technology and the mu
+ sic industry.
+email: rmt2bsc2@verizon.net
+onm: Roy Terrell, Jr.
+phoneFax: 9723357125
+state: Texas
+street: 2300 Dana Dr
+website: www.rmt2.net
+zip: 75028

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="BatchJobView">
+   <Sql From="batch_job" GroupBy="" Having="" OrderBy="" Select="id, &#xA;&#x9;&#x9;description" Where="" />
+   <TableUsage DBName="batch_job" Name="BatchJobTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="id" DataValue="" DisplayHeader="" IsNull="false" JavaType="String" Name="Id" PrimaryKey="true" SqlType="varchar" TableName="BatchJobTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="BatchJobTable" Updateable="true" />
+</DataSource>
+

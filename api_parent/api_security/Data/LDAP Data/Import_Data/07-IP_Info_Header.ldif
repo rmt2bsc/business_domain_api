@@ -1,0 +1,19 @@
+version: 1
+
+dn: ou=IpInfo,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: IpInfo
+description: Manages detail IP addresses information
+
+dn: ou=Blocks,ou=IpInfo,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: Blocks
+description: Manages blocks of IP address numbers for various locations
+
+dn: ou=Locations,ou=IpInfo,o=RMT2BSC,dc=rmt2,dc=net
+objectClass: top
+objectClass: organizationalUnit
+ou: Locations
+description: A master list of IP address locations based on country, region city, postal code, and area code

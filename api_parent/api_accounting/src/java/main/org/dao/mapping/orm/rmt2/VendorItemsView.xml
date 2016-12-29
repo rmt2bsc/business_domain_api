@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VendorItemsView">
+   <Sql From="vendor_items" GroupBy="" Having="" OrderBy="" Select="item_id, &#xA;&#x9;&#x9;creditor_id, &#xA;&#x9;&#x9;vendor_item_no, &#xA;&#x9;&#x9;item_serial_no, &#xA;&#x9;&#x9;unit_cost" Where="" />
+   <TableUsage DBName="vendor_items" Name="VendorItemsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ItemId" PrimaryKey="true" SqlType="integer" TableName="VendorItemsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="creditor_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="CreditorId" PrimaryKey="true" SqlType="integer" TableName="VendorItemsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="vendor_item_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="VendorItemNo" PrimaryKey="false" SqlType="varchar" TableName="VendorItemsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_serial_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ItemSerialNo" PrimaryKey="false" SqlType="varchar" TableName="VendorItemsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="unit_cost" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="UnitCost" PrimaryKey="false" SqlType="decimal" TableName="VendorItemsTable" Updateable="true" />
+</DataSource>
+

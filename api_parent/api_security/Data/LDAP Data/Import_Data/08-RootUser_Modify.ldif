@@ -1,0 +1,4 @@
+dn: cn=RMT2RootUser,cn=Root DNs,cn=config
+changetype: modify
+add: ds-rlim-lookthrough-limit
+ds-rlim-lookthrough-limit: 0

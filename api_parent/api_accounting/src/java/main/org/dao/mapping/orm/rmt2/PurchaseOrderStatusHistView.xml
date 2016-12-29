@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="PurchaseOrderStatusHistView">
+   <Sql From="purchase_order_status_hist" GroupBy="" Having="" OrderBy="" Select="po_status_hist_id, &#xA;&#x9;&#x9;po_status_id, &#xA;&#x9;&#x9;po_id, &#xA;&#x9;&#x9;effective_date, &#xA;&#x9;&#x9;end_date, &#xA;&#x9;&#x9;user_id" Where="" />
+   <TableUsage DBName="purchase_order_status_hist" Name="PurchaseOrderStatusHistTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="po_status_hist_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="PoStatusHistId" PrimaryKey="true" SqlType="integer" TableName="PurchaseOrderStatusHistTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="po_status_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="PoStatusId" PrimaryKey="false" SqlType="integer" TableName="PurchaseOrderStatusHistTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="po_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="PoId" PrimaryKey="false" SqlType="integer" TableName="PurchaseOrderStatusHistTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="effective_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="EffectiveDate" PrimaryKey="false" SqlType="date" TableName="PurchaseOrderStatusHistTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="end_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="EndDate" PrimaryKey="false" SqlType="date" TableName="PurchaseOrderStatusHistTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="PurchaseOrderStatusHistTable" Updateable="true" />
+</DataSource>
+

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="PurchaseOrderStatusView">
+   <Sql From="purchase_order_status" GroupBy="" Having="" OrderBy="" Select="po_status_id, &#xA;&#x9;&#x9;description" Where="" />
+   <TableUsage DBName="purchase_order_status" Name="PurchaseOrderStatusTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="po_status_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="PoStatusId" PrimaryKey="true" SqlType="integer" TableName="PurchaseOrderStatusTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="PurchaseOrderStatusTable" Updateable="true" />
+</DataSource>
+

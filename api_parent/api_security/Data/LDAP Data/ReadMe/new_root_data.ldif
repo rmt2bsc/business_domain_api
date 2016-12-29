@@ -1,0 +1,11 @@
+
+This is no good.    Have to change property, ds-cfg-base-dn, in file, config.ldif, from "dc=example,dc=com" to "dc=rmt2,dc=netfile"
+
+
+
+dn: dc=rmt2,dc=net
+dc: rmt2
+description: Optional. Suffix configuration is found in config.ldif as ds-cfg-base-dn: dc=example,dc=com (original)  dc=rmt2,dc=net
+objectClass: dcObject
+objectClass: organization
+o: RMT2 Business Systems Corp.
