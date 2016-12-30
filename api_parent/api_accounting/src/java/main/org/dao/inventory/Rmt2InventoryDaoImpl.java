@@ -56,6 +56,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements
     }
 
     /**
+     * Creates a Rmt2InventoryDaoImpl that is aware of a PersistenceClient instance.
      * @param client
      */
     Rmt2InventoryDaoImpl(PersistenceClient client) {
