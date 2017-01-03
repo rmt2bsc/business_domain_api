@@ -3,12 +3,11 @@ package generalledger;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.dto.AccountDto;
 import org.dto.AccountTypeDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.modules.generalledger.GeneralLedgerApiFactory;
