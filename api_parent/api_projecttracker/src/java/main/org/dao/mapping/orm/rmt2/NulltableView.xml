@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<DataSource Name="NulltableView">
-   <Sql From="nulltable" GroupBy="" Having="" OrderBy="" Select="nullcol" Where="" />
-   <TableUsage DBName="nulltable" Name="NulltableTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="nullcol" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="Nullcol" PrimaryKey="false" SqlType="integer" TableName="NulltableTable" Updateable="true" />
-</DataSource>
-

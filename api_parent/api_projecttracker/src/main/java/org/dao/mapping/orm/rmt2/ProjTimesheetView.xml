@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="ProjTimesheetView">
+   <Sql From="proj_timesheet" GroupBy="" Having="" OrderBy="" Select="timesheet_id, &#xA;&#x9;&#x9;client_id, &#xA;&#x9;&#x9;emp_id, &#xA;&#x9;&#x9;display_value, &#xA;&#x9;&#x9;begin_period, &#xA;&#x9;&#x9;end_period, &#xA;&#x9;&#x9;invoice_ref_no, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;comments, &#xA;&#x9;&#x9;ext_ref, &#xA;&#x9;&#x9;document_id, &#xA;&#x9;&#x9;proj_id, &#xA;&#x9;&#x9;ip_created, &#xA;&#x9;&#x9;ip_updated" Where="" />
+   <TableUsage DBName="proj_timesheet" Name="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="timesheet_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="TimesheetId" PrimaryKey="true" SqlType="integer" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="client_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ClientId" PrimaryKey="false" SqlType="integer" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="emp_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="EmpId" PrimaryKey="false" SqlType="integer" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="display_value" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="DisplayValue" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="begin_period" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="BeginPeriod" PrimaryKey="false" SqlType="timestamp" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="end_period" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="EndPeriod" PrimaryKey="false" SqlType="timestamp" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="invoice_ref_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="InvoiceRefNo" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateCreated" PrimaryKey="false" SqlType="timestamp" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="comments" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Comments" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ext_ref" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ExtRef" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="document_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="DocumentId" PrimaryKey="false" SqlType="integer" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="proj_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ProjId" PrimaryKey="false" SqlType="integer" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="IpCreated" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="IpUpdated" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetTable" Updateable="true" />
+</DataSource>
+
