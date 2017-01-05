@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="PurchaseOrderView">
+   <Sql From="purchase_order" GroupBy="" Having="" OrderBy="" Select="po_id, &#xA;&#x9;&#x9;xact_id, &#xA;&#x9;&#x9;creditor_id, &#xA;&#x9;&#x9;ref_no, &#xA;&#x9;&#x9;total, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id" Where="" />
+   <TableUsage DBName="purchase_order" Name="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="po_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="PoId" PrimaryKey="true" SqlType="integer" TableName="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="xact_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="XactId" PrimaryKey="false" SqlType="integer" TableName="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="creditor_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="CreditorId" PrimaryKey="false" SqlType="integer" TableName="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ref_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="RefNo" PrimaryKey="false" SqlType="varchar" TableName="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="total" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="Total" PrimaryKey="false" SqlType="decimal" TableName="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateCreated" PrimaryKey="false" SqlType="timestamp" TableName="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="PurchaseOrderTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="PurchaseOrderTable" Updateable="true" />
+</DataSource>
+

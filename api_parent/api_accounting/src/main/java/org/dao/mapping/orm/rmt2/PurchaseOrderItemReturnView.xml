@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="PurchaseOrderItemReturnView">
+   <Sql From="purchase_order_item_return" GroupBy="" Having="" OrderBy="" Select="po_item_return_id, &#xA;&#x9;&#x9;po_return_id, &#xA;&#x9;&#x9;item_id, &#xA;&#x9;&#x9;qty_rtn" Where="" />
+   <TableUsage DBName="purchase_order_item_return" Name="PurchaseOrderItemReturnTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="po_item_return_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="PoItemReturnId" PrimaryKey="true" SqlType="integer" TableName="PurchaseOrderItemReturnTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="po_return_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="PoReturnId" PrimaryKey="false" SqlType="integer" TableName="PurchaseOrderItemReturnTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ItemId" PrimaryKey="false" SqlType="integer" TableName="PurchaseOrderItemReturnTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="qty_rtn" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="QtyRtn" PrimaryKey="false" SqlType="integer" TableName="PurchaseOrderItemReturnTable" Updateable="true" />
+</DataSource>
+
