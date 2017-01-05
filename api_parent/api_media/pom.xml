@@ -6,7 +6,7 @@
 	<name>Multi-Media API</name>
 	<description>API for maintaining media related data</description>
 	<properties>
-	   <mp3LibPath>C:/source/RMT2_Business_Domain_API/api_parent/api_media/lib</mp3LibPath>
+		<mp3LibPath>C:/source/RMT2_Business_Domain_API/api_parent/api_media/lib</mp3LibPath>
 	</properties>
 	<parent>
 		<groupId>org.rmt2.api.services</groupId>
@@ -30,10 +30,8 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>rmt2.mp3.lib</groupId>
 			<artifactId>mp3.entagged</artifactId>
@@ -48,7 +46,7 @@
 			<scope>system</scope>
 			<systemPath>${mp3LibPath}/JID3.jar</systemPath>
 		</dependency>
-    <dependency>
+		<dependency>
 			<groupId>rmt2.mp3.lib</groupId>
 			<artifactId>mp3.MP3Tag</artifactId>
 			<version>1.0</version>
