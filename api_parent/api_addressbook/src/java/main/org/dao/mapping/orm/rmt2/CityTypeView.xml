@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<DataSource Name="CityTypeView">
-   <Sql From="city_type" GroupBy="" Having="" OrderBy="" Select="city_type_id, &#xA;&#x9;&#x9;descr" Where="" />
-   <TableUsage DBName="city_type" Name="CityTypeTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="city_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="String" Name="CityTypeId" PrimaryKey="true" SqlType="varchar" TableName="CityTypeTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="descr" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Descr" PrimaryKey="false" SqlType="varchar" TableName="CityTypeTable" Updateable="true" />
-</DataSource>
-
