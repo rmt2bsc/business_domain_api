@@ -1,0 +1,176 @@
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1EN8T6J\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\4DY78HUR\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\YDXI3AHO\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\SP27812F\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\SP27812F\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1EN8T6J\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\0X63KTY3\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\ODUR4TEN\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\4DY78HUR\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl: https://home.mynmg.com/Citrix/AccessPlatform/site/,DanaInfo=10.93.29.55+launch.ica?NFuse_Application=Citrix.MPS.App.NMG-Prod.Dameware%20-%20Win7&LaunchId=1338400171781&NFuse_AppFriendlyNameURLENcoded=Dameware%20-%20Win7 signedicafilepath:  PNAgent: 0 FTA: 0 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\09UB8XYJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\09UB8XYJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\ODUR4TEN\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\CFTZEQFX\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\49ER4DMF\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl: https://home.mynmg.com/Citrix/AccessPlatform/site/,DanaInfo=10.93.29.55+launch.ica?NFuse_Application=Citrix.MPS.App.NMG-Prod.Dameware%20-%20Win7&LaunchId=1340739254765&NFuse_AppFriendlyNameURLENcoded=Dameware%20-%20Win7 signedicafilepath:  PNAgent: 0 FTA: 0 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\09UB8XYJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\OHE3WTI7\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl: https://home.mynmg.com/Citrix/AccessPlatform/site/,DanaInfo=10.93.29.55+launch.ica?NFuse_Application=Citrix.MPS.App.NMG-Prod.Dameware%20-%20Win7&LaunchId=1340808986812&NFuse_AppFriendlyNameURLENcoded=Dameware%20-%20Win7 signedicafilepath:  PNAgent: 0 FTA: 0 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\YDXI3AHO\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1IJG1QJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\4DY78HUR\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1EN8T6J\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\QPJC90V6\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\412R4T6V\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\09UB8XYJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1IJG1QJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\OZRBMWLD\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\KHMJ8TAN\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\0X63KTY3\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1IJG1QJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\OZRBMWLD\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\ZYO771KL\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\0X63KTY3\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\HVVZ99KE\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1EN8T6J\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\OHE3WTI7\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\ZYO771KL\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\YYRL9BHZ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\KHMJ8TAN\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\GDY7W5YV\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\NRDJBXGW\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl: https://home.mynmg.com/Citrix/AccessPlatform/site/,DanaInfo=10.93.29.55+launch.ica?NFuse_Application=Citrix.MPS.App.NMG-Prod.Dameware%20-%20Win7&LaunchId=1343065344062&NFuse_AppFriendlyNameURLENcoded=Dameware%20-%20Win7 signedicafilepath:  PNAgent: 0 FTA: 0 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\QPJC90V6\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\CFTZEQFX\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\OTI3G56R\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\S1EN8T6J\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\CFTZEQFX\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\HVVZ99KE\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\PG8ZTPSX\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\25F0HOVI\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl: https://home.mynmg.com/Citrix/AccessPlatform/site/,DanaInfo=10.93.29.55+launch.ica?NFuse_Application=Citrix.MPS.App.NMG-Prod.Dameware%20-%20Win7&LaunchId=1343339482953&NFuse_AppFriendlyNameURLENcoded=Dameware%20-%20Win7 signedicafilepath:  PNAgent: 0 FTA: 0 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\4DY78HUR\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\HVVZ99KE\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\OHE3WTI7\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\OTI3G56R\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\ZYO771KL\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\09UB8XYJ\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+----------------------------------------------
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\412R4T6V\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+
+icafilename: C:\Documents and Settings\WinXP User\Local Settings\Temporary Internet Files\Content.IE5\1SCF9T89\,DanaInfo=10.93.29.55+launch[1].ica m_icafileurl:  signedicafilepath:  PNAgent: 0 FTA: 1 ICO: 0 trustedlauncher: 0
+sif.VerifyIcaFileSignature result: 0x0
+

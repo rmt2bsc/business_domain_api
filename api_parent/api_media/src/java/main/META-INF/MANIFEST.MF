@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: org.modules.services.DocumentInboundDirectoryListener
-Class-Path:fw_core.jar fw_msg.jar fw_web.jar 

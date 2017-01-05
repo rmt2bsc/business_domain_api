@@ -1,16 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <!-- <groupId>org.rmt2.api.services</groupId> -->
-  <artifactId>api-media</artifactId>
-  <version>2.0-SNAPSHOT</version>
-  <name>Multi-Media API</name>
-  <description>API for maintaining media related data</description>
-  <parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>api-media</artifactId>
+	<version>2.0-SNAPSHOT</version>
+	<name>Multi-Media API</name>
+	<description>API for maintaining media related data</description>
+	<properties>
+	   <mp3LibPath>C:/source/RMT2_Business_Domain_API/api_parent/api_media/lib</mp3LibPath>
+	</properties>
+	<parent>
 		<groupId>org.rmt2.api.services</groupId>
 		<artifactId>api-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.rmt2.framework.suite</groupId>
@@ -30,50 +33,54 @@
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>rmt2.mp3.lib</groupId>
+			<artifactId>mp3.entagged</artifactId>
+			<version>0.35</version>
+			<scope>system</scope>
+			<systemPath>${mp3LibPath}/Entagged-0.35.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>rmt2.mp3.lib</groupId>
+			<artifactId>mp3.jid3</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${mp3LibPath}/JID3.jar</systemPath>
+		</dependency>
+    <dependency>
+			<groupId>rmt2.mp3.lib</groupId>
+			<artifactId>mp3.MP3Tag</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${mp3LibPath}/MP3Tag-0.3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>rmt2.mp3.lib</groupId>
+			<artifactId>mp3.myid3</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${mp3LibPath}/myid3.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-  <build>
-    <sourceDirectory>src/java/main</sourceDirectory>
-    <testSourceDirectory>src/java/test</testSourceDirectory>
-    <resources>
-      <resource>
-        <directory>src/java/main</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>resources</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>src/java/test</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </testResource>
-    </testResources>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  <distributionManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<distributionManagement>
 		<snapshotRepository>
 			<id>InternalSnapshots</id>
 			<name>Internal Snapshots</name>
@@ -84,5 +91,5 @@
 			<name>Internal Releases</name>
 			<url>file://rmtdalsys01/rmt2/repo/releases/</url>
 		</repository>
-	</distributionManagement>  
+	</distributionManagement>
 </project>
