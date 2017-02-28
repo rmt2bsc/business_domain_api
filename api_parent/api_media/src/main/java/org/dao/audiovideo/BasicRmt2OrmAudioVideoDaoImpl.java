@@ -795,7 +795,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
             // Make data adjustments in the event we are dealing with a Various
             // Artists type album.
             if (comments.contains(AudioVideoConstants.VARIOUS_ARTIST_TOKEN)) {
-                avt.setTrackArtist(ava.getName());
                 ava.setName(AudioVideoConstants.VARIOUS_ARTIST_NAME);
             }
 

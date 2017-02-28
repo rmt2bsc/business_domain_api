@@ -379,25 +379,4 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
     public String getComments() {
         return this.t.getComments();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.TracksDto#setTrackArtist(java.lang.String)
-     */
-    @Override
-    public void setTrackArtist(String value) {
-        this.t.setTrackArtist(value);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.TracksDto#getTrackArtist()
-     */
-    @Override
-    public String getTrackArtist() {
-        return this.t.getTrackArtist();
-    }
-
 }
