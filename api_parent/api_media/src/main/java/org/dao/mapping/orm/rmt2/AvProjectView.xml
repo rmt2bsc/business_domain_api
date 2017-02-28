@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataSource Name="AvProjectView">
-   <Sql From="av_project" GroupBy="" Having="" OrderBy="" Select="project_id, &#xA;&#x9;&#x9;artist_id, &#xA;&#x9;&#x9;project_type_id, &#xA;&#x9;&#x9;genre_id, &#xA;&#x9;&#x9;media_type_id, &#xA;&#x9;&#x9;title, &#xA;&#x9;&#x9;year, &#xA;&#x9;&#x9;master_dup_id, &#xA;&#x9;&#x9;ripped, &#xA;&#x9;&#x9;cost, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;content_id" Where="" />
+   <Sql From="av_project" GroupBy="" Having="" OrderBy="" Select="project_id, &#xA;&#x9;&#x9;artist_id, &#xA;&#x9;&#x9;project_type_id, &#xA;&#x9;&#x9;genre_id, &#xA;&#x9;&#x9;media_type_id, &#xA;&#x9;&#x9;title, &#xA;&#x9;&#x9;year, &#xA;&#x9;&#x9;master_dup_id, &#xA;&#x9;&#x9;ripped, &#xA;&#x9;&#x9;cost, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;content_id, &#xA;&#x9;&#x9;art_work_path" Where="" />
    <TableUsage DBName="av_project" Name="AvProjectTable" Updateable="true" />
    <ColAttr Computed="false" DBName="project_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ProjectId" PrimaryKey="true" SqlType="integer" TableName="AvProjectTable" Updateable="true" />
    <ColAttr Computed="false" DBName="artist_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ArtistId" PrimaryKey="false" SqlType="integer" TableName="AvProjectTable" Updateable="true" />
@@ -16,5 +16,6 @@
    <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="false" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="AvProjectTable" Updateable="true" />
    <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="AvProjectTable" Updateable="true" />
    <ColAttr Computed="false" DBName="content_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ContentId" PrimaryKey="false" SqlType="integer" TableName="AvProjectTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="art_work_path" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ArtWorkPath" PrimaryKey="false" SqlType="varchar" TableName="AvProjectTable" Updateable="true" />
 </DataSource>
 
