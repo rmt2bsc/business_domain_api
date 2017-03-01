@@ -53,6 +53,10 @@ public class AvProject extends OrmBean {
   public static final String PROP_CONTENTPATH = "ContentPath";
 /** The property name constant equivalent to property, ProjectComments, of respective DataSource view. */
   public static final String PROP_PROJECTCOMMENTS = "ProjectComments";
+/** The property name constant equivalent to property, ContentFilename, of respective DataSource view. */
+  public static final String PROP_CONTENTFILENAME = "ContentFilename";
+/** The property name constant equivalent to property, ArtWorkFilename, of respective DataSource view. */
+  public static final String PROP_ARTWORKFILENAME = "ArtWorkFilename";
 
 
 
@@ -90,6 +94,10 @@ public class AvProject extends OrmBean {
   private String contentPath;
 /** The javabean property equivalent of database column av_project.project_comments */
   private String projectComments;
+/** The javabean property equivalent of database column av_project.content_filename */
+  private String contentFilename;
+/** The javabean property equivalent of database column av_project.art_work_filename */
+  private String artWorkFilename;
 
 
 
@@ -304,6 +312,30 @@ public class AvProject extends OrmBean {
  */
   public String getProjectComments() {
     return this.projectComments;
+  }
+/**
+ * Sets the value of member variable contentFilename
+ */
+  public void setContentFilename(String value) {
+    this.contentFilename = value;
+  }
+/**
+ * Gets the value of member variable contentFilename
+ */
+  public String getContentFilename() {
+    return this.contentFilename;
+  }
+/**
+ * Sets the value of member variable artWorkFilename
+ */
+  public void setArtWorkFilename(String value) {
+    this.artWorkFilename = value;
+  }
+/**
+ * Gets the value of member variable artWorkFilename
+ */
+  public String getArtWorkFilename() {
+    return this.artWorkFilename;
   }
 /**
  * Stubbed initialization method designed to implemented by developer.
