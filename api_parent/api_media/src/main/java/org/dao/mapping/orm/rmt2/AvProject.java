@@ -49,6 +49,10 @@ public class AvProject extends OrmBean {
   public static final String PROP_CONTENTID = "ContentId";
 /** The property name constant equivalent to property, ArtWorkPath, of respective DataSource view. */
   public static final String PROP_ARTWORKPATH = "ArtWorkPath";
+/** The property name constant equivalent to property, ContentPath, of respective DataSource view. */
+  public static final String PROP_CONTENTPATH = "ContentPath";
+/** The property name constant equivalent to property, ProjectComments, of respective DataSource view. */
+  public static final String PROP_PROJECTCOMMENTS = "ProjectComments";
 
 
 
@@ -82,6 +86,10 @@ public class AvProject extends OrmBean {
   private int contentId;
 /** The javabean property equivalent of database column av_project.art_work_path */
   private String artWorkPath;
+/** The javabean property equivalent of database column av_project.content_path */
+  private String contentPath;
+/** The javabean property equivalent of database column av_project.project_comments */
+  private String projectComments;
 
 
 
@@ -272,6 +280,30 @@ public class AvProject extends OrmBean {
  */
   public String getArtWorkPath() {
     return this.artWorkPath;
+  }
+/**
+ * Sets the value of member variable contentPath
+ */
+  public void setContentPath(String value) {
+    this.contentPath = value;
+  }
+/**
+ * Gets the value of member variable contentPath
+ */
+  public String getContentPath() {
+    return this.contentPath;
+  }
+/**
+ * Sets the value of member variable projectComments
+ */
+  public void setProjectComments(String value) {
+    this.projectComments = value;
+  }
+/**
+ * Gets the value of member variable projectComments
+ */
+  public String getProjectComments() {
+    return this.projectComments;
   }
 /**
  * Stubbed initialization method designed to implemented by developer.
