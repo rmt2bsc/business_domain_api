@@ -344,4 +344,45 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
         this.p.setProjectComments(comments);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#getArtWorkFilename()
+     */
+    @Override
+    public String getArtWorkFilename() {
+        return this.p.getArtWorkFilename();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#setArtWorkFilename(java.lang.String)
+     */
+    @Override
+    public void setArtWorkFilename(String artWorkFilename) {
+        this.p.setArtWorkFilename(artWorkFilename);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#getContentFilename()
+     */
+    @Override
+    public String getContentFilename() {
+        return this.p.getContentFilename();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#setContentFilename(java.lang.String)
+     */
+    @Override
+    public void setContentFilename(String contentFilename) {
+        this.p.setContentFilename(contentFilename);
+
+    }
+
 }

@@ -192,38 +192,72 @@ public interface ProjectDto extends TransactionDto {
     void setContentId(int contentId);
 
     /**
+     * get content path
      * 
      * @return
      */
     String getContentPath();
 
     /**
+     * set content path
      * 
      * @param contentPath
      */
     void setContentPath(String contentPath);
 
     /**
+     * get art work image path
      * 
      * @return
      */
     String getArtWorkPath();
 
     /**
+     * Set art work image path
      * 
      * @param artWorkPath
      */
     void setArtWorkPath(String artWorkPath);
 
     /**
+     * Get comments
      * 
      * @return
      */
     String getComments();
 
     /**
+     * Set comments
      * 
      * @param artWorkPath
      */
     void setComments(String comments);
+
+    /**
+     * Get art work image filename
+     * 
+     * @return
+     */
+    String getArtWorkFilename();
+
+    /**
+     * Set art work image filename
+     * 
+     * @param artWorkFilename
+     */
+    void setArtWorkFilename(String artWorkFilename);
+
+    /**
+     * Get content filename
+     * 
+     * @return
+     */
+    String getContentFilename();
+
+    /**
+     * Set the filename of content
+     * 
+     * @param contentPath
+     */
+    void setContentFilename(String contentFilename);
 }
