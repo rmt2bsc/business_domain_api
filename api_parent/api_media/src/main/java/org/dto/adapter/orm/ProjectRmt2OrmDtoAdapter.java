@@ -284,4 +284,64 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#getContentPath()
+     */
+    @Override
+    public String getContentPath() {
+        return this.p.getContentPath();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#setContentPath(java.lang.String)
+     */
+    @Override
+    public void setContentPath(String contentPath) {
+        this.p.setContentPath(contentPath);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#getArtWorkPath()
+     */
+    @Override
+    public String getArtWorkPath() {
+        return this.p.getArtWorkPath();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#setArtWorkPath(java.lang.String)
+     */
+    @Override
+    public void setArtWorkPath(String artWorkPath) {
+        this.p.setArtWorkPath(artWorkPath);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#getComments()
+     */
+    @Override
+    public String getComments() {
+        return this.p.getProjectComments();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ProjectDto#setComments(java.lang.String)
+     */
+    @Override
+    public void setComments(String comments) {
+        this.p.setProjectComments(comments);
+    }
+
 }

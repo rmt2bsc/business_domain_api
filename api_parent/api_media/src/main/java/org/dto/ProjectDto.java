@@ -191,4 +191,39 @@ public interface ProjectDto extends TransactionDto {
      */
     void setContentId(int contentId);
 
+    /**
+     * 
+     * @return
+     */
+    String getContentPath();
+
+    /**
+     * 
+     * @param contentPath
+     */
+    void setContentPath(String contentPath);
+
+    /**
+     * 
+     * @return
+     */
+    String getArtWorkPath();
+
+    /**
+     * 
+     * @param artWorkPath
+     */
+    void setArtWorkPath(String artWorkPath);
+
+    /**
+     * 
+     * @return
+     */
+    String getComments();
+
+    /**
+     * 
+     * @param artWorkPath
+     */
+    void setComments(String comments);
 }
