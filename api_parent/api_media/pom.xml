@@ -6,7 +6,7 @@
 	<name>Multi-Media API</name>
 	<description>API for maintaining media related data</description>
 	<properties>
-		<mp3LibPath>C:/source/RMT2_Business_Domain_API/api_parent/api_media/lib</mp3LibPath>
+		<mp3LibPath>lib</mp3LibPath>
 	</properties>
 	<parent>
 		<groupId>org.rmt2.api.services</groupId>
@@ -37,28 +37,28 @@
 			<artifactId>mp3.entagged</artifactId>
 			<version>0.35</version>
 			<scope>system</scope>
-			<systemPath>${mp3LibPath}/Entagged-0.35.jar</systemPath>
+			<systemPath>${basedir}/${mp3LibPath}/Entagged-0.35.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>rmt2.mp3.lib</groupId>
 			<artifactId>mp3.jid3</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${mp3LibPath}/JID3.jar</systemPath>
+			<systemPath>${basedir}/${mp3LibPath}/JID3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>rmt2.mp3.lib</groupId>
 			<artifactId>mp3.MP3Tag</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${mp3LibPath}/MP3Tag-0.3.jar</systemPath>
+			<systemPath>${basedir}/${mp3LibPath}/MP3Tag-0.3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>rmt2.mp3.lib</groupId>
 			<artifactId>mp3.myid3</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${mp3LibPath}/myid3.jar</systemPath>
+			<systemPath>${basedir}/${mp3LibPath}/myid3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
