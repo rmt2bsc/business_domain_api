@@ -1,4 +1,4 @@
-# RMT2 Business Domain API
+# Business Domain API
 
 Manages various domain specific API's.  THe following API's are supported by RMT2:
 
