@@ -24,7 +24,7 @@
 			<artifactId>fw-messaging</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.rmt2.messaging.services</groupId>
+			<groupId>org.rmt2.messaging</groupId>
 			<artifactId>ws-dto-model</artifactId>
 		</dependency>
 		<dependency>
