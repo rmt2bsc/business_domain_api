@@ -9,7 +9,7 @@
 		<mp3LibPath>lib</mp3LibPath>
 	</properties>
 	<parent>
-		<groupId>org.rmt2.api.services</groupId>
+		<groupId>org.rmt2.api</groupId>
 		<artifactId>api-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
