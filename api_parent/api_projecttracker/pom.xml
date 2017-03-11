@@ -13,7 +13,7 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.rmt2.framework.suite</groupId>
+			<groupId>org.rmt2.framework</groupId>
 			<artifactId>fw-messaging</artifactId>
 		</dependency>
 		<dependency>
