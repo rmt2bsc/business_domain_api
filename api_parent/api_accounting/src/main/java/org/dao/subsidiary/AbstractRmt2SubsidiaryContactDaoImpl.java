@@ -17,7 +17,7 @@ import org.rmt2.jaxb.RQBusinessContactSearch;
 import org.rmt2.jaxb.RSBusinessContactSearch;
 import org.rmt2.util.JaxbPayloadFactory;
 
-import com.api.messaging.MessageRoutingException;
+import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.messaging.webservice.WebServiceConstants;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.persistence.PersistenceClient;
