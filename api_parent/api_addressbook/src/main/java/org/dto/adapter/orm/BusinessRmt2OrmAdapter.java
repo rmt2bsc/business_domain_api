@@ -1,5 +1,6 @@
 package org.dto.adapter.orm;
 
+import org.dao.contacts.ContactsConst;
 import org.dao.mapping.orm.rmt2.Address;
 import org.dao.mapping.orm.rmt2.Business;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
@@ -48,6 +49,7 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
         this.dateCreated = this.bus.getDateCreated();
         this.dateUpdated = this.bus.getDateUpdated();
         this.updateUserId = this.bus.getUserId();
+        this.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
         return;
     }
 
@@ -68,6 +70,7 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
             bus = new Business();
         }
         this.bus = bus;
+        this.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
     }
 
     /*
