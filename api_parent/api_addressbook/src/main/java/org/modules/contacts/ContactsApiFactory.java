@@ -26,8 +26,6 @@ public class ContactsApiFactory extends RMT2Base {
      * @return an instance of {@link ContactsApi}
      */
     public ContactsApi createApi() {
-        // ContactsApi api = new ContactsApiImpl();
-        // return api;
         return this.createApi(AddressBookConstants.DEFAULT_CONTEXT_NAME);
     }
 
