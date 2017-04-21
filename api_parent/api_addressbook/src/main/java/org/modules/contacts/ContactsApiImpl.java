@@ -32,14 +32,14 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
     /**
      * Default Constructor
      */
-    public ContactsApiImpl() {
+    protected ContactsApiImpl() {
         super();
         this.factory = new ContactsDaoFactory();
         this.appName = null;
         logger.info("logger initialized");
     }
 
-    public ContactsApiImpl(String appName) {
+    protected ContactsApiImpl(String appName) {
         super();
         this.factory = new ContactsDaoFactory();
         this.appName = appName;
