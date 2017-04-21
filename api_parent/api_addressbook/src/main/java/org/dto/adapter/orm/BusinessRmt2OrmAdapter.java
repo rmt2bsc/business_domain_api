@@ -6,6 +6,9 @@ import org.dao.mapping.orm.rmt2.Business;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dto.BusinessContactDto;
 
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
+
 /**
  * Adapts an RMT2 ORM <i>Business</i> and an <i>Address</i> object to an
  * <i>BusinessContactDto</i>.
@@ -331,6 +334,148 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
     @Override
     public String getShortName() {
         return this.bus.getShortname();
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.getAddr1()),
+                HashCodeAssistant.hashObject(this.getAddr2()), HashCodeAssistant.hashObject(this.getAddr1()),
+                HashCodeAssistant.hashObject(this.getAddr4()), HashCodeAssistant.hashObject(this.getAddrId()),
+                HashCodeAssistant.hashObject(this.getCategoryId()), HashCodeAssistant.hashObject(this.getCity()),
+                HashCodeAssistant.hashObject(this.getContactEmail()),
+                HashCodeAssistant.hashObject(this.getContactExt()),
+                HashCodeAssistant.hashObject(this.getContactFirstname()),
+                HashCodeAssistant.hashObject(this.getContactId()),
+                HashCodeAssistant.hashObject(this.getContactLastname()),
+                HashCodeAssistant.hashObject(this.getContactLastname()),
+                HashCodeAssistant.hashObject(this.getContactName()),
+                HashCodeAssistant.hashObject(this.getContactPhone()),
+                HashCodeAssistant.hashObject(this.getContactType()),
+                HashCodeAssistant.hashObject(this.getEntityTypeId()), HashCodeAssistant.hashObject(this.getPhoneCell()),
+                HashCodeAssistant.hashObject(this.getPhoneCompany()), HashCodeAssistant.hashObject(this.getPhoneExt()),
+                HashCodeAssistant.hashObject(this.getPhoneFax()), HashCodeAssistant.hashObject(this.getPhoneHome()),
+                HashCodeAssistant.hashObject(this.getPhonePager()), HashCodeAssistant.hashObject(this.getPhoneWork()),
+                HashCodeAssistant.hashObject(this.getServTypeId()), HashCodeAssistant.hashObject(this.getShortName()),
+                HashCodeAssistant.hashObject(this.getState()), HashCodeAssistant.hashObject(this.getTaxId()),
+                HashCodeAssistant.hashObject(this.getWebsite()), HashCodeAssistant.hashObject(this.getZip()),
+                HashCodeAssistant.hashObject(this.getZipext()), HashCodeAssistant.hashObject(this.getUpdateUserId()),
+                HashCodeAssistant.hashObject(this.getDateCreated()),
+                HashCodeAssistant.hashObject(this.getDateUpdated()));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof BusinessContactDto)) {
+            return false;
+        }
+        final BusinessContactDto other = (BusinessContactDto) obj;
+
+        if (EqualityAssistant.notEqual(this.getAddrId(), other.getAddrId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getAddr1(), other.getAddr1())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getAddr2(), other.getAddr2())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getAddr3(), other.getAddr3())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getAddr4(), other.getAddr4())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getCategoryId(), other.getCategoryId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getCity(), other.getCity())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactEmail(), other.getContactEmail())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactExt(), other.getContactExt())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactFirstname(), other.getContactFirstname())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactId(), other.getContactId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactLastname(), other.getContactLastname())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactName(), other.getContactName())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactPhone(), other.getContactPhone())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getContactType(), other.getContactType())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getEntityTypeId(), other.getEntityTypeId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getPhoneCell(), other.getPhoneCell())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getPhoneCompany(), other.getPhoneCompany())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getPhoneExt(), other.getPhoneExt())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getPhoneFax(), other.getPhoneFax())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getPhoneHome(), other.getPhoneHome())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getPhonePager(), other.getPhonePager())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getPhoneWork(), other.getPhoneWork())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getServTypeId(), other.getServTypeId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getShortName(), other.getShortName())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getState(), other.getState())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getTaxId(), other.getTaxId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getWebsite(), other.getWebsite())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getZip(), other.getZip())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getZipext(), other.getZipext())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getUpdateUserId(), other.getUpdateUserId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getDateCreated(), other.getDateCreated())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getDateUpdated(), other.getDateUpdated())) {
+            return false;
+        }
+        return true;
     }
 
 }
