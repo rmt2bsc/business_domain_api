@@ -116,31 +116,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         }
     }
 
-    private Person getPersonContactOrm(int contactId)
-            throws ContactDaoException {
-        Person criteria = new Person();
-        criteria.addCriteria(Person.PROP_PERSONID, contactId);
-        Person results = null;
-        try {
-            results = (Person) this.client.retrieveObject(criteria);
-            return results;
-        } catch (DatabaseException e) {
-            throw new ContactDaoException(e);
-        }
-    }
 
-    private Business getBusinessContactOrm(int contactId)
-            throws ContactDaoException {
-        Business criteria = new Business();
-        criteria.addCriteria(Business.PROP_BUSINESSID, contactId);
-        Business results = null;
-        try {
-            results = (Business) this.client.retrieveObject(criteria);
-            return results;
-        } catch (DatabaseException e) {
-            throw new ContactDaoException(e);
-        }
-    }
 
     /**
      * Rettieves a list of contacts based on the selection criteria contained in
@@ -416,8 +392,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
 
         List<ContactDto> list = new ArrayList<ContactDto>();
         for (VwBusinessAddress item : results) {
-            ContactDto dto = Rmt2AddressBookDtoFactory
-                    .getBusinessInstance(item);
+            ContactDto dto = Rmt2AddressBookDtoFactory.getBusinessInstance(item);
             list.add(dto);
         }
         return list;
@@ -1281,6 +1256,30 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             this.msg = "Error occurred deleting contact from the business table, "
                     + contactId;
             throw new DatabaseException(this.msg, e);
+        }
+    }
+
+    private Person getPersonContactOrm(int contactId) throws ContactDaoException {
+        Person criteria = new Person();
+        criteria.addCriteria(Person.PROP_PERSONID, contactId);
+        Person results = null;
+        try {
+            results = (Person) this.client.retrieveObject(criteria);
+            return results;
+        } catch (DatabaseException e) {
+            throw new ContactDaoException(e);
+        }
+    }
+
+    private Business getBusinessContactOrm(int contactId) throws ContactDaoException {
+        Business criteria = new Business();
+        criteria.addCriteria(Business.PROP_BUSINESSID, contactId);
+        Business results = null;
+        try {
+            results = (Business) this.client.retrieveObject(criteria);
+            return results;
+        } catch (DatabaseException e) {
+            throw new ContactDaoException(e);
         }
     }
 
