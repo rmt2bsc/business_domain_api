@@ -24,9 +24,9 @@ import org.modules.contacts.ContactsApiException;
 import org.modules.contacts.ContactsApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.BaseDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
-import com.api.persistence.BaseDaoTest;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
