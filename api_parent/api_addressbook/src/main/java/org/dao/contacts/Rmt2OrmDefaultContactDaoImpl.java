@@ -774,7 +774,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
 
         // Get orginal address record and update contents with the input Address
         // instance
-        Address deltaAddr = this.retrieveAddressInfo(addr.getAddrId());
+        Address deltaAddr = this.getAddressInfo(addr.getAddrId());
         this.copyAddressInfo(addr, deltaAddr);
 
         // Apply changes to personal contact record to the database.
@@ -915,9 +915,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         Business deltaContact = this.getBusinessContactOrm(contact
                 .getBusinessId());
         if (deltaContact == null) {
-            throw new NotFoundException(
-                    "Business contact profile not found in database: "
-                            + contact.getBusinessId());
+            throw new NotFoundException("Business contact profile not found in database: " + contact.getBusinessId());
         }
         deltaContact.setBusinessId(contact.getBusinessId());
         deltaContact.setEntityTypeId(contact.getEntityTypeId());
@@ -940,7 +938,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
 
         // Get orginal address record and update contents with the input Address
         // instance
-        Address deltaAddr = this.retrieveAddressInfo(addr.getAddrId());
+        Address deltaAddr = this.getAddressInfo(addr.getAddrId());
         this.copyAddressInfo(addr, deltaAddr);
 
         // Apply changes to business contact record to the database.
@@ -1345,8 +1343,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws ContactDaoException
      *             general database access errors.
      */
-    protected Address retrieveAddressInfo(int addressId)
-            throws ContactDaoException {
+    protected Address getAddressInfo(int addressId) throws ContactDaoException {
         Address criteria = new Address();
         criteria.addCriteria(Address.PROP_ADDRID, addressId);
         try {
