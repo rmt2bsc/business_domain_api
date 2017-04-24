@@ -43,10 +43,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
     private List<VwBusinessAddress> mockAllProfileFetchResponse;
     private List<VwBusinessAddress> mockNotFoundFetchResponse;
     private Business mockBusinessObject;
-    private Business mockBusinessCriteriaObject;
     private Address mockAddressObject;
-    private Address mockAddressCriteriaObject;
-    private BusinessContactDto mockUpdateBusinessDto;
 
     @Override
     public void setUp() throws Exception {
@@ -58,9 +55,6 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
         this.mockBusinessObject = this.createBusinessMockObject();
         this.mockAddressObject = this.createAddressMockObject();
-        this.mockUpdateBusinessDto = this.createMockBusinessContactDto(1351);
-        this.mockBusinessCriteriaObject = this.createBusinessCriteriaMockObject(1351);
-        this.mockAddressCriteriaObject = this.createAddressCriteriaMockObject(2222);
     }
 
     @Override
@@ -221,7 +215,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         return list;
     }
 
-    private BusinessContactDto createMockBusinessContactDto(int contactId) {
+    private BusinessContactDto createMockBusinessContactDto(int contactId, int addressId) {
         Business b = this.createBusinessMockObject();
         b.setBusinessId(contactId);
         b.setContactFirstname("Dennis");
@@ -230,6 +224,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         b.setContactEmail("dennischambers@gmail.com");
 
         Address a = this.createAddressMockObject();
+        a.setAddrId(addressId);
         a.setBusinessId(contactId);
         a.setAddr1("2300 Flora Dr");
         a.setAddr2("Suite 100");
@@ -434,6 +429,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
 
     @Test
     public void testBusinessContactUpdate() {
+        BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.retrieveObject(any(Object.class))).thenReturn(this.mockBusinessObject,
                     this.mockAddressObject);
@@ -442,7 +438,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
             Assert.fail("Business contact update test case failed setting up business and address object calls");
         }
         try {
-            when(this.mockPersistenceClient.updateRow(any(Business.class))).thenReturn(1);
+            when(this.mockPersistenceClient.updateRow(any(Object.class))).thenReturn(1);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("Business contact update test case failed setting up update call");
@@ -451,7 +447,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         int rc = 0;
         try {
-            rc = api.updateContact(this.mockUpdateBusinessDto);
+            rc = api.updateContact(mockUpdateBusinessDto);
         } catch (Exception e) {
             Assert.fail("Business contact update test case failed");
             e.printStackTrace();
@@ -459,4 +455,49 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         Assert.assertEquals(1, rc);
     }
 
+    @Test
+    public void testBusinessContactInsert() {
+        BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(0, 0);
+        try {
+            when(this.mockPersistenceClient.insertRow(any(BusinessContactDto.class), any(Boolean.class)))
+                    .thenReturn(1351);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact insert test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateContact(mockUpdateBusinessDto);
+        } catch (Exception e) {
+            Assert.fail("Business contact insert test case failed");
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1351, rc);
+        Assert.assertEquals(1351, mockUpdateBusinessDto.getContactId());
+        Assert.assertEquals(1351, mockUpdateBusinessDto.getAddrId());
+
+    }
+
+    @Test
+    public void testBusinessContactDelete() {
+        BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class))).thenReturn(1);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteContact(mockUpdateBusinessDto);
+        } catch (Exception e) {
+            Assert.fail("Business contact delete test case failed");
+            e.printStackTrace();
+        }
+        Assert.assertEquals(2, rc);
+    }
 }
