@@ -50,8 +50,7 @@ public interface PostalApi {
      * @return a List of {@link CountryRegionDto} or null if no data is found.
      * @throws PostalApiException
      */
-    List<CountryRegionDto> getCountryRegion(CountryRegionDto criteria)
-            throws PostalApiException;
+    List<CountryRegionDto> getCountryRegion(CountryRegionDto criteria) throws PostalApiException;
 
     /**
      * Obtains a single region (state/province) object by its internal unique
@@ -120,8 +119,7 @@ public interface PostalApi {
      * @return a List of {@link TimeZoneDto}
      * @throws PostalApiException
      */
-    List<TimeZoneDto> getTimezone(TimeZoneDto criteria)
-            throws PostalApiException;
+    List<TimeZoneDto> getTimezone(TimeZoneDto criteria) throws PostalApiException;
 
     /**
      * Obtains the location details for an IP address that is in IPv4 form.

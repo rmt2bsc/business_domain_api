@@ -37,8 +37,7 @@ public interface RegionCountryDao extends DaoClient {
      * @return a List of {@link CountryDto} or null if no data is found.
      * @throws RegionCountryDaoException
      */
-    List<CountryDto> fetchCountry(CountryDto criteria)
-            throws RegionCountryDaoException;
+    List<CountryDto> fetchCountry(CountryDto criteria) throws RegionCountryDaoException;
 
     /**
      * Fetches one or more objects containign both country and region data using
@@ -51,8 +50,7 @@ public interface RegionCountryDao extends DaoClient {
      * @return a List of {@link CountryRegionDto} or null if no data is found.
      * @throws RegionCountryDaoException
      */
-    List<CountryRegionDto> fetchCountryRegion(CountryRegionDto criteria)
-            throws RegionCountryDaoException;
+    List<CountryRegionDto> fetchCountryRegion(CountryRegionDto criteria) throws RegionCountryDaoException;
 
     /**
      * Fetches a single region (state/province) object by its internal unique
@@ -75,8 +73,7 @@ public interface RegionCountryDao extends DaoClient {
      * @return a List of {@link RegionDto} or null if no data is found.
      * @throws RegionCountryDaoException
      */
-    List<RegionDto> fetchRegion(RegionDto criteria)
-            throws RegionCountryDaoException;
+    List<RegionDto> fetchRegion(RegionDto criteria) throws RegionCountryDaoException;
 
     /**
      * Creates a new or modifies an existing region object and persist the

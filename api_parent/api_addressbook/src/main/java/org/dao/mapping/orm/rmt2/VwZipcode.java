@@ -171,18 +171,26 @@ public class VwZipcode extends OrmBean {
      * vw_zipcode.county_fips
      */
     private String countyFips;
-    /** The javabean property equivalent of database column vw_zipcode.time_zone */
+    /**
+     * The javabean property equivalent of database column vw_zipcode.time_zone
+     */
     private int timeZone;
     /**
      * The javabean property equivalent of database column
      * vw_zipcode.day_light_saving
      */
     private String dayLightSaving;
-    /** The javabean property equivalent of database column vw_zipcode.latitude */
+    /**
+     * The javabean property equivalent of database column vw_zipcode.latitude
+     */
     private double latitude;
-    /** The javabean property equivalent of database column vw_zipcode.longitude */
+    /**
+     * The javabean property equivalent of database column vw_zipcode.longitude
+     */
     private double longitude;
-    /** The javabean property equivalent of database column vw_zipcode.elevation */
+    /**
+     * The javabean property equivalent of database column vw_zipcode.elevation
+     */
     private double elevation;
     /** The javabean property equivalent of database column vw_zipcode.msa */
     private double msa;
@@ -190,7 +198,9 @@ public class VwZipcode extends OrmBean {
     private double pmsa;
     /** The javabean property equivalent of database column vw_zipcode.cbsa */
     private double cbsa;
-    /** The javabean property equivalent of database column vw_zipcode.cbsa_div */
+    /**
+     * The javabean property equivalent of database column vw_zipcode.cbsa_div
+     */
     private double cbsaDiv;
     /**
      * The javabean property equivalent of database column
@@ -255,7 +265,9 @@ public class VwZipcode extends OrmBean {
     private String city;
     /** The javabean property equivalent of database column vw_zipcode.state */
     private String state;
-    /** The javabean property equivalent of database column vw_zipcode.area_code */
+    /**
+     * The javabean property equivalent of database column vw_zipcode.area_code
+     */
     private String areaCode;
     /**
      * The javabean property equivalent of database column

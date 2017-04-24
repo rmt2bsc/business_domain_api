@@ -114,7 +114,9 @@ public class Address extends OrmBean {
     private int addrId;
     /** The javabean property equivalent of database column address.person_id */
     private int personId;
-    /** The javabean property equivalent of database column address.business_id */
+    /**
+     * The javabean property equivalent of database column address.business_id
+     */
     private int businessId;
     /** The javabean property equivalent of database column address.addr1 */
     private String addr1;
@@ -128,23 +130,37 @@ public class Address extends OrmBean {
     private int zip;
     /** The javabean property equivalent of database column address.zipext */
     private int zipext;
-    /** The javabean property equivalent of database column address.phone_home */
+    /**
+     * The javabean property equivalent of database column address.phone_home
+     */
     private String phoneHome;
-    /** The javabean property equivalent of database column address.phone_work */
+    /**
+     * The javabean property equivalent of database column address.phone_work
+     */
     private String phoneWork;
     /** The javabean property equivalent of database column address.phone_ext */
     private String phoneExt;
-    /** The javabean property equivalent of database column address.phone_main */
+    /**
+     * The javabean property equivalent of database column address.phone_main
+     */
     private String phoneMain;
-    /** The javabean property equivalent of database column address.phone_cell */
+    /**
+     * The javabean property equivalent of database column address.phone_cell
+     */
     private String phoneCell;
     /** The javabean property equivalent of database column address.phone_fax */
     private String phoneFax;
-    /** The javabean property equivalent of database column address.phone_pager */
+    /**
+     * The javabean property equivalent of database column address.phone_pager
+     */
     private String phonePager;
-    /** The javabean property equivalent of database column address.date_created */
+    /**
+     * The javabean property equivalent of database column address.date_created
+     */
     private java.util.Date dateCreated;
-    /** The javabean property equivalent of database column address.date_updated */
+    /**
+     * The javabean property equivalent of database column address.date_updated
+     */
     private java.util.Date dateUpdated;
     /** The javabean property equivalent of database column address.user_id */
     private String userId;

@@ -175,13 +175,21 @@ public class Zipcode extends OrmBean {
      * zipcode.city_alias_abbr
      */
     private String cityAliasAbbr;
-    /** The javabean property equivalent of database column zipcode.city_type_id */
+    /**
+     * The javabean property equivalent of database column zipcode.city_type_id
+     */
     private String cityTypeId;
-    /** The javabean property equivalent of database column zipcode.county_name */
+    /**
+     * The javabean property equivalent of database column zipcode.county_name
+     */
     private String countyName;
-    /** The javabean property equivalent of database column zipcode.county_fips */
+    /**
+     * The javabean property equivalent of database column zipcode.county_fips
+     */
     private String countyFips;
-    /** The javabean property equivalent of database column zipcode.time_zone_id */
+    /**
+     * The javabean property equivalent of database column zipcode.time_zone_id
+     */
     private int timeZoneId;
     /**
      * The javabean property equivalent of database column

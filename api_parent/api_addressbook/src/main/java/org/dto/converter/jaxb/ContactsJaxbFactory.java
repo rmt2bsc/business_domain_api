@@ -176,13 +176,11 @@ public class ContactsJaxbFactory extends RMT2Base {
      *            List of {@link BusinessContactDto}
      * @return List of {@link com.xml.schema.bindings.BusinessType BusinessType}
      */
-    public List<BusinessType> createBusinessTypeInstance(
-            List<ContactDto> contacts) {
+    public List<BusinessType> createBusinessTypeInstance(List<ContactDto> contacts) {
         List<BusinessType> list = new ArrayList<BusinessType>();
         for (ContactDto item : contacts) {
             if (item instanceof BusinessContactDto) {
-                list.add(this
-                        .createBusinessTypeInstance((BusinessContactDto) item));
+                list.add(this.createBusinessTypeInstance((BusinessContactDto) item));
             }
 
         }
@@ -284,15 +282,13 @@ public class ContactsJaxbFactory extends RMT2Base {
         pt.setLastName(contact.getLastname());
         pt.setMaidenName(contact.getMaidenname());
         pt.setShortName(contact.getContactName());
-        pt.setBirthDate(RMT2Date.formatDate(contact.getBirthDate(),
-                "MM/dd/yyyy"));
+        pt.setBirthDate(RMT2Date.formatDate(contact.getBirthDate(), "MM/dd/yyyy"));
         pt.setEmail(contact.getContactEmail());
         pt.setSsn(contact.getSsn());
 
         // Bind generation
         try {
-            GenerationType gt = GenerationType.fromValue(contact
-                    .getGeneration());
+            GenerationType gt = GenerationType.fromValue(contact.getGeneration());
             pt.setGeneration(gt);
         } catch (Exception e) {
             // ...Do nothing
@@ -343,8 +339,7 @@ public class ContactsJaxbFactory extends RMT2Base {
         ObjectFactory f = new ObjectFactory();
         AddressType at = f.createAddressType();
         at.setAddrId(BigInteger.valueOf(contact.getAddrId()));
-        if (contact.getContactType().equalsIgnoreCase(
-                ContactsConst.CONTACT_TYPE_BUSINESS)) {
+        if (contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS)) {
             at.setBusinessId(BigInteger.valueOf(contact.getContactId()));
         }
         else {
@@ -478,8 +473,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @return an instance of {@link com.xml.schema.bindings.CodeDetailType
      *         CodeDetailType}
      */
-    public CodeDetailType createCodeDetailTypeInstance(int codeId,
-            String shortDesc, String longDesc) {
+    public CodeDetailType createCodeDetailTypeInstance(int codeId, String shortDesc, String longDesc) {
         ObjectFactory f = new ObjectFactory();
         CodeDetailType cdt = f.createCodeDetailType();
         cdt.setCodeId(BigInteger.valueOf(codeId));
@@ -495,8 +489,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param countryCode
      * @return
      */
-    public CountryType createCountryTypeInstance(int id, String countryName,
-            String countryCode) {
+    public CountryType createCountryTypeInstance(int id, String countryName, String countryCode) {
         ObjectFactory f = new ObjectFactory();
         CountryType c = f.createCountryType();
         c.setCountryCode(countryCode);
@@ -586,8 +579,7 @@ public class ContactsJaxbFactory extends RMT2Base {
         ContactsJaxbFactory cf = new ContactsJaxbFactory();
         List<CountryType> list = new ArrayList<CountryType>();
         for (Country src : c) {
-            CountryType ct = cf.createCountryTypeInstance(src.getCountryId(),
-                    src.getName(), src.getCode());
+            CountryType ct = cf.createCountryTypeInstance(src.getCountryId(), src.getName(), src.getCode());
             list.add(ct);
         }
         return list;
@@ -599,8 +591,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param codes
      * @return
      */
-    public static LookupCodeType getLookupCodeTypeInstance(
-            GeneralCodesGroup grp, List<GeneralCodes> codes) {
+    public static LookupCodeType getLookupCodeTypeInstance(GeneralCodesGroup grp, List<GeneralCodes> codes) {
         ObjectFactory f = new ObjectFactory();
         ContactsJaxbFactory cf = new ContactsJaxbFactory();
         LookupCodeType lct = null;
@@ -614,8 +605,7 @@ public class ContactsJaxbFactory extends RMT2Base {
             try {
                 for (int ndx = 0; ndx < codes.size(); ndx++) {
                     GeneralCodes code = codes.get(ndx);
-                    CodeDetailType cdt = cf.createCodeDetailTypeInstance(
-                            code.getCodeId(), code.getShortdesc(),
+                    CodeDetailType cdt = cf.createCodeDetailTypeInstance(code.getCodeId(), code.getShortdesc(),
                             code.getLongdesc());
                     cdt.setLabel(code.getLongdesc());
                     lct.getCode().add(cdt);
@@ -632,8 +622,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param src
      * @return
      */
-    public static List<LookupCodeType> getLookupCodeTypeInstance(
-            List<VwCodes> src) {
+    public static List<LookupCodeType> getLookupCodeTypeInstance(List<VwCodes> src) {
         ObjectFactory f = new ObjectFactory();
         ContactsJaxbFactory cf = new ContactsJaxbFactory();
         List<LookupCodeType> lst = new ArrayList<LookupCodeType>();
@@ -652,14 +641,12 @@ public class ContactsJaxbFactory extends RMT2Base {
 
                 // Build code instances for current group
                 if (code.getCodeId() > 0) {
-                    CodeDetailType cdt = cf.createCodeDetailTypeInstance(
-                            code.getCodeId(), code.getCodeShortdesc(),
+                    CodeDetailType cdt = cf.createCodeDetailTypeInstance(code.getCodeId(), code.getCodeShortdesc(),
                             code.getCodeLongdesc());
                     cdt.setLabel(code.getCodeLongdesc());
                     lct.getCode().add(cdt);
                 }
-                if ((ndx + 1) == src.size()
-                        || src.get(ndx + 1).getGroupId() != prevGrpId) {
+                if ((ndx + 1) == src.size() || src.get(ndx + 1).getGroupId() != prevGrpId) {
                     lst.add(lct);
                 }
             }
@@ -689,8 +676,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param items
      * @return
      */
-    public static List<StateType> getStateTypeInstance(
-            List<VwStateCountry> items) {
+    public static List<StateType> getStateTypeInstance(List<VwStateCountry> items) {
         List<StateType> list = new ArrayList<StateType>();
         for (VwStateCountry item : items) {
             StateType st = ContactsJaxbFactory.getStateTypeInstance(item);
@@ -856,12 +842,10 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param items
      * @return
      */
-    public static List<ZipcodeFullType> getZipFullTypeInstance(
-            List<VwZipcode> items) {
+    public static List<ZipcodeFullType> getZipFullTypeInstance(List<VwZipcode> items) {
         List<ZipcodeFullType> list = new ArrayList<ZipcodeFullType>();
         for (VwZipcode item : items) {
-            ZipcodeFullType z = ContactsJaxbFactory
-                    .getZipFullTypeInstance(item);
+            ZipcodeFullType z = ContactsJaxbFactory.getZipFullTypeInstance(item);
             list.add(z);
         }
         return list;

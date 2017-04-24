@@ -11,8 +11,7 @@ import com.RMT2Constants;
  * @author Roy Terrell
  * 
  */
-class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
-        ZipcodeDto {
+class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements ZipcodeDto {
 
     private LdapZipcode z;
 
@@ -704,8 +703,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setTimeZoneId(int value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -713,8 +711,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public int getTimeZoneId() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -722,8 +719,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setCityAliasAbbr(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -731,8 +727,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getCityAliasAbbr() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -740,8 +735,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setCityTypeId(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -749,8 +743,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getCityTypeId() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -758,8 +751,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setCityTypDescr(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -767,8 +759,7 @@ class ZipCodeLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getCityTypDescr() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
 }

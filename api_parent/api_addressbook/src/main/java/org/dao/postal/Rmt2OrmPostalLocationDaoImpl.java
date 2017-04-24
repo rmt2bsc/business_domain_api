@@ -25,8 +25,7 @@ import com.util.RMT2Utility;
  * @author Roy Terrell
  * 
  */
-class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
-        PostalLocationDao {
+class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements PostalLocationDao {
 
     /**
      * Default constructor.
@@ -57,12 +56,10 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
             if (results == null) {
                 return null;
             }
-            ZipcodeDto dto = Rmt2AddressBookDtoFactory
-                    .getZipCodeInstance(results);
+            ZipcodeDto dto = Rmt2AddressBookDtoFactory.getZipCodeInstance(results);
             return dto;
         } catch (DatabaseException e) {
-            this.msg = "Database access error occurred while fetching zip code record by primary key, "
-                    + uid;
+            this.msg = "Database access error occurred while fetching zip code record by primary key, " + uid;
             throw new ZipcodeDaoException(this.msg, e);
         }
     }
@@ -87,8 +84,7 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
      *             <i>criteria</i> object as being assigned a value.
      */
     @Override
-    public List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria)
-            throws PostalDaoException {
+    public List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria) throws PostalDaoException {
         if (criteria == null) {
             this.msg = "Zip search criteria object is invalid";
             throw new ZipcodeDaoException(this.msg);
@@ -119,10 +115,8 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
         }
 
         // At least one property is required to be set in the criteria object
-        if (!z.isCriteriaAvailable() && !z.isInClauseAvailable()
-                && !z.isCustomCriteriaAvailable()
-                && !z.isLikeClauseAvailable(OrmBean.LIKE_BEGIN)
-                && !z.isLikeClauseAvailable(OrmBean.LIKE_END)
+        if (!z.isCriteriaAvailable() && !z.isInClauseAvailable() && !z.isCustomCriteriaAvailable()
+                && !z.isLikeClauseAvailable(OrmBean.LIKE_BEGIN) && !z.isLikeClauseAvailable(OrmBean.LIKE_END)
                 && !z.isLikeClauseAvailable(OrmBean.LIKE_CONTAINS)) {
             this.msg = "At least one property is required to be set in the zip code search criteria object";
             throw new InvalidZipcodeCriteriaDaoException(this.msg);
@@ -173,12 +167,10 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
             if (results == null) {
                 return null;
             }
-            TimeZoneDto dto = Rmt2AddressBookDtoFactory
-                    .getTimezoneInstance(results);
+            TimeZoneDto dto = Rmt2AddressBookDtoFactory.getTimezoneInstance(results);
             return dto;
         } catch (DatabaseException e) {
-            this.msg = "Database access error occurred while fetching time zone record by primary key, "
-                    + uid;
+            this.msg = "Database access error occurred while fetching time zone record by primary key, " + uid;
             throw new ZipcodeDaoException(this.msg, e);
         }
     }
@@ -198,18 +190,15 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
      *             database access errors.
      */
     @Override
-    public List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria)
-            throws PostalDaoException {
+    public List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria) throws PostalDaoException {
         // Setup selection criteria
         TimeZone tz = new TimeZone();
         if (criteria != null) {
             if (criteria.getTimeZoneId() > 0) {
-                tz.addCriteria(TimeZone.PROP_TIMEZONEID,
-                        criteria.getTimeZoneId());
+                tz.addCriteria(TimeZone.PROP_TIMEZONEID, criteria.getTimeZoneId());
             }
             if (criteria.getTimeZoneDescr() != null) {
-                tz.addLikeClause(TimeZone.PROP_DESCR,
-                        criteria.getTimeZoneDescr());
+                tz.addLikeClause(TimeZone.PROP_DESCR, criteria.getTimeZoneDescr());
             }
         }
 
@@ -229,8 +218,7 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
 
         List<TimeZoneDto> list = new ArrayList<TimeZoneDto>();
         for (TimeZone item : results) {
-            TimeZoneDto dto = Rmt2AddressBookDtoFactory
-                    .getTimezoneInstance(item);
+            TimeZoneDto dto = Rmt2AddressBookDtoFactory.getTimezoneInstance(item);
             list.add(dto);
         }
         return list;
@@ -253,8 +241,7 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
             ipNum = RMT2Utility.convertIp(ip);
             return this.fetchIpInfo(ipNum);
         } catch (Exception e) {
-            this.msg = "Database access error occurred while fetching IP Location record by IP Adderss: "
-                    + ip;
+            this.msg = "Database access error occurred while fetching IP Location record by IP Adderss: " + ip;
             throw new IpDaoException(this.msg, e);
         }
     }
@@ -295,13 +282,11 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
             loc.addCriteria(IpLocation.PROP_LOCID, blk.getIpLoc());
             loc = (IpLocation) this.client.retrieveObject(loc);
         } catch (DatabaseException e) {
-            this.msg = "Database access error occurred while fetching IP Location record by IP number: "
-                    + ip;
+            this.msg = "Database access error occurred while fetching IP Location record by IP number: " + ip;
             throw new IpDaoException(this.msg, e);
         }
 
-        IpLocationDto dto = Rmt2AddressBookDtoFactory
-                .getIpLocationInstance(loc);
+        IpLocationDto dto = Rmt2AddressBookDtoFactory.getIpLocationInstance(loc);
         return dto;
     }
 

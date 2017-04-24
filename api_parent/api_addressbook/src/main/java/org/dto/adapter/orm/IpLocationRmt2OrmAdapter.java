@@ -12,8 +12,7 @@ import com.api.foundation.TransactionDtoImpl;
  * @author rterrell
  * 
  */
-class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements
-        IpLocationDto {
+class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationDto {
 
     private IpLocation ip;
 
@@ -217,8 +216,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setIpRangeId(int value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -226,8 +224,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public int getIpRangeId() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
 }

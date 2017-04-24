@@ -48,7 +48,9 @@ public class State extends OrmBean {
     private int countryId;
     /** The javabean property equivalent of database column state.state_name */
     private String stateName;
-    /** The javabean property equivalent of database column state.stt_void_ind */
+    /**
+     * The javabean property equivalent of database column state.stt_void_ind
+     */
     private String sttVoidInd;
 
     // Getter/Setter Methods

@@ -22,8 +22,7 @@ import com.util.RMT2Money;
  */
 class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi {
 
-    private static final Logger logger = Logger
-            .getLogger(ContactsApiImpl.class);
+    private static final Logger logger = Logger.getLogger(ContactsApiImpl.class);
 
     private ContactsDaoFactory factory;
 
@@ -67,9 +66,7 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
         dao.setDaoUser(this.apiUser);
         try {
             List<ContactDto> results = dao.fetchContact();
-            this.msg = "Successfully retrieved "
-                    + (results == null ? 0 : results.size())
-                    + " generic contacts";
+            this.msg = "Successfully retrieved " + (results == null ? 0 : results.size()) + " generic contacts";
             logger.info(this.msg);
             return results;
         } catch (ContactDaoException e) {
@@ -102,13 +99,11 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
         dao.setDaoUser(this.apiUser);
         try {
             ContactDto results = dao.fetchContact(contactId);
-            this.msg = "Successfully retrieved contact details for contact, "
-                    + contactId;
+            this.msg = "Successfully retrieved contact details for contact, " + contactId;
             logger.info(this.msg);
             return results;
         } catch (ContactDaoException e) {
-            this.msg = "Error retrieving generic contact by contact id, "
-                    + contactId;
+            this.msg = "Error retrieving generic contact by contact id, " + contactId;
             logger.error(this.msg, e);
             throw new ContactDaoException(this.msg, e);
         } finally {
@@ -134,8 +129,7 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      *             id's in <i>busIdList</i> are non numeric
      */
     @Override
-    public List<BusinessContactDto> getBusinessContact(List<String> busIdList)
-            throws ContactsApiException {
+    public List<BusinessContactDto> getBusinessContact(List<String> busIdList) throws ContactsApiException {
         if (busIdList == null || busIdList.size() <= 0) {
             this.msg = "A list of business id's are required";
             logger.error(this.msg);
@@ -146,8 +140,7 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
         // the method
         for (String item : busIdList) {
             if (!RMT2Money.isNumeric(item)) {
-                this.msg = "Error obtaining generic contacts due to non-numeric business id, "
-                        + item;
+                this.msg = "Error obtaining generic contacts due to non-numeric business id, " + item;
                 logger.error(this.msg);
                 throw new ContactsApiException(this.msg);
             }
@@ -156,8 +149,7 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
         ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
-            List<BusinessContactDto> results = dao
-                    .fetchBusinessContact(busIdList);
+            List<BusinessContactDto> results = dao.fetchBusinessContact(busIdList);
             this.msg = "Successfully retrieved list of contacts by one or more business id's";
             logger.info(this.msg);
             return results;
@@ -189,8 +181,7 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      *             general data access error
      */
     @Override
-    public List<ContactDto> getContact(ContactDto criteria)
-            throws ContactsApiException {
+    public List<ContactDto> getContact(ContactDto criteria) throws ContactsApiException {
         ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
@@ -225,19 +216,16 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      *             general data access error
      */
     @Override
-    public int updateContact(ContactDto contact)
-            throws ContactUpdateDaoException {
+    public int updateContact(ContactDto contact) throws ContactUpdateDaoException {
         ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainContact(contact);
-            this.msg = "Update was successfully performed for contact, "
-                    + contact.getContactId();
+            this.msg = "Update was successfully performed for contact, " + contact.getContactId();
             logger.info(this.msg);
             return rc;
         } catch (ContactDaoException e) {
-            this.msg = "Error occurred updating contact, "
-                    + contact.getContactName();
+            this.msg = "Error occurred updating contact, " + contact.getContactName();
             logger.error(this.msg, e);
             throw new ContactDaoException(this.msg, e);
         } finally {
@@ -266,19 +254,16 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      *             general data access error
      */
     @Override
-    public int deleteContact(ContactDto contact)
-            throws ContactUpdateDaoException {
+    public int deleteContact(ContactDto contact) throws ContactUpdateDaoException {
         ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.deleteContact(contact);
-            this.msg = "Delete was successfully performed for contact, "
-                    + contact.getContactId();
+            this.msg = "Delete was successfully performed for contact, " + contact.getContactId();
             logger.info(this.msg);
             return rc;
         } catch (ContactDaoException e) {
-            this.msg = "Error occurred deleting contact, "
-                    + contact.getContactName();
+            this.msg = "Error occurred deleting contact, " + contact.getContactName();
             logger.error(this.msg, e);
             throw new ContactDaoException(this.msg, e);
         } finally {

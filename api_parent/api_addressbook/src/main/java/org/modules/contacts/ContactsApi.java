@@ -56,8 +56,7 @@ public interface ContactsApi extends TransactionApi {
      *         is found.
      * @throws ContactsApiException
      */
-    List<BusinessContactDto> getBusinessContact(List<String> businessId)
-            throws ContactsApiException;
+    List<BusinessContactDto> getBusinessContact(List<String> businessId) throws ContactsApiException;
 
     /**
      * Obtains one or more contact objects based on the selection criteria
@@ -75,8 +74,7 @@ public interface ContactsApi extends TransactionApi {
      * @return a List of {@link ContactDto} objects or null if no data is found.
      * @throws ContactsApiException
      */
-    List<ContactDto> getContact(ContactDto criteria)
-            throws ContactsApiException;
+    List<ContactDto> getContact(ContactDto criteria) throws ContactsApiException;
 
     /**
      * Creates a new or modifies an existing contact object.

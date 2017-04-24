@@ -37,8 +37,7 @@ public interface PostalLocationDao extends DaoClient {
      * @return a List of {@link ZipcodeDto}
      * @throws PostalDaoException
      */
-    List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria)
-            throws PostalDaoException;
+    List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria) throws PostalDaoException;
 
     /**
      * Fetches a time zone entry by using its internal unique id.
@@ -62,8 +61,7 @@ public interface PostalLocationDao extends DaoClient {
      * @return a List of {@link TimeZoneDto}
      * @throws PostalDaoException
      */
-    List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria)
-            throws PostalDaoException;
+    List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria) throws PostalDaoException;
 
     /**
      * Fetch the location details for an IP address that is in IPv4 form.

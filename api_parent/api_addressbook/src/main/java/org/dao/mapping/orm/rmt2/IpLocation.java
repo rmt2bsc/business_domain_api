@@ -61,11 +61,17 @@ public class IpLocation extends OrmBean {
      */
     public static final String PROP_AREACODE = "AreaCode";
 
-    /** The javabean property equivalent of database column ip_location.loc_id */
+    /**
+     * The javabean property equivalent of database column ip_location.loc_id
+     */
     private int locId;
-    /** The javabean property equivalent of database column ip_location.country */
+    /**
+     * The javabean property equivalent of database column ip_location.country
+     */
     private String country;
-    /** The javabean property equivalent of database column ip_location.region */
+    /**
+     * The javabean property equivalent of database column ip_location.region
+     */
     private String region;
     /** The javabean property equivalent of database column ip_location.city */
     private String city;
@@ -74,7 +80,9 @@ public class IpLocation extends OrmBean {
      * ip_location.postal_code
      */
     private String postalCode;
-    /** The javabean property equivalent of database column ip_location.latitude */
+    /**
+     * The javabean property equivalent of database column ip_location.latitude
+     */
     private double latitude;
     /**
      * The javabean property equivalent of database column ip_location.longitude

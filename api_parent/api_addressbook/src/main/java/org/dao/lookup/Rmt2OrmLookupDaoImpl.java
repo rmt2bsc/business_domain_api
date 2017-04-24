@@ -24,8 +24,7 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
-        LookupDao {
+public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDao {
 
     /**
      * Default constructor.
@@ -89,8 +88,7 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
      * @throws LookupDaoException
      */
     @Override
-    public List<LookupCodeDto> fetchCode(LookupCodeDto criteria)
-            throws LookupDaoException {
+    public List<LookupCodeDto> fetchCode(LookupCodeDto criteria) throws LookupDaoException {
         GeneralCodes c = new GeneralCodes();
         if (criteria != null) {
             if (criteria.getCodeId() > 0) {
@@ -100,12 +98,10 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
                 c.addCriteria(GeneralCodes.PROP_CODEGRPID, criteria.getGrpId());
             }
             if (criteria.getCodeShortName() != null) {
-                c.addLikeClause(GeneralCodes.PROP_SHORTDESC,
-                        criteria.getCodeShortName());
+                c.addLikeClause(GeneralCodes.PROP_SHORTDESC, criteria.getCodeShortName());
             }
             if (criteria.getCodeLongName() != null) {
-                c.addLikeClause(GeneralCodes.PROP_LONGDESC,
-                        criteria.getCodeLongName());
+                c.addLikeClause(GeneralCodes.PROP_LONGDESC, criteria.getCodeLongName());
             }
         }
 
@@ -173,17 +169,14 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
      * @throws LookupDaoException
      */
     @Override
-    public List<LookupGroupDto> fetchGroup(LookupGroupDto criteria)
-            throws LookupDaoException {
+    public List<LookupGroupDto> fetchGroup(LookupGroupDto criteria) throws LookupDaoException {
         GeneralCodesGroup c = new GeneralCodesGroup();
         if (criteria != null) {
             if (criteria.getGrpId() > 0) {
-                c.addCriteria(GeneralCodesGroup.PROP_CODEGRPID,
-                        criteria.getGrpId());
+                c.addCriteria(GeneralCodesGroup.PROP_CODEGRPID, criteria.getGrpId());
             }
             if (criteria.getGrpDescr() != null) {
-                c.addLikeClause(GeneralCodesGroup.PROP_DESCRIPTION,
-                        criteria.getGrpDescr());
+                c.addLikeClause(GeneralCodesGroup.PROP_DESCRIPTION, criteria.getGrpDescr());
             }
         }
 
@@ -199,8 +192,7 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
 
         List<LookupGroupDto> list = new ArrayList<LookupGroupDto>();
         for (GeneralCodesGroup item : results) {
-            LookupGroupDto dto = Rmt2AddressBookDtoFactory
-                    .getCodeInstance(item);
+            LookupGroupDto dto = Rmt2AddressBookDtoFactory.getCodeInstance(item);
             list.add(dto);
         }
         return list;
@@ -220,20 +212,17 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
      * @throws LookupDaoException
      */
     @Override
-    public List<LookupExtDto> fetchCodeExt(LookupExtDto criteria)
-            throws LookupDaoException {
+    public List<LookupExtDto> fetchCodeExt(LookupExtDto criteria) throws LookupDaoException {
         VwCodes c = new VwCodes();
         if (criteria != null) {
             if (criteria.getCodeId() > 0) {
                 c.addCriteria(VwCodes.PROP_CODEID, criteria.getCodeId());
             }
             if (criteria.getCodeShortName() != null) {
-                c.addLikeClause(VwCodes.PROP_CODESHORTDESC,
-                        criteria.getCodeShortName());
+                c.addLikeClause(VwCodes.PROP_CODESHORTDESC, criteria.getCodeShortName());
             }
             if (criteria.getCodeLongName() != null) {
-                c.addLikeClause(VwCodes.PROP_CODELONGDESC,
-                        criteria.getCodeLongName());
+                c.addLikeClause(VwCodes.PROP_CODELONGDESC, criteria.getCodeLongName());
             }
             if (criteria.getGrpId() > 0) {
                 c.addCriteria(VwCodes.PROP_GROUPID, criteria.getGrpId());
@@ -308,8 +297,7 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
      * @return The primary key of the table row added.
      * @throws LookupUpdateDaoException
      */
-    private int insertGroup(GeneralCodesGroup obj)
-            throws LookupUpdateDaoException {
+    private int insertGroup(GeneralCodesGroup obj) throws LookupUpdateDaoException {
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateCreated(ut.getDateCreated());
@@ -334,13 +322,11 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
      * @return The total number of rows effected by the transaction.
      * @throws LookupUpdateDaoException
      */
-    private int updateGroup(GeneralCodesGroup obj)
-            throws LookupUpdateDaoException {
+    private int updateGroup(GeneralCodesGroup obj) throws LookupUpdateDaoException {
         try {
             GeneralCodesGroup origRec = this.getRmt2Group(obj.getCodeGrpId());
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
-            obj.addCriteria(GeneralCodesGroup.PROP_CODEGRPID,
-                    obj.getCodeGrpId());
+            obj.addCriteria(GeneralCodesGroup.PROP_CODEGRPID, obj.getCodeGrpId());
             obj.setDateCreated(origRec.getDateCreated());
             obj.setDateUpdated(ut.getDateCreated());
             obj.setUserId(ut.getLoginId());
@@ -366,15 +352,12 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
      *             <li>The description is null</li>
      *             </ol>
      */
-    protected void validateGroup(LookupGroupDto group)
-            throws InvalidLookupDataDaoException {
+    protected void validateGroup(LookupGroupDto group) throws InvalidLookupDataDaoException {
         if (group == null) {
-            throw new InvalidLookupDataDaoException(
-                    "General codes group object cannot be null");
+            throw new InvalidLookupDataDaoException("General codes group object cannot be null");
         }
         if (group.getGrpDescr() == null || group.getGrpDescr().length() <= 0) {
-            throw new InvalidLookupDataDaoException(
-                    "Group description is required");
+            throw new InvalidLookupDataDaoException("Group description is required");
         }
     }
 
@@ -511,20 +494,16 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements
      *             least one must exists.</li>
      *             </ol>
      */
-    protected void validateCode(LookupCodeDto lookup)
-            throws InvalidLookupDataDaoException {
+    protected void validateCode(LookupCodeDto lookup) throws InvalidLookupDataDaoException {
         if (lookup == null) {
-            throw new InvalidLookupDataDaoException(
-                    "General lookup object is invalid");
+            throw new InvalidLookupDataDaoException("General lookup object is invalid");
         }
         if (lookup.getGrpId() <= 0) {
             throw new InvalidLookupDataDaoException(
                     "lookup group id is required and must be a value greater than zero");
         }
-        if ((lookup.getCodeShortName() == null || lookup.getCodeShortName()
-                .length() <= 0)
-                && (lookup.getCodeLongName() == null || lookup
-                        .getCodeLongName().length() <= 0)) {
+        if ((lookup.getCodeShortName() == null || lookup.getCodeShortName().length() <= 0)
+                && (lookup.getCodeLongName() == null || lookup.getCodeLongName().length() <= 0)) {
             throw new InvalidLookupDataDaoException(
                     "General lookup object must have either a short or long descripton");
         }

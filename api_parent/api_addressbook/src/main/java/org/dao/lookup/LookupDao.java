@@ -39,8 +39,7 @@ public interface LookupDao extends DaoClient {
      * @return a List of {@link LookupCodeDto}
      * @throws LookupDaoException
      */
-    List<LookupCodeDto> fetchCode(LookupCodeDto criteria)
-            throws LookupDaoException;
+    List<LookupCodeDto> fetchCode(LookupCodeDto criteria) throws LookupDaoException;
 
     /**
      * Fetches a Genreal Code Group using primary key
@@ -64,8 +63,7 @@ public interface LookupDao extends DaoClient {
      * @return a List of {@link LookupGroupDto}
      * @throws LookupDaoException
      */
-    List<LookupGroupDto> fetchGroup(LookupGroupDto criteria)
-            throws LookupDaoException;
+    List<LookupGroupDto> fetchGroup(LookupGroupDto criteria) throws LookupDaoException;
 
     /**
      * Fetches a list of extension lookup objects containg both lookup group and
@@ -81,8 +79,7 @@ public interface LookupDao extends DaoClient {
      * @return a List of {@link LookupExtDto}
      * @throws LookupDaoException
      */
-    List<LookupExtDto> fetchCodeExt(LookupExtDto criteria)
-            throws LookupDaoException;
+    List<LookupExtDto> fetchCodeExt(LookupExtDto criteria) throws LookupDaoException;
 
     /**
      * Creates a new or modifies an existing general lookup group object

@@ -15,8 +15,7 @@ import org.dto.PersonalContactDto;
  * @author Roy Terrell
  * 
  */
-class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
-        PersonalContactDto {
+class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalContactDto {
     private Person per;
 
     /**

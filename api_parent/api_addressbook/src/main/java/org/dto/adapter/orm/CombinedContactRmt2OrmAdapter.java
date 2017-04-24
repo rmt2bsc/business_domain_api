@@ -10,8 +10,7 @@ import org.dto.ContactDto;
  * @author rterrell
  * 
  */
-public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter
-        implements ContactDto {
+public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements ContactDto {
 
     private VwCommonContact src;
 

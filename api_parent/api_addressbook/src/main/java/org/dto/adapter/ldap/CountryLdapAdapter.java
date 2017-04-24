@@ -12,8 +12,7 @@ import com.RMT2RuntimeException;
  * @author Roy Terrell
  * 
  */
-class CountryLdapAdapter extends AbstractAddressBookLdapAdapter implements
-        CountryDto {
+class CountryLdapAdapter extends AbstractAddressBookLdapAdapter implements CountryDto {
 
     private LdapCountry c;
 
@@ -54,8 +53,7 @@ class CountryLdapAdapter extends AbstractAddressBookLdapAdapter implements
         try {
             return Integer.parseInt(this.c.getCountryId());
         } catch (NumberFormatException e) {
-            throw new RMT2RuntimeException("Country id must be numeric: "
-                    + this.c.getCountryId());
+            throw new RMT2RuntimeException("Country id must be numeric: " + this.c.getCountryId());
         }
     }
 
@@ -106,8 +104,7 @@ class CountryLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setCountryPermcol(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -117,8 +114,7 @@ class CountryLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getCountryPermcol() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
 }

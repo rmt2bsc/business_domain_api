@@ -16,8 +16,7 @@ import com.util.assistants.HashCodeAssistant;
  * @author rterrell
  * 
  */
-class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
-        BusinessContactDto {
+class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessContactDto {
 
     private Business bus;
 

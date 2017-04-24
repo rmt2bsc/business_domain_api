@@ -42,7 +42,9 @@ public class VwCodes extends OrmBean {
 
     /** The javabean property equivalent of database column vw_codes.group_id */
     private int groupId;
-    /** The javabean property equivalent of database column vw_codes.group_desc */
+    /**
+     * The javabean property equivalent of database column vw_codes.group_desc
+     */
     private String groupDesc;
     /** The javabean property equivalent of database column vw_codes.code_id */
     private int codeId;

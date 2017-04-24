@@ -136,13 +136,19 @@ public class Person extends OrmBean {
     private String ssn;
     /** The javabean property equivalent of database column person.email */
     private String email;
-    /** The javabean property equivalent of database column person.date_created */
+    /**
+     * The javabean property equivalent of database column person.date_created
+     */
     private java.util.Date dateCreated;
-    /** The javabean property equivalent of database column person.date_updated */
+    /**
+     * The javabean property equivalent of database column person.date_updated
+     */
     private java.util.Date dateUpdated;
     /** The javabean property equivalent of database column person.user_id */
     private String userId;
-    /** The javabean property equivalent of database column person.category_id */
+    /**
+     * The javabean property equivalent of database column person.category_id
+     */
     private int categoryId;
 
     // Getter/Setter Methods

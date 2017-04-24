@@ -35,7 +35,9 @@ public class Country extends OrmBean {
      */
     public static final String PROP_CODE = "Code";
 
-    /** The javabean property equivalent of database column country.country_id */
+    /**
+     * The javabean property equivalent of database column country.country_id
+     */
     private int countryId;
     /** The javabean property equivalent of database column country.name */
     private String name;

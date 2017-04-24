@@ -15,8 +15,7 @@ import com.api.foundation.TransactionDtoImpl;
  * @author rterrell
  * 
  */
-public class AddressRmt2OrmAdapter extends TransactionDtoImpl implements
-        AddressDto {
+public class AddressRmt2OrmAdapter extends TransactionDtoImpl implements AddressDto {
 
     protected Address src;
 
@@ -49,12 +48,10 @@ public class AddressRmt2OrmAdapter extends TransactionDtoImpl implements
             this.src.setAddrId(contact.getAddrId());
             this.contactType = contact.getContactType();
             if (contact.getContactType() != null) {
-                if (contact.getContactType().equalsIgnoreCase(
-                        ContactsConst.CONTACT_TYPE_PERSONAL)) {
+                if (contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)) {
                     this.src.setPersonId(contact.getContactId());
                 }
-                if (contact.getContactType().equalsIgnoreCase(
-                        ContactsConst.CONTACT_TYPE_BUSINESS)) {
+                if (contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS)) {
                     this.src.setBusinessId(contact.getContactId());
                 }
             }

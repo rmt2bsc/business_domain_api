@@ -22,8 +22,7 @@ import com.api.persistence.DatabaseException;
  * @author rterrell
  * 
  */
-class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
-        RegionCountryDao {
+class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCountryDao {
 
     /**
      * Default constructor
@@ -82,8 +81,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
      * @throws RegionCountryDaoException
      */
     @Override
-    public List<RegionDto> fetchRegion(RegionDto criteria)
-            throws RegionCountryDaoException {
+    public List<RegionDto> fetchRegion(RegionDto criteria) throws RegionCountryDaoException {
         State s = new State();
         if (criteria != null) {
             if (criteria.getStateId() > 0) {
@@ -140,8 +138,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
                 return null;
             }
         } catch (DatabaseException e) {
-            this.msg = "Database access error occurred while fetching single country record by primary key, "
-                    + uid;
+            this.msg = "Database access error occurred while fetching single country record by primary key, " + uid;
             throw new RegionCountryDaoException(this.msg, e);
         }
         CountryDto dto = Rmt2AddressBookDtoFactory.getCountryInstance(c);
@@ -164,8 +161,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
      * @throws RegionCountryDaoException
      */
     @Override
-    public List<CountryDto> fetchCountry(CountryDto criteria)
-            throws RegionCountryDaoException {
+    public List<CountryDto> fetchCountry(CountryDto criteria) throws RegionCountryDaoException {
         Country s = new Country();
         if (criteria != null) {
             if (criteria.getCountryId() > 0) {
@@ -215,8 +211,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
      * @throws RegionCountryDaoException
      */
     @Override
-    public List<CountryRegionDto> fetchCountryRegion(CountryRegionDto criteria)
-            throws RegionCountryDaoException {
+    public List<CountryRegionDto> fetchCountryRegion(CountryRegionDto criteria) throws RegionCountryDaoException {
         VwStateCountry s = new VwStateCountry();
         if (criteria != null) {
             if (criteria.getCountryId() > 0) {
@@ -250,8 +245,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
 
         List<CountryRegionDto> list = new ArrayList<CountryRegionDto>();
         for (VwStateCountry item : results) {
-            CountryRegionDto dto = Rmt2AddressBookDtoFactory
-                    .getCountryRegionInstance(item);
+            CountryRegionDto dto = Rmt2AddressBookDtoFactory.getCountryRegionInstance(item);
             list.add(dto);
         }
         return list;
@@ -347,8 +341,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
      *             if <i>obj</i> is null or <i>state code</i>, <i>state name</i>
      *             and/or <i>country id</i> have not been assinged a value.
      */
-    protected void validateRegion(RegionDto obj)
-            throws InvalidRegionDataDaoException {
+    protected void validateRegion(RegionDto obj) throws InvalidRegionDataDaoException {
         if (obj == null) {
             this.msg = "Region instance cannot be null for insert/update operations";
             throw new InvalidRegionDataDaoException(this.msg);
@@ -489,8 +482,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements
      *             if <i>obj</i> is null or <i>country name</i> does not been
      *             assinged a value.
      */
-    protected void validate(CountryDto obj)
-            throws InvalidRegionDataDaoException {
+    protected void validate(CountryDto obj) throws InvalidRegionDataDaoException {
         if (obj == null) {
             this.msg = "Country instance cannot be null for insert/update operations";
             throw new InvalidRegionDataDaoException(this.msg);

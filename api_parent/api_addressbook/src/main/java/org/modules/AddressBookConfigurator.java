@@ -14,8 +14,7 @@ import com.util.RMT2File;
  * @author appdev
  *
  */
-public class AddressBookConfigurator extends
-        AbstractApiConfiguratorPropertiesImpl {
+public class AddressBookConfigurator extends AbstractApiConfiguratorPropertiesImpl {
 
     private static Logger logger;
 
@@ -45,13 +44,11 @@ public class AddressBookConfigurator extends
     @Override
     protected void setupLogger() {
         // Setup Logging environment
-        String logPath = this.config
-                .getString(ConfigConstants.API_LOGGER_CONFIG_PATH_KEY);
+        String logPath = this.config.getString(ConfigConstants.API_LOGGER_CONFIG_PATH_KEY);
         Properties prop = RMT2File.loadPropertiesFromClasspath(logPath);
         PropertyConfigurator.configure(prop);
         logger = Logger.getLogger(AddressBookConfigurator.class);
-        logger.info("Logger initialized locally for application, "
-                + this.appName);
+        logger.info("Logger initialized locally for application, " + this.appName);
 
     }
 

@@ -36,7 +36,9 @@ public class UserConnectXref extends OrmBean {
      */
     public static final String PROP_APPUSERID = "AppUserId";
 
-    /** The javabean property equivalent of database column user_connect_xref.id */
+    /**
+     * The javabean property equivalent of database column user_connect_xref.id
+     */
     private int id;
     /**
      * The javabean property equivalent of database column

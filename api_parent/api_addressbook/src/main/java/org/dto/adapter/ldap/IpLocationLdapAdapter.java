@@ -53,8 +53,7 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
             try {
                 value = Integer.parseInt(this.ip.getIpLocId());
             } catch (NumberFormatException e) {
-                throw new RuntimeException("ipLocId value is not numeric: "
-                        + this.ip.getIpLocId());
+                throw new RuntimeException("ipLocId value is not numeric: " + this.ip.getIpLocId());
             }
         }
         return value;
@@ -82,8 +81,7 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
             try {
                 value = Integer.parseInt(this.ip.getIpRangeId());
             } catch (NumberFormatException e) {
-                throw new RuntimeException("ipRangeId value is not numeric: "
-                        + this.ip.getIpRangeId());
+                throw new RuntimeException("ipRangeId value is not numeric: " + this.ip.getIpRangeId());
             }
         }
         return value;
@@ -191,8 +189,7 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
             try {
                 value = Double.parseDouble(this.ip.getIpLatitude());
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Lattitude value is not numeric: "
-                        + this.ip.getIpLatitude());
+                throw new RuntimeException("Lattitude value is not numeric: " + this.ip.getIpLatitude());
             }
         }
         return value;
@@ -220,8 +217,7 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
             try {
                 value = Double.parseDouble(this.ip.getIpLongitude());
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Longitude value is not numeric: "
-                        + this.ip.getIpLongitude());
+                throw new RuntimeException("Longitude value is not numeric: " + this.ip.getIpLongitude());
             }
         }
         return value;

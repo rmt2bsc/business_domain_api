@@ -15,8 +15,7 @@ import com.api.foundation.TransactionDtoImpl;
  * @author rterrell
  * 
  */
-public class AddressJaxbAdapter extends TransactionDtoImpl implements
-        AddressDto {
+public class AddressJaxbAdapter extends TransactionDtoImpl implements AddressDto {
 
     protected ObjectFactory f;
 

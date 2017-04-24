@@ -75,8 +75,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      * @return an instance of {@link BusinessContactDto}.
      */
     public static final BusinessContactDto getNewBusinessInstance() {
-        BusinessContactDto dto = Rmt2AddressBookDtoFactory.getBusinessInstance(
-                null, null);
+        BusinessContactDto dto = Rmt2AddressBookDtoFactory.getBusinessInstance(null, null);
         dto.setEntityTypeId(-100);
         dto.setServTypeId(-110);
         return dto;
@@ -90,8 +89,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      *            an instance of {@link VwBusinessAddress}
      * @return an instance of {@link BusinessContactDto}
      */
-    public static final BusinessContactDto getBusinessInstance(
-            VwBusinessAddress bus) {
+    public static final BusinessContactDto getBusinessInstance(VwBusinessAddress bus) {
         BusinessContactDto dto = new BusinessRmt2OrmAdapter(bus);
         return dto;
     }
@@ -106,8 +104,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      *            an instance of {@link Address}
      * @return an instance of {@link BusinessContactDto}
      */
-    public static final BusinessContactDto getBusinessInstance(Business bus,
-            Address addr) {
+    public static final BusinessContactDto getBusinessInstance(Business bus, Address addr) {
         BusinessContactDto dto = new BusinessRmt2OrmAdapter(bus, addr);
         return dto;
     }
@@ -144,8 +141,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      *            an instance of {@link Address}
      * @return an instance of {@link PersonalContactDto}
      */
-    public static final PersonalContactDto getPersonInstance(Person per,
-            Address addr) {
+    public static final PersonalContactDto getPersonInstance(Person per, Address addr) {
         PersonalContactDto dto = new PersonalRmt2OrmAdapter(per, addr);
         return dto;
     }
@@ -207,8 +203,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      *            an instance of {@link CityType}
      * @return an instance of {@link ZipcodeDto}
      */
-    public static final ZipcodeDto getZipCodeInstance(Zipcode zip,
-            TimeZone timeZone, CityType cityType) {
+    public static final ZipcodeDto getZipCodeInstance(Zipcode zip, TimeZone timeZone, CityType cityType) {
         ZipcodeDto dto = new PostalDataRmt2OrmAdapter(zip, timeZone, cityType);
         return dto;
     }
@@ -325,8 +320,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      *            an instance of {@link VwStateCountry}
      * @return an instance of {@link CountryRegionDto}
      */
-    public static final CountryRegionDto getCountryRegionInstance(
-            VwStateCountry vwsc) {
+    public static final CountryRegionDto getCountryRegionInstance(VwStateCountry vwsc) {
         CountryRegionDto dto = new PostalDataRmt2OrmAdapter(vwsc);
         return dto;
     }

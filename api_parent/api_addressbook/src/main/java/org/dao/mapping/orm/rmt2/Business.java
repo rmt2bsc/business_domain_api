@@ -96,7 +96,9 @@ public class Business extends OrmBean {
      */
     public static final String PROP_CATEGORYID = "CategoryId";
 
-    /** The javabean property equivalent of database column business.business_id */
+    /**
+     * The javabean property equivalent of database column business.business_id
+     */
     private int businessId;
     /**
      * The javabean property equivalent of database column
@@ -109,7 +111,9 @@ public class Business extends OrmBean {
     private int servTypeId;
     /** The javabean property equivalent of database column business.longname */
     private String longname;
-    /** The javabean property equivalent of database column business.shortname */
+    /**
+     * The javabean property equivalent of database column business.shortname
+     */
     private String shortname;
     /**
      * The javabean property equivalent of database column
@@ -126,7 +130,9 @@ public class Business extends OrmBean {
      * business.contact_phone
      */
     private String contactPhone;
-    /** The javabean property equivalent of database column business.contact_ext */
+    /**
+     * The javabean property equivalent of database column business.contact_ext
+     */
     private String contactExt;
     /**
      * The javabean property equivalent of database column
@@ -147,7 +153,9 @@ public class Business extends OrmBean {
     private java.util.Date dateUpdated;
     /** The javabean property equivalent of database column business.user_id */
     private String userId;
-    /** The javabean property equivalent of database column business.category_id */
+    /**
+     * The javabean property equivalent of database column business.category_id
+     */
     private int categoryId;
 
     // Getter/Setter Methods

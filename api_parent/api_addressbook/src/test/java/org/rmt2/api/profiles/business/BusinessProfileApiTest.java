@@ -459,6 +459,4 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         Assert.assertEquals(1, rc);
     }
 
-
-
 }

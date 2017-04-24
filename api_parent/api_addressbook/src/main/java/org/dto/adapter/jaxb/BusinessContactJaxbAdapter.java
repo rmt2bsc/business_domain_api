@@ -14,8 +14,7 @@ import org.rmt2.jaxb.ObjectFactory;
  * @author Roy Terrell
  * 
  */
-class BusinessContactJaxbAdapter extends AddressJaxbAdapter implements
-        BusinessContactDto {
+class BusinessContactJaxbAdapter extends AddressJaxbAdapter implements BusinessContactDto {
 
     private BusinessType bus;
     private ObjectFactory f;
@@ -61,8 +60,7 @@ class BusinessContactJaxbAdapter extends AddressJaxbAdapter implements
      */
     @Override
     public int getContactId() {
-        return (this.bus.getBusinessId() != null ? this.bus.getBusinessId()
-                .intValue() : 0);
+        return (this.bus.getBusinessId() != null ? this.bus.getBusinessId().intValue() : 0);
     }
 
     /*
