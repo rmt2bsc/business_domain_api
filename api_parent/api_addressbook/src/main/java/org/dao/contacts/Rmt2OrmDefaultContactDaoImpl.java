@@ -613,7 +613,8 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             }
             if (p.getPersonId() == 0) {
                 rc = this.insertPersonContact(p, a);
-                contact.setContactId(rc);
+                contact.setContactId(p.getPersonId());
+                contact.setAddrId(a.getAddrId());
             }
             return rc;
         } catch (DatabaseException e) {
@@ -654,7 +655,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             addr.setUserId(ut.getLoginId());
             addr.setPersonId(newPersonId);
             addr.setNull(Address.PROP_BUSINESSID);
-            this.client.insertRow(addr, true);
+            int newAddressId = this.client.insertRow(addr, true);
+
+            person.setPersonId(newPersonId);
+            addr.setAddrId(newAddressId);
             return newPersonId;
         } catch (Exception e) {
             this.msg = "Insert operation failed tageting the Person table";
@@ -777,7 +781,8 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         }
         if (b.getBusinessId() == 0) {
             rc = this.insertBusinessContact(b, a);
-            contact.setContactId(rc);
+            contact.setContactId(b.getBusinessId());
+            contact.setAddrId(a.getAddrId());
         }
         return rc;
     }
@@ -814,7 +819,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             addr.setUserId(ut.getLoginId());
             addr.setBusinessId(newBusinessId);
             addr.setNull(Address.PROP_PERSONID);
-            this.client.insertRow(addr, true);
+            int newAddressId = this.client.insertRow(addr, true);
+
+            contact.setBusinessId(newBusinessId);
+            addr.setAddrId(newAddressId);
             return newBusinessId;
         } catch (Exception e) {
             this.msg = "Insert operation tageting business table failed";
