@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.rmt2.api.profiles.business;
+package org.rmt2.api.profiles;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
