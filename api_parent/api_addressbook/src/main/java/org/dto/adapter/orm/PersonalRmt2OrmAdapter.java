@@ -212,7 +212,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalCo
      */
     @Override
     public String getContactName() {
-        return this.per.getShortname();
+        return this.per.getFirstname() + " " + this.per.getLastname();
     }
 
     /*
