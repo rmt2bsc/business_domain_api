@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.AddressBookDaoImpl;
-import org.dao.mapping.orm.rmt2.IpBlock;
 import org.dao.mapping.orm.rmt2.IpLocation;
 import org.dao.mapping.orm.rmt2.TimeZone;
 import org.dao.mapping.orm.rmt2.Zipcode;
@@ -250,10 +249,10 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements PostalL
      * Fetch the location details of an IP address that is in numeric form from
      * the ip_location table.
      * <p>
-     * First, the the location id is obtained from the ip_block table by
-     * dtermining the block of IP address <i>ip</i> fits within. Lastly, the
-     * address details are fetched from the ip_lcoation table using the location
-     * id obtained from the previous query.
+     * First, the location id is obtained from the ip_block table by dtermining
+     * the block of IP address <i>ip</i> fits within. Lastly, the address
+     * details are fetched from the ip_lcoation table using the location id
+     * obtained from the previous query.
      * <p>
      * The data contained in the ip_block and ip_location tables was obtained
      * from the company, MaxMind. The <i>GeoLite City IPv6 (Beta)</i> is the
@@ -272,14 +271,8 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements PostalL
     public IpLocationDto fetchIpInfo(long ip) throws PostalDaoException {
         IpLocation loc = null;
         try {
-            IpBlock blk = new IpBlock();
-            blk.addCustomCriteria(ip + ">= ip_start and " + ip + " <= ip_end");
-            blk = (IpBlock) this.client.retrieveObject(blk);
-            if (blk == null) {
-                return null;
-            }
             loc = new IpLocation();
-            loc.addCriteria(IpLocation.PROP_LOCID, blk.getIpLoc());
+            loc.addCustomCriteria(ip + ">= ip_from and " + ip + " <= ip_to");
             loc = (IpLocation) this.client.retrieveObject(loc);
         } catch (DatabaseException e) {
             this.msg = "Database access error occurred while fetching IP Location record by IP number: " + ip;
@@ -289,5 +282,26 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements PostalL
         IpLocationDto dto = Rmt2AddressBookDtoFactory.getIpLocationInstance(loc);
         return dto;
     }
+    // public IpLocationDto fetchIpInfo(long ip) throws PostalDaoException {
+    // IpLocation loc = null;
+    // try {
+    // IpBlock blk = new IpBlock();
+    // blk.addCustomCriteria(ip + ">= ip_start and " + ip + " <= ip_end");
+    // blk = (IpBlock) this.client.retrieveObject(blk);
+    // if (blk == null) {
+    // return null;
+    // }
+    // loc = new IpLocation();
+    // loc.addCriteria(IpLocation.PROP_LOCID, blk.getIpLoc());
+    // loc = (IpLocation) this.client.retrieveObject(loc);
+    // } catch (DatabaseException e) {
+    // this.msg = "Database access error occurred while fetching IP Location
+    // record by IP number: " + ip;
+    // throw new IpDaoException(this.msg, e);
+    // }
+    //
+    // IpLocationDto dto = Rmt2AddressBookDtoFactory.getIpLocationInstance(loc);
+    // return dto;
+    // }
 
 }
