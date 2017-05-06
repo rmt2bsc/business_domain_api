@@ -77,7 +77,7 @@ public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter impleme
      */
     @Override
     public void setContactEmail(String value) {
-        this.src.setEmail(value);
+        return;
     }
 
     /*
@@ -87,7 +87,7 @@ public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter impleme
      */
     @Override
     public String getContactEmail() {
-        return this.src.getEmail();
+        return null;
     }
 
     // /* (non-Javadoc)
