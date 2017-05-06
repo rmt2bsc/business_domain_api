@@ -1,7 +1,6 @@
 package org.dto.adapter.ldap;
 
 import org.dao.mapping.orm.ldap.LdapIp;
-
 import org.dto.IpLocationDto;
 
 import com.api.foundation.TransactionDtoImpl;
@@ -31,33 +30,34 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
         this.ip = ipLoc;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.IpLocationDto#setLocId(int)
-     */
-    @Override
-    public void setLocId(int value) {
-        this.ip.setIpLocId(String.valueOf(value));
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.IpLocationDto#getLocId()
-     */
-    @Override
-    public int getLocId() {
-        int value = 0;
-        if (this.ip.getIpLocId() != null) {
-            try {
-                value = Integer.parseInt(this.ip.getIpLocId());
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("ipLocId value is not numeric: " + this.ip.getIpLocId());
-            }
-        }
-        return value;
-    }
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see org.dto.IpLocationDto#setLocId(int)
+    // */
+    // @Override
+    // public void setLocId(int value) {
+    // this.ip.setIpLocId(String.valueOf(value));
+    // }
+    //
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see org.dto.IpLocationDto#getLocId()
+    // */
+    // @Override
+    // public int getLocId() {
+    // int value = 0;
+    // if (this.ip.getIpLocId() != null) {
+    // try {
+    // value = Integer.parseInt(this.ip.getIpLocId());
+    // } catch (NumberFormatException e) {
+    // throw new RuntimeException("ipLocId value is not numeric: " +
+    // this.ip.getIpLocId());
+    // }
+    // }
+    // return value;
+    // }
 
     /*
      * (non-Javadoc)
