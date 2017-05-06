@@ -150,7 +150,7 @@ class ResourceRmt2OrmAdapter extends DefaultResourceAdapter implements
      * @see org.dto.DefaultResourceRmt2OrmAdapter#getRouterType()
      */
     public String getRouterType() {
-        return this.r.getRouterType();
+        return null;
     }
 
     /*
@@ -160,7 +160,7 @@ class ResourceRmt2OrmAdapter extends DefaultResourceAdapter implements
      * org.dto.DefaultResourceRmt2OrmAdapter#setRouterType(java.lang.String)
      */
     public void setRouterType(String routerType) {
-        this.r.setRouterType(routerType);
+        return;
     }
 
     /*
