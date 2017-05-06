@@ -31,25 +31,25 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
         this.ip = ipLoc;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.IpLocationDto#setIpId(int)
-     */
-    @Override
-    public void setLocId(int value) {
-        this.ip.setLocId(value);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.IpLocationDto#getIpId()
-     */
-    @Override
-    public int getLocId() {
-        return this.ip.getLocId();
-    }
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see org.dto.IpLocationDto#setIpId(int)
+    // */
+    // @Override
+    // public void setLocId(int value) {
+    // this.ip.setLocId(value);
+    // }
+    //
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see org.dto.IpLocationDto#getIpId()
+    // */
+    // @Override
+    // public int getLocId() {
+    // return this.ip.getLocId();
+    // }
 
     /*
      * (non-Javadoc)
@@ -58,7 +58,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public void setAreaCode(String value) {
-        this.ip.setAreaCode(value);
+        return;
     }
 
     /*
@@ -68,7 +68,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public String getAreaCode() {
-        return this.ip.getAreaCode();
+        return null;
     }
 
     /*
@@ -78,7 +78,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public void setCountry(String value) {
-        this.ip.setCountry(value);
+        this.ip.setCountryName(value);
     }
 
     /*
@@ -88,7 +88,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public String getCountry() {
-        return this.ip.getCountry();
+        return this.ip.getCountryName();
     }
 
     /*
@@ -178,7 +178,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public void setPostalCode(String value) {
-        this.ip.setPostalCode(value);
+        this.ip.setZipcode(value);
     }
 
     /*
@@ -188,7 +188,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public String getPostalCode() {
-        return this.ip.getPostalCode();
+        return this.ip.getZipcode();
     }
 
     /*
@@ -198,7 +198,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public void setMetroCode(String value) {
-        this.ip.setMetroCode(value);
+        return;
     }
 
     /*
@@ -208,7 +208,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public String getMetroCode() {
-        return this.ip.getMetroCode();
+        return null;
     }
 
     /**
