@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -257,6 +259,100 @@ public class ProjEmployeeProject extends OrmBean {
   public String getIpUpdated() {
     return this.ipUpdated;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjEmployeeProject other = (ProjEmployeeProject) obj; 
+   if (EqualityAssistant.notEqual(this.empProjId, other.empProjId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.empId, other.empId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projId, other.projId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.effectiveDate, other.effectiveDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.hourlyRate, other.hourlyRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.hourlyOverRate, other.hourlyOverRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.flatRate, other.flatRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.comments, other.comments)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.empProjId),
+   HashCodeAssistant.hashObject(this.empId),
+   HashCodeAssistant.hashObject(this.projId),
+   HashCodeAssistant.hashObject(this.effectiveDate),
+   HashCodeAssistant.hashObject(this.endDate),
+   HashCodeAssistant.hashObject(this.hourlyRate),
+   HashCodeAssistant.hashObject(this.hourlyOverRate),
+   HashCodeAssistant.hashObject(this.flatRate),
+   HashCodeAssistant.hashObject(this.comments),
+   HashCodeAssistant.hashObject(this.dateCreated),
+   HashCodeAssistant.hashObject(this.dateUpdated),
+   HashCodeAssistant.hashObject(this.userId),
+   HashCodeAssistant.hashObject(this.ipCreated),
+   HashCodeAssistant.hashObject(this.ipUpdated));
+} 
+
+@Override
+public String toString() {
+   return "ProjEmployeeProject [empProjId=" + empProjId + 
+          ", empId=" + empId + 
+          ", projId=" + projId + 
+          ", effectiveDate=" + effectiveDate + 
+          ", endDate=" + endDate + 
+          ", hourlyRate=" + hourlyRate + 
+          ", hourlyOverRate=" + hourlyOverRate + 
+          ", flatRate=" + flatRate + 
+          ", comments=" + comments + 
+          ", dateCreated=" + dateCreated + 
+          ", dateUpdated=" + dateUpdated + 
+          ", userId=" + userId + 
+          ", ipCreated=" + ipCreated + 
+          ", ipUpdated=" + ipUpdated  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

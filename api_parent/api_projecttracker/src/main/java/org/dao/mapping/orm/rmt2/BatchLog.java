@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -113,6 +115,55 @@ public class BatchLog extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final BatchLog other = (BatchLog) obj; 
+   if (EqualityAssistant.notEqual(this.id, other.id)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.batId, other.batId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.msg, other.msg)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.batchDate, other.batchDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.id),
+   HashCodeAssistant.hashObject(this.batId),
+   HashCodeAssistant.hashObject(this.msg),
+   HashCodeAssistant.hashObject(this.batchDate),
+   HashCodeAssistant.hashObject(this.userId));
+} 
+
+@Override
+public String toString() {
+   return "BatchLog [id=" + id + 
+          ", batId=" + batId + 
+          ", msg=" + msg + 
+          ", batchDate=" + batchDate + 
+          ", userId=" + userId  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

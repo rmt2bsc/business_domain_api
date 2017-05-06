@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -145,6 +147,65 @@ public class ProjEvent extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjEvent other = (ProjEvent) obj; 
+   if (EqualityAssistant.notEqual(this.eventId, other.eventId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectTaskId, other.projectTaskId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.eventDate, other.eventDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.hours, other.hours)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.eventId),
+   HashCodeAssistant.hashObject(this.projectTaskId),
+   HashCodeAssistant.hashObject(this.eventDate),
+   HashCodeAssistant.hashObject(this.hours),
+   HashCodeAssistant.hashObject(this.dateCreated),
+   HashCodeAssistant.hashObject(this.dateUpdated),
+   HashCodeAssistant.hashObject(this.userId));
+} 
+
+@Override
+public String toString() {
+   return "ProjEvent [eventId=" + eventId + 
+          ", projectTaskId=" + projectTaskId + 
+          ", eventDate=" + eventDate + 
+          ", hours=" + hours + 
+          ", dateCreated=" + dateCreated + 
+          ", dateUpdated=" + dateUpdated + 
+          ", userId=" + userId  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

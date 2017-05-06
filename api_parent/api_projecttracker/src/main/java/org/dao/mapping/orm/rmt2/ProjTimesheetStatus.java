@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -81,6 +83,45 @@ public class ProjTimesheetStatus extends OrmBean {
   public String getDescription() {
     return this.description;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjTimesheetStatus other = (ProjTimesheetStatus) obj; 
+   if (EqualityAssistant.notEqual(this.timesheetStatusId, other.timesheetStatusId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.name, other.name)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.description, other.description)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetStatusId),
+   HashCodeAssistant.hashObject(this.name),
+   HashCodeAssistant.hashObject(this.description));
+} 
+
+@Override
+public String toString() {
+   return "ProjTimesheetStatus [timesheetStatusId=" + timesheetStatusId + 
+          ", name=" + name + 
+          ", description=" + description  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

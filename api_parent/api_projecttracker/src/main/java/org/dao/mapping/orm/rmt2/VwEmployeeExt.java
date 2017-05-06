@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -305,6 +307,115 @@ public class VwEmployeeExt extends OrmBean {
   public String getEmployeeType() {
     return this.employeeType;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final VwEmployeeExt other = (VwEmployeeExt) obj; 
+   if (EqualityAssistant.notEqual(this.employeeId, other.employeeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.loginId, other.loginId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.loginName, other.loginName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.startDate, other.startDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.terminationDate, other.terminationDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.titleId, other.titleId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.typeId, other.typeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.managerId, other.managerId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.firstname, other.firstname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.lastname, other.lastname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.shortname, other.shortname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.companyName, other.companyName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ssn, other.ssn)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.isManager, other.isManager)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.email, other.email)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.employeeTitle, other.employeeTitle)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.employeeType, other.employeeType)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.employeeId),
+   HashCodeAssistant.hashObject(this.loginId),
+   HashCodeAssistant.hashObject(this.loginName),
+   HashCodeAssistant.hashObject(this.startDate),
+   HashCodeAssistant.hashObject(this.terminationDate),
+   HashCodeAssistant.hashObject(this.titleId),
+   HashCodeAssistant.hashObject(this.typeId),
+   HashCodeAssistant.hashObject(this.managerId),
+   HashCodeAssistant.hashObject(this.firstname),
+   HashCodeAssistant.hashObject(this.lastname),
+   HashCodeAssistant.hashObject(this.shortname),
+   HashCodeAssistant.hashObject(this.companyName),
+   HashCodeAssistant.hashObject(this.ssn),
+   HashCodeAssistant.hashObject(this.isManager),
+   HashCodeAssistant.hashObject(this.email),
+   HashCodeAssistant.hashObject(this.employeeTitle),
+   HashCodeAssistant.hashObject(this.employeeType));
+} 
+
+@Override
+public String toString() {
+   return "VwEmployeeExt [employeeId=" + employeeId + 
+          ", loginId=" + loginId + 
+          ", loginName=" + loginName + 
+          ", startDate=" + startDate + 
+          ", terminationDate=" + terminationDate + 
+          ", titleId=" + titleId + 
+          ", typeId=" + typeId + 
+          ", managerId=" + managerId + 
+          ", firstname=" + firstname + 
+          ", lastname=" + lastname + 
+          ", shortname=" + shortname + 
+          ", companyName=" + companyName + 
+          ", ssn=" + ssn + 
+          ", isManager=" + isManager + 
+          ", email=" + email + 
+          ", employeeTitle=" + employeeTitle + 
+          ", employeeType=" + employeeType  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

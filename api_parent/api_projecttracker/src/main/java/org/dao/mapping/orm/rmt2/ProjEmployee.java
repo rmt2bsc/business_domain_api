@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -39,20 +41,20 @@ public class ProjEmployee extends OrmBean {
   public static final String PROP_DATEUPDATED = "DateUpdated";
 /** The property name constant equivalent to property, UserId, of respective DataSource view. */
   public static final String PROP_USERID = "UserId";
-/** The property name constant equivalent to property, CompanyName, of respective DataSource view. */
-  public static final String PROP_COMPANYNAME = "CompanyName";
 /** The property name constant equivalent to property, Firstname, of respective DataSource view. */
   public static final String PROP_FIRSTNAME = "Firstname";
 /** The property name constant equivalent to property, Lastname, of respective DataSource view. */
   public static final String PROP_LASTNAME = "Lastname";
-/** The property name constant equivalent to property, IsManager, of respective DataSource view. */
-  public static final String PROP_ISMANAGER = "IsManager";
-/** The property name constant equivalent to property, Email, of respective DataSource view. */
-  public static final String PROP_EMAIL = "Email";
 /** The property name constant equivalent to property, Ssn, of respective DataSource view. */
   public static final String PROP_SSN = "Ssn";
+/** The property name constant equivalent to property, Email, of respective DataSource view. */
+  public static final String PROP_EMAIL = "Email";
 /** The property name constant equivalent to property, LoginName, of respective DataSource view. */
   public static final String PROP_LOGINNAME = "LoginName";
+/** The property name constant equivalent to property, CompanyName, of respective DataSource view. */
+  public static final String PROP_COMPANYNAME = "CompanyName";
+/** The property name constant equivalent to property, IsManager, of respective DataSource view. */
+  public static final String PROP_ISMANAGER = "IsManager";
 
 
 
@@ -76,20 +78,20 @@ public class ProjEmployee extends OrmBean {
   private java.util.Date dateUpdated;
 /** The javabean property equivalent of database column proj_employee.user_id */
   private String userId;
-/** The javabean property equivalent of database column proj_employee.company_name */
-  private String companyName;
 /** The javabean property equivalent of database column proj_employee.firstname */
   private String firstname;
 /** The javabean property equivalent of database column proj_employee.lastname */
   private String lastname;
-/** The javabean property equivalent of database column proj_employee.is_manager */
-  private int isManager;
-/** The javabean property equivalent of database column proj_employee.email */
-  private String email;
 /** The javabean property equivalent of database column proj_employee.ssn */
   private String ssn;
+/** The javabean property equivalent of database column proj_employee.email */
+  private String email;
 /** The javabean property equivalent of database column proj_employee.login_name */
   private String loginName;
+/** The javabean property equivalent of database column proj_employee.company_name */
+  private String companyName;
+/** The javabean property equivalent of database column proj_employee.is_manager */
+  private int isManager;
 
 
 
@@ -222,18 +224,6 @@ public class ProjEmployee extends OrmBean {
     return this.userId;
   }
 /**
- * Sets the value of member variable companyName
- */
-  public void setCompanyName(String value) {
-    this.companyName = value;
-  }
-/**
- * Gets the value of member variable companyName
- */
-  public String getCompanyName() {
-    return this.companyName;
-  }
-/**
  * Sets the value of member variable firstname
  */
   public void setFirstname(String value) {
@@ -258,16 +248,16 @@ public class ProjEmployee extends OrmBean {
     return this.lastname;
   }
 /**
- * Sets the value of member variable isManager
+ * Sets the value of member variable ssn
  */
-  public void setIsManager(int value) {
-    this.isManager = value;
+  public void setSsn(String value) {
+    this.ssn = value;
   }
 /**
- * Gets the value of member variable isManager
+ * Gets the value of member variable ssn
  */
-  public int getIsManager() {
-    return this.isManager;
+  public String getSsn() {
+    return this.ssn;
   }
 /**
  * Sets the value of member variable email
@@ -282,18 +272,6 @@ public class ProjEmployee extends OrmBean {
     return this.email;
   }
 /**
- * Sets the value of member variable ssn
- */
-  public void setSsn(String value) {
-    this.ssn = value;
-  }
-/**
- * Gets the value of member variable ssn
- */
-  public String getSsn() {
-    return this.ssn;
-  }
-/**
  * Sets the value of member variable loginName
  */
   public void setLoginName(String value) {
@@ -305,6 +283,139 @@ public class ProjEmployee extends OrmBean {
   public String getLoginName() {
     return this.loginName;
   }
+/**
+ * Sets the value of member variable companyName
+ */
+  public void setCompanyName(String value) {
+    this.companyName = value;
+  }
+/**
+ * Gets the value of member variable companyName
+ */
+  public String getCompanyName() {
+    return this.companyName;
+  }
+/**
+ * Sets the value of member variable isManager
+ */
+  public void setIsManager(int value) {
+    this.isManager = value;
+  }
+/**
+ * Gets the value of member variable isManager
+ */
+  public int getIsManager() {
+    return this.isManager;
+  }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjEmployee other = (ProjEmployee) obj; 
+   if (EqualityAssistant.notEqual(this.empId, other.empId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.empTypeId, other.empTypeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.managerId, other.managerId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.empTitleId, other.empTitleId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.loginId, other.loginId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.startDate, other.startDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.terminationDate, other.terminationDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.firstname, other.firstname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.lastname, other.lastname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ssn, other.ssn)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.email, other.email)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.loginName, other.loginName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.companyName, other.companyName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.isManager, other.isManager)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.empId),
+   HashCodeAssistant.hashObject(this.empTypeId),
+   HashCodeAssistant.hashObject(this.managerId),
+   HashCodeAssistant.hashObject(this.empTitleId),
+   HashCodeAssistant.hashObject(this.loginId),
+   HashCodeAssistant.hashObject(this.startDate),
+   HashCodeAssistant.hashObject(this.terminationDate),
+   HashCodeAssistant.hashObject(this.dateCreated),
+   HashCodeAssistant.hashObject(this.dateUpdated),
+   HashCodeAssistant.hashObject(this.userId),
+   HashCodeAssistant.hashObject(this.firstname),
+   HashCodeAssistant.hashObject(this.lastname),
+   HashCodeAssistant.hashObject(this.ssn),
+   HashCodeAssistant.hashObject(this.email),
+   HashCodeAssistant.hashObject(this.loginName),
+   HashCodeAssistant.hashObject(this.companyName),
+   HashCodeAssistant.hashObject(this.isManager));
+} 
+
+@Override
+public String toString() {
+   return "ProjEmployee [empId=" + empId + 
+          ", empTypeId=" + empTypeId + 
+          ", managerId=" + managerId + 
+          ", empTitleId=" + empTitleId + 
+          ", loginId=" + loginId + 
+          ", startDate=" + startDate + 
+          ", terminationDate=" + terminationDate + 
+          ", dateCreated=" + dateCreated + 
+          ", dateUpdated=" + dateUpdated + 
+          ", userId=" + userId + 
+          ", firstname=" + firstname + 
+          ", lastname=" + lastname + 
+          ", ssn=" + ssn + 
+          ", email=" + email + 
+          ", loginName=" + loginName + 
+          ", companyName=" + companyName + 
+          ", isManager=" + isManager  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -241,6 +243,95 @@ public class VwTimesheetSummary extends OrmBean {
   public double getTotalHrs() {
     return this.totalHrs;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final VwTimesheetSummary other = (VwTimesheetSummary) obj; 
+   if (EqualityAssistant.notEqual(this.timesheetId, other.timesheetId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.shortname, other.shortname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.displayValue, other.displayValue)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.endPeriod, other.endPeriod)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.documentId, other.documentId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.day1Hrs, other.day1Hrs)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.day2Hrs, other.day2Hrs)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.day3Hrs, other.day3Hrs)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.day4Hrs, other.day4Hrs)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.day5Hrs, other.day5Hrs)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.day6Hrs, other.day6Hrs)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.day7Hrs, other.day7Hrs)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.totalHrs, other.totalHrs)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetId),
+   HashCodeAssistant.hashObject(this.shortname),
+   HashCodeAssistant.hashObject(this.displayValue),
+   HashCodeAssistant.hashObject(this.endPeriod),
+   HashCodeAssistant.hashObject(this.documentId),
+   HashCodeAssistant.hashObject(this.day1Hrs),
+   HashCodeAssistant.hashObject(this.day2Hrs),
+   HashCodeAssistant.hashObject(this.day3Hrs),
+   HashCodeAssistant.hashObject(this.day4Hrs),
+   HashCodeAssistant.hashObject(this.day5Hrs),
+   HashCodeAssistant.hashObject(this.day6Hrs),
+   HashCodeAssistant.hashObject(this.day7Hrs),
+   HashCodeAssistant.hashObject(this.totalHrs));
+} 
+
+@Override
+public String toString() {
+   return "VwTimesheetSummary [timesheetId=" + timesheetId + 
+          ", shortname=" + shortname + 
+          ", displayValue=" + displayValue + 
+          ", endPeriod=" + endPeriod + 
+          ", documentId=" + documentId + 
+          ", day1Hrs=" + day1Hrs + 
+          ", day2Hrs=" + day2Hrs + 
+          ", day3Hrs=" + day3Hrs + 
+          ", day4Hrs=" + day4Hrs + 
+          ", day5Hrs=" + day5Hrs + 
+          ", day6Hrs=" + day6Hrs + 
+          ", day7Hrs=" + day7Hrs + 
+          ", totalHrs=" + totalHrs  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

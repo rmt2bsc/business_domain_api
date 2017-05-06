@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -97,6 +99,50 @@ public class UserConnectXref extends OrmBean {
   public String getAppUserId() {
     return this.appUserId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final UserConnectXref other = (UserConnectXref) obj; 
+   if (EqualityAssistant.notEqual(this.id, other.id)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.conId, other.conId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.conUserId, other.conUserId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.appUserId, other.appUserId)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.id),
+   HashCodeAssistant.hashObject(this.conId),
+   HashCodeAssistant.hashObject(this.conUserId),
+   HashCodeAssistant.hashObject(this.appUserId));
+} 
+
+@Override
+public String toString() {
+   return "UserConnectXref [id=" + id + 
+          ", conId=" + conId + 
+          ", conUserId=" + conUserId + 
+          ", appUserId=" + appUserId  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

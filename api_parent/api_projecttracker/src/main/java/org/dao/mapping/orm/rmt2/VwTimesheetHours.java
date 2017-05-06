@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -369,6 +371,135 @@ public class VwTimesheetHours extends OrmBean {
   public java.util.Date getDateCreated() {
     return this.dateCreated;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final VwTimesheetHours other = (VwTimesheetHours) obj; 
+   if (EqualityAssistant.notEqual(this.timesheetId, other.timesheetId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.clientId, other.clientId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.employeeId, other.employeeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.displayValue, other.displayValue)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.timesheetBeginPeriod, other.timesheetBeginPeriod)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.timesheetEndPeriod, other.timesheetEndPeriod)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.invoiceRefNo, other.invoiceRefNo)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.extRef, other.extRef)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.documentId, other.documentId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectId, other.projectId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.taskId, other.taskId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.eventId, other.eventId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projTaskId, other.projTaskId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectName, other.projectName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.taskName, other.taskName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.effectiveDate, other.effectiveDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.billable, other.billable)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.eventDate, other.eventDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.hours, other.hours)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetId),
+   HashCodeAssistant.hashObject(this.clientId),
+   HashCodeAssistant.hashObject(this.employeeId),
+   HashCodeAssistant.hashObject(this.displayValue),
+   HashCodeAssistant.hashObject(this.timesheetBeginPeriod),
+   HashCodeAssistant.hashObject(this.timesheetEndPeriod),
+   HashCodeAssistant.hashObject(this.invoiceRefNo),
+   HashCodeAssistant.hashObject(this.extRef),
+   HashCodeAssistant.hashObject(this.documentId),
+   HashCodeAssistant.hashObject(this.projectId),
+   HashCodeAssistant.hashObject(this.taskId),
+   HashCodeAssistant.hashObject(this.eventId),
+   HashCodeAssistant.hashObject(this.projTaskId),
+   HashCodeAssistant.hashObject(this.projectName),
+   HashCodeAssistant.hashObject(this.taskName),
+   HashCodeAssistant.hashObject(this.effectiveDate),
+   HashCodeAssistant.hashObject(this.endDate),
+   HashCodeAssistant.hashObject(this.billable),
+   HashCodeAssistant.hashObject(this.eventDate),
+   HashCodeAssistant.hashObject(this.hours),
+   HashCodeAssistant.hashObject(this.dateCreated));
+} 
+
+@Override
+public String toString() {
+   return "VwTimesheetHours [timesheetId=" + timesheetId + 
+          ", clientId=" + clientId + 
+          ", employeeId=" + employeeId + 
+          ", displayValue=" + displayValue + 
+          ", timesheetBeginPeriod=" + timesheetBeginPeriod + 
+          ", timesheetEndPeriod=" + timesheetEndPeriod + 
+          ", invoiceRefNo=" + invoiceRefNo + 
+          ", extRef=" + extRef + 
+          ", documentId=" + documentId + 
+          ", projectId=" + projectId + 
+          ", taskId=" + taskId + 
+          ", eventId=" + eventId + 
+          ", projTaskId=" + projTaskId + 
+          ", projectName=" + projectName + 
+          ", taskName=" + taskName + 
+          ", effectiveDate=" + effectiveDate + 
+          ", endDate=" + endDate + 
+          ", billable=" + billable + 
+          ", eventDate=" + eventDate + 
+          ", hours=" + hours + 
+          ", dateCreated=" + dateCreated  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

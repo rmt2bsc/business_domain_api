@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -81,6 +83,45 @@ public class ProjPeriod extends OrmBean {
   public int getMaxRegHrs() {
     return this.maxRegHrs;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjPeriod other = (ProjPeriod) obj; 
+   if (EqualityAssistant.notEqual(this.projPeriodId, other.projPeriodId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.prdType, other.prdType)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.maxRegHrs, other.maxRegHrs)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.projPeriodId),
+   HashCodeAssistant.hashObject(this.prdType),
+   HashCodeAssistant.hashObject(this.maxRegHrs));
+} 
+
+@Override
+public String toString() {
+   return "ProjPeriod [projPeriodId=" + projPeriodId + 
+          ", prdType=" + prdType + 
+          ", maxRegHrs=" + maxRegHrs  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

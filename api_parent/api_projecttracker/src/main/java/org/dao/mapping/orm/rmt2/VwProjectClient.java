@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -177,6 +179,75 @@ public class VwProjectClient extends OrmBean {
   public double getOtBillRate() {
     return this.otBillRate;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final VwProjectClient other = (VwProjectClient) obj; 
+   if (EqualityAssistant.notEqual(this.projId, other.projId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.description, other.description)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.effectiveDate, other.effectiveDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.clientId, other.clientId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.businessId, other.businessId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.name, other.name)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.billRate, other.billRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.otBillRate, other.otBillRate)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.projId),
+   HashCodeAssistant.hashObject(this.description),
+   HashCodeAssistant.hashObject(this.effectiveDate),
+   HashCodeAssistant.hashObject(this.endDate),
+   HashCodeAssistant.hashObject(this.clientId),
+   HashCodeAssistant.hashObject(this.businessId),
+   HashCodeAssistant.hashObject(this.name),
+   HashCodeAssistant.hashObject(this.billRate),
+   HashCodeAssistant.hashObject(this.otBillRate));
+} 
+
+@Override
+public String toString() {
+   return "VwProjectClient [projId=" + projId + 
+          ", description=" + description + 
+          ", effectiveDate=" + effectiveDate + 
+          ", endDate=" + endDate + 
+          ", clientId=" + clientId + 
+          ", businessId=" + businessId + 
+          ", name=" + name + 
+          ", billRate=" + billRate + 
+          ", otBillRate=" + otBillRate  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

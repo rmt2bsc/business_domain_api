@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -41,12 +43,12 @@ public class ProjTimesheet extends OrmBean {
   public static final String PROP_USERID = "UserId";
 /** The property name constant equivalent to property, Comments, of respective DataSource view. */
   public static final String PROP_COMMENTS = "Comments";
+/** The property name constant equivalent to property, ProjId, of respective DataSource view. */
+  public static final String PROP_PROJID = "ProjId";
 /** The property name constant equivalent to property, ExtRef, of respective DataSource view. */
   public static final String PROP_EXTREF = "ExtRef";
 /** The property name constant equivalent to property, DocumentId, of respective DataSource view. */
   public static final String PROP_DOCUMENTID = "DocumentId";
-/** The property name constant equivalent to property, ProjId, of respective DataSource view. */
-  public static final String PROP_PROJID = "ProjId";
 /** The property name constant equivalent to property, IpCreated, of respective DataSource view. */
   public static final String PROP_IPCREATED = "IpCreated";
 /** The property name constant equivalent to property, IpUpdated, of respective DataSource view. */
@@ -76,12 +78,12 @@ public class ProjTimesheet extends OrmBean {
   private String userId;
 /** The javabean property equivalent of database column proj_timesheet.comments */
   private String comments;
+/** The javabean property equivalent of database column proj_timesheet.proj_id */
+  private int projId;
 /** The javabean property equivalent of database column proj_timesheet.ext_ref */
   private String extRef;
 /** The javabean property equivalent of database column proj_timesheet.document_id */
   private int documentId;
-/** The javabean property equivalent of database column proj_timesheet.proj_id */
-  private int projId;
 /** The javabean property equivalent of database column proj_timesheet.ip_created */
   private String ipCreated;
 /** The javabean property equivalent of database column proj_timesheet.ip_updated */
@@ -230,6 +232,18 @@ public class ProjTimesheet extends OrmBean {
     return this.comments;
   }
 /**
+ * Sets the value of member variable projId
+ */
+  public void setProjId(int value) {
+    this.projId = value;
+  }
+/**
+ * Gets the value of member variable projId
+ */
+  public int getProjId() {
+    return this.projId;
+  }
+/**
  * Sets the value of member variable extRef
  */
   public void setExtRef(String value) {
@@ -252,18 +266,6 @@ public class ProjTimesheet extends OrmBean {
  */
   public int getDocumentId() {
     return this.documentId;
-  }
-/**
- * Sets the value of member variable projId
- */
-  public void setProjId(int value) {
-    this.projId = value;
-  }
-/**
- * Gets the value of member variable projId
- */
-  public int getProjId() {
-    return this.projId;
   }
 /**
  * Sets the value of member variable ipCreated
@@ -289,6 +291,110 @@ public class ProjTimesheet extends OrmBean {
   public String getIpUpdated() {
     return this.ipUpdated;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjTimesheet other = (ProjTimesheet) obj; 
+   if (EqualityAssistant.notEqual(this.timesheetId, other.timesheetId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.clientId, other.clientId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.empId, other.empId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.displayValue, other.displayValue)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.beginPeriod, other.beginPeriod)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.endPeriod, other.endPeriod)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.invoiceRefNo, other.invoiceRefNo)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.comments, other.comments)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projId, other.projId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.extRef, other.extRef)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.documentId, other.documentId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetId),
+   HashCodeAssistant.hashObject(this.clientId),
+   HashCodeAssistant.hashObject(this.empId),
+   HashCodeAssistant.hashObject(this.displayValue),
+   HashCodeAssistant.hashObject(this.beginPeriod),
+   HashCodeAssistant.hashObject(this.endPeriod),
+   HashCodeAssistant.hashObject(this.invoiceRefNo),
+   HashCodeAssistant.hashObject(this.dateCreated),
+   HashCodeAssistant.hashObject(this.dateUpdated),
+   HashCodeAssistant.hashObject(this.userId),
+   HashCodeAssistant.hashObject(this.comments),
+   HashCodeAssistant.hashObject(this.projId),
+   HashCodeAssistant.hashObject(this.extRef),
+   HashCodeAssistant.hashObject(this.documentId),
+   HashCodeAssistant.hashObject(this.ipCreated),
+   HashCodeAssistant.hashObject(this.ipUpdated));
+} 
+
+@Override
+public String toString() {
+   return "ProjTimesheet [timesheetId=" + timesheetId + 
+          ", clientId=" + clientId + 
+          ", empId=" + empId + 
+          ", displayValue=" + displayValue + 
+          ", beginPeriod=" + beginPeriod + 
+          ", endPeriod=" + endPeriod + 
+          ", invoiceRefNo=" + invoiceRefNo + 
+          ", dateCreated=" + dateCreated + 
+          ", dateUpdated=" + dateUpdated + 
+          ", userId=" + userId + 
+          ", comments=" + comments + 
+          ", projId=" + projId + 
+          ", extRef=" + extRef + 
+          ", documentId=" + documentId + 
+          ", ipCreated=" + ipCreated + 
+          ", ipUpdated=" + ipUpdated  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -35,10 +37,10 @@ public class ProjClient extends OrmBean {
   public static final String PROP_DATEUPDATED = "DateUpdated";
 /** The property name constant equivalent to property, UserId, of respective DataSource view. */
   public static final String PROP_USERID = "UserId";
-/** The property name constant equivalent to property, ContactFirstname, of respective DataSource view. */
-  public static final String PROP_CONTACTFIRSTNAME = "ContactFirstname";
 /** The property name constant equivalent to property, AccountNo, of respective DataSource view. */
   public static final String PROP_ACCOUNTNO = "AccountNo";
+/** The property name constant equivalent to property, ContactFirstname, of respective DataSource view. */
+  public static final String PROP_CONTACTFIRSTNAME = "ContactFirstname";
 /** The property name constant equivalent to property, ContactLastname, of respective DataSource view. */
   public static final String PROP_CONTACTLASTNAME = "ContactLastname";
 /** The property name constant equivalent to property, ContactPhone, of respective DataSource view. */
@@ -66,10 +68,10 @@ public class ProjClient extends OrmBean {
   private java.util.Date dateUpdated;
 /** The javabean property equivalent of database column proj_client.user_id */
   private String userId;
-/** The javabean property equivalent of database column proj_client.contact_firstname */
-  private String contactFirstname;
 /** The javabean property equivalent of database column proj_client.account_no */
   private String accountNo;
+/** The javabean property equivalent of database column proj_client.contact_firstname */
+  private String contactFirstname;
 /** The javabean property equivalent of database column proj_client.contact_lastname */
   private String contactLastname;
 /** The javabean property equivalent of database column proj_client.contact_phone */
@@ -186,18 +188,6 @@ public class ProjClient extends OrmBean {
     return this.userId;
   }
 /**
- * Sets the value of member variable contactFirstname
- */
-  public void setContactFirstname(String value) {
-    this.contactFirstname = value;
-  }
-/**
- * Gets the value of member variable contactFirstname
- */
-  public String getContactFirstname() {
-    return this.contactFirstname;
-  }
-/**
  * Sets the value of member variable accountNo
  */
   public void setAccountNo(String value) {
@@ -208,6 +198,18 @@ public class ProjClient extends OrmBean {
  */
   public String getAccountNo() {
     return this.accountNo;
+  }
+/**
+ * Sets the value of member variable contactFirstname
+ */
+  public void setContactFirstname(String value) {
+    this.contactFirstname = value;
+  }
+/**
+ * Gets the value of member variable contactFirstname
+ */
+  public String getContactFirstname() {
+    return this.contactFirstname;
   }
 /**
  * Sets the value of member variable contactLastname
@@ -257,6 +259,100 @@ public class ProjClient extends OrmBean {
   public String getContactEmail() {
     return this.contactEmail;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjClient other = (ProjClient) obj; 
+   if (EqualityAssistant.notEqual(this.clientId, other.clientId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.businessId, other.businessId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.name, other.name)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.billRate, other.billRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.otBillRate, other.otBillRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.accountNo, other.accountNo)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contactFirstname, other.contactFirstname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contactLastname, other.contactLastname)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contactPhone, other.contactPhone)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contactExt, other.contactExt)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contactEmail, other.contactEmail)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.clientId),
+   HashCodeAssistant.hashObject(this.businessId),
+   HashCodeAssistant.hashObject(this.name),
+   HashCodeAssistant.hashObject(this.billRate),
+   HashCodeAssistant.hashObject(this.otBillRate),
+   HashCodeAssistant.hashObject(this.dateCreated),
+   HashCodeAssistant.hashObject(this.dateUpdated),
+   HashCodeAssistant.hashObject(this.userId),
+   HashCodeAssistant.hashObject(this.accountNo),
+   HashCodeAssistant.hashObject(this.contactFirstname),
+   HashCodeAssistant.hashObject(this.contactLastname),
+   HashCodeAssistant.hashObject(this.contactPhone),
+   HashCodeAssistant.hashObject(this.contactExt),
+   HashCodeAssistant.hashObject(this.contactEmail));
+} 
+
+@Override
+public String toString() {
+   return "ProjClient [clientId=" + clientId + 
+          ", businessId=" + businessId + 
+          ", name=" + name + 
+          ", billRate=" + billRate + 
+          ", otBillRate=" + otBillRate + 
+          ", dateCreated=" + dateCreated + 
+          ", dateUpdated=" + dateUpdated + 
+          ", userId=" + userId + 
+          ", accountNo=" + accountNo + 
+          ", contactFirstname=" + contactFirstname + 
+          ", contactLastname=" + contactLastname + 
+          ", contactPhone=" + contactPhone + 
+          ", contactExt=" + contactExt + 
+          ", contactEmail=" + contactEmail  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 
