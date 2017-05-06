@@ -167,9 +167,6 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         if (criteriaDto.getContactType() != null) {
             criteria.addCriteria(VwCommonContact.PROP_CONTACTTYPE, criteriaDto.getContactType());
         }
-        if (criteriaDto.getContactEmail() != null) {
-            criteria.addLikeClause(VwCommonContact.PROP_EMAIL, criteriaDto.getContactEmail());
-        }
         if (criteriaDto.getPhoneCell() != null) {
             criteria.addCriteria(VwCommonContact.PROP_ADDRPHONECELL, criteriaDto.getPhoneCell());
         }
