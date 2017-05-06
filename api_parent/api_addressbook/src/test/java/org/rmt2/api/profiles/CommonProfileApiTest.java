@@ -75,7 +75,6 @@ public class CommonProfileApiTest extends BaseDaoTest {
         p.setContactId(1351);
         p.setContactName("Dennis Chambers");
         p.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
-        p.setEmail("dennischambers@gmail.com");
 
         p.setAddrId(2222);
         p.setContactId(1351);
@@ -103,7 +102,6 @@ public class CommonProfileApiTest extends BaseDaoTest {
         p.setContactId(1351);
         p.setContactName("Dennis Chambers");
         p.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
-        p.setEmail("dennischambers@gmail.com");
 
         p.setAddrId(2222);
         p.setContactId(1351);
@@ -118,7 +116,6 @@ public class CommonProfileApiTest extends BaseDaoTest {
         p.setContactId(2045);
         p.setContactName("DQ Conenient Store");
         p.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
-        p.setEmail("dqconvenientstore@gmail.com");
 
         p.setAddrId(3333);
         p.setContactId(2045);
@@ -140,7 +137,6 @@ public class CommonProfileApiTest extends BaseDaoTest {
         p.setContactId(1351);
         p.setContactName("Dennis Chambers");
         p.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
-        p.setEmail("dennischambers@gmail.com");
 
         p.setAddrId(2222);
         p.setContactId(1351);
@@ -155,7 +151,6 @@ public class CommonProfileApiTest extends BaseDaoTest {
         p.setContactId(2045);
         p.setContactName("DQ Conenient Store");
         p.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
-        p.setEmail("dqconvenientstore@gmail.com");
 
         p.setAddrId(3333);
         p.setContactId(2045);
@@ -172,7 +167,6 @@ public class CommonProfileApiTest extends BaseDaoTest {
         p.setContactId(3458);
         p.setContactName("Billy Cobham");
         p.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
-        p.setEmail("billycobham@gmail.com");
 
         p.setAddrId(4444);
         p.setContactId(3458);
@@ -236,9 +230,9 @@ public class CommonProfileApiTest extends BaseDaoTest {
 
     @Test
     public void testAllContactFetch() {
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
+        ContactDto criteria = Rmt2AddressBookDtoFactory.getNewContactInstance();
         try {
-            when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
+            when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
                     .thenReturn(this.mockAllProfileFetchResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
@@ -249,7 +243,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
@@ -259,23 +253,23 @@ public class CommonProfileApiTest extends BaseDaoTest {
         for (ContactDto contact : results) {
             Assert.assertNotNull(contact);
             Assert.assertNotNull(contact.getContactType());
-            Assert.assertEquals(ContactsConst.CONTACT_TYPE_PERSONAL, contact.getContactType());
+            Assert.assertTrue(contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)
+                    || contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS));
             Assert.assertTrue(contact.getContactId() > 0);
             Assert.assertNotNull(contact.getContactName());
 
-            Assert.assertTrue(contact instanceof PersonalContactDto);
-            PersonalContactDto perContact = (PersonalContactDto) contact;
-            Assert.assertNotNull(perContact.getFirstname());
-            Assert.assertNotNull(perContact.getLastname());
-            Assert.assertNotNull(perContact.getContactEmail());
+            Assert.assertTrue(contact instanceof ContactDto);
+            Assert.assertNotNull(contact.getContactName());
+            Assert.assertNotNull(contact.getCity());
+            Assert.assertNotNull(contact.getState());
         }
     }
 
     @Test
     public void testSingleContactFetch() {
-        Person per = new Person();
-        per.setPersonId(1351);
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getPersonInstance(per, null);
+        VwCommonContact commonContact = new VwCommonContact();
+        commonContact.setContactId(1351);
+        ContactDto criteria = Rmt2AddressBookDtoFactory.getContactInstance(commonContact);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
                     .thenReturn(this.mockSingleProfileFetchResponse);
@@ -288,7 +282,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
@@ -296,26 +290,26 @@ public class CommonProfileApiTest extends BaseDaoTest {
         Assert.assertEquals(1, results.size());
         ContactDto contact = results.get(0);
         Assert.assertNotNull(contact.getContactType());
-        Assert.assertEquals(ContactsConst.CONTACT_TYPE_PERSONAL, contact.getContactType());
+        Assert.assertTrue(contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)
+                || contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS));
         Assert.assertEquals(1351, contact.getContactId());
         Assert.assertNotNull(contact.getContactName());
         Assert.assertEquals("Dennis Chambers", contact.getContactName());
 
-        Assert.assertTrue(contact instanceof PersonalContactDto);
-        PersonalContactDto perContact = (PersonalContactDto) contact;
-        Assert.assertNotNull(perContact.getFirstname());
-        Assert.assertNotNull(perContact.getLastname());
-        Assert.assertNotNull(perContact.getContactEmail());
+        Assert.assertTrue(contact instanceof ContactDto);
+        Assert.assertNotNull(contact.getContactName());
+        Assert.assertNotNull(contact.getCity());
+        Assert.assertNotNull(contact.getState());
 
     }
 
     @Test
     public void testContactCriteriaFetch() {
-        Person per = new Person();
-        per.setLastname("M");
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getPersonInstance(per, null);
+        VwCommonContact commonContact = new VwCommonContact();
+        commonContact.setContactName("M");
+        ContactDto criteria = Rmt2AddressBookDtoFactory.getContactInstance(commonContact);
         try {
-            when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
+            when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
                     .thenReturn(this.mockCriteriaProfileFetchResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
@@ -326,7 +320,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
@@ -335,18 +329,18 @@ public class CommonProfileApiTest extends BaseDaoTest {
         for (ContactDto contact : results) {
             Assert.assertNotNull(contact);
             Assert.assertNotNull(contact.getContactType());
-            Assert.assertEquals(ContactsConst.CONTACT_TYPE_PERSONAL, contact.getContactType());
+            Assert.assertTrue(contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)
+                    || contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS));
             Assert.assertTrue(contact.getContactId() > 0);
             Assert.assertNotNull(contact.getContactName());
             String name[] = contact.getContactName().split(" ");
-            Assert.assertEquals(2, name.length);
-            Assert.assertEquals("C", name[1].substring(0, 1));
+            Assert.assertTrue(name.length > 1);
+            Assert.assertEquals("D", name[0].substring(0, 1));
 
-            Assert.assertTrue(contact instanceof PersonalContactDto);
-            PersonalContactDto busContact = (PersonalContactDto) contact;
-            Assert.assertNotNull(busContact.getFirstname());
-            Assert.assertNotNull(busContact.getLastname());
-            Assert.assertNotNull(busContact.getContactEmail());
+            Assert.assertTrue(contact instanceof ContactDto);
+            Assert.assertNotNull(contact.getContactName());
+            Assert.assertNotNull(contact.getCity());
+            Assert.assertNotNull(contact.getState());
         }
     }
 
