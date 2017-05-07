@@ -38,8 +38,7 @@ public interface LookupDataApi extends TransactionApi {
      * @return a List of {@link LookupCodeDto}
      * @throws LookupDataApiException
      */
-    List<LookupCodeDto> getCode(LookupCodeDto criteria)
-            throws LookupDataApiException;
+    List<LookupCodeDto> getCode(LookupCodeDto criteria) throws LookupDataApiException;
 
     /**
      * Retrieves a General Code Group using a unique identifier.
@@ -63,8 +62,7 @@ public interface LookupDataApi extends TransactionApi {
      * @return a List of {@link LookupGroupDto}
      * @throws LookupDataApiException
      */
-    List<LookupGroupDto> getGroup(LookupGroupDto criteria)
-            throws LookupDataApiException;
+    List<LookupGroupDto> getGroup(LookupGroupDto criteria) throws LookupDataApiException;
 
     /**
      * Retrieves a list of extension lookup objects containg both lookup group
@@ -80,8 +78,7 @@ public interface LookupDataApi extends TransactionApi {
      * @return a List of {@link LookupExtDto}
      * @throws LookupDataApiException
      */
-    List<LookupExtDto> getCodeExt(LookupExtDto criteria)
-            throws LookupDataApiException;
+    List<LookupExtDto> getCodeExt(LookupExtDto criteria) throws LookupDataApiException;
 
     /**
      * Creates a new or modifies an existing general lookup group object in the

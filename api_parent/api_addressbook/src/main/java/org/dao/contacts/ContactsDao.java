@@ -57,8 +57,7 @@ public interface ContactsDao extends DaoClient {
      *         is found.
      * @throws ContactDaoException
      */
-    List<BusinessContactDto> fetchBusinessContact(List<String> businessId)
-            throws ContactDaoException;
+    List<BusinessContactDto> fetchBusinessContact(List<String> businessId) throws ContactDaoException;
 
     /**
      * Rettieves a list of contacts based on the selection criteria contained in
@@ -76,8 +75,7 @@ public interface ContactsDao extends DaoClient {
      * @return a List of {@link ContactDto} objects or null if no data is found.
      * @throws ContactDaoException
      */
-    List<ContactDto> fetchContact(ContactDto criteria)
-            throws ContactDaoException;
+    List<ContactDto> fetchContact(ContactDto criteria) throws ContactDaoException;
 
     /**
      * Creates a new or modifies an existing contact object.

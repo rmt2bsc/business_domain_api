@@ -51,13 +51,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public CountryDto getCountry(int uid) throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountry(uid);
         } catch (PostalDaoException e) {
-            this.msg = "Unable to fetch country object by internal unique id, "
-                    + uid;
+            this.msg = "Unable to fetch country object by internal unique id, " + uid;
             throw new PostalApiException(this.msg, e);
         } finally {
             dao.close();
@@ -71,10 +69,8 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      * @see org.modules.postal.PostalApi#fetchCountry(org.dto.CountryDto)
      */
     @Override
-    public List<CountryDto> getCountry(CountryDto criteria)
-            throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+    public List<CountryDto> getCountry(CountryDto criteria) throws PostalApiException {
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountry(criteria);
         } catch (PostalDaoException e) {
@@ -93,10 +89,8 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      * org.modules.postal.PostalApi#fetchCountryRegion(org.dto.CountryRegionDto)
      */
     @Override
-    public List<CountryRegionDto> getCountryRegion(CountryRegionDto criteria)
-            throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+    public List<CountryRegionDto> getCountryRegion(CountryRegionDto criteria) throws PostalApiException {
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountryRegion(criteria);
         } catch (PostalDaoException e) {
@@ -115,13 +109,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public RegionDto getRegion(int uid) throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchRegion(uid);
         } catch (PostalDaoException e) {
-            this.msg = "Unable to fetch region (state/province) object by internal unique id, "
-                    + uid;
+            this.msg = "Unable to fetch region (state/province) object by internal unique id, " + uid;
             throw new PostalApiException(this.msg, e);
         } finally {
             dao.close();
@@ -135,10 +127,8 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      * @see org.modules.postal.PostalApi#fetchRegion(org.dto.RegionDto)
      */
     @Override
-    public List<RegionDto> getRegion(RegionDto criteria)
-            throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+    public List<RegionDto> getRegion(RegionDto criteria) throws PostalApiException {
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchRegion(criteria);
         } catch (PostalDaoException e) {
@@ -160,10 +150,8 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         if (zipCode == 0) {
             return null;
         }
-        PostalLocationDao dao = this.factory
-                .createRmt2OrmPostalDao(this.appName);
-        ZipcodeDto criteria = Rmt2AddressBookDtoFactory
-                .getZipCodeInstance(null);
+        PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
+        ZipcodeDto criteria = Rmt2AddressBookDtoFactory.getZipCodeInstance(null);
         criteria.setZip(zipCode);
         List<ZipcodeDto> results = null;
         try {
@@ -172,8 +160,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
                 return null;
             }
         } catch (PostalDaoException e) {
-            this.msg = "Unable to fetch zip code object by internal unique id, "
-                    + zipCode;
+            this.msg = "Unable to fetch zip code object by internal unique id, " + zipCode;
             throw new PostalApiException(this.msg, e);
         } finally {
             dao.close();
@@ -181,8 +168,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         }
 
         if (results.size() > 1) {
-            this.msg = "Results should contain only one zip code record, but instead returned "
-                    + results.size();
+            this.msg = "Results should contain only one zip code record, but instead returned " + results.size();
             throw new PostalApiException(this.msg);
         }
         return results.get(0);
@@ -194,10 +180,8 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      * @see org.modules.postal.PostalApi#fetchZipCode(org.dto.ZipcodeDto)
      */
     @Override
-    public List<ZipcodeDto> getZipCode(ZipcodeDto criteria)
-            throws PostalApiException {
-        PostalLocationDao dao = this.factory
-                .createRmt2OrmPostalDao(this.appName);
+    public List<ZipcodeDto> getZipCode(ZipcodeDto criteria) throws PostalApiException {
+        PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchZipCode(criteria);
         } catch (PostalDaoException e) {
@@ -216,13 +200,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public TimeZoneDto getTimezone(int uid) throws PostalApiException {
-        PostalLocationDao dao = this.factory
-                .createRmt2OrmPostalDao(this.appName);
+        PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchTimezone(uid);
         } catch (PostalDaoException e) {
-            this.msg = "Unable to fetch time zone object by internal unique id, "
-                    + uid;
+            this.msg = "Unable to fetch time zone object by internal unique id, " + uid;
             throw new PostalApiException(this.msg, e);
         } finally {
             dao.close();
@@ -236,10 +218,8 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      * @see org.modules.postal.PostalApi#fetchTimezone(org.dto.TimeZoneDto)
      */
     @Override
-    public List<TimeZoneDto> getTimezone(TimeZoneDto criteria)
-            throws PostalApiException {
-        PostalLocationDao dao = this.factory
-                .createRmt2OrmPostalDao(this.appName);
+    public List<TimeZoneDto> getTimezone(TimeZoneDto criteria) throws PostalApiException {
+        PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchTimezone(criteria);
         } catch (PostalDaoException e) {
@@ -258,8 +238,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public IpLocationDto getIpInfo(String ip) throws PostalApiException {
-        PostalLocationDao dao = this.factory
-                .createRmt2OrmPostalDao(this.appName);
+        PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchIpInfo(ip);
         } catch (PostalDaoException e) {
@@ -278,8 +257,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public IpLocationDto getIpInfo(long ip) throws PostalApiException {
-        PostalLocationDao dao = this.factory
-                .createRmt2OrmPostalDao(this.appName);
+        PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchIpInfo(ip);
         } catch (PostalDaoException e) {
@@ -298,8 +276,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int updateRegion(RegionDto obj) throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.maintainRegion(obj);
         } catch (PostalDaoException e) {
@@ -318,8 +295,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int deleteRegion(int stateId) throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.deleteRegion(stateId);
         } catch (PostalDaoException e) {
@@ -338,8 +314,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int updateCountry(CountryDto obj) throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.maintainCountry(obj);
         } catch (PostalDaoException e) {
@@ -358,8 +333,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int deleteCountry(int countryId) throws PostalApiException {
-        RegionCountryDao dao = this.factory
-                .createRmt2OrmRegionCountryDao(this.appName);
+        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.deleteCountry(countryId);
         } catch (PostalDaoException e) {

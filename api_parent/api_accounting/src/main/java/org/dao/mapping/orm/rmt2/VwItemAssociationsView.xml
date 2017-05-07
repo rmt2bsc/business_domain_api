@@ -7,6 +7,6 @@
    <ColAttr Computed="false" DBName="item_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ItemId" PrimaryKey="false" SqlType="integer" TableName="VwItemAssociationsTable" Updateable="true" />
    <ColAttr Computed="false" DBName="item_cost" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="ItemCost" PrimaryKey="false" SqlType="decimal" TableName="VwItemAssociationsTable" Updateable="true" />
    <ColAttr Computed="false" DBName="order_qty" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="OrderQty" PrimaryKey="false" SqlType="numeric" TableName="VwItemAssociationsTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="assoc_type" DataValue="" DisplayHeader="" IsNull="false" JavaType="String" Name="AssocType" PrimaryKey="false" SqlType="varchar" TableName="VwItemAssociationsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="assoc_type" DataValue="" DisplayHeader="" IsNull="false" JavaType="char" Name="AssocType" PrimaryKey="false" SqlType="char" TableName="VwItemAssociationsTable" Updateable="true" />
 </DataSource>
 

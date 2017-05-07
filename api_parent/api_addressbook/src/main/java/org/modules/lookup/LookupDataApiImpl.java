@@ -19,10 +19,8 @@ import com.api.foundation.AbstractTransactionApiImpl;
  * @author rterrell
  * 
  */
-class LookupDataApiImpl extends AbstractTransactionApiImpl implements
-        LookupDataApi {
-    private static final Logger logger = Logger
-            .getLogger(LookupDataApiImpl.class);
+class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupDataApi {
+    private static final Logger logger = Logger.getLogger(LookupDataApiImpl.class);
 
     private LookupDaoFactory factory;
 
@@ -87,8 +85,7 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements
      *             DAO errors.
      */
     @Override
-    public List<LookupCodeDto> getCode(LookupCodeDto criteria)
-            throws LookupDataApiException {
+    public List<LookupCodeDto> getCode(LookupCodeDto criteria) throws LookupDataApiException {
         LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             List<LookupCodeDto> list = dao.fetchCode(criteria);
@@ -143,8 +140,7 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements
      * @throws LookupDataApiException
      */
     @Override
-    public List<LookupGroupDto> getGroup(LookupGroupDto criteria)
-            throws LookupDataApiException {
+    public List<LookupGroupDto> getGroup(LookupGroupDto criteria) throws LookupDataApiException {
         LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             List<LookupGroupDto> list = dao.fetchGroup(criteria);
@@ -177,8 +173,7 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements
      *             DAO errors.
      */
     @Override
-    public List<LookupExtDto> getCodeExt(LookupExtDto criteria)
-            throws LookupDataApiException {
+    public List<LookupExtDto> getCodeExt(LookupExtDto criteria) throws LookupDataApiException {
         LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             List<LookupExtDto> list = dao.fetchCodeExt(criteria);

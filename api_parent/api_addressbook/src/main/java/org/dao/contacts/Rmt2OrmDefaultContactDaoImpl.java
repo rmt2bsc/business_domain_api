@@ -31,8 +31,7 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
-        ContactsDao {
+class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements ContactsDao {
 
     /**
      * Default constructor
@@ -108,35 +107,8 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             if (results == null) {
                 return null;
             }
-            ContactDto dto = Rmt2AddressBookDtoFactory
-                    .getContactInstance(results);
+            ContactDto dto = Rmt2AddressBookDtoFactory.getContactInstance(results);
             return dto;
-        } catch (DatabaseException e) {
-            throw new ContactDaoException(e);
-        }
-    }
-
-    private Person getPersonContactOrm(int contactId)
-            throws ContactDaoException {
-        Person criteria = new Person();
-        criteria.addCriteria(Person.PROP_PERSONID, contactId);
-        Person results = null;
-        try {
-            results = (Person) this.client.retrieveObject(criteria);
-            return results;
-        } catch (DatabaseException e) {
-            throw new ContactDaoException(e);
-        }
-    }
-
-    private Business getBusinessContactOrm(int contactId)
-            throws ContactDaoException {
-        Business criteria = new Business();
-        criteria.addCriteria(Business.PROP_BUSINESSID, contactId);
-        Business results = null;
-        try {
-            results = (Business) this.client.retrieveObject(criteria);
-            return results;
         } catch (DatabaseException e) {
             throw new ContactDaoException(e);
         }
@@ -167,8 +139,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             <i>criteria</i> is null or database access error
      */
     @Override
-    public List<ContactDto> fetchContact(ContactDto criteria)
-            throws ContactDaoException {
+    public List<ContactDto> fetchContact(ContactDto criteria) throws ContactDaoException {
         if (criteria == null) {
             throw new ContactDaoException(
                     "Selection criteria is required when searching for contact using DTO as input");
@@ -185,61 +156,44 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         return null;
     }
 
-    private List<ContactDto> getCommonContact(ContactDto criteriaDto)
-            throws ContactDaoException {
+    private List<ContactDto> getCommonContact(ContactDto criteriaDto) throws ContactDaoException {
         VwCommonContact criteria = new VwCommonContact();
         if (criteriaDto.getContactId() > 0) {
-            criteria.addCriteria(VwCommonContact.PROP_CONTACTID,
-                    criteriaDto.getContactId());
+            criteria.addCriteria(VwCommonContact.PROP_CONTACTID, criteriaDto.getContactId());
         }
         if (criteriaDto.getContactName() != null) {
-            criteria.addLikeClause(VwCommonContact.PROP_CONTACTNAME,
-                    criteriaDto.getContactName());
+            criteria.addLikeClause(VwCommonContact.PROP_CONTACTNAME, criteriaDto.getContactName());
         }
         if (criteriaDto.getContactType() != null) {
-            criteria.addCriteria(VwCommonContact.PROP_CONTACTTYPE,
-                    criteriaDto.getContactType());
-        }
-        if (criteriaDto.getContactEmail() != null) {
-            criteria.addLikeClause(VwCommonContact.PROP_EMAIL,
-                    criteriaDto.getContactEmail());
+            criteria.addCriteria(VwCommonContact.PROP_CONTACTTYPE, criteriaDto.getContactType());
         }
         if (criteriaDto.getPhoneCell() != null) {
-            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONECELL,
-                    criteriaDto.getPhoneCell());
+            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONECELL, criteriaDto.getPhoneCell());
         }
         if (criteriaDto.getPhoneCell() != null) {
-            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONECELL,
-                    criteriaDto.getPhoneCell());
+            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONECELL, criteriaDto.getPhoneCell());
         }
         if (criteriaDto.getPhoneHome() != null) {
-            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEHOME,
-                    criteriaDto.getPhoneHome());
+            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEHOME, criteriaDto.getPhoneHome());
         }
         if (criteriaDto.getPhoneCompany() != null) {
-            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEMAIN,
-                    criteriaDto.getPhoneCompany());
+            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEMAIN, criteriaDto.getPhoneCompany());
         }
         if (criteriaDto.getPhoneWork() != null) {
-            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEWORK,
-                    criteriaDto.getPhoneWork());
+            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEWORK, criteriaDto.getPhoneWork());
         }
         if (criteriaDto.getZip() > 0) {
-            criteria.addCriteria(VwCommonContact.PROP_ADDRZIP,
-                    criteriaDto.getZip());
+            criteria.addCriteria(VwCommonContact.PROP_ADDRZIP, criteriaDto.getZip());
         }
         if (criteriaDto.getCity() != null) {
-            criteria.addLikeClause(VwCommonContact.PROP_ZIPCITY,
-                    criteriaDto.getCity());
+            criteria.addLikeClause(VwCommonContact.PROP_ZIPCITY, criteriaDto.getCity());
         }
         if (criteriaDto.getState() != null) {
-            criteria.addLikeClause(VwCommonContact.PROP_ZIPSTATE,
-                    criteriaDto.getState());
+            criteria.addLikeClause(VwCommonContact.PROP_ZIPSTATE, criteriaDto.getState());
         }
 
         // Set ordering
-        criteria.addOrderBy(VwCommonContact.PROP_CONTACTNAME,
-                VwCommonContact.ORDERBY_ASCENDING);
+        criteria.addOrderBy(VwCommonContact.PROP_CONTACTNAME, VwCommonContact.ORDERBY_ASCENDING);
 
         // Perform query
         List<VwCommonContact> results = null;
@@ -263,75 +217,57 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             throws PersonalContactQueryDaoException {
         VwPersonAddress criteria = new VwPersonAddress();
         if (criteriaDto.getContactId() > 0) {
-            criteria.addCriteria(VwPersonAddress.PROP_PERSONID,
-                    criteriaDto.getContactId());
+            criteria.addCriteria(VwPersonAddress.PROP_PERSONID, criteriaDto.getContactId());
         }
         if (criteriaDto.getFirstname() != null) {
-            criteria.addLikeClause(VwPersonAddress.PROP_PERFIRSTNAME,
-                    criteriaDto.getFirstname());
+            criteria.addLikeClause(VwPersonAddress.PROP_PERFIRSTNAME, criteriaDto.getFirstname());
         }
         if (criteriaDto.getLastname() != null) {
-            criteria.addLikeClause(VwPersonAddress.PROP_PERLASTNAME,
-                    criteriaDto.getLastname());
+            criteria.addLikeClause(VwPersonAddress.PROP_PERLASTNAME, criteriaDto.getLastname());
         }
         if (criteriaDto.getContactName() != null) {
-            criteria.addLikeClause(VwPersonAddress.PROP_PERSHORTNAME,
-                    criteriaDto.getContactName());
+            criteria.addLikeClause(VwPersonAddress.PROP_PERSHORTNAME, criteriaDto.getContactName());
         }
         if (criteriaDto.getMaidenname() != null) {
-            criteria.addLikeClause(VwPersonAddress.PROP_PERMAIDENNAME,
-                    criteriaDto.getMaidenname());
+            criteria.addLikeClause(VwPersonAddress.PROP_PERMAIDENNAME, criteriaDto.getMaidenname());
         }
         if (criteriaDto.getSsn() != null) {
-            criteria.addCriteria(VwPersonAddress.PROP_PERSSN,
-                    criteriaDto.getSsn());
+            criteria.addCriteria(VwPersonAddress.PROP_PERSSN, criteriaDto.getSsn());
         }
         if (criteriaDto.getContactEmail() != null) {
-            criteria.addLikeClause(VwPersonAddress.PROP_PEREMAIL,
-                    criteriaDto.getContactEmail());
+            criteria.addLikeClause(VwPersonAddress.PROP_PEREMAIL, criteriaDto.getContactEmail());
         }
         if (criteriaDto.getPhoneCell() != null) {
-            criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONECELL,
-                    criteriaDto.getPhoneCell());
+            criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONECELL, criteriaDto.getPhoneCell());
         }
         if (criteriaDto.getPhoneHome() != null) {
-            criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONEHOME,
-                    criteriaDto.getPhoneHome());
+            criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONEHOME, criteriaDto.getPhoneHome());
         }
         if (criteriaDto.getPhoneWork() != null) {
-            criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONEWORK,
-                    criteriaDto.getPhoneWork());
+            criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONEWORK, criteriaDto.getPhoneWork());
         }
         if (criteriaDto.getZip() > 0) {
-            criteria.addCriteria(VwPersonAddress.PROP_ADDRZIP,
-                    criteriaDto.getZip());
+            criteria.addCriteria(VwPersonAddress.PROP_ADDRZIP, criteriaDto.getZip());
         }
         if (criteriaDto.getCity() != null) {
-            criteria.addLikeClause(VwPersonAddress.PROP_ZIPCITY,
-                    criteriaDto.getCity());
+            criteria.addLikeClause(VwPersonAddress.PROP_ZIPCITY, criteriaDto.getCity());
         }
         if (criteriaDto.getState() != null) {
-            criteria.addLikeClause(VwPersonAddress.PROP_ZIPSTATE,
-                    criteriaDto.getState());
+            criteria.addLikeClause(VwPersonAddress.PROP_ZIPSTATE, criteriaDto.getState());
         }
         if (criteriaDto.getRaceId() > 0) {
-            criteria.addCriteria(VwPersonAddress.PROP_PERRACEID,
-                    criteriaDto.getRaceId());
+            criteria.addCriteria(VwPersonAddress.PROP_PERRACEID, criteriaDto.getRaceId());
         }
         if (criteriaDto.getMaritalStatusId() > 0) {
-            criteria.addCriteria(VwPersonAddress.PROP_PERMARITALSTATUS,
-                    criteriaDto.getMaritalStatusId());
+            criteria.addCriteria(VwPersonAddress.PROP_PERMARITALSTATUS, criteriaDto.getMaritalStatusId());
         }
         if (criteriaDto.getGenderId() > 0) {
-            criteria.addCriteria(VwPersonAddress.PROP_PERGENDERID,
-                    criteriaDto.getGenderId());
+            criteria.addCriteria(VwPersonAddress.PROP_PERGENDERID, criteriaDto.getGenderId());
         }
 
         // Set ordering.
-        criteria.addOrderBy(VwPersonAddress.PROP_PERLASTNAME,
-                VwPersonAddress.ORDERBY_ASCENDING);
-        criteria.addOrderBy(VwPersonAddress.PROP_PERFIRSTNAME,
-                VwPersonAddress.ORDERBY_ASCENDING);
+        criteria.addOrderBy(VwPersonAddress.PROP_PERLASTNAME, VwPersonAddress.ORDERBY_ASCENDING);
+        criteria.addOrderBy(VwPersonAddress.PROP_PERFIRSTNAME, VwPersonAddress.ORDERBY_ASCENDING);
 
         // Perform query
         List<VwPersonAddress> results = null;
@@ -355,53 +291,41 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             throws PersonalContactQueryDaoException {
         VwBusinessAddress criteria = new VwBusinessAddress();
         if (criteriaDto.getContactId() > 0) {
-            criteria.addCriteria(VwBusinessAddress.PROP_BUSINESSID,
-                    criteriaDto.getContactId());
+            criteria.addCriteria(VwBusinessAddress.PROP_BUSINESSID, criteriaDto.getContactId());
         }
         if (criteriaDto.getContactName() != null) {
-            criteria.addLikeClause(VwBusinessAddress.PROP_BUSLONGNAME,
-                    criteriaDto.getContactName());
+            criteria.addLikeClause(VwBusinessAddress.PROP_BUSLONGNAME, criteriaDto.getContactName());
         }
         if (criteriaDto.getShortName() != null) {
-            criteria.addLikeClause(VwBusinessAddress.PROP_BUSSHORTNAME,
-                    criteriaDto.getShortName());
+            criteria.addLikeClause(VwBusinessAddress.PROP_BUSSHORTNAME, criteriaDto.getShortName());
         }
         if (criteriaDto.getTaxId() != null) {
-            criteria.addCriteria(VwBusinessAddress.PROP_BUSTAXID,
-                    criteriaDto.getTaxId());
+            criteria.addCriteria(VwBusinessAddress.PROP_BUSTAXID, criteriaDto.getTaxId());
         }
         if (criteriaDto.getContactEmail() != null) {
-            criteria.addLikeClause(VwBusinessAddress.PROP_CONTACTEMAIL,
-                    criteriaDto.getContactEmail());
+            criteria.addLikeClause(VwBusinessAddress.PROP_CONTACTEMAIL, criteriaDto.getContactEmail());
         }
         if (criteriaDto.getPhoneCompany() != null) {
-            criteria.addCriteria(VwBusinessAddress.PROP_ADDRPHONEMAIN,
-                    criteriaDto.getPhoneCompany());
+            criteria.addCriteria(VwBusinessAddress.PROP_ADDRPHONEMAIN, criteriaDto.getPhoneCompany());
         }
         if (criteriaDto.getZip() > 0) {
-            criteria.addCriteria(VwBusinessAddress.PROP_ADDRZIP,
-                    criteriaDto.getZip());
+            criteria.addCriteria(VwBusinessAddress.PROP_ADDRZIP, criteriaDto.getZip());
         }
         if (criteriaDto.getCity() != null) {
-            criteria.addLikeClause(VwBusinessAddress.PROP_ZIPCITY,
-                    criteriaDto.getCity());
+            criteria.addLikeClause(VwBusinessAddress.PROP_ZIPCITY, criteriaDto.getCity());
         }
         if (criteriaDto.getState() != null) {
-            criteria.addLikeClause(VwBusinessAddress.PROP_ZIPSTATE,
-                    criteriaDto.getState());
+            criteria.addLikeClause(VwBusinessAddress.PROP_ZIPSTATE, criteriaDto.getState());
         }
         if (criteriaDto.getEntityTypeId() > 0) {
-            criteria.addCriteria(VwBusinessAddress.PROP_BUSENTITYTYPEID,
-                    criteriaDto.getEntityTypeId());
+            criteria.addCriteria(VwBusinessAddress.PROP_BUSENTITYTYPEID, criteriaDto.getEntityTypeId());
         }
         if (criteriaDto.getServTypeId() > 0) {
-            criteria.addCriteria(VwBusinessAddress.PROP_BUSSERVTYPEID,
-                    criteriaDto.getServTypeId());
+            criteria.addCriteria(VwBusinessAddress.PROP_BUSSERVTYPEID, criteriaDto.getServTypeId());
         }
 
         // Set ordering.
-        criteria.addOrderBy(VwBusinessAddress.PROP_BUSLONGNAME,
-                VwBusinessAddress.ORDERBY_ASCENDING);
+        criteria.addOrderBy(VwBusinessAddress.PROP_BUSLONGNAME, VwBusinessAddress.ORDERBY_ASCENDING);
 
         // Perform query
         List<VwBusinessAddress> results = null;
@@ -416,8 +340,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
 
         List<ContactDto> list = new ArrayList<ContactDto>();
         for (VwBusinessAddress item : results) {
-            ContactDto dto = Rmt2AddressBookDtoFactory
-                    .getBusinessInstance(item);
+            ContactDto dto = Rmt2AddressBookDtoFactory.getBusinessInstance(item);
             list.add(dto);
         }
         return list;
@@ -436,8 +359,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws ContactDaoException
      */
     @Override
-    public List<BusinessContactDto> fetchBusinessContact(List<String> busIdList)
-            throws ContactDaoException {
+    public List<BusinessContactDto> fetchBusinessContact(List<String> busIdList) throws ContactDaoException {
         if (busIdList == null || busIdList.size() <= 0) {
             throw new ContactDaoException("Business Id list is invalid");
         }
@@ -445,8 +367,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         ids = (String[]) busIdList.toArray(new String[busIdList.size()]);
         VwBusinessAddress criteria = new VwBusinessAddress();
         criteria.addInClause(VwBusinessAddress.PROP_BUSINESSID, ids);
-        criteria.addOrderBy(VwBusinessAddress.PROP_BUSLONGNAME,
-                VwBusinessAddress.ORDERBY_ASCENDING);
+        criteria.addOrderBy(VwBusinessAddress.PROP_BUSLONGNAME, VwBusinessAddress.ORDERBY_ASCENDING);
         List<VwBusinessAddress> results = null;
         try {
             results = this.client.retrieveList(criteria);
@@ -459,8 +380,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
 
         List<BusinessContactDto> list = new ArrayList<BusinessContactDto>();
         for (VwBusinessAddress item : results) {
-            BusinessContactDto dto = Rmt2AddressBookDtoFactory
-                    .getBusinessInstance(item);
+            BusinessContactDto dto = Rmt2AddressBookDtoFactory.getBusinessInstance(item);
             list.add(dto);
         }
         return list;
@@ -487,7 +407,8 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * </tr>
      * <tr>
      * <td><b>ContactDto</b></td>
-     * <td>Business or Person (evaluate contact_type column to determine table)</td>
+     * <td>Business or Person (evaluate contact_type column to determine
+     * table)</td>
      * <td>business.business_id or person.person_id</td>
      * <td>business.longname or person.shortname</td>
      * </tr>
@@ -513,8 +434,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws ContactUpdateDaoException
      */
     @Override
-    public int maintainContact(ContactDto contact)
-            throws ContactUpdateDaoException {
+    public int maintainContact(ContactDto contact) throws ContactUpdateDaoException {
         this.validateContactBasicInfo(contact);
 
         this.client.beginTrans();
@@ -567,19 +487,15 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             does not exist for the update operation, or general database
      *             access error.
      */
-    private int maintainCommonContact(ContactDto contact)
-            throws ContactUpdateDaoException {
+    private int maintainCommonContact(ContactDto contact) throws ContactUpdateDaoException {
         this.validateContactGenericInfo(contact);
         int rc = 0;
 
         // handle business contact
-        if (contact.getContactType().equalsIgnoreCase(
-                ContactsConst.CONTACT_TYPE_BUSINESS)) {
-            BusinessContactDto dto = Rmt2AddressBookDtoFactory
-                    .getNewBusinessInstance();
+        if (contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS)) {
+            BusinessContactDto dto = Rmt2AddressBookDtoFactory.getNewBusinessInstance();
             if (contact.getContactId() > 0) {
-                BusinessContactDto criteria = Rmt2AddressBookDtoFactory
-                        .getNewBusinessInstance();
+                BusinessContactDto criteria = Rmt2AddressBookDtoFactory.getNewBusinessInstance();
                 criteria.setContactId(contact.getContactId());
                 List<ContactDto> list = this.fetchContact(criteria);
                 if (list != null && list.size() == 1) {
@@ -610,13 +526,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         }
 
         // handle personal contact
-        if (contact.getContactType().equalsIgnoreCase(
-                ContactsConst.CONTACT_TYPE_PERSONAL)) {
-            PersonalContactDto dto = Rmt2AddressBookDtoFactory
-                    .getNewPersonInstance();
+        if (contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)) {
+            PersonalContactDto dto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
             if (contact.getContactId() > 0) {
-                PersonalContactDto criteria = Rmt2AddressBookDtoFactory
-                        .getNewPersonInstance();
+                PersonalContactDto criteria = Rmt2AddressBookDtoFactory.getNewPersonInstance();
                 criteria.setContactId(contact.getContactId());
                 List<ContactDto> list = this.fetchContact(criteria);
                 if (list != null && list.size() == 1) {
@@ -664,8 +577,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             general problem(s) saving data changes for the personal
      *             contact.
      */
-    private int maintainPersonalContact(PersonalContactDto contact)
-            throws PersonalContactUpdateDaoException {
+    private int maintainPersonalContact(PersonalContactDto contact) throws PersonalContactUpdateDaoException {
         this.validatePersonalContactInfo(contact);
 
         // Get Person information
@@ -698,12 +610,12 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             }
             if (p.getPersonId() == 0) {
                 rc = this.insertPersonContact(p, a);
-                contact.setContactId(rc);
+                contact.setContactId(p.getPersonId());
+                contact.setAddrId(a.getAddrId());
             }
             return rc;
         } catch (DatabaseException e) {
-            this.msg = "Error occurred persisting data changes for personal contact, "
-                    + p.getShortname();
+            this.msg = "Error occurred persisting data changes for personal contact, " + p.getShortname();
             throw new PersonalContactUpdateDaoException(this.msg, e);
         }
     }
@@ -724,8 +636,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws DatabaseException
      *             general database error
      */
-    private int insertPersonContact(Person person, Address addr)
-            throws DatabaseException {
+    private int insertPersonContact(Person person, Address addr) throws DatabaseException {
         this.checkPersonalContactFkValues(person);
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
@@ -741,7 +652,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             addr.setUserId(ut.getLoginId());
             addr.setPersonId(newPersonId);
             addr.setNull(Address.PROP_BUSINESSID);
-            this.client.insertRow(addr, true);
+            int newAddressId = this.client.insertRow(addr, true);
+
+            person.setPersonId(newPersonId);
+            addr.setAddrId(newAddressId);
             return newPersonId;
         } catch (Exception e) {
             this.msg = "Insert operation failed tageting the Person table";
@@ -767,14 +681,11 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             profile does not exists in the <i>person</i> table for
      *             <i>contact</i>.
      */
-    private int updatePersonContact(Person contact, Address addr)
-            throws DatabaseException, NotFoundException {
+    private int updatePersonContact(Person contact, Address addr) throws DatabaseException, NotFoundException {
         // Get orginal contact record and update contents
         Person deltaContact = this.getPersonContactOrm(contact.getPersonId());
         if (deltaContact == null) {
-            throw new NotFoundException(
-                    "Personal contact profile not found in database: "
-                            + contact.getPersonId());
+            throw new NotFoundException("Personal contact profile not found in database: " + contact.getPersonId());
         }
         deltaContact.setPersonId(contact.getPersonId());
         deltaContact.setFirstname(contact.getFirstname());
@@ -799,7 +710,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
 
         // Get orginal address record and update contents with the input Address
         // instance
-        Address deltaAddr = this.retrieveAddressInfo(addr.getAddrId());
+        Address deltaAddr = this.getAddressInfo(addr.getAddrId());
         this.copyAddressInfo(addr, deltaAddr);
 
         // Apply changes to personal contact record to the database.
@@ -815,13 +726,11 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             // update personal contact
             deltaContact.setDateUpdated(ut.getDateCreated());
             deltaContact.setUserId(ut.getLoginId());
-            deltaContact.addCriteria(Person.PROP_PERSONID,
-                    deltaContact.getPersonId());
+            deltaContact.addCriteria(Person.PROP_PERSONID, deltaContact.getPersonId());
             rc = this.client.updateRow(deltaContact);
             return rc;
         } catch (Exception e) {
-            this.msg = "Update operation targeting person table failed for contact, "
-                    + contact.getPersonId();
+            this.msg = "Update operation targeting person table failed for contact, " + contact.getPersonId();
             throw new DatabaseException(this.msg, e);
         }
     }
@@ -842,8 +751,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             general problem(s) saving data changes for the business
      *             contact.
      */
-    private int maintainBusinessContact(BusinessContactDto contact)
-            throws BusinessContactUpdateDaoException {
+    private int maintainBusinessContact(BusinessContactDto contact) throws BusinessContactUpdateDaoException {
         Business b = new Business();
         b.setBusinessId(contact.getContactId());
         b.setEntityTypeId(contact.getEntityTypeId());
@@ -870,7 +778,8 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         }
         if (b.getBusinessId() == 0) {
             rc = this.insertBusinessContact(b, a);
-            contact.setContactId(rc);
+            contact.setContactId(b.getBusinessId());
+            contact.setAddrId(a.getAddrId());
         }
         return rc;
     }
@@ -891,8 +800,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws DatabaseException
      *             general database error
      */
-    private int insertBusinessContact(Business contact, Address addr)
-            throws DatabaseException {
+    private int insertBusinessContact(Business contact, Address addr) throws DatabaseException {
         this.checkBusinessContactFkValues(contact);
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
@@ -908,7 +816,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             addr.setUserId(ut.getLoginId());
             addr.setBusinessId(newBusinessId);
             addr.setNull(Address.PROP_PERSONID);
-            this.client.insertRow(addr, true);
+            int newAddressId = this.client.insertRow(addr, true);
+
+            contact.setBusinessId(newBusinessId);
+            addr.setAddrId(newAddressId);
             return newBusinessId;
         } catch (Exception e) {
             this.msg = "Insert operation tageting business table failed";
@@ -934,15 +845,11 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             profile does not exists in the <i>business</i> table for
      *             <i>contact</i>.
      */
-    private int updateBusinessContact(Business contact, Address addr)
-            throws DatabaseException, NotFoundException {
+    private int updateBusinessContact(Business contact, Address addr) throws DatabaseException, NotFoundException {
         // Get orginal contact record and update contents
-        Business deltaContact = this.getBusinessContactOrm(contact
-                .getBusinessId());
+        Business deltaContact = this.getBusinessContactOrm(contact.getBusinessId());
         if (deltaContact == null) {
-            throw new NotFoundException(
-                    "Business contact profile not found in database: "
-                            + contact.getBusinessId());
+            throw new NotFoundException("Business contact profile not found in database: " + contact.getBusinessId());
         }
         deltaContact.setBusinessId(contact.getBusinessId());
         deltaContact.setEntityTypeId(contact.getEntityTypeId());
@@ -965,7 +872,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
 
         // Get orginal address record and update contents with the input Address
         // instance
-        Address deltaAddr = this.retrieveAddressInfo(addr.getAddrId());
+        Address deltaAddr = this.getAddressInfo(addr.getAddrId());
         this.copyAddressInfo(addr, deltaAddr);
 
         // Apply changes to business contact record to the database.
@@ -981,13 +888,11 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             // update business contact
             deltaContact.setDateUpdated(ut.getDateCreated());
             deltaContact.setUserId(ut.getLoginId());
-            deltaContact.addCriteria(Business.PROP_BUSINESSID,
-                    deltaContact.getBusinessId());
+            deltaContact.addCriteria(Business.PROP_BUSINESSID, deltaContact.getBusinessId());
             rc = this.client.updateRow(deltaContact);
             return rc;
         } catch (Exception e) {
-            this.msg = "Update operation targeting business table failed for contact, "
-                    + contact.getBusinessId();
+            this.msg = "Update operation targeting business table failed for contact, " + contact.getBusinessId();
             throw new DatabaseException(this.msg, e);
         }
     }
@@ -1002,8 +907,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws InvalidContactDataDaoException
      *             <i>contact</i> is null or the contact name property is null
      */
-    protected void validateContactBasicInfo(ContactDto contact)
-            throws InvalidContactDataDaoException {
+    protected void validateContactBasicInfo(ContactDto contact) throws InvalidContactDataDaoException {
         if (contact == null) {
             this.msg = "Contact object cannot be null";
             throw new InvalidContactDataDaoException(this.msg);
@@ -1035,16 +939,13 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             <i>contact</i>'s property, contactType, is null or is not
      *             equal to <i>per</i> or <i>bus</i>.
      */
-    protected void validateContactGenericInfo(ContactDto contact)
-            throws InvalidContactDataDaoException {
+    protected void validateContactGenericInfo(ContactDto contact) throws InvalidContactDataDaoException {
         if (contact.getContactType() == null) {
             this.msg = "Contact type is required";
             throw new InvalidContactDataDaoException(this.msg);
         }
-        if (!contact.getContactType().equalsIgnoreCase(
-                ContactsConst.CONTACT_TYPE_BUSINESS)
-                && !contact.getContactType().equalsIgnoreCase(
-                        ContactsConst.CONTACT_TYPE_PERSONAL)) {
+        if (!contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS)
+                && !contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)) {
             this.msg = "Contact type is required to be either \"bus\" or \"per\"";
             throw new InvalidContactDataDaoException(this.msg);
         }
@@ -1062,16 +963,11 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             <i>contact</i>'s properties, firstName, lastName, and/or
      *             shortName is equal to null.
      */
-    protected void validatePersonalContactInfo(PersonalContactDto contact)
-            throws InvalidContactDataDaoException {
-        if (contact.getFirstname() != null && contact.getLastname() != null
-                && contact.getContactName() == null) {
-            contact.setContactName(contact.getLastname() + ", "
-                    + contact.getFirstname());
+    protected void validatePersonalContactInfo(PersonalContactDto contact) throws InvalidContactDataDaoException {
+        if (contact.getFirstname() != null && contact.getLastname() != null && contact.getContactName() == null) {
+            contact.setContactName(contact.getLastname() + ", " + contact.getFirstname());
         }
-        else if (contact.getFirstname() == null
-                && contact.getLastname() == null
-                && contact.getContactName() != null) {
+        else if (contact.getFirstname() == null && contact.getLastname() == null && contact.getContactName() != null) {
             String name[] = contact.getContactName().split(" ");
             if (name.length == 1) {
                 contact.setFirstname(name[0]);
@@ -1089,9 +985,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
                 }
             }
         }
-        else if (contact.getFirstname() != null
-                && contact.getLastname() != null
-                && contact.getContactName() != null) {
+        else if (contact.getFirstname() != null && contact.getLastname() != null && contact.getContactName() != null) {
             // Name is okay. Do Nothing...
         }
         else {
@@ -1122,7 +1016,8 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * </tr>
      * <tr>
      * <td><b>ContactDto</b></td>
-     * <td>Business or Person (evaluate contact_type column to determine table)</td>
+     * <td>Business or Person (evaluate contact_type column to determine
+     * table)</td>
      * <td>business.business_id or person.person_id</td>
      * </tr>
      * <tr>
@@ -1146,8 +1041,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws ContactUpdateDaoException
      */
     @Override
-    public int deleteContact(ContactDto contact)
-            throws ContactUpdateDaoException {
+    public int deleteContact(ContactDto contact) throws ContactUpdateDaoException {
         if (contact == null) {
             this.msg = "A Contact instance is required as an input parameter when deleting a contact";
             throw new ContactUpdateDaoException(this.msg);
@@ -1199,13 +1093,11 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      *             The contact id is not set in <i>contact</i> or general
      *             database error.
      */
-    private int deleteCommonContact(ContactDto contact)
-            throws DatabaseException {
+    private int deleteCommonContact(ContactDto contact) throws DatabaseException {
         this.validateContactGenericInfo(contact);
         int rows = 0;
         try {
-            if (contact.getContactType().equalsIgnoreCase(
-                    ContactsConst.CONTACT_TYPE_PERSONAL)) {
+            if (contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)) {
                 rows = this.deletePersonalContact(contact.getContactId());
             }
             else {
@@ -1213,8 +1105,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             }
             return rows;
         } catch (Exception e) {
-            this.msg = "Unable to deleting common contact identified as: "
-                    + contact.getContactId();
+            this.msg = "Unable to deleting common contact identified as: " + contact.getContactId();
             throw new DatabaseException(this.msg, e);
         }
 
@@ -1246,8 +1137,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         try {
             return rows += this.client.deleteRow(p);
         } catch (Exception e) {
-            this.msg = "Error occurred deleting contact from the person table, "
-                    + contactId;
+            this.msg = "Error occurred deleting contact from the person table, " + contactId;
             throw new DatabaseException(this.msg, e);
         }
     }
@@ -1278,9 +1168,32 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
         try {
             return rows += this.client.deleteRow(b);
         } catch (Exception e) {
-            this.msg = "Error occurred deleting contact from the business table, "
-                    + contactId;
+            this.msg = "Error occurred deleting contact from the business table, " + contactId;
             throw new DatabaseException(this.msg, e);
+        }
+    }
+
+    private Person getPersonContactOrm(int contactId) throws ContactDaoException {
+        Person criteria = new Person();
+        criteria.addCriteria(Person.PROP_PERSONID, contactId);
+        Person results = null;
+        try {
+            results = (Person) this.client.retrieveObject(criteria);
+            return results;
+        } catch (DatabaseException e) {
+            throw new ContactDaoException(e);
+        }
+    }
+
+    private Business getBusinessContactOrm(int contactId) throws ContactDaoException {
+        Business criteria = new Business();
+        criteria.addCriteria(Business.PROP_BUSINESSID, contactId);
+        Business results = null;
+        try {
+            results = (Business) this.client.retrieveObject(criteria);
+            return results;
+        } catch (DatabaseException e) {
+            throw new ContactDaoException(e);
         }
     }
 
@@ -1346,8 +1259,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
      * @throws ContactDaoException
      *             general database access errors.
      */
-    protected Address retrieveAddressInfo(int addressId)
-            throws ContactDaoException {
+    protected Address getAddressInfo(int addressId) throws ContactDaoException {
         Address criteria = new Address();
         criteria.addCriteria(Address.PROP_ADDRID, addressId);
         try {
@@ -1380,8 +1292,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements
             dest.setBusinessId(src.getContactId());
         }
         else {
-            if (src.getContactType().equalsIgnoreCase(
-                    ContactsConst.CONTACT_TYPE_BUSINESS)) {
+            if (src.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_BUSINESS)) {
                 dest.setBusinessId(src.getContactId());
             }
             else {

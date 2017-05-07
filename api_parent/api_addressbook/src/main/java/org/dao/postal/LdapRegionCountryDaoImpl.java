@@ -29,11 +29,9 @@ import com.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
-        RegionCountryDao {
+class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements RegionCountryDao {
 
-    private static final Logger logger = Logger
-            .getLogger(LdapRegionCountryDaoImpl.class);
+    private static final Logger logger = Logger.getLogger(LdapRegionCountryDaoImpl.class);
 
     /**
      * Base DN for country LDAP node
@@ -68,8 +66,7 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
      * @throws RegionCountryDaoException
      */
     @Override
-    public CountryDto fetchCountry(int countryId)
-            throws RegionCountryDaoException {
+    public CountryDto fetchCountry(int countryId) throws RegionCountryDaoException {
         List<LdapCountry> list = null;
         try {
             LdapSearchOperation op = new LdapSearchOperation();
@@ -112,22 +109,18 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
      * @throws RegionCountryDaoException
      */
     @Override
-    public List<CountryDto> fetchCountry(CountryDto criteria)
-            throws RegionCountryDaoException {
+    public List<CountryDto> fetchCountry(CountryDto criteria) throws RegionCountryDaoException {
         LdapSearchOperation op = new LdapSearchOperation();
         if (criteria != null) {
             if (criteria.getCountryId() > 0) {
-                op.getSearchFilterArgs().put("countryId",
-                        String.valueOf(criteria.getCountryId()));
+                op.getSearchFilterArgs().put("countryId", String.valueOf(criteria.getCountryId()));
             }
             else {
                 if (criteria.getCountryName() != null) {
-                    op.getSearchFilterArgs().put("c",
-                            criteria.getCountryName() + "*");
+                    op.getSearchFilterArgs().put("c", criteria.getCountryName() + "*");
                 }
                 if (criteria.getCountryCode() != null) {
-                    op.getSearchFilterArgs().put("cn",
-                            criteria.getCountryCode() + "*");
+                    op.getSearchFilterArgs().put("cn", criteria.getCountryCode() + "*");
                 }
             }
         }
@@ -138,8 +131,7 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
             op.setDn(LdapRegionCountryDaoImpl.BASE_DN_COUNTRY);
             op.setScope(SearchControls.ONELEVEL_SCOPE);
             op.setUseSearchFilterExpression(true);
-            logger.info("LDAP filter to be applied for country search operation: "
-                    + op.getSearchFilter());
+            logger.info("LDAP filter to be applied for country search operation: " + op.getSearchFilter());
             op.setMappingBeanName("org.dao.mapping.orm.ldap.LdapCountry");
             Object results[] = this.ldap.retrieve(op);
             countryList = this.ldap.extractLdapResults(results);
@@ -178,13 +170,10 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
         List<LdapRegion> list = null;
         try {
             LdapSearchOperation op = new LdapSearchOperation();
-            String dn = RMT2String.replace(
-                    LdapRegionCountryDaoImpl.BASE_DN_REGION, "United States",
-                    "?");
+            String dn = RMT2String.replace(LdapRegionCountryDaoImpl.BASE_DN_REGION, "United States", "?");
             op.setDn(dn);
             op.setScope(SearchControls.ONELEVEL_SCOPE);
-            op.getSearchFilterArgs()
-                    .put("provinceId", String.valueOf(regionId));
+            op.getSearchFilterArgs().put("provinceId", String.valueOf(regionId));
             op.setUseSearchFilterExpression(true);
             op.setMappingBeanName("org.dao.mapping.orm.ldap.LdapRegion");
             Object results[] = this.ldap.retrieve(op);
@@ -229,31 +218,24 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
      *             <i>criteria</i> is null, or genreal LDAP access error.
      */
     @Override
-    public List<RegionDto> fetchRegion(RegionDto criteria)
-            throws RegionCountryDaoException {
+    public List<RegionDto> fetchRegion(RegionDto criteria) throws RegionCountryDaoException {
         if (criteria == null) {
-            throw new RegionCountryDaoException(
-                    "Selection criteria must exist as an instance of RegionDto");
+            throw new RegionCountryDaoException("Selection criteria must exist as an instance of RegionDto");
         }
         if (criteria.getCountryName() == null) {
-            throw new RegionCountryDaoException(
-                    "Selection criteria requires country name");
+            throw new RegionCountryDaoException("Selection criteria requires country name");
         }
-        String dn = RMT2String.replace(LdapRegionCountryDaoImpl.BASE_DN_REGION,
-                criteria.getCountryName(), "?");
+        String dn = RMT2String.replace(LdapRegionCountryDaoImpl.BASE_DN_REGION, criteria.getCountryName(), "?");
         LdapSearchOperation op = new LdapSearchOperation();
         if (criteria.getStateId() > 0) {
-            op.getSearchFilterArgs().put("provinceId",
-                    String.valueOf(criteria.getStateId()));
+            op.getSearchFilterArgs().put("provinceId", String.valueOf(criteria.getStateId()));
         }
         else {
             if (criteria.getStateName() != null) {
-                op.getSearchFilterArgs()
-                        .put("c", criteria.getStateName() + "*");
+                op.getSearchFilterArgs().put("c", criteria.getStateName() + "*");
             }
             if (criteria.getStateCode() != null) {
-                op.getSearchFilterArgs().put("cn",
-                        criteria.getStateCode() + "*");
+                op.getSearchFilterArgs().put("cn", criteria.getStateCode() + "*");
             }
         }
 
@@ -262,10 +244,9 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
         try {
             op.setDn(dn);
             op.setScope(SearchControls.ONELEVEL_SCOPE);
-            logger.info("LDAP base DN to be applied for region/state/province search operation: "
-                    + dn);
-            logger.info("LDAP filter to be applied for region/state/province search operation: "
-                    + op.getSearchFilter());
+            logger.info("LDAP base DN to be applied for region/state/province search operation: " + dn);
+            logger.info(
+                    "LDAP filter to be applied for region/state/province search operation: " + op.getSearchFilter());
             op.setMappingBeanName("org.dao.mapping.orm.ldap.LdapRegion");
             op.setUseSearchFilterExpression(true);
             Object results[] = this.ldap.retrieve(op);
@@ -298,8 +279,7 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
      */
     @Override
     public int maintainRegion(RegionDto obj) throws RegionCountryDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -307,8 +287,7 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
      */
     @Override
     public int deleteRegion(int stateId) throws RegionCountryDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -316,8 +295,7 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
      */
     @Override
     public int maintainCountry(CountryDto obj) throws RegionCountryDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -325,17 +303,14 @@ class LdapRegionCountryDaoImpl extends AbstractLdapDaoClient implements
      */
     @Override
     public int deleteCountry(int countryId) throws RegionCountryDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
      * Not supported
      */
     @Override
-    public List<CountryRegionDto> fetchCountryRegion(CountryRegionDto criteria)
-            throws RegionCountryDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    public List<CountryRegionDto> fetchCountryRegion(CountryRegionDto criteria) throws RegionCountryDaoException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 }

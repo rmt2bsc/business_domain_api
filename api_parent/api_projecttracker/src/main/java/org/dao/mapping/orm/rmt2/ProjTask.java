@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -129,6 +131,60 @@ public class ProjTask extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjTask other = (ProjTask) obj; 
+   if (EqualityAssistant.notEqual(this.taskId, other.taskId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.description, other.description)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.billable, other.billable)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.taskId),
+   HashCodeAssistant.hashObject(this.description),
+   HashCodeAssistant.hashObject(this.billable),
+   HashCodeAssistant.hashObject(this.dateCreated),
+   HashCodeAssistant.hashObject(this.dateUpdated),
+   HashCodeAssistant.hashObject(this.userId));
+} 
+
+@Override
+public String toString() {
+   return "ProjTask [taskId=" + taskId + 
+          ", description=" + description + 
+          ", billable=" + billable + 
+          ", dateCreated=" + dateCreated + 
+          ", dateUpdated=" + dateUpdated + 
+          ", userId=" + userId  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

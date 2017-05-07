@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -97,6 +99,50 @@ public class ProjProjectTask extends OrmBean {
   public int getProjId() {
     return this.projId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjProjectTask other = (ProjProjectTask) obj; 
+   if (EqualityAssistant.notEqual(this.projectTaskId, other.projectTaskId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.taskId, other.taskId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.timesheetId, other.timesheetId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projId, other.projId)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.projectTaskId),
+   HashCodeAssistant.hashObject(this.taskId),
+   HashCodeAssistant.hashObject(this.timesheetId),
+   HashCodeAssistant.hashObject(this.projId));
+} 
+
+@Override
+public String toString() {
+   return "ProjProjectTask [projectTaskId=" + projectTaskId + 
+          ", taskId=" + taskId + 
+          ", timesheetId=" + timesheetId + 
+          ", projId=" + projId  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

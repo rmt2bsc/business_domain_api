@@ -25,10 +25,8 @@ public class JaxbAddressBookFactory extends RMT2Base {
      *            an instance of {@link BusinessContactCriteria}
      * @return an instance of {@link BusinessContactDto}
      */
-    public static final BusinessContactDto createBusinessContactDtoInstance(
-            BusinessContactCriteria criteria) {
-        BusinessContactDto dto = new BusinessContactCriteriaJaxbAdapter(
-                criteria);
+    public static final BusinessContactDto createBusinessContactDtoInstance(BusinessContactCriteria criteria) {
+        BusinessContactDto dto = new BusinessContactCriteriaJaxbAdapter(criteria);
         return dto;
     }
 
@@ -40,8 +38,7 @@ public class JaxbAddressBookFactory extends RMT2Base {
      *            an instance of {@link BusinessType}
      * @return an instance of {@link BusinessContactDto}
      */
-    public static final BusinessContactDto createBusinessContactDtoInstance(
-            BusinessType bus) {
+    public static final BusinessContactDto createBusinessContactDtoInstance(BusinessType bus) {
         BusinessContactDto dto = new BusinessContactJaxbAdapter(bus);
         return dto;
     }

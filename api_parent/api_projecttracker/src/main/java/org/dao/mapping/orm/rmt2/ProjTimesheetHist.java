@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -19,10 +21,10 @@ public class ProjTimesheetHist extends OrmBean {
 
 	// Property name constants that belong to respective DataSource, ProjTimesheetHistView
 
-/** The property name constant equivalent to property, TimesheetId, of respective DataSource view. */
-  public static final String PROP_TIMESHEETID = "TimesheetId";
 /** The property name constant equivalent to property, TimesheetHistId, of respective DataSource view. */
   public static final String PROP_TIMESHEETHISTID = "TimesheetHistId";
+/** The property name constant equivalent to property, TimesheetId, of respective DataSource view. */
+  public static final String PROP_TIMESHEETID = "TimesheetId";
 /** The property name constant equivalent to property, TimesheetStatusId, of respective DataSource view. */
   public static final String PROP_TIMESHEETSTATUSID = "TimesheetStatusId";
 /** The property name constant equivalent to property, EffectiveDate, of respective DataSource view. */
@@ -38,10 +40,10 @@ public class ProjTimesheetHist extends OrmBean {
 
 
 
-	/** The javabean property equivalent of database column proj_timesheet_hist.timesheet_id */
-  private int timesheetId;
-/** The javabean property equivalent of database column proj_timesheet_hist.timesheet_hist_id */
+	/** The javabean property equivalent of database column proj_timesheet_hist.timesheet_hist_id */
   private int timesheetHistId;
+/** The javabean property equivalent of database column proj_timesheet_hist.timesheet_id */
+  private int timesheetId;
 /** The javabean property equivalent of database column proj_timesheet_hist.timesheet_status_id */
   private int timesheetStatusId;
 /** The javabean property equivalent of database column proj_timesheet_hist.effective_date */
@@ -66,18 +68,6 @@ public class ProjTimesheetHist extends OrmBean {
 	super();
  }
 /**
- * Sets the value of member variable timesheetId
- */
-  public void setTimesheetId(int value) {
-    this.timesheetId = value;
-  }
-/**
- * Gets the value of member variable timesheetId
- */
-  public int getTimesheetId() {
-    return this.timesheetId;
-  }
-/**
  * Sets the value of member variable timesheetHistId
  */
   public void setTimesheetHistId(int value) {
@@ -88,6 +78,18 @@ public class ProjTimesheetHist extends OrmBean {
  */
   public int getTimesheetHistId() {
     return this.timesheetHistId;
+  }
+/**
+ * Sets the value of member variable timesheetId
+ */
+  public void setTimesheetId(int value) {
+    this.timesheetId = value;
+  }
+/**
+ * Gets the value of member variable timesheetId
+ */
+  public int getTimesheetId() {
+    return this.timesheetId;
   }
 /**
  * Sets the value of member variable timesheetStatusId
@@ -161,6 +163,70 @@ public class ProjTimesheetHist extends OrmBean {
   public String getIpUpdated() {
     return this.ipUpdated;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final ProjTimesheetHist other = (ProjTimesheetHist) obj; 
+   if (EqualityAssistant.notEqual(this.timesheetHistId, other.timesheetHistId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.timesheetId, other.timesheetId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.timesheetStatusId, other.timesheetStatusId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.effectiveDate, other.effectiveDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetHistId),
+   HashCodeAssistant.hashObject(this.timesheetId),
+   HashCodeAssistant.hashObject(this.timesheetStatusId),
+   HashCodeAssistant.hashObject(this.effectiveDate),
+   HashCodeAssistant.hashObject(this.endDate),
+   HashCodeAssistant.hashObject(this.userId),
+   HashCodeAssistant.hashObject(this.ipCreated),
+   HashCodeAssistant.hashObject(this.ipUpdated));
+} 
+
+@Override
+public String toString() {
+   return "ProjTimesheetHist [timesheetHistId=" + timesheetHistId + 
+          ", timesheetId=" + timesheetId + 
+          ", timesheetStatusId=" + timesheetStatusId + 
+          ", effectiveDate=" + effectiveDate + 
+          ", endDate=" + endDate + 
+          ", userId=" + userId + 
+          ", ipCreated=" + ipCreated + 
+          ", ipUpdated=" + ipUpdated  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

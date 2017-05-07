@@ -17,8 +17,8 @@ import com.RMT2RuntimeException;
  * @author Roy Terrell
  * 
  */
-public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
-        LookupExtDto, LookupCodeDto, LookupGroupDto {
+public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter
+        implements LookupExtDto, LookupCodeDto, LookupGroupDto {
 
     private LdapLookup c;
 
@@ -144,8 +144,7 @@ public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
         try {
             return Integer.parseInt(this.c.getUid().get(0));
         } catch (NumberFormatException e) {
-            throw new RMT2RuntimeException(
-                    "Lookup code group id must be numeric");
+            throw new RMT2RuntimeException("Lookup code group id must be numeric");
         }
     }
 
@@ -182,8 +181,7 @@ public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setGrpPermcol(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -193,8 +191,7 @@ public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getGrpPermcol() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -204,8 +201,7 @@ public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setCodeGenIndValue(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -215,8 +211,7 @@ public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getCodeGenIndValue() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -226,8 +221,7 @@ public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setCodePermcol(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -237,8 +231,7 @@ public class LookupLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getCodePermcol() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
 }

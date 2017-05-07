@@ -14,8 +14,7 @@ import com.RMT2RuntimeException;
  * @author Roy Terrell
  * 
  */
-class RegionLdapAdapter extends AbstractAddressBookLdapAdapter implements
-        RegionDto {
+class RegionLdapAdapter extends AbstractAddressBookLdapAdapter implements RegionDto {
 
     private LdapRegion r;
 
@@ -46,9 +45,7 @@ class RegionLdapAdapter extends AbstractAddressBookLdapAdapter implements
         try {
             return Integer.parseInt(this.r.getRegionId());
         } catch (NumberFormatException e) {
-            throw new RMT2RuntimeException(
-                    "Region/State/Province Id in not numeric: "
-                            + this.r.getRegionId());
+            throw new RMT2RuntimeException("Region/State/Province Id in not numeric: " + this.r.getRegionId());
         }
     }
 
@@ -99,8 +96,7 @@ class RegionLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setStatePermcol(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -110,8 +106,7 @@ class RegionLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public String getStatePermcol() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -119,8 +114,7 @@ class RegionLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public int getCountryId() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -130,8 +124,7 @@ class RegionLdapAdapter extends AbstractAddressBookLdapAdapter implements
      */
     @Override
     public void setCountryId(int value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*

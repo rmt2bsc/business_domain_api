@@ -29,8 +29,7 @@ import com.api.ldap.operation.LdapSearchOperation;
  */
 class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
 
-    private static final Logger logger = Logger
-            .getLogger(LdapLookupDaoImpl.class);
+    private static final Logger logger = Logger.getLogger(LdapLookupDaoImpl.class);
 
     private static final String MAPPER_CLASS = "org.dao.mapping.orm.ldap.LdapLookup";
 
@@ -89,8 +88,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
         else {
             obj = list.get(0);
         }
-        LookupCodeDto dto = LdapAddressBookDtoFactory
-                .getLookupCodeInstance(obj);
+        LookupCodeDto dto = LdapAddressBookDtoFactory.getLookupCodeInstance(obj);
         return dto;
     }
 
@@ -119,11 +117,9 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
      *             general LDAP access error.
      */
     @Override
-    public List<LookupCodeDto> fetchCode(LookupCodeDto criteria)
-            throws LookupDaoException {
+    public List<LookupCodeDto> fetchCode(LookupCodeDto criteria) throws LookupDaoException {
         if (criteria == null) {
-            throw new LookupDaoException(
-                    "Selection criteria must exist as an instance of LookupCodeDto");
+            throw new LookupDaoException("Selection criteria must exist as an instance of LookupCodeDto");
         }
         if (criteria.getGrpId() <= 0) {
             throw new LookupDaoException("Selection criteria requires Group Id");
@@ -131,28 +127,23 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
 
         LookupGroupDto grpDto = this.fetchGroup(criteria.getGrpId());
         if (grpDto == null) {
-            throw new LookupDaoException(
-                    "An invalid group was passed in the selection criteria object");
+            throw new LookupDaoException("An invalid group was passed in the selection criteria object");
         }
         if (grpDto.getGrpDescr() == null) {
             throw new LookupDaoException(
-                    "An invalid group description was found for lookup group, "
-                            + grpDto.getGrpId());
+                    "An invalid group description was found for lookup group, " + grpDto.getGrpId());
         }
 
         // Build base DN for a particular group
-        String dn = "ou=" + grpDto.getGrpDescr() + ","
-                + LdapLookupDaoImpl.BASE_DN;
+        String dn = "ou=" + grpDto.getGrpDescr() + "," + LdapLookupDaoImpl.BASE_DN;
 
         // Build selection criteria
         LdapSearchOperation op = new LdapSearchOperation();
         if (criteria.getCodeShortName() != null) {
-            op.getSearchFilterArgs().put("cn",
-                    criteria.getCodeShortName() + "*");
+            op.getSearchFilterArgs().put("cn", criteria.getCodeShortName() + "*");
         }
         if (criteria.getCodeLongName() != null) {
-            op.getSearchFilterArgs().put("description",
-                    criteria.getCodeLongName() + "*");
+            op.getSearchFilterArgs().put("description", criteria.getCodeLongName() + "*");
         }
 
         List<LdapLookup> lookupList;
@@ -161,8 +152,8 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
             op.setScope(SearchControls.ONELEVEL_SCOPE);
             op.setUseSearchFilterExpression(true);
             op.setMappingBeanName(LdapLookupDaoImpl.MAPPER_CLASS);
-            logger.info("LDAP filter to be applied for lookup codes by group search operation: "
-                    + op.getSearchFilter());
+            logger.info(
+                    "LDAP filter to be applied for lookup codes by group search operation: " + op.getSearchFilter());
             Object results[] = this.ldap.retrieve(op);
             if (results == null) {
                 return null;
@@ -174,8 +165,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
 
         List<LookupCodeDto> list = new ArrayList<LookupCodeDto>();
         for (LdapLookup item : lookupList) {
-            LookupCodeDto dto = LdapAddressBookDtoFactory
-                    .getLookupCodeInstance(item);
+            LookupCodeDto dto = LdapAddressBookDtoFactory.getLookupCodeInstance(item);
             list.add(dto);
         }
         return list;
@@ -223,8 +213,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
         else {
             obj = list.get(0);
         }
-        LookupGroupDto dto = LdapAddressBookDtoFactory
-                .getLookupGroupInstance(obj);
+        LookupGroupDto dto = LdapAddressBookDtoFactory.getLookupGroupInstance(obj);
         return dto;
     }
 
@@ -251,18 +240,15 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
      *             general LDAP access error.
      */
     @Override
-    public List<LookupGroupDto> fetchGroup(LookupGroupDto criteria)
-            throws LookupDaoException {
+    public List<LookupGroupDto> fetchGroup(LookupGroupDto criteria) throws LookupDaoException {
         LdapSearchOperation op = new LdapSearchOperation();
         if (criteria != null) {
             if (criteria.getGrpId() > 0) {
-                op.getSearchFilterArgs().put("uid",
-                        String.valueOf(criteria.getGrpId()));
+                op.getSearchFilterArgs().put("uid", String.valueOf(criteria.getGrpId()));
             }
             else {
                 if (criteria.getGrpDescr() != null) {
-                    op.getSearchFilterArgs().put("ou",
-                            criteria.getGrpDescr() + "*");
+                    op.getSearchFilterArgs().put("ou", criteria.getGrpDescr() + "*");
                 }
             }
         }
@@ -273,8 +259,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
             op.setScope(SearchControls.ONELEVEL_SCOPE);
             op.setMappingBeanName(LdapLookupDaoImpl.MAPPER_CLASS);
             op.setUseSearchFilterExpression(true);
-            logger.info("LDAP filter to be applied for lookup group search operation: "
-                    + op.getSearchFilter());
+            logger.info("LDAP filter to be applied for lookup group search operation: " + op.getSearchFilter());
             Object results[] = this.ldap.retrieve(op);
             if (results == null) {
                 return null;
@@ -286,8 +271,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
 
         List<LookupGroupDto> list = new ArrayList<LookupGroupDto>();
         for (LdapLookup item : lookupList) {
-            LookupGroupDto dto = LdapAddressBookDtoFactory
-                    .getLookupGroupInstance(item);
+            LookupGroupDto dto = LdapAddressBookDtoFactory.getLookupGroupInstance(item);
             list.add(dto);
         }
         return list;
@@ -297,10 +281,8 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
      * Not supported.
      */
     @Override
-    public List<LookupExtDto> fetchCodeExt(LookupExtDto criteria)
-            throws LookupDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    public List<LookupExtDto> fetchCodeExt(LookupExtDto criteria) throws LookupDaoException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -308,8 +290,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
      */
     @Override
     public int maintainGroup(LookupGroupDto group) throws LookupDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -317,8 +298,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
      */
     @Override
     public int deleteGroup(int groupId) throws LookupDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -326,8 +306,7 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
      */
     @Override
     public int maintainCode(LookupCodeDto lookup) throws LookupDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -335,7 +314,6 @@ class LdapLookupDaoImpl extends AbstractLdapDaoClient implements LookupDao {
      */
     @Override
     public int deleteCode(int codeId) throws LookupDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 }

@@ -11,8 +11,7 @@ import org.dto.TimeZoneDto;
  * @author Roy Terrell
  * 
  */
-class TimezoneLdapAdapter extends AbstractAddressBookLdapAdapter implements
-        TimeZoneDto {
+class TimezoneLdapAdapter extends AbstractAddressBookLdapAdapter implements TimeZoneDto {
 
     private LdapTimezone t;
 

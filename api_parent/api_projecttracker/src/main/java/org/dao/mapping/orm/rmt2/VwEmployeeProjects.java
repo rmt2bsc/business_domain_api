@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -321,6 +323,120 @@ public class VwEmployeeProjects extends OrmBean {
   public double getClientOtBillRate() {
     return this.clientOtBillRate;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final VwEmployeeProjects other = (VwEmployeeProjects) obj; 
+   if (EqualityAssistant.notEqual(this.empProjId, other.empProjId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.empId, other.empId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projId, other.projId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projempEffectiveDate, other.projempEffectiveDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projempEndDate, other.projempEndDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.payRate, other.payRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.otPayRate, other.otPayRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.flatRate, other.flatRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.comments, other.comments)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.clientId, other.clientId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectName, other.projectName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projEffectiveDate, other.projEffectiveDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projEndDate, other.projEndDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.clientName, other.clientName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.accountNo, other.accountNo)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.businessId, other.businessId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.clientBillRate, other.clientBillRate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.clientOtBillRate, other.clientOtBillRate)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.empProjId),
+   HashCodeAssistant.hashObject(this.empId),
+   HashCodeAssistant.hashObject(this.projId),
+   HashCodeAssistant.hashObject(this.projempEffectiveDate),
+   HashCodeAssistant.hashObject(this.projempEndDate),
+   HashCodeAssistant.hashObject(this.payRate),
+   HashCodeAssistant.hashObject(this.otPayRate),
+   HashCodeAssistant.hashObject(this.flatRate),
+   HashCodeAssistant.hashObject(this.comments),
+   HashCodeAssistant.hashObject(this.clientId),
+   HashCodeAssistant.hashObject(this.projectName),
+   HashCodeAssistant.hashObject(this.projEffectiveDate),
+   HashCodeAssistant.hashObject(this.projEndDate),
+   HashCodeAssistant.hashObject(this.clientName),
+   HashCodeAssistant.hashObject(this.accountNo),
+   HashCodeAssistant.hashObject(this.businessId),
+   HashCodeAssistant.hashObject(this.clientBillRate),
+   HashCodeAssistant.hashObject(this.clientOtBillRate));
+} 
+
+@Override
+public String toString() {
+   return "VwEmployeeProjects [empProjId=" + empProjId + 
+          ", empId=" + empId + 
+          ", projId=" + projId + 
+          ", projempEffectiveDate=" + projempEffectiveDate + 
+          ", projempEndDate=" + projempEndDate + 
+          ", payRate=" + payRate + 
+          ", otPayRate=" + otPayRate + 
+          ", flatRate=" + flatRate + 
+          ", comments=" + comments + 
+          ", clientId=" + clientId + 
+          ", projectName=" + projectName + 
+          ", projEffectiveDate=" + projEffectiveDate + 
+          ", projEndDate=" + projEndDate + 
+          ", clientName=" + clientName + 
+          ", accountNo=" + accountNo + 
+          ", businessId=" + businessId + 
+          ", clientBillRate=" + clientBillRate + 
+          ", clientOtBillRate=" + clientOtBillRate  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

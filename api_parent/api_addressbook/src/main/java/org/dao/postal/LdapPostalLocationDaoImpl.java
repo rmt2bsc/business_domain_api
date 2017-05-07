@@ -34,11 +34,9 @@ import com.util.RMT2Utility;
  * @author Roy Terrell
  * 
  */
-class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
-        PostalLocationDao {
+class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements PostalLocationDao {
 
-    private static final Logger logger = Logger
-            .getLogger(LdapPostalLocationDaoImpl.class);
+    private static final Logger logger = Logger.getLogger(LdapPostalLocationDaoImpl.class);
 
     private static final String BASE_ZIP_DN = "c=United States,ou=Country";
 
@@ -85,8 +83,7 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
      *             LDAP access errors.
      */
     @Override
-    public List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria)
-            throws PostalDaoException {
+    public List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria) throws PostalDaoException {
         if (criteria == null) {
             this.msg = "Client must supply a valid selection criteria object";
             throw new PostalDaoException(this.msg);
@@ -102,8 +99,7 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
 
         // Add any suffixes to the base DN as it pertains to state name, city,
         // and zip id.
-        if (criteria.getStateName() != null && criteria.getCity() != null
-                && criteria.getIdStr() != null) {
+        if (criteria.getStateName() != null && criteria.getCity() != null && criteria.getIdStr() != null) {
             // Include zipId, city and state as part of the DN
             rdn.append("zipId=");
             rdn.append(criteria.getIdStr());
@@ -153,8 +149,7 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
 
         if (criteria.getZip() != 0) {
             // Include zip code as part of the filter
-            op.getSearchFilterArgs().put("zip",
-                    String.valueOf(criteria.getZip()));
+            op.getSearchFilterArgs().put("zip", String.valueOf(criteria.getZip()));
         }
 
         if (criteria.getAreaCode() != null) {
@@ -193,16 +188,10 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
             }
             op.setDn(dn);
             op.setUseSearchFilterExpression(true);
-            logger.info("LDAP base DN to be applied for zip code search operation: "
-                    + dn);
-            logger.info("LDAP filter to be applied for zip code search operation: "
-                    + op.getSearchFilter());
-            System.out
-                    .println("LDAP base DN to be applied for zip code search operation: "
-                            + dn);
-            System.out
-                    .println("LDAP filter to be applied for zip code search operation: "
-                            + op.getSearchFilter());
+            logger.info("LDAP base DN to be applied for zip code search operation: " + dn);
+            logger.info("LDAP filter to be applied for zip code search operation: " + op.getSearchFilter());
+            System.out.println("LDAP base DN to be applied for zip code search operation: " + dn);
+            System.out.println("LDAP filter to be applied for zip code search operation: " + op.getSearchFilter());
             op.setMappingBeanName("org.dao.mapping.orm.ldap.LdapZipcode");
             Object results[] = this.ldap.retrieve(op);
             zipList = this.ldap.extractLdapResults(results);
@@ -275,20 +264,17 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
      * @throws PostalDaoException
      */
     @Override
-    public List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria)
-            throws PostalDaoException {
+    public List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria) throws PostalDaoException {
         List<LdapTimezone> ldapResults = null;
         try {
             LdapSearchOperation op = new LdapSearchOperation();
             op.setDn(LdapPostalLocationDaoImpl.BASE_TIMEZONE_DN);
             if (criteria != null) {
                 if (criteria.getTimeZoneId() > 0) {
-                    op.getMatchAttributes().put("uid",
-                            String.valueOf(criteria.getTimeZoneId()));
+                    op.getMatchAttributes().put("uid", String.valueOf(criteria.getTimeZoneId()));
                 }
                 if (criteria.getTimeZoneDescr() != null) {
-                    op.getMatchAttributes().put("description",
-                            String.valueOf(criteria.getTimeZoneDescr()));
+                    op.getMatchAttributes().put("description", String.valueOf(criteria.getTimeZoneDescr()));
                 }
             }
 
@@ -304,8 +290,7 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
 
         List<TimeZoneDto> tzList = new ArrayList<TimeZoneDto>();
         for (LdapTimezone item : ldapResults) {
-            TimeZoneDto dto = LdapAddressBookDtoFactory
-                    .getTimezoneInstance(item);
+            TimeZoneDto dto = LdapAddressBookDtoFactory.getTimezoneInstance(item);
             tzList.add(dto);
         }
         return tzList;
@@ -332,8 +317,7 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
             ipNum = RMT2Utility.convertIp(ip);
             return this.fetchIpInfo(ipNum);
         } catch (Exception e) {
-            this.msg = "LDAP server access error occurred while fetching IP Location record by IP Adderss: "
-                    + ip;
+            this.msg = "LDAP server access error occurred while fetching IP Location record by IP Adderss: " + ip;
             throw new IpDaoException(this.msg, e);
         }
     }
@@ -380,8 +364,7 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
             op.setDn(LdapPostalLocationDaoImpl.BASE_IP_BLOCK_DN);
             op.setScope(SearchControls.ONELEVEL_SCOPE);
             op.setSearchFilter(filter);
-            logger.info("LDAP filter to be applied for IP Address info search operation: "
-                    + filter);
+            logger.info("LDAP filter to be applied for IP Address info search operation: " + filter);
             op.setMappingBeanName("org.dao.mapping.orm.ldap.LdapIp");
             Object results[] = this.ldap.retrieve(op);
             ipList = this.ldap.extractLdapResults(results);
@@ -408,12 +391,10 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
         List<LdapIp> ipList = null;
         try {
             LdapSearchOperation op = new LdapSearchOperation();
-            String dn = "ipLocId=" + locId
-                    + LdapPostalLocationDaoImpl.BASE_IP_LOC_DN;
+            String dn = "ipLocId=" + locId + LdapPostalLocationDaoImpl.BASE_IP_LOC_DN;
             op.setDn(dn);
             op.setScope(SearchControls.OBJECT_SCOPE);
-            logger.info("LDAP base DN to be applied for IP Address Location info search operation: "
-                    + dn);
+            logger.info("LDAP base DN to be applied for IP Address Location info search operation: " + dn);
             op.setMappingBeanName("org.dao.mapping.orm.ldap.LdapIp");
             Object results[] = this.ldap.retrieve(op);
             ipList = this.ldap.extractLdapResults(results);
@@ -441,7 +422,6 @@ class LdapPostalLocationDaoImpl extends AbstractLdapDaoClient implements
      */
     @Override
     public ZipcodeDto fetchZipCode(int uid) throws PostalDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 }

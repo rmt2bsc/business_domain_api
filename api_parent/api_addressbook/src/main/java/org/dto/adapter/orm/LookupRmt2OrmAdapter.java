@@ -19,8 +19,7 @@ import com.api.foundation.TransactionDtoImpl;
  * @author rterrell
  * 
  */
-class LookupRmt2OrmAdapter extends TransactionDtoImpl implements LookupExtDto,
-        LookupCodeDto, LookupGroupDto {
+class LookupRmt2OrmAdapter extends TransactionDtoImpl implements LookupExtDto, LookupCodeDto, LookupGroupDto {
 
     private GeneralCodesGroup grp;
 

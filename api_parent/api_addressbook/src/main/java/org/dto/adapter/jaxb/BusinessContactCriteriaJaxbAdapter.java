@@ -14,8 +14,7 @@ import org.rmt2.jaxb.ObjectFactory;
  * @author Roy Terrell
  * 
  */
-class BusinessContactCriteriaJaxbAdapter extends DefaultAddressAdapter
-        implements BusinessContactDto {
+class BusinessContactCriteriaJaxbAdapter extends DefaultAddressAdapter implements BusinessContactDto {
 
     private BusinessContactCriteria criteria;
 
@@ -57,8 +56,7 @@ class BusinessContactCriteriaJaxbAdapter extends DefaultAddressAdapter
      */
     @Override
     public int getContactId() {
-        return (this.criteria.getContactId() != null ? this.criteria
-                .getContactId().intValue() : 0);
+        return (this.criteria.getContactId() != null ? this.criteria.getContactId().intValue() : 0);
     }
 
     /*

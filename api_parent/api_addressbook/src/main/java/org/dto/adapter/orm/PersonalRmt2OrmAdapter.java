@@ -2,6 +2,7 @@ package org.dto.adapter.orm;
 
 import java.util.Date;
 
+import org.dao.contacts.ContactsConst;
 import org.dao.mapping.orm.rmt2.Address;
 import org.dao.mapping.orm.rmt2.Person;
 import org.dao.mapping.orm.rmt2.VwPersonAddress;
@@ -14,8 +15,7 @@ import org.dto.PersonalContactDto;
  * @author Roy Terrell
  * 
  */
-class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
-        PersonalContactDto {
+class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalContactDto {
     private Person per;
 
     /**
@@ -51,6 +51,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
         this.dateCreated = this.per.getDateCreated();
         this.dateUpdated = this.per.getDateUpdated();
         this.updateUserId = this.per.getUserId();
+        this.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
         return;
     }
 
@@ -71,6 +72,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
             per = new Person();
         }
         this.per = per;
+        this.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
     }
 
     /*
@@ -210,7 +212,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements
      */
     @Override
     public String getContactName() {
-        return this.per.getShortname();
+        return this.per.getFirstname() + " " + this.per.getLastname();
     }
 
     /*

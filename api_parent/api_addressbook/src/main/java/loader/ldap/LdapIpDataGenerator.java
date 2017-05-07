@@ -73,15 +73,13 @@ public class LdapIpDataGenerator {
         System.out.println(this.countryCodes.length);
 
         // Get db connection
-        PersistenceClient client = Rmt2OrmClientFactory
-                .createOrmClientInstance();
+        PersistenceClient client = Rmt2OrmClientFactory.createOrmClientInstance();
         this.con = (Connection) client.getConnection();
     }
 
     public void openFile(String countryCode) {
         // Setup output file
-        File file = new File(OUTPUT_FILENAME + countryCode
-                + OUTPUT_FILENAME_EXT);
+        File file = new File(OUTPUT_FILENAME + countryCode + OUTPUT_FILENAME_EXT);
         try {
             // Create a file output stream that overwrite the file it exists.
             FileOutputStream fos = new FileOutputStream(file, false);
@@ -104,8 +102,7 @@ public class LdapIpDataGenerator {
     }
 
     private String[] loadCountryCodes() {
-        ResourceBundle rb = RMT2File
-                .loadAppConfigProperties("loader.IpCountryCodes");
+        ResourceBundle rb = RMT2File.loadAppConfigProperties("loader.IpCountryCodes");
         String codeList = rb.getString("codes");
         String codeArray[] = codeList.split(",");
         return codeArray;
@@ -137,8 +134,7 @@ public class LdapIpDataGenerator {
         try {
             System.out.println("Fetching data from the ip_location table...");
             stmt = this.con.createStatement();
-            sqlReplacement = RMT2String.replace(this.ipLocSql,
-                    String.valueOf(countryCode), "?");
+            sqlReplacement = RMT2String.replace(this.ipLocSql, String.valueOf(countryCode), "?");
             rs = stmt.executeQuery(sqlReplacement);
             LdapIp rec = null;
             while (rs.next()) {
@@ -152,20 +148,15 @@ public class LdapIpDataGenerator {
                 rec.setIpCountry(rs.getString("country"));
                 String temp = rs.getString("region");
 
-                rec.setIpRegion(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE
-                        : temp);
+                rec.setIpRegion(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE : temp);
                 temp = rs.getString("city");
-                rec.setIpCity(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE
-                        : temp);
+                rec.setIpCity(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE : temp);
                 temp = rs.getString("postal_code");
-                rec.setIpZip(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE
-                        : temp);
+                rec.setIpZip(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE : temp);
                 temp = rs.getString("metro_code");
-                rec.setIpMetroCode(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE
-                        : temp);
+                rec.setIpMetroCode(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE : temp);
                 temp = rs.getString("area_code");
-                rec.setIpAreaCode(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE
-                        : temp);
+                rec.setIpAreaCode(RMT2String2.isNullOrEmpty(temp) ? UNKNOWN_VALUE : temp);
                 ipRec.add(rec);
             }
         } catch (Exception e) {
@@ -194,8 +185,7 @@ public class LdapIpDataGenerator {
             for (LdapIp ip : ipRec) {
 
                 // Write Country data
-                if (prevCountry == null
-                        || !prevCountry.equalsIgnoreCase(ip.getIpCountry())) {
+                if (prevCountry == null || !prevCountry.equalsIgnoreCase(ip.getIpCountry())) {
                     entry = this.getIpCountryHeader(ip.getIpCountry());
                     prevCountry = ip.getIpCountry();
                     buffer.append(entry);
@@ -206,8 +196,7 @@ public class LdapIpDataGenerator {
                 }
 
                 // Write Region detail data
-                if (prevRegion == null
-                        || !prevRegion.equalsIgnoreCase(ip.getIpRegion())) {
+                if (prevRegion == null || !prevRegion.equalsIgnoreCase(ip.getIpRegion())) {
                     entry = this.getIpRegion(ip);
                     prevRegion = ip.getIpRegion();
                     buffer.append(entry);
@@ -217,8 +206,7 @@ public class LdapIpDataGenerator {
                 }
 
                 // Write City data
-                if (prevCity == null
-                        || !prevCity.equalsIgnoreCase(ip.getIpCity())) {
+                if (prevCity == null || !prevCity.equalsIgnoreCase(ip.getIpCity())) {
                     entry = this.getIpCity(ip);
                     prevCity = ip.getIpCity();
                     buffer.append(entry);
@@ -227,8 +215,7 @@ public class LdapIpDataGenerator {
                 }
 
                 // Write area code
-                if (prevAreaCode == null
-                        || !prevAreaCode.equalsIgnoreCase(ip.getIpAreaCode())) {
+                if (prevAreaCode == null || !prevAreaCode.equalsIgnoreCase(ip.getIpAreaCode())) {
                     entry = this.getIpAreaCode(ip);
                     prevAreaCode = ip.getIpAreaCode();
                     buffer.append(entry);
@@ -257,12 +244,10 @@ public class LdapIpDataGenerator {
                 ipKey.append("]");
 
                 System.out.println("");
-                System.out.println("Adding IP address block(s) for " + ipKey
-                        + "...");
+                System.out.println("Adding IP address block(s) for " + ipKey + "...");
                 try {
                     stmt = this.con.createStatement();
-                    sqlReplacement = RMT2String.replace(ipBlockSql,
-                            String.valueOf(ip.getIpLocId()), "?");
+                    sqlReplacement = RMT2String.replace(ipBlockSql, String.valueOf(ip.getIpLocId()), "?");
                     rs = stmt.executeQuery(sqlReplacement);
                     int blockCount = 0;
                     while (rs.next()) {
@@ -277,12 +262,8 @@ public class LdapIpDataGenerator {
                         entry = this.getCityIpBlock(ip);
                         buffer.append(entry);
                     }
-                    System.out
-                            .println("Sucessfully added IP address block(s) for "
-                                    + ipKey + "...");
-                    System.out
-                            .println("Total number of IP Address blocks added: "
-                                    + blockCount);
+                    System.out.println("Sucessfully added IP address block(s) for " + ipKey + "...");
+                    System.out.println("Total number of IP Address blocks added: " + blockCount);
                     System.out.println("");
                 } catch (SQLException e) {
                     throw new RuntimeException(e);

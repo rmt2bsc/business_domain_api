@@ -10,8 +10,7 @@ import org.dto.ContactDto;
  * @author rterrell
  * 
  */
-public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter
-        implements ContactDto {
+public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements ContactDto {
 
     private VwCommonContact src;
 
@@ -78,7 +77,7 @@ public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter
      */
     @Override
     public void setContactEmail(String value) {
-        this.src.setEmail(value);
+        return;
     }
 
     /*
@@ -88,7 +87,7 @@ public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter
      */
     @Override
     public String getContactEmail() {
-        return this.src.getEmail();
+        return null;
     }
 
     // /* (non-Javadoc)

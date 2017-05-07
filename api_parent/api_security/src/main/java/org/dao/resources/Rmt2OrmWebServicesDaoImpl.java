@@ -235,7 +235,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      * <li>id</li>
      * <li>name</li>
      * <li>description</li>
-     * <li>host</li>
      * <li>secured</li>
      * </ul>
      * <b>Resource Type</b>
@@ -285,10 +284,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
             if (criteria.getDescription() != null) {
                 rsrc.addLikeClause(VwResource.PROP_DESCRIPTION,
                         criteria.getDescription());
-            }
-            if (((WebServiceDto) criteria).getHost() != null) {
-                rsrc.addLikeClause(VwResource.PROP_HOST,
-                        ((WebServiceDto) criteria).getHost());
             }
             if (((WebServiceDto) criteria).isQuerySecureFlag()) {
                 rsrc.addCriteria(VwResource.PROP_SECURED,
@@ -375,7 +370,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         r.setDescription(resource.getDescription());
         r.setSecured(((WebServiceDto) resource).getSecured());
         r.setHost(((WebServiceDto) resource).getHost());
-        r.setRouterType(((WebServiceDto) resource).getRouterType());
         r.setDateCreated(resource.getDateCreated());
         r.setDateUpdated(resource.getDateUpdated());
         r.setUserId(resource.getUpdateUserId());

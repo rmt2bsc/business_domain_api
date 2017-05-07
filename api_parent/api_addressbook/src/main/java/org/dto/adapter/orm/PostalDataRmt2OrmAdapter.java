@@ -30,9 +30,8 @@ import com.api.foundation.TransactionDtoImpl;
  * @author rterrell
  * 
  */
-class PostalDataRmt2OrmAdapter extends TransactionDtoImpl implements
-        ZipcodeDto, TimeZoneDto, CountryDto, RegionDto, CountryRegionDto,
-        CityTypeDto {
+class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
+        implements ZipcodeDto, TimeZoneDto, CountryDto, RegionDto, CountryRegionDto, CityTypeDto {
 
     private Zipcode zip;
 
@@ -1010,8 +1009,7 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setIdStr(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -1021,8 +1019,7 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public String getIdStr() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
 }

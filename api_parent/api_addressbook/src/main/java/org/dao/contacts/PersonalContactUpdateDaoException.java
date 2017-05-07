@@ -7,8 +7,7 @@ package org.dao.contacts;
  * @author rterrell
  * 
  */
-public class PersonalContactUpdateDaoException extends
-        ContactUpdateDaoException {
+public class PersonalContactUpdateDaoException extends ContactUpdateDaoException {
 
     private static final long serialVersionUID = -6226861078350853129L;
 

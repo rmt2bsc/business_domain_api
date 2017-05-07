@@ -67,8 +67,7 @@ public class LdapFlatIpDataGenerator {
      */
     public LdapFlatIpDataGenerator() {
         // Get db connection
-        PersistenceClient client = Rmt2OrmClientFactory
-                .createOrmClientInstance();
+        PersistenceClient client = Rmt2OrmClientFactory.createOrmClientInstance();
         this.con = (Connection) client.getConnection();
     }
 
@@ -144,8 +143,7 @@ public class LdapFlatIpDataGenerator {
                 ipKey.append("]");
 
                 System.out.println("");
-                System.out.println("Adding IP address block for location "
-                        + ipKey + "...");
+                System.out.println("Adding IP address block for location " + ipKey + "...");
                 String entry = this.buildIpBlockEntry(rec);
                 buffer.append(entry);
                 // Write base DN entry to file
@@ -228,8 +226,7 @@ public class LdapFlatIpDataGenerator {
                 ipKey.append("]");
 
                 System.out.println("");
-                System.out.println("Adding IP address location:  " + ipKey
-                        + "...");
+                System.out.println("Adding IP address location:  " + ipKey + "...");
                 String entry = this.buildLocationEntry(rec);
                 buffer.append(entry);
                 // Write base DN entry to file
@@ -324,8 +321,7 @@ public class LdapFlatIpDataGenerator {
 
     private String buildIpBlockEntry(LdapIp ip) {
         StringBuffer buf = new StringBuffer();
-        String uid = ip.getIpFrom() + "-" + ip.getIpTo() + "-"
-                + ip.getIpLocId();
+        String uid = ip.getIpFrom() + "-" + ip.getIpTo() + "-" + ip.getIpLocId();
         buf.append("dn: uid=");
         buf.append(uid);
         buf.append(",ou=Blocks,ou=IpInfo,o=RMT2BSC,dc=rmt2,dc=net");

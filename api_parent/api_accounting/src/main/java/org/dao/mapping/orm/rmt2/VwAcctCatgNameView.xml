@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataSource Name="VwAcctCatgNameView">
-   <Sql From="vw_acct_catg_name" GroupBy="" Having="" OrderBy="" Select="acct_type_id, &#xA;&#x9;&#x9;acct_baltype_id, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;acct_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;gl_catg_description, &#xA;&#x9;&#x9;acct_catg_id, &#xA;&#x9;&#x9;acct_no, &#xA;&#x9;&#x9;acct_seq" Where="" />
+   <Sql From="vw_acct_catg_name" GroupBy="" Having="" OrderBy="" Select="acct_catg_id, &#xA;&#x9;&#x9;acct_no, &#xA;&#x9;&#x9;acct_seq, &#xA;&#x9;&#x9;acct_type_id, &#xA;&#x9;&#x9;acct_baltype_id, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;acct_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;gl_catg_description" Where="" />
    <TableUsage DBName="vw_acct_catg_name" Name="VwAcctCatgNameTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="acct_catg_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AcctCatgId" PrimaryKey="false" SqlType="integer" TableName="VwAcctCatgNameTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="acct_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AcctNo" PrimaryKey="false" SqlType="varchar" TableName="VwAcctCatgNameTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="acct_seq" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="AcctSeq" PrimaryKey="false" SqlType="integer" TableName="VwAcctCatgNameTable" Updateable="true" />
    <ColAttr Computed="false" DBName="acct_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AcctTypeId" PrimaryKey="false" SqlType="integer" TableName="VwAcctCatgNameTable" Updateable="true" />
    <ColAttr Computed="false" DBName="acct_baltype_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="AcctBaltypeId" PrimaryKey="false" SqlType="integer" TableName="VwAcctCatgNameTable" Updateable="true" />
    <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="VwAcctCatgNameTable" Updateable="true" />
    <ColAttr Computed="false" DBName="acct_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AcctId" PrimaryKey="false" SqlType="integer" TableName="VwAcctCatgNameTable" Updateable="true" />
    <ColAttr Computed="false" DBName="name" DataValue="" DisplayHeader="" IsNull="false" JavaType="String" Name="Name" PrimaryKey="false" SqlType="varchar" TableName="VwAcctCatgNameTable" Updateable="true" />
    <ColAttr Computed="false" DBName="gl_catg_description" DataValue="" DisplayHeader="" IsNull="false" JavaType="String" Name="GlCatgDescription" PrimaryKey="false" SqlType="varchar" TableName="VwAcctCatgNameTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="acct_catg_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AcctCatgId" PrimaryKey="false" SqlType="integer" TableName="VwAcctCatgNameTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="acct_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AcctNo" PrimaryKey="false" SqlType="varchar" TableName="VwAcctCatgNameTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="acct_seq" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="AcctSeq" PrimaryKey="false" SqlType="integer" TableName="VwAcctCatgNameTable" Updateable="true" />
 </DataSource>
 

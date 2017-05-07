@@ -28,21 +28,6 @@ public interface IpLocationDto extends TransactionDto {
     int getIpRangeId();
 
     /**
-     * Set the internal location id.
-     * 
-     * @param value
-     *            int
-     */
-    void setLocId(int value);
-
-    /**
-     * Get the internal location id.
-     * 
-     * @return int
-     */
-    int getLocId();
-
-    /**
      * Set the area code.
      * 
      * @param value

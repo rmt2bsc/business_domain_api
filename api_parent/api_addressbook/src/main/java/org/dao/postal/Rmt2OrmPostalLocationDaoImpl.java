@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.AddressBookDaoImpl;
-import org.dao.mapping.orm.rmt2.IpBlock;
 import org.dao.mapping.orm.rmt2.IpLocation;
 import org.dao.mapping.orm.rmt2.TimeZone;
 import org.dao.mapping.orm.rmt2.Zipcode;
@@ -25,8 +24,7 @@ import com.util.RMT2Utility;
  * @author Roy Terrell
  * 
  */
-class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
-        PostalLocationDao {
+class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements PostalLocationDao {
 
     /**
      * Default constructor.
@@ -57,12 +55,10 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
             if (results == null) {
                 return null;
             }
-            ZipcodeDto dto = Rmt2AddressBookDtoFactory
-                    .getZipCodeInstance(results);
+            ZipcodeDto dto = Rmt2AddressBookDtoFactory.getZipCodeInstance(results);
             return dto;
         } catch (DatabaseException e) {
-            this.msg = "Database access error occurred while fetching zip code record by primary key, "
-                    + uid;
+            this.msg = "Database access error occurred while fetching zip code record by primary key, " + uid;
             throw new ZipcodeDaoException(this.msg, e);
         }
     }
@@ -87,8 +83,7 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
      *             <i>criteria</i> object as being assigned a value.
      */
     @Override
-    public List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria)
-            throws PostalDaoException {
+    public List<ZipcodeDto> fetchZipCode(ZipcodeDto criteria) throws PostalDaoException {
         if (criteria == null) {
             this.msg = "Zip search criteria object is invalid";
             throw new ZipcodeDaoException(this.msg);
@@ -119,10 +114,8 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
         }
 
         // At least one property is required to be set in the criteria object
-        if (!z.isCriteriaAvailable() && !z.isInClauseAvailable()
-                && !z.isCustomCriteriaAvailable()
-                && !z.isLikeClauseAvailable(OrmBean.LIKE_BEGIN)
-                && !z.isLikeClauseAvailable(OrmBean.LIKE_END)
+        if (!z.isCriteriaAvailable() && !z.isInClauseAvailable() && !z.isCustomCriteriaAvailable()
+                && !z.isLikeClauseAvailable(OrmBean.LIKE_BEGIN) && !z.isLikeClauseAvailable(OrmBean.LIKE_END)
                 && !z.isLikeClauseAvailable(OrmBean.LIKE_CONTAINS)) {
             this.msg = "At least one property is required to be set in the zip code search criteria object";
             throw new InvalidZipcodeCriteriaDaoException(this.msg);
@@ -173,12 +166,10 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
             if (results == null) {
                 return null;
             }
-            TimeZoneDto dto = Rmt2AddressBookDtoFactory
-                    .getTimezoneInstance(results);
+            TimeZoneDto dto = Rmt2AddressBookDtoFactory.getTimezoneInstance(results);
             return dto;
         } catch (DatabaseException e) {
-            this.msg = "Database access error occurred while fetching time zone record by primary key, "
-                    + uid;
+            this.msg = "Database access error occurred while fetching time zone record by primary key, " + uid;
             throw new ZipcodeDaoException(this.msg, e);
         }
     }
@@ -198,18 +189,15 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
      *             database access errors.
      */
     @Override
-    public List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria)
-            throws PostalDaoException {
+    public List<TimeZoneDto> fetchTimezone(TimeZoneDto criteria) throws PostalDaoException {
         // Setup selection criteria
         TimeZone tz = new TimeZone();
         if (criteria != null) {
             if (criteria.getTimeZoneId() > 0) {
-                tz.addCriteria(TimeZone.PROP_TIMEZONEID,
-                        criteria.getTimeZoneId());
+                tz.addCriteria(TimeZone.PROP_TIMEZONEID, criteria.getTimeZoneId());
             }
             if (criteria.getTimeZoneDescr() != null) {
-                tz.addLikeClause(TimeZone.PROP_DESCR,
-                        criteria.getTimeZoneDescr());
+                tz.addLikeClause(TimeZone.PROP_DESCR, criteria.getTimeZoneDescr());
             }
         }
 
@@ -229,8 +217,7 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
 
         List<TimeZoneDto> list = new ArrayList<TimeZoneDto>();
         for (TimeZone item : results) {
-            TimeZoneDto dto = Rmt2AddressBookDtoFactory
-                    .getTimezoneInstance(item);
+            TimeZoneDto dto = Rmt2AddressBookDtoFactory.getTimezoneInstance(item);
             list.add(dto);
         }
         return list;
@@ -253,8 +240,7 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
             ipNum = RMT2Utility.convertIp(ip);
             return this.fetchIpInfo(ipNum);
         } catch (Exception e) {
-            this.msg = "Database access error occurred while fetching IP Location record by IP Adderss: "
-                    + ip;
+            this.msg = "Database access error occurred while fetching IP Location record by IP Adderss: " + ip;
             throw new IpDaoException(this.msg, e);
         }
     }
@@ -263,10 +249,10 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
      * Fetch the location details of an IP address that is in numeric form from
      * the ip_location table.
      * <p>
-     * First, the the location id is obtained from the ip_block table by
-     * dtermining the block of IP address <i>ip</i> fits within. Lastly, the
-     * address details are fetched from the ip_lcoation table using the location
-     * id obtained from the previous query.
+     * First, the location id is obtained from the ip_block table by dtermining
+     * the block of IP address <i>ip</i> fits within. Lastly, the address
+     * details are fetched from the ip_lcoation table using the location id
+     * obtained from the previous query.
      * <p>
      * The data contained in the ip_block and ip_location tables was obtained
      * from the company, MaxMind. The <i>GeoLite City IPv6 (Beta)</i> is the
@@ -285,24 +271,37 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements
     public IpLocationDto fetchIpInfo(long ip) throws PostalDaoException {
         IpLocation loc = null;
         try {
-            IpBlock blk = new IpBlock();
-            blk.addCustomCriteria(ip + ">= ip_start and " + ip + " <= ip_end");
-            blk = (IpBlock) this.client.retrieveObject(blk);
-            if (blk == null) {
-                return null;
-            }
             loc = new IpLocation();
-            loc.addCriteria(IpLocation.PROP_LOCID, blk.getIpLoc());
+            loc.addCustomCriteria(ip + ">= ip_from and " + ip + " <= ip_to");
             loc = (IpLocation) this.client.retrieveObject(loc);
         } catch (DatabaseException e) {
-            this.msg = "Database access error occurred while fetching IP Location record by IP number: "
-                    + ip;
+            this.msg = "Database access error occurred while fetching IP Location record by IP number: " + ip;
             throw new IpDaoException(this.msg, e);
         }
 
-        IpLocationDto dto = Rmt2AddressBookDtoFactory
-                .getIpLocationInstance(loc);
+        IpLocationDto dto = Rmt2AddressBookDtoFactory.getIpLocationInstance(loc);
         return dto;
     }
+    // public IpLocationDto fetchIpInfo(long ip) throws PostalDaoException {
+    // IpLocation loc = null;
+    // try {
+    // IpBlock blk = new IpBlock();
+    // blk.addCustomCriteria(ip + ">= ip_start and " + ip + " <= ip_end");
+    // blk = (IpBlock) this.client.retrieveObject(blk);
+    // if (blk == null) {
+    // return null;
+    // }
+    // loc = new IpLocation();
+    // loc.addCriteria(IpLocation.PROP_LOCID, blk.getIpLoc());
+    // loc = (IpLocation) this.client.retrieveObject(loc);
+    // } catch (DatabaseException e) {
+    // this.msg = "Database access error occurred while fetching IP Location
+    // record by IP number: " + ip;
+    // throw new IpDaoException(this.msg, e);
+    // }
+    //
+    // IpLocationDto dto = Rmt2AddressBookDtoFactory.getIpLocationInstance(loc);
+    // return dto;
+    // }
 
 }

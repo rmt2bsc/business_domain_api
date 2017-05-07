@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -33,12 +35,12 @@ public class SalesOrder extends OrmBean {
   public static final String PROP_DATEUPDATED = "DateUpdated";
 /** The property name constant equivalent to property, UserId, of respective DataSource view. */
   public static final String PROP_USERID = "UserId";
-/** The property name constant equivalent to property, EffectiveDate, of respective DataSource view. */
-  public static final String PROP_EFFECTIVEDATE = "EffectiveDate";
 /** The property name constant equivalent to property, IpCreated, of respective DataSource view. */
   public static final String PROP_IPCREATED = "IpCreated";
 /** The property name constant equivalent to property, IpUpdated, of respective DataSource view. */
   public static final String PROP_IPUPDATED = "IpUpdated";
+/** The property name constant equivalent to property, EffectiveDate, of respective DataSource view. */
+  public static final String PROP_EFFECTIVEDATE = "EffectiveDate";
 
 
 
@@ -56,12 +58,12 @@ public class SalesOrder extends OrmBean {
   private java.util.Date dateUpdated;
 /** The javabean property equivalent of database column sales_order.user_id */
   private String userId;
-/** The javabean property equivalent of database column sales_order.effective_date */
-  private java.util.Date effectiveDate;
 /** The javabean property equivalent of database column sales_order.ip_created */
   private String ipCreated;
 /** The javabean property equivalent of database column sales_order.ip_updated */
   private String ipUpdated;
+/** The javabean property equivalent of database column sales_order.effective_date */
+  private java.util.Date effectiveDate;
 
 
 
@@ -158,18 +160,6 @@ public class SalesOrder extends OrmBean {
     return this.userId;
   }
 /**
- * Sets the value of member variable effectiveDate
- */
-  public void setEffectiveDate(java.util.Date value) {
-    this.effectiveDate = value;
-  }
-/**
- * Gets the value of member variable effectiveDate
- */
-  public java.util.Date getEffectiveDate() {
-    return this.effectiveDate;
-  }
-/**
  * Sets the value of member variable ipCreated
  */
   public void setIpCreated(String value) {
@@ -193,6 +183,92 @@ public class SalesOrder extends OrmBean {
   public String getIpUpdated() {
     return this.ipUpdated;
   }
+/**
+ * Sets the value of member variable effectiveDate
+ */
+  public void setEffectiveDate(java.util.Date value) {
+    this.effectiveDate = value;
+  }
+/**
+ * Gets the value of member variable effectiveDate
+ */
+  public java.util.Date getEffectiveDate() {
+    return this.effectiveDate;
+  }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final SalesOrder other = (SalesOrder) obj; 
+   if (EqualityAssistant.notEqual(this.soId, other.soId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.customerId, other.customerId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.invoiced, other.invoiced)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.orderTotal, other.orderTotal)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.effectiveDate, other.effectiveDate)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.soId),
+               HashCodeAssistant.hashObject(this.customerId),
+               HashCodeAssistant.hashObject(this.invoiced),
+               HashCodeAssistant.hashObject(this.orderTotal),
+               HashCodeAssistant.hashObject(this.dateCreated),
+               HashCodeAssistant.hashObject(this.dateUpdated),
+               HashCodeAssistant.hashObject(this.userId),
+               HashCodeAssistant.hashObject(this.ipCreated),
+               HashCodeAssistant.hashObject(this.ipUpdated),
+               HashCodeAssistant.hashObject(this.effectiveDate));
+} 
+
+@Override
+public String toString() {
+   return "SalesOrder [soId=" + soId + 
+          ", customerId=" + customerId + 
+          ", invoiced=" + invoiced + 
+          ", orderTotal=" + orderTotal + 
+          ", dateCreated=" + dateCreated + 
+          ", dateUpdated=" + dateUpdated + 
+          ", userId=" + userId + 
+          ", ipCreated=" + ipCreated + 
+          ", ipUpdated=" + ipUpdated + 
+          ", effectiveDate=" + effectiveDate  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

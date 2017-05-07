@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataSource Name="UserResourceView">
-   <Sql From="user_resource" GroupBy="" Having="" OrderBy="" Select="rsrc_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;rsrc_type_id, &#xA;&#x9;&#x9;rsrc_subtype_id, &#xA;&#x9;&#x9;url, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;secured, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;host, &#xA;&#x9;&#x9;router_type" Where="" />
+   <Sql From="user_resource" GroupBy="" Having="" OrderBy="" Select="rsrc_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;rsrc_type_id, &#xA;&#x9;&#x9;rsrc_subtype_id, &#xA;&#x9;&#x9;url, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;secured, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;host" Where="" />
    <TableUsage DBName="user_resource" Name="UserResourceTable" Updateable="true" />
    <ColAttr Computed="false" DBName="rsrc_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="RsrcId" PrimaryKey="true" SqlType="integer" TableName="UserResourceTable" Updateable="true" />
    <ColAttr Computed="false" DBName="name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Name" PrimaryKey="false" SqlType="varchar" TableName="UserResourceTable" Updateable="true" />
@@ -13,6 +13,5 @@
    <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="UserResourceTable" Updateable="true" />
    <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="UserResourceTable" Updateable="true" />
    <ColAttr Computed="false" DBName="host" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Host" PrimaryKey="false" SqlType="varchar" TableName="UserResourceTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="router_type" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="RouterType" PrimaryKey="false" SqlType="varchar" TableName="UserResourceTable" Updateable="true" />
 </DataSource>
 
