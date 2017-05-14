@@ -263,8 +263,8 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testAllContactFetch() {
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
+    public void testFetchAll() {
+        PersonalContactDto perDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
                     .thenReturn(this.mockAllProfileFetchResponse);
@@ -277,7 +277,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(perDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
@@ -300,10 +300,10 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testSingleContactFetch() {
+    public void testFetchSingle() {
         Person per = new Person();
         per.setPersonId(1351);
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getPersonInstance(per, null);
+        PersonalContactDto perDto = Rmt2AddressBookDtoFactory.getPersonInstance(per, null);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwPersonAddress.class)))
                     .thenReturn(this.mockSingleProfileFetchResponse);
@@ -316,7 +316,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(perDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
@@ -338,10 +338,10 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testContactCriteriaFetch() {
+    public void testFetchUsingCriteria() {
         Person per = new Person();
         per.setLastname("M");
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getPersonInstance(per, null);
+        PersonalContactDto perDto = Rmt2AddressBookDtoFactory.getPersonInstance(per, null);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
                     .thenReturn(this.mockCriteriaProfileFetchResponse);
@@ -354,7 +354,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(perDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
@@ -379,8 +379,85 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testNotFoundlContactFetch() {
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
+    public void testFetchSingleUsingDtoOnly() {
+        PersonalContactDto perDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
+        perDto.setContactId(1351);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwPersonAddress.class)))
+                    .thenReturn(this.mockSingleProfileFetchResponse);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Single person contact fetch test case failed");
+        }
+
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(APP_NAME);
+        List<ContactDto> results = null;
+        try {
+            results = api.getContact(perDto);
+        } catch (ContactsApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ContactDto contact = results.get(0);
+        Assert.assertNotNull(contact.getContactType());
+        Assert.assertEquals(ContactsConst.CONTACT_TYPE_PERSONAL, contact.getContactType());
+        Assert.assertEquals(1351, contact.getContactId());
+        Assert.assertNotNull(contact.getContactName());
+        Assert.assertEquals("Dennis Chambers", contact.getContactName());
+
+        Assert.assertTrue(contact instanceof PersonalContactDto);
+        PersonalContactDto perContact = (PersonalContactDto) contact;
+        Assert.assertNotNull(perContact.getFirstname());
+        Assert.assertNotNull(perContact.getLastname());
+        Assert.assertNotNull(perContact.getContactEmail());
+
+    }
+
+    @Test
+    public void testFetchUsingUsingCriteiraDtoOnly() {
+        PersonalContactDto perDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
+        perDto.setContactName("M");
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
+                    .thenReturn(this.mockCriteriaProfileFetchResponse);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("person contact fetch using specific selection criteria test case failed");
+        }
+
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(APP_NAME);
+        List<ContactDto> results = null;
+        try {
+            results = api.getContact(perDto);
+        } catch (ContactsApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(2, results.size());
+        for (ContactDto contact : results) {
+            Assert.assertNotNull(contact);
+            Assert.assertNotNull(contact.getContactType());
+            Assert.assertEquals(ContactsConst.CONTACT_TYPE_PERSONAL, contact.getContactType());
+            Assert.assertTrue(contact.getContactId() > 0);
+            Assert.assertNotNull(contact.getContactName());
+            String name[] = contact.getContactName().split(" ");
+            Assert.assertEquals(2, name.length);
+            Assert.assertEquals("C", name[1].substring(0, 1));
+
+            Assert.assertTrue(contact instanceof PersonalContactDto);
+            PersonalContactDto busContact = (PersonalContactDto) contact;
+            Assert.assertNotNull(busContact.getFirstname());
+            Assert.assertNotNull(busContact.getLastname());
+            Assert.assertNotNull(busContact.getContactEmail());
+        }
+    }
+
+    @Test
+    public void testNotFoundlFetch() {
+        PersonalContactDto perDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
                     .thenReturn(this.mockNotFoundFetchResponse);
@@ -393,7 +470,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
         ContactsApi api = f.createApi(APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(perDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
@@ -402,7 +479,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testNullCriteriaContactFetch() {
+    public void testFetchUsingCriteriaNullResults() {
         ContactsApiFactory f = new ContactsApiFactory();
         ContactsApi api = f.createApi(APP_NAME);
         try {
@@ -417,7 +494,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testContactUpdate() {
+    public void testUpdate() {
         PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.retrieveObject(any(Object.class))).thenReturn(this.mockPersonObject,
@@ -445,7 +522,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testContactInsert() {
+    public void testInsert() {
         PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(0, 0);
         try {
             when(this.mockPersistenceClient.insertRow(any(PersonalContactDto.class), any(Boolean.class)))
@@ -470,7 +547,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     @Test
-    public void testContactDelete() {
+    public void testDelete() {
         PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class))).thenReturn(1);
