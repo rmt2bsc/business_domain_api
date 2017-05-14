@@ -18,11 +18,11 @@ public class CountryOrmTest {
 
     @Test
     public void testToString() {
-        Country c = new Country();
-        c.setCode("USA");
-        c.setCountryId(100);
-        c.setName("United States");
-        String val = c.toString();
+        Country o = new Country();
+        o.setCode("USA");
+        o.setCountryId(100);
+        o.setName("United States");
+        String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
     }
@@ -30,38 +30,42 @@ public class CountryOrmTest {
     @Test
     public void testEquality() {
         boolean result = false;
-        Country c1 = new Country();
-        Country c2 = null;
+        Country o1 = new Country();
+        Country o2 = null;
 
-        result = c1.equals(c2);
+        result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        c1.setCode("USA");
-        c1.setCountryId(100);
-        c1.setName("United States");
-        c2 = new Country();
+        o1.setCode("USA");
+        o1.setCountryId(100);
+        o1.setName("United States");
+        o2 = new Country();
 
-        result = c1.equals(c2);
+        result = o1.equals(o2);
         Assert.assertFalse(result);
-        c2.setCode("USA");
-        result = c1.equals(c2);
+        o2.setCode("USA");
+        result = o1.equals(o2);
         Assert.assertFalse(result);
-        c2.setCountryId(100);
-        result = c1.equals(c2);
+        o2.setCountryId(100);
+        result = o1.equals(o2);
         Assert.assertFalse(result);
-        c2.setName("United States");
-        result = c1.equals(c2);
+        o2.setName("United States");
+        result = o1.equals(o2);
         Assert.assertTrue(result);
     }
 
     @Test
     public void testHashCode() {
-        boolean result = false;
-        Country c1 = new Country();
-        c1.setCode("USA");
-        c1.setCountryId(100);
-        c1.setName("United States");
-        int hashCode = c1.hashCode();
-        Assert.assertTrue(hashCode > 1000);
+        Country o1 = new Country();
+        o1.setCode("USA");
+        o1.setCountryId(100);
+        o1.setName("United States");
+
+        Country o2 = new Country();
+        o2.setCode("USA");
+        o2.setCountryId(100);
+        o2.setName("United States");
+        Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
+        Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }
 }
