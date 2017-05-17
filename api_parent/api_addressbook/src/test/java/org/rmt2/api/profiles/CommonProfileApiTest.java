@@ -40,9 +40,9 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
 public class CommonProfileApiTest extends BaseDaoTest {
 
-    private List<VwCommonContact> mockSingleProfileFetchResponse;
-    private List<VwCommonContact> mockCriteriaProfileFetchResponse;
-    private List<VwCommonContact> mockAllProfileFetchResponse;
+    private List<VwCommonContact> mockFetchSingleResponse;
+    private List<VwCommonContact> mockCriteriaFetchResponse;
+    private List<VwCommonContact> mockFetchAllResponse;
     private List<VwCommonContact> mockNotFoundFetchResponse;
     private Person mockPersonObject;
     private Address mockAddressObject;
@@ -51,9 +51,9 @@ public class CommonProfileApiTest extends BaseDaoTest {
     public void setUp() throws Exception {
         APP_NAME = "addressbook";
         super.setUp();
-        this.mockSingleProfileFetchResponse = this.createMockSingleContactFetchResponse();
-        this.mockCriteriaProfileFetchResponse = this.createMockContactFetchUsingCriteriaResponse();
-        this.mockAllProfileFetchResponse = this.createMockContactFetchAllResponse();
+        this.mockFetchSingleResponse = this.createMockSingleFetchResponse();
+        this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
+        this.mockFetchAllResponse = this.createMockFetchAllResponse();
         this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
         this.mockPersonObject = this.createSingleMockOrmObject();
         this.mockAddressObject = this.createAddressMockObject();
@@ -69,7 +69,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         return list;
     }
 
-    private List<VwCommonContact> createMockSingleContactFetchResponse() {
+    private List<VwCommonContact> createMockSingleFetchResponse() {
         List<VwCommonContact> list = new ArrayList<VwCommonContact>();
         VwCommonContact p = new VwCommonContact();
         p.setContactId(1351);
@@ -96,7 +96,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
      * 
      * @return
      */
-    private List<VwCommonContact> createMockContactFetchUsingCriteriaResponse() {
+    private List<VwCommonContact> createMockFetchUsingCriteriaResponse() {
         List<VwCommonContact> list = new ArrayList<VwCommonContact>();
         VwCommonContact p = new VwCommonContact();
         p.setContactId(1351);
@@ -131,7 +131,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         return list;
     }
 
-    private List<VwCommonContact> createMockContactFetchAllResponse() {
+    private List<VwCommonContact> createMockFetchAllResponse() {
         List<VwCommonContact> list = new ArrayList<VwCommonContact>();
         VwCommonContact p = new VwCommonContact();
         p.setContactId(1351);
@@ -233,7 +233,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         ContactDto criteria = Rmt2AddressBookDtoFactory.getNewContactInstance();
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
-                    .thenReturn(this.mockAllProfileFetchResponse);
+                    .thenReturn(this.mockFetchAllResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("All personal contact fetch test case failed");
@@ -272,7 +272,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         ContactDto criteria = Rmt2AddressBookDtoFactory.getContactInstance(commonContact);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
-                    .thenReturn(this.mockSingleProfileFetchResponse);
+                    .thenReturn(this.mockFetchSingleResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("Single person contact fetch test case failed");
@@ -310,7 +310,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         ContactDto criteria = Rmt2AddressBookDtoFactory.getContactInstance(commonContact);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
-                    .thenReturn(this.mockCriteriaProfileFetchResponse);
+                    .thenReturn(this.mockCriteriaFetchResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("person contact fetch using specific selection criteria test case failed");
@@ -350,7 +350,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         criteria.setContactId(1351);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
-                    .thenReturn(this.mockSingleProfileFetchResponse);
+                    .thenReturn(this.mockFetchSingleResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("Single person contact fetch test case failed");
@@ -387,7 +387,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         criteria.setContactName("M");
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
-                    .thenReturn(this.mockCriteriaProfileFetchResponse);
+                    .thenReturn(this.mockCriteriaFetchResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("person contact fetch using specific selection criteria test case failed");

@@ -38,9 +38,9 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
 public class BusinessProfileApiTest extends BaseDaoTest {
 
-    private List<VwBusinessAddress> mockSingleProfileFetchResponse;
-    private List<VwBusinessAddress> mockCriteriaProfileFetchResponse;
-    private List<VwBusinessAddress> mockAllProfileFetchResponse;
+    private List<VwBusinessAddress> mockFetchSingleResponse;
+    private List<VwBusinessAddress> mockCriteriaFetchResponse;
+    private List<VwBusinessAddress> mockFetchAllResponse;
     private List<VwBusinessAddress> mockNotFoundFetchResponse;
     private Business mockBusinessObject;
     private Address mockAddressObject;
@@ -49,9 +49,9 @@ public class BusinessProfileApiTest extends BaseDaoTest {
     public void setUp() throws Exception {
         APP_NAME = "addressbook";
         super.setUp();
-        this.mockSingleProfileFetchResponse = this.createMockSingleContactFetchResponse();
-        this.mockCriteriaProfileFetchResponse = this.createMockContactFetchUsingCriteriaResponse();
-        this.mockAllProfileFetchResponse = this.createMockContactFetchAllResponse();
+        this.mockFetchSingleResponse = this.createMockSingleFetchResponse();
+        this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
+        this.mockFetchAllResponse = this.createMockFetchAllResponse();
         this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
         this.mockBusinessObject = this.createBusinessMockObject();
         this.mockAddressObject = this.createAddressMockObject();
@@ -67,7 +67,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         return list;
     }
 
-    private List<VwBusinessAddress> createMockSingleContactFetchResponse() {
+    private List<VwBusinessAddress> createMockSingleFetchResponse() {
         List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
         VwBusinessAddress b = new VwBusinessAddress();
         b.setBusinessId(1351);
@@ -100,7 +100,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
      * 
      * @return
      */
-    private List<VwBusinessAddress> createMockContactFetchUsingCriteriaResponse() {
+    private List<VwBusinessAddress> createMockFetchUsingCriteriaResponse() {
         List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
         VwBusinessAddress b = new VwBusinessAddress();
         b.setBusinessId(3333);
@@ -146,7 +146,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         return list;
     }
 
-    private List<VwBusinessAddress> createMockContactFetchAllResponse() {
+    private List<VwBusinessAddress> createMockFetchAllResponse() {
         List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
         VwBusinessAddress b = new VwBusinessAddress();
         b.setBusinessId(3333);
@@ -280,7 +280,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         BusinessContactDto busDto = Rmt2AddressBookDtoFactory.getNewBusinessInstance();
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
-                    .thenReturn(this.mockAllProfileFetchResponse);
+                    .thenReturn(this.mockFetchAllResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("All business contact fetch test case failed");
@@ -319,7 +319,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         BusinessContactDto busDto = Rmt2AddressBookDtoFactory.getBusinessInstance(bus, null);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
-                    .thenReturn(this.mockSingleProfileFetchResponse);
+                    .thenReturn(this.mockFetchSingleResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("Single business contact fetch test case failed");
@@ -356,7 +356,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         busDto.setContactId(1351);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
-                    .thenReturn(this.mockSingleProfileFetchResponse);
+                    .thenReturn(this.mockFetchSingleResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("Single business contact fetch test case failed");
@@ -394,7 +394,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         BusinessContactDto busDto = Rmt2AddressBookDtoFactory.getBusinessInstance(bus, null);
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
-                    .thenReturn(this.mockCriteriaProfileFetchResponse);
+                    .thenReturn(this.mockCriteriaFetchResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("business contact fetch using specific selection criteria test case failed");
@@ -432,7 +432,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         busDto.setContactName("M");
         try {
             when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
-                    .thenReturn(this.mockCriteriaProfileFetchResponse);
+                    .thenReturn(this.mockCriteriaFetchResponse);
         } catch (ContactDaoException e) {
             e.printStackTrace();
             Assert.fail("business contact fetch using specific selection criteria test case failed");
