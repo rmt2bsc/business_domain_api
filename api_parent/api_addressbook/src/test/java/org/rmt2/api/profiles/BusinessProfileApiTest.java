@@ -31,6 +31,8 @@ import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
+ * Test functionality as it pertains to business contact profiles
+ * 
  * @author royterrell
  *
  */
