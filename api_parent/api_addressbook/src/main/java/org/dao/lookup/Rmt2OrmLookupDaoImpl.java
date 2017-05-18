@@ -151,8 +151,8 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
         try {
             results = (GeneralCodesGroup) this.client.retrieveObject(c);
             return results;
-        } catch (DatabaseException e) {
-            throw new LookupDaoException(e);
+        } catch (Exception e) {
+            throw new LookupDaoException("Unable to fetch GeneralCodesGroup row from database", e);
         }
     }
 
@@ -186,8 +186,8 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
             if (results == null) {
                 return null;
             }
-        } catch (DatabaseException e) {
-            throw new LookupDaoException(e);
+        } catch (Exception e) {
+            throw new LookupDaoException("Unable to fetch GeneralCodesGroup list from database", e);
         }
 
         List<LookupGroupDto> list = new ArrayList<LookupGroupDto>();
@@ -311,6 +311,9 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
         } catch (SystemException e) {
             this.msg = "Unable to establish UserTimestamp instance before inserting record in general_codes_group table";
             throw new LookupUpdateDaoException(this.msg, e);
+        } catch (Exception e) {
+            this.msg = "Unable to perform database insert into general_codes_group table";
+            throw new LookupUpdateDaoException(this.msg, e);
         }
     }
 
@@ -383,8 +386,8 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
             g.addCriteria(GeneralCodesGroup.PROP_CODEGRPID, groupId);
             rows = this.client.deleteRow(g);
             return rows;
-        } catch (DatabaseException e) {
-            throw new LookupDaoException(e);
+        } catch (Exception e) {
+            throw new LookupDaoException("Unable to delete GeneralCodesGroup row from the database", e);
         }
     }
 
