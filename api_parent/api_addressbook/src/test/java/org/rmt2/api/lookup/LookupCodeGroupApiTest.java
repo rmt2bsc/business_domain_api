@@ -161,6 +161,28 @@ public class LookupCodeGroupApiTest extends BaseDaoTest {
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
     }
+    
+    @Test
+    public void testFetchByGroupId() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(GeneralCodesGroup.class)))
+                    .thenReturn(this.mockSingleFetchResponse.get(0));
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup group fetch by group id test case failed");
+        }
+
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        LookupGroupDto results = null;
+        try {
+            results = api.getGroup(100);
+        } catch (LookupDataApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(100, results.getGrpId());
+    }
 
     @Test
     public void testFetchUsingCriteria() {
@@ -224,7 +246,7 @@ public class LookupCodeGroupApiTest extends BaseDaoTest {
             Assert.fail("Lookup Code Group update test case failed setting up mock retrieve call");
         }
         try {
-            when(this.mockPersistenceClient.updateRow(any(LookupGroupDto.class)))
+            when(this.mockPersistenceClient.updateRow(any(GeneralCodesGroup.class)))
                     .thenReturn(1);
         } catch (LookupDaoException e) {
             e.printStackTrace();
@@ -245,10 +267,25 @@ public class LookupCodeGroupApiTest extends BaseDaoTest {
     }
 
     @Test
+    public void testUpdateWithoutDescription() {
+        GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
+        LookupGroupDto mockUpdateDto = this.createMockDto(555, null);
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateGroup(mockUpdateDto);
+            Assert.fail("Expecting validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testInsert() {
         LookupGroupDto mockDto = this.createMockDto(0, "Test Group 3");
         try {
-            when(this.mockPersistenceClient.insertRow(any(LookupGroupDto.class), any(Boolean.class)))
+            when(this.mockPersistenceClient.insertRow(any(GeneralCodesGroup.class), any(Boolean.class)))
                     .thenReturn(555);
         } catch (LookupDaoException e) {
             e.printStackTrace();
@@ -268,6 +305,21 @@ public class LookupCodeGroupApiTest extends BaseDaoTest {
         Assert.assertEquals("Test Group 3", mockDto.getGrpDescr());
     }
 
+    @Test
+    public void testInsertWithoutDescription() {
+        GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
+        LookupGroupDto mockUpdateDto = this.createMockDto(0, null);
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateGroup(mockUpdateDto);
+            Assert.fail("Expecting validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     @Test
     public void testDelete() {
         GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
@@ -308,6 +360,21 @@ public class LookupCodeGroupApiTest extends BaseDaoTest {
             api.deleteGroup(mockUpdateDto.getGrpId());
             Assert.fail("Expecting an exception to be thrown...Lookup Code Group API delete test case failed");
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchUsingNullCriteria() {
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        try {
+            api.getGroup(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (LookupDataApiException e) {
+            Assert.assertNotNull(e);
+            String errMsg = e.getErrorStack();
+            Assert.assertTrue(errMsg.contains("Lookup group criteria object cannot be null"));
             e.printStackTrace();
         }
     }

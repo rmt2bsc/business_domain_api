@@ -50,8 +50,7 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     public LookupCodeDto fetchCode(int codeId) throws LookupDaoException {
         GeneralCodes c = new GeneralCodes();
         c.addCriteria(GeneralCodes.PROP_CODEID, codeId);
-        GeneralCodes results = this.getRmt2Code(codeId);
-        results = (GeneralCodes) this.client.retrieveObject(c);
+        GeneralCodes results = (GeneralCodes) this.client.retrieveObject(c);
         if (results == null) {
             return null;
         }
@@ -104,6 +103,9 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
                 c.addLikeClause(GeneralCodes.PROP_LONGDESC, criteria.getCodeLongName());
             }
         }
+        else {
+            throw new LookupDaoException("Lookup code criteria object cannot be null");
+        }
 
         List<GeneralCodes> results = null;
         try {
@@ -136,8 +138,7 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     public LookupGroupDto fetchGroup(int grpId) throws LookupDaoException {
         GeneralCodesGroup c = new GeneralCodesGroup();
         c.addCriteria(GeneralCodes.PROP_CODEGRPID, grpId);
-        GeneralCodesGroup results = this.getRmt2Group(grpId);
-        results = (GeneralCodesGroup) this.client.retrieveObject(c);
+        GeneralCodesGroup results = (GeneralCodesGroup) this.client.retrieveObject(c);
         if (results == null) {
             return null;
         }
@@ -178,6 +179,9 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
             if (criteria.getGrpDescr() != null) {
                 c.addLikeClause(GeneralCodesGroup.PROP_DESCRIPTION, criteria.getGrpDescr());
             }
+        }
+        else {
+            throw new LookupDaoException("Lookup group criteria object cannot be null");
         }
 
         List<GeneralCodesGroup> results = null;
@@ -267,8 +271,6 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
      */
     @Override
     public int maintainGroup(LookupGroupDto group) throws LookupDaoException {
-        this.validateGroup(group);
-
         GeneralCodesGroup g = new GeneralCodesGroup();
         g.setCodeGrpId(group.getGrpId());
         g.setDescription(group.getGrpDescr());
@@ -345,26 +347,6 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     }
 
     /**
-     * Validates an incoming general lookup group data.
-     * 
-     * @param group
-     *            an instance of {@link LookupCodeDto}
-     * @throws InvalidLookupDataDaoException
-     *             <ol>
-     *             <li>The general lookup group object is null</li>
-     *             <li>The description is null</li>
-     *             </ol>
-     */
-    protected void validateGroup(LookupGroupDto group) throws InvalidLookupDataDaoException {
-        if (group == null) {
-            throw new InvalidLookupDataDaoException("General codes group object cannot be null");
-        }
-        if (group.getGrpDescr() == null || group.getGrpDescr().length() <= 0) {
-            throw new InvalidLookupDataDaoException("Group description is required");
-        }
-    }
-
-    /**
      * Deletes a record from the general_codes_group table using the primary
      * key.
      * 
@@ -376,10 +358,6 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
      */
     @Override
     public int deleteGroup(int groupId) throws LookupDaoException {
-        if (groupId <= 0) {
-            this.msg = "Group id is required and must greater than zero";
-            throw new LookupDaoException(this.msg);
-        }
         try {
             GeneralCodesGroup g = new GeneralCodesGroup();
             int rows = 0;
@@ -407,9 +385,6 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
      */
     @Override
     public int maintainCode(LookupCodeDto lookup) throws LookupDaoException {
-        // Validate DTO object
-        this.validateCode(lookup);
-
         // Convert dto to GeneralCodes object
         GeneralCodes c = new GeneralCodes();
         c.setCodeId(lookup.getCodeId());
@@ -485,34 +460,6 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     }
 
     /**
-     * Validates an incoming general lookup data.
-     * 
-     * @param lookup
-     *            an instance of {@link LookupCodeDto}
-     * @throws InvalidLookupDataDaoException
-     *             <ol>
-     *             <li>The general lookup object is null</li>
-     *             <li>Code group id is not greater than zero</li>
-     *             <li>The short description and long description are absent. At
-     *             least one must exists.</li>
-     *             </ol>
-     */
-    protected void validateCode(LookupCodeDto lookup) throws InvalidLookupDataDaoException {
-        if (lookup == null) {
-            throw new InvalidLookupDataDaoException("General lookup object is invalid");
-        }
-        if (lookup.getGrpId() <= 0) {
-            throw new InvalidLookupDataDaoException(
-                    "lookup group id is required and must be a value greater than zero");
-        }
-        if ((lookup.getCodeShortName() == null || lookup.getCodeShortName().length() <= 0)
-                && (lookup.getCodeLongName() == null || lookup.getCodeLongName().length() <= 0)) {
-            throw new InvalidLookupDataDaoException(
-                    "General lookup object must have either a short or long descripton");
-        }
-    }
-
-    /**
      * 
      * Deletes a record from the general_codes table using the primary key.
      * 
@@ -524,10 +471,6 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
      */
     @Override
     public int deleteCode(int codeId) throws LookupDaoException {
-        if (codeId <= 0) {
-            this.msg = "Code id is required and must greater than zero";
-            throw new LookupDaoException(this.msg);
-        }
         GeneralCodes obj = new GeneralCodes();
         try {
             obj.addCriteria(GeneralCodes.PROP_CODEID, codeId);

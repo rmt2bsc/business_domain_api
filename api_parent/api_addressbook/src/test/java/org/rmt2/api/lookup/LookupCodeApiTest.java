@@ -1,6 +1,5 @@
 package org.rmt2.api.lookup;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -73,14 +72,14 @@ public class LookupCodeApiTest extends BaseDaoTest {
     private List<GeneralCodes> createMockFetchUsingCriteriaResponse() {
         List<GeneralCodes> list = new ArrayList<GeneralCodes>();
         GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(100);
+        p.setCodeGrpId(300);
         p.setCodeId(500);
         p.setLongdesc("This is Code 1");
         p.setShortdesc("Code 1");
         list.add(p);
 
         p = new GeneralCodes();
-        p.setCodeGrpId(200);
+        p.setCodeGrpId(300);
         p.setCodeId(501);
         p.setLongdesc("This is Code 2");
         p.setShortdesc("Code 2");
@@ -175,45 +174,284 @@ public class LookupCodeApiTest extends BaseDaoTest {
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
     }
+    
+    @Test
+    public void testFetchByCodeId() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(GeneralCodes.class)))
+                    .thenReturn(this.mockSingleFetchResponse.get(0));
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup code fetch by code id test case failed");
+        }
+
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        LookupCodeDto results = null;
+        try {
+            results = api.getCode(1000);
+        } catch (LookupDataApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1000, results.getCodeId());
+    }
 
     @Test
     public void testFetchUsingCriteria() {
-        fail("Not yet implemented");
-    }
+        LookupCodeDto criteria = Rmt2AddressBookDtoFactory.getNewCodeInstance();
+        criteria.setGrpId(300);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GeneralCodes.class)))
+                    .thenReturn(this.mockCriteriaFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All lookup code fetch criteria test case failed");
+        }
 
-    @Test
-    public void testFetchSingleUsingDtoOnly() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testFetchUsingUsingCriteiraDtoOnly() {
-        fail("Not yet implemented");
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        List<LookupCodeDto> results = null;
+        try {
+            results = api.getCode(criteria);
+        } catch (LookupDataApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(2, results.size());
+        for (LookupCodeDto dto : results) {
+            Assert.assertEquals(300, dto.getGrpId());
+        }
     }
 
     @Test
     public void testNotFoundlFetch() {
-        fail("Not yet implemented");
+        LookupCodeDto criteria = Rmt2AddressBookDtoFactory.getNewCodeInstance();
+        criteria.setGrpId(3854);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GeneralCodes.class)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All lookup code fetch not found test case failed");
+        }
+
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        List<LookupCodeDto> results = null;
+        try {
+            results = api.getCode(criteria);
+        } catch (LookupDataApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(0, results.size());
     }
 
     @Test
     public void testFetchUsingCriteriaNullResults() {
-        fail("Not yet implemented");
+        LookupCodeDto criteria = Rmt2AddressBookDtoFactory.getNewCodeInstance();
+        criteria.setGrpId(3854);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GeneralCodes.class)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All lookup code fetch not found test case failed");
+        }
+
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        List<LookupCodeDto> results = null;
+        try {
+            results = api.getCode(criteria);
+        } catch (LookupDataApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(0, results.size());
+    }
+    
+    @Test
+    public void testFetchUsingNullCriteria() {
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        try {
+            api.getCode(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (LookupDataApiException e) {
+            Assert.assertNotNull(e);
+            String errMsg = e.getErrorStack();
+            Assert.assertTrue(errMsg.contains("Lookup code criteria object cannot be null"));
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testUpdate() {
-        fail("Not yet implemented");
+        GeneralCodes mockGeneralCodes = new GeneralCodes();
+        mockGeneralCodes.setCodeGrpId(555);
+        mockGeneralCodes.setCodeId(300);
+        mockGeneralCodes.setLongdesc("Test Code 3");
+        mockGeneralCodes.setShortdesc("Code 3");
+        GeneralCodes mockSelectCriteria = new GeneralCodes();
+        LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, "Modified Code 33", "Code 33");
+        try {
+            when(this.mockPersistenceClient.retrieveObject(mockSelectCriteria)).thenReturn(mockGeneralCodes);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code update test case failed setting up mock retrieve call");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(GeneralCodes.class)))
+                    .thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code update test case failed setting up mock update call");
+        }
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCode(mockUpdateDto);
+        } catch (Exception e) {
+            Assert.fail("Lookup Code API update test case failed");
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
+        Assert.assertEquals(555, mockUpdateDto.getGrpId());
+        Assert.assertEquals(300, mockUpdateDto.getCodeId());
+        Assert.assertEquals("Modified Code 33", mockUpdateDto.getCodeLongName());
+        Assert.assertEquals("Code 33", mockUpdateDto.getCodeShortName());
+    }
+    
+    @Test
+    public void testUpdateWithoutGroupId() {
+        LookupCodeDto mockUpdateDto = this.createMockDto(0, 300, "Modified Code 33", "Code 33");
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCode(mockUpdateDto);
+            Assert.fail("Expected Validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithoutLongDescription() {
+        LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, null, "Code 33");
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCode(mockUpdateDto);
+            Assert.fail("Expected Validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithoutShortDescription() {
+        LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, "Modified Code 33", null);
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCode(mockUpdateDto);
+            Assert.fail("Expected Validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithoutAnyDescriptions() {
+        LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, null, null);
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCode(mockUpdateDto);
+            Assert.fail("Expected Validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testInsert() {
-        fail("Not yet implemented");
+        GeneralCodes mockGeneralCodes = new GeneralCodes();
+        mockGeneralCodes.setCodeGrpId(555);
+        mockGeneralCodes.setCodeId(333);
+        mockGeneralCodes.setLongdesc("Test Code 3");
+        mockGeneralCodes.setShortdesc("Code 3");
+        LookupCodeDto mockUpdateDto = this.createMockDto(555, 0, "Modified Code 33", "Code 33");
+        try {
+            when(this.mockPersistenceClient.insertRow(any(GeneralCodes.class), any(Boolean.class)))
+                    .thenReturn(333);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code update test case failed setting up mock update call");
+        }
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCode(mockUpdateDto);
+        } catch (Exception e) {
+            Assert.fail("Lookup Code API update test case failed");
+            e.printStackTrace();
+        }
+        Assert.assertEquals(333, rc);
+        Assert.assertEquals(555, mockUpdateDto.getGrpId());
+        Assert.assertEquals(333, mockUpdateDto.getCodeId());
+        Assert.assertEquals("Modified Code 33", mockUpdateDto.getCodeLongName());
+        Assert.assertEquals("Code 33", mockUpdateDto.getCodeShortName());
     }
 
     @Test
     public void testDelete() {
-        fail("Not yet implemented");
+        LookupCodeDto mockUpdateDto = this.createMockDto(555, 333, "Modified Code 33", "Code 33");
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(GeneralCodes.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code delete test case failed setting up mock deleteRow call");
+        }
+       
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteGroup(mockUpdateDto.getCodeId());
+        } catch (Exception e) {
+            Assert.fail("Lookup Code API delete test case failed");
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
     }
 
+    @Test
+    public void testDeleteWithInvalidCodeId() {
+        LookupCodeDto mockUpdateDto = this.createMockDto(555, -1, "Modified Code 33", "Code 33");
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(GeneralCodes.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code delete test case failed setting up mock deleteRow call");
+        }
+       
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteCode(mockUpdateDto.getCodeId());
+            Assert.fail("Expected validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

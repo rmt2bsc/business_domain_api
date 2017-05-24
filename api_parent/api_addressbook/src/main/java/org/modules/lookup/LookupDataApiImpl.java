@@ -196,10 +196,11 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      * @return The lookup id for new records or the total number of records
      *         effected by the update.
      * @throws LookupDataApiException
-     *             DAO errors.
+     *             <i>group</i> produces validation errors or DAO errors.
      */
     @Override
     public int updateGroup(LookupGroupDto group) throws LookupDataApiException {
+        this.validateGroup(group);
         LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
@@ -226,6 +227,10 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      */
     @Override
     public int deleteGroup(int groupId) throws LookupDataApiException {
+        if (groupId <= 0) {
+            this.msg = "Group id is required and must greater than zero";
+            throw new LookupDataApiException(this.msg);
+        }
         LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             int rc = dao.deleteGroup(groupId);
@@ -243,18 +248,19 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      * Creates a new or modifies an existing lookup object in the system using
      * the RMT ORM implementaion of Code DAO.
      * 
-     * @param lookup
+     * @param code
      *            an instance of {@link LookupCodeDto}
      * @return The lookup id for new records or the total number of records
      *         effected by the update.
-     * @throws LookupDataApiException
+     * @throws LookupDataApiException <i>code</i> produces validation errors or DAO errors.
      */
     @Override
-    public int updateCode(LookupCodeDto lookup) throws LookupDataApiException {
+    public int updateCode(LookupCodeDto code) throws LookupDataApiException {
+        this.validateCode(code);
         LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
-            int rc = dao.maintainCode(lookup);
+            int rc = dao.maintainCode(code);
             return rc;
         } catch (LookupDaoException e) {
             this.msg = "Unable to update Code bject";
@@ -277,6 +283,10 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      */
     @Override
     public int deleteCode(int codeId) throws LookupDataApiException {
+        if (codeId <= 0) {
+            this.msg = "Code id is required and must greater than zero";
+            throw new LookupDataApiException(this.msg);
+        }
         LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             int rc = dao.deleteCode(codeId);
@@ -290,4 +300,51 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         }
     }
 
+    /**
+     * Validates an incoming general lookup group data.
+     * 
+     * @param group
+     *            an instance of {@link LookupCodeDto}
+     * @throws InvalidLookupDataDaoException
+     *             <ol>
+     *             <li>The general lookup group object is null</li>
+     *             <li>The description is null</li>
+     *             </ol>
+     */
+    protected void validateGroup(LookupGroupDto group) throws LookupDataApiException {
+        if (group == null) {
+            throw new LookupDataApiException("General codes group object cannot be null");
+        }
+        if (group.getGrpDescr() == null || group.getGrpDescr().length() <= 0) {
+            throw new LookupDataApiException("Group description is required");
+        }
+    }
+    
+    /**
+     * Validates an incoming general lookup data.
+     * 
+     * @param code
+     *            an instance of {@link LookupCodeDto}
+     * @throws InvalidLookupDataDaoException
+     *             <ol>
+     *             <li>The general lookup object is null</li>
+     *             <li>Code group id is not greater than zero</li>
+     *             <li>The short description and long description are absent. At
+     *             least one must exists.</li>
+     *             </ol>
+     */
+    protected void validateCode(LookupCodeDto code) throws LookupDataApiException {
+        if (code == null) {
+            throw new LookupDataApiException("General lookup object is invalid");
+        }
+        if (code.getGrpId() <= 0) {
+            throw new LookupDataApiException(
+                    "lookup group id is required and must be a value greater than zero");
+        }
+        if ((code.getCodeShortName() == null || code.getCodeShortName().length() <= 0)
+                && (code.getCodeLongName() == null || code.getCodeLongName().length() <= 0)) {
+            throw new LookupDataApiException(
+                    "General lookup object must have either a short or long descripton");
+        }
+    }
 }
