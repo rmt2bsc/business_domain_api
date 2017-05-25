@@ -276,6 +276,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int updateRegion(RegionDto obj) throws PostalApiException {
+        this.validateRegion(obj);
         RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.maintainRegion(obj);
@@ -285,6 +286,35 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } finally {
             dao.close();
             dao = null;
+        }
+    }
+
+    /**
+     * Validates a RegionDto object for insert and update opertaions.
+     * 
+     * @param obj
+     *            an instance of {@link RegionDto} that is to be validated.
+     * @throws PostalApiException
+     *             if <i>obj</i> is null or <i>state code</i>, <i>state name</i>
+     *             and/or <i>country id</i> have not been assinged a value.
+     */
+    protected void validateRegion(RegionDto obj) throws PostalApiException {
+        if (obj == null) {
+            this.msg = "Region instance cannot be null for insert/update operations";
+            throw new PostalApiException(this.msg);
+        }
+
+        if (obj.getStateCode() == null || obj.getStateCode().equals("")) {
+            this.msg = "Region (State/Province) code is required";
+            throw new PostalApiException(this.msg);
+        }
+        if (obj.getStateName() == null || obj.getStateName().equals("")) {
+            this.msg = "Region (State/Province) name is required";
+            throw new PostalApiException(this.msg);
+        }
+        if (obj.getCountryId() <= 0) {
+            this.msg = "Country code is required";
+            throw new PostalApiException(this.msg);
         }
     }
 
@@ -314,6 +344,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int updateCountry(CountryDto obj) throws PostalApiException {
+        this.validate(obj);
         RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.maintainCountry(obj);
@@ -323,6 +354,26 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } finally {
             dao.close();
             dao = null;
+        }
+    }
+
+    /**
+     * Validates a CountryDto object for insert and update operations.
+     * 
+     * @param obj
+     *            an instance of {@link CountryDto} that is to be validated.
+     * @throws PostalApiException
+     *             if <i>obj</i> is null or <i>country name</i> does not been
+     *             assinged a value.
+     */
+    protected void validate(CountryDto obj) throws PostalApiException {
+        if (obj == null) {
+            this.msg = "Country instance cannot be null for insert/update operations";
+            throw new PostalApiException(this.msg);
+        }
+        if (obj.getCountryName() == null || obj.getCountryName().equals("")) {
+            this.msg = "Country name is required";
+            throw new PostalApiException(this.msg);
         }
     }
 

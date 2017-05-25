@@ -97,6 +97,9 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
                 s.addLikeClause(State.PROP_STATENAME, criteria.getStateName());
             }
         }
+        else {
+            throw new RegionCountryDaoException("Region criteria object cannot be null");
+        }
 
         List<State> results;
         try {
@@ -174,6 +177,9 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
                 s.addCriteria(Country.PROP_CODE, criteria.getCountryCode());
             }
         }
+        else {
+            throw new RegionCountryDaoException("Country criteria object cannot be null");
+        }
 
         List<Country> results;
         try {
@@ -231,6 +237,9 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
                 s.addLikeClause(State.PROP_STATENAME, criteria.getStateName());
             }
         }
+        else {
+            throw new RegionCountryDaoException("Country/Region criteria object cannot be null");
+        }
 
         List<VwStateCountry> results;
         try {
@@ -264,8 +273,6 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
      */
     @Override
     public int maintainRegion(RegionDto dto) throws RegionCountryDaoException {
-        this.validateRegion(dto);
-
         State state = new State();
         state.setStateId(dto.getStateId());
         state.setAbbrCode(dto.getStateCode());
@@ -333,35 +340,6 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
     }
 
     /**
-     * Validates a RegionDto object for insert and update opertaions.
-     * 
-     * @param obj
-     *            an instance of {@link RegionDto} that is to be validated.
-     * @throws InvalidRegionDataDaoException
-     *             if <i>obj</i> is null or <i>state code</i>, <i>state name</i>
-     *             and/or <i>country id</i> have not been assinged a value.
-     */
-    protected void validateRegion(RegionDto obj) throws InvalidRegionDataDaoException {
-        if (obj == null) {
-            this.msg = "Region instance cannot be null for insert/update operations";
-            throw new InvalidRegionDataDaoException(this.msg);
-        }
-
-        if (obj.getStateCode() == null || obj.getStateCode().equals("")) {
-            this.msg = "Region (State/Province) code is required";
-            throw new InvalidRegionDataDaoException(this.msg);
-        }
-        if (obj.getStateName() == null || obj.getStateName().equals("")) {
-            this.msg = "Region (State/Province) name is required";
-            throw new InvalidRegionDataDaoException(this.msg);
-        }
-        if (obj.getCountryId() <= 0) {
-            this.msg = "Country code is required";
-            throw new InvalidRegionDataDaoException(this.msg);
-        }
-    }
-
-    /**
      * Deletes a single record from the <i>state</i> table of the contacts
      * database.
      * 
@@ -405,8 +383,6 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
      */
     @Override
     public int maintainCountry(CountryDto dto) throws RegionCountryDaoException {
-        this.validate(dto);
-
         Country c = new Country();
         c.setCountryId(dto.getCountryId());
         c.setName(dto.getCountryName());
@@ -470,26 +446,6 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
             return rows;
         } catch (Exception e) {
             throw new RegionCountryDaoException(e);
-        }
-    }
-
-    /**
-     * Validates a CountryDto object for insert and update operations.
-     * 
-     * @param obj
-     *            an instance of {@link CountryDto} that is to be validated.
-     * @throws InvalidRegionDataDaoException
-     *             if <i>obj</i> is null or <i>country name</i> does not been
-     *             assinged a value.
-     */
-    protected void validate(CountryDto obj) throws InvalidRegionDataDaoException {
-        if (obj == null) {
-            this.msg = "Country instance cannot be null for insert/update operations";
-            throw new InvalidRegionDataDaoException(this.msg);
-        }
-        if (obj.getCountryName() == null || obj.getCountryName().equals("")) {
-            this.msg = "Country name is required";
-            throw new InvalidRegionDataDaoException(this.msg);
         }
     }
 
