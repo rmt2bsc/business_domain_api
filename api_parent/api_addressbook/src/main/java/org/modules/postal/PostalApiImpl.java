@@ -70,6 +70,10 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public List<CountryDto> getCountry(CountryDto criteria) throws PostalApiException {
+        if (criteria == null) {
+            this.msg = "Country criteia instance cannot be null for fetch operations";
+            throw new PostalApiException(this.msg);
+        }
         RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountry(criteria);
@@ -90,6 +94,10 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public List<CountryRegionDto> getCountryRegion(CountryRegionDto criteria) throws PostalApiException {
+        if (criteria == null) {
+            this.msg = "Country/Region criteia instance cannot be null for fetch operations";
+            throw new PostalApiException(this.msg);
+        }
         RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountryRegion(criteria);
@@ -128,6 +136,10 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public List<RegionDto> getRegion(RegionDto criteria) throws PostalApiException {
+        if (criteria == null) {
+            this.msg = "Region criteia instance cannot be null for fetch operations";
+            throw new PostalApiException(this.msg);
+        }
         RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchRegion(criteria);
@@ -181,6 +193,10 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public List<ZipcodeDto> getZipCode(ZipcodeDto criteria) throws PostalApiException {
+        if (criteria == null) {
+            this.msg = "Zip code criteia instance cannot be null for fetch operations";
+            throw new PostalApiException(this.msg);
+        }
         PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchZipCode(criteria);
@@ -219,6 +235,10 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public List<TimeZoneDto> getTimezone(TimeZoneDto criteria) throws PostalApiException {
+        if (criteria == null) {
+            this.msg = "Timezone criteia instance cannot be null for fetch operations";
+            throw new PostalApiException(this.msg);
+        }
         PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchTimezone(criteria);
