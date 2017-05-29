@@ -15,6 +15,7 @@ import org.dto.ZipcodeDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.util.RMT2String2;
 
 /**
  * An implementation of {@link PostalApi} for managing postal location related
@@ -391,7 +392,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "Country instance cannot be null for insert/update operations";
             throw new PostalApiException(this.msg);
         }
-        if (obj.getCountryName() == null || obj.getCountryName().equals("")) {
+        if (RMT2String2.isEmpty(obj.getCountryName())) {
             this.msg = "Country name is required";
             throw new PostalApiException(this.msg);
         }
@@ -404,6 +405,10 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int deleteCountry(int countryId) throws PostalApiException {
+        if (countryId <= 0) {
+            this.msg = "Country id is invalid...must be greater than zero";
+            throw new PostalApiException(this.msg);
+        }
         RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.deleteCountry(countryId);
