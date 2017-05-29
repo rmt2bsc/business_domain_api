@@ -462,10 +462,6 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
      */
     @Override
     public int deleteCountry(int countryId) throws RegionCountryDaoException {
-        if (countryId <= 0) {
-            this.msg = "Country id is invalid...must be greater than zero";
-            throw new InvalidRegionDataDaoException(this.msg);
-        }
         Country obj = new Country();
 
         this.client.beginTrans();
