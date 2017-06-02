@@ -65,7 +65,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
     }
 
     private List<VwBusinessAddress> createMockNotFoundSearchResultsResponse() {
-        List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
+        List<VwBusinessAddress> list = null;
         return list;
     }
 
@@ -485,8 +485,7 @@ public class BusinessProfileApiTest extends BaseDaoTest {
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
-        Assert.assertNotNull(results);
-        Assert.assertEquals(0, results.size());
+        Assert.assertNull(results);
     }
 
     @Test

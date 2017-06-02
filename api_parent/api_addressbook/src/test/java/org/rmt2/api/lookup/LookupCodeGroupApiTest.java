@@ -49,7 +49,7 @@ public class LookupCodeGroupApiTest extends BaseDaoTest {
     }
 
     private List<GeneralCodesGroup> createMockNotFoundSearchResultsResponse() {
-        List<GeneralCodesGroup> list = new ArrayList<GeneralCodesGroup>();
+        List<GeneralCodesGroup> list = null;
         return list;
     }
 
@@ -228,8 +228,7 @@ public class LookupCodeGroupApiTest extends BaseDaoTest {
         } catch (LookupDataApiException e) {
             e.printStackTrace();
         }
-        Assert.assertNotNull(results);
-        Assert.assertEquals(0, results.size());
+        Assert.assertNull(results);
     }
 
     @Test

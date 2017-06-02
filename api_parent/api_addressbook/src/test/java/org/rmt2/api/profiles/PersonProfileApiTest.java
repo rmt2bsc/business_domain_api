@@ -67,7 +67,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
     }
 
     private List<VwPersonAddress> createMockNotFoundSearchResultsResponse() {
-        List<VwPersonAddress> list = new ArrayList<VwPersonAddress>();
+        List<VwPersonAddress> list = null;
         return list;
     }
 
@@ -476,8 +476,7 @@ public class PersonProfileApiTest extends BaseDaoTest {
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
-        Assert.assertNotNull(results);
-        Assert.assertEquals(0, results.size());
+        Assert.assertNull(results);
     }
 
     @Test

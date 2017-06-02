@@ -67,7 +67,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
     }
 
     private List<VwCommonContact> createMockNotFoundSearchResultsResponse() {
-        List<VwCommonContact> list = new ArrayList<VwCommonContact>();
+        List<VwCommonContact> list = null;
         return list;
     }
 
@@ -442,8 +442,7 @@ public class CommonProfileApiTest extends BaseDaoTest {
         } catch (ContactsApiException e) {
             e.printStackTrace();
         }
-        Assert.assertNotNull(results);
-        Assert.assertEquals(0, results.size());
+        Assert.assertNull(results);
     }
 
     @Test

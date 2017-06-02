@@ -49,7 +49,7 @@ public class CountryApiTest extends BaseDaoTest {
     }
 
     private List<Country> createMockNotFoundSearchResultsResponse() {
-        List<Country> list = new ArrayList<Country>();
+        List<Country> list = null;
         return list;
     }
 
@@ -245,8 +245,7 @@ public class CountryApiTest extends BaseDaoTest {
         } catch (PostalApiException e) {
             e.printStackTrace();
         }
-        Assert.assertNotNull(results);
-        Assert.assertEquals(0, results.size());
+        Assert.assertNull(results);
     }
 
     @Test
