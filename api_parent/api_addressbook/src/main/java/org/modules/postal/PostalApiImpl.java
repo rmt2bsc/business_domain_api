@@ -346,6 +346,10 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public int deleteRegion(int stateId) throws PostalApiException {
+        if (stateId <= 0) {
+            this.msg = "State id is invalid...must be greater than zero";
+            throw new PostalApiException(this.msg);
+        }
         RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.deleteRegion(stateId);

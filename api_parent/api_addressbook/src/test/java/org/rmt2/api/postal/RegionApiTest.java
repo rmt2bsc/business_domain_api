@@ -1,16 +1,24 @@
 package org.rmt2.api.postal;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.GeneralCodes;
-import org.dto.LookupCodeDto;
+import org.dao.lookup.LookupDaoException;
+import org.dao.mapping.orm.rmt2.State;
+import org.dto.RegionDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.postal.PostalApi;
+import org.modules.postal.PostalApiException;
+import org.modules.postal.PostalApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseDaoTest;
@@ -21,10 +29,10 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
 public class RegionApiTest extends BaseDaoTest {
-    private List<GeneralCodes> mockSingleFetchResponse;
-    private List<GeneralCodes> mockCriteriaFetchResponse;
-    private List<GeneralCodes> mockFetchAllResponse;
-    private List<GeneralCodes> mockNotFoundFetchResponse;
+    private List<State> mockSingleFetchResponse;
+    private List<State> mockCriteriaFetchResponse;
+    private List<State> mockFetchAllResponse;
+    private List<State> mockNotFoundFetchResponse;
 
     @Before
     public void setUp() throws Exception {
@@ -40,159 +48,422 @@ public class RegionApiTest extends BaseDaoTest {
     public void tearDown() throws Exception {
     }
 
-    private List<GeneralCodes> createMockNotFoundSearchResultsResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
+    private List<State> createMockNotFoundSearchResultsResponse() {
+        List<State> list = null;
         return list;
     }
 
-    private List<GeneralCodes> createMockSingleFetchResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(200);
-        p.setCodeId(1000);
-        p.setLongdesc("This is Code 1000");
-        p.setShortdesc("Code 1000");
-
-        list.add(p);
+    private List<State> createMockSingleFetchResponse() {
+        List<State> list = new ArrayList<State>();
+        State o = new State();
+        o.setStateId(10);
+        o.setAbbrCode("TX");
+        o.setStateName("Texas");
+        o.setCountryId(100);
+        list.add(o);
         return list;
     }
 
     /**
-     * Use for the following selection criteria: where last name begins with 'C'
+     * Use for the following selection criteria: where last name begins with 'T'
      * 
      * @return
      */
-    private List<GeneralCodes> createMockFetchUsingCriteriaResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(500);
-        p.setLongdesc("This is Code 1");
-        p.setShortdesc("Code 1");
-        list.add(p);
+    private List<State> createMockFetchUsingCriteriaResponse() {
+        List<State> list = new ArrayList<State>();
+        State o = new State();
+        o.setStateId(10);
+        o.setAbbrCode("TX");
+        o.setStateName("Texas");
+        o.setCountryId(100);
+        list.add(o);
 
-        p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(501);
-        p.setLongdesc("This is Code 2");
-        p.setShortdesc("Code 2");
-        list.add(p);
+        o = new State();
+        o.setStateId(20);
+        o.setAbbrCode("TN");
+        o.setStateName("Tennessee");
+        o.setCountryId(100);
+        list.add(o);
 
         return list;
     }
 
-    private List<GeneralCodes> createMockFetchAllResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(100);
-        p.setCodeId(500);
-        p.setLongdesc("This is Code 1");
-        p.setShortdesc("Code 1");
-        list.add(p);
+    private List<State> createMockFetchAllResponse() {
+        List<State> list = new ArrayList<State>();
+        State o = new State();
+        o.setStateId(10);
+        o.setAbbrCode("TX");
+        o.setStateName("Texas");
+        o.setCountryId(100);
+        list.add(o);
 
-        p = new GeneralCodes();
-        p.setCodeGrpId(200);
-        p.setCodeId(501);
-        p.setLongdesc("This is Code 2");
-        p.setShortdesc("Code 2");
-        list.add(p);
-
-        p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(503);
-        p.setLongdesc("This is Code 3");
-        p.setShortdesc("Code 3");
-        list.add(p);
-
-        p = new GeneralCodes();
-        p.setCodeGrpId(400);
-        p.setCodeId(504);
-        p.setLongdesc("This is Code 4");
-        p.setShortdesc("Code 4");
-        list.add(p);
+        o = new State();
+        o.setStateId(20);
+        o.setAbbrCode("TN");
+        o.setStateName("Tennessee");
+        o.setCountryId(100);
+        list.add(o);
+        
+        o = new State();
+        o.setStateId(30);
+        o.setAbbrCode("LA");
+        o.setStateName("Louisiana");
+        o.setCountryId(100);
+        list.add(o);
+        
+        o = new State();
+        o.setStateId(40);
+        o.setAbbrCode("CA");
+        o.setStateName("California");
+        o.setCountryId(100);
+        list.add(o);
+        
+        o = new State();
+        o.setStateId(50);
+        o.setAbbrCode("NY");
+        o.setStateName("New York");
+        o.setCountryId(100);
+        list.add(o);
         return list;
     }
 
-    private LookupCodeDto createMockDto(int grpId, int codeId, String description, String shortDescription) {
-        LookupCodeDto dto = Rmt2AddressBookDtoFactory.getNewCodeInstance();
-        dto.setGrpId(grpId);
-        dto.setCodeId(codeId);
-        dto.setCodeLongName(description);
-        dto.setCodeShortDesc(shortDescription);
+    private RegionDto createMockDto(int stateId, int countryId, String stateName, String stateCode) {
+        RegionDto dto = Rmt2AddressBookDtoFactory.getNewRegionInstance();
+        dto.setStateId(stateId);
+        dto.setStateCode(stateCode);
+        dto.setStateName(stateName);
+        dto.setCountryId(countryId);
         return dto;
     }
     @Test
     public void testFetchAll() {
-        Assert.fail("test Failed");
+        RegionDto criteria = Rmt2AddressBookDtoFactory.getNewRegionInstance();
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(State.class))).thenReturn(this.mockFetchAllResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All state/region fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<RegionDto> results = null;
+        try {
+            results = api.getRegion(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
     }
 
     @Test
     public void testFetchSingle() {
-        Assert.fail("test Failed");
+        RegionDto criteria = Rmt2AddressBookDtoFactory.getNewRegionInstance();
+        criteria.setStateId(10);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(State.class))).thenReturn(this.mockSingleFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Single state/region fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<RegionDto> results = null;
+        try {
+            results = api.getRegion(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        RegionDto state = (RegionDto) results.get(0);
+        Assert.assertNotNull(state);
+        Assert.assertEquals(10, state.getStateId());
+        Assert.assertEquals("TX", state.getStateCode());
+        Assert.assertEquals("Texas", state.getStateName());
     }
     
     @Test
     public void testFetchByCodeId() {
-        Assert.fail("test Failed");
+        RegionDto criteria = Rmt2AddressBookDtoFactory.getNewRegionInstance();
+        criteria.setStateId(10);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(State.class))).thenReturn(this.mockSingleFetchResponse.get(0));
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Fetch state/region by code id test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        RegionDto results = null;
+        try {
+            results = api.getRegion(10);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertNotNull(results);
+        Assert.assertEquals(10, results.getStateId());
+        Assert.assertEquals("TX", results.getStateCode());
+        Assert.assertEquals("Texas", results.getStateName());
     }
 
     @Test
     public void testFetchUsingCriteria() {
-        Assert.fail("test Failed");
+        RegionDto criteria = Rmt2AddressBookDtoFactory.getNewRegionInstance();
+        criteria.setStateName("T");
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(State.class))).thenReturn(this.mockCriteriaFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Criteria state/region fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<RegionDto> results = null;
+        try {
+            results = api.getRegion(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(2, results.size());
+        for (RegionDto item : results) {
+            Assert.assertTrue(item.getStateName().substring(0, 1).equalsIgnoreCase("T"));
+        }
     }
 
     @Test
     public void testNotFoundlFetch() {
-        Assert.fail("test Failed");
+        RegionDto criteria = Rmt2AddressBookDtoFactory.getNewRegionInstance();
+        criteria.setStateName("ZZ");
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(State.class))).thenReturn(this.mockNotFoundFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Criteria state/region fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<RegionDto> results = null;
+        try {
+            results = api.getRegion(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
     }
 
     @Test
-    public void testFetchUsingCriteriaNullResults() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
     public void testFetchUsingNullCriteria() {
-        Assert.fail("test Failed");
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        try {
+            api.getRegion(null);
+            Assert.fail("Expected exception to be thrown due to null criteria object input");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testUpdate() {
-        Assert.fail("test Failed");
+        State origState = new State();
+        origState.setAbbrCode("TX");
+        origState.setCountryId(10);
+        origState.setStateId(100);
+        origState.setStateName("Texas");
+        RegionDto updateState = this.createMockDto(100, 10, "Modified State", "MS");
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(State.class))).thenReturn(origState);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region fetch test case failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(State.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region update row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateRegion(updateState);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
     }
     
     @Test
-    public void testUpdateWithoutGroupId() {
-        Assert.fail("test Failed");
+    public void testUpdateWithZeroCountryId() {
+        State origState = new State();
+        origState.setAbbrCode("TX");
+        origState.setCountryId(0);
+        origState.setStateId(100);
+        origState.setStateName("Texas");
+        RegionDto updateState = this.createMockDto(100, 0, "Mississippi", "MS");
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(State.class))).thenReturn(origState);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region fetch test case failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(State.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region update row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateRegion(updateState);
+            Assert.fail("Expected exception to be thrown");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
     }
     
     @Test
-    public void testUpdateWithoutLongDescription() {
-        Assert.fail("test Failed");
+    public void testUpdateWithNullStateName() {
+        State origState = new State();
+        origState.setAbbrCode("TX");
+        origState.setCountryId(0);
+        origState.setStateId(100);
+        origState.setStateName("Texas");
+        RegionDto updateState = this.createMockDto(100, 10, null, "MS");
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(State.class))).thenReturn(origState);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region fetch test case failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(State.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region update row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateRegion(updateState);
+            Assert.fail("Expected exception to be thrown");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
     }
     
     @Test
-    public void testUpdateWithoutShortDescription() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testUpdateWithoutAnyDescriptions() {
-        Assert.fail("test Failed");
+    public void testUpdateWithullStateCode() {
+        State origState = new State();
+        origState.setAbbrCode("TX");
+        origState.setCountryId(0);
+        origState.setStateId(100);
+        origState.setStateName("Texas");
+        RegionDto updateState = this.createMockDto(100, 10, "Mississippi", null);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(State.class))).thenReturn(origState);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region fetch test case failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(State.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update state/region update row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateRegion(updateState);
+            Assert.fail("Expected exception to be thrown");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testInsert() {
-        Assert.fail("test Failed");
+        RegionDto updateState = this.createMockDto(0, 100, "Mississippi", "MS");
+        try {
+            when(this.mockPersistenceClient.insertRow(any(State.class), eq(true))).thenReturn(555);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert state/region row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateRegion(updateState);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(555, rc);
+        Assert.assertEquals(555, updateState.getStateId());
     }
 
     @Test
+    public void testInsertWithZeroCountryId() {
+        RegionDto updateState = this.createMockDto(0, 0, "Mississippi", "MS");
+        try {
+            when(this.mockPersistenceClient.insertRow(any(State.class), eq(true))).thenReturn(555);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert state/region row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        try {
+            api.updateRegion(updateState);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testDelete() {
-        Assert.fail("test Failed");
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(Integer.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Delete state/region row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteRegion(10);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
     }
 
     @Test
     public void testDeleteWithInvalidCodeId() {
-        Assert.fail("test Failed");
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(Integer.class))).thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Delete state/region row test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        try {
+            api.deleteRegion(-10);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
     }
 }
