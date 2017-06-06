@@ -20,7 +20,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
-public class PostalApiTest extends BaseDaoTest {
+public class TimezoneApiTest extends BaseDaoTest {
     private List<GeneralCodes> mockSingleFetchResponse;
     private List<GeneralCodes> mockCriteriaFetchResponse;
     private List<GeneralCodes> mockFetchAllResponse;
@@ -132,7 +132,7 @@ public class PostalApiTest extends BaseDaoTest {
     }
     
     @Test
-    public void testFetchByCodeId() {
+    public void testFetchByUid() {
         Assert.fail("test Failed");
     }
 
