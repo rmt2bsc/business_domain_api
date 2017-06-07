@@ -1,16 +1,20 @@
 package org.rmt2.api.postal;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
-import org.dao.mapping.orm.rmt2.GeneralCodes;
-import org.dto.LookupCodeDto;
+import org.dao.lookup.LookupDaoException;
+import org.dao.mapping.orm.rmt2.IpLocation;
+import org.dto.IpLocationDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.postal.PostalApi;
+import org.modules.postal.PostalApiException;
+import org.modules.postal.PostalApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseDaoTest;
@@ -21,18 +25,14 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
 public class IpInfoApiTest extends BaseDaoTest {
-    private List<GeneralCodes> mockSingleFetchResponse;
-    private List<GeneralCodes> mockCriteriaFetchResponse;
-    private List<GeneralCodes> mockFetchAllResponse;
-    private List<GeneralCodes> mockNotFoundFetchResponse;
+    private IpLocation mockSingleFetchResponse;
+    private IpLocation mockNotFoundFetchResponse;
 
     @Before
     public void setUp() throws Exception {
         APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
-        this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
-        this.mockFetchAllResponse = this.createMockFetchAllResponse();
         this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
     }
 
@@ -40,159 +40,147 @@ public class IpInfoApiTest extends BaseDaoTest {
     public void tearDown() throws Exception {
     }
 
-    private List<GeneralCodes> createMockNotFoundSearchResultsResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        return list;
+    private IpLocation createMockNotFoundSearchResultsResponse() {
+        IpLocation p = null;
+        return p;
     }
 
-    private List<GeneralCodes> createMockSingleFetchResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(200);
-        p.setCodeId(1000);
-        p.setLongdesc("This is Code 1000");
-        p.setShortdesc("Code 1000");
-
-        list.add(p);
-        return list;
+    private IpLocation createMockSingleFetchResponse() {
+        IpLocation p = this.createMockOrm(200, 123456789, 987654321, 90333.333, 29393.392838, "United States", "USA", "Dallas", "75240", "6");
+        return p;
     }
 
-    /**
-     * Use for the following selection criteria: where last name begins with 'C'
-     * 
-     * @return
-     */
-    private List<GeneralCodes> createMockFetchUsingCriteriaResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(500);
-        p.setLongdesc("This is Code 1");
-        p.setShortdesc("Code 1");
-        list.add(p);
+   
 
-        p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(501);
-        p.setLongdesc("This is Code 2");
-        p.setShortdesc("Code 2");
-        list.add(p);
-
-        return list;
-    }
-
-    private List<GeneralCodes> createMockFetchAllResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(100);
-        p.setCodeId(500);
-        p.setLongdesc("This is Code 1");
-        p.setShortdesc("Code 1");
-        list.add(p);
-
-        p = new GeneralCodes();
-        p.setCodeGrpId(200);
-        p.setCodeId(501);
-        p.setLongdesc("This is Code 2");
-        p.setShortdesc("Code 2");
-        list.add(p);
-
-        p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(503);
-        p.setLongdesc("This is Code 3");
-        p.setShortdesc("Code 3");
-        list.add(p);
-
-        p = new GeneralCodes();
-        p.setCodeGrpId(400);
-        p.setCodeId(504);
-        p.setLongdesc("This is Code 4");
-        p.setShortdesc("Code 4");
-        list.add(p);
-        return list;
-    }
-
-    private LookupCodeDto createMockDto(int grpId, int codeId, String description, String shortDescription) {
-        LookupCodeDto dto = Rmt2AddressBookDtoFactory.getNewCodeInstance();
-        dto.setGrpId(grpId);
-        dto.setCodeId(codeId);
-        dto.setCodeLongName(description);
-        dto.setCodeShortDesc(shortDescription);
+    private IpLocationDto createMockDto(int id, double longitude, double latitude, String countyName, String state, String city, String zip, String areaCode) {
+        IpLocationDto dto = Rmt2AddressBookDtoFactory.getNewIpLocationInstance();
+        dto.setIpRangeId(id);
+        dto.setCity(city);
+        dto.setPostalCode(zip);;
+        dto.setCountry(countyName);
+        dto.setRegion(state);
+        dto.setAreaCode(areaCode);
+        dto.setLatitude(longitude);
+        dto.setLongitude(latitude);
         return dto;
     }
-    @Test
-    public void testFetchAll() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testFetchSingle() {
-        Assert.fail("test Failed");
+    
+    private IpLocation createMockOrm(int id, double ipFrom, double ipTo, double longitude, double latitude, String countyName, String countyCode, String city, String zip, String timeZoneId) {
+        IpLocation dto = new IpLocation();
+        dto.setIpId(id);
+        dto.setIpFrom(ipFrom);
+        dto.setIpTo(ipTo);
+        dto.setCity(city);
+        dto.setZipcode(zip);
+        dto.setCountryName(countyName);
+        dto.setCountryCode(countyCode);
+        dto.setTimezone(timeZoneId);
+        dto.setLatitude(latitude);
+        dto.setLongitude(longitude);
+        return dto;
     }
     
     @Test
-    public void testFetchByUid() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testFetchUsingCriteria() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testNotFoundlFetch() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testFetchUsingCriteriaNullResults() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testFetchUsingNullCriteria() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testUpdate() {
-        Assert.fail("test Failed");
+    public void testFetchSingleUsingOctet() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(IpLocation.class))).thenReturn(this.mockSingleFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("IP location octet fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        IpLocationDto rec = null;
+        try {
+            rec = api.getIpInfo("123.345.456.678");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(rec);
+        Assert.assertEquals(200, rec.getIpRangeId());
+        Assert.assertEquals(90333.333, rec.getLongitude(), 0);
+        Assert.assertEquals(29393.392838, rec.getLatitude(), 0);
+        Assert.assertEquals("Dallas", rec.getCity());
+        Assert.assertEquals("75240", rec.getPostalCode());
+        Assert.assertEquals("United States", rec.getCountry());
     }
     
     @Test
-    public void testUpdateWithoutGroupId() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testUpdateWithoutLongDescription() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testUpdateWithoutShortDescription() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testUpdateWithoutAnyDescriptions() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testInsert() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testDelete() {
-        Assert.fail("test Failed");
+    public void testFetchSingleUsingLongValue() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(IpLocation.class))).thenReturn(this.mockSingleFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("IP location with long value fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        IpLocationDto rec = null;
+        try {
+            rec = api.getIpInfo(123456789045L);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(rec);
+        Assert.assertEquals(200, rec.getIpRangeId());
+        Assert.assertEquals(90333.333, rec.getLongitude(), 0);
+        Assert.assertEquals(29393.392838, rec.getLatitude(), 0);
+        Assert.assertEquals("Dallas", rec.getCity());
+        Assert.assertEquals("75240", rec.getPostalCode());
+        Assert.assertEquals("United States", rec.getCountry());
     }
 
     @Test
-    public void testDeleteWithInvalidCodeId() {
-        Assert.fail("test Failed");
+    public void testFetchWithNullOctets() {
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        IpLocationDto rec = null;
+        try {
+            rec = api.getIpInfo(null);
+            Assert.fail("Expected exception to be thrown due to 3 octets");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
     }
+    
+    @Test
+    public void testFetchWith3Octets() {
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        IpLocationDto rec = null;
+        try {
+            rec = api.getIpInfo("123.345.456");
+            Assert.fail("Expected exception to be thrown due to 3 octets");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetchWithAnInvalidOctet() {
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        IpLocationDto rec = null;
+        try {
+            rec = api.getIpInfo("123.345.456.abc");
+            Assert.fail("Expected exception to be thrown due to 3 octets");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchWithNoOctets() {
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        IpLocationDto rec = null;
+        try {
+            rec = api.getIpInfo("123345456225");
+            Assert.fail("Expected exception to be thrown due to 3 octets");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+    }
+    
+
 }
