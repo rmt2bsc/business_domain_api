@@ -13,7 +13,6 @@ import org.dto.IpLocationDto;
 import org.dto.RegionDto;
 import org.dto.TimeZoneDto;
 import org.dto.ZipcodeDto;
-import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.util.RMT2String2;
@@ -165,11 +164,9 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             return null;
         }
         PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
-        ZipcodeDto criteria = Rmt2AddressBookDtoFactory.getZipCodeInstance(null);
-        criteria.setZip(zipCode);
-        List<ZipcodeDto> results = null;
+        ZipcodeDto results = null;
         try {
-            results = dao.fetchZipCode(criteria);
+            results = dao.fetchZipCode(zipCode);
             if (results == null) {
                 return null;
             }
@@ -180,12 +177,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             dao.close();
             dao = null;
         }
-
-        if (results.size() > 1) {
-            this.msg = "Results should contain only one zip code record, but instead returned " + results.size();
-            throw new PostalApiException(this.msg);
-        }
-        return results.get(0);
+        return results;
     }
 
     /**

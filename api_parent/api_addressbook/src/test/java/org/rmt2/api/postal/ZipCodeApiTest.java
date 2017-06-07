@@ -32,6 +32,8 @@ public class ZipCodeApiTest extends BaseDaoTest {
     private List<Zipcode> mockCriteriaFetchResponse;
     private List<Zipcode> mockFetchAllResponse;
     private List<Zipcode> mockNotFoundFetchResponse;
+    private Zipcode mockNotFoundUidFetchResponse;
+    private Zipcode mockSingleUidFetchResponse;
 
     @Before
     public void setUp() throws Exception {
@@ -41,6 +43,8 @@ public class ZipCodeApiTest extends BaseDaoTest {
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
         this.mockFetchAllResponse = this.createMockFetchAllResponse();
         this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
+        this.mockNotFoundUidFetchResponse = this.createMockNotFoundUidSearchResultsResponse();
+        this.mockSingleUidFetchResponse = this.createMockSingleUidFetchResponse();
     }
 
     @After
@@ -48,8 +52,13 @@ public class ZipCodeApiTest extends BaseDaoTest {
     }
 
     private List<Zipcode> createMockNotFoundSearchResultsResponse() {
-        List<Zipcode> list = new ArrayList<Zipcode>();
+        List<Zipcode> list = null;
         return list;
+    }
+    
+    private Zipcode createMockNotFoundUidSearchResultsResponse() {
+        Zipcode rec = null;
+        return rec;
     }
 
     private List<Zipcode> createMockSingleFetchResponse() {
@@ -57,6 +66,11 @@ public class ZipCodeApiTest extends BaseDaoTest {
         Zipcode p = this.createMockOrm(71106,71106, "LA", "Shreveport", "318", "Caddo", 6);
         list.add(p);
         return list;
+    }
+    
+    private Zipcode createMockSingleUidFetchResponse() {
+        Zipcode p = this.createMockOrm(71106,71106, "LA", "Shreveport", "318", "Caddo", 6);
+        return p;
     }
 
     /**
@@ -183,6 +197,27 @@ public class ZipCodeApiTest extends BaseDaoTest {
     }
     
     @Test
+    public void testFetchNotFoundWithCriteria() {
+        ZipcodeDto criteria = Rmt2AddressBookDtoFactory.getNewZipCodeInstance();
+        criteria.setTimeZoneId(-847384);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(Zipcode.class))).thenReturn(this.mockNotFoundFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("zipcode not found fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<ZipcodeDto> results = null;
+        try {
+            results = api.getZipCode(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
     public void testFetchWithEmptyCriteria() {
         ZipcodeDto criteria = Rmt2AddressBookDtoFactory.getNewZipCodeInstance();
         try {
@@ -251,7 +286,7 @@ public class ZipCodeApiTest extends BaseDaoTest {
     @Test
     public void testFetchByUid() {
         try {
-            when(this.mockPersistenceClient.retrieveList(any(Zipcode.class))).thenReturn(this.mockSingleFetchResponse);
+            when(this.mockPersistenceClient.retrieveObject(any(Zipcode.class))).thenReturn(this.mockSingleUidFetchResponse);
         } catch (LookupDaoException e) {
             e.printStackTrace();
             Assert.fail("UID zipcode fetch test case failed");
@@ -270,5 +305,24 @@ public class ZipCodeApiTest extends BaseDaoTest {
         Assert.assertEquals("Shreveport", rec.getCity());
         Assert.assertEquals("LA", rec.getStateCode());
         Assert.assertEquals("318", rec.getAreaCode());
+    }
+    
+    @Test
+    public void testFetchNotFoundByUid() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(Zipcode.class))).thenReturn(this.mockNotFoundUidFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("UID zipcode not found fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        ZipcodeDto rec = null;
+        try {
+            rec = api.getZipCode(99999);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(rec);
     }
 }
