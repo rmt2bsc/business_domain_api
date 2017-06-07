@@ -308,7 +308,7 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchIpInfo(ip);
-        } catch (PostalDaoException e) {
+        } catch (AddressBookDaoException e) {
             this.msg = "Unable to fetch IP address object by " + ip;
             throw new PostalApiException(this.msg, e);
         } finally {
