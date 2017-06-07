@@ -1,16 +1,23 @@
 package org.rmt2.api.postal;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.GeneralCodes;
-import org.dto.LookupCodeDto;
+import org.dao.lookup.LookupDaoException;
+import org.dao.mapping.orm.rmt2.TimeZone;
+import org.dto.TimeZoneDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.postal.PostalApi;
+import org.modules.postal.PostalApiException;
+import org.modules.postal.PostalApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseDaoTest;
@@ -21,10 +28,12 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
 public class TimezoneApiTest extends BaseDaoTest {
-    private List<GeneralCodes> mockSingleFetchResponse;
-    private List<GeneralCodes> mockCriteriaFetchResponse;
-    private List<GeneralCodes> mockFetchAllResponse;
-    private List<GeneralCodes> mockNotFoundFetchResponse;
+    private List<TimeZone> mockSingleFetchResponse;
+    private List<TimeZone> mockCriteriaFetchResponse;
+    private List<TimeZone> mockFetchAllResponse;
+    private List<TimeZone> mockNotFoundFetchResponse;
+    private TimeZone mockNotFoundUidFetchResponse;
+    private TimeZone mockSingleUidFetchResponse;
 
     @Before
     public void setUp() throws Exception {
@@ -34,165 +43,211 @@ public class TimezoneApiTest extends BaseDaoTest {
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
         this.mockFetchAllResponse = this.createMockFetchAllResponse();
         this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
+        this.mockNotFoundUidFetchResponse = this.createMockNotFoundUidSearchResultsResponse();
+        this.mockSingleUidFetchResponse = this.createMockSingleUidFetchResponse();
     }
 
     @After
     public void tearDown() throws Exception {
     }
 
-    private List<GeneralCodes> createMockNotFoundSearchResultsResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
+    private List<TimeZone> createMockNotFoundSearchResultsResponse() {
+        List<TimeZone> list = null;
         return list;
     }
 
-    private List<GeneralCodes> createMockSingleFetchResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(200);
-        p.setCodeId(1000);
-        p.setLongdesc("This is Code 1000");
-        p.setShortdesc("Code 1000");
+    private List<TimeZone> createMockSingleFetchResponse() {
+        List<TimeZone> list = new ArrayList<TimeZone>();
+        TimeZone p = new TimeZone();
+        p.setTimeZoneId(100);
+        p.setDescr("Central");
 
         list.add(p);
         return list;
     }
 
+    private TimeZone createMockNotFoundUidSearchResultsResponse() {
+        TimeZone rec = null;
+        return rec;
+    }
+    
+    private TimeZone createMockSingleUidFetchResponse() {
+        TimeZone p = new TimeZone();
+        p.setTimeZoneId(100);
+        p.setDescr("Central");
+        return p;
+    }
     /**
      * Use for the following selection criteria: where last name begins with 'C'
      * 
      * @return
      */
-    private List<GeneralCodes> createMockFetchUsingCriteriaResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(500);
-        p.setLongdesc("This is Code 1");
-        p.setShortdesc("Code 1");
+    private List<TimeZone> createMockFetchUsingCriteriaResponse() {
+        List<TimeZone> list = new ArrayList<TimeZone>();
+        
+        TimeZone p = new TimeZone();
+        p.setTimeZoneId(100);
+        p.setDescr("Central");
         list.add(p);
 
-        p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(501);
-        p.setLongdesc("This is Code 2");
-        p.setShortdesc("Code 2");
+        p = new TimeZone();
+        p.setTimeZoneId(200);
+        p.setDescr("Mountain");
         list.add(p);
 
         return list;
     }
 
-    private List<GeneralCodes> createMockFetchAllResponse() {
-        List<GeneralCodes> list = new ArrayList<GeneralCodes>();
-        GeneralCodes p = new GeneralCodes();
-        p.setCodeGrpId(100);
-        p.setCodeId(500);
-        p.setLongdesc("This is Code 1");
-        p.setShortdesc("Code 1");
+    private List<TimeZone> createMockFetchAllResponse() {
+        List<TimeZone> list = new ArrayList<TimeZone>();
+        TimeZone p = new TimeZone();
+        p.setTimeZoneId(100);
+        p.setDescr("Central");
         list.add(p);
 
-        p = new GeneralCodes();
-        p.setCodeGrpId(200);
-        p.setCodeId(501);
-        p.setLongdesc("This is Code 2");
-        p.setShortdesc("Code 2");
+        p = new TimeZone();
+        p.setTimeZoneId(200);
+        p.setDescr("Mountain");
         list.add(p);
 
-        p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(503);
-        p.setLongdesc("This is Code 3");
-        p.setShortdesc("Code 3");
+        p = new TimeZone();
+        p.setTimeZoneId(300);
+        p.setDescr("Pacifc");
         list.add(p);
 
-        p = new GeneralCodes();
-        p.setCodeGrpId(400);
-        p.setCodeId(504);
-        p.setLongdesc("This is Code 4");
-        p.setShortdesc("Code 4");
+        p = new TimeZone();
+        p.setTimeZoneId(400);
+        p.setDescr("Eastern");
         list.add(p);
         return list;
     }
 
-    private LookupCodeDto createMockDto(int grpId, int codeId, String description, String shortDescription) {
-        LookupCodeDto dto = Rmt2AddressBookDtoFactory.getNewCodeInstance();
-        dto.setGrpId(grpId);
-        dto.setCodeId(codeId);
-        dto.setCodeLongName(description);
-        dto.setCodeShortDesc(shortDescription);
+    private TimeZoneDto createMockDto(int id, String description) {
+        TimeZoneDto dto = Rmt2AddressBookDtoFactory.getNewTimezoneInstance();
+        dto.setTimeZoneId(id);
+        dto.setTimeZoneDescr(description);
         return dto;
     }
     @Test
     public void testFetchAll() {
-        Assert.fail("test Failed");
+        TimeZoneDto criteria = Rmt2AddressBookDtoFactory.getNewTimezoneInstance();
+        
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(TimeZone.class))).thenReturn(this.mockFetchAllResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All timezone fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<TimeZoneDto> results = null;
+        try {
+            results = api.getTimezone(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(4, results.size());
+    }
+    
+    @Test
+    public void testFetchNotFoundWithCriteria() {
+        TimeZoneDto criteria = Rmt2AddressBookDtoFactory.getNewTimezoneInstance();
+        criteria.setTimeZoneId(9999);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(TimeZone.class))).thenReturn(this.mockNotFoundFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("timezone not found fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<TimeZoneDto> results = null;
+        try {
+            results = api.getTimezone(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+       
+    @Test
+    public void testFetchWithNullCriteria() {
+        TimeZoneDto criteria = null;
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<TimeZoneDto> results = null;
+        try {
+            api.getTimezone(criteria);
+            Assert.fail("Expected exception to be thrown due to null criteria");
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testFetchSingle() {
-        Assert.fail("test Failed");
+        TimeZoneDto criteria = Rmt2AddressBookDtoFactory.getNewTimezoneInstance();
+        criteria.setTimeZoneId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(TimeZone.class))).thenReturn(this.mockSingleFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("timezone single fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        List<TimeZoneDto> results = null;
+        try {
+            results = api.getTimezone(criteria);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        TimeZoneDto rec = results.get(0);
+        Assert.assertEquals(100, rec.getTimeZoneId());
+        Assert.assertEquals("Central", rec.getTimeZoneDescr());
     }
     
     @Test
     public void testFetchByUid() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testFetchUsingCriteria() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testNotFoundlFetch() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testFetchUsingCriteriaNullResults() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testFetchUsingNullCriteria() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testUpdate() {
-        Assert.fail("test Failed");
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(TimeZone.class))).thenReturn(this.mockSingleUidFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("timezone single UID fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        TimeZoneDto rec = null;
+        try {
+            rec = api.getTimezone(100);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(rec);
+        Assert.assertEquals(100, rec.getTimeZoneId());
+        Assert.assertEquals("Central", rec.getTimeZoneDescr());
     }
     
     @Test
-    public void testUpdateWithoutGroupId() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testUpdateWithoutLongDescription() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testUpdateWithoutShortDescription() {
-        Assert.fail("test Failed");
-    }
-    
-    @Test
-    public void testUpdateWithoutAnyDescriptions() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testInsert() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testDelete() {
-        Assert.fail("test Failed");
-    }
-
-    @Test
-    public void testDeleteWithInvalidCodeId() {
-        Assert.fail("test Failed");
+    public void testFetchNotFoundByUid() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(TimeZone.class))).thenReturn(this.mockNotFoundUidFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("timezone single UID fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(APP_NAME);
+        TimeZoneDto rec = null;
+        try {
+            rec = api.getTimezone(100);
+        } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(rec);
     }
 }
