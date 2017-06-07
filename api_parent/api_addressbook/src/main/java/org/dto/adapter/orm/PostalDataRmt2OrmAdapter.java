@@ -623,7 +623,12 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
      */
     @Override
     public void setTimeZoneId(int value) {
-        this.zip.setTimeZoneId(value);
+        if (zip != null) {
+            this.zip.setTimeZoneId(value);    
+        }
+        if (tz != null) {
+            this.tz.setTimeZoneId(value);
+        }
     }
 
     /*
@@ -649,7 +654,9 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
      */
     @Override
     public void setTimeZoneDescr(String value) {
-        this.tz.setDescr(value);
+        if (tz != null) {
+            this.tz.setDescr(value);
+        }
     }
 
     /*
@@ -659,7 +666,10 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
      */
     @Override
     public String getTimeZoneDescr() {
-        return this.tz.getDescr();
+        if (tz != null) {
+            return this.tz.getDescr();    
+        }
+        return null;
     }
 
     /*
