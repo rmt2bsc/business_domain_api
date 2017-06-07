@@ -3,7 +3,6 @@ package org.dto.adapter.orm;
 import org.dao.mapping.orm.rmt2.IpLocation;
 import org.dto.IpLocationDto;
 
-import com.RMT2Constants;
 import com.api.foundation.TransactionDtoImpl;
 
 /**
@@ -216,7 +215,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public void setIpRangeId(int value) {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        this.ip.setIpId(value);
     }
 
     /**
@@ -224,7 +223,7 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      */
     @Override
     public int getIpRangeId() {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        return this.ip.getIpId();
     }
 
 }
