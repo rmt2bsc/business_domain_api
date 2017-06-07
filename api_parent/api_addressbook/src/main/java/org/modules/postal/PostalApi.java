@@ -92,7 +92,7 @@ public interface PostalApi {
      * @param criteria
      *            an instance of {@link ZipcodeDto} containing properties used
      *            to build the query's selection criteria.
-     * @return a List of {@link ZipcodeDto}
+     * @return a List of {@link ZipcodeDto} or null for no data set found.
      * @throws PostalApiException
      */
     List<ZipcodeDto> getZipCode(ZipcodeDto criteria) throws PostalApiException;
