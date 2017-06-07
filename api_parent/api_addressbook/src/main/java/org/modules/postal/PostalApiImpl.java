@@ -2,6 +2,7 @@ package org.modules.postal;
 
 import java.util.List;
 
+import org.dao.AddressBookDaoException;
 import org.dao.postal.PostalDaoException;
 import org.dao.postal.PostalDaoFactory;
 import org.dao.postal.PostalLocationDao;
@@ -187,10 +188,33 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         return results.get(0);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Obtains a list of zip code entries based on selection criteria included
+     * in <i>criteria</i>.
      * 
-     * @see org.modules.postal.PostalApi#fetchZipCode(org.dto.ZipcodeDto)
+     * @param criteria
+     *            an instance of {@link ZipcodeDto} containing properties used
+     *            to build the query's selection criteria.
+     *            The following conditions must be met for this parameter for query opertations:<br>
+     *            <ol>
+     *              <li>Must not be null.</li>
+     *              <li>At least one of the following properties must its respective condtion(s):</li>
+     *                 <ul>
+     *                   <li><i>id</i> must greater than zero.</li>
+     *                   <li><i>zip</i> must be greater than zero.</li>
+     *                   <li><i>timeZoneId</i> must be greater than zero</li>
+     *                   <li><i>stateCode</i> must not be null.</li>
+     *                   <li><i>countyName</i> must not be null.</li>
+     *                   <li><i>areaCode</i> must not be null.</li>
+     *                   <li><i>city</i> must not be null.</li>
+     *                 </ul>
+     *              <li></li>
+     *              <li></li>
+     *              
+     *            </ol>
+     * @return a List of {@link ZipcodeDto} or null for no data set found.
+     * @throws PostalApiException 
+     *              <i>criteria</i> is null or any of the required criteria properties have not been set.
      */
     @Override
     public List<ZipcodeDto> getZipCode(ZipcodeDto criteria) throws PostalApiException {
@@ -198,16 +222,46 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "Zip code criteia instance cannot be null for fetch operations";
             throw new PostalApiException(this.msg);
         }
+        if (!this.isCriteriaAvailable(criteria)) {
+            this.msg = "At least one selection criteria property is required";
+            throw new PostalApiException(this.msg);
+        }
         PostalLocationDao dao = this.factory.createRmt2OrmPostalDao(this.appName);
         try {
             return dao.fetchZipCode(criteria);
-        } catch (PostalDaoException e) {
+        } catch (AddressBookDaoException e) {
             this.msg = "Unable to fetch zip code object(s) using DTO criteria";
             throw new PostalApiException(this.msg, e);
         } finally {
             dao.close();
             dao = null;
         }
+    }
+    
+    private boolean isCriteriaAvailable(ZipcodeDto criteria) {
+        int criteriaCount = 0;
+        if (criteria.getId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getZip() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getTimeZoneId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getStateCode() != null) {
+            criteriaCount++;
+        }
+        if (criteria.getCountyName() != null) {
+            criteriaCount++;
+        }
+        if (criteria.getAreaCode() != null) {
+            criteriaCount++;
+        }
+        if (criteria.getCity() != null) {
+            criteriaCount++;
+        }
+        return (criteriaCount > 0);
     }
 
     /*
