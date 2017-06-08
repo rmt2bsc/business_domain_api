@@ -21,7 +21,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
-public class ExampleApiTest extends BaseDaoTest {
+public class ExampleApiTest extends BaseAccountingDaoTest {
     private List<Country> mockSingleFetchResponse;
     private List<Country> mockCriteriaFetchResponse;
     private List<Country> mockFetchAllResponse;
