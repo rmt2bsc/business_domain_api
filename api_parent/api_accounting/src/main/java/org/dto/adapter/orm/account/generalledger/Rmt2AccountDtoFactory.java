@@ -45,7 +45,8 @@ public class Rmt2AccountDtoFactory extends RMT2Base {
      *            an instance of {@link GlAccountTypes}
      * @return an instance of {@link AccountTypeDto}.
      */
-    public static final AccountTypeDto createAccountTypeInstance(GlAccountTypes ormBean) {
+    public static final AccountTypeDto createAccountTypeInstance(
+            GlAccountTypes ormBean) {
         return new AccountRmt2OrmAdapter(ormBean);
     }
 
