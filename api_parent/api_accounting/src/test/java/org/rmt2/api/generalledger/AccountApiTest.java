@@ -1,17 +1,29 @@
 package org.rmt2.api.generalledger;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.lookup.LookupDaoException;
+import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dto.AccountDto;
-import org.dto.AccountTypeDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.modules.generalledger.GeneralLedgerApiException;
 import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.BaseAccountingDaoTest;
+
+import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
  * Tests the general ledger API library.
@@ -19,22 +31,27 @@ import org.modules.generalledger.GlAccountApi;
  * @author rterrell
  * 
  */
-public class AccountApiTest {
-    private GeneralLedgerApiFactory f;
-
-    private GlAccountApi api;
-
-    private List<Integer> acctKeys;
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
+public class AccountApiTest extends BaseAccountingDaoTest {
+    private List<GlAccounts> mockSingleFetchResponse;
+    private List<GlAccounts> mockCriteriaFetchResponse;
+    private List<GlAccounts> mockFetchAllResponse;
+    private List<GlAccounts> mockNotFoundFetchResponse;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        this.f = new GeneralLedgerApiFactory();
-        this.api = this.f.createApi();
-        this.api.setApiUser("Testuser");
-        this.createData();
+        APP_NAME = "accounting";
+        super.setUp();
+        this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
+        this.mockCriteriaFetchResponse = this
+                .createMockFetchUsingCriteriaResponse();
+        this.mockFetchAllResponse = this.createMockFetchAllResponse();
+        this.mockNotFoundFetchResponse = this
+                .createMockNotFoundSearchResultsResponse();
     }
 
     /**
@@ -42,239 +59,153 @@ public class AccountApiTest {
      */
     @After
     public void tearDown() throws Exception {
-        this.deleteData();
-        this.api = null;
-        this.f = null;
+        super.tearDown();
+        return;
     }
 
-    private void createData() throws Exception {
-        int newId = 0;
-        this.acctKeys = new ArrayList<Integer>();
-        AccountDto dto = Rmt2AccountDtoFactory.createAccountInstance(null);
-
-        dto.setAcctTypeId(7);
-        dto.setAcctCatgId(701);
-        dto.setAcctName("Test Account #1");
-        dto.setAcctCode("CODE_1");
-        dto.setAcctDescription("Test DESCRIPTION");
-        dto.setBalanceTypeId(1);
-        newId = this.api.updateAccount(dto);
-        Assert.assertTrue(newId > 0);
-        this.acctKeys.add(newId);
-
-        dto = Rmt2AccountDtoFactory.createAccountInstance(null);
-        dto.setAcctTypeId(5);
-        dto.setAcctCatgId(501);
-        dto.setAcctName("Test Account #2");
-        dto.setAcctCode("CODE_2");
-        dto.setAcctDescription("Test DESCRIPTION");
-        dto.setBalanceTypeId(2);
-        newId = this.api.updateAccount(dto);
-        Assert.assertTrue(newId > 0);
-        this.acctKeys.add(newId);
-
+    private List<GlAccounts> createMockNotFoundSearchResultsResponse() {
+        List<GlAccounts> list = null;
+        return list;
     }
 
-    private void deleteData() throws Exception {
-        int rc = 0;
-        for (int key : this.acctKeys) {
-            rc = this.api.deleteAccount(key);
-            Assert.assertTrue(rc > 0);
-        }
+    private List<GlAccounts> createMockSingleFetchResponse() {
+        List<GlAccounts> list = new ArrayList<GlAccounts>();
+        GlAccounts p = this.createMockOrm(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
+        list.add(p);
+        return list;
     }
+
+    /**
+     * Use for the following selection criteria: where last name begins with 'C'
+     * 
+     * @return
+     */
+    private List<GlAccounts> createMockFetchUsingCriteriaResponse() {
+        List<GlAccounts> list = new ArrayList<GlAccounts>();
+        GlAccounts p = this.createMockOrm(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
+        list.add(p);
+
+        p = this.createMockOrm(100, 200, 300, 1, "GL_101", "CASH", "230",
+                "CASH", 1);
+        list.add(p);
+
+        return list;
+    }
+
+    private List<GlAccounts> createMockFetchAllResponse() {
+        List<GlAccounts> list = new ArrayList<GlAccounts>();
+        GlAccounts p = this.createMockOrm(100, 1, 120, 1, "GL_100", "ACCT_RECV",
+                "134", "Accounts Receivable", 1);
+        list.add(p);
+
+        p = this.createMockOrm(200, 2, 150, 1, "GL_201", "ACCT_PAY", "230",
+                "Accounts Payable", 2);
+        list.add(p);
+
+        p = this.createMockOrm(300, 3, 160, 1, "GL_301", "OWNER_CAP", "330",
+                "Owner's Capital", 2);
+        list.add(p);
+
+        p = this.createMockOrm(400, 4, 170, 1, "GL_401", "CRED_PURCH", "430",
+                "Creditor Purchases", 1);
+        list.add(p);
+        return list;
+    }
+
+    private AccountDto createMockDto(int acctId, int acctTypeId, int acctCatgId,
+            int acctSeq, String acctNo, String acctName, String acctCode,
+            String acctDescription, int acctBalTypeId) {
+        GlAccounts orm = this.createMockOrm(acctId, acctTypeId, acctCatgId,
+                acctSeq, acctNo, acctName, acctCode, acctDescription,
+                acctBalTypeId);
+        AccountDto dto = Rmt2AccountDtoFactory.createAccountInstance(orm);
+        return dto;
+    }
+
+    private GlAccounts createMockOrm(int acctId, int acctTypeId, int acctCatgId,
+            int acctSeq, String acctNo, String acctName, String acctCode,
+            String acctDescription, int acctBalTypeId) {
+        GlAccounts orm = new GlAccounts();
+        orm.setAcctId(acctId);
+        orm.setAcctTypeId(acctTypeId);
+        orm.setAcctBaltypeId(acctBalTypeId);
+        orm.setAcctCatgId(acctCatgId);
+        orm.setAcctNo(acctNo);
+        orm.setAcctSeq(acctSeq);
+        orm.setCode(acctCode);
+        orm.setDescription(acctDescription);
+        orm.setName(acctName);
+        return orm;
+    }
+
 
     @Test
-    public void fetchAllStockAccounts() {
-        List<AccountDto> list = null;
-        try {
-            list = this.api.getAccount(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-
-        Assert.assertNotNull(list);
-        Assert.assertTrue(list.size() > 0);
-        Assert.assertTrue(list.get(0) instanceof AccountDto);
-    }
-
-    @Test
-    public void fetchStockAccountById() {
-        int acctId = 20;
-        String acctName = "Accounts Payable";
-        String acctCode = "ACCTPAY";
-
-        AccountDto acct = null;
-        try {
-            acct = this.api.getAccount(acctId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-
-        Assert.assertNotNull(acct);
-        Assert.assertTrue(acct instanceof AccountDto);
-        Assert.assertEquals(acctId, acct.getAcctId());
-        Assert.assertEquals(acctName, acct.getAcctName());
-        Assert.assertEquals(acctCode, acct.getAcctCode());
-
-    }
-
-    @Test
-    public void fetchAccountByName() {
-        String acctName = "Test Account #1";
-        List<AccountDto> list = null;
+    public void testFetchAll() {
         AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-        criteria.setAcctName(acctName);
         try {
-            list = this.api.getAccount(criteria);
-        } catch (Exception e) {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockFetchAllResponse);
+        } catch (LookupDaoException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            Assert.fail("All GL Acccount fetch test case failed");
         }
 
-        Assert.assertNotNull(list);
-        Assert.assertEquals(1, list.size());
-        Assert.assertTrue(list.get(0) instanceof AccountDto);
-        AccountDto dto = list.get(0);
-        Assert.assertEquals(acctName, dto.getAcctName());
-    }
-
-    @Test
-    public void fetchAllStockAccountTypes() {
-        List<AccountTypeDto> list = null;
-        try {
-            list = this.api.getAccountType(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-
-        Assert.assertNotNull(list);
-        Assert.assertTrue(list.size() > 0);
-        Assert.assertTrue(list.get(0) instanceof AccountTypeDto);
-    }
-
-    @Test
-    public void addAccountWithDuplicateName() {
-        int newId = 0;
-        AccountDto dto = Rmt2AccountDtoFactory.createAccountInstance(null);
-        dto.setAcctTypeId(7);
-        dto.setAcctCatgId(701);
-        dto.setAcctName("Test Account #1");
-        dto.setAcctCode("CODE_1");
-        dto.setAcctDescription("Test DESCRIPTION");
-        dto.setBalanceTypeId(1);
-        try {
-            newId = this.api.updateAccount(dto);
-            System.out.println("New account id: " + newId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        Assert.fail("Test failed, because GL Account was created with a duplicate account name");
-    }
-
-    @Test
-    public void updateAccount() {
-        String origAcctName = "Test Account #1";
-        String newAcctName = "RoyTerrell";
-        int acctId = this.acctKeys.get(0);
-        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
         List<AccountDto> results = null;
-        criteria.setAcctId(acctId);
-        int rc = 0;
         try {
-            results = this.api.getAccount(criteria);
-            Assert.assertNotNull(results);
-            Assert.assertEquals(1, results.size());
-            AccountDto dto = results.get(0);
-            Assert.assertEquals(origAcctName, dto.getAcctName());
-
-            dto.setAcctName(newAcctName);
-            rc = this.api.updateAccount(dto);
-            Assert.assertEquals(1, rc);
-
-            results = this.api.getAccount(criteria);
-            Assert.assertNotNull(results);
-            Assert.assertEquals(1, results.size());
-            dto = results.get(0);
-            Assert.assertEquals(newAcctName, dto.getAcctName());
-        } catch (Exception e) {
+            results = api.getAccount(criteria);
+        } catch (GeneralLedgerApiException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
         }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(4, results.size());
     }
 
     @Test
-    public void updateAccountWithDuplicateName() {
-        String origAcctName = "Test Account #1";
-        String newAcctName = "Test Account #2";
-        int acctId = this.acctKeys.get(0);
-        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-        List<AccountDto> results = null;
-        criteria.setAcctId(acctId);
-        try {
-            results = this.api.getAccount(criteria);
-            Assert.assertNotNull(results);
-            Assert.assertEquals(1, results.size());
-            AccountDto dto = results.get(0);
-            Assert.assertEquals(origAcctName, dto.getAcctName());
-
-            dto.setAcctName(newAcctName);
-            this.api.updateAccount(dto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        Assert.fail("Test failed, because GL Account was successfully changed with a duplicate account name");
+    public void testFetchWithNullCriteriaObject() {
+        Assert.fail("Test Failed");
     }
 
     @Test
-    public void updateAccountWithInvalidAccountCategory() {
-        String origAcctName = "Test Account #1";
-        int invalidCatgId = 777;
-        int acctId = this.acctKeys.get(0);
-        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-        List<AccountDto> results = null;
-        criteria.setAcctId(acctId);
-        try {
-            results = this.api.getAccount(criteria);
-            Assert.assertNotNull(results);
-            Assert.assertEquals(1, results.size());
-            AccountDto dto = results.get(0);
-            Assert.assertEquals(origAcctName, dto.getAcctName());
-
-            dto.setAcctCatgId(invalidCatgId);
-            this.api.updateAccount(dto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        Assert.fail("Test failed, because GL Account was successfully changed with an invalid account category id");
+    public void testFetchSingle() {
+        Assert.fail("Test Failed");
     }
 
     @Test
-    public void updateAccountWithInvalidAccountType() {
-        String origAcctName = "Test Account #1";
-        int invalidTypeId = 777;
-        int acctId = this.acctKeys.get(0);
-        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-        List<AccountDto> results = null;
-        criteria.setAcctId(acctId);
-        try {
-            results = this.api.getAccount(criteria);
-            Assert.assertNotNull(results);
-            Assert.assertEquals(1, results.size());
-            AccountDto dto = results.get(0);
-            Assert.assertEquals(origAcctName, dto.getAcctName());
+    public void testFetchByUid() {
+        Assert.fail("Test Failed");
+    }
 
-            dto.setAcctTypeId(invalidTypeId);
-            this.api.updateAccount(dto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        Assert.fail("Test failed, because GL Account was successfully changed with an invalid account type id");
+    @Test
+    public void testFetchUsingCriteria() {
+        Assert.fail("Test Failed");
+    }
+
+    @Test
+    public void testNotFoundlFetch() {
+        Assert.fail("Test Failed");
+    }
+
+    @Test
+    public void testUpdate() {
+        Assert.fail("Test Failed");
+    }
+
+    @Test
+    public void testInsert() {
+        Assert.fail("Test Failed");
+    }
+
+    @Test
+    public void testDelete() {
+        Assert.fail("Test Failed");
+    }
+
+    @Test
+    public void testDeleteWithZeroUid() {
+        Assert.fail("Test Failed");
     }
 }

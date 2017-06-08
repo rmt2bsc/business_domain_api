@@ -53,8 +53,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * org.modules.generalledger.GlAccountApi#getAccount(org.dto.AccountDto)
      */
     @Override
-    public List<AccountDto> getAccount(AccountDto criteria)
-            throws GeneralLedgerApiException {
+    public List<AccountDto> getAccount(AccountDto criteria) throws GeneralLedgerApiException {
         GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {

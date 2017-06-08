@@ -70,8 +70,7 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
      *             general database access errors
      */
     @Override
-    public List<AccountDto> fetchAccount(AccountDto criteria)
-            throws DatabaseException {
+    public List<AccountDto> fetchAccount(AccountDto criteria) throws DatabaseException {
         GlAccounts ormCriteria = new GlAccounts();
         if (criteria != null) {
             if (criteria.getAcctId() > 0) {
