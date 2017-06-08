@@ -17,14 +17,14 @@ import org.modules.postal.PostalApiException;
 import org.modules.postal.PostalApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.BaseDaoTest;
+import org.rmt2.api.BaseAddressBookDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
-public class IpInfoApiTest extends BaseDaoTest {
+public class IpInfoApiTest extends BaseAddressBookDaoTest {
     private IpLocation mockSingleFetchResponse;
     private IpLocation mockNotFoundFetchResponse;
 

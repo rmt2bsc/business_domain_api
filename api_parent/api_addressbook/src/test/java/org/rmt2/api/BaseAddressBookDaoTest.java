@@ -18,14 +18,14 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  *
  */
 
-public class BaseDaoTest {
+public class BaseAddressBookDaoTest {
     protected static String APP_NAME;
     protected PersistenceClient mockPersistenceClient;
 
     /**
      * 
      */
-    public BaseDaoTest() {
+    public BaseAddressBookDaoTest() {
         return;
     }
 
