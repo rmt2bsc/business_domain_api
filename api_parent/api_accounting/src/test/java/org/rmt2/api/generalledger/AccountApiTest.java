@@ -3,6 +3,7 @@ package org.rmt2.api.generalledger;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.generalledger.GeneralLedgerApiException;
 import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
@@ -33,12 +35,13 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class AccountApiTest extends BaseAccountingDaoTest {
     private List<GlAccounts> mockSingleFetchResponse;
     private List<GlAccounts> mockCriteriaFetchResponse;
     private List<GlAccounts> mockFetchAllResponse;
     private List<GlAccounts> mockNotFoundFetchResponse;
+    private List<GlAccounts> mockMultiResultsReturnedErrorResponse;
 
     /**
      * @throws java.lang.Exception
@@ -53,6 +56,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         this.mockFetchAllResponse = this.createMockFetchAllResponse();
         this.mockNotFoundFetchResponse = this
                 .createMockNotFoundSearchResultsResponse();
+        this.mockMultiResultsReturnedErrorResponse = this.createMockFetchUidMultiResultsReturnedResponse();
     }
 
     /**
@@ -88,7 +92,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
                 "ACCT_RECV", "234", "Accounts Receivable", 1);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrm(100, 200, 300, 1, "GL_101", "CASH", "230",
+        p = AccountingMockDataUtility.createMockOrm(101, 200, 300, 1, "GL_101", "CASH", "230",
                 "CASH", 1);
         list.add(p);
 
@@ -115,6 +119,18 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         return list;
     }
 
+    private List<GlAccounts> createMockFetchUidMultiResultsReturnedResponse() {
+        List<GlAccounts> list = new ArrayList<GlAccounts>();
+        GlAccounts p = AccountingMockDataUtility.createMockOrm(100, 1, 120, 1, "GL_100", "ACCT_RECV",
+                "134", "Accounts Receivable", 1);
+        list.add(p);
+
+        p = AccountingMockDataUtility.createMockOrm(100, 1, 150, 1, "GL_101", "CASH", "130",
+                "Cash", 1);
+        list.add(p);
+        return list;
+    }
+    
     @Test
     public void testFetchAll() {
         AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
@@ -140,37 +156,231 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     @Test
     public void testFetchWithNullCriteriaObject() {
-        Assert.fail("Test Failed");
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockFetchAllResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All GL Acccount fetch test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        List<AccountDto> results = null;
+        try {
+            results = api.getAccount(null);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(4, results.size());
     }
 
     @Test
     public void testFetchSingle() {
-        Assert.fail("Test Failed");
+        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+        criteria.setAcctId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Single GL Acccount fetch using criteria test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        List<AccountDto> results = null;
+        try {
+            results = api.getAccount(criteria);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        AccountDto dto = results.get(0);
+        Assert.assertEquals(100, dto.getAcctId());
+        Assert.assertEquals(200, dto.getAcctTypeId());
+        Assert.assertEquals("GL_100", dto.getAcctNo());
     }
 
+   
     @Test
     public void testFetchByUid() {
-        Assert.fail("Test Failed");
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Single GL Acccount fetch by UID test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        AccountDto dto = null;
+        try {
+            dto = api.getAccount(100);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(dto);
+        Assert.assertEquals(100, dto.getAcctId());
+        Assert.assertEquals(200, dto.getAcctTypeId());
+        Assert.assertEquals("GL_100", dto.getAcctNo());
+    }
+    
+    @Test
+    public void testFetchByUidMultipleItemsReturned() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockMultiResultsReturnedErrorResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Single GL Acccount fetch by UID test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.getAccount(100);
+            Assert.fail("Expected exception to be thrown due multiple items returned");
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testFetchUsingCriteria() {
-        Assert.fail("Test Failed");
+        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+        criteria.setAcctTypeId(200);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockCriteriaFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount fetch using criteria test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        List<AccountDto> results = null;
+        try {
+            results = api.getAccount(criteria);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(2, results.size());
+        for (AccountDto dto : results) {
+            Assert.assertTrue(dto.getAcctId() >= 100 && dto.getAcctId() <= 105);
+            Assert.assertEquals(200, dto.getAcctTypeId());
+        }
     }
 
     @Test
     public void testNotFoundlFetch() {
-        Assert.fail("Test Failed");
+        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+        criteria.setAcctTypeId(999);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount not found fetch test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        List<AccountDto> results = null;
+        try {
+            results = api.getAccount(criteria);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
     }
 
     @Test
     public void testUpdate() {
-        Assert.fail("Test Failed");
+        GlAccounts p = AccountingMockDataUtility.createMockOrm(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctTypeId(200);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account: Single GL Acccount fetch using criteria mock failed");
+        }
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse.get(0));
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account: Single GL Acccount fetch mock failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(GlAccounts.class)))
+                    .thenReturn(1);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount update row test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateAccount(dto);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
+        Assert.assertEquals("Accounts Receivable modified", dto.getAcctDescription());
     }
 
     @Test
     public void testInsert() {
-        Assert.fail("Test Failed");
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
+        dto.setAcctTypeId(200);
+     
+        ResultSet mockResultSet = Mockito.mock(ResultSet.class);
+        try {
+            when(this.mockPersistenceClient.executeSql(any(String.class)))
+                    .thenReturn(mockResultSet);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount insert row test case failed");
+        }
+
+//        try {
+//            when(mockResultSet.next()).thenReturn(true);
+//            when(mockResultSet.getInt("next_seq")).thenReturn(554);    
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        try {
+            when(this.mockPersistenceClient.insertRow(any(GlAccounts.class), any(Boolean.class)))
+                    .thenReturn(555);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount insert row test case failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateAccount(dto);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(555, rc);
+        Assert.assertEquals(555, dto.getAcctId());
     }
 
     @Test

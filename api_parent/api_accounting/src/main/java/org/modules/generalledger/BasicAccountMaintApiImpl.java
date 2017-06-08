@@ -9,6 +9,7 @@ import org.dto.AccountCategoryDto;
 import org.dto.AccountDto;
 import org.dto.AccountTypeDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
+import org.modules.TooManyItemsReturnedApiException;
 
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.CannotProceedException;
@@ -100,7 +101,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
                 msgBuf.append(results.size());
                 msgBuf.append("] were retrieved when only one object is expected to be returned");
                 logger.error(msgBuf);
-                throw new GeneralLedgerApiException(msgBuf.toString());
+                throw new TooManyItemsReturnedApiException(msgBuf.toString());
             }
             msgBuf.append("General ledger account object, ");
             msgBuf.append(accountId);
