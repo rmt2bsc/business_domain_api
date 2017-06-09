@@ -70,34 +70,46 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
      *             general database access errors
      */
     @Override
-    public List<AccountDto> fetchAccount(AccountDto criteria)
-            throws DatabaseException {
+    public List<AccountDto> fetchAccount(AccountDto criteria) throws DatabaseException {
         GlAccounts ormCriteria = new GlAccounts();
         if (criteria != null) {
             if (criteria.getAcctId() > 0) {
                 ormCriteria.addCriteria(GlAccounts.PROP_ACCTID,
                         criteria.getAcctId());
+                // Bad design: added for unit testing equality
+                ormCriteria.setAcctId(criteria.getAcctId());
             }
             if (criteria.getAcctTypeId() > 0) {
                 ormCriteria.addCriteria(GlAccounts.PROP_ACCTTYPEID,
                         criteria.getAcctTypeId());
+                // Bad design: added for unit testing equality
+                ormCriteria.setAcctTypeId(criteria.getAcctTypeId());
             }
             if (criteria.getAcctCatgId() > 0) {
                 ormCriteria.addCriteria(GlAccounts.PROP_ACCTCATGID,
                         criteria.getAcctCatgId());
+                // Bad design: added for unit testing equality
+                ormCriteria.setAcctCatgId(criteria.getAcctCatgId());
             }
             if (criteria.getAcctNo() != null) {
                 ormCriteria.addLikeClause(GlAccounts.PROP_ACCTNO,
                         criteria.getAcctNo());
+                // Bad design: added for unit testing equality
+                ormCriteria.setAcctNo(criteria.getAcctNo());
             }
             if (criteria.getAcctCode() != null) {
                 ormCriteria.addLikeClause(GlAccounts.PROP_CODE,
                         criteria.getAcctCode());
+                // Bad design: added for unit testing equality
+                ormCriteria.setCode(criteria.getAcctCode());
             }
             if (criteria.getAcctName() != null) {
                 ormCriteria.addLikeClause(GlAccounts.PROP_NAME,
                         criteria.getAcctName());
+                // Bad design: added for unit testing equality
+                ormCriteria.setName(criteria.getAcctName());
             }
+            
         }
 
         // Retrieve data
