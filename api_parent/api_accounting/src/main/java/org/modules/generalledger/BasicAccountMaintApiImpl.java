@@ -13,6 +13,7 @@ import org.modules.TooManyItemsReturnedApiException;
 
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.CannotProceedException;
+import com.util.RMT2String2;
 
 /**
  * 
@@ -315,8 +316,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * org.modules.generalledger.GlAccountApi#updateAccount(org.dto.AccountDto)
      */
     @Override
-    public int updateAccount(AccountDto account)
-            throws GeneralLedgerApiException {
+    public int updateAccount(AccountDto account) throws GeneralLedgerApiException {
         this.validateAccount(account);
         int rc = 0;
         StringBuffer msgBuf = new StringBuffer();
@@ -324,6 +324,15 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
         dao.setDaoUser(this.apiUser);
         try {
             dao.beginTrans();
+            // Handle prerequisites for new accounts.
+            if (account.getAcctId() == 0) {
+                // Get next sequence number
+                int nextSeq = dao.getNextAccountSeq(account);
+                account.setAcctSeq(nextSeq);
+                // Setup new account number
+                String acctNo = this.buildAccountNo(account);
+                account.setAcctNo(acctNo);
+            }
             rc = dao.maintainAccount(account);
             dao.commitTrans();
             msgBuf.append("GL Account, ");
@@ -350,8 +359,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * AccountCategoryDto)
      */
     @Override
-    public int updateCategory(AccountCategoryDto category)
-            throws GeneralLedgerApiException {
+    public int updateCategory(AccountCategoryDto category) throws GeneralLedgerApiException {
         this.validateCategory(category);
         int rc = 0;
         StringBuffer msgBuf = new StringBuffer();
@@ -443,6 +451,63 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
     }
 
     /**
+     * Computes a GL account number as a String using properties belonging to an
+     * AccountDto object.
+     * <p>
+     * Once the account number is computed, the account number is assigned to
+     * <i>obj</i>. The format of the account number goes as follows:
+     * 
+     * <pre>
+     *   &lt;Account Type Id&gt;-&lt;Account Catgegory Id&gt;-&lt;Account Sequence Number&gt;
+     * </pre
+     * 
+     * @param account
+     *            An instance of {@link AccountDto}
+     * @return The account number in String format.
+     * @throws InvalidAccountNumberComponentException
+     *             When the account type or account category, account sequence
+     *             values are invalid.
+     */
+    protected String buildAccountNo(AccountDto account) throws InvalidAccountNumberComponentException {
+        String result = "";
+        String temp = "";
+        int seq = account.getAcctSeq();
+        int acctType = account.getAcctTypeId();
+        int acctCat = account.getAcctCatgId();
+
+        // Validate Data Values
+        if (acctType <= 0) {
+            this.msg = "Account Number cannot be created without a valid account type code";
+            throw new InvalidAccountNumberComponentException(this.msg);
+        }
+        if (acctCat <= 0) {
+            this.msg = "Account Number cannot be created without a valid account category type code";
+            throw new InvalidAccountNumberComponentException(this.msg);
+        }
+        if (seq <= 0) {
+            this.msg = "Account Number cannot be created without a valid account sequence number";
+            throw new InvalidAccountNumberComponentException(this.msg);
+        }
+
+        // Compute GL Account Number using the Account Type Id, Account
+        // Catgegory Id, and Account Sequence Number
+        result = acctType + "-" + acctCat + "-";
+        if (seq >= 1 && seq <= 9) {
+            temp = "00" + seq;
+        }
+        if (seq > 9 && seq <= 99) {
+            temp = "0" + seq;
+        }
+        if (seq > 99 && seq <= 999) {
+            temp = String.valueOf(seq);
+        }
+        result += temp;
+        account.setAcctNo(result);
+
+        return result;
+    }
+    
+    /**
      * Validates a GL Account object for data persistence.
      * <p>
      * Commonly, it requires values for account type, account category, account
@@ -465,6 +530,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
         }
         List<AccountDto> old = null;
         AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+        // Validate existing account
         if (acct.getAcctId() > 0) {
             criteria.setAcctId(acct.getAcctId());
             old = this.getAccount(criteria);
@@ -479,8 +545,17 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
                         + ", exists multiple times in the gl_account table";
                 throw new CannotProceedException(this.msg);
             }
+            if (RMT2String2.isEmpty(acct.getAcctNo())) {
+                this.msg = "Existing account must be assigned an account number";
+                throw new CannotProceedException(this.msg);
+            }   
+            if (acct.getAcctSeq() == 0) {
+                this.msg = "Existing account must be assigned a sequence number (greater than zero)";
+                throw new CannotProceedException(this.msg);
+            }
         }
 
+        // Common validations
         if (acct.getAcctTypeId() == 0) {
             this.msg = "Account must be assoicated with an account type";
             throw new CannotProceedException(this.msg);
@@ -489,18 +564,15 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Account must be assoicated with an account category";
             throw new CannotProceedException(this.msg);
         }
-        if (acct.getAcctName() == null
-                || acct.getAcctName().trim().length() <= 0) {
+        if (RMT2String2.isEmpty(acct.getAcctName())) {
             this.msg = "Account must be assigned a name";
             throw new CannotProceedException(this.msg);
         }
-        if (acct.getAcctCode() == null
-                || acct.getAcctCode().trim().length() <= 0) {
+        if (RMT2String2.isEmpty(acct.getAcctCode())) {
             this.msg = "Account must have a code";
             throw new CannotProceedException(this.msg);
         }
-        if (acct.getAcctDescription() == null
-                || acct.getAcctDescription().trim().length() <= 0) {
+        if (RMT2String2.isEmpty(acct.getAcctDescription())) {
             this.msg = "Account must have a description";
             throw new CannotProceedException(this.msg);
         }
@@ -509,6 +581,8 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             throw new CannotProceedException(this.msg);
         }
 
+        // New account validations
+        
         // determine if GL Account Name is not Duplicated
         if (acct.getAcctId() == 0
                 || (old != null && !acct.getAcctName().equalsIgnoreCase(
