@@ -1,6 +1,7 @@
 package org.rmt2.api.generalledger;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -25,7 +26,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAccountingDaoTest;
 import org.rmt2.dao.AccountingMockDataUtility;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotProceedException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -343,10 +346,16 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     @Test
     public void testInsert() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 0, null,
                 "ACCT_RECV", "234", "Accounts Receivable", 1);
-        dto.setAcctTypeId(200);
      
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account mock setup failed");
+        }
         ResultSet mockResultSet = Mockito.mock(ResultSet.class);
         try {
             when(this.mockPersistenceClient.executeSql(any(String.class)))
@@ -375,6 +384,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
         Assert.assertEquals(555, rc);
         Assert.assertEquals(555, dto.getAcctId());
+        Assert.assertEquals("200-300-555", dto.getAcctNo());
     }
 
     @Test
@@ -398,4 +408,562 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         Assert.assertEquals(1, rc);
     }
 
+    
+    @Test
+    public void testUpdateWithNullAccountDto() {
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.updateAccount(null);
+            Assert.fail("Expected exception to be thrown due to null input DTO object");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CannotProceedException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithAccountThatDoesNotExists() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account not exist: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due account does not exists");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CannotProceedException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateExistCheckReturnsTooManyAccounts() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockFetchAllResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account exist check return too many: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due account exist chech return too many accounts");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CannotProceedException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateAccountNumberMissing() {
+        String nullAcctNo = null;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, nullAcctNo,
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account missing account number: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due account number missing");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithNegativeSequenceNumber() {
+        int invalidSeqNo = -1;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, invalidSeqNo, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with negative sequence number: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due sequence number is a negative number");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithInvalidSequenceNumber() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with zero sequence number: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        int invalidSeqNo = -1;
+        dto.setAcctSeq(invalidSeqNo);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due sequence number is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        invalidSeqNo = 0;
+        dto.setAcctSeq(invalidSeqNo);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due sequence number is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    // Common validations
+    @Test
+    public void testUpdateWithInvalidAccountTypeId() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with invalid account type id: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        int invalidNumericArg = -1;
+        dto.setAcctTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due negative account type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        invalidNumericArg = 0;
+        dto.setAcctTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due account type id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    
+    @Test
+    public void testUpdateWithInvalidAccountCategoryId() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with invalid account category id: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        int invalidNumericArg = -1;
+        dto.setAcctCatgId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due negative account category id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        invalidNumericArg = 0;
+        dto.setAcctCatgId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due account category id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithInvalidBalanceTypeId() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with invalid balance type id: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        int invalidNumericArg = -1;
+        dto.setBalanceTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due negative balance type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        invalidNumericArg = 0;
+        dto.setBalanceTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due balance type id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithNullAccountName() {
+        String invalidStringArg = null;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctName(invalidStringArg);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with null account name: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account name is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithNullAccountCode() {
+        String invalidStringArg = null;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctCode(invalidStringArg);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with null account code: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account code is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithNullAccountDescription() {
+        String invalidStringArg = null;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctDescription(invalidStringArg);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account with null account description: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account description is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    @Test
+    public void testInsertWithInvalidAccountTypeId() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account with invalid account type id: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        int invalidNumericArg = -1;
+        dto.setAcctTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due negative account type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        invalidNumericArg = 0;
+        dto.setAcctTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due account type id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    
+    @Test
+    public void testInsertWithInvalidAccountCategoryId() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account with invalid account category id: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        int invalidNumericArg = -1;
+        dto.setAcctCatgId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due negative account category id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        invalidNumericArg = 0;
+        dto.setAcctCatgId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due account category id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertWithInvalidBalanceTypeId() {
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account with invalid balance type id: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        int invalidNumericArg = -1;
+        dto.setBalanceTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due negative balance type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        invalidNumericArg = 0;
+        dto.setBalanceTypeId(invalidNumericArg);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due balance type id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertWithNullAccountName() {
+        String invalidStringArg = null;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctName(invalidStringArg);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account with null account name: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account name is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertWithNullAccountCode() {
+        String invalidStringArg = null;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctCode(invalidStringArg);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account with null account code: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account code is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertWithNullAccountDescription() {
+        String invalidStringArg = null;
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctDescription(invalidStringArg);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account with null account description: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account description is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    
+    // Insert specific tests
+    @Test
+    public void testInsertWithDuplicateAccountName() {
+        GlAccounts nameCheckCriteria = AccountingMockDataUtility.createMockOrm(0, 0, 0, 0, null,
+                "ACCT_RECV", null, null, 0);
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_122",
+                "ACCT_RECV", "255", "Cash account", 1);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(nameCheckCriteria)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account name is duplicated");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CannotProceedException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertWithDuplicateAccountCode() {
+        GlAccounts nameCheckCriteria = AccountingMockDataUtility.createMockOrm(0, 0, 0, 0, null,
+                "ACCT_RECV", null, null, 0);
+        GlAccounts codeCheckCriteria = AccountingMockDataUtility.createMockOrm(0, 0, 0, 0, null,
+                null, "234", null, 0);
+        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_122",
+                "ACCT_RECV", "234", "Cash account", 1);
+        dto.setAcctTypeId(200);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(nameCheckCriteria)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(codeCheckCriteria)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        try {
+            api.updateAccount(dto);
+            Assert.fail("Expected exception to be thrown due to account name is duplicated");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CannotProceedException);
+            e.printStackTrace();
+        }
+    }
 }
