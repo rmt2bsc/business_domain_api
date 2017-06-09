@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dao.lookup.LookupDaoException;
+import org.dao.generalledger.GeneralLedgerDaoException;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dto.AccountDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
@@ -137,9 +137,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockFetchAllResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("All GL Acccount fetch test case failed");
+            Assert.fail("All GL Acccount fetch test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -159,9 +159,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockFetchAllResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("All GL Acccount fetch test case failed");
+            Assert.fail("All GL Acccount fetch test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -183,9 +183,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockSingleFetchResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("Single GL Acccount fetch using criteria test case failed");
+            Assert.fail("Single GL Acccount fetch using criteria test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -210,9 +210,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockSingleFetchResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("Single GL Acccount fetch by UID test case failed");
+            Assert.fail("Single GL Acccount fetch by UID test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -234,9 +234,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockMultiResultsReturnedErrorResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("Single GL Acccount fetch by UID test case failed");
+            Assert.fail("Single GL Acccount fetch by UID test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -256,9 +256,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockCriteriaFetchResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("GL Acccount fetch using criteria test case failed");
+            Assert.fail("GL Acccount fetch using criteria test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -284,9 +284,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockNotFoundFetchResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("GL Acccount not found fetch test case failed");
+            Assert.fail("GL Acccount not found fetch test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -310,23 +310,23 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
                     .thenReturn(this.mockSingleFetchResponse);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("Update account: Single GL Acccount fetch using criteria mock failed");
+            Assert.fail("Update account: Single GL Acccount fetch using criteria mock setup failed");
         }
         try {
             when(this.mockPersistenceClient.retrieveObject(any(GlAccounts.class)))
                     .thenReturn(this.mockSingleFetchResponse.get(0));
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("Update account: Single GL Acccount fetch mock failed");
+            Assert.fail("Update account: Single GL Acccount fetch mock setup failed");
         }
         try {
             when(this.mockPersistenceClient.updateRow(any(GlAccounts.class)))
                     .thenReturn(1);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("GL Acccount update row test case failed");
+            Assert.fail("GL Acccount update row test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -351,24 +351,18 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.executeSql(any(String.class)))
                     .thenReturn(mockResultSet);
+            when(mockResultSet.next()).thenReturn(true);
+            when(mockResultSet.getInt("next_seq")).thenReturn(554);   
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("GL Acccount insert row test case failed");
+            Assert.fail("GL Acccount insert row test case setup failed");
         }
-
-//        try {
-//            when(mockResultSet.next()).thenReturn(true);
-//            when(mockResultSet.getInt("next_seq")).thenReturn(554);    
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
         try {
             when(this.mockPersistenceClient.insertRow(any(GlAccounts.class), any(Boolean.class)))
                     .thenReturn(555);
-        } catch (LookupDaoException e) {
+        } catch (GeneralLedgerDaoException e) {
             e.printStackTrace();
-            Assert.fail("GL Acccount insert row test case failed");
+            Assert.fail("GL Acccount insert row test case setup failed");
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
@@ -385,11 +379,23 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     @Test
     public void testDelete() {
-        Assert.fail("Test Failed");
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(Integer.class)))
+                    .thenReturn(1);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Delete account mock setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteAccount(100);
+        } catch (GeneralLedgerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
     }
 
-    @Test
-    public void testDeleteWithZeroUid() {
-        Assert.fail("Test Failed");
-    }
 }
