@@ -11,6 +11,7 @@ import org.dto.AccountTypeDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
 import org.modules.TooManyItemsReturnedApiException;
 
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.CannotProceedException;
 import com.util.RMT2String2;
@@ -61,8 +62,8 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
         dao.setDaoUser(this.apiUser);
         try {
             List<AccountDto> results = dao.fetchAccount(criteria);
-            logger.info("Total number of GL Account objects obtained: "
-                    + results.size());
+            int count = (results ==  null ? 0 : results.size());
+            logger.info("Total number of GL Account objects obtained: " + count);
             return results;
         } catch (Exception e) {
             this.msg = "Error occurred retrieving GL Account objects";
@@ -518,9 +519,11 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * @param acct
      *            an instance of {@link AccountDto} that will be validated
      * @throws CannotProceedException
-     *             When any validation errors occurs.
+     *             Due to database inconsistencies such as duplicate data.
      * @throws GeneralLedgerApiException
      *             General API access errors
+     * @throws InvalidDataException
+     *          Typical validation errors such as required data missing in <i>acct</i>.
      */
     protected void validateAccount(AccountDto acct)
             throws CannotProceedException, GeneralLedgerApiException {
@@ -535,76 +538,67 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             criteria.setAcctId(acct.getAcctId());
             old = this.getAccount(criteria);
             if (old == null) {
-                this.msg = "Account does not exist, [account id="
-                        + acct.getAcctId() + "]";
+                this.msg = "Account does not exist [account id=" + acct.getAcctId() + "]";
                 throw new CannotProceedException(this.msg);
             }
             if (old.size() > 1) {
-                this.msg = "Found a database anomolly since the account id, "
+                this.msg = "Found a database anomaly since the account id, "
                         + acct.getAcctId()
                         + ", exists multiple times in the gl_account table";
                 throw new CannotProceedException(this.msg);
             }
             if (RMT2String2.isEmpty(acct.getAcctNo())) {
-                this.msg = "Existing account must be assigned an account number";
-                throw new CannotProceedException(this.msg);
+                this.msg = "Account No. is required to update an existing account";
+                throw new InvalidDataException(this.msg);
             }   
-            if (acct.getAcctSeq() == 0) {
-                this.msg = "Existing account must be assigned a sequence number (greater than zero)";
-                throw new CannotProceedException(this.msg);
+            if (acct.getAcctSeq() <= 0) {
+                this.msg = "Account sequence number is required to update an existing account (greater than zero)";
+                throw new InvalidDataException(this.msg);
             }
         }
 
-        // Common validations
-        if (acct.getAcctTypeId() == 0) {
-            this.msg = "Account must be assoicated with an account type";
-            throw new CannotProceedException(this.msg);
+        // Common mandatory validations
+        if (acct.getAcctTypeId() <= 0) {
+            this.msg = "Account Type Id is required";
+            throw new InvalidDataException(this.msg);
         }
-        if (acct.getAcctCatgId() == 0) {
-            this.msg = "Account must be assoicated with an account category";
-            throw new CannotProceedException(this.msg);
+        if (acct.getAcctCatgId() <= 0) {
+            this.msg = "Account Category Id is required";
+            throw new InvalidDataException(this.msg);
         }
         if (RMT2String2.isEmpty(acct.getAcctName())) {
-            this.msg = "Account must be assigned a name";
-            throw new CannotProceedException(this.msg);
+            this.msg = "Account Name is required";
+            throw new InvalidDataException(this.msg);
         }
         if (RMT2String2.isEmpty(acct.getAcctCode())) {
-            this.msg = "Account must have a code";
-            throw new CannotProceedException(this.msg);
+            this.msg = "Account Code is required";
+            throw new InvalidDataException(this.msg);
         }
         if (RMT2String2.isEmpty(acct.getAcctDescription())) {
-            this.msg = "Account must have a description";
-            throw new CannotProceedException(this.msg);
+            this.msg = "Account description is required";
+            throw new InvalidDataException(this.msg);
         }
-        if (acct.getBalanceTypeId() == 0) {
-            this.msg = "Account must have a balance type";
-            throw new CannotProceedException(this.msg);
+        if (acct.getBalanceTypeId() <= 0) {
+            this.msg = "Account Balance Type Id is required";
+            throw new InvalidDataException(this.msg);
         }
 
         // New account validations
-        
-        // determine if GL Account Name is not Duplicated
-        if (acct.getAcctId() == 0
-                || (old != null && !acct.getAcctName().equalsIgnoreCase(
-                        old.get(0).getAcctName()))) {
-            criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+        if (acct.getAcctId() <= 0 ) {
+            // Determine if GL Account Name is not Duplicated
             criteria.setAcctName(acct.getAcctName());
             old = this.getAccount(criteria);
             if (old != null && old.size() > 0) {
-                this.msg = "Duplicate GL account name";
+                this.msg = "Insert failed due to duplicate GL account name";
                 throw new CannotProceedException(this.msg);
             }
             // Determine if GL Account code is not duplicated for new accounts
-            if (acct.getAcctId() == 0
-                    || (old != null && !acct.getAcctCode().equalsIgnoreCase(
-                            old.get(0).getAcctCode()))) {
-                criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-                criteria.setAcctCode(acct.getAcctCode());
-                old = this.getAccount(criteria);
-                if (old != null && old.size() > 0) {
-                    this.msg = "Duplicate GL account code";
-                    throw new CannotProceedException(this.msg);
-                }
+            criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+            criteria.setAcctCode(acct.getAcctCode());
+            old = this.getAccount(criteria);
+            if (old != null && old.size() > 0) {
+                this.msg = "Insert failed due to duplicate GL account code";
+                throw new CannotProceedException(this.msg);
             }
         }
         return;
