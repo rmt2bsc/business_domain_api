@@ -200,14 +200,12 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.generalledger.GlAccountApi#getAccountType(int)
      */
     @Override
-    public AccountTypeDto getAccountType(int accountTypeId)
-            throws GeneralLedgerApiException {
+    public AccountTypeDto getAccountType(int accountTypeId) throws GeneralLedgerApiException {
         StringBuffer msgBuf = new StringBuffer();
         GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
-            AccountTypeDto criteria = Rmt2AccountDtoFactory
-                    .createAccountTypeInstance(null);
+            AccountTypeDto criteria = Rmt2AccountDtoFactory.createAccountTypeInstance(null);
             criteria.setAcctTypeId(accountTypeId);
             List<AccountTypeDto> results = dao.fetchType(criteria);
             if (results == null) {

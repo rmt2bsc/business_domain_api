@@ -79,7 +79,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccounts> createMockSingleFetchResponse() {
         List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrm(100, 200, 300, 1, "GL_100",
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable", 1);
         list.add(p);
         return list;
@@ -92,11 +92,11 @@ public class AccountApiTest extends BaseAccountingDaoTest {
      */
     private List<GlAccounts> createMockFetchUsingCriteriaResponse() {
         List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrm(100, 200, 300, 1, "GL_100",
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable", 1);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrm(101, 200, 300, 1, "GL_101", "CASH", "230",
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(101, 200, 300, 1, "GL_101", "CASH", "230",
                 "CASH", 1);
         list.add(p);
 
@@ -105,19 +105,19 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccounts> createMockFetchAllResponse() {
         List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrm(100, 1, 120, 1, "GL_100", "ACCT_RECV",
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 120, 1, "GL_100", "ACCT_RECV",
                 "134", "Accounts Receivable", 1);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrm(200, 2, 150, 1, "GL_201", "ACCT_PAY", "230",
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(200, 2, 150, 1, "GL_201", "ACCT_PAY", "230",
                 "Accounts Payable", 2);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrm(300, 3, 160, 1, "GL_301", "OWNER_CAP", "330",
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(300, 3, 160, 1, "GL_301", "OWNER_CAP", "330",
                 "Owner's Capital", 2);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrm(400, 4, 170, 1, "GL_401", "CRED_PURCH", "430",
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(400, 4, 170, 1, "GL_401", "CRED_PURCH", "430",
                 "Creditor Purchases", 1);
         list.add(p);
         return list;
@@ -125,11 +125,11 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccounts> createMockFetchUidMultiResultsReturnedResponse() {
         List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrm(100, 1, 120, 1, "GL_100", "ACCT_RECV",
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 120, 1, "GL_100", "ACCT_RECV",
                 "134", "Accounts Receivable", 1);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrm(100, 1, 150, 1, "GL_101", "CASH", "130",
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 150, 1, "GL_101", "CASH", "130",
                 "Cash", 1);
         list.add(p);
         return list;
@@ -306,9 +306,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     @Test
     public void testUpdate() {
-        GlAccounts p = AccountingMockDataUtility.createMockOrm(100, 200, 300, 1, "GL_100",
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable", 1);
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         dto.setAcctTypeId(200);
         try {
@@ -347,7 +347,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     @Test
     public void testInsert() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 0, null,
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 0, null,
                 "ACCT_RECV", "234", "Accounts Receivable", 1);
      
         try {
@@ -425,7 +425,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testUpdateWithAccountThatDoesNotExists() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -447,7 +447,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testUpdateExistCheckReturnsTooManyAccounts() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -470,7 +470,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testUpdateAccountNumberMissing() {
         String nullAcctNo = null;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, nullAcctNo,
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, nullAcctNo,
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -493,7 +493,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testUpdateWithNegativeSequenceNumber() {
         int invalidSeqNo = -1;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, invalidSeqNo, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, invalidSeqNo, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -515,7 +515,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testUpdateWithInvalidSequenceNumber() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -551,7 +551,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     // Common validations
     @Test
     public void testUpdateWithInvalidAccountTypeId() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -587,7 +587,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testUpdateWithInvalidAccountCategoryId() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -622,7 +622,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testUpdateWithInvalidBalanceTypeId() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -658,7 +658,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testUpdateWithNullAccountName() {
         String invalidStringArg = null;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         dto.setAcctName(invalidStringArg);
         try {
@@ -683,7 +683,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testUpdateWithNullAccountCode() {
         String invalidStringArg = null;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         dto.setAcctCode(invalidStringArg);
         try {
@@ -708,7 +708,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testUpdateWithNullAccountDescription() {
         String invalidStringArg = null;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(100, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         dto.setAcctDescription(invalidStringArg);
         try {
@@ -734,7 +734,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testInsertWithInvalidAccountTypeId() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -770,7 +770,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testInsertWithInvalidAccountCategoryId() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -805,7 +805,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testInsertWithInvalidBalanceTypeId() {
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
@@ -841,7 +841,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testInsertWithNullAccountName() {
         String invalidStringArg = null;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         dto.setAcctName(invalidStringArg);
         try {
@@ -866,7 +866,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testInsertWithNullAccountCode() {
         String invalidStringArg = null;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         dto.setAcctCode(invalidStringArg);
         try {
@@ -891,7 +891,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testInsertWithNullAccountDescription() {
         String invalidStringArg = null;
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_100",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_100",
                 "ACCT_RECV", "234", "Accounts Receivable modified", 1);
         dto.setAcctDescription(invalidStringArg);
         try {
@@ -917,9 +917,9 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     // Insert specific tests
     @Test
     public void testInsertWithDuplicateAccountName() {
-        GlAccounts nameCheckCriteria = AccountingMockDataUtility.createMockOrm(0, 0, 0, 0, null,
+        GlAccounts nameCheckCriteria = AccountingMockDataUtility.createMockOrmGlAccounts(0, 0, 0, 0, null,
                 "ACCT_RECV", null, null, 0);
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_122",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_122",
                 "ACCT_RECV", "255", "Cash account", 1);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(nameCheckCriteria)))
@@ -941,11 +941,11 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     
     @Test
     public void testInsertWithDuplicateAccountCode() {
-        GlAccounts nameCheckCriteria = AccountingMockDataUtility.createMockOrm(0, 0, 0, 0, null,
+        GlAccounts nameCheckCriteria = AccountingMockDataUtility.createMockOrmGlAccounts(0, 0, 0, 0, null,
                 "ACCT_RECV", null, null, 0);
-        GlAccounts codeCheckCriteria = AccountingMockDataUtility.createMockOrm(0, 0, 0, 0, null,
+        GlAccounts codeCheckCriteria = AccountingMockDataUtility.createMockOrmGlAccounts(0, 0, 0, 0, null,
                 null, "234", null, 0);
-        AccountDto dto = AccountingMockDataUtility.createMockDto(0, 200, 300, 1, "GL_122",
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 1, "GL_122",
                 "ACCT_RECV", "234", "Cash account", 1);
         dto.setAcctTypeId(200);
         try {
