@@ -147,4 +147,16 @@ public interface GeneralLedgerDao extends DaoClient {
      * @throws DatabaseException
      */
     int deleteCategory(int catgId) throws DatabaseException;
+    
+    /**
+     * Retrieves the next account sequence number for the account.
+     * <p>
+     * Sequence numbers of generated based specific implmentation.
+     * 
+     * @param acct
+     *            an instance of {@link GlAccounts}
+     * @return The next sequence number.
+     * @throws DatabaseException
+     */
+   int getNextAccountSeq(AccountDto account);
 }
