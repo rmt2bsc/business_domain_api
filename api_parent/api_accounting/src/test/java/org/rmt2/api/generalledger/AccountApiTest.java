@@ -32,7 +32,8 @@ import com.api.persistence.CannotProceedException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
- * Tests the general ledger API library.
+ * Tests the Account entity belonging to the GlAccountApi within the 
+ * general ledger API library.
  * 
  * @author rterrell
  * 
