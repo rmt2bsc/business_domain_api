@@ -440,11 +440,6 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
         } catch (SystemException e) {
             throw new CannotProceedException(e);
         }
-
-        int nextSeq = this.getNextAccountSeq(obj);
-        obj.setAcctSeq(nextSeq);
-        String acctNo = this.buildAccountNo(obj);
-        obj.setAcctNo(acctNo);
         int newId = this.client.insertRow(obj, true);
         obj.setAcctId(newId);
         return newId;
@@ -520,7 +515,7 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
      * @return The next sequence number.
      * @throws DatabaseException
      */
-    private int getNextAccountSeq(GlAccounts acct) throws DatabaseException {
+    public int getNextAccountSeq(AccountDto acct) throws DatabaseException {
         String sql = "select max(acct_seq) next_seq from gl_accounts where acct_type_id = "
                 + acct.getAcctTypeId()
                 + " and acct_catg_id = "
@@ -539,189 +534,6 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
             throw new CannotRetrieveException(this.msg, e);
         }
     }
-
-    /**
-     * Computes a GL account number as a String using properties belonging to an
-     * GlAccouonts object.
-     * <p>
-     * Once the account number is computed, the account number is assigned to
-     * <i>obj</i>. The format of the account number goes as follows:
-     * 
-     * <pre>
-     *   &lt;Account Type Id&gt;-&lt;Account Catgegory Id&gt;-&lt;Account Sequence Number&gt;
-     * </pre
-     * 
-     * @param acct
-     *            An instance of {@link GlAccounts}
-     * @return The account number in String format.
-     * @throws GeneralLedgerDaoException
-     *             When the account type or account category, account sequence
-     *             values are invalid.
-     */
-    protected String buildAccountNo(GlAccounts acct)
-            throws GeneralLedgerDaoException {
-        String result = "";
-        String temp = "";
-        int seq = acct.getAcctSeq();
-        int acctType = acct.getAcctTypeId();
-        int acctCat = acct.getAcctCatgId();
-
-        // Validate Data Values
-        if (acctType <= 0) {
-            this.msg = "Account Number cannot be created without a valid account type code";
-            throw new GeneralLedgerDaoException(this.msg);
-        }
-        if (acctCat <= 0) {
-            this.msg = "Account Number cannot be created without a valid account category type code";
-            throw new GeneralLedgerDaoException(this.msg);
-        }
-        if (seq <= 0) {
-            this.msg = "Account Number cannot be created without a valid account sequence number";
-            throw new GeneralLedgerDaoException(this.msg);
-        }
-
-        // Compute GL Account Number using the Account Type Id, Account
-        // Catgegory Id, and Account Sequence Number
-        result = acctType + "-" + acctCat + "-";
-        if (seq >= 1 && seq <= 9) {
-            temp = "00" + seq;
-        }
-        if (seq > 9 && seq <= 99) {
-            temp = "0" + seq;
-        }
-        if (seq > 99 && seq <= 999) {
-            temp = String.valueOf(seq);
-        }
-        result += temp;
-        acct.setAcctNo(result);
-
-        return result;
-    }
-
-    // /**
-    // * Validates a GL Account object for data persistence.
-    // * <p>
-    // * Commonly, it requires values for account type, account category,
-    // account
-    // * code, description, name, and balance type. An existence test is
-    // conducted
-    // * for the account when <i>obj</i> is targeted for update. A valid account
-    // * requires that the code and name do not already exist.
-    // *
-    // * @param acct
-    // * an instance of {@link AccountDto} that will be validated
-    // * @throws CannotProceedException
-    // * When any validation errors occurs.
-    // */
-    // protected void validateAccount(AccountDto acct)
-    // throws CannotProceedException {
-    // if (acct == null) {
-    // this.msg = "Account object cannot be null";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // List<AccountDto> old = null;
-    // AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-    // if (acct.getAcctId() > 0) {
-    // criteria.setAcctId(acct.getAcctId());
-    // old = this.fetchAccount(criteria);
-    // if (old == null) {
-    // this.msg = "Account does not exist, [account id="
-    // + acct.getAcctId() + "]";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // if (old.size() > 1) {
-    // this.msg = "Found a database anomolly since the account id, "
-    // + acct.getAcctId()
-    // + ", exists multiple times in the gl_account table";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // }
-    //
-    // if (acct.getAcctTypeId() == 0) {
-    // this.msg = "Account must be assoicated with an account type";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // if (acct.getAcctCatgId() == 0) {
-    // this.msg = "Account must be assoicated with an account category";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // if (acct.getAcctName() == null
-    // || acct.getAcctName().trim().length() <= 0) {
-    // this.msg = "Account must be assigned a name";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // if (acct.getAcctCode() == null
-    // || acct.getAcctCode().trim().length() <= 0) {
-    // this.msg = "Account must have a code";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // if (acct.getAcctDescription() == null
-    // || acct.getAcctDescription().trim().length() <= 0) {
-    // this.msg = "Account must have a description";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // if (acct.getBalanceTypeId() == 0) {
-    // this.msg = "Account must have a balance type";
-    // throw new CannotProceedException(this.msg);
-    // }
-    //
-    // // determine if GL Account Name is not Duplicated
-    // if (acct.getAcctId() == 0
-    // || (old != null && !acct.getAcctName().equalsIgnoreCase(
-    // old.get(0).getAcctName()))) {
-    // criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-    // criteria.setAcctName(acct.getAcctName());
-    // old = this.fetchAccount(criteria);
-    // if (old != null && old.size() > 0) {
-    // this.msg = "Duplicate GL account name";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // // Determine if GL Account code is not duplicated for new accounts
-    // if (acct.getAcctId() == 0
-    // || (old != null && !acct.getAcctCode().equalsIgnoreCase(
-    // old.get(0).getAcctCode()))) {
-    // criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
-    // criteria.setAcctCode(acct.getAcctCode());
-    // old = this.fetchAccount(criteria);
-    // if (old != null && old.size() > 0) {
-    // this.msg = "Duplicate GL account code";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // }
-    // }
-    // return;
-    // }
-
-    // /**
-    // * Validates an account type by using <i>glAcctTypeId</i> to query the
-    // * database for its existence.
-    // *
-    // * @param glAcctTypeId
-    // * The GL aacount type id.
-    // * @return true when account type exists and false, otherwise.
-    // * @throws CannotProceedException
-    // * General database errors.
-    // */
-    // protected void validateAccountType(AccountTypeDto acctType)
-    // throws CannotProceedException {
-    // List<AccountTypeDto> old = null;
-    // AccountTypeDto criteria = Rmt2AccountDtoFactory
-    // .createAccountTypeInstance(null);
-    // if (acctType.getAcctTypeId() > 0) {
-    // criteria.setAcctTypeId(acctType.getAcctTypeId());
-    // old = this.fetchType(criteria);
-    // if (old == null) {
-    // this.msg = "Account Type does not exist";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // }
-    // String typeName = acctType.getAcctTypeDescription();
-    // if (typeName == null || typeName.length() <= 0) {
-    // this.msg = "Account type Description must contain a value";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // return;
-    // }
 
     /**
      * Adds a new or modifies an existing row to the <i>gl_account_category</i>
@@ -862,45 +674,4 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
             throw new CannotRemoveException(e);
         }
     }
-
-    // /**
-    // * Validates an account category object for data persistence.
-    // * <p>
-    // * It is required for an account category to have an account type id and a
-    // * description. When <i>obj</i> is targeted for a databae update, a check
-    // is
-    // * performed to determine if <i>obj</i> exist in the database.
-    // *
-    // * @param acctCatg
-    // * an instance of {@link AccountCategoryDto} which is to be
-    // * validated.
-    // * @throws CannotProceedException
-    // * if any of the validations fail.
-    // */
-    // protected void validateCategory(AccountCategoryDto acctCatg)
-    // throws CannotProceedException {
-    // List<AccountCategoryDto> old = null;
-    // AccountCategoryDto criteria = Rmt2AccountDtoFactory
-    // .createAccountCategoryInstance(null);
-    // if (acctCatg.getAcctCatgId() > 0) {
-    // criteria.setAcctCatgId(acctCatg.getAcctCatgId());
-    // old = this.fetchCategory(criteria);
-    // if (old == null) {
-    // this.msg = "Account Category does not exist";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // }
-    // if (acctCatg.getAcctTypeId() <= 0) {
-    // this.msg = "Account Category account type is invalid";
-    // throw new CannotProceedException(this.msg);
-    // }
-    //
-    // String catgName = acctCatg.getAcctCatgDescription();
-    // if (catgName == null || catgName.length() <= 0) {
-    // this.msg = "Account Category Name must contain a value";
-    // throw new CannotProceedException(this.msg);
-    // }
-    // return;
-    // }
-
 }
