@@ -244,14 +244,14 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * AccountCategoryDto)
      */
     @Override
-    public List<AccountCategoryDto> getAccountCategory(
-            AccountCategoryDto criteria) throws GeneralLedgerApiException {
+    public List<AccountCategoryDto> getAccountCategory(AccountCategoryDto criteria) 
+            throws GeneralLedgerApiException {
         GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
             List<AccountCategoryDto> results = dao.fetchCategory(criteria);
             logger.info("Total number of GL Account Category objects obtained: "
-                    + results.size());
+                    + (results == null ? 0 : results.size()));
             return results;
         } catch (Exception e) {
             this.msg = "Error occurred retrieving GL Account Category objects";
@@ -613,16 +613,21 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      *            an instance of {@link AccountCategoryDto} which is to be
      *            validated.
      * @throws CannotProceedException
-     *             if any of the validations fail.
+     *              Due to database inconsistencies such as duplicate data.
+     * @throws InvalidDataException
+     *             Typical validation errors such as required data missing in <i>acctCatg</i>.
      * @throws GeneralLedgerApiException
-     *             General API access errors
+     *             category does not exists.
      */
     protected void validateCategory(AccountCategoryDto acctCatg)
             throws CannotProceedException, GeneralLedgerApiException {
-        List<AccountCategoryDto> old = null;
-        AccountCategoryDto criteria = Rmt2AccountDtoFactory
-                .createAccountCategoryInstance(null);
+        if (acctCatg == null) {
+            this.msg = "Account Category cannot be null";
+            throw new CannotProceedException(this.msg); 
+        }
         if (acctCatg.getAcctCatgId() > 0) {
+            List<AccountCategoryDto> old = null;
+            AccountCategoryDto criteria = Rmt2AccountDtoFactory.createAccountCategoryInstance(null);
             criteria.setAcctCatgId(acctCatg.getAcctCatgId());
             old = this.getAccountCategory(criteria);
             if (old == null) {
@@ -631,14 +636,14 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             }
         }
         if (acctCatg.getAcctTypeId() <= 0) {
-            this.msg = "Account Category account type is invalid";
-            throw new CannotProceedException(this.msg);
+            this.msg = "Account Type Id is required";
+            throw new InvalidDataException(this.msg);
         }
 
         String catgName = acctCatg.getAcctCatgDescription();
-        if (catgName == null || catgName.length() <= 0) {
-            this.msg = "Account Category Name must contain a value";
-            throw new CannotProceedException(this.msg);
+        if (RMT2String2.isEmpty(catgName)) {
+            this.msg = "Account Category Name is required";
+            throw new InvalidDataException(this.msg);
         }
         return;
     }

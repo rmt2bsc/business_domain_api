@@ -568,6 +568,9 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
         GlAccountCategory a = f.createRmt2OrmCategoryBean(category);
         try {
             if (a.getAcctCatgId() == 0) {
+                // Get next category id
+                int nextSeq = this.getNextCategoryId(category);
+                a.setAcctCatgId(nextSeq);
                 rc = this.insertCategory(a);
                 category.setAcctCatgId(rc);
             }
@@ -601,11 +604,8 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
         } catch (SystemException e) {
             throw new CannotProceedException(e);
         }
-        int newId = this.getNextCategoryId(obj);
-        obj.setAcctCatgId(newId);
         this.client.insertRow(obj, false);
-        obj.setAcctCatgId(newId);
-        return newId;
+        return obj.getAcctCatgId();
     }
 
     /**
@@ -619,8 +619,7 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
      * @return The next sequence number.
      * @throws DatabaseException
      */
-    private int getNextCategoryId(GlAccountCategory catg)
-            throws DatabaseException {
+    public int getNextCategoryId(AccountCategoryDto catg) {
         String sql = "select max(acct_catg_id) next_seq from gl_account_category where acct_type_id = "
                 + catg.getAcctTypeId();
         ResultSet rs = null;

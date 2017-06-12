@@ -1,5 +1,6 @@
 package org.rmt2.dao;
 
+import org.dao.mapping.orm.rmt2.GlAccountCategory;
 import org.dao.mapping.orm.rmt2.GlAccountTypes;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dto.AccountDto;
@@ -44,6 +45,21 @@ public class AccountingMockDataUtility {
         GlAccountTypes orm = new GlAccountTypes();
         orm.setAcctTypeId(id);
         orm.setAcctBaltypeId(acctBalTypeId);
+        orm.setDescription(description);
+        return orm;
+    }
+    
+    /**
+     * 
+     * @param id
+     * @param acctTypeId
+     * @param description
+     * @return
+     */
+    public static final GlAccountCategory createMockOrmGlAccountCategory(int id, int acctTypeId, String description) {
+        GlAccountCategory orm = new GlAccountCategory();
+        orm.setAcctCatgId(id);
+        orm.setAcctTypeId(acctTypeId);
         orm.setDescription(description);
         return orm;
     }

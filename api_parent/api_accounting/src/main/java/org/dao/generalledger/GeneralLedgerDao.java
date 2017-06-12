@@ -159,4 +159,17 @@ public interface GeneralLedgerDao extends DaoClient {
      * @throws DatabaseException
      */
    int getNextAccountSeq(AccountDto account);
+   
+   /**
+    * Retrieves the next primary key value for a category.
+    * <p>
+    * The next primary key is generated based on the category's account type
+    * id.
+    * 
+    * @param catg
+    *            an instance of {@link AccountCategoryDto}
+    * @return The next sequence number.
+    * @throws DatabaseException
+    */
+   int getNextCategoryId(AccountCategoryDto catg);
 }
