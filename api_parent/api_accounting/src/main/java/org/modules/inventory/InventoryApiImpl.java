@@ -24,11 +24,13 @@ import org.modules.subsidiary.CreditorApi;
 import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
 
+import com.InvalidDataException;
 import com.RMT2Base;
 import com.RMT2Exception;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
 import com.util.RMT2String;
+import com.util.RMT2String2;
 
 /**
  * @author roy terrell
@@ -87,13 +89,30 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         this.factory = new InventoryDaoFactory();
     }
 
+    @Override
+    public List<ItemMasterDto> getItem(ItemMasterDto criteria) throws InventoryApiException {
+        dao.setDaoUser(this.apiUser);
+        List<ItemMasterDto> results;
+        try {
+            results = dao.fetch(criteria);
+            return results;
+        } catch (Exception e) {
+            this.msg = "Error querying inventory item(s)";
+            logger.error(this.msg, e);
+            throw new InventoryApiException(e);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 
      * @see org.modules.inventory.InventoryApi#getItemById(int)
      */
     @Override
-    public ItemMasterDto getItemById(int itemId) throws InventoryException {
+    public ItemMasterDto getItemById(int itemId) throws InventoryApiException {
+        if (itemId <= 0) {
+            throw new InvalidDataException("Inventory item id is required and must be greater than zero");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -102,17 +121,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterDto criteria = Rmt2InventoryDtoFactory
                     .createItemMasterInstance(im);
             criteria.setItemId(itemId);
-            results = dao.fetch(criteria);
+            results = this.getItem(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item by item id: "
                     + itemId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory item, ");
@@ -127,7 +142,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             msgBuf.append(" Count: ");
             msgBuf.append(results.size());
             logger.error(msgBuf);
-            throw new InventoryException(msgBuf.toString());
+            throw new InventoryApiException(msgBuf.toString());
         }
         msgBuf.append("Inventory object was retrieved for item id, ");
         msgBuf.append(itemId);
@@ -142,8 +157,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<ItemMasterDto> getItemByType(int itemTypeId)
-            throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+            throws InventoryApiException {
+        if (itemTypeId <= 0) {
+            throw new InvalidDataException("Inventory item type id is required and must be greater than zero");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -152,18 +169,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterDto criteria = Rmt2InventoryDtoFactory
                     .createItemMasterInstance(im);
             criteria.setItemTypeId(itemTypeId);
-            results = dao.fetch(criteria);
+            results = this.getItem(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item(s) by item type id: "
                     + itemTypeId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
-
+  
         if (results == null) {
             msgBuf.append("Inventory items were not found by item type id, ");
             msgBuf.append(itemTypeId);
@@ -184,8 +197,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<ItemMasterDto> getItemByVendorId(int vendorId)
-            throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+            throws InventoryApiException {
+        if (vendorId <= 0) {
+            throw new InvalidDataException("Vendor Id is required and must be greater than zero");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -194,17 +209,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterDto criteria = Rmt2InventoryDtoFactory
                     .createItemMasterInstance(im);
             criteria.setVendorId(vendorId);
-            results = dao.fetch(criteria);
+            results = this.getItem(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item(s) by vendor id: "
                     + vendorId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory items were not found by vendor id, ");
@@ -228,8 +239,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<ItemMasterDto> getItemByVendorItemNo(String vendItemNo)
-            throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+            throws InventoryApiException {
+        if (RMT2String2.isEmpty(vendItemNo)) {
+            throw new InvalidDataException("Vendor Item No. is required");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -238,17 +251,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterDto criteria = Rmt2InventoryDtoFactory
                     .createItemMasterInstance(im);
             criteria.setVendorItemNo(vendItemNo);
-            results = dao.fetch(criteria);
+            results = this.getItem(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item(s) by vendor item number: "
                     + vendItemNo;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory items were not found by vendor item number, ");
@@ -271,8 +280,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<ItemMasterDto> getItemBySerialNo(String serialNo)
-            throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+            throws InventoryApiException {
+        if (RMT2String2.isEmpty(serialNo)) {
+            throw new InvalidDataException("Item Serial No. is required");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -281,17 +292,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterDto criteria = Rmt2InventoryDtoFactory
                     .createItemMasterInstance(im);
             criteria.setItemSerialNo(serialNo);
-            results = dao.fetch(criteria);
+            results = this.getItem(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item(s) by vendor item number: "
                     + serialNo;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory items were not found by serial number, ");
@@ -312,8 +319,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItem(java.lang.String)
      */
     @Override
-    public List<ItemMasterDto> getItem(String criteria) throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+    public List<ItemMasterDto> getItem(String criteria) throws InventoryApiException {
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -323,12 +329,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to retrieve inventory item(s) using customer SQL predicate: "
                     + criteria;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory items were not found using customer SQL predicate, ");
@@ -343,14 +345,34 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         return results;
     }
 
+    
+    @Override
+    public List<ItemMasterTypeDto> getItemType(ItemMasterTypeDto criteria)
+            throws InventoryApiException {
+        dao.setDaoUser(this.apiUser);
+        List<ItemMasterTypeDto> results;
+        try {
+            results = dao.fetch(criteria);
+            return results;
+        } catch (Exception e) {
+            this.msg = "Error querying inventory item type(s)";
+            logger.error(this.msg, e);
+            throw new InventoryApiException(e);
+        }
+    }
+
+    
+    
     /*
      * (non-Javadoc)
      * 
      * @see org.modules.inventory.InventoryApi#getItemTypeById(int)
      */
     @Override
-    public ItemMasterTypeDto getItemTypeById(int itemTypeId) throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+    public ItemMasterTypeDto getItemTypeById(int itemTypeId) throws InventoryApiException {
+        if (itemTypeId <= 0) {
+            throw new InvalidDataException("Item Type Id is required and must be greater than zero");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterTypeDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -359,18 +381,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterTypeDto criteria = Rmt2InventoryDtoFactory
                     .createItemTypeInstance(imt);
             criteria.setItemTypeId(itemTypeId);
-            results = dao.fetch(criteria);
+            results = this.getItemType(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item type by item type id: "
                     + itemTypeId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
-
+ 
         if (results == null) {
             msgBuf.append("Inventory item type, ");
             msgBuf.append(itemTypeId);
@@ -384,7 +402,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             msgBuf.append(" Count: ");
             msgBuf.append(results.size());
             logger.error(msgBuf);
-            throw new InventoryException(msgBuf.toString());
+            throw new InventoryApiException(msgBuf.toString());
         }
         msgBuf.append("Inventory item type object was retrieved for item type id, ");
         msgBuf.append(itemTypeId);
@@ -398,8 +416,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemTypes(java.lang.String)
      */
     @Override
-    public List<ItemMasterTypeDto> getItemTypes(String itemName) throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+    public List<ItemMasterTypeDto> getItemTypes(String itemName) throws InventoryApiException {
+        if (RMT2String2.isEmpty(itemName)) {
+            throw new InvalidDataException("Item Type Name is required");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterTypeDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -408,18 +428,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterTypeDto criteria = Rmt2InventoryDtoFactory
                     .createItemTypeInstance(imt);
             criteria.setItemTypeDescription(itemName);
-            results = dao.fetch(criteria);
+            results = this.getItemType(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item type(s) by item name: "
                     + itemName;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
-
+ 
         if (results == null) {
             msgBuf.append("Inventory item types were not found by item name, ");
             msgBuf.append(itemName);
@@ -433,14 +449,31 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         return results;
     }
 
+    @Override
+    public List<ItemMasterStatusDto> getItemStatus(ItemMasterStatusDto criteria)
+            throws InventoryApiException {
+        dao.setDaoUser(this.apiUser);
+        List<ItemMasterStatusDto> results;
+        try {
+            results = dao.fetch(criteria);
+            return results;
+        } catch (Exception e) {
+            this.msg = "Error querying inventory item status(es)";
+            logger.error(this.msg, e);
+            throw new InventoryApiException(e);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 
      * @see org.modules.inventory.InventoryApi#getItemStatus(java.lang.String)
      */
     @Override
-    public List<ItemMasterStatusDto> getItemStatus(String statusName) throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+    public List<ItemMasterStatusDto> getItemStatus(String statusName) throws InventoryApiException {
+        if (RMT2String2.isEmpty(statusName)) {
+            throw new InvalidDataException("Item Status Name is required");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -449,17 +482,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterStatusDto criteria = Rmt2InventoryDtoFactory
                     .createItemStatusInstance(imt);
             criteria.setEntityName(statusName);
-            results = dao.fetch(criteria);
+            results = this.getItemStatus(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item status(es) by status name: "
                     + statusName;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory item status were not found by item name, ");
@@ -480,8 +509,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemStatusById(int)
      */
     @Override
-    public ItemMasterStatusDto getItemStatusById(int itemStatusId) throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+    public ItemMasterStatusDto getItemStatusById(int itemStatusId) throws InventoryApiException {
+        if (itemStatusId <= 0) {
+            throw new InvalidDataException("Item Status Id is required and must be greater than zero");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -490,17 +521,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterStatusDto criteria = Rmt2InventoryDtoFactory
                     .createItemStatusInstance(imt);
             criteria.setEntityId(itemStatusId);
-            results = dao.fetch(criteria);
+            results = this.getItemStatus(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item status by item status id: "
                     + itemStatusId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory item status, ");
@@ -515,7 +542,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             msgBuf.append(" Count: ");
             msgBuf.append(results.size());
             logger.error(msgBuf);
-            throw new InventoryException(msgBuf.toString());
+            throw new InventoryApiException(msgBuf.toString());
         }
         msgBuf.append("Inventory item status object was retrieved for item status id, ");
         msgBuf.append(itemStatusId);
@@ -523,6 +550,21 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         return results.get(0);
     }
 
+    @Override
+    public List<ItemMasterStatusHistDto> getItemStatusHist(ItemMasterStatusHistDto criteria) 
+            throws InventoryApiException {
+        dao.setDaoUser(this.apiUser);
+        List<ItemMasterStatusHistDto> results;
+        try {
+            results = dao.fetch(criteria);
+            return results;
+        } catch (Exception e) {
+            this.msg = "Error querying inventory item status history";
+            logger.error(this.msg, e);
+            throw new InventoryApiException(e);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -530,8 +572,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<ItemMasterStatusHistDto> getItemStatusHistByItemId(int itemId)
-            throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+            throws InventoryApiException {
+        if (itemId <= 0) {
+            throw new InvalidDataException("Item Id is required and must be greater than zero");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusHistDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -540,17 +584,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterStatusHistDto criteria = Rmt2InventoryDtoFactory
                     .createItemStatusHistoryInstance(imt);
             criteria.setItemId(itemId);
-            results = dao.fetch(criteria);
+            results = this.getItemStatusHist(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve inventory item status history by item id: "
                     + itemId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Inventory item status history was not found by item id, ");
@@ -572,8 +612,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public ItemMasterStatusHistDto getCurrentItemStatusHist(int itemId)
-            throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+            throws InventoryApiException {
+        if (itemId <= 0) {
+            throw new InvalidDataException("Item Id is required and must be greater than zero");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusHistDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -582,17 +624,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterStatusHistDto criteria = Rmt2InventoryDtoFactory
                     .createItemStatusHistoryInstance(imt);
             criteria.setItemId(itemId);
-            results = dao.fetch(criteria);
+            results = this.getItemStatusHist(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve current inventory item status history by item id: "
                     + itemId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Current inventory item status history was not found by item id, ");
@@ -614,7 +652,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public VendorItemDto getVendorItem(int vendorId, int itemId)
-            throws InventoryException {
+            throws InventoryApiException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
         List<VendorItemDto> results;
@@ -630,12 +668,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to retrieve vendor item by item id and vendor id: "
                     + itemId + " " + vendorId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append(" inventory vendor item was not found by item id and vendor id, ");
@@ -661,7 +695,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<VendorItemDto> getVendorAssignItems(int vendorId)
-            throws InventoryException {
+            throws InventoryApiException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
         List<VendorItemDto> results;
@@ -676,12 +710,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to retrieve vendor associated inventory items by vendor id: "
                     + vendorId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Vendor associated inventory items were not found by vendor id, ");
@@ -703,7 +733,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<ItemMasterDto> getVendorUnassignItems(int vendorId)
-            throws InventoryException {
+            throws InventoryApiException {
         String criteria = RMT2String.replace(
                 AccountingSqlConst.SQL_CRTIERIA_VENDOR_UNASSIGNED_ITEM,
                 String.valueOf(vendorId), "$1");
@@ -718,12 +748,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to retrieve unassociated vendor inventory items by vendor id: "
                     + vendorId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Vendor associated inventory items were not found by vendor id, ");
@@ -746,11 +772,11 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public List<ItemAssociationDto> getItemAssociations(int itemId)
-            throws InventoryException {
+            throws InventoryApiException {
         if (itemId <= 0) {
             this.msg = "A valid item id must provided in order to perform an item assoication query";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -766,7 +792,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to retrieve item associations for item id: "
                     + itemId;
             logger.error(this.msg, e);
-            throw new InventoryException(e);
+            throw new InventoryApiException(e);
         }
         // finally {
         // dao.close();
@@ -794,7 +820,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * )
      */
     @Override
-    public int updateItemMaster(ItemMasterDto item) throws InventoryException {
+    public int updateItemMaster(ItemMasterDto item) throws InventoryApiException {
         dao.setDaoUser(this.apiUser);
         this.computeItemRetail(item);
         boolean newItem = (item.getItemId() == 0);
@@ -820,7 +846,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                 this.msg = "Inventory item update error: Item id, "
                         + item.getItemId() + ", does not exist in the system";
                 logger.error(this.msg);
-                throw new InventoryException(this.msg);
+                throw new InventoryApiException(this.msg);
             }
         }
 
@@ -898,7 +924,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         } catch (Exception e) {
             this.msg = "Unable to process inventory item master updates.";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
     }
 
@@ -1159,11 +1185,11 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @throws InventoryException
      */
     protected void validateItemMaster(ItemMasterDto item)
-            throws InventoryException {
+            throws InventoryApiException {
         if (item == null) {
             this.msg = "Item Master DTO cannot be null";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         // Validate Creditor
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1173,7 +1199,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             try {
                 cred = api.getByCreditorId(item.getVendorId());
             } catch (CreditorApiException e) {
-                throw new InventoryException(e);
+                throw new InventoryApiException(e);
             } finally {
                 api = null;
             }
@@ -1181,7 +1207,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                 this.msg = "The Vendor associated with the inventory item master does not exist in the system: "
                         + item.getVendorId();
                 logger.error(this.msg);
-                throw new InventoryException(this.msg);
+                throw new InventoryApiException(this.msg);
             }
         }
 
@@ -1189,19 +1215,19 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         if (item.getItemName() == null || item.getItemName().equals("")) {
             this.msg = "Item Name must contain a value and cannot be null";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
 
         if (item.getItemTypeId() <= 0) {
             this.msg = "Item Type is invalid";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         // Mark Up must be greater than zero and cannot be null
         if (item.getMarkup() <= 0) {
             this.msg = "Mark Up must be greater than zero and cannot be null";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
 
         /*
@@ -1215,19 +1241,19 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             if (item.getVendorId() > 0) {
                 this.msg = "Service items cannot be assoicated with a Vendor";
                 logger.error(this.msg);
-                throw new InventoryException(this.msg);
+                throw new InventoryApiException(this.msg);
             }
             // Quantity on Hand must be equal to 1 for service items
             if (item.getQtyOnHand() != 1) {
                 this.msg = "Quantity on Hand must be equal to 1 for service items";
                 logger.error(this.msg);
-                throw new InventoryException(this.msg);
+                throw new InventoryApiException(this.msg);
             }
             // Mark Up must be equal to 1
             if (item.getMarkup() != 1) {
                 this.msg = "Mark Up must be equal to 1";
                 logger.error(this.msg);
-                throw new InventoryException(this.msg);
+                throw new InventoryApiException(this.msg);
             }
         }
     }
@@ -1245,7 +1271,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @throws InventoryException
      */
     private void computeItemRetail(ItemMasterDto item)
-            throws InventoryException {
+            throws InventoryApiException {
         double retailPrice = 0;
 
         // Determine if user requests us to override retail calculations.
@@ -1264,7 +1290,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * )
      */
     @Override
-    public int updateVendorItem(VendorItemDto item) throws InventoryException {
+    public int updateVendorItem(VendorItemDto item) throws InventoryApiException {
         this.validateVendorItem(item);
 
         // Update Vendor Item
@@ -1280,7 +1306,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.rollbackTrans();
             this.msg = "Unable to process inventory vendor item updates.";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1303,12 +1329,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @throws InventoryException
      */
     protected void validateVendorItem(VendorItemDto vi)
-            throws InventoryException {
+            throws InventoryApiException {
         dao.setDaoUser(this.apiUser);
         if (vi == null) {
             this.msg = "Vendor Item DTO cannot be null";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         // Validate Creditor
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1318,7 +1344,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             try {
                 cred = api.getByCreditorId(vi.getVendorId());
             } catch (CreditorApiException e) {
-                throw new InventoryException(e);
+                throw new InventoryApiException(e);
             } finally {
                 api = null;
             }
@@ -1326,24 +1352,24 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                 this.msg = "The Vendor associated with the inventory vendor item does not exist in the system: "
                         + vi.getVendorId();
                 logger.error(this.msg);
-                throw new InventoryException(this.msg);
+                throw new InventoryApiException(this.msg);
             }
         }
         else {
             this.msg = "The vendor item\'s Vendor Id is invalid: "
                     + vi.getVendorId();
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         if (vi.getVendorItemNo() == null || vi.getVendorItemNo().length() <= 0) {
             this.msg = "New and existing merchandise items must have the vendor's version of an item numbe or part number";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         if (vi.getItemSerialNo() == null || vi.getItemSerialNo().length() <= 0) {
             this.msg = "Merchandise items must have a vendor serial number";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         return;
     }
@@ -1354,7 +1380,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#deleteItemMaster(int)
      */
     @Override
-    public int deleteItemMaster(int itemId) throws InventoryException {
+    public int deleteItemMaster(int itemId) throws InventoryApiException {
         // Determine if item is tied to one or more sales orders.
         List<ItemAssociationDto> associations = this
                 .getItemAssociations(itemId);
@@ -1363,7 +1389,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     + itemId
                     + ", cannot be deleted since it is associated with one or more sales orders and/or purchase orders";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
 
         // InventoryDao dao = this.factory.createRmt2OrmDao();
@@ -1397,7 +1423,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.rollbackTrans();
             this.msg = "Unable to delete inventory item due to database error";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1411,13 +1437,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#pushInventory(int, int)
      */
     @Override
-    public double pushInventory(int itemId, int qty) throws InventoryException {
+    public double pushInventory(int itemId, int qty) throws InventoryApiException {
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
                     + ", could not be found...invenory was not increased";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         int origItemQty = im.getQtyOnHand();
         int changeItemQty = origItemQty + qty;
@@ -1430,7 +1456,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to push inventory for item master , " + itemId
                     + ", due to a database error";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         return changeValue;
     }
@@ -1441,13 +1467,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#pullInventory(int, int)
      */
     @Override
-    public double pullInventory(int itemId, int qty) throws InventoryException {
+    public double pullInventory(int itemId, int qty) throws InventoryApiException {
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
                     + ", could not be found...invenory was not decreased";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         int origItemQty = im.getQtyOnHand();
         int changeItemQty = origItemQty - qty;
@@ -1460,7 +1486,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to pull inventory for item master , " + itemId
                     + ", due to a database error";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         return changeValue;
     }
@@ -1471,13 +1497,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#deactivateItemMaster(int)
      */
     @Override
-    public int deactivateItemMaster(int itemId) throws InventoryException {
+    public int deactivateItemMaster(int itemId) throws InventoryApiException {
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
                     + ", could not be found...item was not deactivated";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -1497,7 +1523,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to deactivate item master , " + itemId
                     + ", due to a database error";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1511,13 +1537,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#activateItemMaster(int)
      */
     @Override
-    public int activateItemMaster(int itemId) throws InventoryException {
+    public int activateItemMaster(int itemId) throws InventoryApiException {
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
                     + ", could not be found...item was not activated";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -1540,7 +1566,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             this.msg = "Unable to activate item master , " + itemId
                     + ", due to a database error";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1569,7 +1595,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public int assignVendorItems(int vendorId, int[] items)
-            throws InventoryException {
+            throws InventoryApiException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -1581,7 +1607,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     this.msg = "Item id is not found in the database: "
                             + items[ndx];
                     logger.error(this.msg);
-                    throw new InventoryException(this.msg);
+                    throw new InventoryApiException(this.msg);
                 }
                 VendorItemDto viDto = Rmt2InventoryDtoFactory
                         .createVendorItemInstance(vendorId, imDto);
@@ -1592,7 +1618,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                             + "] and item id {" + imDto.getItemId()
                             + "] associtation";
                     logger.error(this.msg);
-                    throw new InventoryException(this.msg, e);
+                    throw new InventoryApiException(this.msg, e);
                 }
             }
             // dao.commitTrans();
@@ -1601,7 +1627,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.rollbackTrans();
             this.msg = "Unable to persist vendor id/item master association to table, vendor_items.  The assignment of items to vendor is aborted";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1630,7 +1656,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public int removeVendorItems(int vendorId, int[] items)
-            throws InventoryException {
+            throws InventoryApiException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -1647,7 +1673,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     this.msg = "Error deleting vendor id [" + vendorId
                             + "] and item id {" + items[ndx] + "] associtation";
                     logger.error(this.msg);
-                    throw new InventoryException(this.msg, e);
+                    throw new InventoryApiException(this.msg, e);
                 }
             }
             // dao.commitTrans();
@@ -1656,7 +1682,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.rollbackTrans();
             this.msg = "Unable to delete vendor id/item master association from table, vendor_items.  The deletion of items to vendor is aborted";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1693,7 +1719,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public int addInventoryOverride(int vendorId, int[] items)
-            throws InventoryException {
+            throws InventoryApiException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -1705,7 +1731,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     this.msg = "Item id is not found in the database: "
                             + items[ndx];
                     logger.error(this.msg);
-                    throw new InventoryException(this.msg);
+                    throw new InventoryApiException(this.msg);
                 }
 
                 // Do not attempt to update an item that is currently overriden.
@@ -1723,7 +1749,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     this.msg = "Error changing override status of inventory item id, "
                             + imDto.getItemId();
                     logger.error(this.msg);
-                    throw new InventoryException(this.msg, e);
+                    throw new InventoryApiException(this.msg, e);
                 }
             }
             // dao.commitTrans();
@@ -1732,7 +1758,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.rollbackTrans();
             this.msg = "Unable to persist vendor id/item master association to table, vendor_items.  The assignment of items to vendor is aborted";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1759,7 +1785,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public int removeInventoryOverride(int vendorId, int[] items)
-            throws InventoryException {
+            throws InventoryApiException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -1771,7 +1797,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     this.msg = "Item id is not found in the database: "
                             + items[ndx];
                     logger.error(this.msg);
-                    throw new InventoryException(this.msg);
+                    throw new InventoryApiException(this.msg);
                 }
 
                 // Do not attempt to update an item that is currently overriden.
@@ -1789,7 +1815,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     this.msg = "Error changing override status of inventory item id, "
                             + imDto.getItemId();
                     logger.error(this.msg);
-                    throw new InventoryException(this.msg, e);
+                    throw new InventoryApiException(this.msg, e);
                 }
             }
             // dao.commitTrans();
@@ -1798,7 +1824,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.rollbackTrans();
             this.msg = "Unable to persist vendor id/item master association to table, vendor_items.  The assignment of items to vendor is aborted";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
         // finally {
         // dao.close();
@@ -1845,7 +1871,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *             occurs, or a system error occurs.
      */
     protected ItemMasterStatusHistDto changeItemStatus(ItemMasterDto item,
-            int newItemStatusId) throws InventoryException {
+            int newItemStatusId) throws InventoryApiException {
         ItemMasterStatusHistDto imsh = null;
 
         dao.setDaoUser(this.apiUser);
@@ -1859,18 +1885,18 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         } catch (InventoryDaoException e) {
             this.msg = "Problem querying for new Item status";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         if (imsList == null) {
             this.msg = "New item status id does not exist in the system: "
                     + newItemStatusId;
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
         if (imsList.size() > 1) {
             this.msg = "New item status id query return multiple items in the result set.  Should only be one element";
             logger.error(this.msg);
-            throw new InventoryException(this.msg);
+            throw new InventoryApiException(this.msg);
         }
 
         try {
@@ -1892,7 +1918,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         } catch (Exception e) {
             this.msg = "Inventory item status history change failed due to a Database or System error";
             logger.error(this.msg, e);
-            throw new InventoryException(this.msg, e);
+            throw new InventoryApiException(this.msg, e);
         }
     }
 

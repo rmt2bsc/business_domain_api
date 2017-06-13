@@ -21,12 +21,27 @@ import com.api.foundation.TransactionApi;
 public interface InventoryApi extends TransactionApi {
 
     /**
+     * Retrieves one or more items using item type id
+     * 
+     * @param criteria
+     *            An instance of {@link ItemMasterDto} representing the
+     *            selection criteria.
+     * @return A List of {@link ItemMasterDto} objects.
+     * @throws InventoryApiException
+     */
+    List<ItemMasterDto> getItem(ItemMasterDto criteria)
+            throws InventoryApiException;
+
+    /**
      * Retrieves an item object by item id.
      * 
      * @param itemId
      *            The id of the item
      * @return An instance of {@link ItemMasterDto}
-     * @throws InventoryException
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>itemId</i> is invalid
      */
     ItemMasterDto getItemById(int itemId) throws InventoryApiException;
 
@@ -35,18 +50,25 @@ public interface InventoryApi extends TransactionApi {
      * 
      * @param itemTypeId
      *            The item type id
-     * @return A List of arbitrary objects representing one or more items.
-     * @throws InventoryException
+     * @return A List of {@link ItemMasterDto} objects.
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>itemTypeId</i> is invalid
      */
-    List<ItemMasterDto> getItemByType(int itemTypeId) throws InventoryApiException;
+    List<ItemMasterDto> getItemByType(int itemTypeId)
+            throws InventoryApiException;
 
     /**
      * Retrieves one or more items using the id of the vendor.
      * 
      * @param vendorId
      *            The id of Vendor
-     * @return A List of arbitrary objects representing one or more items.
-     * @throws InventoryException
+     * @return A List of {@link ItemMasterDto} objects.
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>vendorId</i> is invalid
      */
     List<ItemMasterDto> getItemByVendorId(int vendorId)
             throws InventoryApiException;
@@ -56,8 +78,11 @@ public interface InventoryApi extends TransactionApi {
      * 
      * @param vendItemNo
      *            The vendor's verison of the item number.
-     * @return A List of arbitrary objects representing one or more items.
-     * @throws InventoryException
+     * @return A List of {@link ItemMasterDto} objects.
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>vendItemNo</i> is invalid
      */
     List<ItemMasterDto> getItemByVendorItemNo(String vendItemNo)
             throws InventoryApiException;
@@ -67,8 +92,11 @@ public interface InventoryApi extends TransactionApi {
      * 
      * @param serialNo
      *            The serial number of the item.
-     * @return A List of arbitrary objects representing one or more items.
-     * @throws InventoryException
+     * @return A List of {@link ItemMasterDto} objects.
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>serialNo</i> is invalid
      */
     List<ItemMasterDto> getItemBySerialNo(String serialNo)
             throws InventoryApiException;
@@ -81,20 +109,38 @@ public interface InventoryApi extends TransactionApi {
      * 
      * @param criteria
      *            The selection criteria to apply to the query of data source.
-     * @returnA List of arbitrary objects representing one or more items.
-     * @throws InventoryException
+     * @returnA A List of {@link ItemMasterDto} objects.
+     * @throws InventoryApiException
+     *             <i>criteria</i> contains invalid predicate or general data
+     *             access error
      */
     List<ItemMasterDto> getItem(String criteria) throws InventoryApiException;
+
+    /**
+     * Retrieves Item Type data using various selection criteria.
+     * 
+     * @param criteria
+     *            Instance of {@link ItemMasterTypeDto}
+     * @return A List of {@link ItemMasterTypeDto} objects.
+     * @throws InventoryApiException
+     *             general data access error
+     */
+    List<ItemMasterTypeDto> getItemType(ItemMasterTypeDto criteria)
+            throws InventoryApiException;
 
     /**
      * Retrieves Item Type data using item type id.
      * 
      * @param itemTypeId
      *            The id of the item type/
-     * @return An arbitrary object representing an item type.
-     * @throws InventoryException
+     * @return An instance of {@link ItemMasterTypeDto}
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>itemTypeId</i> is invalid
      */
-    ItemMasterTypeDto getItemTypeById(int itemTypeId) throws InventoryApiException;
+    ItemMasterTypeDto getItemTypeById(int itemTypeId)
+            throws InventoryApiException;
 
     /**
      * Retrieve one or more item type objects using criteria.
@@ -103,42 +149,76 @@ public interface InventoryApi extends TransactionApi {
      *            The name of the item
      * @return List of {@link ItemMasterTypeDto} objects representing one or
      *         more item types.
-     * @throws InventoryException
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>itemName</i> is invalid or null
      */
     List<ItemMasterTypeDto> getItemTypes(String itemName)
             throws InventoryApiException;
 
     /**
-     * Retrieves one or more item status object using custom selection criteria.
+     * Retrieves a list of item master statuses using custom selection criteria.
+     * 
+     * @param criteria
+     *            an instance of {@link ItemMasterStatusDto}
+     * @return List of {@link ItemMasterStatusDto} objects
+     * @throws InventoryApiException
+     */
+    List<ItemMasterStatusDto> getItemStatus(ItemMasterStatusDto criteria)
+            throws InventoryApiException;
+
+    /**
+     * Retrieves a list of item master statuses based on status name.
      * 
      * @param statusName
      *            The name of status to retrieve
      * @return List of {@link ItemMasterStatusDto} objects representing one or
      *         more item statuses.
-     * @throws InventoryException
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>statusName</i> is invalid or null
      */
     List<ItemMasterStatusDto> getItemStatus(String statusName)
             throws InventoryApiException;
 
     /**
-     * Retrieves Item master status object by primary key.
+     * Retrieves Item master status by status id.
      * 
      * @param itemStatusId
      * @return An {@link ItemMasterStatusDto} object representing an item
      *         status.
-     * @throws InventoryException
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>itemStatusId</i> is invalid
      */
     ItemMasterStatusDto getItemStatusById(int itemStatusId)
             throws InventoryApiException;
 
     /**
-     * Retrieves one or more item statuses using an item id.
+     * Retrieves one or more item status history items using custom selection
+     * criteria.
+     * 
+     * @param criteria
+     *            An instance of {@link ItemMasterStatusHistDto}
+     * @return List of {@link ItemMasterStatusDto} objects
+     * @throws InventoryApiException
+     */
+    List<ItemMasterStatusHistDto> getItemStatusHist(
+            ItemMasterStatusHistDto criteria) throws InventoryApiException;
+
+    /**
+     * Retrieves one or more item status history items by item id.
      * 
      * @param id
      *            The id of the item to retrieve its statuses.
-     * @return List of arbitrary objects representing one or more item status
-     *         history items.
-     * @throws InventoryException
+     * @return List of {@link ItemMasterStatusDto} objects
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>itemId</i> is invalid
      */
     List<ItemMasterStatusHistDto> getItemStatusHistByItemId(int itemId)
             throws InventoryApiException;
@@ -148,8 +228,11 @@ public interface InventoryApi extends TransactionApi {
      * 
      * @param itemId
      *            The id of the item to retreive its current status.
-     * @return An arbitrary object representing an item status history item.
-     * @throws InventoryException
+     * @return An instance of of {@link ItemMasterStatusDto}
+     * @throws InventoryApiException
+     *             general data access error
+     * @throws InvalidDataException
+     *             <i>itemId</i> is invalid
      */
     ItemMasterStatusHistDto getCurrentItemStatusHist(int itemId)
             throws InventoryApiException;
@@ -162,7 +245,7 @@ public interface InventoryApi extends TransactionApi {
      * @param itemId
      *            The id of the inventory item
      * @return An arbitrary object representing a vendor items item.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     VendorItemDto getVendorItem(int vendorId, int itemId)
             throws InventoryApiException;
@@ -174,7 +257,7 @@ public interface InventoryApi extends TransactionApi {
      * @param vendorId
      *            The id of the target vendor.
      * @return List of arbitrary objects representing one or more vendor items.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     List<VendorItemDto> getVendorAssignItems(int vendorId)
             throws InventoryApiException;
@@ -187,7 +270,7 @@ public interface InventoryApi extends TransactionApi {
      *            The id of the target vendor.
      * @return List of {@link ItemMasterDto} objects representing one or more
      *         unassigned vendor items.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     List<ItemMasterDto> getVendorUnassignItems(int vendorId)
             throws InventoryApiException;
@@ -198,7 +281,7 @@ public interface InventoryApi extends TransactionApi {
      * @param itemId
      *            The id of the item to query.
      * @return An arbitrary item representing the assoications.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     List<ItemAssociationDto> getItemAssociations(int itemId)
             throws InventoryApiException;
@@ -211,7 +294,7 @@ public interface InventoryApi extends TransactionApi {
      * @param item
      *            the inventory item to create or update
      * @return The id of the item maintained.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     int updateItemMaster(ItemMasterDto item) throws InventoryApiException;
 
@@ -223,7 +306,7 @@ public interface InventoryApi extends TransactionApi {
      * @param item
      *            The {@link VendorItemDto} object to create or update.
      * @return The id of the vendor item maintained.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     int updateVendorItem(VendorItemDto item) throws InventoryApiException;
 
@@ -233,7 +316,7 @@ public interface InventoryApi extends TransactionApi {
      * @param itemId
      *            The id of the item to delete
      * @return 1 for success
-     * @throws InventoryException
+     * @throws InventoryApiException
      *             when itemId is associated with one or more sales orders, or a
      *             database error occurred.
      */
@@ -248,7 +331,7 @@ public interface InventoryApi extends TransactionApi {
      *            The quantity to increase the inventory item by.
      * @return The dollar value of the item's inventory after the quantity
      *         increase.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     double pushInventory(int itemId, int qty) throws InventoryApiException;
 
@@ -261,7 +344,7 @@ public interface InventoryApi extends TransactionApi {
      *            The quantity to decrease the inventory item by.
      * @return The dollar value of the item's inventory after the quantity
      *         decrease.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     double pullInventory(int itemId, int qty) throws InventoryApiException;
 
@@ -271,7 +354,7 @@ public interface InventoryApi extends TransactionApi {
      * @param itemId
      *            The id of an inventory item.
      * @return 1 for success.
-     * @throws InventoryException
+     * @throws InventoryApiException
      *             itemId does not exist in the system or a database error
      *             occurred.
      */
@@ -283,7 +366,7 @@ public interface InventoryApi extends TransactionApi {
      * @param itemId
      *            The id of an inventory item.
      * @return 1 for success.
-     * @throws InventoryException
+     * @throws InventoryApiException
      *             itemId does not exist in the system or a database error
      *             occurred.
      */
@@ -297,9 +380,10 @@ public interface InventoryApi extends TransactionApi {
      * @param items
      *            A list inventory item id's
      * @return The number of items assigned to the vendor.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
-    int assignVendorItems(int vendorId, int items[]) throws InventoryApiException;
+    int assignVendorItems(int vendorId, int items[])
+            throws InventoryApiException;
 
     /**
      * Disassociates one or more inventory items from a vendor.
@@ -309,9 +393,10 @@ public interface InventoryApi extends TransactionApi {
      * @param items
      *            A list inventory item id's
      * @return The number of items unassigned from the vendor.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
-    int removeVendorItems(int vendorId, int items[]) throws InventoryApiException;
+    int removeVendorItems(int vendorId, int items[])
+            throws InventoryApiException;
 
     // /**
     // * This method activates a vendor-item override targeting the inventory
@@ -327,10 +412,10 @@ public interface InventoryApi extends TransactionApi {
     // * The target item.
     // * @return The total number of rows effected by the database transaction.
     // * This is ususally 1.
-    // * @throws InventoryException
+    // * @throws InventoryApiException
     // */
     // int addInventoryOverride(int vendorId, int itemId)
-    // throws InventoryException;
+    // throws InventoryApiException;
 
     /**
      * Changes the override flag to true for one or more of a vendor's items.
@@ -342,7 +427,7 @@ public interface InventoryApi extends TransactionApi {
      *            Collection containing one or more item_master id's to
      *            override.
      * @return The total number of rows effected by the database transaction.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     int addInventoryOverride(int vendorId, int items[])
             throws InventoryApiException;
@@ -361,10 +446,10 @@ public interface InventoryApi extends TransactionApi {
     // * The target item.
     // * @return The total number of rows effected by the database transaction.
     // * This is ususally 1.
-    // * @throws InventoryException
+    // * @throws InventoryApiException
     // */
     // int removeInventoryOverride(int vendorId, int itemId)
-    // throws InventoryException;
+    // throws InventoryApiException;
 
     /**
      * Changes the override flag to false for one or more of a vendor's items..
@@ -376,7 +461,7 @@ public interface InventoryApi extends TransactionApi {
      *            Collection containing one or more item_master id's to
      *            deactivate item overrides.
      * @return The total number of rows effected by the database transaction.
-     * @throws InventoryException
+     * @throws InventoryApiException
      */
     int removeInventoryOverride(int vendorId, int items[])
             throws InventoryApiException;
@@ -391,10 +476,10 @@ public interface InventoryApi extends TransactionApi {
     // * The id of the item status.
     // * @return The {@link ItemMasterStatusHistDto} object which represents
     // * newItemStatusId
-    // * @throws InventoryException
+    // * @throws InventoryApiException
     // * If newItemStatusId is out of sequence, if a database error
     // * occurs, or a system error occurs.
     // */
     // ItemMasterStatusHistDto changeItemStatus(ItemMasterDto item,
-    // int newItemStatusId) throws InventoryException;
+    // int newItemStatusId) throws InventoryApiException;
 }
