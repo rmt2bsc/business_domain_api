@@ -28,7 +28,7 @@ public interface InventoryApi extends TransactionApi {
      * @return An instance of {@link ItemMasterDto}
      * @throws InventoryException
      */
-    ItemMasterDto getItemById(int itemId) throws InventoryException;
+    ItemMasterDto getItemById(int itemId) throws InventoryApiException;
 
     /**
      * Retrieves one or more items using item type id
@@ -38,7 +38,7 @@ public interface InventoryApi extends TransactionApi {
      * @return A List of arbitrary objects representing one or more items.
      * @throws InventoryException
      */
-    List<ItemMasterDto> getItemByType(int itemTypeId) throws InventoryException;
+    List<ItemMasterDto> getItemByType(int itemTypeId) throws InventoryApiException;
 
     /**
      * Retrieves one or more items using the id of the vendor.
@@ -49,7 +49,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemMasterDto> getItemByVendorId(int vendorId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves one or more items using the vendor's item number
@@ -60,7 +60,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemMasterDto> getItemByVendorItemNo(String vendItemNo)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves one or more items using the item's serial number
@@ -71,7 +71,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemMasterDto> getItemBySerialNo(String serialNo)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves an ArrayList of of any inventory related object based on the
@@ -84,7 +84,7 @@ public interface InventoryApi extends TransactionApi {
      * @returnA List of arbitrary objects representing one or more items.
      * @throws InventoryException
      */
-    List<ItemMasterDto> getItem(String criteria) throws InventoryException;
+    List<ItemMasterDto> getItem(String criteria) throws InventoryApiException;
 
     /**
      * Retrieves Item Type data using item type id.
@@ -94,7 +94,7 @@ public interface InventoryApi extends TransactionApi {
      * @return An arbitrary object representing an item type.
      * @throws InventoryException
      */
-    ItemMasterTypeDto getItemTypeById(int itemTypeId) throws InventoryException;
+    ItemMasterTypeDto getItemTypeById(int itemTypeId) throws InventoryApiException;
 
     /**
      * Retrieve one or more item type objects using criteria.
@@ -106,7 +106,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemMasterTypeDto> getItemTypes(String itemName)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves one or more item status object using custom selection criteria.
@@ -118,7 +118,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemMasterStatusDto> getItemStatus(String statusName)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves Item master status object by primary key.
@@ -129,7 +129,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     ItemMasterStatusDto getItemStatusById(int itemStatusId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves one or more item statuses using an item id.
@@ -141,7 +141,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemMasterStatusHistDto> getItemStatusHistByItemId(int itemId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves the current status of an item based on the item's id.
@@ -152,7 +152,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     ItemMasterStatusHistDto getCurrentItemStatusHist(int itemId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves one vendor item object using vendorId and itemId
@@ -165,7 +165,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     VendorItemDto getVendorItem(int vendorId, int itemId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves those inventory items that are assigned to a particular vendor
@@ -177,7 +177,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<VendorItemDto> getVendorAssignItems(int vendorId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Retrieves those inventory items that are not assigned to a particular
@@ -190,7 +190,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemMasterDto> getVendorUnassignItems(int vendorId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Fetch all the different entities an item is assoicated with.
@@ -201,7 +201,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     List<ItemAssociationDto> getItemAssociations(int itemId)
-            throws InventoryException;
+            throws InventoryApiException;
 
     /**
      * Adds a new or modifies an existing inventory item. If the id of the item
@@ -213,7 +213,7 @@ public interface InventoryApi extends TransactionApi {
      * @return The id of the item maintained.
      * @throws InventoryException
      */
-    int updateItemMaster(ItemMasterDto item) throws InventoryException;
+    int updateItemMaster(ItemMasterDto item) throws InventoryApiException;
 
     /**
      * Adds a new or modifies an existing vendor item. If the id of the item
@@ -225,7 +225,7 @@ public interface InventoryApi extends TransactionApi {
      * @return The id of the vendor item maintained.
      * @throws InventoryException
      */
-    int updateVendorItem(VendorItemDto item) throws InventoryException;
+    int updateVendorItem(VendorItemDto item) throws InventoryApiException;
 
     /**
      * Removes ainventory item from the database.
@@ -237,7 +237,7 @@ public interface InventoryApi extends TransactionApi {
      *             when itemId is associated with one or more sales orders, or a
      *             database error occurred.
      */
-    int deleteItemMaster(int itemId) throws InventoryException;
+    int deleteItemMaster(int itemId) throws InventoryApiException;
 
     /**
      * Increases the count of an item in inventory.
@@ -250,7 +250,7 @@ public interface InventoryApi extends TransactionApi {
      *         increase.
      * @throws InventoryException
      */
-    double pushInventory(int itemId, int qty) throws InventoryException;
+    double pushInventory(int itemId, int qty) throws InventoryApiException;
 
     /**
      * Decreases the count of an item in inventory.
@@ -263,7 +263,7 @@ public interface InventoryApi extends TransactionApi {
      *         decrease.
      * @throws InventoryException
      */
-    double pullInventory(int itemId, int qty) throws InventoryException;
+    double pullInventory(int itemId, int qty) throws InventoryApiException;
 
     /**
      * Deactivates an inventory item.
@@ -275,7 +275,7 @@ public interface InventoryApi extends TransactionApi {
      *             itemId does not exist in the system or a database error
      *             occurred.
      */
-    int deactivateItemMaster(int itemId) throws InventoryException;
+    int deactivateItemMaster(int itemId) throws InventoryApiException;
 
     /**
      * Activates an inventory item.
@@ -287,7 +287,7 @@ public interface InventoryApi extends TransactionApi {
      *             itemId does not exist in the system or a database error
      *             occurred.
      */
-    int activateItemMaster(int itemId) throws InventoryException;
+    int activateItemMaster(int itemId) throws InventoryApiException;
 
     /**
      * Associates one or more inventory items with a vendor.
@@ -299,7 +299,7 @@ public interface InventoryApi extends TransactionApi {
      * @return The number of items assigned to the vendor.
      * @throws InventoryException
      */
-    int assignVendorItems(int vendorId, int items[]) throws InventoryException;
+    int assignVendorItems(int vendorId, int items[]) throws InventoryApiException;
 
     /**
      * Disassociates one or more inventory items from a vendor.
@@ -311,7 +311,7 @@ public interface InventoryApi extends TransactionApi {
      * @return The number of items unassigned from the vendor.
      * @throws InventoryException
      */
-    int removeVendorItems(int vendorId, int items[]) throws InventoryException;
+    int removeVendorItems(int vendorId, int items[]) throws InventoryApiException;
 
     // /**
     // * This method activates a vendor-item override targeting the inventory
@@ -345,7 +345,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     int addInventoryOverride(int vendorId, int items[])
-            throws InventoryException;
+            throws InventoryApiException;
 
     // /**
     // * This method deactivates a vendor-item override targeting the inventory
@@ -379,7 +379,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InventoryException
      */
     int removeInventoryOverride(int vendorId, int items[])
-            throws InventoryException;
+            throws InventoryApiException;
 
     // /**
     // * Changes the status of an inventory item.

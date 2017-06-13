@@ -28,7 +28,7 @@ import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiFactory;
 import org.modules.inventory.InventoryConst;
-import org.modules.inventory.InventoryException;
+import org.modules.inventory.InventoryApiException;
 import org.modules.subsidiary.CreditorApi;
 import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
@@ -861,7 +861,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                         + this.calculateItemNetOrderQty(oldPoi);
                 im.setQtyOnHand(adjQtyOnHand);
                 invApi.updateItemMaster(im);
-            } catch (InventoryException e) {
+            } catch (InventoryApiException e) {
                 this.msg = "Problemu updating inventory for Purchase order item, "
                         + deltaItem.getItemId()
                         + ", of PO #"
@@ -1359,7 +1359,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                     InventoryApiFactory f = new InventoryApiFactory();
                     InventoryApi invApi = f.createApi(getSharedDao());
                     invApi.pullInventory(oldPoi.getItemId(), qtyRtn);
-                } catch (InventoryException e) {
+                } catch (InventoryApiException e) {
                     throw new VendorPurchasesApiException(e);
                 }
             } // end for

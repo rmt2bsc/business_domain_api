@@ -24,7 +24,7 @@ import org.modules.contacts.ContactsApi;
 import org.modules.contacts.ContactsApiFactory;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiFactory;
-import org.modules.inventory.InventoryException;
+import org.modules.inventory.InventoryApiException;
 import org.modules.subsidiary.CustomerApi;
 import org.modules.subsidiary.CustomerApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
@@ -126,7 +126,7 @@ public class CashReceiptApiTest extends CommonAccountingTest {
             try {
                 invApi.deleteItemMaster(this.item1Id);
                 invApi.deleteItemMaster(this.item2Id);
-            } catch (InventoryException e) {
+            } catch (InventoryApiException e) {
                 e.printStackTrace();
                 invApi.rollbackTrans();
             }

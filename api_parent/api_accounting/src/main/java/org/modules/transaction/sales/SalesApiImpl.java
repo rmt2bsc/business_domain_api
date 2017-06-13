@@ -24,7 +24,7 @@ import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiFactory;
 import org.modules.inventory.InventoryConst;
-import org.modules.inventory.InventoryException;
+import org.modules.inventory.InventoryApiException;
 import org.modules.subsidiary.CustomerApi;
 import org.modules.subsidiary.CustomerApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
@@ -775,7 +775,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                     logger.error(this.msg);
                     throw new SalesOrderInvalidCustomerException(this.msg);
                 }
-            } catch (InventoryException e) {
+            } catch (InventoryApiException e) {
                 buf.append("Database error occurred while validating the existinece of sales order item, ");
                 buf.append(item.getItemId());
                 buf.append(", against inventory");
@@ -829,7 +829,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             InventoryApiFactory invFact = new InventoryApiFactory();
             invApi = invFact.createApi();
             im = invApi.getItemById(soi.getItemId());
-        } catch (InventoryException e) {
+        } catch (InventoryApiException e) {
             buf.append("Unable to obtain inventory details for item, ");
             buf.append(soi.getItemId());
             buf.append(", needed to populate sales order item");
