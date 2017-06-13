@@ -66,8 +66,6 @@ public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements
         this.dateCreated = item.getItemCreateDate();
         this.dateUpdated = item.getItemUpdateDate();
         this.updateUserId = item.getUpdateUserid();
-        this.ipCreated = item.getIpCreated();
-        this.ipUpdated = item.getIpUpdated();
 
         // Adapt item master ORM bean
         this.i = new ItemMaster();
