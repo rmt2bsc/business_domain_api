@@ -34,8 +34,7 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements
-        InventoryDao {
+public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements InventoryDao {
 
     /**
      * Default constructor responsible for establishing a connection to the
@@ -78,8 +77,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements
      *             <i>criteria</i> contains incorrect SQL syntax or general data
      *             access errors
      */
-    public List<ItemMasterDto> fetch(String criteria)
-            throws InventoryDaoException {
+    public List<ItemMasterDto> fetch(String criteria) throws InventoryDaoException {
         ItemMaster obj = new ItemMaster();
         if (criteria != null) {
             obj.addCustomCriteria(criteria);
@@ -135,8 +133,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements
      *             General data access errors
      */
     @Override
-    public List<ItemMasterDto> fetch(ItemMasterDto criteria)
-            throws InventoryDaoException {
+    public List<ItemMasterDto> fetch(ItemMasterDto criteria) throws InventoryDaoException {
         ItemMaster obj = InventoryDaoFactory.createCriteria(criteria);
         obj.addOrderBy(ItemMaster.PROP_DESCRIPTION,
                 ItemMaster.ORDERBY_ASCENDING);
