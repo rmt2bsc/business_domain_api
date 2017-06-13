@@ -28,8 +28,6 @@ public class InventoryApiFactory extends RMT2Base {
      * @return an instance of {@link InventoryApi}
      */
     public InventoryApi createApi() {
-        // InventoryApi api = new InventoryApiImpl();
-        // return api;
         return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 

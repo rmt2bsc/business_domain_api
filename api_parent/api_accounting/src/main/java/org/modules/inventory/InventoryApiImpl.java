@@ -34,11 +34,9 @@ import com.util.RMT2String;
  * @author roy terrell
  * 
  */
-class InventoryApiImpl extends AbstractTransactionApiImpl implements
-        InventoryApi {
+class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryApi {
 
-    private static final Logger logger = Logger
-            .getLogger(InventoryApiImpl.class);
+    private static final Logger logger = Logger.getLogger(InventoryApiImpl.class);
 
     private InventoryDaoFactory factory;
 
@@ -96,8 +94,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      */
     @Override
     public ItemMasterDto getItemById(int itemId) throws InventoryException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -147,7 +144,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public List<ItemMasterDto> getItemByType(int itemTypeId)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -189,7 +186,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public List<ItemMasterDto> getItemByVendorId(int vendorId)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -233,7 +230,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public List<ItemMasterDto> getItemByVendorItemNo(String vendItemNo)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -276,7 +273,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public List<ItemMasterDto> getItemBySerialNo(String serialNo)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -315,10 +312,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.inventory.InventoryApi#getItem(java.lang.String)
      */
     @Override
-    public List<ItemMasterDto> getItem(String criteria)
-            throws InventoryException {
+    public List<ItemMasterDto> getItem(String criteria) throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -353,10 +349,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.inventory.InventoryApi#getItemTypeById(int)
      */
     @Override
-    public ItemMasterTypeDto getItemTypeById(int itemTypeId)
-            throws InventoryException {
+    public ItemMasterTypeDto getItemTypeById(int itemTypeId) throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterTypeDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -403,10 +398,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.inventory.InventoryApi#getItemTypes(java.lang.String)
      */
     @Override
-    public List<ItemMasterTypeDto> getItemTypes(String itemName)
-            throws InventoryException {
+    public List<ItemMasterTypeDto> getItemTypes(String itemName) throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterTypeDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -445,10 +439,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.inventory.InventoryApi#getItemStatus(java.lang.String)
      */
     @Override
-    public List<ItemMasterStatusDto> getItemStatus(String statusName)
-            throws InventoryException {
+    public List<ItemMasterStatusDto> getItemStatus(String statusName) throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -487,10 +480,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.inventory.InventoryApi#getItemStatusById(int)
      */
     @Override
-    public ItemMasterStatusDto getItemStatusById(int itemStatusId)
-            throws InventoryException {
+    public ItemMasterStatusDto getItemStatusById(int itemStatusId) throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -540,7 +532,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public List<ItemMasterStatusHistDto> getItemStatusHistByItemId(int itemId)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusHistDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -582,7 +574,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public ItemMasterStatusHistDto getCurrentItemStatusHist(int itemId)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusHistDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -624,7 +616,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public VendorItemDto getVendorItem(int vendorId, int itemId)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<VendorItemDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -671,7 +663,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
     public List<VendorItemDto> getVendorAssignItems(int vendorId)
             throws InventoryException {
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<VendorItemDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -716,7 +708,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
                 AccountingSqlConst.SQL_CRTIERIA_VENDOR_UNASSIGNED_ITEM,
                 String.valueOf(vendorId), "$1");
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
 
@@ -761,7 +753,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             throw new InventoryException(this.msg);
         }
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         List<ItemAssociationDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
@@ -803,6 +795,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      */
     @Override
     public int updateItemMaster(ItemMasterDto item) throws InventoryException {
+        dao.setDaoUser(this.apiUser);
         this.computeItemRetail(item);
         boolean newItem = (item.getItemId() == 0);
         ItemMaster newITem = null;
@@ -1276,7 +1269,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
 
         // Update Vendor Item
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         int rc;
         try {
             // dao.beginTrans();
@@ -1311,6 +1304,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
      */
     protected void validateVendorItem(VendorItemDto vi)
             throws InventoryException {
+        dao.setDaoUser(this.apiUser);
         if (vi == null) {
             this.msg = "Vendor Item DTO cannot be null";
             logger.error(this.msg);
@@ -1373,7 +1367,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
         }
 
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         int rc;
         try {
             // dao.beginTrans();
@@ -1486,7 +1480,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             throw new InventoryException(this.msg);
         }
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
 
         try {
             // dao.beginTrans();
@@ -1526,7 +1520,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             throw new InventoryException(this.msg);
         }
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         try {
             // dao.beginTrans();
             // Set item active
@@ -1578,7 +1572,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             throws InventoryException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
@@ -1639,7 +1633,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             throws InventoryException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
@@ -1702,7 +1696,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             throws InventoryException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
@@ -1768,7 +1762,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             throws InventoryException {
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
-        // dao.setDaoUser(this.apiUser);
+        dao.setDaoUser(this.apiUser);
         // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
@@ -1854,6 +1848,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements
             int newItemStatusId) throws InventoryException {
         ItemMasterStatusHistDto imsh = null;
 
+        dao.setDaoUser(this.apiUser);
         // Validate newItemStatusId
         List<ItemMasterStatusDto> imsList;
         try {
