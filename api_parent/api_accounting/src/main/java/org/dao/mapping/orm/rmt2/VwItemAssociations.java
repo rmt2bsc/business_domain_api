@@ -1,12 +1,10 @@
 package org.dao.mapping.orm.rmt2;
 
 
-import java.util.Date;
-import java.io.*;
+import com.SystemException;
+import com.api.persistence.db.orm.OrmBean;
 import com.util.assistants.EqualityAssistant;
 import com.util.assistants.HashCodeAssistant;
-import com.api.persistence.db.orm.OrmBean;
-import com.SystemException;
 
 
 /**
@@ -47,7 +45,7 @@ public class VwItemAssociations extends OrmBean {
 /** The javabean property equivalent of database column vw_item_associations.order_qty */
   private double orderQty;
 /** The javabean property equivalent of database column vw_item_associations.assoc_type */
-  private char assocType;
+  private String assocType;
 
 
 
@@ -122,13 +120,13 @@ public class VwItemAssociations extends OrmBean {
 /**
  * Sets the value of member variable assocType
  */
-  public void setAssocType(char value) {
+  public void setAssocType(String value) {
     this.assocType = value;
   }
 /**
  * Gets the value of member variable assocType
  */
-  public char getAssocType() {
+  public String getAssocType() {
     return this.assocType;
   }
 
