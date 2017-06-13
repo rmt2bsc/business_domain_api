@@ -36,7 +36,8 @@ public class Rmt2InventoryDtoFactory extends RMT2Base {
      *            an instance of {@link ItemMaster}
      * @return an instance of {@link ItemMasterDto}.
      */
-    public static final ItemMasterDto createItemMasterInstance(ItemMaster ormBean) {
+    public static final ItemMasterDto createItemMasterInstance(
+            ItemMaster ormBean) {
         return new ItemMasterRmt2OrmAdapter(ormBean);
     }
 

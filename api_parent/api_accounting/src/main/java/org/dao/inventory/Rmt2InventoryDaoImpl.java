@@ -82,7 +82,8 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
         if (criteria != null) {
             obj.addCustomCriteria(criteria);
         }
-        obj.addOrderBy(ItemMaster.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
+        obj.addOrderBy(ItemMaster.PROP_DESCRIPTION,
+                ItemMaster.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<ItemMaster> results = null;
@@ -134,7 +135,8 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
     @Override
     public List<ItemMasterDto> fetch(ItemMasterDto criteria) throws InventoryDaoException {
         ItemMaster obj = InventoryDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(ItemMaster.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
+        obj.addOrderBy(ItemMaster.PROP_DESCRIPTION,
+                ItemMaster.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<ItemMaster> results = null;
@@ -149,7 +151,8 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
 
         List<ItemMasterDto> list = new ArrayList<ItemMasterDto>();
         for (ItemMaster item : results) {
-            ItemMasterDto dto = Rmt2InventoryDtoFactory.createItemMasterInstance(item);
+            ItemMasterDto dto = Rmt2InventoryDtoFactory
+                    .createItemMasterInstance(item);
             list.add(dto);
         }
         return list;
