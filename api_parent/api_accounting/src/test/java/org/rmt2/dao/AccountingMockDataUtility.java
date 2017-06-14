@@ -4,6 +4,7 @@ import org.dao.mapping.orm.rmt2.GlAccountCategory;
 import org.dao.mapping.orm.rmt2.GlAccountTypes;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.ItemMaster;
+import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dto.AccountDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
 
@@ -99,6 +100,20 @@ public class AccountingMockDataUtility {
         i.setOverrideRetail(0);
         i.setMarkup(3);
         i.setRetailPrice((qty * unitCost) * i.getMarkup());
+        return i;
+    }
+    
+    /**
+     * 
+     * @param id
+     * @param description
+     * @return
+     */
+    public static final ItemMasterType createMockOrmItemMasterType(int id,
+            String description) {
+        ItemMasterType i = new ItemMasterType();
+        i.setItemTypeId(id);
+        i.setDescription(description);
         return i;
     }
 }
