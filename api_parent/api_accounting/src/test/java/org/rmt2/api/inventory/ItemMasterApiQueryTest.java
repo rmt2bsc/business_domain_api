@@ -28,8 +28,7 @@ import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
- * Tests the Account Type entity belonging to the GlAccountApi within the
- * general ledger API library.
+ * Tests Item Master entity query use cases belonging to the Inventory Api.
  * 
  * @author rterrell
  * 
