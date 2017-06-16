@@ -553,6 +553,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
     @Override
     public List<ItemMasterStatusHistDto> getItemStatusHist(ItemMasterStatusHistDto criteria) 
             throws InventoryApiException {
+        if (criteria == null) {
+            throw new InvalidDataException("Criteria object is required");
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusHistDto> results;
         try {

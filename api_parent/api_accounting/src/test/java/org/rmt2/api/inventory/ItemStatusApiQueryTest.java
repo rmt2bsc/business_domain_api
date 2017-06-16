@@ -129,7 +129,7 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "All Inventory Item Master Type fetch test case setup failed");
+                    "All Inventory Item Master Status fetch test case setup failed");
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
@@ -153,7 +153,7 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "All Inventory Item Master Type not found fetch test case setup failed");
+                    "All Inventory Item Master Status not found fetch test case setup failed");
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
@@ -176,7 +176,7 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "Single Inventory Item Master Type fetch using criteria test case setup failed");
+                    "Single Inventory Item Master Status fetch using criteria test case setup failed");
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
@@ -216,7 +216,7 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "Single Inventory Item Master Type not found fetch test case setup failed");
+                    "Single Inventory Item Master Status not found fetch test case setup failed");
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
@@ -251,7 +251,7 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "Single Inventory Item Master Type fetch using criteria test case setup failed");
+                    "Single Inventory Item Master Status fetch using criteria test case setup failed");
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
@@ -293,7 +293,7 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "Single Inventory Item Master Type not found fetch  test case setup failed");
+                    "Single Inventory Item Master Status not found fetch  test case setup failed");
         }
 
         InventoryApiFactory f = new InventoryApiFactory();

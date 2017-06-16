@@ -1,13 +1,19 @@
 package org.rmt2.dao;
 
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.GlAccountCategory;
 import org.dao.mapping.orm.rmt2.GlAccountTypes;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
+import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dto.AccountDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
+
+import com.SystemException;
+import com.util.RMT2Date;
 
 public class AccountingMockDataUtility {
 
@@ -103,7 +109,7 @@ public class AccountingMockDataUtility {
         i.setRetailPrice((qty * unitCost) * i.getMarkup());
         return i;
     }
-    
+
     /**
      * 
      * @param id
@@ -117,7 +123,7 @@ public class AccountingMockDataUtility {
         i.setDescription(description);
         return i;
     }
-    
+
     /**
      * 
      * @param id
@@ -131,6 +137,40 @@ public class AccountingMockDataUtility {
         i.setDescription(description);
         return i;
     }
-    
-    
+
+    /**
+     * 
+     * @param id
+     * @param itemId
+     * @param statusId
+     * @param unitCost
+     * @param markup
+     * @param effDate
+     * @param endDate
+     * @param reason
+     * @return
+     */
+    public static final ItemMasterStatusHist createMockOrmItemMasterStatusHistory(
+            int id, int itemId, int statusId, double unitCost, double markup,
+            String effDate, String endDate, String reason) {
+        ItemMasterStatusHist i = new ItemMasterStatusHist();
+        i.setItemStatusHistId(id);
+        i.setItemId(itemId);
+        i.setItemStatusId(statusId);
+        i.setUnitCost(unitCost);
+        i.setMarkup(markup);
+        try {
+            i.setEffectiveDate(RMT2Date.stringToDate(effDate));
+        } catch (SystemException e) {
+            i.setEffectiveDate(new Date());
+        }
+        try {
+            i.setEndDate(RMT2Date.stringToDate(endDate));
+        } catch (SystemException e) {
+            i.setEndDate(new Date());
+        }
+        i.setReason(reason);
+        return i;
+    }
+
 }
