@@ -652,10 +652,16 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getCurrentItemStatusHist(int)
      */
     @Override
-    public ItemMasterStatusHistDto getCurrentItemStatusHist(int itemId)
+    public ItemMasterStatusHistDto getCurrentItemStatusHist(Integer itemId)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Item Id is required", e);
+        }
         if (itemId <= 0) {
-            throw new InvalidDataException("Item Id is required and must be greater than zero");
+            throw new InvalidDataException("Item Id must be greater than zero");
         }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusHistDto> results;
@@ -834,13 +840,21 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemAssociations(int)
      */
     @Override
-    public List<ItemAssociationDto> getItemAssociations(int itemId)
+    public List<ItemAssociationDto> getItemAssociations(Integer itemId)
             throws InventoryApiException {
-        if (itemId <= 0) {
-            this.msg = "A valid item id must provided in order to perform an item assoication query";
-            logger.error(this.msg);
-            throw new InventoryApiException(this.msg);
+        try {
+            Verifier.verifyNotNull(itemId);    
         }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Item Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(itemId);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("A valid item id must provided in order to perform an item assoication query", e);
+        }
+       
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
         List<ItemAssociationDto> results;
@@ -1443,7 +1457,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#deleteItemMaster(int)
      */
     @Override
-    public int deleteItemMaster(int itemId) throws InventoryApiException {
+    public int deleteItemMaster(Integer itemId) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item Id is required", e);
+        }
         // Determine if item is tied to one or more sales orders.
         List<ItemAssociationDto> associations = this
                 .getItemAssociations(itemId);
@@ -1500,7 +1520,20 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#pushInventory(int, int)
      */
     @Override
-    public double pushInventory(int itemId, int qty) throws InventoryApiException {
+    public double pushInventory(Integer itemId, Integer qty) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Item Id is required", e);
+        }
+        try {
+            Verifier.verifyNotNull(qty);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Quantity is required", e);
+        }
+        
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
@@ -1530,7 +1563,19 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#pullInventory(int, int)
      */
     @Override
-    public double pullInventory(int itemId, int qty) throws InventoryApiException {
+    public double pullInventory(Integer itemId, Integer qty) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Item Id is required", e);
+        }
+        try {
+            Verifier.verifyNotNull(qty);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Quantity is required", e);
+        }
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
@@ -1560,7 +1605,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#deactivateItemMaster(int)
      */
     @Override
-    public int deactivateItemMaster(int itemId) throws InventoryApiException {
+    public int deactivateItemMaster(Integer itemId) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item Id is required", e);
+        }
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
@@ -1600,7 +1651,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#activateItemMaster(int)
      */
     @Override
-    public int activateItemMaster(int itemId) throws InventoryApiException {
+    public int activateItemMaster(Integer itemId) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item Id is required", e);
+        }
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId
@@ -1657,8 +1714,20 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *             an inventory item.
      */
     @Override
-    public int assignVendorItems(int vendorId, int[] items)
+    public int assignVendorItems(Integer vendorId, Integer[] items)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Vendor Id is required", e);
+        }
+        try {
+            Verifier.verifyNotNull(items);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("List of Inventory Item Id's is required", e);
+        }
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
@@ -1718,12 +1787,23 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *             from an inventory item.
      */
     @Override
-    public int removeVendorItems(int vendorId, int[] items)
+    public int removeVendorItems(Integer vendorId, Integer[] items)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Id is required", e);
+        }
+        try {
+            Verifier.verifyNotNull(items);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("List of vendor items is required", e);
+        }
+        
         int count = 0;
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
-        // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
                 VendorItemDto viDto = Rmt2InventoryDtoFactory
@@ -1739,31 +1819,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     throw new InventoryApiException(this.msg, e);
                 }
             }
-            // dao.commitTrans();
             return count;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Unable to delete vendor id/item master association from table, vendor_items.  The deletion of items to vendor is aborted";
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
-
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see org.modules.inventory.InventoryApi#addInventoryOverride(int, int)
-    // */
-    // @Override
-    // public int addInventoryOverride(int vendorId, int itemId)
-    // throws InventoryException {
-    // // TODO Auto-generated method stub
-    // return 0;
-    // }
 
     /**
      * Changes the override flag to true for one or more of a vendor's items.
@@ -1781,8 +1843,20 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @throws ItemMasterException
      */
     @Override
-    public int addInventoryOverride(int vendorId, int[] items)
+    public int addInventoryOverride(Integer vendorId, Integer[] items)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Vendor Id is required", e);
+        }
+        try {
+            Verifier.verifyNotNull(items);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("List of Inventory Item Id's is required", e);
+        }
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);

@@ -234,7 +234,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InvalidDataException
      *             <i>itemId</i> is invalid
      */
-    ItemMasterStatusHistDto getCurrentItemStatusHist(int itemId)
+    ItemMasterStatusHistDto getCurrentItemStatusHist(Integer itemId)
             throws InventoryApiException;
 
     /**
@@ -283,7 +283,7 @@ public interface InventoryApi extends TransactionApi {
      * @return An arbitrary item representing the assoications.
      * @throws InventoryApiException
      */
-    List<ItemAssociationDto> getItemAssociations(int itemId)
+    List<ItemAssociationDto> getItemAssociations(Integer itemId)
             throws InventoryApiException;
 
     /**
@@ -320,7 +320,7 @@ public interface InventoryApi extends TransactionApi {
      *             when itemId is associated with one or more sales orders, or a
      *             database error occurred.
      */
-    int deleteItemMaster(int itemId) throws InventoryApiException;
+    int deleteItemMaster(Integer itemId) throws InventoryApiException;
 
     /**
      * Increases the count of an item in inventory.
@@ -333,7 +333,7 @@ public interface InventoryApi extends TransactionApi {
      *         increase.
      * @throws InventoryApiException
      */
-    double pushInventory(int itemId, int qty) throws InventoryApiException;
+    double pushInventory(Integer itemId, Integer qty) throws InventoryApiException;
 
     /**
      * Decreases the count of an item in inventory.
@@ -346,7 +346,7 @@ public interface InventoryApi extends TransactionApi {
      *         decrease.
      * @throws InventoryApiException
      */
-    double pullInventory(int itemId, int qty) throws InventoryApiException;
+    double pullInventory(Integer itemId, Integer qty) throws InventoryApiException;
 
     /**
      * Deactivates an inventory item.
@@ -358,7 +358,7 @@ public interface InventoryApi extends TransactionApi {
      *             itemId does not exist in the system or a database error
      *             occurred.
      */
-    int deactivateItemMaster(int itemId) throws InventoryApiException;
+    int deactivateItemMaster(Integer itemId) throws InventoryApiException;
 
     /**
      * Activates an inventory item.
@@ -370,7 +370,7 @@ public interface InventoryApi extends TransactionApi {
      *             itemId does not exist in the system or a database error
      *             occurred.
      */
-    int activateItemMaster(int itemId) throws InventoryApiException;
+    int activateItemMaster(Integer itemId) throws InventoryApiException;
 
     /**
      * Associates one or more inventory items with a vendor.
@@ -382,7 +382,7 @@ public interface InventoryApi extends TransactionApi {
      * @return The number of items assigned to the vendor.
      * @throws InventoryApiException
      */
-    int assignVendorItems(int vendorId, int items[])
+    int assignVendorItems(Integer vendorId, Integer[] items)
             throws InventoryApiException;
 
     /**
@@ -395,27 +395,7 @@ public interface InventoryApi extends TransactionApi {
      * @return The number of items unassigned from the vendor.
      * @throws InventoryApiException
      */
-    int removeVendorItems(int vendorId, int items[])
-            throws InventoryApiException;
-
-    // /**
-    // * This method activates a vendor-item override targeting the inventory
-    // * item, itemId. An override instructs the system to obtain pricing
-    // * information for an inventory item from the vendor_items table instead
-    // of
-    // * the item_master table . This method puts this concept into effect.
-    // *
-    // * @param vendorId
-    // * The id of the vendor that will be assoicated with an item in
-    // * the item_master table.
-    // * @param itemId
-    // * The target item.
-    // * @return The total number of rows effected by the database transaction.
-    // * This is ususally 1.
-    // * @throws InventoryApiException
-    // */
-    // int addInventoryOverride(int vendorId, int itemId)
-    // throws InventoryApiException;
+    int removeVendorItems(Integer vendorId, Integer[] items) throws InventoryApiException;
 
     /**
      * Changes the override flag to true for one or more of a vendor's items.
@@ -429,27 +409,8 @@ public interface InventoryApi extends TransactionApi {
      * @return The total number of rows effected by the database transaction.
      * @throws InventoryApiException
      */
-    int addInventoryOverride(int vendorId, int items[])
+    int addInventoryOverride(Integer vendorId, Integer[] items)
             throws InventoryApiException;
-
-    // /**
-    // * This method deactivates a vendor-item override targeting the inventory
-    // * item, itemId. An override instructs the system to obtain pricing
-    // * information for an inventory item from the vendor_items table instead
-    // of
-    // * the item_master table . This method renders this concept ineffective.
-    // *
-    // * @param vendorId
-    // * The id of the vendor that will be disassoicated with the item
-    // * id.
-    // * @param itemId
-    // * The target item.
-    // * @return The total number of rows effected by the database transaction.
-    // * This is ususally 1.
-    // * @throws InventoryApiException
-    // */
-    // int removeInventoryOverride(int vendorId, int itemId)
-    // throws InventoryApiException;
 
     /**
      * Changes the override flag to false for one or more of a vendor's items..
@@ -466,20 +427,4 @@ public interface InventoryApi extends TransactionApi {
     int removeInventoryOverride(int vendorId, int items[])
             throws InventoryApiException;
 
-    // /**
-    // * Changes the status of an inventory item.
-    // *
-    // * @param item
-    // * An instance of {@link ItemMasterDto} which is the item master
-    // * object targeted for the satus change.
-    // * @param newItemStatusId
-    // * The id of the item status.
-    // * @return The {@link ItemMasterStatusHistDto} object which represents
-    // * newItemStatusId
-    // * @throws InventoryApiException
-    // * If newItemStatusId is out of sequence, if a database error
-    // * occurs, or a system error occurs.
-    // */
-    // ItemMasterStatusHistDto changeItemStatus(ItemMasterDto item,
-    // int newItemStatusId) throws InventoryApiException;
 }

@@ -275,6 +275,37 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
     }
     
     @Test
+    public void testFetchCurrentItemStatusByInvalidItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.getCurrentItemStatusHist(null);
+            Assert.fail(
+                    "Expected exception to be thrown due item id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        try {
+            api.getCurrentItemStatusHist(0);
+            Assert.fail(
+                    "Expected exception to be thrown due item id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+
+        try {
+            api.getCurrentItemStatusHist(-100);
+            Assert.fail(
+                    "Expected exception to be thrown due item id is less than zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testFetchItemStatusHistory() {
         try {
             when(this.mockPersistenceClient
