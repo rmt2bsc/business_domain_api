@@ -87,11 +87,11 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     private List<ItemMaster> createMockFetchUsingCriteriaResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
         ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+                "444-111-111", "1234567", 4567, "Item # 10", 5, 1.23, true);
         list.add(p);
 
         p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
-                "102-111-111", "10211111", 1234, "Item # 2", 15, 5, true);
+                "555-111-111", "3232333", 5432, "Item # 12", 15, 5, true);
         list.add(p);
 
         return list;
@@ -485,4 +485,67 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
             e.printStackTrace();
         }
     }
+    
+    @Test
+    public void testFetchVendorUnassignedItems() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(ItemMaster.class)))
+                            .thenReturn(this.mockCriteriaFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Vendor Unassinged Items fetch using criteria test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        List<ItemMasterDto> results = null;
+        try {
+            results = api.getVendorUnassignItems(1234);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(2, results.size());
+        for (ItemMasterDto dto : results) {
+            Assert.assertNotEquals(1234, dto.getVendorId());
+        }
+   }
+    
+    @Test
+    public void testFetchVendorUnassignedItemsNotFound() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(ItemMaster.class)))
+                            .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Vendor unassinged items not found fetch using criteria test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        List<ItemMasterDto> results = null;
+        try {
+            results = api.getVendorUnassignItems(1234);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+   }
+    
+    @Test
+    public void testFetchVendorUnassignedItemsWithNullVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.getVendorUnassignItems(null);
+            Assert.fail("Expected exception to be thrown due to null vendor id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+   }
 }
