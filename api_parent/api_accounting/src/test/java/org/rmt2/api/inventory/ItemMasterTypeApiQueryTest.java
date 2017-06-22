@@ -348,6 +348,16 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
     public void testFetchByInvalidItemTypeId() {
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(APP_NAME);
+        
+        try {
+            api.getItemTypeById(null);
+            Assert.fail(
+                    "Expected exception to be thrown due item type id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
         try {
             api.getItemTypeById(0);
             Assert.fail(

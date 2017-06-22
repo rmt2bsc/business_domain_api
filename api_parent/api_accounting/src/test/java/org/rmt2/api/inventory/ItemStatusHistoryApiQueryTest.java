@@ -218,6 +218,8 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         Assert.assertEquals(100, dto.getItemId());
         Assert.assertEquals("Item Status History Description 1", dto.getReason());
     }
+    
+    
 
     @Test
     public void testFetchSingleNotFound() {
@@ -311,6 +313,37 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
             api.getItemStatusHist(criteria);
             Assert.fail(
                     "Expected exception to be thrown due to null criteria object");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchItemStatusHistoryByInvalidItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.getItemStatusHistByItemId(null);
+            Assert.fail(
+                    "Expected exception to be thrown due item id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        try {
+            api.getItemStatusHistByItemId(0);
+            Assert.fail(
+                    "Expected exception to be thrown due item id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+
+        try {
+            api.getItemStatusHistByItemId(-100);
+            Assert.fail(
+                    "Expected exception to be thrown due item id is less than zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();

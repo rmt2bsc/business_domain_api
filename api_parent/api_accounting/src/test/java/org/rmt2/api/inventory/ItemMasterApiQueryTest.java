@@ -210,6 +210,34 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     }
 
     @Test
+    public void testFetchSingleWithInvalidItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.getItemById(null);
+            Assert.fail("Expected exception to be thrown due to null item id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        try {
+            api.getItemById(0);
+            Assert.fail("Expected exception to be thrown due to item id equal zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        
+        try {
+            api.getItemById(-100);
+            Assert.fail("Expected exception to be thrown due to item id cannot be less than or equal to zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testFetchBySerialNo() {
         try {
             when(this.mockPersistenceClient
@@ -331,8 +359,15 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(APP_NAME);
         try {
+            api.getItemByType(null);
+            Assert.fail("Expected exception to be thrown due to null item type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        try {
             api.getItemByType(0);
-            Assert.fail("Expected exception to be thrown due to null serial number");
+            Assert.fail("Expected exception to be thrown due to null item type id");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
@@ -340,7 +375,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         
         try {
             api.getItemByType(-100);
-            Assert.fail("Expected exception to be thrown due to null serial number");
+            Assert.fail("Expected exception to be thrown due to null item type id");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
@@ -400,8 +435,15 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(APP_NAME);
         try {
+            api.getItemByVendorId(null);
+            Assert.fail("Expected exception to be thrown due to null vendor id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        try {
             api.getItemByVendorId(0);
-            Assert.fail("Expected exception to be thrown due to null serial number");
+            Assert.fail("Expected exception to be thrown due to null vendor id");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
@@ -409,7 +451,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         
         try {
             api.getItemByVendorId(-100);
-            Assert.fail("Expected exception to be thrown due to null serial number");
+            Assert.fail("Expected exception to be thrown due to null vendor id");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();

@@ -350,6 +350,14 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(APP_NAME);
         try {
+            api.getItemStatusById(null);
+            Assert.fail(
+                    "Expected exception to be thrown due item statusid is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+        try {
             api.getItemStatusById(0);
             Assert.fail(
                     "Expected exception to be thrown due item statusid is zero");
