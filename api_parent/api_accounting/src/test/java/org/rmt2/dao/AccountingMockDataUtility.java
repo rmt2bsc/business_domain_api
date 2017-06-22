@@ -9,6 +9,7 @@ import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
+import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.AccountDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
 
@@ -170,6 +171,34 @@ public class AccountingMockDataUtility {
             i.setEndDate(new Date());
         }
         i.setReason(reason);
+        return i;
+    }
+
+    /**
+     * 
+     * @param id
+     * @param serialNo
+     * @param vendorItemNo
+     * @param creditorId
+     * @param description
+     * @param qty
+     * @param unitCost
+     * @param active
+     * @return
+     */
+    public static final VwVendorItems createMockOrmVwVendorItems(int id,
+            String serialNo, String vendorItemNo, int creditorId,
+            String description, int qty, double unitCost) {
+        VwVendorItems i = new VwVendorItems();
+        i.setItemId(id);
+        i.setItemSerialNo(serialNo);
+        i.setVendorItemNo(vendorItemNo);
+        i.setCreditorId(creditorId);
+        i.setDescription(description);
+        i.setQtyOnHand(qty);
+        i.setUnitCost(unitCost);
+        i.setOverrideRetail(0);
+        i.setMarkup(3);
         return i;
     }
 
