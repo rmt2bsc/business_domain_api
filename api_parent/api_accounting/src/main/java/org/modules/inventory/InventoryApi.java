@@ -247,7 +247,7 @@ public interface InventoryApi extends TransactionApi {
      * @return An arbitrary object representing a vendor items item.
      * @throws InventoryApiException
      */
-    VendorItemDto getVendorItem(int vendorId, int itemId)
+    VendorItemDto getVendorItem(Integer vendorId, Integer itemId)
             throws InventoryApiException;
 
     /**
@@ -259,7 +259,7 @@ public interface InventoryApi extends TransactionApi {
      * @return List of arbitrary objects representing one or more vendor items.
      * @throws InventoryApiException
      */
-    List<VendorItemDto> getVendorAssignItems(int vendorId)
+    List<VendorItemDto> getVendorAssignItems(Integer vendorId)
             throws InventoryApiException;
 
     /**
@@ -272,7 +272,7 @@ public interface InventoryApi extends TransactionApi {
      *         unassigned vendor items.
      * @throws InventoryApiException
      */
-    List<ItemMasterDto> getVendorUnassignItems(int vendorId)
+    List<ItemMasterDto> getVendorUnassignItems(Integer vendorId)
             throws InventoryApiException;
 
     /**

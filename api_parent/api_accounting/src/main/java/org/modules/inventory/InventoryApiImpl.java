@@ -31,6 +31,8 @@ import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
 import com.util.RMT2String;
 import com.util.RMT2String2;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * @author roy terrell
@@ -654,9 +656,21 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getVendorItem(int, int)
      */
     @Override
-    public VendorItemDto getVendorItem(int vendorId, int itemId)
+    public VendorItemDto getVendorItem(Integer vendorId, Integer itemId)
             throws InventoryApiException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor/Creditor Id is required", e);
+        }
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Item Id is required", e);
+        }
+        
         dao.setDaoUser(this.apiUser);
         List<VendorItemDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -697,9 +711,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getVendorAssignItems(int)
      */
     @Override
-    public List<VendorItemDto> getVendorAssignItems(int vendorId)
+    public List<VendorItemDto> getVendorAssignItems(Integer vendorId)
             throws InventoryApiException {
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor/Creditor Id is required to fetch assigned items", e);
+        }
         dao.setDaoUser(this.apiUser);
         List<VendorItemDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -735,12 +754,17 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getVendorUnassignItems(int)
      */
     @Override
-    public List<ItemMasterDto> getVendorUnassignItems(int vendorId)
+    public List<ItemMasterDto> getVendorUnassignItems(Integer vendorId)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor/Creditor Id is required to fetch unassigned items", e);
+        }
         String criteria = RMT2String.replace(
                 AccountingSqlConst.SQL_CRTIERIA_VENDOR_UNASSIGNED_ITEM,
                 String.valueOf(vendorId), "$1");
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
