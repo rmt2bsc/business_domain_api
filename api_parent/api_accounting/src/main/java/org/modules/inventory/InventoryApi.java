@@ -43,7 +43,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InvalidDataException
      *             <i>itemId</i> is invalid
      */
-    ItemMasterDto getItemById(int itemId) throws InventoryApiException;
+    ItemMasterDto getItemById(Integer itemId) throws InventoryApiException;
 
     /**
      * Retrieves one or more items using item type id
@@ -56,7 +56,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InvalidDataException
      *             <i>itemTypeId</i> is invalid
      */
-    List<ItemMasterDto> getItemByType(int itemTypeId)
+    List<ItemMasterDto> getItemByType(Integer itemTypeId)
             throws InventoryApiException;
 
     /**
@@ -70,7 +70,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InvalidDataException
      *             <i>vendorId</i> is invalid
      */
-    List<ItemMasterDto> getItemByVendorId(int vendorId)
+    List<ItemMasterDto> getItemByVendorId(Integer vendorId)
             throws InventoryApiException;
 
     /**
@@ -139,7 +139,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InvalidDataException
      *             <i>itemTypeId</i> is invalid
      */
-    ItemMasterTypeDto getItemTypeById(int itemTypeId)
+    ItemMasterTypeDto getItemTypeById(Integer itemTypeId)
             throws InventoryApiException;
 
     /**
@@ -194,7 +194,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InvalidDataException
      *             <i>itemStatusId</i> is invalid
      */
-    ItemMasterStatusDto getItemStatusById(int itemStatusId)
+    ItemMasterStatusDto getItemStatusById(Integer itemStatusId)
             throws InventoryApiException;
 
     /**
@@ -220,7 +220,7 @@ public interface InventoryApi extends TransactionApi {
      * @throws InvalidDataException
      *             <i>itemId</i> is invalid
      */
-    List<ItemMasterStatusHistDto> getItemStatusHistByItemId(int itemId)
+    List<ItemMasterStatusHistDto> getItemStatusHistByItemId(Integer itemId)
             throws InventoryApiException;
 
     /**

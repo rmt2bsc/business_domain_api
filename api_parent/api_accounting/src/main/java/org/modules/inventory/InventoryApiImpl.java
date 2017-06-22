@@ -111,9 +111,15 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemById(int)
      */
     @Override
-    public ItemMasterDto getItemById(int itemId) throws InventoryApiException {
+    public ItemMasterDto getItemById(Integer itemId) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory item id is required", e);
+        }
         if (itemId <= 0) {
-            throw new InvalidDataException("Inventory item id is required and must be greater than zero");
+            throw new InvalidDataException("Inventory item must be greater than zero");
         }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
@@ -158,10 +164,16 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemByType(int)
      */
     @Override
-    public List<ItemMasterDto> getItemByType(int itemTypeId)
+    public List<ItemMasterDto> getItemByType(Integer itemTypeId)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory item type id is required", e);
+        }
         if (itemTypeId <= 0) {
-            throw new InvalidDataException("Inventory item type id is required and must be greater than zero");
+            throw new InvalidDataException("Inventory item type id must be greater than zero");
         }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
@@ -198,8 +210,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemByVendorId(int)
      */
     @Override
-    public List<ItemMasterDto> getItemByVendorId(int vendorId)
+    public List<ItemMasterDto> getItemByVendorId(Integer vendorId)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Vendor id is required", e);
+        }
         if (vendorId <= 0) {
             throw new InvalidDataException("Vendor Id is required and must be greater than zero");
         }
@@ -371,7 +389,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemTypeById(int)
      */
     @Override
-    public ItemMasterTypeDto getItemTypeById(int itemTypeId) throws InventoryApiException {
+    public ItemMasterTypeDto getItemTypeById(Integer itemTypeId) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item type Id is required", e);
+        }
         if (itemTypeId <= 0) {
             throw new InvalidDataException("Item Type Id is required and must be greater than zero");
         }
@@ -511,7 +535,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemStatusById(int)
      */
     @Override
-    public ItemMasterStatusDto getItemStatusById(int itemStatusId) throws InventoryApiException {
+    public ItemMasterStatusDto getItemStatusById(Integer itemStatusId) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemStatusId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item Status Id is required", e);
+        }
         if (itemStatusId <= 0) {
             throw new InvalidDataException("Item Status Id is required and must be greater than zero");
         }
@@ -576,8 +606,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemStatusHistByItemId(int)
      */
     @Override
-    public List<ItemMasterStatusHistDto> getItemStatusHistByItemId(int itemId)
+    public List<ItemMasterStatusHistDto> getItemStatusHistByItemId(Integer itemId)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item Id is required", e);
+        }
         if (itemId <= 0) {
             throw new InvalidDataException("Item Id is required and must be greater than zero");
         }
