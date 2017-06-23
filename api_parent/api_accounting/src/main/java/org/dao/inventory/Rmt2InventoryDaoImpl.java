@@ -465,10 +465,6 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      */
     @Override
     public int maintain(ItemMasterDto item) throws InventoryDaoException {
-        if (item == null) {
-            throw new InventoryDaoException(
-                    "Inventory DAO item master update error: ItemMasterDto object is null");
-        }
         int rc;
         ItemMaster obj = InventoryDaoFactory.createItemMasterRmt2Orm(item);
         if (obj.getCreditorId() == 0) {
