@@ -898,12 +898,18 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      */
     @Override
     public int updateItemMaster(ItemMasterDto item) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(item);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory item master object is required", e);
+        }
+        
         dao.setDaoUser(this.apiUser);
         this.computeItemRetail(item);
         boolean newItem = (item.getItemId() == 0);
         ItemMaster newITem = null;
-        ItemMasterDto imDto = Rmt2InventoryDtoFactory
-                .createItemMasterInstance(newITem);
+        ItemMasterDto imDto = Rmt2InventoryDtoFactory.createItemMasterInstance(newITem);
 
         // // Try to use shared connection if DAO is null
         // if (dao == null) {
