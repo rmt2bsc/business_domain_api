@@ -226,26 +226,32 @@ public class InventoryDaoFactory extends RMT2Base {
         if (criteria != null) {
             if (criteria.getItemId() > 0) {
                 obj.addCriteria(ItemMaster.PROP_ITEMID, criteria.getItemId());
+                obj.setItemId(criteria.getItemId());
             }
             if (criteria.getItemSerialNo() != null) {
                 obj.addLikeClause(ItemMaster.PROP_ITEMSERIALNO,
                         criteria.getItemSerialNo());
+                obj.setItemSerialNo(criteria.getItemSerialNo());
             }
             if (criteria.getItemTypeId() > 0) {
                 obj.addCriteria(ItemMaster.PROP_ITEMTYPEID,
                         criteria.getItemTypeId());
+                obj.setItemTypeId(criteria.getItemTypeId());
             }
             if (criteria.getVendorId() > 0) {
                 obj.addCriteria(ItemMaster.PROP_CREDITORID,
                         criteria.getVendorId());
+                obj.setCreditorId(criteria.getVendorId());
             }
             if (criteria.getVendorItemNo() != null) {
                 obj.addLikeClause(ItemMaster.PROP_VENDORITEMNO,
                         criteria.getVendorItemNo());
+                obj.setVendorItemNo(criteria.getVendorItemNo());
             }
             if (criteria.getItemName() != null) {
                 obj.addLikeClause(ItemMaster.PROP_DESCRIPTION,
                         criteria.getItemName());
+                obj.setDescription(criteria.getItemName());
             }
         }
         return obj;
@@ -271,18 +277,22 @@ public class InventoryDaoFactory extends RMT2Base {
         if (criteria != null) {
             if (criteria.getItemId() > 0) {
                 obj.addCriteria(VendorItems.PROP_ITEMID, criteria.getItemId());
+                obj.setItemId(criteria.getItemId());
             }
             if (criteria.getItemSerialNo() != null) {
                 obj.addLikeClause(VendorItems.PROP_ITEMSERIALNO,
                         criteria.getItemSerialNo());
+                obj.setItemSerialNo(criteria.getItemSerialNo());
             }
             if (criteria.getVendorId() > 0) {
                 obj.addCriteria(VendorItems.PROP_CREDITORID,
                         criteria.getVendorId());
+                obj.setCreditorId(criteria.getVendorId());
             }
             if (criteria.getVendorItemNo() != null) {
                 obj.addLikeClause(VendorItems.PROP_VENDORITEMNO,
                         criteria.getVendorItemNo());
+                obj.setVendorItemNo(criteria.getVendorItemNo());
             }
         }
         return obj;
@@ -307,10 +317,12 @@ public class InventoryDaoFactory extends RMT2Base {
             if (criteria.getItemTypeId() > 0) {
                 obj.addCriteria(ItemMasterType.PROP_ITEMTYPEID,
                         criteria.getItemTypeId());
+                obj.setItemTypeId(criteria.getItemTypeId());
             }
             if (criteria.getItemTypeDescription() != null) {
                 obj.addLikeClause(ItemMasterType.PROP_DESCRIPTION,
                         criteria.getItemTypeDescription());
+                obj.setDescription(criteria.getItemTypeDescription());
             }
         }
         return obj;
@@ -337,10 +349,12 @@ public class InventoryDaoFactory extends RMT2Base {
             if (criteria.getEntityId() > 0) {
                 obj.addCriteria(ItemMasterStatus.PROP_ITEMSTATUSID,
                         criteria.getEntityId());
+                obj.setItemStatusId(criteria.getEntityId());
             }
             if (criteria.getEntityName() != null) {
                 obj.addLikeClause(ItemMasterStatus.PROP_DESCRIPTION,
                         criteria.getEntityName());
+                obj.setDescription(criteria.getEntityName());
             }
         }
         return obj;
@@ -368,14 +382,17 @@ public class InventoryDaoFactory extends RMT2Base {
             if (criteria.getEntityId() > 0) {
                 obj.addCriteria(ItemMasterStatusHist.PROP_ITEMSTATUSHISTID,
                         criteria.getEntityId());
+                obj.setItemStatusHistId(criteria.getEntityId());
             }
             if (criteria.getItemId() > 0) {
                 obj.addCriteria(ItemMasterStatusHist.PROP_ITEMID,
                         criteria.getItemId());
+                obj.setItemId(criteria.getItemId());
             }
             if (criteria.getItemStatusId() > 0) {
                 obj.addCriteria(ItemMasterStatusHist.PROP_ITEMSTATUSID,
                         criteria.getItemStatusId());
+                obj.setItemStatusId(criteria.getItemStatusId());
             }
         }
         return obj;
