@@ -911,17 +911,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         ItemMaster newITem = null;
         ItemMasterDto imDto = Rmt2InventoryDtoFactory.createItemMasterInstance(newITem);
 
-        // // Try to use shared connection if DAO is null
-        // if (dao == null) {
-        // if (this.getSharedDao().getClient() == null) {
-        // this.msg = "Inventory item update error: DAO object is invalid";
-        // logger.error(this.msg);
-        // throw new InventoryException(this.msg);
-        // }
-        // dao = this.factory.createRmt2OrmDao(this.getSharedDao());
-        // dao.setDaoUser(this.apiUser);
-        // }
-
         // Get old version of item record and apply changes
         if (!newItem) {
             imDto = this.getItemById(item.getItemId());
@@ -972,8 +961,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                 }
                 // Change the most recent item status, which should be
                 // 'Replaced'
-                imsh = this.changeItemStatus(imDto,
-                        InventoryConst.ITEM_STATUS_REPLACE);
+                imsh = this.changeItemStatus(imDto, InventoryConst.ITEM_STATUS_REPLACE);
 
                 // User has requested system to activate vendor item override.
                 if (imDto.getOverrideRetail() == InventoryConst.ITEM_OVERRIDE_YES
