@@ -20,7 +20,10 @@ import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
 
+import com.InvalidDataException;
 import com.api.persistence.DaoClient;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link CreditorApi} which provides functionality that
@@ -30,7 +33,8 @@ import com.api.persistence.DaoClient;
  * @author Roy Terrell
  * 
  */
-class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXactHistoryDto> implements CreditorApi {
+class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXactHistoryDto> 
+          implements CreditorApi {
     private static final Logger logger = Logger
             .getLogger(CreditorApiImpl.class);
 
@@ -81,13 +85,66 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
         this.daoFact = new SubsidiaryDaoFactory();
     }
 
+    /**
+     * Retireve a list of subsidiary accounts combined with common contact data. 
+     * <p>
+     * The results of this method will typically be a product of merging subsidiary 
+     * accounts with their address book data based on related <i>business id</i>.
+     * 
+     * @param criteria an instance of {@link CreditorDto}
+     * @return List of CreditorDto or null if <i>criteria</i> contains no 
+     *         selection criteria values
+     * @throws SubsidiaryException
+     *           <i>criteria</i> is null or general data access error.
+     */
     @Override
     protected List<CreditorDto> getSubsidiaryInfo(CreditorDto criteria) throws SubsidiaryException {
-        // Fetch common contact data
-        Map<Integer, SubsidiaryContactInfoDto> contactResults = this.getContactInfo(criteria);
-        // Fetch creditor specific data
-        List<CreditorDto> creditorResults = this.get(criteria);
-        // Merge results
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Selection criteria is required when querying combined creditor data", e);
+        }
+        
+        boolean useCreditorParms = false;
+        boolean useContactParms = false;
+        useContactParms = (criteria.getTaxId() != null || criteria.getContactName() != null || 
+                           criteria.getPhoneCompany() != null);
+
+        useCreditorParms = (criteria.getAccountNo() != null || criteria.getCreditorId() > 0 || 
+                            criteria.getContactId() > 0 || criteria.getCreditorTypeId() > 0);
+        
+        Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
+        List<CreditorDto> creditorResults = null;
+        List<Integer> businessIdList = null;
+        
+        // Determine the query sequence for obtaining combined creditor/common contact data.
+        // local-to-remote or remote-to-local.
+        if (useContactParms && !useCreditorParms) {
+            // First, fetch common contact data and then creditor specifc data.
+            contactResults = this.getContactInfo(criteria);
+            // Get list of business id's to use for fetching creditor records.
+            if (contactResults != null) {
+                businessIdList = new ArrayList<Integer>(contactResults.keySet());
+                criteria.setContactIdList(businessIdList);
+                creditorResults = this.get(criteria);    
+            }
+        }
+        else if (useCreditorParms) {
+            // First fetch creditor specific data and then common contact data
+            creditorResults = this.get(criteria);
+            if (creditorResults != null) {
+                // Get list of business id's to use for fetching common contact records.
+                businessIdList = new ArrayList<Integer>();
+                for (CreditorDto item : creditorResults) {
+                    businessIdList.add(item.getContactId());
+                }
+                // Use list of business id's along with contact criteria to fetch common contact records.
+                // If there is no common contact criteria, then just use the list of buisness id's as criteeria.
+                criteria.setContactIdList(businessIdList);
+                contactResults = this.getContactInfo(criteria);
+            }
+        }
         List<CreditorDto> results = this.mergeContactInfo(creditorResults, contactResults);
         return results;
     }
@@ -97,12 +154,18 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * 
      * @param subsidiary
      * @param contact
-     * @return a List<CreditorDto> sorted by contact name
+     * @return a List<CreditorDto> sorted by contact name or null when 
+     *          either <i>subsidiaries</i> or <i>contacts</i> equal null
+     *          or if there is nothing to merge.
      */
     @Override
     protected List<CreditorDto> mergeContactInfo(List<CreditorDto> subsidiaries,
             Map<Integer, SubsidiaryContactInfoDto> contacts) {
-        if (subsidiaries == null) {
+        try {
+            Verifier.verifyNotNull(subsidiaries);
+            Verifier.verifyNotNull(contacts);
+        }
+        catch (VerifyException e) {
             return null;
         }
         List<CreditorDto> mergedCreditors = new ArrayList<CreditorDto>();
@@ -113,12 +176,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
                 if (contact == null) {
                     continue;
                 }
-            }
-            else {
-                // Continue to build creditor DTO when contact data is not
-                // available
-                contact = Rmt2SubsidiaryDtoFactory
-                        .createSubsidiaryInstance(null);
             }
 
             creditor.setContactName(contact.getContactName());
