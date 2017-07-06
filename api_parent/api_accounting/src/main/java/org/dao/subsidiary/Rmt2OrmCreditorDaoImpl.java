@@ -129,6 +129,10 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         Creditor ormCred = null;
         if (criteria != null) {
             ormCred = new Creditor();
+            if (criteria.getContactIdList() != null && criteria.getContactIdList().size() > 0) {
+                Integer[] intArray = criteria.getContactIdList().toArray(new Integer[criteria.getContactIdList().size()]);
+                ormCred.addInClause(Creditor.PROP_CREDITORID, intArray);
+            }
             if (criteria.getCreditorId() > 0) {
                 ormCred.addCriteria(Creditor.PROP_CREDITORID,
                         criteria.getCreditorId());

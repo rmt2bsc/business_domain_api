@@ -18,9 +18,6 @@ public interface SubsidiaryApi extends TransactionApi {
     
     /**
      * Retireve common contact data for a list of subsidiary accounts. 
-     * <p>
-     * The results of this method will typically be merged with subsidiary 
-     * accounts that are related by <i>business id</i>.
      * 
      * @param criteria
      * @return

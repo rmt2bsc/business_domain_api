@@ -1,6 +1,8 @@
 package org.dto.adapter.jaxb;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dto.BusinessContactDto;
 import org.rmt2.jaxb.BusinessType;
@@ -17,6 +19,7 @@ import org.rmt2.jaxb.ObjectFactory;
 class BusinessContactJaxbAdapter extends AddressJaxbAdapter implements BusinessContactDto {
 
     private BusinessType bus;
+    private List<Integer> businessIdList;
     private ObjectFactory f;
 
     /**
@@ -38,6 +41,7 @@ class BusinessContactJaxbAdapter extends AddressJaxbAdapter implements BusinessC
 
         // Setup address DTO
         super.init(bus.getAddress());
+        this.businessIdList = new ArrayList<Integer>();
         return;
     }
 
@@ -48,9 +52,7 @@ class BusinessContactJaxbAdapter extends AddressJaxbAdapter implements BusinessC
      */
     @Override
     public void setContactId(int value) {
-        if (this.bus.getBusinessId() != null) {
-            this.bus.getBusinessId().add(BigInteger.valueOf(value));
-        }
+        this.bus.setBusinessId(BigInteger.valueOf(value));
     }
 
     /*
@@ -313,4 +315,13 @@ class BusinessContactJaxbAdapter extends AddressJaxbAdapter implements BusinessC
         return null;
     }
 
+    @Override
+    public void setContactIdList(List<Integer> value) {
+        this.businessIdList = value;
+    }
+
+    @Override
+    public List<Integer> getContactIdList() {
+        return this.businessIdList;
+    }
 }

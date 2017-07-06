@@ -1,6 +1,8 @@
 package org.dto.adapter.jaxb;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dto.BusinessContactDto;
 import org.dto.DefaultAddressAdapter;
@@ -303,6 +305,26 @@ class BusinessContactCriteriaJaxbAdapter extends DefaultAddressAdapter implement
     @Override
     public String getShortName() {
         return null;
+    }
+
+    @Override
+    public void setContactIdList(List<Integer> value) {
+        if (value == null) {
+            return;
+        }
+        for (Integer item : value) {
+            this.criteria.getBusinessId().add(BigInteger.valueOf(item));    
+        }
+    }
+
+    @Override
+    public List<Integer> getContactIdList() {
+        List<Integer> intList = new ArrayList<Integer>();
+        List<BigInteger> list = this.criteria.getBusinessId(); 
+        for (BigInteger item : list) {
+            intList.add(item.intValue());    
+        }
+        return intList;
     }
 
 }

@@ -1,5 +1,7 @@
 package org.dto;
 
+import java.util.List;
+
 /**
  * Data Transfer Object (DTO) contract that represents a common contact.
  * <p>
@@ -12,6 +14,16 @@ package org.dto;
  * @author Roy Terrell.
  */
 public interface ContactDto extends AddressDto {
+    
+    /**
+     * Set contact id list
+     */
+    void setContactIdList(List<Integer> value);
+
+    /**
+     * Get contact id list
+     */
+    List<Integer> getContactIdList();
 
     /**
      * Sets the value of the contact id.

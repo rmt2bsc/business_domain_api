@@ -14,12 +14,12 @@ public interface SubsidiaryContactInfoDto extends CommonAccountingDto {
     /**
      * Set the subsidiary's contact id
      */
-    void setContactIdList(List<String> value);
+    void setContactIdList(List<Integer> value);
 
     /**
      * Get the subsidiary's contact id
      */
-    List<String> getContactIdList();
+    List<Integer> getContactIdList();
 
     /**
      * Set the subsidiary's contact id

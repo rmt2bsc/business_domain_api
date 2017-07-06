@@ -1,5 +1,8 @@
 package org.dto.adapter.orm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dao.contacts.ContactsConst;
 import org.dao.mapping.orm.rmt2.Address;
 import org.dao.mapping.orm.rmt2.Business;
@@ -19,6 +22,7 @@ import com.util.assistants.HashCodeAssistant;
 class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessContactDto {
 
     private Business bus;
+    private List<Integer> businessIdList;
 
     /**
      * Create a BusinessRmt2OrmAdapter using an instance of
@@ -52,6 +56,7 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessCo
         this.dateUpdated = this.bus.getDateUpdated();
         this.updateUserId = this.bus.getUserId();
         this.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
+        this.businessIdList = new ArrayList<Integer>();
         return;
     }
 
@@ -73,6 +78,7 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessCo
         }
         this.bus = bus;
         this.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
+        this.businessIdList = new ArrayList<Integer>();
     }
 
     /*
@@ -335,6 +341,16 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessCo
         return this.bus.getShortname();
     }
 
+    @Override
+    public void setContactIdList(List<Integer> value) {
+        this.businessIdList = value;
+    }
+
+    @Override
+    public List<Integer> getContactIdList() {
+        return this.businessIdList;
+    }
+    
     @Override
     public int hashCode() {
         return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.getAddr1()),

@@ -1,6 +1,8 @@
 package org.dto.adapter.orm;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.dao.contacts.ContactsConst;
 import org.dao.mapping.orm.rmt2.Address;
@@ -17,6 +19,7 @@ import org.dto.PersonalContactDto;
  */
 class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalContactDto {
     private Person per;
+    private List<Integer> personIdList;
 
     /**
      * Create a PersonalRmt2OrmAdapter using an instance of
@@ -52,6 +55,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalCo
         this.dateUpdated = this.per.getDateUpdated();
         this.updateUserId = this.per.getUserId();
         this.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
+        this.personIdList = new ArrayList<Integer>();
         return;
     }
 
@@ -73,6 +77,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalCo
         }
         this.per = per;
         this.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
+        this.personIdList = new ArrayList<Integer>();
     }
 
     /*
@@ -375,4 +380,13 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalCo
         return this.per.getCategoryId();
     }
 
+    @Override
+    public void setContactIdList(List<Integer> value) {
+        this.personIdList = value;
+    }
+
+    @Override
+    public List<Integer> getContactIdList() {
+        return this.personIdList;
+    }
 }

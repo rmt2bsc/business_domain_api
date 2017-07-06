@@ -39,7 +39,9 @@ abstract class AbstractSubsidiaryApiImpl<E, E2> extends AbstractTransactionApiIm
     }
 
     /**
-     * Fetches subsidiary/contact from a known local datasource.
+     * Fetches subsidiary accounts.
+     * <p>
+     * Combines common contact data with the subsidiary account information.
      * 
      * @param criteria
      *            an instance of {@link E} containing the selection
@@ -107,13 +109,17 @@ abstract class AbstractSubsidiaryApiImpl<E, E2> extends AbstractTransactionApiIm
      *         is keyed by business id.
      * @throws SubsidiaryDaoException
      */
-    public Map<Integer, SubsidiaryContactInfoDto> getContactInfo(
-            SubsidiaryContactInfoDto criteria) throws SubsidiaryException {
+    public Map<Integer, SubsidiaryContactInfoDto> getContactInfo(SubsidiaryContactInfoDto criteria) 
+            throws SubsidiaryException {
         if (criteria == null) {
             throw new SubsidiaryDaoException("Subsidiary contact criteria object cannot be null");
         }
         BusinessContactDto contactDto = Rmt2AddressBookDtoFactory.getNewBusinessInstance();
 
+        // Add multiple business id's to submit to remote service
+        if (criteria.getContactIdList() != null && criteria.getContactIdList().size() > 0) {
+            contactDto.setContactIdList(criteria.getContactIdList());
+        }
         // Add single business id to submit to remote service
         if (criteria.getContactId() > 0) {
             contactDto.setContactId(criteria.getContactId());

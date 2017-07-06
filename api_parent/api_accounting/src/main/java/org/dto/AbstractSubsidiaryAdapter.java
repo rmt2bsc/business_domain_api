@@ -13,7 +13,7 @@ import com.api.foundation.TransactionDtoImpl;
 public abstract class AbstractSubsidiaryAdapter extends TransactionDtoImpl
         implements SubsidiaryContactInfoDto {
 
-    private List<String> contactIdList;
+    private List<Integer> contactIdList;
 
     // private BusinessContactBean b;
 
@@ -37,7 +37,7 @@ public abstract class AbstractSubsidiaryAdapter extends TransactionDtoImpl
      * 
      * @param value
      */
-    public void setContactIdList(List<String> value) {
+    public void setContactIdList(List<Integer> value) {
         this.contactIdList = value;
     }
 
@@ -67,7 +67,7 @@ public abstract class AbstractSubsidiaryAdapter extends TransactionDtoImpl
      * 
      * @return
      */
-    public List<String> getContactIdList() {
+    public List<Integer> getContactIdList() {
         return this.contactIdList;
     }
 

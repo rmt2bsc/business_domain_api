@@ -158,6 +158,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
 
     private List<ContactDto> getCommonContact(ContactDto criteriaDto) throws ContactDaoException {
         VwCommonContact criteria = new VwCommonContact();
+        if (criteriaDto.getContactIdList() != null && criteriaDto.getContactIdList().size() > 0) {
+            Integer[] intArray = criteriaDto.getContactIdList().toArray(new Integer[criteriaDto.getContactIdList().size()]);
+            criteria.addInClause(VwCommonContact.PROP_CONTACTID, intArray);
+        }
         if (criteriaDto.getContactId() > 0) {
             criteria.addCriteria(VwCommonContact.PROP_CONTACTID, criteriaDto.getContactId());
         }
@@ -216,6 +220,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
     private List<ContactDto> getPersonalContact(PersonalContactDto criteriaDto)
             throws PersonalContactQueryDaoException {
         VwPersonAddress criteria = new VwPersonAddress();
+        if (criteriaDto.getContactIdList() != null && criteriaDto.getContactIdList().size() > 0) {
+            Integer[] intArray = criteriaDto.getContactIdList().toArray(new Integer[criteriaDto.getContactIdList().size()]);
+            criteria.addInClause(VwPersonAddress.PROP_PERSONID, intArray);
+        }
         if (criteriaDto.getContactId() > 0) {
             criteria.addCriteria(VwPersonAddress.PROP_PERSONID, criteriaDto.getContactId());
         }
@@ -290,6 +298,10 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
     private List<ContactDto> getBusinessContact(BusinessContactDto criteriaDto)
             throws PersonalContactQueryDaoException {
         VwBusinessAddress criteria = new VwBusinessAddress();
+        if (criteriaDto.getContactIdList() != null && criteriaDto.getContactIdList().size() > 0) {
+            Integer[] intArray = criteriaDto.getContactIdList().toArray(new Integer[criteriaDto.getContactIdList().size()]);
+            criteria.addInClause(VwBusinessAddress.PROP_BUSINESSID, intArray);
+        }
         if (criteriaDto.getContactId() > 0) {
             criteria.addCriteria(VwBusinessAddress.PROP_BUSINESSID, criteriaDto.getContactId());
         }
