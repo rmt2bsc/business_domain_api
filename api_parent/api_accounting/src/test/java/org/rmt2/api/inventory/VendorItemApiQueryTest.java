@@ -264,4 +264,29 @@ public class VendorItemApiQueryTest extends BaseAccountingDaoTest {
         }
         Assert.assertNull(results);
     }
+    
+    
+    @Test
+    // TODO: Implement after subsidiary module.
+    public void testUpdateVendorItem() {
+//        try {
+//            when(this.mockPersistenceClient
+//                    .retrieveList(any(VwVendorItems.class)))
+//                            .thenReturn(this.mockNotFoundFetchResponse);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail(
+//                    "Vendor Assigned Item Not Found fetch using criteria test case setup failed");
+//        }
+//
+//        InventoryApiFactory f = new InventoryApiFactory();
+//        InventoryApi api = f.createApi(APP_NAME);
+//        List<VendorItemDto> results = null;
+//        try {
+//            results = api.getVendorAssignItems(9999);
+//        } catch (InventoryApiException e) {
+//            e.printStackTrace();
+//        }
+//        Assert.assertNull(results);
+    }
 }
