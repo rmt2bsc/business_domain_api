@@ -1,10 +1,8 @@
 package org.dao.subsidiary;
 
 import java.util.List;
-import java.util.Map;
 
 import org.dto.SubsidiaryContactInfoDto;
-import org.dto.SubsidiaryDto;
 import org.dto.SubsidiaryXactHistoryDto;
 
 import com.api.persistence.DaoClient;
@@ -42,33 +40,33 @@ public interface SubsidiaryDao extends DaoClient {
      */
     double calculateBalance(int subsidiaryId) throws SubsidiaryDaoException;
 
-    /**
-     * Fetches common subsidiary contact data based on the selection criteria
-     * containted in <i>criteria</i>.
-     * 
-     * @param criteria
-     *            an instance of {@link SubsidiaryContactInfoDto} which each
-     *            property found to have a value will serve as selection
-     *            criteria.
-     * @return Map <Integer, {@link SubsidiaryContactInfoDto}> in which the map
-     *         is keyed by business id.
-     * @throws SubsidiaryDaoException
-     */
-    Map<Integer, SubsidiaryContactInfoDto> fetch(
-            SubsidiaryContactInfoDto criteria) throws SubsidiaryDaoException;
+//    /**
+//     * Fetches common subsidiary contact data based on the selection criteria
+//     * containted in <i>criteria</i>.
+//     * 
+//     * @param criteria
+//     *            an instance of {@link SubsidiaryContactInfoDto} which each
+//     *            property found to have a value will serve as selection
+//     *            criteria.
+//     * @return Map <Integer, {@link SubsidiaryContactInfoDto}> in which the map
+//     *         is keyed by business id.
+//     * @throws SubsidiaryDaoException
+//     */
+//    Map<Integer, SubsidiaryContactInfoDto> fetch(
+//            SubsidiaryContactInfoDto criteria) throws SubsidiaryDaoException;
 
-    /**
-     * Fetches subsidiary contact data without common contact info based on the
-     * selection criteria containted in <i>criteria</i>.
-     * 
-     * @param criteria
-     *            an instance of {@link SubsidiaryDto} which each property found
-     *            to have a value will serve as selection criteria.
-     * @return List of arbitrary objects
-     * @throws SubsidiaryDaoException
-     */
-    <T> List<T> fetchDomain(SubsidiaryDto criteria)
-            throws SubsidiaryDaoException;
+//    /**
+//     * Fetches subsidiary contact data without common contact info based on the
+//     * selection criteria containted in <i>criteria</i>.
+//     * 
+//     * @param criteria
+//     *            an instance of {@link SubsidiaryDto} which each property found
+//     *            to have a value will serve as selection criteria.
+//     * @return List of arbitrary objects
+//     * @throws SubsidiaryDaoException
+//     */
+//    <T> List<T> fetchDomain(SubsidiaryDto criteria)
+//            throws SubsidiaryDaoException;
 
     /**
      * Creates a new or modifies an existing common subsidiary contact data

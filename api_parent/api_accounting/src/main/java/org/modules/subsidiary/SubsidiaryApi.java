@@ -1,9 +1,9 @@
 package org.modules.subsidiary;
 
-import java.util.List;
+import java.util.Map;
 
 import org.AccountingConst.SubsidiaryType;
-import org.dto.SubsidiaryDto;
+import org.dto.SubsidiaryContactInfoDto;
 
 import com.api.foundation.TransactionApi;
 
@@ -15,17 +15,18 @@ import com.api.foundation.TransactionApi;
  * 
  */
 public interface SubsidiaryApi extends TransactionApi {
-
+    
     /**
-     * Retrieve a single subsidiary account without contact info using the
-     * subsidiary id.
+     * Retireve common contact data for a list of subsidiary accounts. 
+     * <p>
+     * The results of this method will typically be merged with subsidiary 
+     * accounts that are related by <i>business id</i>.
      * 
-     * @param subsidiaryId
-     *            the unique identifier of the target subsidiary
-     * @return an instnace of {@link SubsidiaryDto}
+     * @param criteria
+     * @return
      * @throws SubsidiaryException
      */
-    SubsidiaryDto getDomainBySubsidiaryId(int subsidiaryId)
+    Map<Integer, SubsidiaryContactInfoDto> getContactInfo(SubsidiaryContactInfoDto criteria) 
             throws SubsidiaryException;
 
     /**
@@ -50,16 +51,4 @@ public interface SubsidiaryApi extends TransactionApi {
      *             General database errors.
      */
     double getBalance(int subsidiaryId) throws SubsidiaryException;
-
-    /**
-     * Get transacton history for a particular subsidiary account.
-     * 
-     * @param subsidiaryId
-     *            the unique id of the subsidiary account
-     * @return a List of unknown ojects representing the transaction history.
-     * @throws SubsidiaryException
-     */
-    <T> List<T> getTransactionHistory(int subsidiaryId)
-            throws SubsidiaryException;
-
 }

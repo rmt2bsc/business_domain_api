@@ -10,6 +10,8 @@ import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
+import org.dto.BusinessContactDto;
+import org.dto.ContactDto;
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
 import org.dto.CreditorXactHistoryDto;
@@ -173,6 +175,52 @@ public class Rmt2SubsidiaryDtoFactory extends RMT2Base {
         for (BusinessType item : contacts) {
             SubsidiaryContactInfoDto dto = createSubsidiaryInstance(item);
             map.put(item.getBusinessId().intValue(), dto);
+        }
+        return map;
+    }
+    
+    /**
+     * Creates a Map instance of SubsidiaryContactInfoDto objects where each
+     * element is keyed by business id.
+     * 
+     * @param contacts
+     *            a List of ContactDto instances.
+     * @return Map {@link Integer}, {@link SubsidiaryContactInfoDto}
+     */
+    public static final Map<Integer, SubsidiaryContactInfoDto> createContactMap(List<ContactDto> contacts) {
+        Map<Integer, SubsidiaryContactInfoDto> map = new LinkedHashMap<Integer, SubsidiaryContactInfoDto>();
+        for (ContactDto contact : contacts) {
+            BusinessContactDto item = null;
+            if (contact instanceof BusinessContactDto) {
+                item = (BusinessContactDto) contact;
+                SubsidiaryContactInfoDto dto = Rmt2SubsidiaryDtoFactory.createSubsidiaryInstance(null);
+                dto.setContactId(item.getContactId());
+                dto.setAddr1(item.getAddr1());
+                dto.setAddr2(item.getAddr2());
+                dto.setAddr3(item.getAddr3());
+                dto.setAddr4(item.getAddr4());
+                dto.setCity(item.getCity());
+                dto.setState(item.getState());
+                dto.setZip(item.getZip());
+                dto.setZipext(item.getZipext());
+                dto.setContactFirstname(item.getContactFirstname());
+                dto.setContactLastname(item.getContactLastname());
+                dto.setContactName(item.getContactName());
+                dto.setContactEmail(item.getContactEmail());
+                dto.setContactExt(item.getContactExt());
+                dto.setContactType(item.getContactType());
+                dto.setContactPhone(item.getContactPhone());
+                dto.setPhoneCell(item.getPhoneCell());
+                dto.setPhoneCompany(item.getPhoneCompany());
+                dto.setPhoneExt(item.getPhoneExt());
+                dto.setPhoneFax(item.getPhoneFax());
+                dto.setPhoneHome(item.getPhoneHome());
+                dto.setPhonePager(item.getPhonePager());
+                dto.setPhoneWork(item.getPhoneWork());
+                dto.setEntityTypeId(item.getEntityTypeId());
+                dto.setServTypeId(item.getServTypeId());
+                map.put(dto.getContactId(), dto);
+            }
         }
         return map;
     }

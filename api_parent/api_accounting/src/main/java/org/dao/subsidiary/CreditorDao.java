@@ -60,19 +60,4 @@ public interface CreditorDao extends SubsidiaryDao {
      * @throws CreditorDaoException
      */
     int delete(int credId) throws CreditorDaoException;
-
-    // /**
-    // * Fetches one or more creditor records using a selection criteria
-    // predicate
-    // * that is compliant to the external data soure.
-    // *
-    // * @param criteria
-    // * A String representing the selection predicate to be applied to
-    // * the query that complies to the rules of the underlying data
-    // * source.
-    // * @return a list of {@link CreditorDto} objects or null when the query
-    // * returns an empty result set.
-    // * @throws CreditorDaoException
-    // */
-    // List<CustomerDto> fetch(String criteria) throws CreditorDaoException;
 }

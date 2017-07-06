@@ -1,9 +1,18 @@
-/**
- * 
- */
 package org.modules.subsidiary;
 
+import java.util.List;
+import java.util.Map;
+
 import org.AccountingConst.SubsidiaryType;
+import org.dao.subsidiary.SubsidiaryDaoException;
+import org.dto.BusinessContactDto;
+import org.dto.ContactDto;
+import org.dto.SubsidiaryContactInfoDto;
+import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
+import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
+import org.modules.contacts.ContactsApi;
+import org.modules.contacts.ContactsApiException;
+import org.modules.contacts.ContactsApiFactory;
 
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
@@ -15,7 +24,7 @@ import com.api.persistence.DaoClient;
  * @author Roy Terrell
  * 
  */
-abstract class AbstractSubsidiaryApiImpl extends AbstractTransactionApiImpl
+abstract class AbstractSubsidiaryApiImpl<E, E2> extends AbstractTransactionApiImpl
         implements SubsidiaryApi {
 
     /**
@@ -29,6 +38,36 @@ abstract class AbstractSubsidiaryApiImpl extends AbstractTransactionApiImpl
         super(connection);
     }
 
+    /**
+     * Fetches subsidiary/contact from a known local datasource.
+     * 
+     * @param criteria
+     *            an instance of {@link E} containing the selection
+     *            criteria that is used by both the local and remote queries.
+     * @return List of {@link E} or null when no data is found
+     * @throws CreditorDaoException
+     */
+    protected abstract List<E> getSubsidiaryInfo(E criteria) throws SubsidiaryException;
+    
+    /**
+     * Combines the a list of subsidiary data with a list of common contact data.
+     * 
+     * @param subsidiary
+     * @param contact
+     * @return a List<E>
+     */
+    protected abstract List<E> mergeContactInfo(List<E> subsidiary, Map<Integer, SubsidiaryContactInfoDto> contact);
+    
+    /**
+     * Get transacton history for a particular subsidiary account.
+     * 
+     * @param subsidiaryId
+     *            the unique id of the subsidiary account
+     * @return a List<E> representing the transaction history.
+     * @throws SubsidiaryException
+     */
+    protected abstract List<E2> getTransactionHistory(int subsidiaryId) throws SubsidiaryException;
+    
     /**
      * Creates an account number for a given subsidiary.
      * 
@@ -46,33 +85,63 @@ abstract class AbstractSubsidiaryApiImpl extends AbstractTransactionApiImpl
         return helper.buildAccountNo(businessId, subType);
     }
 
-    // /**
-    // * Calculate and return the customer's balance.
-    // *
-    // * @param businessId
-    // * customer's internal unique id known as the busines id.
-    // * @return double as the customer's balance.
-    // * @throws SubsidiaryException
-    // * General database SQL errors.
-    // */
-    // @Override
-    // public double getBalance(int businessId) throws SubsidiaryException {
-    // String sql =
-    // "select sum(amount) balance from customer_activity where customer_id = "
-    // + businessId;
-    // double bal;
-    // try {
-    // ResultSet rs = this.client.executeSql(sql);
-    // if (rs.next()) {
-    // bal = rs.getDouble("balance");
-    // }
-    // else {
-    // bal = 0;
-    // }
-    // return bal;
-    // } catch (Exception e) {
-    // throw new CustomerDaoException(e);
-    // }
-    // }
+    /**
+     * Fetch common subsidiary contact data based on the selection criteria 
+     * containted in <i>criteria</i>.
+     * <p>
+     * The properties, <i>contactId</i>, <i>contactName</i>, <i>taxId</i>, 
+     * and <i>phoneCompany</i> are used to build the query predicate.
+     * 
+     * @param criteria
+     *            an instance of {@link SubsidiaryContactInfoDto} which each
+     *            property found to have a value will serve as selection
+     *            criteria. The properties targeted in <i>crtieria</i> that are
+     *            used to filter data can be:
+     *            <ul>
+     *               <li><i>contactId</i> - a single business id.</li> 
+     *               <li><i>contactName</i> - the contact's name.</li> 
+     *               <li><i>taxId</i> - the contact's tax id number.</li> 
+     *               <li><i>phoneCompany</i> - the contact's main phone number.</li>
+     *            </ul>
+     * @return Map <Integer, {@link SubsidiaryContactInfoDto}> in which the map
+     *         is keyed by business id.
+     * @throws SubsidiaryDaoException
+     */
+    public Map<Integer, SubsidiaryContactInfoDto> getContactInfo(
+            SubsidiaryContactInfoDto criteria) throws SubsidiaryException {
+        if (criteria == null) {
+            throw new SubsidiaryDaoException("Subsidiary contact criteria object cannot be null");
+        }
+        BusinessContactDto contactDto = Rmt2AddressBookDtoFactory.getNewBusinessInstance();
 
+        // Add single business id to submit to remote service
+        if (criteria.getContactId() > 0) {
+            contactDto.setContactId(criteria.getContactId());
+        }
+        // Add contact name to submit to remote service
+        if (criteria.getContactName() != null) {
+            contactDto.setContactName(criteria.getContactName());
+        }
+        // Add tax id to submit to remote service
+        if (criteria.getTaxId() != null) {
+            contactDto.setTaxId(criteria.getTaxId());
+        }
+        // Add company phone to submit to remote service
+        if (criteria.getPhoneCompany() != null) {
+            contactDto.setPhoneCompany(criteria.getPhoneCompany());
+        }
+        
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi("addressbook");
+        List<ContactDto> results = null;
+        try {
+            results = api.getContact(contactDto);
+        } catch (ContactsApiException e) {
+            e.printStackTrace();
+        }
+        
+        Map<Integer, SubsidiaryContactInfoDto> map = Rmt2SubsidiaryDtoFactory
+                .createContactMap(results);
+        return map;
+    }
 }

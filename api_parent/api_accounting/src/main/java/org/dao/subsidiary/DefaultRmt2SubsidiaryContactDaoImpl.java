@@ -2,7 +2,6 @@ package org.dao.subsidiary;
 
 import java.util.List;
 
-import org.dto.SubsidiaryDto;
 import org.dto.SubsidiaryXactHistoryDto;
 
 import com.api.persistence.PersistenceClient;
@@ -32,16 +31,16 @@ public class DefaultRmt2SubsidiaryContactDaoImpl extends
         super(client);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.subsidiary.SubsidiaryDao#fetchDomain(org.dto.SubsidiaryDto)
-     */
-    @Override
-    public List<SubsidiaryDto> fetchDomain(SubsidiaryDto criteria)
-            throws SubsidiaryDaoException {
-        return null;
-    }
+//    /*
+//     * (non-Javadoc)
+//     * 
+//     * @see org.dao.subsidiary.SubsidiaryDao#fetchDomain(org.dto.SubsidiaryDto)
+//     */
+//    @Override
+//    public List<SubsidiaryDto> fetchDomain(SubsidiaryDto criteria)
+//            throws SubsidiaryDaoException {
+//        return null;
+//    }
 
     /*
      * (non-Javadoc)

@@ -1,17 +1,21 @@
 package org.modules.subsidiary;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.AccountingConst;
 import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.subsidiary.CreditorDao;
+import org.dao.subsidiary.SubsidiaryComparator;
 import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dto.AccountDto;
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
 import org.dto.CreditorXactHistoryDto;
-import org.dto.SubsidiaryDto;
+import org.dto.SubsidiaryContactInfoDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
@@ -26,7 +30,7 @@ import com.api.persistence.DaoClient;
  * @author Roy Terrell
  * 
  */
-class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
+class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXactHistoryDto> implements CreditorApi {
     private static final Logger logger = Logger
             .getLogger(CreditorApiImpl.class);
 
@@ -77,6 +81,77 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         this.daoFact = new SubsidiaryDaoFactory();
     }
 
+    @Override
+    protected List<CreditorDto> getSubsidiaryInfo(CreditorDto criteria) throws SubsidiaryException {
+        // Fetch common contact data
+        Map<Integer, SubsidiaryContactInfoDto> contactResults = this.getContactInfo(criteria);
+        // Fetch creditor specific data
+        List<CreditorDto> creditorResults = this.get(criteria);
+        // Merge results
+        List<CreditorDto> results = this.mergeContactInfo(creditorResults, contactResults);
+        return results;
+    }
+
+    /**
+     * Combines the a list of subsidiary data with a list of common contact data.
+     * 
+     * @param subsidiary
+     * @param contact
+     * @return a List<CreditorDto> sorted by contact name
+     */
+    @Override
+    protected List<CreditorDto> mergeContactInfo(List<CreditorDto> subsidiaries,
+            Map<Integer, SubsidiaryContactInfoDto> contacts) {
+        if (subsidiaries == null) {
+            return null;
+        }
+        List<CreditorDto> mergedCreditors = new ArrayList<CreditorDto>();
+        for (CreditorDto creditor : subsidiaries) {
+            SubsidiaryContactInfoDto contact = null;
+            if (contacts != null) {
+                contact = contacts.get(creditor.getContactId());
+                if (contact == null) {
+                    continue;
+                }
+            }
+            else {
+                // Continue to build creditor DTO when contact data is not
+                // available
+                contact = Rmt2SubsidiaryDtoFactory
+                        .createSubsidiaryInstance(null);
+            }
+
+            creditor.setContactName(contact.getContactName());
+            creditor.setContactPhone(contact.getContactPhone());
+            creditor.setContactFirstname(contact.getContactFirstname());
+            creditor.setContactLastname(contact.getContactLastname());
+            creditor.setContactExt(contact.getContactExt());
+            creditor.setTaxId(contact.getTaxId());
+            creditor.setAddrId(contact.getAddrId());
+            creditor.setAddr1(contact.getAddr1());
+            creditor.setAddr2(contact.getAddr2());
+            creditor.setAddr3(contact.getAddr3());
+            creditor.setAddr4(contact.getAddr4());
+            creditor.setCity(contact.getCity());
+            creditor.setState(contact.getState());
+            creditor.setZip(contact.getZip());
+            creditor.setZipext(contact.getZipext());
+            creditor.setShortName(contact.getShortName());
+            mergedCreditors.add(creditor);
+        }
+
+        // return null if no creditors are found.
+        if (mergedCreditors.size() == 0) {
+            return null;
+        }
+
+        // Sort the list by name
+        SubsidiaryComparator comp = new SubsidiaryComparator();
+        Collections.sort(mergedCreditors, comp);
+        comp = null;
+        return mergedCreditors;
+    }
+    
     /**
      * Obtain the creditor's account balance.
      * 
@@ -88,8 +163,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
      */
     @Override
     public double getBalance(int creditorId) throws SubsidiaryException {
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CreditorDao dao = f.createRmt2OrmCreditorDao();
         try {
             double results = dao.calculateBalance(creditorId);
             return Math.abs(results);
@@ -99,44 +172,21 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
             logger.error(this.msg, e);
             throw new CreditorApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.subsidiary.SubsidiaryApi#getDomainBySubsidiaryId(int)
-     */
+
     @Override
-    public SubsidiaryDto getDomainBySubsidiaryId(int subsidiaryId)
-            throws SubsidiaryException {
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
-                null, null);
-        criteria.setCreditorId(subsidiaryId);
-        List<CreditorDto> results = this.getDomain(criteria);
-        StringBuffer msgBuf = new StringBuffer();
-        if (results == null) {
-            msgBuf.append("Creditor domain record by UID, ");
-            msgBuf.append(subsidiaryId);
-            msgBuf.append(", was not found ");
-            logger.warn(msgBuf);
-            return null;
+    public List<CreditorDto> get(CreditorDto criteria) throws CreditorApiException {
+        try {
+            return dao.fetch(criteria);
+        } catch (Exception e) {
+            this.msg = "Error retrieving creditor data using multi property selection criteria";
+            logger.error(this.msg, e);
+            throw new CreditorApiException(e);
         }
-        if (results.size() > 1) {
-            msgBuf.append("Too many creditor domain entities returned for UID, ");
-            msgBuf.append(subsidiaryId);
-            msgBuf.append(" Count: ");
-            msgBuf.append(results.size());
-            logger.error(msgBuf);
-            throw new CreditorApiException(msgBuf.toString());
-        }
-        return results.get(0);
     }
 
+    
     /*
      * (non-Javadoc)
      * 
@@ -147,7 +197,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
                 null, null);
         criteria.setCreditorId(uid);
-        List<CreditorDto> results = this.get(criteria);
+        List<CreditorDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CreditorApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Creditor record by UID, ");
@@ -178,7 +233,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
                 null, null);
         criteria.setContactId(businessId);
-        List<CreditorDto> results = this.get(criteria);
+        List<CreditorDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CreditorApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Creditor record by business id, ");
@@ -209,7 +269,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
                 null, null);
         criteria.setCreditorId(creditorId);
-        List<CreditorDto> results = this.get(criteria);
+        List<CreditorDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CreditorApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Creditor record by creditor id, ");
@@ -240,7 +305,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
                 null, null);
         criteria.setCreditorTypeId(creditorTypeId);
-        List<CreditorDto> results = this.get(criteria);
+        List<CreditorDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CreditorApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Creditor record(s) by creditor type id, ");
@@ -267,7 +337,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
                 null, null);
         criteria.setAccountNo(acctNo);
-        List<CreditorDto> results = this.get(criteria);
+        List<CreditorDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CreditorApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Creditor record(s) by account number, ");
@@ -283,52 +358,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         return results;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.subsidiary.CreditorApi#get(org.dto.CreditorDto)
-     */
-    @Override
-    public List<CreditorDto> get(CreditorDto criteria)
-            throws CreditorApiException {
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CreditorDao dao = f.createRmt2OrmCreditorDao();
-        try {
-            return dao.fetch(criteria);
-        } catch (Exception e) {
-            this.msg = "Error retrieving creditor data using multi property selection criteria";
-            logger.error(this.msg, e);
-            throw new CreditorApiException(e);
-        }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.subsidiary.CreditorApi#get(org.dto.CreditorDto)
-     */
-    private List<CreditorDto> getDomain(CreditorDto criteria)
-            throws CreditorApiException {
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CreditorDao dao = f.createRmt2OrmCreditorDao();
-        try {
-            return dao.fetchDomain(criteria);
-        } catch (Exception e) {
-            this.msg = "Error retrieving domain creditor data using multi property selection criteria";
-            logger.error(this.msg, e);
-            throw new CreditorApiException(e);
-        }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
-    }
 
     /*
      * (non-Javadoc)
@@ -356,13 +385,10 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
      * @see org.modules.subsidiary.CreditorApi#getCreditorType(int)
      */
     @Override
-    public CreditorTypeDto getCreditorType(int creditorTypeId)
-            throws CreditorApiException {
+    public CreditorTypeDto getCreditorType(int creditorTypeId) throws CreditorApiException {
         CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory
                 .createCreditorInstance(null);
         criteria.setEntityId(creditorTypeId);
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CreditorDao dao = f.createRmt2OrmCreditorDao();
         List<CreditorTypeDto> results = null;
         try {
             results = dao.fetch(criteria);
@@ -371,11 +397,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
             logger.error(this.msg, e);
             throw new CreditorApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Creditor type record by creditor type id, ");
@@ -407,8 +428,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
     @Override
     public List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId)
             throws SubsidiaryException {
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CreditorDao dao = f.createRmt2OrmCreditorDao();
         List<CreditorXactHistoryDto> results;
         try {
             results = dao.fetchTransactionHistory(subsidiaryId);
@@ -420,11 +439,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -449,25 +463,15 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         this.validate(creditor);
 
         // Perform the actual update
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CreditorDao dao = f.createRmt2OrmCreditorDao();
         dao.setDaoUser(this.getApiUser());
         try {
-            // dao.beginTrans();
             int rc = dao.maintain(creditor);
-            // dao.commitTrans();
             return rc;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Error persiting creditor profile changes";
             logger.error(this.msg, e);
             throw new CreditorApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
 
         // TODO: In the future, add logic to update address book contact profile
         // with data changes assoicated with this creditor
@@ -542,24 +546,14 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
                     "Creditor API delete error.  Creditor object cannot be null");
         }
         // Perform the actual delete
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CreditorDao dao = f.createRmt2OrmCreditorDao();
         try {
-            // dao.beginTrans();
             int rc = dao.delete(creditor.getCreditorId());
-            // dao.commitTrans();
             return rc;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Error persiting creditor profile changes";
             logger.error(this.msg, e);
             throw new CreditorApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -605,5 +599,4 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl implements CreditorApi {
         }
         return;
     }
-
 }

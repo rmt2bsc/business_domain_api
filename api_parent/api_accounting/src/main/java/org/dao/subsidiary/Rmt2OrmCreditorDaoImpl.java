@@ -2,10 +2,7 @@ package org.dao.subsidiary;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.dao.AccountingSqlConst;
 import org.dao.mapping.orm.rmt2.Creditor;
@@ -14,8 +11,6 @@ import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
 import org.dto.CreditorXactHistoryDto;
-import org.dto.SubsidiaryContactInfoDto;
-import org.dto.SubsidiaryDto;
 import org.dto.SubsidiaryXactHistoryDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 
@@ -62,10 +57,8 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      * @throws CreditorDaoException
      */
     @Override
-    public double calculateBalance(int creditorId)
-            throws SubsidiaryDaoException {
-        String sql = RMT2String.replace(
-                AccountingSqlConst.SQL_CREDITOR_BALANCE,
+    public double calculateBalance(int creditorId) throws SubsidiaryDaoException {
+        String sql = RMT2String.replace(AccountingSqlConst.SQL_CREDITOR_BALANCE,
                 String.valueOf(creditorId), "$1");
         double bal = 0;
         try {
@@ -85,8 +78,7 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      * @see org.dao.subsidiary.CreditorDao#fetch(org.dto.CreditorTypeDto)
      */
     @Override
-    public List<CreditorTypeDto> fetch(CreditorTypeDto criteria)
-            throws CreditorDaoException {
+    public List<CreditorTypeDto> fetch(CreditorTypeDto criteria) throws CreditorDaoException {
         return null;
     }
 
@@ -125,68 +117,14 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         }
         return list;
     }
-
+    
     /*
      * (non-Javadoc)
      * 
      * @see org.dao.subsidiary.CreditorDao#fetch(org.dto.CreditorDto)
      */
     @Override
-    public List<CreditorDto> fetch(CreditorDto criteria)
-            throws CreditorDaoException {
-        List<CreditorDto> results = null;
-        boolean useCreditorParms = false;
-        boolean useContactParms = false;
-        if (criteria != null) {
-            useContactParms = (criteria.getTaxId() != null
-                    || criteria.getContactName() != null || criteria
-                    .getPhoneCompany() != null);
-
-            useCreditorParms = (criteria.getAccountNo() != null
-                    || criteria.getCreditorId() > 0
-                    || criteria.getContactId() > 0 || criteria
-                    .getCreditorTypeId() > 0);
-        }
-        // Determine the query sequence for obtaining the creditor data.
-        // local=>remote or remote=>local.
-        if (useContactParms && !useCreditorParms) {
-            // Fetch by web service first
-            results = this.fetchWebServiceFirst(criteria);
-        }
-        else {
-            // Fetch by local DB first
-            results = this.fetchLocalFirst(criteria);
-        }
-        return results;
-    }
-
-    private List<Creditor> fetch(Creditor criteria) throws CreditorDaoException {
-        // Retrieve creditor data from the database
-        List<Creditor> results = null;
-        try {
-            results = this.client.retrieveList(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (DatabaseException e) {
-            throw new CreditorDaoException(e);
-        }
-        return results;
-    }
-
-    /**
-     * Fetches creditor/contact combined data from both the local database and a
-     * remote data source which the matching process is driven by the results of
-     * the local fetch. The remote data source is accessed via a web service.
-     * 
-     * @param criteria
-     *            an instance of {@link CreditorDto} containing the selection
-     *            criteria that is used by both the local and remote queries.
-     * @return List of {@link CreditorDto} or null when no data is found
-     * @throws CreditorDaoException
-     */
-    private List<CreditorDto> fetchLocalFirst(CreditorDto criteria)
-            throws CreditorDaoException {
+    public List<CreditorDto> fetch(CreditorDto criteria) throws CreditorDaoException {
         // Gather creditor criteria
         Creditor ormCred = null;
         if (criteria != null) {
@@ -208,150 +146,31 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
                         criteria.getCreditorTypeId());
             }
         }
-
-        // Retrieve creditor local data
-        List<Creditor> localResults = this.fetch(ormCred);
-        if (localResults == null || localResults.isEmpty()) {
-            return null;
+        // Retrieve creditor data from the database
+        List<Creditor> results = this.fetch(ormCred);
+        
+        List<CreditorDto> list = new ArrayList<CreditorDto>();
+        for (Creditor item : results) {
+            CreditorDto dto = Rmt2SubsidiaryDtoFactory.createCreditorInstance(item, null);
+            list.add(dto);
         }
-        // Obtain list of business id to be used for the web service call.
-        List<String> busIdList = new ArrayList<String>();
-        for (Creditor item : localResults) {
-            busIdList.add(String.valueOf(item.getBusinessId()));
-        }
-        criteria.setContactIdList(busIdList);
+        return list;
+    }
 
-        // invoke web service to obtain common contact info from an outside
-        // application for each business id.
-        Map<Integer, SubsidiaryContactInfoDto> remoteResults;
+    private List<Creditor> fetch(Creditor criteria) throws CreditorDaoException {
+        // Retrieve creditor data from the database
+        List<Creditor> results = null;
         try {
-            remoteResults = this.fetch((SubsidiaryContactInfoDto) criteria);
-        } catch (Exception e) {
-            remoteResults = null;
+            results = this.client.retrieveList(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new CreditorDaoException(e);
         }
-        // merge the two result sets.
-        List<CreditorDto> mergedCreditors = this.mergeAndSortResults(
-                localResults, remoteResults);
-        return mergedCreditors;
+        return results;
     }
 
-    /**
-     * Fetches creditor/contact combined data from both the local database and a
-     * remote data source which the matching process is driven by the results of
-     * the remote fetch. The remote data source is accessed via a web service.
-     * 
-     * @param criteria
-     *            an instance of {@link CreditorDto} containing the selection
-     *            criteria that is used by both the local and remote queries.
-     * @return List of {@link CreditorDto} or null when no data is found
-     * @throws CreditorDaoException
-     */
-    private List<CreditorDto> fetchWebServiceFirst(CreditorDto criteria)
-            throws CreditorDaoException {
-        // invoke web service to obtain common contact info from an outside
-        // application for each business id.
-        Map<Integer, SubsidiaryContactInfoDto> remoteResults;
-        try {
-            remoteResults = this.fetch((SubsidiaryContactInfoDto) criteria);
-        } catch (Exception e) {
-            remoteResults = null;
-        }
-
-        // Add list business id's as selection criteria to build an "IN" clause.
-        Creditor ormCriteria = new Creditor();
-        // Only build "IN" clause for business id's when the remote result set
-        // is not empty. Otherwise, return null since selection criteria for
-        // remote query was not met.
-        if (remoteResults != null && !remoteResults.isEmpty()) {
-            List<String> busIdList = new ArrayList<String>();
-            Iterator<Integer> iter = remoteResults.keySet().iterator();
-            while (iter.hasNext()) {
-                Integer busId = iter.next();
-                busIdList.add(busId.toString());
-            }
-            String busArray[] = new String[busIdList.size()];
-            busIdList.toArray(busArray);
-            ormCriteria.addInClause(Creditor.PROP_BUSINESSID, busArray);
-        }
-        else {
-            return null;
-        }
-
-        // Query the local database using the business id's retrieved remotely
-        List<Creditor> localResults = this.fetch(ormCriteria);
-
-        // merge the two result sets.
-        List<CreditorDto> mergedCreditors = this.mergeAndSortResults(
-                localResults, remoteResults);
-        return mergedCreditors;
-    }
-
-    private List<CreditorDto> mergeAndSortResults(List<Creditor> localResults,
-            Map<Integer, SubsidiaryContactInfoDto> remoteResults) {
-        if (localResults == null) {
-            return null;
-        }
-        List<CreditorDto> mergedCreditors = new ArrayList<CreditorDto>();
-        for (Creditor cust : localResults) {
-            SubsidiaryContactInfoDto contact = null;
-            if (remoteResults != null) {
-                contact = remoteResults.get(cust.getBusinessId());
-                if (contact == null) {
-                    continue;
-                }
-            }
-            else {
-                // Continue to build creditor DTO when contact data is not
-                // available
-                contact = Rmt2SubsidiaryDtoFactory
-                        .createSubsidiaryInstance(null);
-            }
-
-            CreditorDto newCust = Rmt2SubsidiaryDtoFactory
-                    .createCreditorInstance(cust, null);
-            newCust.setContactName(contact.getContactName() == null ? "Unavailable"
-                    : contact.getContactName());
-            newCust.setContactPhone(contact.getContactPhone() == null ? "Unavailable"
-                    : contact.getContactPhone());
-            newCust.setContactFirstname(contact.getContactFirstname() == null ? "Unavailable"
-                    : contact.getContactFirstname());
-            newCust.setContactLastname(contact.getContactLastname() == null ? "Unavailable"
-                    : contact.getContactLastname());
-            newCust.setContactExt(contact.getContactExt() == null ? "Unavailable"
-                    : contact.getContactExt());
-            newCust.setTaxId(contact.getTaxId() == null ? "Unavailable"
-                    : contact.getTaxId());
-            newCust.setAddrId(contact.getAddrId());
-            newCust.setAddr1(contact.getAddr1() == null ? "Unavailable"
-                    : contact.getAddr1());
-            newCust.setAddr2(contact.getAddr2() == null ? "Unavailable"
-                    : contact.getAddr2());
-            newCust.setAddr3(contact.getAddr3() == null ? "Unavailable"
-                    : contact.getAddr3());
-            newCust.setAddr4(contact.getAddr4() == null ? "Unavailable"
-                    : contact.getAddr4());
-            newCust.setCity(contact.getCity() == null ? "Unavailable" : contact
-                    .getCity());
-            newCust.setState(contact.getState() == null ? "Unavailable"
-                    : contact.getState());
-            newCust.setZip(contact.getZip());
-            newCust.setZipext(contact.getZipext());
-            newCust.setShortName(contact.getShortName() == null ? "Unavailable"
-                    : contact.getShortName());
-            mergedCreditors.add(newCust);
-        }
-
-        // return null if no creditors are found.
-        if (mergedCreditors.size() == 0) {
-            return null;
-        }
-
-        // Sort the list by name
-        SubsidiaryComparator comp = new SubsidiaryComparator();
-        Collections.sort(mergedCreditors, comp);
-        comp = null;
-        return mergedCreditors;
-    }
 
     /**
      * Associate a transaction history item to a creditor subsidiary account.
@@ -464,42 +283,4 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             throw new CreditorDaoException(e);
         }
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.subsidiary.SubsidiaryDao#fetchDomain(org.dto.SubsidiaryDto)
-     */
-    @Override
-    public List<CreditorDto> fetchDomain(SubsidiaryDto criteria)
-            throws SubsidiaryDaoException {
-        // Gather creditor criteria
-        Creditor ormCred = null;
-        if (criteria != null) {
-            ormCred = new Creditor();
-            if (criteria.getSubsidiaryId() > 0) {
-                ormCred.addCriteria(Creditor.PROP_CREDITORID,
-                        criteria.getSubsidiaryId());
-            }
-            if (criteria.getContactId() > 0) {
-                ormCred.addCriteria(Creditor.PROP_BUSINESSID,
-                        criteria.getContactId());
-            }
-            if (criteria.getAccountNo() != null) {
-                ormCred.addCriteria(Creditor.PROP_ACCOUNTNUMBER,
-                        criteria.getAccountNo());
-            }
-            if (criteria instanceof CreditorDto) {
-                if (((CreditorDto) criteria).getCreditorTypeId() > 0) {
-                    ormCred.addCriteria(Creditor.PROP_CREDITORTYPEID,
-                            ((CreditorDto) criteria).getCreditorTypeId());
-                }
-            }
-        }
-
-        // Retrieve creditor local data
-        List<Creditor> localResults = this.fetch(ormCred);
-        return this.mergeAndSortResults(localResults, null);
-    }
-
 }
