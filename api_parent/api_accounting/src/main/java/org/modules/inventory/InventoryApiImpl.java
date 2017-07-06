@@ -35,6 +35,8 @@ import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
 
 /**
+ * Implements the {@link InventoryApi} interface for maintaining inventory items.
+ * 
  * @author roy terrell
  * 
  */
