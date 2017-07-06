@@ -585,7 +585,6 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
             item.addCriteria(VendorItems.PROP_ITEMID, item.getItemId());
             item.addCriteria(VendorItems.PROP_CREDITORID, item.getCreditorId());
             rows = this.client.updateRow(item);
-//            rows = this.client.insertRow(item, false);
             return rows;
         } catch (Exception e) {
             throw new InventoryDaoException(e);
