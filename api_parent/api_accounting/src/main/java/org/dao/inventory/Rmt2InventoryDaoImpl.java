@@ -551,7 +551,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
     }
 
     /**
-     * Updates the vendor_items table suing <i>vendofItem</i> as the source.
+     * Updates the vendor_items table using <i>vendofItem</i> as the source.
      * <p>
      * Only updates of an existing VendorItems object are performed via this
      * method. vendorItemObj must pass all business rule validations before
@@ -565,12 +565,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      */
     @Override
     public int maintain(VendorItemDto vendorItem) throws InventoryDaoException {
-        if (vendorItem == null) {
-            throw new InventoryDaoException(
-                    "Inventory DAO venfor item update error: VendorItemDto object is null");
-        }
-        VendorItems vi = InventoryDaoFactory
-                .createVendorItemRmt2Orm(vendorItem);
+        VendorItems vi = InventoryDaoFactory.createVendorItemRmt2Orm(vendorItem);
         // Perform the actual update
         return this.updateVendorItem(vi);
     }
@@ -589,7 +584,8 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
         try {
             item.addCriteria(VendorItems.PROP_ITEMID, item.getItemId());
             item.addCriteria(VendorItems.PROP_CREDITORID, item.getCreditorId());
-            rows = this.client.insertRow(item, false);
+            rows = this.client.updateRow(item);
+//            rows = this.client.insertRow(item, false);
             return rows;
         } catch (Exception e) {
             throw new InventoryDaoException(e);
