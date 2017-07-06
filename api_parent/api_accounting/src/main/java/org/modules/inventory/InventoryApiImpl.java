@@ -1390,7 +1390,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * 
      * The following validations must be met:
      * <ul>
-     * <li>The vendor id is required and must exist in the database.</li>
+     * <li>The vendor must exist in the database.</li>
+     * <li>The vendor id is required and must be greater than zero.</li>
      * <li>The Vendor Item Number cannot be null</li>
      * <li>The Item Serial Number cannot be null</li>
      * </ul>
@@ -1399,46 +1400,55 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *            The {@link VendorItemDto} object
      * @throws InventoryException
      */
-    protected void validateVendorItem(VendorItemDto vi)
-            throws InventoryApiException {
+    protected void validateVendorItem(VendorItemDto vi) throws InventoryApiException {
         dao.setDaoUser(this.apiUser);
-        if (vi == null) {
-            this.msg = "Vendor Item DTO cannot be null";
+        try {
+            Verifier.verifyNotNull(vi);   
+        }
+        catch (VerifyException e) {
+            this.msg = "Vendor Item object cannot be null";
             logger.error(this.msg);
             throw new InventoryApiException(this.msg);
         }
+        try {
+            Verifier.verifyPositive(vi.getVendorId());
+        }
+        catch (VerifyException e) {
+            this.msg = "The vendor item\'s Vendor Id is invalid: " + vi.getVendorId();
+            logger.error(this.msg);
+            throw new InventoryApiException(this.msg);
+        }
+        try {
+            Verifier.verifyNotNull(vi.getVendorItemNo());   
+        }
+        catch (VerifyException e) {
+            this.msg = "New and existing merchandise items must have the vendor's version of an item number or part number";
+            logger.error(this.msg);
+            throw new InventoryApiException(this.msg);
+        }
+        try {
+            Verifier.verifyNotNull(vi.getItemSerialNo());   
+        }
+        catch (VerifyException e) {
+            this.msg = "Merchandise items must have a vendor serial number";
+            logger.error(this.msg);
+            throw new InventoryApiException(this.msg);
+        }
+        
         // Validate Creditor
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(this.dao);
-        if (vi.getVendorId() > 0) {
-            Object cred;
-            try {
-                cred = api.getByCreditorId(vi.getVendorId());
-            } catch (CreditorApiException e) {
-                throw new InventoryApiException(e);
-            } finally {
-                api = null;
-            }
-            if (cred == null) {
-                this.msg = "The Vendor associated with the inventory vendor item does not exist in the system: "
-                        + vi.getVendorId();
-                logger.error(this.msg);
-                throw new InventoryApiException(this.msg);
-            }
+        Object cred;
+        try {
+            cred = api.getByCreditorId(vi.getVendorId());
+        } catch (CreditorApiException e) {
+            throw new InventoryApiException(e);
+        } finally {
+            api = null;
         }
-        else {
-            this.msg = "The vendor item\'s Vendor Id is invalid: "
+        if (cred == null) {
+            this.msg = "The Vendor associated with the inventory vendor item does not exist in the system: "
                     + vi.getVendorId();
-            logger.error(this.msg);
-            throw new InventoryApiException(this.msg);
-        }
-        if (vi.getVendorItemNo() == null || vi.getVendorItemNo().length() <= 0) {
-            this.msg = "New and existing merchandise items must have the vendor's version of an item numbe or part number";
-            logger.error(this.msg);
-            throw new InventoryApiException(this.msg);
-        }
-        if (vi.getItemSerialNo() == null || vi.getItemSerialNo().length() <= 0) {
-            this.msg = "Merchandise items must have a vendor serial number";
             logger.error(this.msg);
             throw new InventoryApiException(this.msg);
         }
