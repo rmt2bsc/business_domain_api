@@ -86,7 +86,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
     }
 
     /**
-     * Retireve a list of subsidiary accounts combined with common contact data. 
+     * Retireve a list of creditor subsidiary accounts combined with common contact data. 
      * <p>
      * The results of this method will typically be a product of merging subsidiary 
      * accounts with their address book data based on related <i>business id</i>.
@@ -108,11 +108,14 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
         
         boolean useCreditorParms = false;
         boolean useContactParms = false;
-        useContactParms = (criteria.getTaxId() != null || criteria.getContactName() != null || 
+        useContactParms = (criteria.getTaxId() != null || 
+                           criteria.getContactName() != null || 
                            criteria.getPhoneCompany() != null);
 
-        useCreditorParms = (criteria.getAccountNo() != null || criteria.getCreditorId() > 0 || 
-                            criteria.getContactId() > 0 || criteria.getCreditorTypeId() > 0);
+        useCreditorParms = (criteria.getAccountNo() != null || 
+                            criteria.getCreditorId() > 0 || 
+                            criteria.getContactId() > 0 || 
+                            criteria.getCreditorTypeId() > 0);
         
         Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
         List<CreditorDto> creditorResults = null;
@@ -150,7 +153,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
     }
 
     /**
-     * Combines the a list of subsidiary data with a list of common contact data.
+     * Combines the a list of creditor subsidiary data with a list of common contact data.
      * 
      * @param subsidiary
      * @param contact
@@ -634,23 +637,38 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      */
     @Override
     public void validate(CreditorDto cred) throws CreditorApiException {
-        if (cred == null) {
+        try {
+            Verifier.verifyNotNull(cred);
+        }
+        catch (VerifyException e) {
             this.msg = "Creditor DTO object cannot be null";
             throw new CreditorApiException(this.msg);
         }
-        if (cred.getContactId() <= 0) {
+        try {
+            Verifier.verifyPositive(cred.getContactId());
+        }
+        catch (VerifyException e) {
             this.msg = "Creditor DTO object must be assinged a business id";
             throw new CreditorApiException(this.msg);
         }
-        if (cred.getAcctId() <= 0) {
-            this.msg = "Creditor DTO object must be assinged an account id";
+        try {
+            Verifier.verifyPositive(cred.getAcctId());
+        }
+        catch (VerifyException e) {
+            this.msg = "Creditor DTO object must be assinged a account id";
             throw new CreditorApiException(this.msg);
         }
-        if (cred.getCreditorTypeId() <= 0) {
+        try {
+            Verifier.verifyPositive(cred.getCreditorTypeId());
+        }
+        catch (VerifyException e) {
             this.msg = "Creditor DTO object must be assinged a creditor type id";
             throw new CreditorApiException(this.msg);
         }
-        if (cred.getAccountNo() == null) {
+        try {
+            Verifier.verifyNotNull(cred.getAccountNo());
+        }
+        catch (VerifyException e) {
             this.msg = "Creditor DTO object must be assinged an account number";
             throw new CreditorApiException(this.msg);
         }
