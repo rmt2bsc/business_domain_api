@@ -2,10 +2,7 @@ package org.dao.subsidiary;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.dao.AccountingSqlConst;
 import org.dao.mapping.orm.rmt2.Customer;
@@ -13,8 +10,6 @@ import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
-import org.dto.SubsidiaryContactInfoDto;
-import org.dto.SubsidiaryDto;
 import org.dto.SubsidiaryXactHistoryDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 
@@ -52,76 +47,14 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         return;
     }
 
-    /**
-     * Fetches one or more customer records from the <i>customer</i> table based
-     * on the supplied selection criteria.
-     * <p>
-     * Also, a web service targeting the cotnacts application is used to gather
-     * contact related data related to the customer(s). This implementation
-     * employs two fetch sequences to retrieve customer data based on the
-     * selection criteria supplied: (local database, web service) and (web
-     * service, local database). The following properties of <i>criteria</i> can
-     * be used to build the selection criteria for the query: <i>Customer Id,
-     * Business Id, Customer Name, Account Number, Tax Id, and Company
-     * Phone</i>. If the criteria contains at least one property that originates
-     * from the contacts application (tax id, cusstomer name, or company phone),
-     * the base data is queried from the web service first and then the customer
-     * related data is fetched from the local database. Otherwise, the base data
-     * is fetched from the local database first and then the contact related
-     * data is obtained from the web service.
+    /*
+     * (non-Javadoc)
      * 
-     * @param criteria
-     *            an instance of {@link CustomerDto} containing data that is
-     *            used to build selection criteria. The following properties can
-     *            be used to build the selection criteria for the query:
-     *            Customer Id, Business Id, Customer Name, Account Number, Tax
-     *            Id, and Company Phone. Optionally, this parameter can be null
-     *            which will fetch all customer records from the customer table.
-     * @return a list of {@link CustomerDto} objects or null when the query
-     *         returns an empty result set.
-     * @throws CustomerDaoException
+     * @see org.dao.subsidiary.CustomerDao#fetch(org.dto.CustomerDto)
      */
     @Override
-    public List<CustomerDto> fetch(CustomerDto criteria)
-            throws CustomerDaoException {
-        List<CustomerDto> results = null;
-        boolean useCustomerParms = false;
-        boolean useContactParms = false;
-        if (criteria != null) {
-            useContactParms = (criteria.getTaxId() != null
-                    || criteria.getContactName() != null || criteria
-                    .getPhoneCompany() != null);
-
-            useCustomerParms = (criteria.getAccountNo() != null
-                    || criteria.getCustomerId() > 0 || criteria.getContactId() > 0);
-        }
-
-        // Determine the query sequence for obtaining the customer data.
-        // local-to-remote or remote-to-local.
-        if (useContactParms && !useCustomerParms) {
-            // Fetch by web service first
-            results = this.fetchWebServiceFirst(criteria);
-        }
-        else {
-            // Fetch by local DB first
-            results = this.fetchLocalFirst(criteria);
-        }
-        return results;
-    }
-
-    /**
-     * Fetches customer/contact combined data from both the local database and a
-     * remote data source which the matching process is driven by the results of
-     * the local fetch. The remote data source is accessed via a web service.
-     * 
-     * @param criteria
-     *            an instance of {@link CustomerDto} containing the selection
-     *            criteria that is used by both the local and remote queries.
-     * @return List of {@link CustomerDto} or null when no data is found
-     * @throws CustomerDaoException
-     */
-    private List<CustomerDto> fetchLocalFirst(CustomerDto criteria)
-            throws CustomerDaoException {
+    public List<CustomerDto> fetch(CustomerDto criteria) throws CustomerDaoException {
+       
         // Gather customer criteria
         Customer ormCust = null;
         if (criteria != null) {
@@ -141,80 +74,14 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         }
 
         // Retrieve customer local data
-        List<Customer> localResults = this.fetch(ormCust);
-        if (localResults == null || localResults.isEmpty()) {
-            return null;
+        List<Customer> results = this.fetch(ormCust);
+        // Package data
+        List<CustomerDto> list = new ArrayList<CustomerDto>();;
+        for (Customer item : results) {
+            CustomerDto dto = Rmt2SubsidiaryDtoFactory.createCustomerInstance(item, null);
+            list.add(dto);
         }
-        // Obtain list of business id to be used for the web service call.
-        List<String> busIdList = new ArrayList<String>();
-        for (Customer item : localResults) {
-            busIdList.add(String.valueOf(item.getBusinessId()));
-        }
-        criteria.setContactIdList(busIdList);
-
-        // invoke web service to obtain common contact info from an outside
-        // application for each business id.
-        Map<Integer, SubsidiaryContactInfoDto> remoteResults;
-        try {
-            remoteResults = this.fetch((SubsidiaryContactInfoDto) criteria);
-        } catch (Exception e) {
-            remoteResults = null;
-        }
-        // merge the two result sets.
-        List<CustomerDto> mergedCustomers = this.mergeAndSortResults(
-                localResults, remoteResults);
-        return mergedCustomers;
-    }
-
-    /**
-     * Fetches customer/contact combined data from both the local database and a
-     * remote data source which the matching process is driven by the results of
-     * the remote fetch. The remote data source is accessed via a web service.
-     * 
-     * @param criteria
-     *            an instance of {@link CustomerDto} containing the selection
-     *            criteria that is used by both the local and remote queries.
-     * @return List of {@link CustomerDto} or null when no data is found
-     * @throws CustomerDaoException
-     */
-    private List<CustomerDto> fetchWebServiceFirst(CustomerDto criteria)
-            throws CustomerDaoException {
-        // invoke web service to obtain common contact info from an outside
-        // application for each business id.
-        Map<Integer, SubsidiaryContactInfoDto> remoteResults;
-        try {
-            remoteResults = this.fetch((SubsidiaryContactInfoDto) criteria);
-        } catch (Exception e) {
-            remoteResults = null;
-        }
-
-        // Add list business id's as selection criteria to build an "IN" clause.
-        Customer ormCriteria = new Customer();
-        // Only build "IN" clause for business id's when the remote result set
-        // is not empty. Otherwise, return null since selection criteria for
-        // remote query was not met.
-        if (remoteResults != null && !remoteResults.isEmpty()) {
-            List<String> busIdList = new ArrayList<String>();
-            Iterator<Integer> iter = remoteResults.keySet().iterator();
-            while (iter.hasNext()) {
-                Integer busId = iter.next();
-                busIdList.add(busId.toString());
-            }
-            String busArray[] = new String[busIdList.size()];
-            busIdList.toArray(busArray);
-            ormCriteria.addInClause(Customer.PROP_BUSINESSID, busArray);
-        }
-        else {
-            return null;
-        }
-
-        // Query the local database using the business id's retrieved remotely
-        List<Customer> localResults = this.fetch(ormCriteria);
-
-        // merge the two result sets.
-        List<CustomerDto> mergedCustomers = this.mergeAndSortResults(
-                localResults, remoteResults);
-        return mergedCustomers;
+        return list;
     }
 
     /**
@@ -251,73 +118,6 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             list.add(dto);
         }
         return list;
-    }
-
-    private List<CustomerDto> mergeAndSortResults(List<Customer> localResults,
-            Map<Integer, SubsidiaryContactInfoDto> remoteResults) {
-        if (localResults == null) {
-            return null;
-        }
-        List<CustomerDto> mergedCustomers = new ArrayList<CustomerDto>();
-        for (Customer cust : localResults) {
-            SubsidiaryContactInfoDto contact = null;
-            if (remoteResults != null) {
-                contact = remoteResults.get(cust.getBusinessId());
-                if (contact == null) {
-                    continue;
-                }
-            }
-            else {
-                // Continue to build customer DTO when contact data is not
-                // available
-                contact = Rmt2SubsidiaryDtoFactory
-                        .createSubsidiaryInstance(null);
-            }
-
-            CustomerDto newCust = Rmt2SubsidiaryDtoFactory
-                    .createCustomerInstance(cust, null);
-            newCust.setContactName(contact.getContactName() == null ? "Unavailable"
-                    : contact.getContactName());
-            newCust.setContactPhone(contact.getContactPhone() == null ? "Unavailable"
-                    : contact.getContactPhone());
-            newCust.setContactFirstname(contact.getContactFirstname() == null ? "Unavailable"
-                    : contact.getContactFirstname());
-            newCust.setContactLastname(contact.getContactLastname() == null ? "Unavailable"
-                    : contact.getContactLastname());
-            newCust.setContactExt(contact.getContactExt() == null ? "Unavailable"
-                    : contact.getContactExt());
-            newCust.setTaxId(contact.getTaxId() == null ? "Unavailable"
-                    : contact.getTaxId());
-            newCust.setAddrId(contact.getAddrId());
-            newCust.setAddr1(contact.getAddr1() == null ? "Unavailable"
-                    : contact.getAddr1());
-            newCust.setAddr2(contact.getAddr2() == null ? "Unavailable"
-                    : contact.getAddr2());
-            newCust.setAddr3(contact.getAddr3() == null ? "Unavailable"
-                    : contact.getAddr3());
-            newCust.setAddr4(contact.getAddr4() == null ? "Unavailable"
-                    : contact.getAddr4());
-            newCust.setCity(contact.getCity() == null ? "Unavailable" : contact
-                    .getCity());
-            newCust.setState(contact.getState() == null ? "Unavailable"
-                    : contact.getState());
-            newCust.setZip(contact.getZip());
-            newCust.setZipext(contact.getZipext());
-            newCust.setShortName(contact.getShortName() == null ? "Unavailable"
-                    : contact.getShortName());
-            mergedCustomers.add(newCust);
-        }
-
-        // return null if no customers are found.
-        if (mergedCustomers.size() == 0) {
-            return null;
-        }
-
-        // Sort the list by name
-        SubsidiaryComparator comp = new SubsidiaryComparator();
-        Collections.sort(mergedCustomers, comp);
-        comp = null;
-        return mergedCustomers;
     }
 
     private List<Customer> fetch(Customer criteria) throws CustomerDaoException {
@@ -456,10 +256,8 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      * @throws CustomerDaoException
      */
     @Override
-    public double calculateBalance(int customerId)
-            throws SubsidiaryDaoException {
-        String sql = RMT2String.replace(
-                AccountingSqlConst.SQL_CUSTOMER_BALANCE,
+    public double calculateBalance(int customerId) throws SubsidiaryDaoException {
+        String sql = RMT2String.replace(AccountingSqlConst.SQL_CUSTOMER_BALANCE,
                 String.valueOf(customerId), "$1");
         double bal = 0;
         try {
@@ -471,37 +269,6 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         } catch (Exception e) {
             throw new CustomerDaoException(e);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.subsidiary.SubsidiaryDao#fetchDomain(org.dto.SubsidiaryDto)
-     */
-    @Override
-    public List<CustomerDto> fetchDomain(SubsidiaryDto criteria)
-            throws SubsidiaryDaoException {
-        // Gather customer criteria
-        Customer ormCust = null;
-        if (criteria != null) {
-            ormCust = new Customer();
-            if (criteria.getSubsidiaryId() > 0) {
-                ormCust.addCriteria(Customer.PROP_CUSTOMERID,
-                        criteria.getSubsidiaryId());
-            }
-            if (criteria.getContactId() > 0) {
-                ormCust.addCriteria(Customer.PROP_BUSINESSID,
-                        criteria.getContactId());
-            }
-            if (criteria.getAccountNo() != null) {
-                ormCust.addCriteria(Customer.PROP_ACCOUNTNO,
-                        criteria.getAccountNo());
-            }
-        }
-
-        // Retrieve customer local data
-        List<Customer> localResults = this.fetch(ormCust);
-        return this.mergeAndSortResults(localResults, null);
     }
 
 }
