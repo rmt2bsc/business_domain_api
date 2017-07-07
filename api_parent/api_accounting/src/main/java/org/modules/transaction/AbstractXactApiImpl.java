@@ -1153,7 +1153,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(xactDao);
-        CreditorDto dto = (CreditorDto) api.getDomainBySubsidiaryId(creditorId);
+        CreditorDto dto = (CreditorDto) api.getByCreditorId(creditorId);
         return dto;
     }
 
@@ -1167,7 +1167,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(xactDao);
-        CustomerDto dto = (CustomerDto) api.getDomainBySubsidiaryId(customerId);
+        CustomerDto dto = (CustomerDto) api.getByCustomerId(customerId);
         return dto;
     }
 
