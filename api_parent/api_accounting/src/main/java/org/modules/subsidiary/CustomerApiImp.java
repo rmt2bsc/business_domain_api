@@ -1,21 +1,28 @@
 package org.modules.subsidiary;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.AccountingConst;
 import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.subsidiary.CustomerDao;
+import org.dao.subsidiary.SubsidiaryComparator;
 import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dto.AccountDto;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
-import org.dto.SubsidiaryDto;
+import org.dto.SubsidiaryContactInfoDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
 
+import com.InvalidDataException;
 import com.api.persistence.DaoClient;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link CustomerApi} which provides functionality that
@@ -25,7 +32,7 @@ import com.api.persistence.DaoClient;
  * @author Roy Terrell
  * 
  */
-class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
+class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXactHistoryDto> implements CustomerApi {
     private static final Logger logger = Logger.getLogger(CustomerApiImp.class);
 
     private SubsidiaryDaoFactory daoFact;
@@ -76,6 +83,132 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
     }
 
     /**
+     * Retireve a list of customer subsidiary accounts combined with common contact data. 
+     * <p>
+     * The results of this method will typically be a product of merging subsidiary 
+     * accounts with their address book data based on related <i>business id</i>.
+     * 
+     * @param criteria an instance of {@link CustomerDto}
+     * @return List of CustomerDto or null if <i>criteria</i> contains no 
+     *         selection criteria values
+     * @throws SubsidiaryException
+     *           <i>criteria</i> is null or general data access error.
+     */
+    @Override
+    protected List<CustomerDto> getSubsidiaryInfo(CustomerDto criteria) throws SubsidiaryException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Selection criteria is required when querying combined customer data", e);
+        }
+        
+        boolean useCustomerParms = false;
+        boolean useContactParms = false;
+        useContactParms = (criteria.getTaxId() != null || 
+                           criteria.getContactName() != null || 
+                           criteria.getPhoneCompany() != null);
+
+        useCustomerParms = (criteria.getAccountNo() != null || 
+                            criteria.getCustomerId() > 0 || 
+                            criteria.getContactId() > 0);
+        
+        Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
+        List<CustomerDto> customerResults = null;
+        List<Integer> businessIdList = null;
+        
+        // Determine the query sequence for obtaining combined customer/common contact data.
+        // local-to-remote or remote-to-local.
+        if (useContactParms && !useCustomerParms) {
+            // First, fetch common contact data and then customer specifc data.
+            contactResults = this.getContactInfo(criteria);
+            // Get list of business id's to use for fetching customer records.
+            if (contactResults != null) {
+                businessIdList = new ArrayList<Integer>(contactResults.keySet());
+                criteria.setContactIdList(businessIdList);
+                customerResults = this.get(criteria);    
+            }
+        }
+        else if (useCustomerParms) {
+            // First fetch customer specific data and then common contact data
+            customerResults = this.get(criteria);
+            if (customerResults != null) {
+                // Get list of business id's to use for fetching common contact records.
+                businessIdList = new ArrayList<Integer>();
+                for (CustomerDto item : customerResults) {
+                    businessIdList.add(item.getContactId());
+                }
+                // Use list of business id's along with contact criteria to fetch common contact records.
+                // If there is no common contact criteria, then just use the list of buisness id's as criteeria.
+                criteria.setContactIdList(businessIdList);
+                contactResults = this.getContactInfo(criteria);
+            }
+        }
+        List<CustomerDto> results = this.mergeContactInfo(customerResults, contactResults);
+        return results;
+    }
+
+    /**
+     * Combines the a list of customer subsidiary data with a list of common contact data.
+     * 
+     * @param subsidiary
+     * @param contact
+     * @return a List<CustomerDto> sorted by contact name or null when 
+     *          either <i>subsidiaries</i> or <i>contacts</i> equal null
+     *          or if there is nothing to merge.
+     */
+    @Override
+    protected List<CustomerDto> mergeContactInfo(List<CustomerDto> subsidiaries,
+            Map<Integer, SubsidiaryContactInfoDto> contacts) {
+        try {
+            Verifier.verifyNotNull(subsidiaries);
+            Verifier.verifyNotNull(contacts);
+        }
+        catch (VerifyException e) {
+            return null;
+        }
+        List<CustomerDto> mergedCustomers = new ArrayList<CustomerDto>();
+        for (CustomerDto customer : subsidiaries) {
+            SubsidiaryContactInfoDto contact = null;
+            if (contacts != null) {
+                contact = contacts.get(customer.getContactId());
+                if (contact == null) {
+                    continue;
+                }
+            }
+
+            customer.setContactName(contact.getContactName());
+            customer.setContactPhone(contact.getContactPhone());
+            customer.setContactFirstname(contact.getContactFirstname());
+            customer.setContactLastname(contact.getContactLastname());
+            customer.setContactExt(contact.getContactExt());
+            customer.setTaxId(contact.getTaxId());
+            customer.setAddrId(contact.getAddrId());
+            customer.setAddr1(contact.getAddr1());
+            customer.setAddr2(contact.getAddr2());
+            customer.setAddr3(contact.getAddr3());
+            customer.setAddr4(contact.getAddr4());
+            customer.setCity(contact.getCity());
+            customer.setState(contact.getState());
+            customer.setZip(contact.getZip());
+            customer.setZipext(contact.getZipext());
+            customer.setShortName(contact.getShortName());
+            mergedCustomers.add(customer);
+        }
+
+        // return null if no customers are found.
+        if (mergedCustomers.size() == 0) {
+            return null;
+        }
+
+        // Sort the list by name
+        SubsidiaryComparator comp = new SubsidiaryComparator();
+        Collections.sort(mergedCustomers, comp);
+        comp = null;
+        return mergedCustomers;
+    }
+    
+    /**
      * Obtain the customer's account balance.
      * 
      * @param customerId
@@ -104,36 +237,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
         // }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.subsidiary.SubsidiaryApi#getDomainBySubsidiaryId(int)
-     */
-    @Override
-    public SubsidiaryDto getDomainBySubsidiaryId(int subsidiaryId)
-            throws SubsidiaryException {
-        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
-                null, null);
-        criteria.setCustomerId(subsidiaryId);
-        List<CustomerDto> results = this.getDomain(criteria);
-        StringBuffer msgBuf = new StringBuffer();
-        if (results == null) {
-            msgBuf.append("Customer domain record by UID, ");
-            msgBuf.append(subsidiaryId);
-            msgBuf.append(", was not found ");
-            logger.warn(msgBuf);
-            return null;
-        }
-        if (results.size() > 1) {
-            msgBuf.append("Too many customer domain entities returned for UID, ");
-            msgBuf.append(subsidiaryId);
-            msgBuf.append(" Count: ");
-            msgBuf.append(results.size());
-            logger.error(msgBuf);
-            throw new CustomerApiException(msgBuf.toString());
-        }
-        return results.get(0);
-    }
 
     /*
      * (non-Javadoc)
@@ -145,7 +248,12 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
         criteria.setCustomerId(uid);
-        List<CustomerDto> results = this.get(criteria);
+        List<CustomerDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CustomerApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Customer record by UID, ");
@@ -176,7 +284,12 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
         criteria.setContactId(businessId);
-        List<CustomerDto> results = this.get(criteria);
+        List<CustomerDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CustomerApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Customer record using business id, ");
@@ -207,7 +320,12 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
         criteria.setCustomerId(customerId);
-        List<CustomerDto> results = this.get(criteria);
+        List<CustomerDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CustomerApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Customer record using customer id, ");
@@ -238,7 +356,12 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
         criteria.setAccountNo(acctNo);
-        List<CustomerDto> results = this.get(criteria);
+        List<CustomerDto> results;
+        try {
+            results = this.getSubsidiaryInfo(criteria);
+        } catch (SubsidiaryException e) {
+            throw new CustomerApiException(e);
+        }
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Customer record using customer account number, ");
@@ -272,24 +395,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
             return dao.fetch(criteria);
         } catch (Exception e) {
             this.msg = "Error retrieving customer data using multi property selection criteria";
-            logger.error(this.msg, e);
-            throw new CustomerApiException(e);
-        }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
-    }
-
-    private List<CustomerDto> getDomain(CustomerDto criteria)
-            throws CustomerApiException {
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CustomerDao dao = f.createRmt2OrmCustomerDao();
-        try {
-            return dao.fetchDomain(criteria);
-        } catch (Exception e) {
-            this.msg = "Error retrieving customer domain data using multi property selection criteria";
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
@@ -404,19 +509,31 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
      */
     @Override
     public void validate(CustomerDto cust) throws CustomerApiException {
-        if (cust == null) {
+        try {
+            Verifier.verifyNotNull(cust);
+        }
+        catch (VerifyException e) {
             this.msg = "Customer DTO object cannot be null";
             throw new CustomerApiException(this.msg);
         }
-        if (cust.getContactId() <= 0) {
+        try {
+            Verifier.verifyPositive(cust.getContactId());
+        }
+        catch (VerifyException e) {
             this.msg = "Customer DTO object must be assinged a business id";
             throw new CustomerApiException(this.msg);
         }
-        if (cust.getAcctId() <= 0) {
-            this.msg = "Customer DTO object must be assinged an account id";
+        try {
+            Verifier.verifyPositive(cust.getAcctId());
+        }
+        catch (VerifyException e) {
+            this.msg = "Customer DTO object must be assinged a account id";
             throw new CustomerApiException(this.msg);
         }
-        if (cust.getAccountNo() == null) {
+        try {
+            Verifier.verifyNotNull(cust.getAccountNo());
+        }
+        catch (VerifyException e) {
             this.msg = "Customer DTO object must be assinged an account number";
             throw new CustomerApiException(this.msg);
         }
@@ -482,5 +599,4 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl implements CustomerApi {
         // dao = null;
         // }
     }
-
 }
