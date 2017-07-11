@@ -84,6 +84,8 @@ class Rmt2CreditorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
         subCriteria.setTaxId(criteria.getTaxId());
         subCriteria.setPhoneCompany(criteria.getPhone());
         Map<Integer, SubsidiaryContactInfoDto> contactInfo;
+        // TODO: To eliminate this error, DAO will have to be redesigned to 
+        //       where business business logic is moved to API  module.
         contactInfo = subDao.fetch(subCriteria);
 
         // Create an empty map in the event no results were returned.
