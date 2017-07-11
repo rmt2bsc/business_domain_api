@@ -324,10 +324,8 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @see org.modules.subsidiary.CreditorApi#getByCreditorId(int)
      */
     @Override
-    public CreditorDto getByCreditorId(int creditorId)
-            throws CreditorApiException {
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
-                null, null);
+    public CreditorDto getByCreditorId(int creditorId) throws CreditorApiException {
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
         criteria.setCreditorId(creditorId);
         List<CreditorDto> results;
         try {
