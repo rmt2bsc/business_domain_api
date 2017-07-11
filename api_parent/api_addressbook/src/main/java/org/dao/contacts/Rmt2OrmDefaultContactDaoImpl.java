@@ -164,36 +164,47 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         }
         if (criteriaDto.getContactId() > 0) {
             criteria.addCriteria(VwCommonContact.PROP_CONTACTID, criteriaDto.getContactId());
+            criteria.setContactId(criteriaDto.getContactId());
         }
         if (criteriaDto.getContactName() != null) {
             criteria.addLikeClause(VwCommonContact.PROP_CONTACTNAME, criteriaDto.getContactName());
+            criteria.setContactName(criteriaDto.getContactName());
         }
         if (criteriaDto.getContactType() != null) {
             criteria.addCriteria(VwCommonContact.PROP_CONTACTTYPE, criteriaDto.getContactType());
+            criteria.setContactType(criteriaDto.getContactType());
         }
         if (criteriaDto.getPhoneCell() != null) {
             criteria.addCriteria(VwCommonContact.PROP_ADDRPHONECELL, criteriaDto.getPhoneCell());
+            criteria.setAddrPhoneCell(criteriaDto.getPhoneCell());
         }
-        if (criteriaDto.getPhoneCell() != null) {
-            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONECELL, criteriaDto.getPhoneCell());
+        if (criteriaDto.getPhoneFax() != null) {
+            criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEFAX, criteriaDto.getPhoneFax());
+            criteria.setAddrPhoneFax(criteriaDto.getPhoneFax());
         }
         if (criteriaDto.getPhoneHome() != null) {
             criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEHOME, criteriaDto.getPhoneHome());
+            criteria.setAddrPhoneHome(criteriaDto.getPhoneHome());
         }
         if (criteriaDto.getPhoneCompany() != null) {
             criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEMAIN, criteriaDto.getPhoneCompany());
+            criteria.setAddrPhoneMain(criteriaDto.getPhoneCompany());
         }
         if (criteriaDto.getPhoneWork() != null) {
             criteria.addCriteria(VwCommonContact.PROP_ADDRPHONEWORK, criteriaDto.getPhoneWork());
+            criteria.setAddrPhoneWork(criteriaDto.getPhoneWork());
         }
         if (criteriaDto.getZip() > 0) {
             criteria.addCriteria(VwCommonContact.PROP_ADDRZIP, criteriaDto.getZip());
+            criteria.setAddrZip(criteriaDto.getZip());
         }
         if (criteriaDto.getCity() != null) {
             criteria.addLikeClause(VwCommonContact.PROP_ZIPCITY, criteriaDto.getCity());
+            criteria.setZipCity(criteriaDto.getCity());
         }
         if (criteriaDto.getState() != null) {
             criteria.addLikeClause(VwCommonContact.PROP_ZIPSTATE, criteriaDto.getState());
+            criteria.setZipState(criteriaDto.getState());
         }
 
         // Set ordering
@@ -226,51 +237,67 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         }
         if (criteriaDto.getContactId() > 0) {
             criteria.addCriteria(VwPersonAddress.PROP_PERSONID, criteriaDto.getContactId());
+            criteria.setPersonId(criteriaDto.getContactId());
         }
         if (criteriaDto.getFirstname() != null) {
             criteria.addLikeClause(VwPersonAddress.PROP_PERFIRSTNAME, criteriaDto.getFirstname());
+            criteria.setPerFirstname(criteriaDto.getFirstname());
         }
         if (criteriaDto.getLastname() != null) {
             criteria.addLikeClause(VwPersonAddress.PROP_PERLASTNAME, criteriaDto.getLastname());
+            criteria.setPerLastname(criteriaDto.getLastname());
         }
         if (criteriaDto.getContactName() != null) {
             criteria.addLikeClause(VwPersonAddress.PROP_PERSHORTNAME, criteriaDto.getContactName());
+            criteria.setPerShortname(criteriaDto.getContactName());
         }
         if (criteriaDto.getMaidenname() != null) {
             criteria.addLikeClause(VwPersonAddress.PROP_PERMAIDENNAME, criteriaDto.getMaidenname());
+            criteria.setPerMaidenname(criteriaDto.getMaidenname());
         }
         if (criteriaDto.getSsn() != null) {
             criteria.addCriteria(VwPersonAddress.PROP_PERSSN, criteriaDto.getSsn());
+            criteria.setPerSsn(criteriaDto.getSsn());
         }
         if (criteriaDto.getContactEmail() != null) {
             criteria.addLikeClause(VwPersonAddress.PROP_PEREMAIL, criteriaDto.getContactEmail());
+            criteria.setPerEmail(criteriaDto.getContactEmail());
         }
         if (criteriaDto.getPhoneCell() != null) {
             criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONECELL, criteriaDto.getPhoneCell());
+            criteria.setAddrPhoneCell(criteriaDto.getPhoneCell());
         }
         if (criteriaDto.getPhoneHome() != null) {
             criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONEHOME, criteriaDto.getPhoneHome());
+            criteria.setAddrPhoneHome(criteriaDto.getPhoneHome());
         }
         if (criteriaDto.getPhoneWork() != null) {
             criteria.addCriteria(VwPersonAddress.PROP_ADDRPHONEWORK, criteriaDto.getPhoneWork());
+            criteria.setAddrPhoneWork(criteriaDto.getPhoneWork());
         }
         if (criteriaDto.getZip() > 0) {
             criteria.addCriteria(VwPersonAddress.PROP_ADDRZIP, criteriaDto.getZip());
+            criteria.setAddrZip(criteriaDto.getZip());
         }
         if (criteriaDto.getCity() != null) {
             criteria.addLikeClause(VwPersonAddress.PROP_ZIPCITY, criteriaDto.getCity());
+            criteria.setZipCity(criteriaDto.getCity());
         }
         if (criteriaDto.getState() != null) {
             criteria.addLikeClause(VwPersonAddress.PROP_ZIPSTATE, criteriaDto.getState());
+            criteria.setZipState(criteriaDto.getState());
         }
         if (criteriaDto.getRaceId() > 0) {
             criteria.addCriteria(VwPersonAddress.PROP_PERRACEID, criteriaDto.getRaceId());
+            criteria.setPerRaceId(criteriaDto.getRaceId());
         }
         if (criteriaDto.getMaritalStatusId() > 0) {
             criteria.addCriteria(VwPersonAddress.PROP_PERMARITALSTATUS, criteriaDto.getMaritalStatusId());
+            criteria.setPerMaritalStatus(criteriaDto.getMaritalStatusId());
         }
         if (criteriaDto.getGenderId() > 0) {
             criteria.addCriteria(VwPersonAddress.PROP_PERGENDERID, criteriaDto.getGenderId());
+            criteria.setPerGenderId(criteriaDto.getGenderId());
         }
 
         // Set ordering.
@@ -304,36 +331,47 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         }
         if (criteriaDto.getContactId() > 0) {
             criteria.addCriteria(VwBusinessAddress.PROP_BUSINESSID, criteriaDto.getContactId());
+            criteria.setBusinessId(criteriaDto.getContactId());
         }
         if (criteriaDto.getContactName() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_BUSLONGNAME, criteriaDto.getContactName());
+            criteria.setBusLongname(criteriaDto.getContactName());
         }
         if (criteriaDto.getShortName() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_BUSSHORTNAME, criteriaDto.getShortName());
+            criteria.setBusShortname(criteriaDto.getShortName());
         }
         if (criteriaDto.getTaxId() != null) {
             criteria.addCriteria(VwBusinessAddress.PROP_BUSTAXID, criteriaDto.getTaxId());
+            criteria.setBusTaxId(criteriaDto.getTaxId());
         }
         if (criteriaDto.getContactEmail() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_CONTACTEMAIL, criteriaDto.getContactEmail());
+            criteria.setContactEmail(criteriaDto.getContactEmail());
         }
         if (criteriaDto.getPhoneCompany() != null) {
             criteria.addCriteria(VwBusinessAddress.PROP_ADDRPHONEMAIN, criteriaDto.getPhoneCompany());
+            criteria.setAddrPhoneMain(criteriaDto.getPhoneCompany());
         }
         if (criteriaDto.getZip() > 0) {
             criteria.addCriteria(VwBusinessAddress.PROP_ADDRZIP, criteriaDto.getZip());
+            criteria.setAddrZip(criteriaDto.getZip());
         }
         if (criteriaDto.getCity() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_ZIPCITY, criteriaDto.getCity());
+            criteria.setZipCity(criteriaDto.getCity());
         }
         if (criteriaDto.getState() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_ZIPSTATE, criteriaDto.getState());
+            criteria.setZipState(criteriaDto.getState());
         }
         if (criteriaDto.getEntityTypeId() > 0) {
             criteria.addCriteria(VwBusinessAddress.PROP_BUSENTITYTYPEID, criteriaDto.getEntityTypeId());
+            criteria.setBusEntityTypeId(criteriaDto.getEntityTypeId());
         }
         if (criteriaDto.getServTypeId() > 0) {
             criteria.addCriteria(VwBusinessAddress.PROP_BUSSERVTYPEID, criteriaDto.getServTypeId());
+            criteria.setBusServTypeId(criteriaDto.getServTypeId());
         }
 
         // Set ordering.
