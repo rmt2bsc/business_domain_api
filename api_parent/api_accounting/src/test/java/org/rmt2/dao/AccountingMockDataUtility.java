@@ -2,6 +2,7 @@ package org.rmt2.dao;
 
 import java.util.Date;
 
+import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.GlAccountCategory;
 import org.dao.mapping.orm.rmt2.GlAccountTypes;
 import org.dao.mapping.orm.rmt2.GlAccounts;
@@ -9,6 +10,8 @@ import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
+import org.dao.mapping.orm.rmt2.VwBusinessAddress;
+import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.AccountDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
@@ -200,6 +203,108 @@ public class AccountingMockDataUtility {
         i.setOverrideRetail(0);
         i.setMarkup(3);
         return i;
+    }
+
+    /**
+     * 
+     * @param id
+     * @param businessId
+     * @param acctId
+     * @param acctNo
+     * @param extAcctNo
+     * @param creditorTypeId
+     * @return
+     */
+    public static final Creditor createMockOrmCreditor(int id, int businessId,
+            int acctId, String acctNo, String extAcctNo, int creditorTypeId) {
+        Creditor o = new Creditor();
+        o.setCreditorId(id);
+        o.setBusinessId(businessId);
+        o.setAcctId(acctId);
+        o.setAccountNumber(acctNo);
+        o.setExtAccountNumber(extAcctNo);
+        o.setCreditorTypeId(creditorTypeId);
+        o.setCreditLimit(10000);
+        o.setApr(12.5);
+        o.setActive(1);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        o.setIpCreated("111.222.101.100");
+        o.setIpUpdated(o.getIpCreated());
+        return o;
+    }
+
+    /**
+     * 
+     * @param contactId
+     * @param contactName
+     * @param contactType
+     * @param addressId
+     * @param addr1
+     * @param addr2
+     * @param addr3
+     * @param addr4
+     * @param city
+     * @param state
+     * @param zip
+     * @return
+     */
+    public static final VwCommonContact createMockOrmCommonContact(
+            int contactId, String contactName, String contactType,
+            int addressId, String addr1, String addr2, String addr3,
+            String addr4, String city, String state, int zip) {
+        VwCommonContact o = new VwCommonContact();
+        o.setContactId(contactId);
+        o.setContactName(contactName);
+        o.setContactType(contactType);
+
+        o.setAddrId(addressId);
+        o.setContactId(contactId);
+        o.setAddr1(addr1);
+        o.setAddr2(addr2);
+        o.setAddr3(addr3);
+        o.setAddr4(addr4);
+        o.setZipCity(city);
+        o.setZipState(state);
+        o.setAddrZip(zip);
+        o.setAddrZipext(7001);
+        return o;
+    }
+
+    /**
+     * 
+     * @param businessId
+     * @param contactName
+     * @param addressId
+     * @param addr1
+     * @param addr2
+     * @param addr3
+     * @param addr4
+     * @param city
+     * @param state
+     * @param zip
+     * @return
+     */
+    public static final VwBusinessAddress createMockOrmBusinessContact(
+            int businessId, String contactName, int addressId, String addr1,
+            String addr2, String addr3, String addr4, String city, String state,
+            int zip) {
+        VwBusinessAddress o = new VwBusinessAddress();
+        o.setBusinessId(businessId);
+        o.setBusLongname(contactName);
+        o.setBusEntityTypeId(1);
+        o.setBusServTypeId(2);
+        o.setAddrId(addressId);
+        o.setAddr1(addr1);
+        o.setAddr2(addr2);
+        o.setAddr3(addr3);
+        o.setAddr4(addr4);
+        o.setZipCity(city);
+        o.setZipState(state);
+        o.setAddrZip(zip);
+        o.setAddrZipext(7001);
+        return o;
     }
 
 }
