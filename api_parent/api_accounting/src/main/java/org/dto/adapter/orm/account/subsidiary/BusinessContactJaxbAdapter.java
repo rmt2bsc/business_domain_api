@@ -6,6 +6,7 @@ import org.dto.AbstractSubsidiaryAdapter;
 import org.dto.SubsidiaryContactInfoDto;
 import org.rmt2.jaxb.AddressType;
 import org.rmt2.jaxb.BusinessType;
+import org.rmt2.jaxb.CodeDetailType;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.jaxb.ZipcodeType;
 
@@ -129,6 +130,9 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public void setEntityTypeId(int value) {
+        if (b.getEntityType() == null) {
+            b.setEntityType(new CodeDetailType());
+        }
         b.getEntityType().setCodeId(BigInteger.valueOf(value));
     }
 
@@ -153,6 +157,9 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public void setServTypeId(int value) {
+        if (b.getServiceType() == null) {
+            b.setServiceType(new CodeDetailType());
+        }
         b.getServiceType().setCodeId(BigInteger.valueOf(value));
     }
 
