@@ -6,11 +6,13 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwItemMaster;
+import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
 import org.dto.ItemMasterStatusDto;
 import org.dto.ItemMasterStatusHistDto;
 import org.dto.ItemMasterTypeDto;
+import org.dto.VendorItemDto;
 
 import com.RMT2Base;
 
@@ -119,19 +121,18 @@ public class Rmt2ItemMasterDtoFactory extends RMT2Base {
         return new ItemTypeRmt2OrmAdapter(ormBean);
     }
 
-    // /**
-    // * Create an instance of <i>VendorItemDto</i>.
-    // * <p>
-    // * A brand new instance of VendorItemDto is created when <i>ormBean</i> is
-    // * null. Otherwise, <i>ormBean</i> is adapted to an instance of
-    // * VendorItemDto.
-    // *
-    // * @param ormBean
-    // * an instance of {@link VwVendorItems}
-    // * @return an instance of {@link VendorItemDto}.
-    // */
-    // public static final VendorItemDto createVendorItemInstance(
-    // VwVendorItems ormBean) {
-    // return new VendorItemRmt2OrmAdapter(ormBean);
-    // }
+     /**
+     * Create an instance of <i>VendorItemDto</i>.
+     * <p>
+     * A brand new instance of VendorItemDto is created when <i>ormBean</i> is
+     * null. Otherwise, <i>ormBean</i> is adapted to an instance of
+     * VendorItemDto.
+     *
+     * @param ormBean
+     * an instance of {@link VwVendorItems}
+     * @return an instance of {@link VendorItemDto}.
+     */
+     public static final VendorItemDto createVendorItemInstance(VwVendorItems ormBean) {
+         return new VendorItemRmt2OrmAdapter(ormBean);
+     }
 }
