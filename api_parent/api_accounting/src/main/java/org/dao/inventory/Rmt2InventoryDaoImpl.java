@@ -379,8 +379,10 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
             int itemMasterId) throws InventoryDaoException {
         ItemMasterStatusHist obj = new ItemMasterStatusHist();
         obj.addCriteria(ItemMasterStatusHist.PROP_ITEMID, itemMasterId);
+        obj.setItemId(itemMasterId);
         obj.addCriteria(ItemMasterStatusHist.PROP_ENDDATE,
                 ItemMasterStatusHist.DB_NULL);
+        obj.setEndDate(null);
         obj.addOrderBy(ItemMasterStatus.PROP_DESCRIPTION,
                 ItemMasterStatus.ORDERBY_ASCENDING);
         // Retrieve Data
