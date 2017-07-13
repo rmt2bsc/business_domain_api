@@ -11,6 +11,7 @@ import java.util.List;
 import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
+import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dto.ItemMasterDto;
 import org.dto.adapter.orm.inventory.Rmt2ItemMasterDtoFactory;
 import org.junit.After;
@@ -687,6 +688,156 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         Integer items[] = {-100, 200, 300};
         try {
             api.addInventoryOverride(0, items);
+            Assert.fail("Expected exception due to item list contains an item id with a negative value");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testAssignVendorItems() {
+        ItemMaster item2 = AccountingMockDataUtility.createMockOrmItemMaster(200, 1,
+                "222-111-111", "2222222", 1234, "Item # 2", 5, 1.23, true);
+        List<ItemMaster> mockSingleFetchResponse2 = new ArrayList<ItemMaster>();
+        mockSingleFetchResponse2.add(item2);
+        ItemMaster item3 = AccountingMockDataUtility.createMockOrmItemMaster(300, 1,
+                "333-111-111", "3333333", 1234, "Item # 3", 5, 1.23, true);
+        List<ItemMaster> mockSingleFetchResponse3 = new ArrayList<ItemMaster>();
+        mockSingleFetchResponse3.add(item3);
+        ItemMaster im = new ItemMaster();
+        im.setItemId(100);
+        ItemMaster im2 = new ItemMaster();
+        im2.setItemId(200);
+        ItemMaster im3 = new ItemMaster();
+        im3.setItemId(300);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(im)))
+                    .thenReturn(this.mockSingleFetchResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(im2)))
+            .thenReturn(mockSingleFetchResponse2);
+            when(this.mockPersistenceClient.retrieveList(eq(im3)))
+            .thenReturn(mockSingleFetchResponse3);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Fetch original Item Master for assign vendor items test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(VendorItems.class)))
+                    .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Vendor Item update row test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        Integer items[] = {100, 200, 300};
+        try {
+            rc = api.assignVendorItems(555, items);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(3, rc);
+    }
+    
+    
+    
+    
+    
+    
+    @Test
+    public void testAssignVendorItemsWithNullVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 200, 300};
+        try {
+            api.assignVendorItems(null, items);
+            Assert.fail("Expected exception due to vendor id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testAssignVendorItemsWithZeroValueVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 200, 300};
+        try {
+            api.assignVendorItems(0, items);
+            Assert.fail("Expected exception due to vendor id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testAssignVendorItemsWithNegativeVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 200, 300};
+        try {
+            api.assignVendorItems(-1, items);
+            Assert.fail("Expected exception due to vendor id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testAssignVendorItemsWithNullItemList() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.assignVendorItems(0, null);
+            Assert.fail("Expected exception due to item list is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testAssignVendorItemsWithItemListElementIsNull() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, null, 300};
+        try {
+            api.assignVendorItems(0, items);
+            Assert.fail("Expected exception due to item list contains a null item id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testAssignVendorItemsWithItemListElementIsZero() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 200, 0};
+        try {
+            api.assignVendorItems(0, items);
+            Assert.fail("Expected exception due to item list contains an item id with value of zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testAssignVendorItemsWithItemListElementIsNegative() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {-100, 200, 300};
+        try {
+            api.assignVendorItems(0, items);
             Assert.fail("Expected exception due to item list contains an item id with a negative value");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
