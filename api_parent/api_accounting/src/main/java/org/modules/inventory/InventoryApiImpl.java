@@ -1618,6 +1618,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory Item Id is required", e);
         }
+        try {
+            Verifier.verifyPositive(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item Id must be greater than zero", e);
+        }
         ItemMasterDto im = this.getItemById(itemId);
         if (im == null) {
             this.msg = "Invenoty item master , " + itemId

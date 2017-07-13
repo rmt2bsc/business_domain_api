@@ -844,4 +844,141 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             e.printStackTrace();
         }
     }
+    
+    @Test
+    public void testDeactivateItemMaster() {
+        ItemMaster im = new ItemMaster();
+        im.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(im)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Fetch original Item Master for activation test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(eq(im)))
+                    .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Item master update row test case setup failed");
+        }
+
+        try {
+            ItemMasterStatus ims = new ItemMasterStatus();
+            ims.setItemStatusId(InventoryConst.ITEM_STATUS_OUTSRVC);
+            List<ItemMasterStatus> mockItemStatusHistResp = this
+                    .createMockSingleItemStatusFetchResponse(
+                            InventoryConst.ITEM_STATUS_OUTSRVC);
+            when(this.mockPersistenceClient.retrieveList(eq(ims)))
+                    .thenReturn(mockItemStatusHistResp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Verify item status history fetch for Item Master activation test case setup failed");
+        }
+        
+        ItemMasterStatusHist mockItemMasterStatusHist = this
+                .createMockSingleItemStatusHistFetchResponse(100).get(0);
+        try {
+            List<ItemMasterStatus> mockItemStatusHistResp = this
+                    .createMockSingleItemStatusFetchResponse(
+                            InventoryConst.ITEM_STATUS_INSRVC);
+            when(this.mockPersistenceClient.retrieveList(eq(mockItemMasterStatusHist)))
+                    .thenReturn(mockItemStatusHistResp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Verify item status history fetch for Item Master activation test case setup failed");
+        }
+        try {
+            Boolean insertInd = true;
+            when(this.mockPersistenceClient
+                    .updateRow(any(ItemMasterStatusHist.class))).thenReturn(1);
+            when(this.mockPersistenceClient
+                    .insertRow(any(ItemMasterStatusHist.class), eq(insertInd)))
+                            .thenReturn(222);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master status history update/insert row test case setup failed");
+        }
+        ItemMasterDto dto = Rmt2ItemMasterDtoFactory
+                .createItemMasterInstance(im);
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deactivateItemMaster(100);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
+    }
+    
+    @Test
+    public void testDeactivateItemMasterWithNullItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deactivateItemMaster(null);
+            Assert.fail("Expected exception to be thrown due to null item id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    
+    @Test
+    public void testDeactivateItemMasterWithZeroValueItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deactivateItemMaster(0);
+            Assert.fail("Expected exception to be thrown due to item master id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeactivateItemMasterWithNegativeItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deactivateItemMaster(0);
+            Assert.fail("Expected exception to be thrown due to item master id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeactivateItemMasterWithInvalidItemMasterId() {
+        ItemMaster im = new ItemMaster();
+        im.setItemId(222);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(im)))
+                    .thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Fetch original Item Master for activation test case setup failed");
+        }
+    
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deactivateItemMaster(222);
+            Assert.fail("Expected exception to be thrown due to item master is not found");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            e.printStackTrace();
+        }
+    }
 }
