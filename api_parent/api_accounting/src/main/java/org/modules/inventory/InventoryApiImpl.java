@@ -862,14 +862,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         List<ItemAssociationDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
-            VwItemAssociations imt = null;
+            VwItemAssociations assoc = null;
             ItemAssociationDto criteria = Rmt2InventoryDtoFactory
-                    .createItemAssociationInstance(imt);
+                    .createItemAssociationInstance(assoc);
             criteria.setItemId(itemId);
             results = dao.fetch(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve item associations for item id: "
-                    + itemId;
+            this.msg = "Unable to retrieve item associations for item id: " + itemId;
             logger.error(this.msg, e);
             throw new InventoryApiException(e);
         }
@@ -1470,9 +1469,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory Item Id is required", e);
         }
-        // Determine if item is tied to one or more sales orders.
-        List<ItemAssociationDto> associations = this
-                .getItemAssociations(itemId);
+        // Determine if item is tied to one or more sales orders and/or purchase
+        // orders.
+        List<ItemAssociationDto> associations = this.getItemAssociations(itemId);
         if (associations != null && associations.size() > 0) {
             this.msg = "Invenoty item master , "
                     + itemId
