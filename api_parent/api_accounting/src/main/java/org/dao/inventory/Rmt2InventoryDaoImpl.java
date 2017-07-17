@@ -403,8 +403,11 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
     }
 
     /**
-     * Retrieves a list of inventory item association objects from the
+     * Retrieves a list of inventory item associations from the
      * vw_item_associations database view.
+     * <p>
+     * Item assoiciations are considered to be those that are attached to sales
+     * orders and/of purchase orders.
      * <p>
      * A filter can be applied to the query using one or more properties
      * available in <i>criteria</i> as selection criteria. The following
@@ -431,8 +434,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
     public List<ItemAssociationDto> fetch(ItemAssociationDto criteria)
             throws InventoryDaoException {
         VwItemAssociations obj = InventoryDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(VwItemAssociations.PROP_ITEMID,
-                VwItemAssociations.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwItemAssociations.PROP_ITEMID, VwItemAssociations.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<VwItemAssociations> results = null;
