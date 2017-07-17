@@ -15,6 +15,8 @@ import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
+import org.dto.ItemMasterStatusDto;
+import org.dto.adapter.orm.inventory.Rmt2InventoryDtoFactory;
 import org.dto.adapter.orm.inventory.Rmt2ItemMasterDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -31,6 +33,7 @@ import org.rmt2.api.BaseAccountingDaoTest;
 import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
+import com.RMT2Base;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
@@ -69,6 +72,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         return;
     }
 
+ 
     private List<VwItemAssociations> createMockItemAssoicationsSearchResultsResponse() {
         List<VwItemAssociations> list = new ArrayList<VwItemAssociations>();
         VwItemAssociations o = AccountingMockDataUtility.createMockOrmVwItemAssociations(22, 22, 100, "so", 10, 2.22);
@@ -879,7 +883,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "Verify item status history fetch for Item Master activation test case setup failed");
+                    "Verify item status fetch for Item Master activation test case setup failed");
         }
         
         ItemMasterStatusHist mockItemMasterStatusHist = this
@@ -1040,6 +1044,366 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         try {
             api.getItemAssociations(-100);
             Assert.fail("Expected exception to be thrown due to item id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteItemMaster() {
+        VwItemAssociations assocCriteria = new VwItemAssociations();
+        assocCriteria.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(assocCriteria)))
+                    .thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Assoications test case setup failed");
+        }
+        
+        try {
+            ItemMasterStatusHist ims = new ItemMasterStatusHist();
+            ims.setItemId(100);
+            when(this.mockPersistenceClient.deleteRow(eq(ims))).thenReturn(4);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item status history delete test case setup failed");
+        }
+        
+        try {
+            ItemMaster im = new ItemMaster();
+            im.setItemId(100);
+            when(this.mockPersistenceClient.deleteRow(eq(im))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master delete test case setup failed");
+        }
+        
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteItemMaster(100);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(RMT2Base.SUCCESS, rc);
+    }
+    
+    @Test
+    public void testDeleteItemMasterWithAssociations() {
+        VwItemAssociations assocCriteria = new VwItemAssociations();
+        assocCriteria.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(assocCriteria)))
+                    .thenReturn(this.mockVwItemAssociationsFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Assoications test case setup failed");
+        }
+        
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deleteItemMaster(100);
+            Assert.fail("Expected exception due item master has asociations");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteItemMasterWithNullItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deleteItemMaster(null);
+            Assert.fail("Expected exception due item id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteItemMasterWithZeroItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deleteItemMaster(0);
+            Assert.fail("Expected exception due item id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteItemMasterWithNegativeItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.deleteItemMaster(-222);
+            Assert.fail("Expected exception due item id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testPullInventory() {
+        ItemMaster itemCriteria = new ItemMaster();
+        itemCriteria.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(itemCriteria)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Master test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMaster.class)))
+                    .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update Item Master test case setup failed");
+        }
+        
+        ItemMasterStatusHist mockItemStatusHist = this.createMockSingleItemStatusHistFetchResponse(InventoryConst.ITEM_STATUS_INSRVC).get(0);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(ItemMasterStatusHist.class))).thenReturn(mockItemStatusHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item status history fetch test case setup failed");
+        }
+        
+        try {
+            ItemMasterStatusDto imsCriteria = Rmt2InventoryDtoFactory
+                    .createItemStatusInstance(null);
+            imsCriteria.setEntityId(InventoryConst.ITEM_STATUS_REPLACE);
+            List<ItemMasterStatus> mockItemStatusResp = this
+                    .createMockSingleItemStatusFetchResponse(InventoryConst.ITEM_STATUS_INSRVC);
+            when(this.mockPersistenceClient.retrieveList(eq(imsCriteria)))
+                    .thenReturn(mockItemStatusResp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Verify item status fetch for pull inventory test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMasterStatusHist.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master status history update test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(any(ItemMasterStatusHist.class), any(Boolean.class))).thenReturn(5555);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master status history insert test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMaster.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master update test case setup failed");
+        }
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        double changeValue = 0;
+        int reducedQty = 2;
+        try {
+            changeValue = api.pullInventory(100, reducedQty);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        
+        ItemMaster im = this.createMockSingleFetchResponse().get(0);
+        Assert.assertEquals(changeValue, ((im.getQtyOnHand() - reducedQty) * im.getUnitCost()), 0);
+    }
+    
+    @Test
+    public void testPullInventoryItemNotFound() {
+        ItemMaster itemCriteria = new ItemMaster();
+        itemCriteria.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(itemCriteria)))
+                    .thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Master test case setup failed");
+        }
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        int reducedQty = 2;
+        try {
+            api.pullInventory(100, reducedQty);
+            Assert.fail("Expected exception due to inventory item not found");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testPullInventoryWithNullItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        int reducedQty = 2;
+        try {
+            api.pullInventory(null, reducedQty);
+            Assert.fail("Expected exception due to inventory null item id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testPullInventoryWithNullQty() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.pullInventory(100, null);
+            Assert.fail("Expected exception due to inventory null quantity");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testPushInventory() {
+        ItemMaster itemCriteria = new ItemMaster();
+        itemCriteria.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(itemCriteria)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Master test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMaster.class)))
+                    .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update Item Master test case setup failed");
+        }
+        
+        ItemMasterStatusHist mockItemStatusHist = this.createMockSingleItemStatusHistFetchResponse(InventoryConst.ITEM_STATUS_INSRVC).get(0);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(ItemMasterStatusHist.class))).thenReturn(mockItemStatusHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item status history fetch test case setup failed");
+        }
+        
+        try {
+            ItemMasterStatusDto imsCriteria = Rmt2InventoryDtoFactory
+                    .createItemStatusInstance(null);
+            imsCriteria.setEntityId(InventoryConst.ITEM_STATUS_REPLACE);
+            List<ItemMasterStatus> mockItemStatusResp = this
+                    .createMockSingleItemStatusFetchResponse(InventoryConst.ITEM_STATUS_INSRVC);
+            when(this.mockPersistenceClient.retrieveList(eq(imsCriteria)))
+                    .thenReturn(mockItemStatusResp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Verify item status fetch for pull inventory test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMasterStatusHist.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master status history update test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(any(ItemMasterStatusHist.class), any(Boolean.class))).thenReturn(5555);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master status history insert test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMaster.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Item master update test case setup failed");
+        }
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        double changeValue = 0;
+        int increaseQty = 2;
+        try {
+            changeValue = api.pushInventory(100, increaseQty);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        
+        ItemMaster im = this.createMockSingleFetchResponse().get(0);
+        Assert.assertEquals(changeValue, ((im.getQtyOnHand() + increaseQty) * im.getUnitCost()), 0);
+    }
+    
+    
+    @Test
+    public void testPushInventoryItemNotFound() {
+        ItemMaster itemCriteria = new ItemMaster();
+        itemCriteria.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(itemCriteria)))
+                    .thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Master test case setup failed");
+        }
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        int reducedQty = 2;
+        try {
+            api.pullInventory(100, reducedQty);
+            Assert.fail("Expected exception due to inventory item not found");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testPushInventoryWithNullItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        int reducedQty = 2;
+        try {
+            api.pullInventory(null, reducedQty);
+            Assert.fail("Expected exception due to inventory null item id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testPushInventoryWithNullQty() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.pullInventory(100, null);
+            Assert.fail("Expected exception due to inventory null quantity");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
