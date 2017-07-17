@@ -908,12 +908,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         
         dao.setDaoUser(this.apiUser);
         this.computeItemRetail(item);
-        boolean newItem = (item.getItemId() == 0);
-        ItemMaster newITem = null;
-        ItemMasterDto imDto = Rmt2InventoryDtoFactory.createItemMasterInstance(newITem);
+        boolean isNewItem = (item.getItemId() == 0);
+        ItemMaster newItem = null;
+        ItemMasterDto imDto = Rmt2InventoryDtoFactory.createItemMasterInstance(newItem);
 
         // Get old version of item record and apply changes
-        if (!newItem) {
+        if (!isNewItem) {
             imDto = this.getItemById(item.getItemId());
             if (imDto == null) {
                 this.msg = "Inventory item update error: Item id, "
@@ -947,7 +947,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
 
             // Update statuses
             ItemMasterStatusHistDto imsh = null;
-            if (newItem) {
+            if (isNewItem) {
                 // Indicate that item is in service
                 this.changeItemStatus(imDto, InventoryConst.ITEM_STATUS_INSRVC);
             }
@@ -986,7 +986,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             imsh = this.changeItemStatus(imDto, itemStatusId);
 
             // If item is no longer active, then put in out servive status
-            if (!newItem) {
+            if (!isNewItem) {
                 if (imDto.getActive() == 0) {
                     imsh = this.changeItemStatus(imDto,
                             InventoryConst.ITEM_STATUS_OUTSRVC);
