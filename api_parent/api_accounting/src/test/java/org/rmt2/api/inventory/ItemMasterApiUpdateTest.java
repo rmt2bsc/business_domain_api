@@ -12,6 +12,8 @@ import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.VendorItems;
+import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
 import org.dto.adapter.orm.inventory.Rmt2ItemMasterDtoFactory;
 import org.junit.After;
@@ -43,9 +45,9 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
         ResultSet.class })
 public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     private List<ItemMaster> mockSingleFetchResponse;
-    private List<ItemMaster> mockCriteriaFetchResponse;
+    // private List<ItemMaster> mockCriteriaFetchResponse;
     List<ItemMasterStatusHist> mockFetchItemStatusAllResponse;
-    private List<ItemMaster> mockNotFoundFetchResponse;
+    private List<VwItemAssociations> mockVwItemAssociationsFetchResponse;
 
     /**
      * @throws java.lang.Exception
@@ -55,11 +57,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
-        this.mockCriteriaFetchResponse = this
-                .createMockFetchUsingCriteriaResponse();
-        // this.mockFetchAllResponse = this.createMockFetchAllResponse();
-        this.mockNotFoundFetchResponse = this
-                .createMockNotFoundSearchResultsResponse();
+        this.mockVwItemAssociationsFetchResponse = this.createMockItemAssoicationsSearchResultsResponse();
     }
 
     /**
@@ -71,8 +69,13 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         return;
     }
 
-    private List<ItemMaster> createMockNotFoundSearchResultsResponse() {
-        List<ItemMaster> list = null;
+    private List<VwItemAssociations> createMockItemAssoicationsSearchResultsResponse() {
+        List<VwItemAssociations> list = new ArrayList<VwItemAssociations>();
+        VwItemAssociations o = AccountingMockDataUtility.createMockOrmVwItemAssociations(22, 22, 100, "so", 10, 2.22);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmVwItemAssociations(23, 23, 100, "so", 5, 2.22);
+        list.add(o);
         return list;
     }
 
@@ -978,6 +981,67 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Expected exception to be thrown due to item master is not found");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InventoryApiException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetAssoications() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwItemAssociations.class)))
+                    .thenReturn(this.mockVwItemAssociationsFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Assoications test case setup failed");
+        }
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        List<ItemAssociationDto> results = null;
+        try {
+            results = api.getItemAssociations(100);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(2, results.size());
+
+    }
+
+    @Test
+    public void testGetAssoicationsWithNullItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.getItemAssociations(null);
+            Assert.fail("Expected exception to be thrown due to item id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetAssoicationsWithItemIdZeroValue() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.getItemAssociations(0);
+            Assert.fail("Expected exception to be thrown due to item id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetAssoicationsWithNegataiveItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        try {
+            api.getItemAssociations(-100);
+            Assert.fail("Expected exception to be thrown due to item id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
