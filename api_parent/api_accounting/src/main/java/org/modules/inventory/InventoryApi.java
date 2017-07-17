@@ -276,11 +276,12 @@ public interface InventoryApi extends TransactionApi {
             throws InventoryApiException;
 
     /**
-     * Fetch all the different entities an item is assoicated with.
+     * Fetch all item associations pertaining to sales orders and purchase
+     * orders.
      * 
      * @param itemId
      *            The id of the item to query.
-     * @return An arbitrary item representing the assoications.
+     * @return A list of {@link ItemAssociationDto}
      * @throws InventoryApiException
      */
     List<ItemAssociationDto> getItemAssociations(Integer itemId)
