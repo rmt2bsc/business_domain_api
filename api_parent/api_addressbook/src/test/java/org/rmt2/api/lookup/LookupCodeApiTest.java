@@ -1,6 +1,7 @@
 package org.rmt2.api.lookup;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -293,9 +294,10 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         mockGeneralCodes.setLongdesc("Test Code 3");
         mockGeneralCodes.setShortdesc("Code 3");
         GeneralCodes mockSelectCriteria = new GeneralCodes();
+        mockSelectCriteria.setCodeId(300);
         LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, "Modified Code 33", "Code 33");
         try {
-            when(this.mockPersistenceClient.retrieveObject(mockSelectCriteria)).thenReturn(mockGeneralCodes);
+            when(this.mockPersistenceClient.retrieveObject(eq(mockSelectCriteria))).thenReturn(mockGeneralCodes);
         } catch (LookupDaoException e) {
             e.printStackTrace();
             Assert.fail("Lookup Code update test case failed setting up mock retrieve call");

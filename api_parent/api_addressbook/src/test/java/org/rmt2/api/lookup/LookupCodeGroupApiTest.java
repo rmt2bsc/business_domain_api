@@ -1,6 +1,7 @@
 package org.rmt2.api.lookup;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -237,9 +238,10 @@ public class LookupCodeGroupApiTest extends BaseAddressBookDaoTest {
         mockGeneralCodesGroup.setCodeGrpId(555);
         mockGeneralCodesGroup.setDescription("Test Group 3");
         GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
+        mockSelectCriteria.setCodeGrpId(555);
         LookupGroupDto mockUpdateDto = this.createMockDto(555, "Modified Group 3");
         try {
-            when(this.mockPersistenceClient.retrieveObject(mockSelectCriteria)).thenReturn(mockGeneralCodesGroup);
+            when(this.mockPersistenceClient.retrieveObject(eq(mockSelectCriteria))).thenReturn(mockGeneralCodesGroup);
         } catch (LookupDaoException e) {
             e.printStackTrace();
             Assert.fail("Lookup Code Group update test case failed setting up mock retrieve call");
@@ -322,9 +324,10 @@ public class LookupCodeGroupApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testDelete() {
         GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
+        mockSelectCriteria.setCodeGrpId(555);
         LookupGroupDto mockUpdateDto = this.createMockDto(555, "Modified Group 3");
         try {
-            when(this.mockPersistenceClient.deleteRow(mockSelectCriteria)).thenReturn(1);
+            when(this.mockPersistenceClient.deleteRow(eq(mockSelectCriteria))).thenReturn(1);
         } catch (LookupDaoException e) {
             e.printStackTrace();
             Assert.fail("Lookup Code Group delete test case failed setting up mock deleteRow call");
