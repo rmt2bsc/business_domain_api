@@ -1731,8 +1731,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *             an inventory item.
      */
     @Override
-    public int assignVendorItems(Integer vendorId, Integer[] items)
-            throws InventoryApiException {
+    public int assignVendorItems(Integer vendorId, Integer[] items) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
         }
@@ -1829,18 +1828,32 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             throw new InvalidDataException("Vendor Id is required", e);
         }
         try {
+            Verifier.verifyPositive(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Id must be greater than zero", e);
+        }
+        try {
             Verifier.verifyNotNull(items);    
         }
         catch (VerifyException e) {
-            throw new InvalidDataException("List of vendor items is required", e);
+            throw new InvalidDataException("List of vendor item id's is required", e);
+        }
+        try {
+            for (int ndx = 0; ndx < items.length; ndx++) {
+                Verifier.verifyNotNull(items[ndx]);
+                Verifier.verifyPositive(items[ndx]);
+            }
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Item Id cannot be null and must be greater than zero", e);
         }
         
         int count = 0;
         dao.setDaoUser(this.apiUser);
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
-                VendorItemDto viDto = Rmt2InventoryDtoFactory
-                        .createVendorItemInstance(null);
+                VendorItemDto viDto = Rmt2InventoryDtoFactory.createVendorItemInstance(null);
                 viDto.setVendorId(vendorId);
                 viDto.setItemId(items[ndx]);
                 try {
@@ -1970,8 +1983,36 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @throws ItemMasterException
      */
     @Override
-    public int removeInventoryOverride(int vendorId, int[] items)
+    public int removeInventoryOverride(Integer vendorId, Integer[] items)
             throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Vendor Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Vendor Id must be greater than zero", e);
+        }
+        try {
+            Verifier.verifyNotNull(items);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("List of Inventory Item Id's is required", e);
+        }
+        try {
+            for (int ndx = 0; ndx < items.length; ndx++) {
+                Verifier.verifyNotNull(items[ndx]);
+                Verifier.verifyPositive(items[ndx]);
+            }
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory Item Id cannot be null and must be greater than zero", e);
+        }
+        
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
