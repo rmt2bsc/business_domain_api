@@ -425,7 +425,7 @@ public interface InventoryApi extends TransactionApi {
      * @return The total number of rows effected by the database transaction.
      * @throws InventoryApiException
      */
-    int removeInventoryOverride(int vendorId, int items[])
+    int removeInventoryOverride(Integer vendorId, Integer items[])
             throws InventoryApiException;
 
 }
