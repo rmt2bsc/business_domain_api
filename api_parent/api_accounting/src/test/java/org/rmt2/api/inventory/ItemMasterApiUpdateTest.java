@@ -48,8 +48,8 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
         ResultSet.class })
 public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     private List<ItemMaster> mockSingleFetchResponse;
-    // private List<ItemMaster> mockCriteriaFetchResponse;
-    List<ItemMasterStatusHist> mockFetchItemStatusAllResponse;
+    private List<ItemMaster> mockFetchAllItemsMasterResponse;
+    private List<ItemMasterStatusHist> mockFetchItemStatusAllResponse;
     private List<VwItemAssociations> mockVwItemAssociationsFetchResponse;
 
     /**
@@ -60,6 +60,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
+        this.mockFetchAllItemsMasterResponse = this.createMockFetchAllResponse();
         this.mockVwItemAssociationsFetchResponse = this.createMockItemAssoicationsSearchResultsResponse();
     }
 
@@ -119,15 +120,15 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                 "102-111-111", "10211111", 4321, "Item # 2", 15, 5, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
                 "200-111-111", "20011111", 5555, "Item # 3", 115, 35.80, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
                 "300-111-111", "30011111", 1234, "Item # 4", 300, 0.99, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataUtility.createMockOrmItemMaster(105, 1,
                 "400-111-111", "40011111", 6543, "Item # 5", 1000, 21.99, true);
         list.add(p);
         return list;
@@ -153,6 +154,8 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         list.add(p);
         return list;
     }
+    
+//    
 
     @Test
     public void testUpdateExistingWithAvailability() {
@@ -1404,6 +1407,270 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         try {
             api.pullInventory(100, null);
             Assert.fail("Expected exception due to inventory null quantity");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveInventoryOverride() {
+        List<ItemMaster> list1 = new ArrayList<ItemMaster>();
+        List<ItemMaster> list2 = new ArrayList<ItemMaster>();
+        List<ItemMaster> list3 = new ArrayList<ItemMaster>();
+        List<ItemMaster> list4 = new ArrayList<ItemMaster>();
+        List<ItemMaster> list5 = new ArrayList<ItemMaster>();
+        
+        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+                "111-111-111", "11111111", 4321, "Item # 1", 5, 1.23, true);
+        p.setOverrideRetail(1);
+        list1.add(p);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+                "102-111-111", "10211111", 4321, "Item # 2", 15, 5, true);
+        list2.add(p);
+        p.setOverrideRetail(1);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
+                "200-111-111", "20011111", 4321, "Item # 3", 115, 35.80, true);
+        list3.add(p);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
+                "300-111-111", "30011111", 4321, "Item # 4", 300, 0.99, true);
+        list4.add(p);
+        p.setOverrideRetail(1);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(105, 1,
+                "400-111-111", "40011111", 4321, "Item # 5", 1000, 21.99, true);
+        list5.add(p);
+        
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(ItemMaster.class))).thenReturn(list1, list2, list3, list4, list5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Master test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMaster.class)))
+                    .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update Item Master test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 102, 103, 104, 105};
+        int rc = 0;
+        try {
+            rc = api.removeInventoryOverride(4321, items);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(3, rc);
+    }
+    
+    @Test
+    public void testRemoveInventoryOverrideItemIdNotFound() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(ItemMaster.class))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch Item Master test case setup failed");
+        }
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {9999};
+        try {
+            api.removeInventoryOverride(1234, items);
+            Assert.fail("Expected exception due to item id does not exists");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveInventoryOverrideWithNullVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 102, 103, 104, 105};
+        try {
+            api.removeInventoryOverride(null, items);
+            Assert.fail("Expected exception due to vendor id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveInventoryOverrideWithVendorIdEqualZero() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 102, 103, 104, 105};
+        try {
+            api.removeInventoryOverride(0, items);
+            Assert.fail("Expected exception due to vendor id equal zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveInventoryOverrideWithNegativeVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 102, 103, 104, 105};
+        try {
+            api.removeInventoryOverride(-123, items);
+            Assert.fail("Expected exception due to vendor id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveInventoryOverrideWithNullItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {null};
+        try {
+            api.removeInventoryOverride(1234, items);
+            Assert.fail("Expected exception due to item id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveInventoryOverrideWithItemIdEqualZero() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {0};
+        try {
+            api.removeInventoryOverride(1234, items);
+            Assert.fail("Expected exception due to item id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveInventoryOverrideWithNegativeItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {-555};
+        try {
+            api.removeInventoryOverride(1234, items);
+            Assert.fail("Expected exception due to item id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveVendorItems() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(VendorItems.class)))
+                    .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete Vendor Item test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 200, 300, 400, 500};
+        int rc = 0;
+        try {
+            rc = api.removeVendorItems(4321, items);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(5, rc);
+    }
+    
+    @Test
+    public void testRemoveVendorItemsWithNullVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 102, 103, 104, 105};
+        try {
+            api.removeVendorItems(null, items);
+            Assert.fail("Expected exception due to vendor id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveVendorItemsWithVendorIdEqualZero() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 102, 103, 104, 105};
+        try {
+            api.removeInventoryOverride(0, items);
+            Assert.fail("Expected exception due to vendor id equal zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveVendorItemsWithNegativeVendorId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {100, 102, 103, 104, 105};
+        try {
+            api.removeInventoryOverride(-123, items);
+            Assert.fail("Expected exception due to vendor id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveVendorItemsWithNullItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {null};
+        try {
+            api.removeInventoryOverride(1234, items);
+            Assert.fail("Expected exception due to item id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveVendorItemsWithItemIdEqualZero() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {0};
+        try {
+            api.removeInventoryOverride(1234, items);
+            Assert.fail("Expected exception due to item id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testRemoveVendorItemsWithNegativeItemId() {
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(APP_NAME);
+        Integer items[] = {-555};
+        try {
+            api.removeInventoryOverride(1234, items);
+            Assert.fail("Expected exception due to item id is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
