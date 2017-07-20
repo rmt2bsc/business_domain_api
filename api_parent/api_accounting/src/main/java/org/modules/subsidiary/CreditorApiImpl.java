@@ -35,8 +35,7 @@ import com.util.assistants.VerifyException;
  */
 class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXactHistoryDto> 
           implements CreditorApi {
-    private static final Logger logger = Logger
-            .getLogger(CreditorApiImpl.class);
+    private static final Logger logger = Logger.getLogger(CreditorApiImpl.class);
 
     private SubsidiaryDaoFactory daoFact;
     private CreditorDao dao;
@@ -222,13 +221,25 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      *             General database errors.
      */
     @Override
-    public double getBalance(int creditorId) throws SubsidiaryException {
+    public double getBalance(Integer creditorId) throws SubsidiaryException {
+        try {
+            Verifier.verifyNotNull(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id must be greater than zero", e);
+        }
+        
         try {
             double results = dao.calculateBalance(creditorId);
             return Math.abs(results);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve balance for creditor : "
-                    + creditorId;
+            this.msg = "Unable to retrieve balance for creditor : " + creditorId;
             logger.error(this.msg, e);
             throw new CreditorApiException(e);
         }
@@ -237,6 +248,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
 
     @Override
     public List<CreditorDto> get(CreditorDto criteria) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(criteria);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor selection criteria is required", e);
+        }
         try {
             return dao.fetch(criteria);
         } catch (Exception e) {
@@ -253,9 +270,21 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @see org.modules.subsidiary.CreditorApi#getByUid(int)
      */
     @Override
-    public CreditorDto getByUid(int uid) throws CreditorApiException {
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
-                null, null);
+    public CreditorDto getByUid(Integer uid) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(uid);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Unique identifier is required", e);
+        }
+        try {
+            Verifier.verifyPositive(uid);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Unique identifier  must be greater than zero", e);
+        }
+        
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
         criteria.setCreditorId(uid);
         List<CreditorDto> results;
         try {
@@ -288,10 +317,21 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @see org.modules.subsidiary.CreditorApi#getByBusinessId(int)
      */
     @Override
-    public CreditorDto getByBusinessId(int businessId)
-            throws CreditorApiException {
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
-                null, null);
+    public CreditorDto getByBusinessId(Integer businessId) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(businessId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Business Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(businessId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Business Id must be greater than zero", e);
+        }
+        
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
         criteria.setContactId(businessId);
         List<CreditorDto> results;
         try {
@@ -324,7 +364,20 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @see org.modules.subsidiary.CreditorApi#getByCreditorId(int)
      */
     @Override
-    public CreditorDto getByCreditorId(int creditorId) throws CreditorApiException {
+    public CreditorDto getByCreditorId(Integer creditorId) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id must be greater than zero", e);
+        }
+        
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
         criteria.setCreditorId(creditorId);
         List<CreditorDto> results;
@@ -358,8 +411,21 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @see org.modules.subsidiary.CreditorApi#getByCreditorType(int)
      */
     @Override
-    public List<CreditorDto> getByCreditorType(int creditorTypeId)
+    public List<CreditorDto> getByCreditorType(Integer creditorTypeId)
             throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(creditorTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Type Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Type Id must be greater than zero", e);
+        }
+        
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
                 null, null);
         criteria.setCreditorTypeId(creditorTypeId);
@@ -390,8 +456,13 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @see org.modules.subsidiary.CreditorApi#getByAcctNo(java.lang.String)
      */
     @Override
-    public List<CreditorDto> getByAcctNo(String acctNo)
-            throws CreditorApiException {
+    public List<CreditorDto> getByAcctNo(String acctNo) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(acctNo);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Account number is required", e);
+        }
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(
                 null, null);
         criteria.setAccountNo(acctNo);
@@ -443,9 +514,21 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @see org.modules.subsidiary.CreditorApi#getCreditorType(int)
      */
     @Override
-    public CreditorTypeDto getCreditorType(int creditorTypeId) throws CreditorApiException {
-        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory
-                .createCreditorInstance(null);
+    public CreditorTypeDto getCreditorType(Integer creditorTypeId) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(creditorTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Type Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Type Id must be greater than zero", e);
+        }
+        
+        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null);
         criteria.setEntityId(creditorTypeId);
         List<CreditorTypeDto> results = null;
         try {
