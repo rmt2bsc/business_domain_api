@@ -136,22 +136,18 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             if (criteria.getCreditorId() > 0) {
                 ormCred.addCriteria(Creditor.PROP_CREDITORID,
                         criteria.getCreditorId());
-                ormCred.setCreditorId(criteria.getCreditorId());
             }
             if (criteria.getContactId() > 0) {
                 ormCred.addCriteria(Creditor.PROP_BUSINESSID,
                         criteria.getContactId());
-                ormCred.setBusinessId(criteria.getContactId());
             }
             if (criteria.getAccountNo() != null) {
                 ormCred.addCriteria(Creditor.PROP_ACCOUNTNUMBER,
                         criteria.getAccountNo());
-                ormCred.setAccountNumber(criteria.getAccountNo());
             }
             if (criteria.getCreditorTypeId() > 0) {
                 ormCred.addCriteria(Creditor.PROP_CREDITORTYPEID,
                         criteria.getCreditorTypeId());
-                ormCred.setCreditorTypeId(criteria.getCreditorTypeId());
             }
         }
         // Retrieve creditor data from the database
