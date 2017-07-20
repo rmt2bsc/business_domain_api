@@ -1,4 +1,4 @@
-package org.rmt2.api.subsidiary;
+package org.rmt2.api.subsidiary.creditor;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -22,7 +22,7 @@ import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.BaseAccountingDaoTest;
+import org.rmt2.api.subsidiary.SubsidiaryApiTest;
 import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
@@ -37,25 +37,18 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class CreditorApiTest extends BaseAccountingDaoTest {
-    private List<Creditor> mockCreditorFetchAllResponse;
-    private List<Creditor> mockNotFoundFetchResponse;
-    private List<Creditor> mockCreditorFetchSingleResponse;
-    private List<VwBusinessAddress> mockBusinessContactFetchSingleResponse;
-    private List<VwBusinessAddress> mockBusinessContactFetchAllResponse;
+public class CreditorApiTest extends SubsidiaryApiTest {
+    
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockCreditorFetchAllResponse = this.createMockFetchAllResponse();
-        this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
+        this.mockCreditorNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
         this.mockCreditorFetchSingleResponse = this.createMockSingleCreditorFetchResponse();
-        this.mockBusinessContactFetchSingleResponse = this.createMockSingleContactFetchResponse();
-        this.mockBusinessContactFetchAllResponse = this.createMockFetchAllContactResponse();
     }
 
     /**
@@ -97,40 +90,6 @@ public class CreditorApiTest extends BaseAccountingDaoTest {
         return list;
     }
 
-    private List<VwBusinessAddress> createMockFetchAllContactResponse() {
-        List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
-        VwBusinessAddress p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1351, "Company1", 2222,
-                        "94393 Hall Ave.", "Building 123", "Suite 300",
-                        "Room 45", "Dallas", "TX", 75232);
-        list.add(p);
-        
-        p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1400, "Company2", 4444,
-                        "9382 Frank St.", null, null,
-                        null, "Irving", "TX", 75240);
-        list.add(p);
-        
-        p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1500, "Company3", 5555,
-                        "6718 Bernard Dr", "Building 4353", "Suite 982",
-                        null, "Shreveport", "LA", 71118);
-        list.add(p);
-        
-        p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1600, "Company4", 6666,
-                        "9328 Forest Ave", "Building 854", "Suite 9212",
-                        "Room 555", "FLower Mound", "TX", 75028);
-        list.add(p);
-        
-        p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1700, "Company5", 7777,
-                        "8327 Spring Ave", null, null,
-                        null, "Dallas", "TX", 75232);
-        list.add(p);
-        return list;
-    }
-    
     
     private List<Creditor> createMockSingleCreditorFetchResponse() {
         List<Creditor> list = new ArrayList<Creditor>();
@@ -140,54 +99,6 @@ public class CreditorApiTest extends BaseAccountingDaoTest {
         return list;
     }
 
-    private List<VwBusinessAddress> createMockSingleContactFetchResponse() {
-        List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
-        VwBusinessAddress p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1351, "ABC Company", 2222,
-                        "94393 Hall Ave.", "Building 123", "Suite 300",
-                        "Room 45", "Dallas", "TX", 75232);
-        list.add(p);
-        return list;
-    }
-    
-    
-    
-    private void setupSingleSubsidiaryContactInfoFetch(VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
-      try {
-          when(this.mockPersistenceClient.retrieveList(eq(busContactCriteria)))
-                          .thenReturn(this.mockBusinessContactFetchSingleResponse);
-      } catch (Exception e) {
-          e.printStackTrace();
-          Assert.fail("Single Business Contact fetch test case setup failed");
-      }
-
-      try {
-          when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
-                  .thenReturn(this.mockCreditorFetchSingleResponse);
-      } catch (Exception e) {
-          e.printStackTrace();
-          Assert.fail("Single Creditor fetch test case setup failed");
-      }
-    }
-    
-    private void setupMultipleSubsidiaryContactInfoFetch(VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(busContactCriteria)))
-                            .thenReturn(this.mockBusinessContactFetchAllResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Business Contact fetch test case setup failed");
-        }
-
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
-                    .thenReturn(this.mockCreditorFetchAllResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Creditor fetch test case setup failed");
-        }
-      }
-    
 
     @Test
     public void testFetchAllNoContactData() {
@@ -245,7 +156,7 @@ public class CreditorApiTest extends BaseAccountingDaoTest {
         mockCriteria.setCreditorId(999);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                            .thenReturn(this.mockNotFoundFetchResponse);
+                            .thenReturn(this.mockCreditorNotFoundFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single creditor test case setup failed");
