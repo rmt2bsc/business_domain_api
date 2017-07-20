@@ -220,4 +220,237 @@ public class CreditorApiTest extends SubsidiaryApiTest {
             e.printStackTrace();
         }
     }
+    
+    @Test
+    public void testFetchByBusinessId() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setBusinessId(1351);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto results = null;
+        try {
+            results = api.getByBusinessId(1351);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals("C1234589", results.getAccountNo());
+    }
+    
+    @Test
+    public void testFetchByNullBusinessId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByBusinessId(null);
+            Assert.fail("Expected exception due to null business id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByZeroBusinessId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByBusinessId(0);
+            Assert.fail("Expected exception due to business id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByNegativeBusinessId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByBusinessId(0);
+            Assert.fail("Expected exception due to negative business id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByCreditorId() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorId(200);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto results = null;
+        try {
+            results = api.getByCreditorId(200);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals("C1234589", results.getAccountNo());
+    }
+    
+    @Test
+    public void testFetchByNullCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByCreditorId(null);
+            Assert.fail("Expected exception due to null creditor id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByZeroCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByCreditorId(0);
+            Assert.fail("Expected exception due to creditor id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByNegativeCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByCreditorId(0);
+            Assert.fail("Expected exception due to negative creditor id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByUID() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorId(200);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto results = null;
+        try {
+            results = api.getByUid(200);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals("C1234589", results.getAccountNo());
+    }
+    
+    @Test
+    public void testFetchByNullUID() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByUid(null);
+            Assert.fail("Expected exception due to null UID");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByZeroUID() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByUid(0);
+            Assert.fail("Expected exception due to UID equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByNegativeUID() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByUid(0);
+            Assert.fail("Expected exception due to negative UID");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByCreditorType() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorTypeId(22);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        List<CreditorDto> results = null;
+        try {
+            results = api.getByCreditorType(22);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        Assert.assertEquals("C1234589", results.get(0).getAccountNo());
+    }
+    
+    @Test
+    public void testFetchByNullCreditorType() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByCreditorType(null);
+            Assert.fail("Expected exception due to null creditor type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByZeroCreditorType() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByCreditorType(0);
+            Assert.fail("Expected exception due to creditor type id equals zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByNegativeCreditorType() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByCreditorType(0);
+            Assert.fail("Expected exception due to negative creditor type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
 }
