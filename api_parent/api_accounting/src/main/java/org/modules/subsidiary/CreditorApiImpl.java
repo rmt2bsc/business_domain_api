@@ -128,8 +128,9 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
             // Get list of business id's to use for fetching creditor records.
             if (contactResults != null) {
                 businessIdList = new ArrayList<Integer>(contactResults.keySet());
-                criteria.setContactIdList(businessIdList);
-                creditorResults = this.get(criteria);    
+                CreditorDto criteria2 = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+                criteria2.setContactIdList(businessIdList);
+                creditorResults = this.get(criteria2);    
             }
         }
         else if (useCreditorParms) {
@@ -143,8 +144,9 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
                 }
                 // Use list of business id's along with contact criteria to fetch common contact records.
                 // If there is no common contact criteria, then just use the list of buisness id's as criteeria.
-                criteria.setContactIdList(businessIdList);
-                contactResults = this.getContactInfo(criteria);
+                CreditorDto criteria2 = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+                criteria2.setContactIdList(businessIdList);
+                contactResults = this.getContactInfo(criteria2);
             }
         }
         List<CreditorDto> results = this.mergeContactInfo(creditorResults, contactResults);

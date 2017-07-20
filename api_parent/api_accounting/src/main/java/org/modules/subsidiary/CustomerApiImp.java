@@ -125,8 +125,9 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
             // Get list of business id's to use for fetching customer records.
             if (contactResults != null) {
                 businessIdList = new ArrayList<Integer>(contactResults.keySet());
-                criteria.setContactIdList(businessIdList);
-                customerResults = this.get(criteria);    
+                CustomerDto criteria2 = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
+                criteria2.setContactIdList(businessIdList);
+                customerResults = this.get(criteria2);    
             }
         }
         else if (useCustomerParms) {
@@ -140,8 +141,9 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
                 }
                 // Use list of business id's along with contact criteria to fetch common contact records.
                 // If there is no common contact criteria, then just use the list of buisness id's as criteeria.
-                criteria.setContactIdList(businessIdList);
-                contactResults = this.getContactInfo(criteria);
+                CustomerDto criteria2 = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
+                criteria2.setContactIdList(businessIdList);
+                contactResults = this.getContactInfo(criteria2);
             }
         }
         List<CustomerDto> results = this.mergeContactInfo(customerResults, contactResults);
@@ -294,8 +296,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
     @Override
     public CustomerDto getByBusinessId(Integer businessId)
             throws CustomerApiException {
-        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
-                null, null);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         criteria.setContactId(businessId);
         List<CustomerDto> results;
         try {
