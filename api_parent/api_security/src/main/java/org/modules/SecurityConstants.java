@@ -8,6 +8,8 @@ package org.modules;
  */
 public class SecurityConstants {
     public static final String DEFAULT_CONTEXT_NAME = "Authentication";
+    
+    public static final String APP_NAME = "authentication";
 
     public static final int ROLE_ID_ADMIN = 1;
 

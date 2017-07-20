@@ -8,6 +8,8 @@ package org.modules;
  */
 public class ProjectTrackerApiConst {
     public static final String DEFAULT_CONTEXT_NAME = "ProjectTracker";
+    
+    public static final String APP_NAME = "projecttracker";
 
     /** Flag indicating a billable task */
     public static final int TASK_BILLABLE_FLAG = 1;
