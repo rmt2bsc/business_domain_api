@@ -21,7 +21,7 @@ public interface CustomerApi extends SubsidiaryApi {
      * @return An instance of {@link CustomerDto} or null when no data is found.
      * @throws CustomerApiException
      */
-    CustomerDto getByUid(int id) throws CustomerApiException;
+    CustomerDto getByUid(Integer id) throws CustomerApiException;
 
     /**
      * Fetch the business contact information by business id.
@@ -31,7 +31,7 @@ public interface CustomerApi extends SubsidiaryApi {
      * @return An instance of {@link CustomerDto} or null when no data is found.
      * @throws CustomerApiException
      */
-    CustomerDto getByBusinessId(int businessId) throws CustomerApiException;
+    CustomerDto getByBusinessId(Integer businessId) throws CustomerApiException;
 
     /**
      * Fetch the business contact information by customer id.
@@ -41,7 +41,7 @@ public interface CustomerApi extends SubsidiaryApi {
      * @return An instance of {@link CustomerDto} or null when no data is found.
      * @throws CustomerApiException
      */
-    CustomerDto getByCustomerId(int customerId) throws CustomerApiException;
+    CustomerDto getByCustomerId(Integer customerId) throws CustomerApiException;
 
     /**
      * Fetch customer(s) using an account number.

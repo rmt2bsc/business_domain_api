@@ -257,7 +257,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
      * @see org.modules.subsidiary.CustomerApi#getByUid(int)
      */
     @Override
-    public CustomerDto getByUid(int uid) throws CustomerApiException {
+    public CustomerDto getByUid(Integer uid) throws CustomerApiException {
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
         criteria.setCustomerId(uid);
@@ -292,7 +292,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
      * @see org.modules.subsidiary.CustomerApi#getByBusinessId(int)
      */
     @Override
-    public CustomerDto getByBusinessId(int businessId)
+    public CustomerDto getByBusinessId(Integer businessId)
             throws CustomerApiException {
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
@@ -328,7 +328,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
      * @see org.modules.subsidiary.CustomerApi#getByCustomerId(int)
      */
     @Override
-    public CustomerDto getByCustomerId(int customerId)
+    public CustomerDto getByCustomerId(Integer customerId)
             throws CustomerApiException {
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
