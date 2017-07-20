@@ -120,8 +120,11 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory item id is required", e);
         }
-        if (itemId <= 0) {
-            throw new InvalidDataException("Inventory item must be greater than zero");
+        try {
+            Verifier.verifyPositive(itemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory item must be greater than zero", e);
         }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
@@ -174,9 +177,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory item type id is required", e);
         }
-        if (itemTypeId <= 0) {
-            throw new InvalidDataException("Inventory item type id must be greater than zero");
+        try {
+            Verifier.verifyPositive(itemTypeId);    
         }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Inventory item type id must be greater than zero", e);
+        }
+
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -220,9 +227,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory Vendor id is required", e);
         }
-        if (vendorId <= 0) {
-            throw new InvalidDataException("Vendor Id is required and must be greater than zero");
+        try {
+            Verifier.verifyPositive(vendorId);    
         }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Id is required and must be greater than zero", e);
+        }
+
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -398,9 +409,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory Item type Id is required", e);
         }
-        if (itemTypeId <= 0) {
-            throw new InvalidDataException("Item Type Id is required and must be greater than zero");
+        try {
+            Verifier.verifyPositive(itemTypeId);    
         }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Item Type Id is required and must be greater than zero", e);
+        }
+
         dao.setDaoUser(this.apiUser);
         List<ItemMasterTypeDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -544,9 +559,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory Item Status Id is required", e);
         }
-        if (itemStatusId <= 0) {
-            throw new InvalidDataException("Item Status Id is required and must be greater than zero");
+        try {
+            Verifier.verifyPositive(itemStatusId);    
         }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Item Status Id is required and must be greater than zero", e);
+        }
+
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusDto> results;
         StringBuffer msgBuf = new StringBuffer();
@@ -616,9 +635,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Inventory Item Id is required", e);
         }
-        if (itemId <= 0) {
-            throw new InvalidDataException("Item Id is required and must be greater than zero");
+        try {
+            Verifier.verifyPositive(itemId);    
         }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Item Id is required and must be greater than zero", e);
+        }
+
         dao.setDaoUser(this.apiUser);
         List<ItemMasterStatusHistDto> results;
         StringBuffer msgBuf = new StringBuffer();
