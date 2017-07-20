@@ -10,6 +10,7 @@ import org.dto.ContactDto;
 import org.dto.SubsidiaryContactInfoDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
+import org.modules.AddressBookConstants;
 import org.modules.contacts.ContactsApi;
 import org.modules.contacts.ContactsApiException;
 import org.modules.contacts.ContactsApiFactory;
@@ -138,7 +139,7 @@ abstract class AbstractSubsidiaryApiImpl<E, E2> extends AbstractTransactionApiIm
         }
         
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi("addressbook");
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(contactDto);
