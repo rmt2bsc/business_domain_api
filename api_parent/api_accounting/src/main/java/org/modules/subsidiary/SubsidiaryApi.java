@@ -47,5 +47,5 @@ public interface SubsidiaryApi extends TransactionApi {
      * @throws SubsidiaryException
      *             General database errors.
      */
-    double getBalance(int subsidiaryId) throws SubsidiaryException;
+    double getBalance(Integer subsidiaryId) throws SubsidiaryException;
 }
