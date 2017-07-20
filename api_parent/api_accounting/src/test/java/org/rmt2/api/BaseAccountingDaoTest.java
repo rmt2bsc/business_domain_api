@@ -19,7 +19,6 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 
 public class BaseAccountingDaoTest {
-    protected static String APP_NAME;
     protected PersistenceClient mockPersistenceClient;
 
     /**

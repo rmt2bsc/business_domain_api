@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.postal.PostalApi;
 import org.modules.postal.PostalApiException;
 import org.modules.postal.PostalApiFactory;
@@ -37,7 +38,6 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -139,7 +139,7 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
             Assert.fail("All timezone fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<TimeZoneDto> results = null;
         try {
             results = api.getTimezone(criteria);
@@ -161,7 +161,7 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
             Assert.fail("timezone not found fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<TimeZoneDto> results = null;
         try {
             results = api.getTimezone(criteria);
@@ -176,7 +176,7 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
     public void testFetchWithNullCriteria() {
         TimeZoneDto criteria = null;
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<TimeZoneDto> results = null;
         try {
             api.getTimezone(criteria);
@@ -197,7 +197,7 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
             Assert.fail("timezone single fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<TimeZoneDto> results = null;
         try {
             results = api.getTimezone(criteria);
@@ -220,7 +220,7 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
             Assert.fail("timezone single UID fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         TimeZoneDto rec = null;
         try {
             rec = api.getTimezone(100);
@@ -241,7 +241,7 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
             Assert.fail("timezone single UID fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         TimeZoneDto rec = null;
         try {
             rec = api.getTimezone(100);

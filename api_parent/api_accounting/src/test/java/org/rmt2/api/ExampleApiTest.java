@@ -9,9 +9,7 @@ import org.dao.mapping.orm.rmt2.Country;
 import org.dto.CountryDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -21,6 +19,13 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
+
+/**
+ * An exmaple template of setting up a JUnit.
+ * 
+ * @author roy.terrell
+ *
+ */
 public class ExampleApiTest extends BaseAccountingDaoTest {
     private List<Country> mockSingleFetchResponse;
     private List<Country> mockCriteriaFetchResponse;
@@ -29,7 +34,6 @@ public class ExampleApiTest extends BaseAccountingDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -117,55 +121,55 @@ public class ExampleApiTest extends BaseAccountingDaoTest {
         dto.setDateUpdated(new Date());
         return dto;
     }
-
-    @Test
-    public void testFetchAll() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testFetchWithNullCriteriaObject() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testFetchSingle() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testFetchByUid() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testFetchUsingCriteria() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testNotFoundlFetch() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testUpdate() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testInsert() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testDelete() {
-        Assert.fail("Test Failed");
-    }
-
-    @Test
-    public void testDeleteWithZeroUid() {
-        Assert.fail("Test Failed");
-    }
+//  TODO:  Uncomment in order to use
+//    @Test
+//    public void testFetchAll() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testFetchWithNullCriteriaObject() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testFetchSingle() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testFetchByUid() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testFetchUsingCriteria() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testNotFoundlFetch() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testUpdate() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testInsert() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testDelete() {
+//        Assert.fail("Test Failed");
+//    }
+//
+//    @Test
+//    public void testDeleteWithZeroUid() {
+//        Assert.fail("Test Failed");
+//    }
 
 }

@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.modules.AddressBookConstants;
 import org.modules.generalledger.GeneralLedgerApiException;
 import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
@@ -52,7 +53,6 @@ public class AccountApiTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this
@@ -147,7 +147,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountDto> results = null;
         try {
             results = api.getAccount(criteria);
@@ -169,7 +169,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountDto> results = null;
         try {
             results = api.getAccount(null);
@@ -193,7 +193,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountDto> results = null;
         try {
             results = api.getAccount(criteria);
@@ -220,7 +220,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         AccountDto dto = null;
         try {
             dto = api.getAccount(100);
@@ -244,7 +244,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getAccount(100);
             Assert.fail("Expected exception to be thrown due multiple items returned");
@@ -266,7 +266,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountDto> results = null;
         try {
             results = api.getAccount(criteria);
@@ -294,7 +294,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountDto> results = null;
         try {
             results = api.getAccount(criteria);
@@ -334,7 +334,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateAccount(dto);
@@ -376,7 +376,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateAccount(dto);
@@ -399,7 +399,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.deleteAccount(100);
@@ -413,7 +413,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
     @Test
     public void testUpdateWithNullAccountDto() {
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateAccount(null);
             Assert.fail("Expected exception to be thrown due to null input DTO object");
@@ -435,7 +435,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account not exist: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateAccount(dto);
             Assert.fail("Expected exception to be thrown due account does not exists");
@@ -457,7 +457,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account exist check return too many: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateAccount(dto);
             Assert.fail("Expected exception to be thrown due account exist chech return too many accounts");
@@ -480,7 +480,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account missing account number: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateAccount(dto);
             Assert.fail("Expected exception to be thrown due account number missing");
@@ -503,7 +503,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with negative sequence number: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateAccount(dto);
             Assert.fail("Expected exception to be thrown due sequence number is a negative number");
@@ -525,7 +525,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with zero sequence number: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         int invalidSeqNo = -1;
         dto.setAcctSeq(invalidSeqNo);
@@ -561,7 +561,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with invalid account type id: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         int invalidNumericArg = -1;
         dto.setAcctTypeId(invalidNumericArg);
@@ -597,7 +597,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with invalid account category id: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         int invalidNumericArg = -1;
         dto.setAcctCatgId(invalidNumericArg);
@@ -632,7 +632,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with invalid balance type id: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         int invalidNumericArg = -1;
         dto.setBalanceTypeId(invalidNumericArg);
@@ -669,7 +669,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with null account name: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         try {
             api.updateAccount(dto);
@@ -694,7 +694,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with null account code: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         try {
             api.updateAccount(dto);
@@ -719,7 +719,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account with null account description: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         try {
             api.updateAccount(dto);
@@ -744,7 +744,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Insert account with invalid account type id: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         int invalidNumericArg = -1;
         dto.setAcctTypeId(invalidNumericArg);
@@ -780,7 +780,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Insert account with invalid account category id: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         int invalidNumericArg = -1;
         dto.setAcctCatgId(invalidNumericArg);
@@ -815,7 +815,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Insert account with invalid balance type id: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         int invalidNumericArg = -1;
         dto.setBalanceTypeId(invalidNumericArg);
@@ -852,7 +852,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Insert account with null account name: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         try {
             api.updateAccount(dto);
@@ -877,7 +877,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Insert account with null account code: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         try {
             api.updateAccount(dto);
@@ -902,7 +902,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Insert account with null account description: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         try {
             api.updateAccount(dto);
@@ -929,7 +929,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateAccount(dto);
             Assert.fail("Expected exception to be thrown due to account name is duplicated");
@@ -958,7 +958,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Update account: Single GL Acccount fetch using criteria mock setup failed");
         }
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateAccount(dto);
             Assert.fail("Expected exception to be thrown due to account name is duplicated");

@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
@@ -53,7 +54,6 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this
@@ -162,7 +162,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         VendorItemDto dto = null;
         try {
             dto = api.getVendorItem(1234, 100);
@@ -190,7 +190,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         VendorItemDto dto = null;
         try {
             dto = api.getVendorItem(9999, 99);
@@ -203,7 +203,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchSingleWithNullVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getVendorItem(null, 100);
             Assert.fail(
@@ -217,7 +217,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchSingleWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getVendorItem(1234, null);
             Assert.fail("Expected exception to be thrown due to null item id");
@@ -240,7 +240,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<VendorItemDto> results = null;
         try {
             results = api.getVendorAssignItems(1234);
@@ -260,7 +260,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchAssignedItemsWithNullVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getVendorAssignItems(null);
             Assert.fail(
@@ -284,7 +284,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<VendorItemDto> results = null;
         try {
             results = api.getVendorAssignItems(9999);
@@ -332,7 +332,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateVendorItem(updateDto);

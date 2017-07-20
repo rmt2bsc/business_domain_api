@@ -17,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.CommonAccountingConst;
 import org.modules.subsidiary.CreditorApi;
 import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
@@ -38,7 +39,6 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class CreditorApiTest extends SubsidiaryApiTest {
-    
 
     /**
      * @throws java.lang.Exception
@@ -112,7 +112,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         }
 
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(APP_NAME);
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
         List<CreditorDto> results = null;
         try {
@@ -137,7 +137,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         }
 
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(APP_NAME);
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
         criteria.setCreditorId(200);
         List<CreditorDto> results = null;
@@ -163,7 +163,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         }
 
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(APP_NAME);
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
         criteria.setCreditorId(999);
         List<CreditorDto> results = null;
@@ -178,7 +178,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
     @Test
     public void testFetchWithNullCriteriaObject() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(APP_NAME);
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         try {
             api.get(null);
             Assert.fail("Expected exception due to null selection criteria object");
@@ -196,7 +196,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
         
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(APP_NAME);
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         List<CreditorDto> results = null;
         try {
             results = api.getByAcctNo("C1234589");
@@ -211,7 +211,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
     @Test
     public void testFetchByAccountNumberWithNullValue() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(APP_NAME);
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByAcctNo(null);
             Assert.fail("Expected exception due to null account number");

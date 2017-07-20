@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.postal.PostalApi;
 import org.modules.postal.PostalApiException;
 import org.modules.postal.PostalApiFactory;
@@ -36,7 +37,6 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -135,7 +135,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("All country fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<CountryDto> results = null;
         try {
             results = api.getCountry(criteria);
@@ -149,7 +149,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchAllWithNullCriteriaObject() {
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getCountry(null);
             Assert.fail("Expected exception to be thrown");
@@ -169,7 +169,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Fetch single country test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<CountryDto> results = null;
         try {
             results = api.getCountry(criteria);
@@ -192,7 +192,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Fetch country by country id test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         CountryDto results = null;
         try {
             results = api.getCountry(criteria.getCountryId());
@@ -215,7 +215,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Fetch country using criteria object test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<CountryDto> results = null;
         try {
             results = api.getCountry(criteria);
@@ -238,7 +238,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Not Found country fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<CountryDto> results = null;
         try {
             results = api.getCountry(criteria);
@@ -269,7 +269,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Country update test case failed setting up mock update call");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCountry(mockUpdateCountry);
@@ -292,7 +292,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
         CountryDto mockUpdateCountry = this.createMockDto(200, null, "USA");
 
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCountry(mockUpdateCountry);
@@ -312,7 +312,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Country insert test case failed setting up mock update call");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCountry(mockUpdateCountry);
@@ -336,7 +336,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Country insert test case failed setting up mock update call");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCountry(mockUpdateCountry);
@@ -357,7 +357,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Delete country by country id test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int results = 0;
         try {
             results = api.deleteCountry(criteria.getCountryId());
@@ -373,7 +373,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
         criteria.setCountryId(0);
 
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int results = 0;
         try {
             results = api.deleteCountry(criteria.getCountryId());
@@ -389,7 +389,7 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
         criteria.setCountryId(-123);
 
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int results = 0;
         try {
             results = api.deleteCountry(criteria.getCountryId());

@@ -2,6 +2,8 @@ package org.modules;
 
 public class CommonAccountingConst {
 
+    public static final String APP_NAME = "accounting";
+    
     public static final String DEFAULT_CONTEXT_NAME = "Accounting";
 
     public static final String MSG_DATA_NOT_FOUND = "No data was foundCannot create Creditor when GL Account data is not available";

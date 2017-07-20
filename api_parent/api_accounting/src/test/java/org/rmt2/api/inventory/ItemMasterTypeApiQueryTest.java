@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
@@ -47,7 +48,6 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this
@@ -133,7 +133,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterTypeDto> results = null;
         ItemMasterTypeDto criteriaObj = null;
         try {
@@ -157,7 +157,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterTypeDto> results = null;
         ItemMasterTypeDto criteriaObj = null;
         try {
@@ -180,7 +180,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         ItemMasterTypeDto dto = null;
         try {
             dto = api.getItemTypeById(100);
@@ -220,7 +220,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         ItemMasterTypeDto dto = null;
         try {
             dto = api.getItemTypeById(570);
@@ -255,7 +255,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterTypeDto> results = null;
         try {
             results = api.getItemTypes("Item");
@@ -297,7 +297,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterTypeDto> results = null;
         try {
             results = api.getItemTypes("Item Not Exists");
@@ -323,7 +323,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchWithInvalidDescription() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemTypes(null);
             Assert.fail(
@@ -347,7 +347,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchByInvalidItemTypeId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         
         try {
             api.getItemTypeById(null);

@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.postal.PostalApi;
 import org.modules.postal.PostalApiException;
 import org.modules.postal.PostalApiFactory;
@@ -35,7 +36,6 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -154,7 +154,7 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("All country state/region fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<CountryRegionDto> results = null;
         try {
             results = api.getCountryRegion(criteria);
@@ -177,7 +177,7 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Single country state/region fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<CountryRegionDto> results = null;
         try {
             results = api.getCountryRegion(criteria);
@@ -209,7 +209,7 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Single country state/region fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<CountryRegionDto> results = null;
         try {
             results = api.getCountryRegion(criteria);
@@ -222,7 +222,7 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchUsingNullCriteria() {
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getCountryRegion(null);
             Assert.fail("Expected exception to be thrown due to null criteria object input");

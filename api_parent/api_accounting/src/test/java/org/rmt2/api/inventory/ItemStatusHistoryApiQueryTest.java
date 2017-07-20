@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
@@ -48,7 +49,6 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this
@@ -146,7 +146,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterStatusHistDto> results = null;
         ItemMasterStatusHist im = null;
         ItemMasterStatusHistDto criteria = Rmt2ItemMasterDtoFactory
@@ -173,7 +173,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterStatusHistDto> results = null;
         ItemMasterStatusHist im = null;
         ItemMasterStatusHistDto criteria = Rmt2ItemMasterDtoFactory
@@ -200,7 +200,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterStatusHistDto> results = null;
         ItemMasterStatusHist im = null;
         ItemMasterStatusHistDto criteria = Rmt2ItemMasterDtoFactory
@@ -234,7 +234,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterStatusHistDto> results = null;
         ItemMasterStatusHist im = null;
         ItemMasterStatusHistDto criteria = Rmt2ItemMasterDtoFactory
@@ -261,7 +261,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         ItemMasterStatusHistDto dto = null;
         try {
             dto = api.getCurrentItemStatusHist(100);
@@ -277,7 +277,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchCurrentItemStatusByInvalidItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getCurrentItemStatusHist(null);
             Assert.fail(
@@ -318,7 +318,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterStatusHistDto> results = null;
         try {
             results = api.getItemStatusHistByItemId(100);
@@ -336,7 +336,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchNullCriteria() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterStatusHistDto> results = null;
        
         ItemMasterStatusHistDto criteria = null;
@@ -353,7 +353,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchItemStatusHistoryByInvalidItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemStatusHistByItemId(null);
             Assert.fail(

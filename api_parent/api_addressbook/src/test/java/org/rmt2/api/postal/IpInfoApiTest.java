@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.postal.PostalApi;
 import org.modules.postal.PostalApiException;
 import org.modules.postal.PostalApiFactory;
@@ -30,7 +31,6 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
@@ -89,7 +89,7 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
             Assert.fail("IP location octet fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         IpLocationDto rec = null;
         try {
             rec = api.getIpInfo("123.345.456.678");
@@ -114,7 +114,7 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
             Assert.fail("IP location with long value fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         IpLocationDto rec = null;
         try {
             rec = api.getIpInfo(123456789045L);
@@ -133,7 +133,7 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchWithNullOctets() {
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         IpLocationDto rec = null;
         try {
             rec = api.getIpInfo(null);
@@ -146,7 +146,7 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchWith3Octets() {
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         IpLocationDto rec = null;
         try {
             rec = api.getIpInfo("123.345.456");
@@ -159,7 +159,7 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchWithAnInvalidOctet() {
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         IpLocationDto rec = null;
         try {
             rec = api.getIpInfo("123.345.456.abc");
@@ -172,7 +172,7 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchWithNoOctets() {
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         IpLocationDto rec = null;
         try {
             rec = api.getIpInfo("123345456225");

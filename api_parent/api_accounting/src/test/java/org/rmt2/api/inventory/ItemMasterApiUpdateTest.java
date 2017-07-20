@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
@@ -57,7 +58,6 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockFetchAllItemsMasterResponse = this.createMockFetchAllResponse();
@@ -221,7 +221,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                 .createItemMasterInstance(im);
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateItemMaster(dto);
@@ -289,7 +289,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                 .createItemMasterInstance(im);
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateItemMaster(dto);
@@ -364,7 +364,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                 .createItemMasterInstance(im);
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.activateItemMaster(100);
@@ -377,7 +377,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testActivateItemMasterWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.activateItemMaster(null);
             Assert.fail("Expected exception to be thrown due to null item id");
@@ -391,7 +391,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testActivateItemMasterWithZeroValueItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.activateItemMaster(0);
             Assert.fail("Expected exception to be thrown due to item master id is zero");
@@ -404,7 +404,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testActivateItemMasterWithNegativeItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.activateItemMaster(0);
             Assert.fail("Expected exception to be thrown due to item master id is negative");
@@ -428,7 +428,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
     
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.activateItemMaster(222);
             Assert.fail("Expected exception to be thrown due to item master is not found");
@@ -502,7 +502,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                 .createItemMasterInstance(im);
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         Integer items[] = {100};
         try {
@@ -597,7 +597,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                 .createItemMasterInstance(im);
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         Integer items[] = {100, 200, 300};
         try {
@@ -611,7 +611,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAddInventoryOverrideWithNullVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 300};
         try {
             api.addInventoryOverride(null, items);
@@ -625,7 +625,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAddInventoryOverrideWithZeroValueVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 300};
         try {
             api.addInventoryOverride(0, items);
@@ -639,7 +639,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAddInventoryOverrideWithNegativeVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 300};
         try {
             api.addInventoryOverride(-1, items);
@@ -653,7 +653,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAddInventoryOverrideWithNullItemList() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.addInventoryOverride(0, null);
             Assert.fail("Expected exception due to item list is null");
@@ -666,7 +666,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAddInventoryOverrideWithItemListElementIsNull() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, null, 300};
         try {
             api.addInventoryOverride(0, items);
@@ -680,7 +680,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAddInventoryOverrideWithItemListElementIsZero() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 0};
         try {
             api.addInventoryOverride(0, items);
@@ -694,7 +694,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAddInventoryOverrideWithItemListElementIsNegative() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {-100, 200, 300};
         try {
             api.addInventoryOverride(0, items);
@@ -742,7 +742,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         Integer items[] = {100, 200, 300};
         try {
@@ -761,7 +761,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAssignVendorItemsWithNullVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 300};
         try {
             api.assignVendorItems(null, items);
@@ -775,7 +775,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAssignVendorItemsWithZeroValueVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 300};
         try {
             api.assignVendorItems(0, items);
@@ -789,7 +789,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAssignVendorItemsWithNegativeVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 300};
         try {
             api.assignVendorItems(-1, items);
@@ -803,7 +803,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAssignVendorItemsWithNullItemList() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.assignVendorItems(0, null);
             Assert.fail("Expected exception due to item list is null");
@@ -816,7 +816,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAssignVendorItemsWithItemListElementIsNull() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, null, 300};
         try {
             api.assignVendorItems(0, items);
@@ -830,7 +830,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAssignVendorItemsWithItemListElementIsZero() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 0};
         try {
             api.assignVendorItems(0, items);
@@ -844,7 +844,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testAssignVendorItemsWithItemListElementIsNegative() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {-100, 200, 300};
         try {
             api.assignVendorItems(0, items);
@@ -918,7 +918,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                 .createItemMasterInstance(im);
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.deactivateItemMaster(100);
@@ -931,7 +931,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testDeactivateItemMasterWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deactivateItemMaster(null);
             Assert.fail("Expected exception to be thrown due to null item id");
@@ -945,7 +945,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testDeactivateItemMasterWithZeroValueItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deactivateItemMaster(0);
             Assert.fail("Expected exception to be thrown due to item master id is zero");
@@ -958,7 +958,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testDeactivateItemMasterWithNegativeItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deactivateItemMaster(0);
             Assert.fail("Expected exception to be thrown due to item master id is negative");
@@ -982,7 +982,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
     
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deactivateItemMaster(222);
             Assert.fail("Expected exception to be thrown due to item master is not found");
@@ -1002,7 +1002,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Fetch Item Assoications test case setup failed");
         }
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemAssociationDto> results = null;
         try {
             results = api.getItemAssociations(100);
@@ -1017,7 +1017,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testGetAssoicationsWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemAssociations(null);
             Assert.fail("Expected exception to be thrown due to item id is null");
@@ -1030,7 +1030,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testGetAssoicationsWithItemIdZeroValue() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemAssociations(0);
             Assert.fail("Expected exception to be thrown due to item id is zero");
@@ -1043,7 +1043,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testGetAssoicationsWithNegataiveItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemAssociations(-100);
             Assert.fail("Expected exception to be thrown due to item id is negative");
@@ -1086,7 +1086,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
         
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.deleteItemMaster(100);
@@ -1109,7 +1109,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
         
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deleteItemMaster(100);
             Assert.fail("Expected exception due item master has asociations");
@@ -1122,7 +1122,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testDeleteItemMasterWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deleteItemMaster(null);
             Assert.fail("Expected exception due item id is null");
@@ -1135,7 +1135,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testDeleteItemMasterWithZeroItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deleteItemMaster(0);
             Assert.fail("Expected exception due item id is zero");
@@ -1148,7 +1148,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testDeleteItemMasterWithNegativeItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deleteItemMaster(-222);
             Assert.fail("Expected exception due item id is negative");
@@ -1222,7 +1222,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Item master update test case setup failed");
         }
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         double changeValue = 0;
         int reducedQty = 2;
         try {
@@ -1247,7 +1247,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Fetch Item Master test case setup failed");
         }
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int reducedQty = 2;
         try {
             api.pullInventory(100, reducedQty);
@@ -1261,7 +1261,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testPullInventoryWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int reducedQty = 2;
         try {
             api.pullInventory(null, reducedQty);
@@ -1275,7 +1275,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testPullInventoryWithNullQty() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.pullInventory(100, null);
             Assert.fail("Expected exception due to inventory null quantity");
@@ -1349,7 +1349,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Item master update test case setup failed");
         }
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         double changeValue = 0;
         int increaseQty = 2;
         try {
@@ -1375,7 +1375,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Fetch Item Master test case setup failed");
         }
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int reducedQty = 2;
         try {
             api.pullInventory(100, reducedQty);
@@ -1389,7 +1389,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testPushInventoryWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int reducedQty = 2;
         try {
             api.pullInventory(null, reducedQty);
@@ -1403,7 +1403,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testPushInventoryWithNullQty() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.pullInventory(100, null);
             Assert.fail("Expected exception due to inventory null quantity");
@@ -1456,7 +1456,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 102, 103, 104, 105};
         int rc = 0;
         try {
@@ -1476,7 +1476,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Fetch Item Master test case setup failed");
         }
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {9999};
         try {
             api.removeInventoryOverride(1234, items);
@@ -1490,7 +1490,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveInventoryOverrideWithNullVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 102, 103, 104, 105};
         try {
             api.removeInventoryOverride(null, items);
@@ -1504,7 +1504,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveInventoryOverrideWithVendorIdEqualZero() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 102, 103, 104, 105};
         try {
             api.removeInventoryOverride(0, items);
@@ -1518,7 +1518,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveInventoryOverrideWithNegativeVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 102, 103, 104, 105};
         try {
             api.removeInventoryOverride(-123, items);
@@ -1532,7 +1532,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveInventoryOverrideWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {null};
         try {
             api.removeInventoryOverride(1234, items);
@@ -1546,7 +1546,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveInventoryOverrideWithItemIdEqualZero() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {0};
         try {
             api.removeInventoryOverride(1234, items);
@@ -1560,7 +1560,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveInventoryOverrideWithNegativeItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {-555};
         try {
             api.removeInventoryOverride(1234, items);
@@ -1582,7 +1582,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 200, 300, 400, 500};
         int rc = 0;
         try {
@@ -1596,7 +1596,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveVendorItemsWithNullVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 102, 103, 104, 105};
         try {
             api.removeVendorItems(null, items);
@@ -1610,7 +1610,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveVendorItemsWithVendorIdEqualZero() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 102, 103, 104, 105};
         try {
             api.removeInventoryOverride(0, items);
@@ -1624,7 +1624,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveVendorItemsWithNegativeVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {100, 102, 103, 104, 105};
         try {
             api.removeInventoryOverride(-123, items);
@@ -1638,7 +1638,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveVendorItemsWithNullItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {null};
         try {
             api.removeInventoryOverride(1234, items);
@@ -1652,7 +1652,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveVendorItemsWithItemIdEqualZero() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {0};
         try {
             api.removeInventoryOverride(1234, items);
@@ -1666,7 +1666,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     @Test
     public void testRemoveVendorItemsWithNegativeItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         Integer items[] = {-555};
         try {
             api.removeInventoryOverride(1234, items);

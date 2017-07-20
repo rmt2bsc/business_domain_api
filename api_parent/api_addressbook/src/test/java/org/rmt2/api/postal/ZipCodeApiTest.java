@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.postal.PostalApi;
 import org.modules.postal.PostalApiException;
 import org.modules.postal.PostalApiFactory;
@@ -37,7 +38,6 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -185,7 +185,7 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("All zipcode fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ZipcodeDto> results = null;
         try {
             results = api.getZipCode(criteria);
@@ -207,7 +207,7 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("zipcode not found fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ZipcodeDto> results = null;
         try {
             results = api.getZipCode(criteria);
@@ -227,7 +227,7 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("zipcode fetch with empty criteria test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getZipCode(criteria);
             Assert.fail("Expected exception to be thrown due to empty criteria");
@@ -246,7 +246,7 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("zipcode fetch with null criteria test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getZipCode(criteria);
             Assert.fail("Expected exception to be thrown due to null criteria");
@@ -266,7 +266,7 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Single zipcode fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ZipcodeDto> results = null;
         try {
             results = api.getZipCode(criteria);
@@ -292,7 +292,7 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("UID zipcode fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         ZipcodeDto rec = null;
         try {
             rec = api.getZipCode(71106);
@@ -316,7 +316,7 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("UID zipcode not found fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         ZipcodeDto rec = null;
         try {
             rec = api.getZipCode(99999);

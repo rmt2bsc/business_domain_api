@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
@@ -47,7 +48,6 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this
@@ -133,7 +133,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterDto> results = null;
         String criteria = null;
         try {
@@ -176,7 +176,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         ItemMasterDto dto = null;
         try {
             dto = api.getItemById(100);
@@ -212,7 +212,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchSingleWithInvalidItemId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemById(null);
             Assert.fail("Expected exception to be thrown due to null item id");
@@ -250,7 +250,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterDto> results = null;
         try {
             results = api.getItemBySerialNo("111-111-111");
@@ -288,7 +288,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchByInvalidSerialNo() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemBySerialNo(null);
             Assert.fail("Expected exception to be thrown due to null serial number");
@@ -319,7 +319,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterDto> results = null;
         try {
             results = api.getItemByType(1);
@@ -357,7 +357,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchByInvalidType() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemByType(null);
             Assert.fail("Expected exception to be thrown due to null item type id");
@@ -395,7 +395,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterDto> results = null;
         try {
             results = api.getItemByVendorId(1234);
@@ -433,7 +433,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchByInvalidVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemByVendorId(null);
             Assert.fail("Expected exception to be thrown due to null vendor id");
@@ -472,7 +472,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterDto> results = null;
         try {
             results = api.getItemByVendorItemNo("11111111");
@@ -510,7 +510,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchByInvalidVendorItemNo() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getItemByVendorItemNo(null);
             Assert.fail("Expected exception to be thrown due to null serial number");
@@ -541,7 +541,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterDto> results = null;
         try {
             results = api.getVendorUnassignItems(1234);
@@ -568,7 +568,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
 
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ItemMasterDto> results = null;
         try {
             results = api.getVendorUnassignItems(1234);
@@ -581,7 +581,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     @Test
     public void testFetchVendorUnassignedItemsWithNullVendorId() {
         InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(APP_NAME);
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getVendorUnassignItems(null);
             Assert.fail("Expected exception to be thrown due to null vendor id");

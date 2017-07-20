@@ -36,7 +36,6 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockBusinessContactFetchSingleResponse = this
                 .createMockSingleContactFetchResponse();

@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.generalledger.GeneralLedgerApiException;
 import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
@@ -48,7 +49,6 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "accounting";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -136,7 +136,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountTypeDto> results = null;
         try {
             results = api.getAccountType(criteria);
@@ -158,7 +158,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountTypeDto> results = null;
         try {
             results = api.getAccountType(null);
@@ -182,7 +182,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountTypeDto> results = null;
         try {
             results = api.getAccountType(criteria);
@@ -209,7 +209,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         AccountTypeDto dto = null;
         try {
             dto = api.getAccountType(100);
@@ -233,7 +233,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getAccountType(100);
             Assert.fail("Expected exception to be thrown due multiple items returned");
@@ -255,7 +255,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountTypeDto> results = null;
         try {
             results = api.getAccountType(criteria);
@@ -283,7 +283,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
 
         GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
-        GlAccountApi api = f.createApi(APP_NAME);
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountTypeDto> results = null;
         try {
             results = api.getAccountType(criteria);

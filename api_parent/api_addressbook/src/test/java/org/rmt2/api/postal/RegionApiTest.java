@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.postal.PostalApi;
 import org.modules.postal.PostalApiException;
 import org.modules.postal.PostalApiFactory;
@@ -36,7 +37,6 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -145,7 +145,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("All state/region fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<RegionDto> results = null;
         try {
             results = api.getRegion(criteria);
@@ -167,7 +167,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Single state/region fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<RegionDto> results = null;
         try {
             results = api.getRegion(criteria);
@@ -194,7 +194,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Fetch state/region by code id test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         RegionDto results = null;
         try {
             results = api.getRegion(10);
@@ -219,7 +219,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Criteria state/region fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<RegionDto> results = null;
         try {
             results = api.getRegion(criteria);
@@ -244,7 +244,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Criteria state/region fetch test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<RegionDto> results = null;
         try {
             results = api.getRegion(criteria);
@@ -257,7 +257,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchUsingNullCriteria() {
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getRegion(null);
             Assert.fail("Expected exception to be thrown due to null criteria object input");
@@ -287,7 +287,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Update state/region update row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateRegion(updateState);
@@ -318,7 +318,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Update state/region update row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateRegion(updateState);
@@ -349,7 +349,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Update state/region update row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateRegion(updateState);
@@ -380,7 +380,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Update state/region update row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateRegion(updateState);
@@ -400,7 +400,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Insert state/region row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateRegion(updateState);
@@ -421,7 +421,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Insert state/region row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateRegion(updateState);
             Assert.fail("Expected an exception to be thrown");
@@ -439,7 +439,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Delete state/region row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.deleteRegion(10);
@@ -458,7 +458,7 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Delete state/region row test case failed");
         }
         PostalApiFactory f = new PostalApiFactory();
-        PostalApi api = f.createApi(APP_NAME);
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deleteRegion(-10);
             Assert.fail("Expected an exception to be thrown");

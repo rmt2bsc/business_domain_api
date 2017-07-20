@@ -22,6 +22,7 @@ import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.contacts.ContactsApi;
 import org.modules.contacts.ContactsApiException;
 import org.modules.contacts.ContactsApiFactory;
@@ -51,7 +52,6 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
 
     @Override
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockFetchSingleResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -276,7 +276,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
         }
 
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(perDto);
@@ -315,7 +315,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
         }
 
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(perDto);
@@ -353,7 +353,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
         }
 
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(perDto);
@@ -393,7 +393,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
         }
 
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(perDto);
@@ -430,7 +430,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
         }
 
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(perDto);
@@ -469,7 +469,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
         }
 
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(perDto);
@@ -482,7 +482,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchUsingCriteriaNullResults() {
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getContact(null);
             Assert.fail("Expected test case to throw an exception");
@@ -511,7 +511,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Business contact update test case failed setting up update call");
         }
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateContact(mockUpdatePersonDto);
@@ -533,7 +533,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Person contact insert test case failed setting up update call");
         }
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateContact(mockUpdatePersonDto);
@@ -557,7 +557,7 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Person contact delete test case failed setting up update call");
         }
         ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(APP_NAME);
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.deleteContact(mockUpdatePersonDto);

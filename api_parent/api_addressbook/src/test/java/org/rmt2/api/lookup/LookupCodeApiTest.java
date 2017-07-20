@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.AddressBookConstants;
 import org.modules.lookup.LookupDataApi;
 import org.modules.lookup.LookupDataApiException;
 import org.modules.lookup.LookupDataApiFactory;
@@ -36,7 +37,6 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        APP_NAME = "addressbook";
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
@@ -141,7 +141,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
 
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<LookupCodeDto> results = null;
         try {
             results = api.getCode(criteria);
@@ -165,7 +165,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
 
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<LookupCodeDto> results = null;
         try {
             results = api.getCode(criteria);
@@ -187,7 +187,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
 
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         LookupCodeDto results = null;
         try {
             results = api.getCode(1000);
@@ -211,7 +211,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
 
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<LookupCodeDto> results = null;
         try {
             results = api.getCode(criteria);
@@ -238,7 +238,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
 
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<LookupCodeDto> results = null;
         try {
             results = api.getCode(criteria);
@@ -261,7 +261,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
 
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<LookupCodeDto> results = null;
         try {
             results = api.getCode(criteria);
@@ -274,7 +274,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
     @Test
     public void testFetchUsingNullCriteria() {
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getCode(null);
             Assert.fail("Expected an exception to be thrown");
@@ -310,7 +310,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Lookup Code update test case failed setting up mock update call");
         }
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCode(mockUpdateDto);
@@ -329,7 +329,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
     public void testUpdateWithoutGroupId() {
         LookupCodeDto mockUpdateDto = this.createMockDto(0, 300, "Modified Code 33", "Code 33");
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCode(mockUpdateDto);
@@ -343,7 +343,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
     public void testUpdateWithoutLongDescription() {
         LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, null, "Code 33");
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCode(mockUpdateDto);
@@ -357,7 +357,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
     public void testUpdateWithoutShortDescription() {
         LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, "Modified Code 33", null);
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCode(mockUpdateDto);
@@ -371,7 +371,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
     public void testUpdateWithoutAnyDescriptions() {
         LookupCodeDto mockUpdateDto = this.createMockDto(555, 300, null, null);
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCode(mockUpdateDto);
@@ -397,7 +397,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
             Assert.fail("Lookup Code update test case failed setting up mock update call");
         }
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.updateCode(mockUpdateDto);
@@ -423,7 +423,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
        
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.deleteGroup(mockUpdateDto.getCodeId());
@@ -445,7 +445,7 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
        
         LookupDataApiFactory f = new LookupDataApiFactory();
-        LookupDataApi api = f.createApi(APP_NAME);
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
             rc = api.deleteCode(mockUpdateDto.getCodeId());
