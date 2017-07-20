@@ -218,9 +218,22 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
      *             General database errors.
      */
     @Override
-    public double getBalance(int customerId) throws SubsidiaryException {
+    public double getBalance(Integer customerId) throws SubsidiaryException {
         // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
         // CustomerDao dao = f.createRmt2OrmCustomerDao();
+        try {
+            Verifier.verifyNotNull(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer Id must be greater than zero", e);
+        }
+        
         try {
             double results = dao.calculateBalance(customerId);
             return Math.abs(results);
