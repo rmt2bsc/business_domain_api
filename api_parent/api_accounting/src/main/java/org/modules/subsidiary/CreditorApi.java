@@ -21,7 +21,7 @@ public interface CreditorApi extends SubsidiaryApi {
      * @return An instance of {@link CreditorDto} or null when no data is found.
      * @throws CreditorApiException
      */
-    CreditorDto getByUid(int id) throws CreditorApiException;
+    CreditorDto getByUid(Integer id) throws CreditorApiException;
 
     /**
      * Fetch one or more creditors based on a business contact.
@@ -31,7 +31,7 @@ public interface CreditorApi extends SubsidiaryApi {
      * @return An instance of {@link CreditorDto} or null when no data is found.
      * @throws CreditorApiException
      */
-    CreditorDto getByBusinessId(int businessId) throws CreditorApiException;
+    CreditorDto getByBusinessId(Integer businessId) throws CreditorApiException;
 
     /**
      * Fetch creditors based on a particular creditor type.
@@ -41,8 +41,7 @@ public interface CreditorApi extends SubsidiaryApi {
      * @return A List of {@link CreditorDto} or null when no data is found.
      * @throws CreditorApiException
      */
-    List<CreditorDto> getByCreditorType(int creditorTypeId)
-            throws CreditorApiException;
+    List<CreditorDto> getByCreditorType(Integer creditorTypeId) throws CreditorApiException;
 
     /**
      * Fetch creditors using an account number.
@@ -62,7 +61,7 @@ public interface CreditorApi extends SubsidiaryApi {
      * @return An instance of {@link CreditorDto} or null when no data is found.
      * @throws CreditorApiException
      */
-    CreditorDto getByCreditorId(int creditorId) throws CreditorApiException;
+    CreditorDto getByCreditorId(Integer creditorId) throws CreditorApiException;
 
     /**
      * Fetch the creditor/business contact information using creditor criteria
@@ -91,8 +90,7 @@ public interface CreditorApi extends SubsidiaryApi {
      *         found.
      * @throws CreditorApiException
      */
-    CreditorTypeDto getCreditorType(int creditorTypeId)
-            throws CreditorApiException;
+    CreditorTypeDto getCreditorType(Integer creditorTypeId) throws CreditorApiException;
 
     /**
      * Creates a new or modifies an existing creditor's profile.
