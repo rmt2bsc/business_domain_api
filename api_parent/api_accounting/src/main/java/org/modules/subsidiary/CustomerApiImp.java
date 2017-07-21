@@ -585,20 +585,20 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
     /**
      * Get transacton history for a particular customer account.
      * 
-     * @param subsidiaryId
+     * @param customerId
      *            the unique id of the customer account
      * @return a List of {@link CustomerXactHistoryDto} objects representing the
      *         transaction history of the customer.
      * @throws SubsidiaryException
      */
     @Override
-    public List<CustomerXactHistoryDto> getTransactionHistory(int subsidiaryId)
+    public List<CustomerXactHistoryDto> getTransactionHistory(Integer customerId)
             throws CustomerApiException {
         // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
         // CustomerDao dao = f.createRmt2OrmCustomerDao();
         List<CustomerXactHistoryDto> results;
         try {
-            results = dao.fetchTransactionHistory(subsidiaryId);
+            results = dao.fetchTransactionHistory(customerId);
             // dao.commitTrans();
             return results;
         } catch (Exception e) {

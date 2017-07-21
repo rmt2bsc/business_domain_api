@@ -67,13 +67,14 @@ public interface CustomerApi extends SubsidiaryApi {
     /**
      * Get transacton history for a particular customer account.
      * 
-     * @param subsidiaryId
+     * @param customerId
      *            the unique id of the customer account
      * @return a List of {@link CustomerXactHistoryDto} objects representing the
      *         transaction history of the customer.
      * @throws CustomerApiException
      */
-    List<CustomerXactHistoryDto> getTransactionHistory(int subsidiaryId) throws CustomerApiException;
+    List<CustomerXactHistoryDto> getTransactionHistory(Integer customerId) throws CustomerApiException;
+    
     /**
      * Creates a new or modifies an existing customer's profile.
      * <p>
