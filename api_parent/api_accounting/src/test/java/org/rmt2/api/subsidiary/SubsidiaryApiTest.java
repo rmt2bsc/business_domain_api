@@ -4,11 +4,14 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.Creditor;
+import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
+import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +19,7 @@ import org.rmt2.api.BaseAccountingDaoTest;
 import org.rmt2.dao.AccountingMockDataUtility;
 
 /**
- * Common subsidiary testing functionality.
+ * Common subsidiary testing facility that is mainly responsible for setting up mock data.
  * 
  * @author rterrell
  * 
@@ -30,6 +33,11 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
     protected List<Creditor> mockCreditorFetchSingleResponse;
     protected List<VwBusinessAddress> mockBusinessContactFetchSingleResponse;
     protected List<VwBusinessAddress> mockBusinessContactFetchAllResponse;
+    protected List<VwBusinessAddress> mockBusinessContactNotFoundResponse;
+    protected List<CreditorType> mockCreditorTypeFetchAllResponse;
+    protected List<CreditorType> mockCreditorTypeFetchSingleResponse;
+    protected List<CreditorType> mockCreditorTypeNotFoundResponse;
+    protected List<VwCreditorXactHist> mockCreditorXactHistoryResponse;
 
     /**
      * @throws java.lang.Exception
@@ -37,12 +45,43 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        this.mockBusinessContactFetchSingleResponse = this
-                .createMockSingleContactFetchResponse();
-        this.mockBusinessContactFetchAllResponse = this
-                .createMockFetchAllContactResponse();
+        this.mockCreditorFetchAllResponse = this.createMockFetchAllCreditorResponse();
+        this.mockCreditorNotFoundFetchResponse = this.createMockCreditorNotFoundSearchResultsResponse();
+        this.mockCreditorFetchSingleResponse = this.createMockSingleCreditorFetchResponse();
+        this.mockCreditorTypeFetchAllResponse = this.createMockFetchAllCreditorTypeResponse();
+        this.mockCreditorTypeFetchSingleResponse = this.createMockFetchSingleCreditorTypeResponse();
+        this.mockCreditorTypeNotFoundResponse = this.createMockFetchNotFoundCreditorTypeResponse();
+        this.mockBusinessContactFetchSingleResponse = this.createMockSingleContactFetchResponse();
+        this.mockBusinessContactFetchAllResponse = this.createMockFetchAllContactResponse();
+        this.mockBusinessContactNotFoundResponse = this.createMockNotFoundContactFetchResponse();
+        this.mockCreditorXactHistoryResponse = this.createMockFetchCreditorXactHistoryResponse();
     }
 
+    private List<VwCreditorXactHist> createMockFetchCreditorXactHistoryResponse() {
+        List<VwCreditorXactHist> list = new ArrayList<VwCreditorXactHist>();
+        VwCreditorXactHist o = AccountingMockDataUtility
+                .createMockOrmCreditorXactHistory(1200, 100, "C8434", 1000.00,
+                        new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1201,
+                100, "C8434", 32.00, new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1202,
+                100, "C8434", 1223.00, new Date(), 2);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1203,
+                100, "C8434", 25.67, new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1204,
+                100, "C8434", 745.59, new Date(), 3);
+        list.add(o);
+        return list;
+    }
+    
     /**
      * @throws java.lang.Exception
      */
@@ -52,11 +91,80 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         return;
     }
 
-    private List<Creditor> createMockNotFoundSearchResultsResponse() {
+    protected List<Creditor> createMockCreditorNotFoundSearchResultsResponse() {
         List<Creditor> list = null;
         return list;
     }
+    
+    protected List<Customer> createMockCustomerNotFoundSearchResultsResponse() {
+        List<Customer> list = null;
+        return list;
+    }
 
+    private List<Creditor> createMockFetchAllCreditorResponse() {
+        List<Creditor> list = new ArrayList<Creditor>();
+        Creditor o = AccountingMockDataUtility.createMockOrmCreditor(200, 1351,
+                333, "C1234589", "123-456-789", 22);
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditor(201, 1400,
+                444, "C1400444", "7437437JDJD8484", 22);
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditor(202, 1500,
+                555, "C1500555", "ABC123", 22);
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditor(203, 1600,
+                666, "C1600666", "XYZ321", 22);
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditor(204, 1700,
+                777, "C1700777", "7654312", 22);
+        list.add(o);
+        return list;
+    }
+
+    
+    private List<Creditor> createMockSingleCreditorFetchResponse() {
+        List<Creditor> list = new ArrayList<Creditor>();
+        Creditor o = AccountingMockDataUtility.createMockOrmCreditor(200, 1351,
+                333, "C1234589", "123-456-789", 22);
+        list.add(o);
+        return list;
+    }
+
+    private List<CreditorType> createMockFetchAllCreditorTypeResponse() {
+        List<CreditorType> list = new ArrayList<CreditorType>();
+        CreditorType o = AccountingMockDataUtility.createMockOrmCreditorType(100, "Creditor Type 1");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditorType(200, "Creditor Type 2");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditorType(300, "Creditor Type 3");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditorType(400, "Creditor Type 4");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCreditorType(500, "Creditor Type 5");
+        list.add(o);
+        return list;
+    }
+    
+    private List<CreditorType> createMockFetchSingleCreditorTypeResponse() {
+        List<CreditorType> list = new ArrayList<CreditorType>();
+        CreditorType o = AccountingMockDataUtility.createMockOrmCreditorType(100, "Creditor Type 1");
+        list.add(o);
+        return list;
+    }
+
+    private List<CreditorType> createMockFetchNotFoundCreditorTypeResponse() {
+        List<CreditorType> list = null;
+        return list;
+    }
+    
     private List<VwBusinessAddress> createMockFetchAllContactResponse() {
         List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
         VwBusinessAddress p = AccountingMockDataUtility
@@ -94,6 +202,11 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
                         "94393 Hall Ave.", "Building 123", "Suite 300",
                         "Room 45", "Dallas", "TX", 75232);
         list.add(p);
+        return list;
+    }
+    
+    private List<VwBusinessAddress> createMockNotFoundContactFetchResponse() {
+        List<VwBusinessAddress> list = null;
         return list;
     }
 
@@ -147,6 +260,27 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         try {
             when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
                     .thenReturn(this.mockCreditorFetchAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Creditor fetch test case setup failed");
+        }
+    }
+    
+    protected void setupNotFoundSubsidiaryContactInfoFetch(
+            VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(eq(busContactCriteria))).thenReturn(
+                            this.mockBusinessContactNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Single Business Contact for creditor fetch test case setup failed");
+        }
+
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
+                    .thenReturn(this.mockCreditorNotFoundFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Single Creditor fetch test case setup failed");
@@ -209,4 +343,25 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         }
     }
 
+    
+    protected void setupNotFoundSubsidiaryContactInfoFetch(
+            VwBusinessAddress busContactCriteria, Customer customerCriteria) {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(eq(busContactCriteria))).thenReturn(
+                            this.mockBusinessContactNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Single Business Contact for customer fetch test case setup failed");
+        }
+
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(customerCriteria)))
+                    .thenReturn(this.mockCustomerNotFoundFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Customer fetch test case setup failed");
+        }
+    }
 }
