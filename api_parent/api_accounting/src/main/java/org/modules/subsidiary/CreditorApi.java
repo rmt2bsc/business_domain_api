@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
+import org.dto.CreditorXactHistoryDto;
 
 /**
  * An interface that provides the method prototypes required to be implemented
@@ -91,6 +92,16 @@ public interface CreditorApi extends SubsidiaryApi {
      * @throws CreditorApiException
      */
     CreditorTypeDto getCreditorType(Integer creditorTypeId) throws CreditorApiException;
+    
+    /**
+     * Get transacton history for a particular subsidiary account.
+     * 
+     * @param subsidiaryId
+     *            the unique id of the subsidiary account
+     * @return a List<E> representing the transaction history.
+     * @throws CreditorApiException
+     */
+    List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId) throws CreditorApiException;
 
     /**
      * Creates a new or modifies an existing creditor's profile.

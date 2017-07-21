@@ -3,6 +3,7 @@ package org.modules.subsidiary;
 import java.util.List;
 
 import org.dto.CustomerDto;
+import org.dto.CustomerXactHistoryDto;
 
 /**
  * An interface that provides the method prototypes required to be implemented
@@ -63,6 +64,16 @@ public interface CustomerApi extends SubsidiaryApi {
      */
     List<CustomerDto> get(CustomerDto criteria) throws CustomerApiException;
 
+    /**
+     * Get transacton history for a particular customer account.
+     * 
+     * @param subsidiaryId
+     *            the unique id of the customer account
+     * @return a List of {@link CustomerXactHistoryDto} objects representing the
+     *         transaction history of the customer.
+     * @throws CustomerApiException
+     */
+    List<CustomerXactHistoryDto> getTransactionHistory(int subsidiaryId) throws CustomerApiException;
     /**
      * Creates a new or modifies an existing customer's profile.
      * <p>
