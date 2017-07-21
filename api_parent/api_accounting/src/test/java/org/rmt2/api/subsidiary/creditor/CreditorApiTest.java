@@ -5,12 +5,13 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.Creditor;
+import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dto.CreditorDto;
+import org.dto.CreditorTypeDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -24,7 +25,6 @@ import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.subsidiary.SubsidiaryApiTest;
-import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
@@ -40,15 +40,13 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class CreditorApiTest extends SubsidiaryApiTest {
 
+    
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        this.mockCreditorFetchAllResponse = this.createMockFetchAllResponse();
-        this.mockCreditorNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
-        this.mockCreditorFetchSingleResponse = this.createMockSingleCreditorFetchResponse();
     }
 
     /**
@@ -60,46 +58,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         return;
     }
 
-    private List<Creditor> createMockNotFoundSearchResultsResponse() {
-        List<Creditor> list = null;
-        return list;
-    }
-
-
-    private List<Creditor> createMockFetchAllResponse() {
-        List<Creditor> list = new ArrayList<Creditor>();
-        Creditor o = AccountingMockDataUtility.createMockOrmCreditor(200, 1351,
-                333, "C1234589", "123-456-789", 22);
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(201, 1400,
-                444, "C1400444", "7437437JDJD8484", 22);
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(202, 1500,
-                555, "C1500555", "ABC123", 22);
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(203, 1600,
-                666, "C1600666", "XYZ321", 22);
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(204, 1700,
-                777, "C1700777", "7654312", 22);
-        list.add(o);
-        return list;
-    }
-
     
-    private List<Creditor> createMockSingleCreditorFetchResponse() {
-        List<Creditor> list = new ArrayList<Creditor>();
-        Creditor o = AccountingMockDataUtility.createMockOrmCreditor(200, 1351,
-                333, "C1234589", "123-456-789", 22);
-        list.add(o);
-        return list;
-    }
-
-
     @Test
     public void testFetchAllNoContactData() {
         try {
@@ -207,7 +166,24 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         Assert.assertEquals(1, results.size());
     }
   
-
+    @Test
+    public void testFetchByAccountNumberNotFound() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setAccountNumber("C1234589");
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        List<CreditorDto> results = null;
+        try {
+            results = api.getByAcctNo("C1234589");
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
     @Test
     public void testFetchByAccountNumberWithNullValue() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -238,6 +214,42 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals("C1234589", results.getAccountNo());
+    }
+    
+    @Test
+    public void testFetchByBusinessIdNotFound() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setBusinessId(1351);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto results = null;
+        try {
+            results = api.getByBusinessId(1351);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
+    public void testFetchByBusinessIdTooManyReturned() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setBusinessId(1351);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByBusinessId(1351);
+            Assert.fail("Expected exception due to too many creditor records returned");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
     }
     
     @Test
@@ -299,6 +311,42 @@ public class CreditorApiTest extends SubsidiaryApiTest {
     }
     
     @Test
+    public void testFetchByCreditorIdNotFound() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorId(200);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto results = null;
+        try {
+            results = api.getByCreditorId(200);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
+    public void testFetchByCreditorIdTooManyReturned() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorId(200);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByCreditorId(200);
+            Assert.fail("Expected exception due to too many creditor records returned");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testFetchByNullCreditorId() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
@@ -354,6 +402,42 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals("C1234589", results.getAccountNo());
+    }
+    
+    @Test
+    public void testFetchByUIDNotFound() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorId(200);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto results = null;
+        try {
+            results = api.getByUid(200);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
+    public void testFetchByUIDNotFoundTooManyReturned() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorId(200);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getByUid(200);
+            Assert.fail("Expected exception due to too many creditor records returned");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
     }
     
     @Test
@@ -416,6 +500,24 @@ public class CreditorApiTest extends SubsidiaryApiTest {
     }
     
     @Test
+    public void testFetchByCreditorTypeNotFound() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setCreditorTypeId(22);
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        List<CreditorDto> results = null;
+        try {
+            results = api.getByCreditorType(22);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
     public void testFetchByNullCreditorType() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
@@ -448,6 +550,139 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         try {
             api.getByCreditorType(0);
             Assert.fail("Expected exception due to negative creditor type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllCreditorTypes() {
+        CreditorType mockCredCriteria = new CreditorType();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria))).thenReturn(
+                            this.mockCreditorTypeFetchAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All creditor type fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        List<CreditorTypeDto> results = null;
+        try {
+            results = api.getCreditorType();
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        Assert.assertEquals("Creditor Type 3", results.get(2).getEntityName());
+    }
+    
+    @Test
+    public void testFetchSingleCreditorType() {
+        CreditorType mockCredCriteria = new CreditorType();
+        mockCredCriteria.setCreditorTypeId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria))).thenReturn(
+                            this.mockCreditorTypeFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single creditor type fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorTypeDto results = null;
+        try {
+            results = api.getCreditorType(100);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals("Creditor Type 1", results.getEntityName());
+    }
+    
+    @Test
+    public void testFetchSingleCreditorTypeNotFound() {
+        CreditorType mockCredCriteria = new CreditorType();
+        mockCredCriteria.setCreditorTypeId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria))).thenReturn(
+                            this.mockCreditorTypeNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single creditor type fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorTypeDto results = null;
+        try {
+            results = api.getCreditorType(100);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
+    public void testFetchSingleCreditorTypeTooManyReturned() {
+        CreditorType mockCredCriteria = new CreditorType();
+        mockCredCriteria.setCreditorTypeId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria))).thenReturn(
+                            this.mockCreditorTypeFetchAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Too many returned creditor type fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getCreditorType(100);
+            Assert.fail("Expected exception due to too many creditor type records returned");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleCreditorTypeWithNullId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getCreditorType(null);
+            Assert.fail("Expected exception due to creditor type id argument is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleCreditorTypeWithZeroId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getCreditorType(0);
+            Assert.fail("Expected exception due to creditor type id argument is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleCreditorTypeWithNegativeId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getCreditorType(-444);
+            Assert.fail("Expected exception due to creditor type id argument is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
