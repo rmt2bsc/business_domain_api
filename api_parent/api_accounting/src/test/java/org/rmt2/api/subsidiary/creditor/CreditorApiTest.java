@@ -10,8 +10,10 @@ import java.util.List;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
+import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
+import org.dto.CreditorXactHistoryDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -683,6 +685,89 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         try {
             api.getCreditorType(-444);
             Assert.fail("Expected exception due to creditor type id argument is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchTransactionHistory() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwCreditorXactHist.class))).thenReturn(
+                            this.mockCreditorXactHistoryResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor transaction history fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        List<CreditorXactHistoryDto> results = null;
+        try {
+            results = api.getTransactionHistory(100);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        Assert.assertEquals(25.67, results.get(3).getXactAmount(), 0);
+    }
+    
+    @Test
+    public void testFetchTransactionHistoryNotFound() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwCreditorXactHist.class))).thenReturn(
+                            null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor transaction history fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        List<CreditorXactHistoryDto> results = null;
+        try {
+            results = api.getTransactionHistory(100);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
+    public void testFetchTransactionHistoryWithNullCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getTransactionHistory(null);
+            Assert.fail("Expected exception due to creditor id is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchTransactionHistoryWithZeroCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getTransactionHistory(0);
+            Assert.fail("Expected exception due to creditor id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchTransactionHistoryWithNegativeCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getTransactionHistory(-123);
+            Assert.fail("Expected exception due to creditor id is zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
