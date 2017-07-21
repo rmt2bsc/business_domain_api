@@ -3,6 +3,7 @@ package org.rmt2.dao;
 import java.util.Date;
 
 import org.dao.mapping.orm.rmt2.Creditor;
+import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.GlAccountCategory;
 import org.dao.mapping.orm.rmt2.GlAccountTypes;
 import org.dao.mapping.orm.rmt2.GlAccounts;
@@ -12,6 +13,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
+import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.AccountDto;
@@ -315,5 +317,57 @@ public class AccountingMockDataUtility {
         o.setItemCost(cost);
         return o;
     }
+    
+    /**
+     * 
+     * @param id
+     * @param description
+     * @return
+     */
+    public static final CreditorType createMockOrmCreditorType(int id, String description) {
+        CreditorType o = new CreditorType();
+        o.setCreditorTypeId(id);
+        o.setDescription(description);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        return o;
+    }
 
+    /**
+     * 
+     * @param xactId
+     * @param creditorId
+     * @param acctNo
+     * @param xactAmt
+     * @param xactDate
+     * @param xactTypeId
+     * @return
+     */
+    public static final VwCreditorXactHist createMockOrmCreditorXactHistory(
+            int xactId, int creditorId, String acctNo, double xactAmt,
+            Date xactDate, int xactTypeId) {
+        VwCreditorXactHist o = new VwCreditorXactHist();
+        o.setXactId(xactId);
+        o.setCreditorTypeId(creditorId);
+        o.setAccountNumber(acctNo);
+        o.setXactAmount(xactAmt);
+        o.setXactDate(xactDate);
+        o.setXactTypeId(xactTypeId);
+        o.setReason("Transaction History for creditor, " + creditorId);
+        o.setDateCreated(new Date());
+        o.setUserId("testuser");
+        o.setActive(1);
+        o.setApr(1.56);
+        o.setCreditLimit(5000.00);
+        o.setCreditorTypeDescription("Creditor type description for creditor, " + creditorId);
+        o.setXactSubtypeId(1);
+        o.setXactTypeName("Xact Type Name" + xactId);
+        o.setConfirmNo(String.valueOf(o.getDateCreated().getTime()));
+        o.setTenderId(35);
+        o.setDocumentId(xactId + creditorId);
+        o.setCreditorActivityId(xactId * o.getTenderId());
+        o.setCreditorActivityAmount(xactAmt);
+        return o;
+    }
 }
