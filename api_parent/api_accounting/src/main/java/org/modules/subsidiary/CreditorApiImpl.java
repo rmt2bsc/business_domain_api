@@ -497,7 +497,16 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      */
     @Override
     public List<CreditorTypeDto> getCreditorType() throws CreditorApiException {
-        List<CreditorTypeDto> results = this.getCreditorType();
+        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
+        List<CreditorTypeDto> results = null;
+        try {
+            results = dao.fetch(criteria);
+        } catch (Exception e) {
+            this.msg = "Error retrieving all creditor type data";
+            logger.error(this.msg, e);
+            throw new CreditorApiException(e);
+        }
+        
         StringBuffer msgBuf = new StringBuffer();
         if (results == null) {
             msgBuf.append("Creditor type record(s) were not found");
@@ -530,7 +539,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
             throw new InvalidDataException("Creditor Type Id must be greater than zero", e);
         }
         
-        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null);
+        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
         criteria.setEntityId(creditorTypeId);
         List<CreditorTypeDto> results = null;
         try {
@@ -569,7 +578,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      * @throws SubsidiaryException
      */
     @Override
-    public List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId)
+    protected List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId)
             throws SubsidiaryException {
         List<CreditorXactHistoryDto> results;
         try {
