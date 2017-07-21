@@ -25,7 +25,7 @@ import com.api.persistence.DaoClient;
  * @author Roy Terrell
  * 
  */
-abstract class AbstractSubsidiaryApiImpl<E, E2> extends AbstractTransactionApiImpl
+abstract class AbstractSubsidiaryApiImpl<E> extends AbstractTransactionApiImpl
         implements SubsidiaryApi {
 
     /**
@@ -60,16 +60,6 @@ abstract class AbstractSubsidiaryApiImpl<E, E2> extends AbstractTransactionApiIm
      * @return a List<E>
      */
     protected abstract List<E> mergeContactInfo(List<E> subsidiary, Map<Integer, SubsidiaryContactInfoDto> contact);
-    
-    /**
-     * Get transacton history for a particular subsidiary account.
-     * 
-     * @param subsidiaryId
-     *            the unique id of the subsidiary account
-     * @return a List<E> representing the transaction history.
-     * @throws SubsidiaryException
-     */
-    protected abstract List<E2> getTransactionHistory(int subsidiaryId) throws SubsidiaryException;
     
     /**
      * Creates an account number for a given subsidiary.
