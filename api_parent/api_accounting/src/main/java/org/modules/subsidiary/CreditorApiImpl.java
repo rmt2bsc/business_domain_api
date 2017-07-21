@@ -33,8 +33,7 @@ import com.util.assistants.VerifyException;
  * @author Roy Terrell
  * 
  */
-class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXactHistoryDto> 
-          implements CreditorApi {
+class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements CreditorApi {
     private static final Logger logger = Logger.getLogger(CreditorApiImpl.class);
 
     private SubsidiaryDaoFactory daoFact;
@@ -575,11 +574,11 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
      *            the unique id of the creditor account
      * @return a List of {@link CreditorXactHistoryDto} objects representing the
      *         transaction history of the creditor.
-     * @throws SubsidiaryException
+     * @throws CreditorApiException
      */
     @Override
-    protected List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId)
-            throws SubsidiaryException {
+    public List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId)
+            throws CreditorApiException {
         List<CreditorXactHistoryDto> results;
         try {
             results = dao.fetchTransactionHistory(subsidiaryId);
@@ -589,7 +588,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto, CreditorXac
             dao.rollbackTrans();
             this.msg = "Error persiting creditor profile changes";
             logger.error(this.msg, e);
-            throw new CustomerApiException(e);
+            throw new CreditorApiException(e);
         }
     }
 

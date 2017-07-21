@@ -32,7 +32,7 @@ import com.util.assistants.VerifyException;
  * @author Roy Terrell
  * 
  */
-class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXactHistoryDto> implements CustomerApi {
+class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements CustomerApi {
     private static final Logger logger = Logger.getLogger(CustomerApiImp.class);
 
     private SubsidiaryDaoFactory daoFact;
@@ -593,7 +593,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto, CustomerXact
      */
     @Override
     public List<CustomerXactHistoryDto> getTransactionHistory(int subsidiaryId)
-            throws SubsidiaryException {
+            throws CustomerApiException {
         // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
         // CustomerDao dao = f.createRmt2OrmCustomerDao();
         List<CustomerXactHistoryDto> results;
