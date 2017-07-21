@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.dao.AccountingSqlConst;
 import org.dao.mapping.orm.rmt2.Creditor;
+import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dto.CreditorDto;
@@ -79,7 +80,26 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      */
     @Override
     public List<CreditorTypeDto> fetch(CreditorTypeDto criteria) throws CreditorDaoException {
-        return null;
+        // Gather creditor type criteria
+        CreditorType ormCred = null;
+        if (criteria != null) {
+            ormCred = new CreditorType();
+            if (criteria.getEntityId() > 0) {
+                ormCred.addCriteria(CreditorType.PROP_CREDITORTYPEID, criteria.getEntityId());
+            }
+            if (criteria.getEntityName() != null) {
+                ormCred.addCriteria(CreditorType.PROP_DESCRIPTION, criteria.getEntityName());
+            }
+        }
+        // Retrieve creditor data from the database
+        List<CreditorType> results = this.fetch(ormCred);
+        
+        List<CreditorTypeDto> list = new ArrayList<CreditorTypeDto>();
+        for (CreditorType item : results) {
+            CreditorTypeDto dto = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(item);
+            list.add(dto);
+        }
+        return list;
     }
 
     /**
@@ -164,6 +184,20 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     private List<Creditor> fetch(Creditor criteria) throws CreditorDaoException {
         // Retrieve creditor data from the database
         List<Creditor> results = null;
+        try {
+            results = this.client.retrieveList(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new CreditorDaoException(e);
+        }
+        return results;
+    }
+    
+    private List<CreditorType> fetch(CreditorType criteria) throws CreditorDaoException {
+        // Retrieve creditor type data from the database
+        List<CreditorType> results = null;
         try {
             results = this.client.retrieveList(criteria);
             if (results == null) {
