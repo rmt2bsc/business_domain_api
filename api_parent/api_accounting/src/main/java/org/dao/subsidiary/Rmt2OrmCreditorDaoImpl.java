@@ -125,6 +125,9 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         List<VwCreditorXactHist> results = null;
         try {
             results = this.client.retrieveList(obj);
+            if (results == null) {
+                return null;
+            }
         } catch (DatabaseException e) {
             throw new CreditorDaoException(e);
         }
@@ -185,28 +188,20 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         // Retrieve creditor data from the database
         List<Creditor> results = null;
         try {
-            results = this.client.retrieveList(criteria);
-            if (results == null) {
-                return null;
-            }
+            return this.client.retrieveList(criteria);
         } catch (DatabaseException e) {
             throw new CreditorDaoException(e);
         }
-        return results;
     }
     
     private List<CreditorType> fetch(CreditorType criteria) throws CreditorDaoException {
         // Retrieve creditor type data from the database
         List<CreditorType> results = null;
         try {
-            results = this.client.retrieveList(criteria);
-            if (results == null) {
-                return null;
-            }
+            return this.client.retrieveList(criteria);
         } catch (DatabaseException e) {
             throw new CreditorDaoException(e);
         }
-        return results;
     }
 
 
