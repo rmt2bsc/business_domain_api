@@ -570,18 +570,31 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
     /**
      * Get transacton history for a particular creditor account.
      * 
-     * @param subsidiaryId
+     * @param creditorId
      *            the unique id of the creditor account
      * @return a List of {@link CreditorXactHistoryDto} objects representing the
      *         transaction history of the creditor.
      * @throws CreditorApiException
      */
     @Override
-    public List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId)
+    public List<CreditorXactHistoryDto> getTransactionHistory(Integer creditorId)
             throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id must be greater than zero", e);
+        }
+        
         List<CreditorXactHistoryDto> results;
         try {
-            results = dao.fetchTransactionHistory(subsidiaryId);
+            results = dao.fetchTransactionHistory(creditorId);
             dao.commitTrans();
             return results;
         } catch (Exception e) {

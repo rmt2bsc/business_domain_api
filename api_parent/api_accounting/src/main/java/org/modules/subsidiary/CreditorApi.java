@@ -96,12 +96,12 @@ public interface CreditorApi extends SubsidiaryApi {
     /**
      * Get transacton history for a particular subsidiary account.
      * 
-     * @param subsidiaryId
-     *            the unique id of the subsidiary account
+     * @param creditorId
+     *            the unique id of the creditor account
      * @return a List<E> representing the transaction history.
      * @throws CreditorApiException
      */
-    List<CreditorXactHistoryDto> getTransactionHistory(int subsidiaryId) throws CreditorApiException;
+    List<CreditorXactHistoryDto> getTransactionHistory(Integer creditorId) throws CreditorApiException;
 
     /**
      * Creates a new or modifies an existing creditor's profile.
