@@ -619,7 +619,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             throw new CreditorApiException(this.msg);
         }
 
-        if (creditor.getCreditorId() <= 0) {
+        if (creditor.getCreditorId() == 0) {
             this.prepareNewCreditor(creditor);
         }
         else {
