@@ -220,16 +220,13 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
      * @param busContactCriteria
      * @param creditorCriteria
      */
-    protected void setupSingleSubsidiaryContactInfoFetch(
-            VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
+    protected void setupSingleSubsidiaryContactInfoFetch(VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
         try {
-            when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
+            when(this.mockPersistenceClient.retrieveList(eq(busContactCriteria))).thenReturn(
                             this.mockBusinessContactFetchSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Single Business Contact for creditor fetch test case setup failed");
+            Assert.fail("Single Business Contact for creditor fetch test case setup failed");
         }
 
         try {
