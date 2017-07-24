@@ -10,6 +10,7 @@ import java.util.List;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.Customer;
+import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.junit.After;
@@ -38,6 +39,7 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
     protected List<CreditorType> mockCreditorTypeFetchSingleResponse;
     protected List<CreditorType> mockCreditorTypeNotFoundResponse;
     protected List<VwCreditorXactHist> mockCreditorXactHistoryResponse;
+    protected List<GlAccounts> mockSingleGLAccountFetchResponse;
 
     /**
      * @throws java.lang.Exception
@@ -55,6 +57,7 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         this.mockBusinessContactFetchAllResponse = this.createMockFetchAllContactResponse();
         this.mockBusinessContactNotFoundResponse = this.createMockNotFoundContactFetchResponse();
         this.mockCreditorXactHistoryResponse = this.createMockFetchCreditorXactHistoryResponse();
+        this.mockSingleGLAccountFetchResponse = this.createMockSingleGLAccountFetchResponse();
     }
 
     private List<VwCreditorXactHist> createMockFetchCreditorXactHistoryResponse() {
@@ -363,5 +366,13 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
             e.printStackTrace();
             Assert.fail("Single Customer fetch test case setup failed");
         }
+    }
+
+    private List<GlAccounts> createMockSingleGLAccountFetchResponse() {
+        List<GlAccounts> list = new ArrayList<GlAccounts>();
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, 2, 300, 1, "GL_200", "ACCT_PAY", "234",
+                "Accounts Payable", 1);
+        list.add(p);
+        return list;
     }
 }
