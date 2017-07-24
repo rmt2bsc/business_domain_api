@@ -5,6 +5,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.AccountingConst;
@@ -23,8 +24,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modules.CommonAccountingConst;
+import org.modules.generalledger.GeneralLedgerApiException;
 import org.modules.subsidiary.CreditorApi;
 import org.modules.subsidiary.CreditorApiException;
+import org.modules.subsidiary.NewCreditorSetupFailureException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -815,6 +818,153 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         Assert.assertEquals(newCreditorId, rc);
     }
 
+    @Test
+    public void testCreateNewCreditorWithGLAccountFetchException() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenThrow(
+                    new GeneralLedgerApiException("Database error occurred fetching GL Account data"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(criteria);
+            Assert.fail("Expected exception due to general database error occurre while fetching GL Account information");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof NewCreditorSetupFailureException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testCreateNewCreditorWithGLAccountNotFound() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(criteria);
+            Assert.fail("Expected exception due to fetching GL Account information was not found");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof NewCreditorSetupFailureException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testCreateNewCreditorWithFetchedGLAccountTypeIdInvalid() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        
+        int invalidAcctTypeId = 5;
+        List<GlAccounts> mockGLAccountListResults = new ArrayList<GlAccounts>();
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, invalidAcctTypeId, 300, 1, "GL_200", "ACCT_PAY", "234",
+                "Accounts Payable", 1);
+        mockGLAccountListResults.add(p);
+        
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
+                    mockGLAccountListResults);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Account fetch test case setup failed");
+        }
+
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(criteria);
+            Assert.fail("Expected exception due to fetched GL Account contains an invalid account type id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof NewCreditorSetupFailureException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testCreateNewCreditorWithInvalidBusinessId() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
+                    this.mockSingleGLAccountFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Account fetch test case setup failed");
+        }
+
+        int invalidBusinessId = 0;
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, invalidBusinessId, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(invalidBusinessId, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(criteria);
+            Assert.fail("Expected exception due to business id is invalid");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testCreateNewCreditorWithInvalidCreditorTypeId() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
+                    this.mockSingleGLAccountFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Account fetch test case setup failed");
+        }
+
+        int invalidCreditorTypeId = 0;
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 0, "GL_200", "932-392-339", invalidCreditorTypeId);
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(criteria);
+            Assert.fail("Expected exception due to creditor type id is invalid");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+ 
     @Test
     public void testUpdateExistingCreditor() {
         Creditor mockCreditorSubsidiaryCriteria = new Creditor();
