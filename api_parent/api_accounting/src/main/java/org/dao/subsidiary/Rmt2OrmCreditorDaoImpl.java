@@ -186,7 +186,6 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
 
     private List<Creditor> fetch(Creditor criteria) throws CreditorDaoException {
         // Retrieve creditor data from the database
-        List<Creditor> results = null;
         try {
             return this.client.retrieveList(criteria);
         } catch (DatabaseException e) {
