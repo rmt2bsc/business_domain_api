@@ -791,9 +791,18 @@ public class CreditorApiTest extends SubsidiaryApiTest {
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200", "932-392-339", 1);
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
         BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        int newCreditorId = 1350;
+        try {
+            when(this.mockPersistenceClient.insertRow(eq(mockGLAcctCriteria), eq(true))).thenReturn(newCreditorId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor insertRow test case setup failed");
+        }
+
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
@@ -803,7 +812,34 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         } catch (CreditorApiException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(1, rc);
-
+        Assert.assertEquals(newCreditorId, rc);
     }
+
+    @Test
+    public void testUpdateExistingCreditor() {
+        Creditor mockCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+                "932-392-339", 1);
+        VwBusinessAddress mockBusinessAddress = AccountingMockDataUtility.createMockOrmBusinessAddress(4000,
+                "ABC Company", "roy", "terrell", "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+        this.setupSingleSubsidiaryContactInfoFetch(mockBusinessAddress, mockCreditor);
+
+        try {
+            when(this.mockPersistenceClient.updateRow(eq(mockCreditor))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor updateRow test case setup failed");
+        }
+
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(mockCreditor, null);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.update(criteria);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
+    }
+
 }
