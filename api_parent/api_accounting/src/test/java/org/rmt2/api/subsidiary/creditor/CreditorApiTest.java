@@ -797,7 +797,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
 
         int newCreditorId = 1350;
         try {
-            when(this.mockPersistenceClient.insertRow(eq(mockGLAcctCriteria), eq(true))).thenReturn(newCreditorId);
+            when(this.mockPersistenceClient.insertRow(any(Creditor.class), eq(true))).thenReturn(newCreditorId);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Creditor insertRow test case setup failed");
@@ -817,20 +817,21 @@ public class CreditorApiTest extends SubsidiaryApiTest {
 
     @Test
     public void testUpdateExistingCreditor() {
-        Creditor mockCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
-                "932-392-339", 1);
-        VwBusinessAddress mockBusinessAddress = AccountingMockDataUtility.createMockOrmBusinessAddress(4000,
-                "ABC Company", "roy", "terrell", "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
-        this.setupSingleSubsidiaryContactInfoFetch(mockBusinessAddress, mockCreditor);
+        Creditor mockCreditorSubsidiaryCriteria = new Creditor();
+        mockCreditorSubsidiaryCriteria.setCreditorId(1350);
+        VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
 
         try {
-            when(this.mockPersistenceClient.updateRow(eq(mockCreditor))).thenReturn(1);
+            when(this.mockPersistenceClient.updateRow(any(Creditor.class))).thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Creditor updateRow test case setup failed");
         }
 
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(mockCreditor, null);
+        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+                "932-392-339", 1);
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
