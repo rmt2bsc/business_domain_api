@@ -93,6 +93,9 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         }
         // Retrieve creditor data from the database
         List<CreditorType> results = this.fetch(ormCred);
+        if (results == null) {
+            return null;
+        }
         
         List<CreditorTypeDto> list = new ArrayList<CreditorTypeDto>();
         for (CreditorType item : results) {
@@ -175,6 +178,9 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         }
         // Retrieve creditor data from the database
         List<Creditor> results = this.fetch(ormCred);
+        if (results == null) {
+            return null;
+        }
         
         List<CreditorDto> list = new ArrayList<CreditorDto>();
         for (Creditor item : results) {
@@ -195,7 +201,6 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     
     private List<CreditorType> fetch(CreditorType criteria) throws CreditorDaoException {
         // Retrieve creditor type data from the database
-        List<CreditorType> results = null;
         try {
             return this.client.retrieveList(criteria);
         } catch (DatabaseException e) {
