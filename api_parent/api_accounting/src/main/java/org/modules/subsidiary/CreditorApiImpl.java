@@ -680,7 +680,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         if (oldCred == null) {
             throw new CreditorNotFoundException("Creditor was not found by creditor id: " + deltaCred.getCreditorId());
         }
-        // Set modifyable fields
+        // Set fields that are typically not modified by user
         deltaCred.setCreditorId(oldCred.getCreditorId());
         deltaCred.setAccountNo(oldCred.getAccountNo());
         deltaCred.setAcctId(oldCred.getAcctId());
@@ -707,8 +707,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
     @Override
     public int delete(CreditorDto creditor) throws CreditorApiException {
         if (creditor == null) {
-            throw new CreditorApiException(
-                    "Creditor API delete error.  Creditor object cannot be null");
+            throw new CreditorApiException("Creditor API delete error:  Creditor object cannot be null");
         }
         // Perform the actual delete
         try {
