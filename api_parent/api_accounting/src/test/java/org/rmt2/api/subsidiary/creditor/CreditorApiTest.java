@@ -7,8 +7,10 @@ import static org.mockito.Mockito.when;
 import java.sql.ResultSet;
 import java.util.List;
 
+import org.AccountingConst;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorType;
+import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dto.CreditorDto;
@@ -27,6 +29,8 @@ import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.subsidiary.SubsidiaryApiTest;
+import org.rmt2.dao.AccountingMockDataUtility;
+import org.rmt2.jaxb.BusinessType;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
@@ -43,12 +47,14 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 public class CreditorApiTest extends SubsidiaryApiTest {
 
     
+
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         super.setUp();
+
     }
 
     /**
@@ -60,7 +66,6 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         return;
     }
 
-    
     @Test
     public void testFetchAllNoContactData() {
         try {
@@ -772,5 +777,33 @@ public class CreditorApiTest extends SubsidiaryApiTest {
             Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testCreateNewCreditor() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
+                    this.mockSingleGLAccountFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Account fetch test case setup failed");
+        }
+
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.update(criteria);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
+
     }
 }
