@@ -86,6 +86,7 @@ public interface CustomerApi extends SubsidiaryApi {
      *            an instance of {@link CustomerDto}
      * @return the total number of entities effected by the transaction.
      * @throws CustomerApiException
+     * @throws {@link com.InvalidDataException}
      */
     int update(CustomerDto customer) throws CustomerApiException;
 
@@ -98,14 +99,4 @@ public interface CustomerApi extends SubsidiaryApi {
      * @throws CustomerApiException
      */
     int delete(CustomerDto customer) throws CustomerApiException;
-
-    /**
-     * Validate a single customer instance.
-     * 
-     * @param cust
-     *            an instance of {@link CustomerDto} representing the customer
-     *            that is to be valdiated
-     * @throws CustomerApiException
-     */
-    void validate(CustomerDto cust) throws CustomerApiException;
 }

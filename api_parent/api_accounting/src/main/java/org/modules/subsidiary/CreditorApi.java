@@ -114,6 +114,7 @@ public interface CreditorApi extends SubsidiaryApi {
      *            an instance of {@link CreditorDto}
      * @return the total number of entities effected by the transaction.
      * @throws CreditorApiException
+     * @throws {@link com.InvalidDataException}
      */
     int update(CreditorDto creditor) throws CreditorApiException;
 
@@ -127,13 +128,4 @@ public interface CreditorApi extends SubsidiaryApi {
      */
     int delete(CreditorDto creditor) throws CreditorApiException;
 
-    /**
-     * Validate a single creditor instance.
-     * 
-     * @param cust
-     *            an instance of {@link CreditorDto} representing the creditor
-     *            that is to be valdiated
-     * @throws CreditorApiException
-     */
-    void validate(CreditorDto cust) throws CreditorApiException;
 }
