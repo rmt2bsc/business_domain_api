@@ -134,8 +134,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
         GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
-            AccountDto criteria = Rmt2AccountDtoFactory
-                    .createAccountInstance(null);
+            AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
             criteria.setAcctName(accountName);
             List<AccountDto> results = dao.fetchAccountExact(criteria);
             if (results == null) {
