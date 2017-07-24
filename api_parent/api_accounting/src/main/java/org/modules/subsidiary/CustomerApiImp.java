@@ -426,9 +426,10 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      */
     @Override
     public int update(CustomerDto customer) throws CustomerApiException {
-        if (customer == null) {
-            this.msg = "Error updating customer: customer object is null";
-            logger.error(this.msg);
+        try {
+            Verifier.verifyNotNull(customer);
+        } catch (VerifyException e) {
+            this.msg = "Customer API update error: customer object is required.  Be sure that is not null.";
             throw new CustomerApiException(this.msg);
         }
         if (customer.getCustomerId() <= 0) {
@@ -465,11 +466,9 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         // with data changes assoicated with this customer
     }
 
-    private void prepareNewCustomer(CustomerDto customer)
-            throws CustomerApiException {
+    private void prepareNewCustomer(CustomerDto customer) throws CustomerApiException {
         // Build and assign the account number for the new customer
-        String acctNo = this.buildAccountNo(customer.getContactId(),
-                SubsidiaryType.CUSTOMER);
+        String acctNo = this.buildAccountNo(customer.getContactId(), SubsidiaryType.CUSTOMER);
         customer.setAccountNo(acctNo);
 
         // Assign an account id to the new customer
@@ -477,32 +476,33 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         GlAccountApi api = f.createApi();
         AccountDto acctDto;
         try {
-            acctDto = api
-                    .getAccountByExactName(AccountingConst.ACCT_NAME_ACCTRCV);
+            acctDto = api.getAccountByExactName(AccountingConst.ACCT_NAME_ACCTRCV);
         } catch (Exception e) {
-            this.msg = "Error retrieving customer GL Account info to verify correct account type before creating a new customer";
+            this.msg = "Unable to retrieve GL Account information for new customer";
             logger.error(this.msg);
-            throw new CustomerApiException(this.msg);
+            throw new NewCustomerSetupFailureException(this.msg);
         }
         if (acctDto == null) {
-            this.msg = "General ledger account could not be found for the customer account";
+            this.msg = "Accounts Payable General ledger account could not be found for the purpose of assigning to customer";
             logger.error(this.msg);
-            throw new CustomerApiException(this.msg);
+            throw new NewCustomerSetupFailureException(this.msg);
         }
         // Be sure that we chose the correcte GL Account
         if (acctDto.getAcctTypeId() != AccountingConst.ACCT_TYPE_ASSET) {
-            this.msg = "An invalid account type was selected for the customer account";
+            this.msg = "An invalid general ledger account type was selected for the customer account";
             logger.error(this.msg);
-            throw new CustomerApiException(this.msg);
+            throw new NewCustomerSetupFailureException(this.msg);
         }
         // Assign the GL Account id.
         customer.setAcctId(acctDto.getAcctId());
         return;
     }
 
-    private void prepareExistingCustomer(CustomerDto deltaCust)
-            throws CustomerApiException {
+    private void prepareExistingCustomer(CustomerDto deltaCust) throws CustomerApiException {
         CustomerDto oldCust = this.getByCustomerId(deltaCust.getCustomerId());
+        if (oldCust == null) {
+            throw new CustomerNotFoundException("Customer was not found by creditor id: " + deltaCust.getCustomerId());
+        }
         // Set modifyable fields
         deltaCust.setCustomerId(oldCust.getCustomerId());
         deltaCust.setAccountNo(oldCust.getAccountNo());
@@ -516,40 +516,50 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         return;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Validate a single customer instance.
+     * <p>
+     * In order to pass validations, the customer object cannot be null, and the
+     * contact id (business id), account id, and account number must all be
+     * assigned.
      * 
-     * @see org.modules.subsidiary.CustomerApi#validate(org.dto.CustomerDto)
+     * @param cust
+     *            an instance of {@link CustomerDto} representing the customer
+     *            that is to be valdiated
+     * @throws {@link InvalidDataException}
+     *         <ul>
+     *         <li><i>cust</i> is null.</li> <li>contact id property is less
+     *         than or equal to zero.</li> <li> account id property is less than
+     *         or equal to zero.</li><li>account number is null.</li>
+     *         </ul>
      */
-    @Override
-    public void validate(CustomerDto cust) throws CustomerApiException {
+    protected void validate(CustomerDto cust) {
         try {
             Verifier.verifyNotNull(cust);
-        }
-        catch (VerifyException e) {
-            this.msg = "Customer DTO object cannot be null";
-            throw new CustomerApiException(this.msg);
+        } catch (VerifyException e) {
+            this.msg = "Customer object is required.";
+            throw new InvalidDataException(this.msg);
         }
         try {
             Verifier.verifyPositive(cust.getContactId());
         }
         catch (VerifyException e) {
-            this.msg = "Customer DTO object must be assinged a business id";
-            throw new CustomerApiException(this.msg);
+            this.msg = "Customer business id/contact id is required";
+            throw new InvalidDataException(this.msg);
         }
         try {
             Verifier.verifyPositive(cust.getAcctId());
         }
         catch (VerifyException e) {
-            this.msg = "Customer DTO object must be assinged a account id";
-            throw new CustomerApiException(this.msg);
+            this.msg = "Customer account id is required";
+            throw new InvalidDataException(this.msg);
         }
         try {
             Verifier.verifyNotNull(cust.getAccountNo());
         }
         catch (VerifyException e) {
-            this.msg = "Customer DTO object must be assinged an account number";
-            throw new CustomerApiException(this.msg);
+            this.msg = "Customer account number is required";
+            throw new InvalidDataException(this.msg);
         }
         return;
     }
