@@ -432,7 +432,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             this.msg = "Customer API update error: customer object is required.  Be sure that is not null.";
             throw new CustomerApiException(this.msg);
         }
-        if (customer.getCustomerId() <= 0) {
+        if (customer.getCustomerId() == 0) {
             this.prepareNewCustomer(customer);
         }
         else {
