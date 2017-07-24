@@ -666,7 +666,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         }
         // Be sure that we chose the correcte GL Account
         if (acctDto.getAcctTypeId() != AccountingConst.ACCT_TYPE_LIABILITY) {
-            this.msg = "An invalid general ledger account type was selected for the creditor account";
+            this.msg = "The GL Account assoicated with creditor contains an incorrect account type id.  The account type expected is " + AccountingConst.ACCT_TYPE_LIABILITY;
             logger.error(this.msg);
             throw new NewCreditorSetupFailureException(this.msg);
         }
