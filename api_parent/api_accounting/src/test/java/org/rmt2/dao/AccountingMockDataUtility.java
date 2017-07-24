@@ -264,6 +264,45 @@ public class AccountingMockDataUtility {
 
     /**
      * 
+     * @param businessId
+     * @param longName
+     * @param contactFirstName
+     * @param contactLastName
+     * @param contactPhone
+     * @param contactEmail
+     * @param taxId
+     * @param website
+     * @return
+     */
+    public static final VwBusinessAddress createMockOrmBusinessAddress(int businessId, String longName,
+            String contactFirstName, String contactLastName, String contactPhone, String contactEmail, String taxId,
+            String website) {
+        VwBusinessAddress b = new VwBusinessAddress();
+        b.setBusinessId(businessId);
+        b.setBusLongname(longName);
+        b.setBusContactFirstname(contactFirstName);
+        b.setBusContactLastname(contactLastName);
+        b.setBusContactPhone(contactPhone);
+        b.setContactEmail(contactEmail);
+        b.setBusServTypeId(130);
+        b.setBusEntityTypeId(100);
+        b.setBusTaxId(taxId);
+        b.setBusWebsite(website);
+
+        b.setAddrId(2222);
+        b.setAddrBusinessId(1351);
+        b.setAddr1("94393 Hall Ave.");
+        b.setAddr2("Suite 948");
+        b.setAddr3("P.O. Box 84763");
+        b.setZipCity("dallas");
+        b.setZipState("TX");
+        b.setAddrZip(75028);
+        b.setAddrZipext(1234);
+        return b;
+    }
+
+    /**
+     * 
      * @param contactId
      * @param contactName
      * @param contactType
