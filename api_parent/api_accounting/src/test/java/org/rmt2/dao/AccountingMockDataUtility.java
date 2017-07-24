@@ -1,5 +1,6 @@
 package org.rmt2.dao;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import org.dao.mapping.orm.rmt2.Creditor;
@@ -18,6 +19,9 @@ import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.AccountDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
+import org.rmt2.jaxb.BusinessType;
+import org.rmt2.jaxb.CodeDetailType;
+import org.rmt2.jaxb.ObjectFactory;
 
 import com.SystemException;
 import com.util.RMT2Date;
@@ -223,6 +227,39 @@ public class AccountingMockDataUtility {
         o.setIpCreated("111.222.101.100");
         o.setIpUpdated(o.getIpCreated());
         return o;
+    }
+
+    /**
+     * 
+     * @param businessId
+     * @param longName
+     * @param contactFirstName
+     * @param contactLastName
+     * @param contactPhone
+     * @param contactEmail
+     * @param taxId
+     * @param website
+     * @return
+     */
+    public static final BusinessType createMockJaxbBusiness(int businessId, String longName, String contactFirstName,
+            String contactLastName, String contactPhone, String contactEmail, String taxId, String website) {
+        ObjectFactory f = new ObjectFactory();
+        BusinessType b = f.createBusinessType();
+        b.setBusinessId(BigInteger.valueOf(businessId));
+        b.setLongName(longName);
+        b.setContactFirstname(contactFirstName);
+        b.setContactLastname(contactLastName);
+        b.setContactPhone(contactPhone);
+        b.setContactEmail(contactEmail);
+        CodeDetailType cdt1 = f.createCodeDetailType();
+        cdt1.setCodeId(BigInteger.valueOf(130));
+        CodeDetailType cdt2 = f.createCodeDetailType();
+        cdt2.setCodeId(BigInteger.valueOf(100));
+        b.setServiceType(cdt1);
+        b.setEntityType(cdt2);
+        b.setTaxId(taxId);
+        b.setWebsite(website);
+        return b;
     }
 
     /**
