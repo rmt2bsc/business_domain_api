@@ -23,12 +23,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.CommonAccountingConst;
 import org.modules.generalledger.GeneralLedgerApiException;
 import org.modules.subsidiary.CreditorApi;
 import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.NewCreditorSetupFailureException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
+import org.modules.subsidiary.SubsidiaryException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.subsidiary.SubsidiaryApiTest;
@@ -567,6 +569,94 @@ public class CreditorApiTest extends SubsidiaryApiTest {
     }
     
     @Test
+    public void testGetCreditorBalance() {
+        ResultSet mockResulstSet = Mockito.mock(ResultSet.class);
+        try {
+            when(this.mockPersistenceClient.executeSql(any(String.class)))
+                            .thenReturn(mockResulstSet);
+            when(mockResulstSet.next()).thenReturn(true);
+            when(mockResulstSet.getDouble("balance")).thenReturn(7777777.77);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch creditor balance test case setup failed");
+        }
+
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+       double results = 0;
+        try {
+            results = api.getBalance(1350);
+        } catch (SubsidiaryException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(7777777.77, results, 0);
+    }
+
+    @Test
+    public void testGetCreditorBalanceNoDataFound() {
+        ResultSet mockResulstSet = Mockito.mock(ResultSet.class);
+        try {
+            when(this.mockPersistenceClient.executeSql(any(String.class)))
+                            .thenReturn(mockResulstSet);
+            when(mockResulstSet.next()).thenReturn(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch creditor balance test case setup failed");
+        }
+
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+       double results = 0;
+        try {
+            results = api.getBalance(1350);
+        } catch (SubsidiaryException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(0, results, 0);
+    }
+    
+    @Test
+    public void testGetCreditorBalanceWithNullCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getBalance(null);
+            Assert.fail("Expected exception due to negative creditor id");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testGetCreditorBalanceWithZeroCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getBalance(0);
+            Assert.fail("Expected exception due to creditor id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testGetCreditorBalanceWithNegativeCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.getBalance(-1350);
+            Assert.fail("Expected exception due to creditor id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testFetchAllCreditorTypes() {
         CreditorType mockCredCriteria = new CreditorType();
         try {
@@ -964,6 +1054,19 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         }
     }
     
+    @Test
+    public void testCreateNewCreditorWithNullCreditorObject() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(null);
+            Assert.fail("Expected exception due to creditor input object is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
+    }
+    
  
     @Test
     public void testUpdateExistingCreditor() {
@@ -993,4 +1096,100 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         Assert.assertEquals(1, rc);
     }
 
+    @Test
+    public void testUpdateExistingCreditorWhereCreditorNotFound() {
+        Creditor mockCreditorSubsidiaryCriteria = new Creditor();
+        mockCreditorSubsidiaryCriteria.setCreditorId(1350);
+        VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
+        this.setupNotFoundSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
+
+        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+                "932-392-339", 1);
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(criteria);
+            Assert.fail("Expected exception due to creditor ws not found");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateExistingCreditorInvalidCreditorTypeId() {
+        Creditor mockCreditorSubsidiaryCriteria = new Creditor();
+        mockCreditorSubsidiaryCriteria.setCreditorId(1350);
+        VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
+
+        int invalidCreditorTypeId = 0;
+        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+                "932-392-339", invalidCreditorTypeId);
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(criteria);
+            Assert.fail("Expected exception due to creditor type id is required");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateExistingCreditorWithInvalidCreditorObject() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.update(null);
+            Assert.fail("Expected exception due to input creditor object is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteCreditor() {
+        Creditor deleteCreditorCriteria = new Creditor();
+        deleteCreditorCriteria.setCreditorId(1350);
+
+        try {
+            when(this.mockPersistenceClient.deleteRow(eq(deleteCreditorCriteria))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor deleteRow test case setup failed");
+        }
+
+        CreditorDto deleteCreditor = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+        deleteCreditor.setCreditorId(1350);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.delete(deleteCreditor);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
+    }
+    
+    @Test
+    public void testDeleteCreditorWithNullCreditorObject() {
+        Creditor deleteCreditorCriteria = new Creditor();
+        deleteCreditorCriteria.setCreditorId(1350);
+
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.delete(null);
+            Assert.fail("Expected exception due to input creditor object is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
+    }
 }
