@@ -612,11 +612,13 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
      */
     @Override
     public int update(CreditorDto creditor) throws CreditorApiException {
-        if (creditor == null) {
-            this.msg = "Creditor API update error: creditor object is null";
-            logger.error(this.msg);
+        try {
+            Verifier.verifyNotNull(creditor);
+        } catch (VerifyException e) {
+            this.msg = "Creditor API update error: creditor object is required.  Be sure that is not null.";
             throw new CreditorApiException(this.msg);
         }
+
         if (creditor.getCreditorId() <= 0) {
             this.prepareNewCreditor(creditor);
         }
@@ -641,11 +643,9 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         // with data changes assoicated with this creditor
     }
 
-    private void prepareNewCreditor(CreditorDto creditor)
-            throws CreditorApiException {
+    private void prepareNewCreditor(CreditorDto creditor) throws CreditorApiException {
         // Build and assign the account number for the new creditor
-        String acctNo = this.buildAccountNo(creditor.getContactId(),
-                SubsidiaryType.CREDITOR);
+        String acctNo = this.buildAccountNo(creditor.getContactId(), SubsidiaryType.CREDITOR);
         creditor.setAccountNo(acctNo);
 
         // Assign an account id to the new customer
@@ -653,32 +653,33 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         GlAccountApi api = f.createApi();
         AccountDto acctDto;
         try {
-            acctDto = api
-                    .getAccountByExactName(AccountingConst.ACCT_NAME_ACCTPAY);
+            acctDto = api.getAccountByExactName(AccountingConst.ACCT_NAME_ACCTPAY);
         } catch (Exception e) {
-            this.msg = "Error retrieving creditor GL Account info to verify correct account type before creating a new customer";
+            this.msg = "Unable to retrieve GL Account information for new creditor";
             logger.error(this.msg);
-            throw new CreditorApiException(this.msg);
+            throw new NewCreditorSetupFailureException(this.msg, e);
         }
         if (acctDto == null) {
-            this.msg = "General ledger account could not be found for the creditor account";
+            this.msg = "Accounts Payable General ledger account could not be found for the purpose of assigning to creditor";
             logger.error(this.msg);
-            throw new CreditorApiException(this.msg);
+            throw new NewCreditorSetupFailureException(this.msg);
         }
         // Be sure that we chose the correcte GL Account
         if (acctDto.getAcctTypeId() != AccountingConst.ACCT_TYPE_LIABILITY) {
-            this.msg = "An invalid account type was selected for the creditor account";
+            this.msg = "An invalid general ledger account type was selected for the creditor account";
             logger.error(this.msg);
-            throw new CreditorApiException(this.msg);
+            throw new NewCreditorSetupFailureException(this.msg);
         }
         // Assign the GL Account id.
         creditor.setAcctId(acctDto.getAcctId());
         return;
     }
 
-    private void prepareExistingCreditor(CreditorDto deltaCred)
-            throws CreditorApiException {
+    private void prepareExistingCreditor(CreditorDto deltaCred) throws CreditorApiException {
         CreditorDto oldCred = this.getByCreditorId(deltaCred.getCreditorId());
+        if (oldCred == null) {
+            throw new CreditorNotFoundException("Creditor was not found by creditor id: " + deltaCred.getCreditorId());
+        }
         // Set modifyable fields
         deltaCred.setCreditorId(oldCred.getCreditorId());
         deltaCred.setAccountNo(oldCred.getAccountNo());
@@ -730,51 +731,48 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
      * @param cust
      *            an instance of {@link CreditorDto} representing the creditor
      *            that is to be valdiated
-     * @throws CreditorApiException
-     *             <ul>
-     *             <li><i>cred</i> is null.</li> <li>contact id property is less
-     *             than or equal to zero.</li> <li>account id property is less
-     *             than or equal to zero.</li> <li>creditor type id property is
-     *             less than or equal to zero.</li> <li>account number is null.
-     *             </li>
-     *             </ul>
+     * @throws {@link InvalidDataException}
+     *         <ul>
+     *         <li><i>cred</i> is null.</li> <li>contact id property is less
+     *         than or equal to zero.</li> <li> account id property is less than
+     *         or equal to zero.</li> <li> creditor type id property is less
+     *         than or equal to zero.</li> <li>account number is null.</li>
+     *         </ul>
      */
-    @Override
-    public void validate(CreditorDto cred) throws CreditorApiException {
+    protected void validate(CreditorDto cred) {
         try {
             Verifier.verifyNotNull(cred);
-        }
-        catch (VerifyException e) {
-            this.msg = "Creditor DTO object cannot be null";
-            throw new CreditorApiException(this.msg);
+        } catch (VerifyException e) {
+            this.msg = "Creditor object is required";
+            throw new InvalidDataException(this.msg);
         }
         try {
             Verifier.verifyPositive(cred.getContactId());
         }
         catch (VerifyException e) {
-            this.msg = "Creditor DTO object must be assinged a business id";
-            throw new CreditorApiException(this.msg);
+            this.msg = "Creditor business id/contact id is required";
+            throw new InvalidDataException(this.msg);
         }
         try {
             Verifier.verifyPositive(cred.getAcctId());
         }
         catch (VerifyException e) {
-            this.msg = "Creditor DTO object must be assinged a account id";
-            throw new CreditorApiException(this.msg);
+            this.msg = "Creditor account id is required";
+            throw new InvalidDataException(this.msg);
         }
         try {
             Verifier.verifyPositive(cred.getCreditorTypeId());
         }
         catch (VerifyException e) {
-            this.msg = "Creditor DTO object must be assinged a creditor type id";
-            throw new CreditorApiException(this.msg);
+            this.msg = "Creditor type id is required";
+            throw new InvalidDataException(this.msg);
         }
         try {
             Verifier.verifyNotNull(cred.getAccountNo());
         }
         catch (VerifyException e) {
-            this.msg = "Creditor DTO object must be assinged an account number";
-            throw new CreditorApiException(this.msg);
+            this.msg = "Creditor account number is required";
+            throw new InvalidDataException(this.msg);
         }
         return;
     }
