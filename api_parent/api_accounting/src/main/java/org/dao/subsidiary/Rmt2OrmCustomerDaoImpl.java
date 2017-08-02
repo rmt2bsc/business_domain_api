@@ -75,6 +75,9 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
 
         // Retrieve customer local data
         List<Customer> results = this.fetch(ormCust);
+        if (results == null) {
+            return null;
+        }
         // Package data
         List<CustomerDto> list = new ArrayList<CustomerDto>();;
         for (Customer item : results) {
