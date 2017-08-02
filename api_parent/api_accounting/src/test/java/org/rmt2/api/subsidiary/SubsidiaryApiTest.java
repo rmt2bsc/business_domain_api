@@ -41,7 +41,8 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
     protected List<CreditorType> mockCreditorTypeNotFoundResponse;
     protected List<VwCreditorXactHist> mockCreditorXactHistoryResponse;
     protected List<VwCustomerXactHist> mockCustomerXactHistoryResponse;
-    protected List<GlAccounts> mockSingleGLAccountFetchResponse;
+    protected List<GlAccounts> mockSingleCreditorGLAccountFetchResponse;
+    protected List<GlAccounts> mockSingleCustomerGLAccountFetchResponse;
 
     /**
      * @throws java.lang.Exception
@@ -63,7 +64,8 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         this.mockBusinessContactNotFoundResponse = this.createMockNotFoundContactFetchResponse();
         this.mockCreditorXactHistoryResponse = this.createMockFetchCreditorXactHistoryResponse();
         this.mockCustomerXactHistoryResponse = this.createMockFetchCustomerXactHistoryResponse();
-        this.mockSingleGLAccountFetchResponse = this.createMockSingleGLAccountFetchResponse();
+        this.mockSingleCreditorGLAccountFetchResponse = this.createMockSingleCreditorGLAccountFetchResponse();
+        this.mockSingleCustomerGLAccountFetchResponse = this.createMockSingleCustomerGLAccountFetchResponse();
     }
 
     /**
@@ -378,7 +380,7 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         }
     }
 
-    private List<GlAccounts> createMockSingleGLAccountFetchResponse() {
+    private List<GlAccounts> createMockSingleCreditorGLAccountFetchResponse() {
         List<GlAccounts> list = new ArrayList<GlAccounts>();
         GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, 2, 300, 1, "GL_200", "ACCT_PAY", "234",
                 "Accounts Payable", 1);
@@ -410,6 +412,16 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         list.add(o);
         return list;
     }
+    
+    
+    private List<GlAccounts> createMockSingleCustomerGLAccountFetchResponse() {
+        List<GlAccounts> list = new ArrayList<GlAccounts>();
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, 1, 100, 1, "GL_100", "ACCT_RCV", "1234",
+                "Accounts Receivable", 2);
+        list.add(p);
+        return list;
+    }
+    
     
     private List<VwCustomerXactHist> createMockFetchCustomerXactHistoryResponse() {
         List<VwCustomerXactHist> list = new ArrayList<VwCustomerXactHist>();
