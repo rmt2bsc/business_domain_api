@@ -260,6 +260,18 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      */
     @Override
     public CustomerDto getByUid(Integer uid) throws CustomerApiException {
+        try {
+            Verifier.verifyNotNull(uid);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Unique identifier is required", e);
+        }
+        try {
+            Verifier.verifyPositive(uid);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Unique identifier  must be greater than zero", e);
+        }
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
                 null, null);
         criteria.setCustomerId(uid);
@@ -294,8 +306,19 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      * @see org.modules.subsidiary.CustomerApi#getByBusinessId(int)
      */
     @Override
-    public CustomerDto getByBusinessId(Integer businessId)
-            throws CustomerApiException {
+    public CustomerDto getByBusinessId(Integer businessId) throws CustomerApiException {
+        try {
+            Verifier.verifyNotNull(businessId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Business Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(businessId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Business Id must be greater than zero", e);
+        }
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         criteria.setContactId(businessId);
         List<CustomerDto> results;
@@ -329,10 +352,20 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      * @see org.modules.subsidiary.CustomerApi#getByCustomerId(int)
      */
     @Override
-    public CustomerDto getByCustomerId(Integer customerId)
-            throws CustomerApiException {
-        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
-                null, null);
+    public CustomerDto getByCustomerId(Integer customerId) throws CustomerApiException {
+        try {
+            Verifier.verifyNotNull(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer Id must be greater than zero", e);
+        }
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         criteria.setCustomerId(customerId);
         List<CustomerDto> results;
         try {
@@ -365,10 +398,14 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      * @see org.modules.subsidiary.CustomerApi#getByAcctNo(java.lang.String)
      */
     @Override
-    public List<CustomerDto> getByAcctNo(String acctNo)
-            throws CustomerApiException {
-        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(
-                null, null);
+    public List<CustomerDto> getByAcctNo(String acctNo) throws CustomerApiException {
+        try {
+            Verifier.verifyNotNull(acctNo);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer Account number is required", e);
+        }
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         criteria.setAccountNo(acctNo);
         List<CustomerDto> results;
         try {
@@ -401,10 +438,15 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      * @see org.modules.subsidiary.CustomerApi#get(org.dto.CustomerDto)
      */
     @Override
-    public List<CustomerDto> get(CustomerDto criteria)
-            throws CustomerApiException {
+    public List<CustomerDto> get(CustomerDto criteria) throws CustomerApiException {
         // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
         // CustomerDao dao = f.createRmt2OrmCustomerDao();
+        try {
+            Verifier.verifyNotNull(criteria);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer selection criteria is required", e);
+        }
         try {
             return dao.fetch(criteria);
         } catch (Exception e) {
@@ -604,6 +646,18 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
     @Override
     public List<CustomerXactHistoryDto> getTransactionHistory(Integer customerId)
             throws CustomerApiException {
+        try {
+            Verifier.verifyNotNull(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id must be greater than zero", e);
+        }
         // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
         // CustomerDao dao = f.createRmt2OrmCustomerDao();
         List<CustomerXactHistoryDto> results;
