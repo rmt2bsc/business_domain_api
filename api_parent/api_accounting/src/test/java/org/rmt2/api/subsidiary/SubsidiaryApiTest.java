@@ -13,6 +13,7 @@ import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
+import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,6 +40,7 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
     protected List<CreditorType> mockCreditorTypeFetchSingleResponse;
     protected List<CreditorType> mockCreditorTypeNotFoundResponse;
     protected List<VwCreditorXactHist> mockCreditorXactHistoryResponse;
+    protected List<VwCustomerXactHist> mockCustomerXactHistoryResponse;
     protected List<GlAccounts> mockSingleGLAccountFetchResponse;
 
     /**
@@ -47,6 +49,9 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        this.mockCustomerFetchAllResponse = this.createMockFetchAllCustomerResponse();
+        this.mockCustomerFetchSingleResponse = this.createMockSingleCustomerFetchResponse();
+        this.mockCustomerNotFoundFetchResponse = this.createMockCustomerNotFoundSearchResultsResponse();
         this.mockCreditorFetchAllResponse = this.createMockFetchAllCreditorResponse();
         this.mockCreditorNotFoundFetchResponse = this.createMockCreditorNotFoundSearchResultsResponse();
         this.mockCreditorFetchSingleResponse = this.createMockSingleCreditorFetchResponse();
@@ -57,34 +62,10 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         this.mockBusinessContactFetchAllResponse = this.createMockFetchAllContactResponse();
         this.mockBusinessContactNotFoundResponse = this.createMockNotFoundContactFetchResponse();
         this.mockCreditorXactHistoryResponse = this.createMockFetchCreditorXactHistoryResponse();
+        this.mockCustomerXactHistoryResponse = this.createMockFetchCustomerXactHistoryResponse();
         this.mockSingleGLAccountFetchResponse = this.createMockSingleGLAccountFetchResponse();
     }
 
-    private List<VwCreditorXactHist> createMockFetchCreditorXactHistoryResponse() {
-        List<VwCreditorXactHist> list = new ArrayList<VwCreditorXactHist>();
-        VwCreditorXactHist o = AccountingMockDataUtility
-                .createMockOrmCreditorXactHistory(1200, 100, "C8434", 1000.00,
-                        new Date(), 1);
-        list.add(o);
-
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1201,
-                100, "C8434", 32.00, new Date(), 1);
-        list.add(o);
-
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1202,
-                100, "C8434", 1223.00, new Date(), 2);
-        list.add(o);
-
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1203,
-                100, "C8434", 25.67, new Date(), 1);
-        list.add(o);
-
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1204,
-                100, "C8434", 745.59, new Date(), 3);
-        list.add(o);
-        return list;
-    }
-    
     /**
      * @throws java.lang.Exception
      */
@@ -94,13 +75,45 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         return;
     }
 
-    protected List<Creditor> createMockCreditorNotFoundSearchResultsResponse() {
-        List<Creditor> list = null;
+    protected List<Customer> createMockCustomerNotFoundSearchResultsResponse() {
+        List<Customer> list = null;
         return list;
     }
     
-    protected List<Customer> createMockCustomerNotFoundSearchResultsResponse() {
-        List<Customer> list = null;
+    private List<Customer> createMockFetchAllCustomerResponse() {
+        List<Customer> list = new ArrayList<Customer>();
+        Customer o = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+                333, "C1234589", "Customer 1");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCustomer(201, 1400, 0,
+                333, "C1400444", "Customer 2");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCustomer(202, 1500, 0,
+                333, "C747344", "Customer 3");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCustomer(203, 1600, 0,
+                333, "C5949493", "Customer 4");
+        list.add(o);
+        
+        o = AccountingMockDataUtility.createMockOrmCustomer(204, 1700, 0,
+                333, "C2229393", "Customer 5");
+        list.add(o);
+        return list;
+    }
+    
+    private List<Customer> createMockSingleCustomerFetchResponse() {
+        List<Customer> list = new ArrayList<Customer>();
+        Customer o = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+                333, "C1234589", "Customer 1");
+        list.add(o);
+        return list;
+    }
+    
+    protected List<Creditor> createMockCreditorNotFoundSearchResultsResponse() {
+        List<Creditor> list = null;
         return list;
     }
 
@@ -370,6 +383,56 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, 2, 300, 1, "GL_200", "ACCT_PAY", "234",
                 "Accounts Payable", 1);
         list.add(p);
+        return list;
+    }
+    
+    private List<VwCreditorXactHist> createMockFetchCreditorXactHistoryResponse() {
+        List<VwCreditorXactHist> list = new ArrayList<VwCreditorXactHist>();
+        VwCreditorXactHist o = AccountingMockDataUtility
+                .createMockOrmCreditorXactHistory(1200, 100, "C8434", 1000.00,
+                        new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1201,
+                100, "C8434", 32.00, new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1202,
+                100, "C8434", 1223.00, new Date(), 2);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1203,
+                100, "C8434", 25.67, new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1204,
+                100, "C8434", 745.59, new Date(), 3);
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwCustomerXactHist> createMockFetchCustomerXactHistoryResponse() {
+        List<VwCustomerXactHist> list = new ArrayList<VwCustomerXactHist>();
+        VwCustomerXactHist o = AccountingMockDataUtility
+                .createMockOrmCustomerXactHistory(1200, 100, 1351, 0, "C8434", 1000.00,
+                        new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(2345, 100, 1351, 0, "C8434", 1000.00,
+                new Date(), 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(3333, 100, 1351, 0, "C8434", 2000.00,
+                new Date(), 2);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(6543, 100, 1351, 0, "C8434", 3000.00,
+                new Date(), 3);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(8765, 100, 1351, 0, "C8434", 4000.00,
+                new Date(), 4);
+        list.add(o);
         return list;
     }
 }
