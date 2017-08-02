@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorType;
+import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.GlAccountCategory;
 import org.dao.mapping.orm.rmt2.GlAccountTypes;
 import org.dao.mapping.orm.rmt2.GlAccounts;
@@ -15,6 +16,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
+import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.AccountDto;
@@ -28,8 +30,10 @@ import com.util.RMT2Date;
 
 public class AccountingMockDataUtility {
 
-    public static final GlAccounts createMockOrmGlAccounts(int acctId, int acctTypeId, int acctCatgId, int acctSeq,
-            String acctNo, String acctName, String acctCode, String acctDescription, int acctBalTypeId) {
+    public static final GlAccounts createMockOrmGlAccounts(int acctId,
+            int acctTypeId, int acctCatgId, int acctSeq, String acctNo,
+            String acctName, String acctCode, String acctDescription,
+            int acctBalTypeId) {
         GlAccounts orm = new GlAccounts();
         orm.setAcctId(acctId);
         orm.setAcctTypeId(acctTypeId);
@@ -43,10 +47,13 @@ public class AccountingMockDataUtility {
         return orm;
     }
 
-    public static final AccountDto createMockDtoGlAccounts(int acctId, int acctTypeId, int acctCatgId, int acctSeq,
-            String acctNo, String acctName, String acctCode, String acctDescription, int acctBalTypeId) {
-        GlAccounts orm = AccountingMockDataUtility.createMockOrmGlAccounts(acctId, acctTypeId, acctCatgId, acctSeq,
-                acctNo, acctName, acctCode, acctDescription, acctBalTypeId);
+    public static final AccountDto createMockDtoGlAccounts(int acctId,
+            int acctTypeId, int acctCatgId, int acctSeq, String acctNo,
+            String acctName, String acctCode, String acctDescription,
+            int acctBalTypeId) {
+        GlAccounts orm = AccountingMockDataUtility.createMockOrmGlAccounts(
+                acctId, acctTypeId, acctCatgId, acctSeq, acctNo, acctName,
+                acctCode, acctDescription, acctBalTypeId);
         AccountDto dto = Rmt2AccountDtoFactory.createAccountInstance(orm);
         return dto;
     }
@@ -57,7 +64,8 @@ public class AccountingMockDataUtility {
      * @param acctBalTypeId
      * @return
      */
-    public static final GlAccountTypes createMockOrmGlAccountTypes(int id, int acctBalTypeId, String description) {
+    public static final GlAccountTypes createMockOrmGlAccountTypes(int id,
+            int acctBalTypeId, String description) {
         GlAccountTypes orm = new GlAccountTypes();
         orm.setAcctTypeId(id);
         orm.setAcctBaltypeId(acctBalTypeId);
@@ -72,7 +80,8 @@ public class AccountingMockDataUtility {
      * @param description
      * @return
      */
-    public static final GlAccountCategory createMockOrmGlAccountCategory(int id, int acctTypeId, String description) {
+    public static final GlAccountCategory createMockOrmGlAccountCategory(int id,
+            int acctTypeId, String description) {
         GlAccountCategory orm = new GlAccountCategory();
         orm.setAcctCatgId(id);
         orm.setAcctTypeId(acctTypeId);
@@ -94,8 +103,10 @@ public class AccountingMockDataUtility {
      * @param active
      * @return
      */
-    public static final ItemMaster createMockOrmItemMaster(int id, int itemTypeId, String serialNo, String vendorItemNo,
-            int creditorId, String description, int qty, double unitCost, boolean active) {
+    public static final ItemMaster createMockOrmItemMaster(int id,
+            int itemTypeId, String serialNo, String vendorItemNo,
+            int creditorId, String description, int qty, double unitCost,
+            boolean active) {
         ItemMaster i = new ItemMaster();
         i.setItemId(id);
         i.setItemTypeId(itemTypeId);
@@ -118,7 +129,8 @@ public class AccountingMockDataUtility {
      * @param description
      * @return
      */
-    public static final ItemMasterType createMockOrmItemMasterType(int id, String description) {
+    public static final ItemMasterType createMockOrmItemMasterType(int id,
+            String description) {
         ItemMasterType i = new ItemMasterType();
         i.setItemTypeId(id);
         i.setDescription(description);
@@ -131,7 +143,8 @@ public class AccountingMockDataUtility {
      * @param description
      * @return
      */
-    public static final ItemMasterStatus createMockOrmItemMasterStatus(int id, String description) {
+    public static final ItemMasterStatus createMockOrmItemMasterStatus(int id,
+            String description) {
         ItemMasterStatus i = new ItemMasterStatus();
         i.setItemStatusId(id);
         i.setDescription(description);
@@ -150,8 +163,9 @@ public class AccountingMockDataUtility {
      * @param reason
      * @return
      */
-    public static final ItemMasterStatusHist createMockOrmItemMasterStatusHistory(int id, int itemId, int statusId,
-            double unitCost, double markup, String effDate, String endDate, String reason) {
+    public static final ItemMasterStatusHist createMockOrmItemMasterStatusHistory(
+            int id, int itemId, int statusId, double unitCost, double markup,
+            String effDate, String endDate, String reason) {
         ItemMasterStatusHist i = new ItemMasterStatusHist();
         i.setItemStatusHistId(id);
         i.setItemId(itemId);
@@ -184,8 +198,9 @@ public class AccountingMockDataUtility {
      * @param active
      * @return
      */
-    public static final VwVendorItems createMockOrmVwVendorItems(int id, String serialNo, String vendorItemNo,
-            int creditorId, String description, int qty, double unitCost) {
+    public static final VwVendorItems createMockOrmVwVendorItems(int id,
+            String serialNo, String vendorItemNo, int creditorId,
+            String description, int qty, double unitCost) {
         VwVendorItems i = new VwVendorItems();
         i.setItemId(id);
         i.setItemSerialNo(serialNo);
@@ -209,8 +224,8 @@ public class AccountingMockDataUtility {
      * @param creditorTypeId
      * @return
      */
-    public static final Creditor createMockOrmCreditor(int id, int businessId, int acctId, String acctNo,
-            String extAcctNo, int creditorTypeId) {
+    public static final Creditor createMockOrmCreditor(int id, int businessId,
+            int acctId, String acctNo, String extAcctNo, int creditorTypeId) {
         Creditor o = new Creditor();
         o.setCreditorId(id);
         o.setBusinessId(businessId);
@@ -241,8 +256,10 @@ public class AccountingMockDataUtility {
      * @param website
      * @return
      */
-    public static final BusinessType createMockJaxbBusiness(int businessId, String longName, String contactFirstName,
-            String contactLastName, String contactPhone, String contactEmail, String taxId, String website) {
+    public static final BusinessType createMockJaxbBusiness(int businessId,
+            String longName, String contactFirstName, String contactLastName,
+            String contactPhone, String contactEmail, String taxId,
+            String website) {
         ObjectFactory f = new ObjectFactory();
         BusinessType b = f.createBusinessType();
         b.setBusinessId(BigInteger.valueOf(businessId));
@@ -274,9 +291,10 @@ public class AccountingMockDataUtility {
      * @param website
      * @return
      */
-    public static final VwBusinessAddress createMockOrmBusinessAddress(int businessId, String longName,
-            String contactFirstName, String contactLastName, String contactPhone, String contactEmail, String taxId,
-            String website) {
+    public static final VwBusinessAddress createMockOrmBusinessAddress(
+            int businessId, String longName, String contactFirstName,
+            String contactLastName, String contactPhone, String contactEmail,
+            String taxId, String website) {
         VwBusinessAddress b = new VwBusinessAddress();
         b.setBusinessId(businessId);
         b.setBusLongname(longName);
@@ -316,9 +334,10 @@ public class AccountingMockDataUtility {
      * @param zip
      * @return
      */
-    public static final VwCommonContact createMockOrmCommonContact(int contactId, String contactName,
-            String contactType, int addressId, String addr1, String addr2, String addr3, String addr4, String city,
-            String state, int zip) {
+    public static final VwCommonContact createMockOrmCommonContact(
+            int contactId, String contactName, String contactType,
+            int addressId, String addr1, String addr2, String addr3,
+            String addr4, String city, String state, int zip) {
         VwCommonContact o = new VwCommonContact();
         o.setContactId(contactId);
         o.setContactName(contactName);
@@ -382,8 +401,9 @@ public class AccountingMockDataUtility {
      * @param cost
      * @return
      */
-    public static final VwItemAssociations createMockOrmVwItemAssociations(int assocId, int assocItemId,
-            int itemMasterId, String assocType, double qty, double cost) {
+    public static final VwItemAssociations createMockOrmVwItemAssociations(
+            int assocId, int assocItemId, int itemMasterId, String assocType,
+            double qty, double cost) {
         VwItemAssociations o = new VwItemAssociations();
         o.setAssocId(assocId);
         o.setAssocItemId(assocItemId);
@@ -393,14 +413,15 @@ public class AccountingMockDataUtility {
         o.setItemCost(cost);
         return o;
     }
-    
+
     /**
      * 
      * @param id
      * @param description
      * @return
      */
-    public static final CreditorType createMockOrmCreditorType(int id, String description) {
+    public static final CreditorType createMockOrmCreditorType(int id,
+            String description) {
         CreditorType o = new CreditorType();
         o.setCreditorTypeId(id);
         o.setDescription(description);
@@ -436,7 +457,8 @@ public class AccountingMockDataUtility {
         o.setActive(1);
         o.setApr(1.56);
         o.setCreditLimit(5000.00);
-        o.setCreditorTypeDescription("Creditor type description for creditor, " + creditorId);
+        o.setCreditorTypeDescription(
+                "Creditor type description for creditor, " + creditorId);
         o.setXactSubtypeId(1);
         o.setXactTypeName("Xact Type Name" + xactId);
         o.setConfirmNo(String.valueOf(o.getDateCreated().getTime()));
@@ -444,6 +466,59 @@ public class AccountingMockDataUtility {
         o.setDocumentId(xactId + creditorId);
         o.setCreditorActivityId(xactId * o.getTenderId());
         o.setCreditorActivityAmount(xactAmt);
+        return o;
+    }
+
+    /**
+     * 
+     * @param id
+     * @param businessId
+     * @param personId
+     * @param acctId
+     * @param acctNo
+     * @param description
+     * @return
+     */
+    public static final Customer createMockOrmCustomer(int id, int businessId,
+            int personId, int acctId, String acctNo, String description) {
+        Customer o = new Customer();
+        o.setCustomerId(id);
+        o.setBusinessId(businessId);
+        o.setPersonId(personId);
+        o.setAcctId(acctId);
+        o.setAccountNo(acctNo);
+        o.setDescription(description);
+        o.setCreditLimit(10000);
+        o.setActive(1);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        o.setIpCreated("111.222.101.100");
+        o.setIpUpdated(o.getIpCreated());
+        return o;
+    }
+
+    public static final VwCustomerXactHist createMockOrmCustomerXactHistory(
+            int xactId, int customerId, int businessId, int personId,
+            String acctNo, double xactAmt, Date xactDate, int xactTypeId) {
+        VwCustomerXactHist o = new VwCustomerXactHist();
+        o.setXactId(xactId);
+        o.setCustomerId(customerId);
+        o.setBusinessId(businessId);
+        o.setPersonId(personId);
+        o.setAccountNo(acctNo);
+        o.setXactAmount(xactAmt);
+        o.setXactDate(xactDate);
+        o.setXactTypeId(xactTypeId);
+        o.setReason("Transaction History for customer, " + customerId);
+        o.setActive(1);
+        o.setCreditLimit(5000.00);
+        o.setXactSubtypeId(1);
+        o.setXactTypeName("Xact Type Name" + xactId);
+        o.setConfirmNo(String.valueOf(xactDate.getTime()));
+        o.setDocumentId(xactId + customerId);
+        o.setCustomerActivityId(xactId * customerId);
+        o.setCustomerActivityAmount(xactAmt);
         return o;
     }
 }
