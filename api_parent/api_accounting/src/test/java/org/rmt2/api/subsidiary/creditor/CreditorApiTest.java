@@ -878,7 +878,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
-                    this.mockSingleGLAccountFetchResponse);
+                    this.mockSingleCreditorGLAccountFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("GL Account fetch test case setup failed");
@@ -1002,7 +1002,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
-                    this.mockSingleGLAccountFetchResponse);
+                    this.mockSingleCreditorGLAccountFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("GL Account fetch test case setup failed");
@@ -1031,7 +1031,7 @@ public class CreditorApiTest extends SubsidiaryApiTest {
         mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
-                    this.mockSingleGLAccountFetchResponse);
+                    this.mockSingleCreditorGLAccountFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("GL Account fetch test case setup failed");
