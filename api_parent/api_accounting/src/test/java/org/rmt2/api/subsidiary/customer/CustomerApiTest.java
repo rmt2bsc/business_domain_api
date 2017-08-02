@@ -9,12 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.AccountingConst;
-import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
-import org.dto.CreditorDto;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
@@ -27,10 +25,10 @@ import org.mockito.Mockito;
 import org.modules.CommonAccountingConst;
 import org.modules.generalledger.GeneralLedgerApiException;
 import org.modules.subsidiary.CreditorApi;
-import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.CustomerApi;
 import org.modules.subsidiary.CustomerApiException;
-import org.modules.subsidiary.NewCreditorSetupFailureException;
+import org.modules.subsidiary.CustomerNotFoundException;
+import org.modules.subsidiary.NewCustomerSetupFailureException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.subsidiary.SubsidiaryException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -544,7 +542,7 @@ public class CustomerApiTest extends SubsidiaryApiTest {
     }
     
     @Test
-    public void testGetCreditorBalanceWithNullCustomerId() {
+    public void testGetBalanceWithNullCustomerId() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
@@ -557,7 +555,7 @@ public class CustomerApiTest extends SubsidiaryApiTest {
     }
     
     @Test
-    public void testGetCreditorBalanceWithZeroCustomerId() {
+    public void testGetBalanceWithZeroCustomerId() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
@@ -570,7 +568,7 @@ public class CustomerApiTest extends SubsidiaryApiTest {
     }
     
     @Test
-    public void testGetCreditorBalanceWithNegativeCustomerId() {
+    public void testGetBalanceWithNegativeCustomerId() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
@@ -667,45 +665,46 @@ public class CustomerApiTest extends SubsidiaryApiTest {
     }
 
     @Test
-    public void testCreateNewCreditor() {
+    public void testCreateNewCustomer() {
         GlAccounts mockGLAcctCriteria = new GlAccounts();
-        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTRCV);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
-                    this.mockSingleGLAccountFetchResponse);
+                    this.mockSingleCustomerGLAccountFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+                333, "C1234589", "Customer 1");
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
-        int newCreditorId = 1350;
+        int newCustomerId = 1350;
         try {
-            when(this.mockPersistenceClient.insertRow(any(Creditor.class), eq(true))).thenReturn(newCreditorId);
+            when(this.mockPersistenceClient.insertRow(any(Customer.class), eq(true))).thenReturn(newCustomerId);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Creditor insertRow test case setup failed");
+            Assert.fail("Customer insertRow test case setup failed");
         }
 
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
             rc = api.update(criteria);
-        } catch (CreditorApiException e) {
+        } catch (CustomerApiException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(newCreditorId, rc);
+        Assert.assertEquals(newCustomerId, rc);
     }
 
     @Test
-    public void testCreateNewCreditorWithGLAccountFetchException() {
+    public void testCreateNewCustomerWithGLAccountFetchException() {
         GlAccounts mockGLAcctCriteria = new GlAccounts();
-        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTRCV);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenThrow(
                     new GeneralLedgerApiException("Database error occurred fetching GL Account data"));
@@ -713,57 +712,59 @@ public class CustomerApiTest extends SubsidiaryApiTest {
             e.printStackTrace();
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+                333, "C1234589", "Customer 1");
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to general database error occurre while fetching GL Account information");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof NewCreditorSetupFailureException);
+            Assert.assertTrue(e instanceof NewCustomerSetupFailureException);
             e.printStackTrace();
         }
     }
     
     @Test
-    public void testCreateNewCreditorWithGLAccountNotFound() {
+    public void testCreateNewCustomerWithGLAccountNotFound() {
         GlAccounts mockGLAcctCriteria = new GlAccounts();
-        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTRCV);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+                333, "C1234589", "Customer 1");
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to fetching GL Account information was not found");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof NewCreditorSetupFailureException);
+            Assert.assertTrue(e instanceof NewCustomerSetupFailureException);
             e.printStackTrace();
         }
     }
     
     @Test
-    public void testCreateNewCreditorWithFetchedGLAccountTypeIdInvalid() {
+    public void testCreateNewCustomerWithFetchedGLAccountTypeIdInvalid() {
         GlAccounts mockGLAcctCriteria = new GlAccounts();
-        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTRCV);
         
         int invalidAcctTypeId = 5;
         List<GlAccounts> mockGLAccountListResults = new ArrayList<GlAccounts>();
         GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, invalidAcctTypeId, 300, 1, "GL_200", "ACCT_PAY", "234",
-                "Accounts Payable", 1);
+                "Accounts Receivable", 2);
         mockGLAccountListResults.add(p);
         
         try {
@@ -774,42 +775,44 @@ public class CustomerApiTest extends SubsidiaryApiTest {
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+                333, "C1234589", "Customer 1");
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to fetched GL Account contains an invalid account type id");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof NewCreditorSetupFailureException);
+            Assert.assertTrue(e instanceof NewCustomerSetupFailureException);
             e.printStackTrace();
         }
     }
     
     @Test
-    public void testCreateNewCreditorWithInvalidBusinessId() {
+    public void testCreateNewCustomerWithInvalidBusinessId() {
         GlAccounts mockGLAcctCriteria = new GlAccounts();
-        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTRCV);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
-                    this.mockSingleGLAccountFetchResponse);
+                    this.mockSingleCustomerGLAccountFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("GL Account fetch test case setup failed");
         }
 
         int invalidBusinessId = 0;
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, invalidBusinessId, 1234, "GL_200", "932-392-339", 1);
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, invalidBusinessId, 0,
+                333, "C1234589", "Customer 1");
         BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(invalidBusinessId, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to business id is invalid");
@@ -820,169 +823,115 @@ public class CustomerApiTest extends SubsidiaryApiTest {
     }
     
     @Test
-    public void testCreateNewCreditorWithInvalidCreditorTypeId() {
-        GlAccounts mockGLAcctCriteria = new GlAccounts();
-        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
-                    this.mockSingleGLAccountFetchResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("GL Account fetch test case setup failed");
-        }
-
-        int invalidCreditorTypeId = 0;
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 0, "GL_200", "932-392-339", invalidCreditorTypeId);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
-                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
-
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        try {
-            api.update(criteria);
-            Assert.fail("Expected exception due to creditor type id is invalid");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
-    
-    @Test
     public void testCreateNewCreditorWithNullCreditorObject() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(null);
-            Assert.fail("Expected exception due to creditor input object is null");
+            Assert.fail("Expected exception due to customer input object is null");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e instanceof CustomerApiException);
             e.printStackTrace();
         }
     }
     
  
     @Test
-    public void testUpdateExistingCreditor() {
-        Creditor mockCreditorSubsidiaryCriteria = new Creditor();
-        mockCreditorSubsidiaryCriteria.setCreditorId(1350);
+    public void testUpdateExistingCustomer() {
+        Customer mockCustomerSubsidiaryCriteria = new Customer();
+        mockCustomerSubsidiaryCriteria.setCustomerId(200);
         VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
-        this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
+        this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCustomerSubsidiaryCriteria);
 
         try {
-            when(this.mockPersistenceClient.updateRow(any(Creditor.class))).thenReturn(1);
+            when(this.mockPersistenceClient.updateRow(any(Customer.class))).thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Creditor updateRow test case setup failed");
+            Assert.fail("Customer updateRow test case setup failed");
         }
 
-        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
-                "932-392-339", 1);
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
+        Customer updateCustomer = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+                333, "C1234589", "Customer 1");
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
             rc = api.update(criteria);
-        } catch (CreditorApiException e) {
+        } catch (CustomerApiException e) {
             e.printStackTrace();
         }
         Assert.assertEquals(1, rc);
     }
 
     @Test
-    public void testUpdateExistingCreditorWhereCreditorNotFound() {
-        Creditor mockCreditorSubsidiaryCriteria = new Creditor();
-        mockCreditorSubsidiaryCriteria.setCreditorId(1350);
+    public void testUpdateExistingCreditorWhereCustomerNotFound() {
+        Customer mockCustomerSubsidiaryCriteria = new Customer();
+        mockCustomerSubsidiaryCriteria.setCustomerId(200);
         VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
-        this.setupNotFoundSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
+        this.setupNotFoundSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCustomerSubsidiaryCriteria);
 
-        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
-                "932-392-339", 1);
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
+        Customer updateCustomer = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+                333, "C1234589", "Customer 1");
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
-            Assert.fail("Expected exception due to creditor ws not found");
+            Assert.fail("Expected exception due to customer ws not found");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e instanceof CustomerNotFoundException);
             e.printStackTrace();
         }
     }
     
     @Test
-    public void testUpdateExistingCreditorInvalidCreditorTypeId() {
-        Creditor mockCreditorSubsidiaryCriteria = new Creditor();
-        mockCreditorSubsidiaryCriteria.setCreditorId(1350);
-        VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
-        this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
-
-        int invalidCreditorTypeId = 0;
-        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
-                "932-392-339", invalidCreditorTypeId);
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
+    public void testUpdateExistingCustomerWithInvalidCreditorObject() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        try {
-            api.update(criteria);
-            Assert.fail("Expected exception due to creditor type id is required");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
-    
-    @Test
-    public void testUpdateExistingCreditorWithInvalidCreditorObject() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(null);
-            Assert.fail("Expected exception due to input creditor object is null");
+            Assert.fail("Expected exception due to input customer object is null");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e instanceof CustomerApiException);
             e.printStackTrace();
         }
     }
     
     @Test
-    public void testDeleteCreditor() {
-        Creditor deleteCreditorCriteria = new Creditor();
-        deleteCreditorCriteria.setCreditorId(1350);
+    public void testDeleteCustomer() {
+        Customer deleteCustomerCriteria = new Customer();
+        deleteCustomerCriteria.setCustomerId(1350);
 
         try {
-            when(this.mockPersistenceClient.deleteRow(eq(deleteCreditorCriteria))).thenReturn(1);
+            when(this.mockPersistenceClient.deleteRow(eq(deleteCustomerCriteria))).thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Creditor deleteRow test case setup failed");
+            Assert.fail("Customer deleteRow test case setup failed");
         }
 
-        CreditorDto deleteCreditor = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
-        deleteCreditor.setCreditorId(1350);
+        CustomerDto deleteCustomer = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
+        deleteCustomer.setCustomerId(1350);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
-            rc = api.delete(deleteCreditor);
-        } catch (CreditorApiException e) {
+            rc = api.delete(deleteCustomer);
+        } catch (CustomerApiException e) {
             e.printStackTrace();
         }
         Assert.assertEquals(1, rc);
     }
     
     @Test
-    public void testDeleteCreditorWithNullCreditorObject() {
-        Creditor deleteCreditorCriteria = new Creditor();
-        deleteCreditorCriteria.setCreditorId(1350);
-
+    public void testDeleteCustomerWithNullCustomerObject() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.delete(null);
-            Assert.fail("Expected exception due to input creditor object is null");
+            Assert.fail("Expected exception due to input customer object is null");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e instanceof CustomerApiException);
             e.printStackTrace();
         }
     }
