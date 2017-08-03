@@ -22,9 +22,9 @@ import org.dto.XactDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.modules.inventory.InventoryApi;
+import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.modules.inventory.InventoryConst;
-import org.modules.inventory.InventoryApiException;
 import org.modules.subsidiary.CustomerApi;
 import org.modules.subsidiary.CustomerApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
@@ -658,15 +658,34 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         return processCount;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Validte sales order.
+     * <p>
+     * The following rules must be met in order for a sales order to be
+     * considered valid:
+     * <ul>
+     * <li><i>order</i> and <i>items</i> cannot be null.</li>
+     * <li>The <i>customerId</i> property of <i>order</i> must be greater than
+     * zero.</li>
+     * <li>The customer must exist in the system.</li>
+     * <li>There must be at least one sales order item contained in
+     * <i>items</i>.</li>
+     * <li>The item id property of each sales order item contained in
+     * <i>items</i> must be greater than zero.</li>
+     * <li>Each sales order item in <i>items</i> must exist in inventory either
+     * as a service (soft) item type or as type merchandise.</li>
+     * <li>The base sales order total must equal the sum of ssales order item
+     * amounts.</li>
+     * </ul>
      * 
-     * @see
-     * org.modules.transaction.sales.SalesApi#validate(org.dto.SalesOrderDto ,
-     * int, java.util.List)
+     * @param order
+     *            an instance of {@link SalesOrderDto}.
+     * @param items
+     *            a List of {@link SalesOrderItemDto} instances.
+     * @throws SalesApiException
+     *             when any one of the specified validations are not met.
      */
-    @Override
-    public void validate(SalesOrderDto order, List<SalesOrderItemDto> items)
+    protected void validate(SalesOrderDto order, List<SalesOrderItemDto> items)
             throws SalesApiException {
         if (order == null) {
             this.msg = "Sales order object cannot be null";

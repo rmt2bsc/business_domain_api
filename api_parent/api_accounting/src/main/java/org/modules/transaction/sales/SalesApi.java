@@ -187,35 +187,4 @@ public interface SalesApi extends XactApi {
      * @throws SalesApiException
      */
     int deleteSalesOrder(int salesOrderId) throws SalesApiException;
-
-    /**
-     * Validte sales order.
-     * <p>
-     * The following rules must be met in order for a sales order to be
-     * considered valid:
-     * <ul>
-     * <li><i>order</i> and <i>items</i> cannot be null.</li>
-     * <li>The <i>customerId</i> property of <i>order</i> must be greater than
-     * zero.</li>
-     * <li>The customer must exist in the system.</li>
-     * <li>There must be at least one sales order item contained in
-     * <i>items</i>.</li>
-     * <li>The item id property of each sales order item contained in
-     * <i>items</i> must be greater than zero.</li>
-     * <li>Each sales order item in <i>items</i> must exist in inventory either
-     * as a service (soft) item type or as type merchandise.</li>
-     * <li>The base sales order total must equal the sum of ssales order item
-     * amounts.</li>
-     * </ul>
-     * 
-     * @param order
-     *            an instance of {@link SalesOrderDto}.
-     * @param items
-     *            a List of {@link SalesOrderItemDto} instances.
-     * @throws SalesApiException
-     *             when any one of the specified validations are not met.
-     */
-    void validate(SalesOrderDto order, List<SalesOrderItemDto> items)
-            throws SalesApiException;
-
 }

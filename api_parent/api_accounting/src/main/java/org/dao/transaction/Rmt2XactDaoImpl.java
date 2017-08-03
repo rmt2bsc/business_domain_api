@@ -376,8 +376,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
     public int maintain(XactDto xact, List<XactTypeItemActivityDto> items)
             throws XactDaoException {
         Xact ormXact = XactDaoFactory.createXact(xact);
-        List<XactTypeItemActivity> ormItems = XactDaoFactory
-                .createXactItemActivity(items);
+        List<XactTypeItemActivity> ormItems = XactDaoFactory.createXactItemActivity(items);
         // Handle base transaction
         int xactId = 0;
         try {

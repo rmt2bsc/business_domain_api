@@ -202,20 +202,6 @@ public interface XactApi extends TransactionApi {
             throws XactApiException;
 
     /**
-     * Validates the transaction and its items.
-     * 
-     * @param xact
-     *            An instance of {@link XactDto} serving as the base
-     *            transaction.
-     * @param xactItems
-     *            A List of {@link XactTypeItemActivityDto} serving as the
-     *            transaction items
-     * @throws XactApiException
-     */
-    void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException;
-
-    /**
      * Reverses a transaction and its detail items.
      * 
      * @param xact
@@ -228,41 +214,7 @@ public interface XactApi extends TransactionApi {
     int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems)
             throws XactApiException;
 
-    // /**
-    // * Creates Customer activity (subsidiary) entry based on related
-    // transaction
-    // * (_xactId).
-    // *
-    // * @param customerId
-    // * The id of the customer
-    // * @param xactId
-    // * The id of the transaction
-    // * @param amount
-    // * The transaction amount
-    // * @return String - Confrimation number.
-    // * @throws XactApiException
-    // */
-    // String createCustomerActivity(int customerId, int xactId, double amount)
-    // throws XactApiException;
-    //
-    // /**
-    // * Creates Creditor activity (subsidiary) entry based on related
-    // transaction
-    // * (_xactId).
-    // *
-    // * @param creditorId
-    // * The id of the creditor
-    // * @param xactId
-    // * The id of the transaction
-    // * @param amount
-    // * The transaction amount
-    // * @return The confirmation number.
-    // * @throws XactApiException
-    // */
-    // String createCreditorActivity(int creditorId, int xactId, double amount)
-    // throws XactApiException;
-
-    /**
+       /**
      * Creates transacction activity for a particular subsidiary.
      * 
      * @param subsidiaryId

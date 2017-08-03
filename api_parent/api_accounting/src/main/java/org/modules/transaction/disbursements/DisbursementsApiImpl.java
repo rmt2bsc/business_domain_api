@@ -307,8 +307,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      *             fail.
      * @see {@link AbstractXactApiImpl#validate(XactDto, List)}
      */
-    @Override
-    public void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems)
+    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems)
             throws XactApiException {
         // Transaction items are only required for general cash disbursement
         // type transactions

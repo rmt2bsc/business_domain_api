@@ -623,8 +623,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *             amount of each element of <i>xactItems</i> does not equal the
      *             transaction amount found in <i>xact</i>.
      */
-    @Override
-    public void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems)
+    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems)
             throws XactApiException {
         // Validate base transaction
         this.validate(xact);
