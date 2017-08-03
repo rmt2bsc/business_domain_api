@@ -129,11 +129,9 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * @see org.dao.transaction.XactDao#fetchCategory(org.dto.XactCategoryDto)
      */
     @Override
-    public List<XactCategoryDto> fetchCategory(XactCategoryDto criteria)
-            throws XactDaoException {
+    public List<XactCategoryDto> fetchCategory(XactCategoryDto criteria) throws XactDaoException {
         XactCategory ormCriteria = XactDaoFactory.createCriteria(criteria);
-        ormCriteria.addOrderBy(XactCategory.PROP_DESCRIPTION,
-                ItemMaster.ORDERBY_ASCENDING);
+        ormCriteria.addOrderBy(XactCategory.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<XactCategory> results = null;
@@ -148,8 +146,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
 
         List<XactCategoryDto> list = new ArrayList<XactCategoryDto>();
         for (XactCategory item : results) {
-            XactCategoryDto dto = Rmt2XactDtoFactory
-                    .createXactCategoryInstance(item);
+            XactCategoryDto dto = Rmt2XactDtoFactory.createXactCategoryInstance(item);
             list.add(dto);
         }
         return list;
