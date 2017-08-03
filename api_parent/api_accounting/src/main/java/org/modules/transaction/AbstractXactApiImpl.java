@@ -148,7 +148,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
-            results = dao.fetchCategory(null);
+            XactCategoryDto criteria = Rmt2XactDtoFactory.createXactCategoryInstance(null);
+            results = dao.fetchCategory(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve all transaction categories";
