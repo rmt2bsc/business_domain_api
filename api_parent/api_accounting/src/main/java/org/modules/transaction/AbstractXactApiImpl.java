@@ -106,7 +106,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactById(int)
      */
     @Override
-    public XactDto getXactById(int xactId) throws XactApiException {
+    public XactDto getXactById(Integer xactId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactDto> results = null;
         try {
@@ -166,7 +166,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getCategoryById(int)
      */
     @Override
-    public XactCategoryDto getCategoryById(int catgId) throws XactApiException {
+    public XactCategoryDto getCategoryById(Integer catgId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
@@ -226,7 +226,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getGroup(int)
      */
     @Override
-    public XactCodeGroupDto getGroup(int groupId) throws XactApiException {
+    public XactCodeGroupDto getGroup(Integer groupId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeGroupDto> results = null;
         try {
@@ -286,7 +286,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getCode(int)
      */
     @Override
-    public XactCodeDto getCode(int codeId) throws XactApiException {
+    public XactCodeDto getCode(Integer codeId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
@@ -324,7 +324,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getCodeByGroupId(int)
      */
     @Override
-    public List<XactCodeDto> getCodeByGroupId(int groupId)
+    public List<XactCodeDto> getCodeByGroupId(Integer groupId)
             throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
@@ -373,7 +373,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactType(int)
      */
     @Override
-    public XactTypeDto getXactType(int typeId) throws XactApiException {
+    public XactTypeDto getXactType(Integer typeId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
@@ -411,7 +411,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeByCatgId(int)
      */
     @Override
-    public List<XactTypeDto> getXactTypeByCatgId(int catgId)
+    public List<XactTypeDto> getXactTypeByCatgId(Integer catgId)
             throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
@@ -438,7 +438,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeItemActivity(int)
      */
     @Override
-    public List<XactTypeItemActivityDto> getXactTypeItemActivity(int xactId)
+    public List<XactTypeItemActivityDto> getXactTypeItemActivity(Integer xactId)
             throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeItemActivityDto> results = null;
@@ -465,7 +465,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeItemActivityExt(int)
      */
     @Override
-    public List<XactTypeItemActivityDto> getXactTypeItemActivityExt(int xactId)
+    public List<XactTypeItemActivityDto> getXactTypeItemActivityExt(Integer xactId)
             throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeItemActivityDto> results = null;
@@ -488,7 +488,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeItemsByXactTypeId(int)
      */
     @Override
-    public List<XactTypeItemDto> getXactTypeItemsByXactTypeId(int xactTypeId)
+    public List<XactTypeItemDto> getXactTypeItemsByXactTypeId(Integer xactTypeId)
             throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeItemDto> results = null;
@@ -1016,8 +1016,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @throws XactApiException
      */
     @Override
-    public int createSubsidiaryTransaction(int subsidiaryId, int xactId,
-            double amount) throws XactApiException {
+    public int createSubsidiaryTransaction(Integer subsidiaryId, Integer xactId,
+            Double amount) throws XactApiException {
         int rc = 0;
         // Determine the type of subsidiary we are dealing with
         SubsidiaryType subType = this.evaluateSubsidiaryType(subsidiaryId);
@@ -1119,7 +1119,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @return {@link SubsidiaryType}
      * @throws SubsidiaryDaoException
      */
-    public SubsidiaryType evaluateSubsidiaryType(int subsidiaryId)
+    public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId)
             throws SubsidiaryDaoException {
         SubsidiaryDto result = null;
         try {

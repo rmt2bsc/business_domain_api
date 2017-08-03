@@ -1542,7 +1542,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * evaluateSubsidiaryType(int)
      */
     @Override
-    public SubsidiaryType evaluateSubsidiaryType(int subsidiaryId)
+    public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId)
             throws SubsidiaryDaoException {
         return SubsidiaryType.CUSTOMER;
     }

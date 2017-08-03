@@ -32,7 +32,7 @@ public interface XactApi extends TransactionApi {
      * @return {@link Xact}
      * @throws XactApiException
      */
-    XactDto getXactById(int xactId) throws XactApiException;
+    XactDto getXactById(Integer xactId) throws XactApiException;
 
     /**
      * Retrieves a transaction category object using category id.
@@ -50,7 +50,7 @@ public interface XactApi extends TransactionApi {
      * @return {@link XactCategoryView} object
      * @throws XactApiException
      */
-    XactCategoryDto getCategoryById(int catgId) throws XactApiException;
+    XactCategoryDto getCategoryById(Integer catgId) throws XactApiException;
 
     /**
      * Retrieves a list of transaction code group data based custom criteria
@@ -72,7 +72,7 @@ public interface XactApi extends TransactionApi {
      * @return {@link XactCodeGroup} object
      * @throws XactApiException
      */
-    XactCodeGroupDto getGroup(int groupId) throws XactApiException;
+    XactCodeGroupDto getGroup(Integer groupId) throws XactApiException;
 
     /**
      * Retrieves a list of transaction code data based custom criteria supplied
@@ -94,7 +94,7 @@ public interface XactApi extends TransactionApi {
      * @return {@link XactCodes} object.
      * @throws XactApiException
      */
-    XactCodeDto getCode(int codeId) throws XactApiException;
+    XactCodeDto getCode(Integer codeId) throws XactApiException;
 
     /**
      * Retrieves one or more transaction code objects using a transaction code
@@ -105,7 +105,7 @@ public interface XactApi extends TransactionApi {
      * @return ArrayList of {@link XactCodes}
      * @throws XactApiException
      */
-    List<XactCodeDto> getCodeByGroupId(int gropuId) throws XactApiException;
+    List<XactCodeDto> getCodeByGroupId(Integer gropuId) throws XactApiException;
 
     /**
      * Retrieves an ArrayList of transaction type objects based custom criteria
@@ -124,7 +124,7 @@ public interface XactApi extends TransactionApi {
      * @return {@link XactType} object.
      * @throws XactApiException
      */
-    XactTypeDto getXactType(int typeId) throws XactApiException;
+    XactTypeDto getXactType(Integer typeId) throws XactApiException;
 
     /**
      * Retrieves one or more transaction type objects using a transaction
@@ -135,7 +135,7 @@ public interface XactApi extends TransactionApi {
      * @return ArrayList of {@link XactType} objects.
      * @throws XactApiException
      */
-    List<XactTypeDto> getXactTypeByCatgId(int catgId) throws XactApiException;
+    List<XactTypeDto> getXactTypeByCatgId(Integer catgId) throws XactApiException;
 
     /**
      * Retrieves one or more transaction type item activity objects related to
@@ -146,8 +146,7 @@ public interface XactApi extends TransactionApi {
      * @return ArrayList of one or more {@link XactTypeItemActivity} obejcts.
      * @throws XactApiException
      */
-    List<XactTypeItemActivityDto> getXactTypeItemActivity(int xactId)
-            throws XactApiException;
+    List<XactTypeItemActivityDto> getXactTypeItemActivity(Integer xactId) throws XactApiException;
 
     /**
      * Retrieves one or more extended transaction type item activity objects
@@ -158,8 +157,7 @@ public interface XactApi extends TransactionApi {
      * @return ArrayList of one or more {@link XactTypeItemActivity} obejcts.
      * @throws XactApiException
      */
-    List<XactTypeItemActivityDto> getXactTypeItemActivityExt(int xactId)
-            throws XactApiException;
+    List<XactTypeItemActivityDto> getXactTypeItemActivityExt(Integer xactId) throws XactApiException;
 
     /**
      * Retrieves one or more transaction type items related to a transaction
@@ -170,8 +168,7 @@ public interface XactApi extends TransactionApi {
      * @return ArrayList of {@link XactTypeItem}
      * @throws XactApiException
      */
-    List<XactTypeItemDto> getXactTypeItemsByXactTypeId(int xactTypeId)
-            throws XactApiException;
+    List<XactTypeItemDto> getXactTypeItemsByXactTypeId(Integer xactTypeId) throws XactApiException;
 
     /**
      * Gets transaction item collection.
@@ -198,8 +195,7 @@ public interface XactApi extends TransactionApi {
      * @return The id of the newly formed transction.
      * @throws XactApiException
      */
-    int update(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException;
+    int update(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException;
 
     /**
      * Reverses a transaction and its detail items.
@@ -211,8 +207,7 @@ public interface XactApi extends TransactionApi {
      * @return New id of the reversed transaction.
      * @throws XactApiException
      */
-    int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException;
+    int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException;
 
        /**
      * Creates transacction activity for a particular subsidiary.
@@ -226,7 +221,7 @@ public interface XactApi extends TransactionApi {
      * @return The new unique identifier of the subsidiary transaction.
      * @throws XactApiException
      */
-    int createSubsidiaryTransaction(int subsidiaryId, int xactId, double amount)
+    int createSubsidiaryTransaction(Integer subsidiaryId, Integer xactId, Double amount)
             throws XactApiException;
 
     /**
@@ -260,6 +255,5 @@ public interface XactApi extends TransactionApi {
      * @return an instance of {@link SubsidiaryType}
      * @throws SubsidiaryDaoException
      */
-    SubsidiaryType evaluateSubsidiaryType(int subsidiaryId)
-            throws SubsidiaryDaoException;
+    SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws SubsidiaryDaoException;
 }
