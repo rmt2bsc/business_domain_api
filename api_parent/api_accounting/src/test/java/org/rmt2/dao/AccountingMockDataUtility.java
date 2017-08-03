@@ -19,6 +19,13 @@ import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
+import org.dao.mapping.orm.rmt2.Xact;
+import org.dao.mapping.orm.rmt2.XactCategory;
+import org.dao.mapping.orm.rmt2.XactCodeGroup;
+import org.dao.mapping.orm.rmt2.XactCodes;
+import org.dao.mapping.orm.rmt2.XactType;
+import org.dao.mapping.orm.rmt2.XactTypeItem;
+import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.dto.AccountDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
 import org.rmt2.jaxb.BusinessType;
@@ -519,6 +526,164 @@ public class AccountingMockDataUtility {
         o.setDocumentId(xactId + customerId);
         o.setCustomerActivityId(xactId * customerId);
         o.setCustomerActivityAmount(xactAmt);
+        return o;
+    }
+
+    /**
+     * 
+     * @param xactCatgId
+     * @param description
+     * @param code
+     * @return
+     */
+    public static final XactCategory createMockOrmXactCategory(int xactCatgId,
+            String description, String code) {
+        XactCategory o = new XactCategory();
+        o.setXactCatgId(xactCatgId);
+        o.setDescription(description);
+        o.setCode(code);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param xactCodeId
+     * @param xactGroupId
+     * @param description
+     * @return
+     */
+    public static final XactCodes createMockOrmXactCode(int xactCodeId,
+            int xactGroupId, String description) {
+        XactCodes o = new XactCodes();
+        o.setXactCodeId(xactCodeId);
+        o.setDescription(description);
+        o.setXactCodeGrpId(xactGroupId);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        return o;
+    }
+    
+    /**
+     * 
+     * @param xactGroupId
+     * @param description
+     * @return
+     */
+    public static final XactCodeGroup createMockOrmXactCodeGroup(
+            int xactGroupId, String description) {
+        XactCodeGroup o = new XactCodeGroup();
+        o.setDescription(description);
+        o.setXactCodeGrpId(xactGroupId);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        return o;
+    }
+    
+    /**
+     * 
+     * @param xactTypeId
+     * @param xactCatgId
+     * @param description
+     * @param code
+     * @param toMultiplier
+     * @param fromMultiplier
+     * @param toAcctTypeId
+     * @param fromAcctTypeId
+     * @param toAcctCatgId
+     * @param fromAcctCatgId
+     * @param hasSubsidiary
+     * @return
+     */
+    public static final XactType createMockOrmXactType(int xactTypeId,
+            int xactCatgId, String description, String code, int toMultiplier,
+            int fromMultiplier, int toAcctTypeId, int fromAcctTypeId,
+            int toAcctCatgId, int fromAcctCatgId, int hasSubsidiary) {
+        XactType o = new XactType();
+        o.setXactCatgId(xactCatgId);
+        o.setDescription(description);
+        o.setCode(code);
+        o.setXactTypeId(xactTypeId);
+
+        o.setToMultiplier(toMultiplier);
+        o.setFromMultiplier(fromMultiplier);
+        o.setToAcctTypeId(toAcctTypeId);
+        o.setToAcctCatgId(toAcctCatgId);
+        o.setFromAcctTypeId(fromAcctTypeId);
+        o.setFromAcctCatgId(fromAcctCatgId);
+        o.setHasSubsidiary(hasSubsidiary);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param xactId
+     * @param xactTypeId
+     * @param xactSubType
+     * @param xactDate
+     * @param xactAmount
+     * @param tenderId
+     * @param negInstrNo
+     * @return
+     */
+    public static final Xact createMockOrmXact(int xactId, int xactTypeId,
+            int xactSubType, Date xactDate, double xactAmount, int tenderId, String negInstrNo) {
+        Xact o = new Xact();
+        o.setXactId(xactId);
+        o.setReason("reason for transaction id " + xactId);
+        o.setXactTypeId(xactTypeId);
+        o.setXactSubtypeId(xactSubType);
+        o.setXactDate(xactDate);
+        o.setXactAmount(xactAmount);
+        o.setTenderId(tenderId);
+        o.setNegInstrNo(negInstrNo);
+        o.setPostedDate(xactDate);
+        o.setConfirmNo(String.valueOf(xactDate.getTime()));
+        o.setEntityRefNo("Entity Ref No " + xactId);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param xactItemId
+     * @param xactTypeId
+     * @param name
+     * @return
+     */
+    public static final XactTypeItem createMockOrmXactTypeItem(int xactItemId,
+            int xactTypeId, String name) {
+        XactTypeItem o = new XactTypeItem();
+        o.setXactItemId(xactItemId);
+        o.setName(name);
+        o.setXactTypeId(xactTypeId);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        return o;
+    }
+    
+    /**
+     * 
+     * @param xactTypeItemActvId
+     * @param xactId
+     * @param xactItemId
+     * @param amount
+     * @param desctiption
+     * @return
+     */
+    public static final XactTypeItemActivity createMockOrmXactTypeItemActivity(
+            int xactTypeItemActvId, int xactId, int xactItemId, double amount,
+            String desctiption) {
+        XactTypeItemActivity o = new XactTypeItemActivity();
+        o.setXactTypeItemActvId(xactTypeItemActvId);
+        o.setXactId(xactId);
+        o.setXactItemId(xactItemId);
+        o.setDescription(desctiption);
+        o.setAmount(amount);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
         return o;
     }
 }
