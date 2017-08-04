@@ -1,19 +1,8 @@
 package org.rmt2.api.transaction;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.Creditor;
-import org.dao.mapping.orm.rmt2.CreditorType;
-import org.dao.mapping.orm.rmt2.Customer;
-import org.dao.mapping.orm.rmt2.GlAccounts;
-import org.dao.mapping.orm.rmt2.VwBusinessAddress;
-import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
-import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.mapping.orm.rmt2.XactCategory;
 import org.dao.mapping.orm.rmt2.XactCodeGroup;
@@ -22,60 +11,47 @@ import org.dao.mapping.orm.rmt2.XactType;
 import org.dao.mapping.orm.rmt2.XactTypeItem;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.rmt2.api.BaseAccountingDaoTest;
+import org.rmt2.api.subsidiary.SubsidiaryApiTest;
 import org.rmt2.dao.AccountingMockDataUtility;
 
+import com.util.RMT2Date;
+
 /**
- * Base transaction testing facility that is mainly responsible for setting up mock data.
+ * Base transaction testing facility that is mainly responsible for setting up
+ * mock data.
  * 
  * @author rterrell
  * 
  */
-public class XactApiTestData extends BaseAccountingDaoTest {
+public class XactApiTestData extends SubsidiaryApiTest {
     protected List<XactCategory> mockCategoryNotFoundFetchResponse;
     protected List<XactCategory> mockCategoryFetchAllResponse;
     protected List<XactCategory> mockCategoryFetchSingleResponse;
-    
+
     protected List<XactCodes> mockCodeNotFoundFetchResponse;
     protected List<XactCodes> mockCodeFetchAllResponse;
     protected List<XactCodes> mockCodeFetchSingleResponse;
-    
+
     protected List<XactCodeGroup> mockCodeGroupNotFoundFetchResponse;
     protected List<XactCodeGroup> mockCodeGroupFetchAllResponse;
     protected List<XactCodeGroup> mockCodeGroupFetchSingleResponse;
-    
+
     protected List<XactType> mockXactTypeNotFoundFetchResponse;
     protected List<XactType> mockXactTypeFetchAllResponse;
     protected List<XactType> mockXactTypeFetchSingleResponse;
-    
+
     protected List<Xact> mockXactNotFoundFetchResponse;
     protected List<Xact> mockXactFetchAllResponse;
     protected List<Xact> mockXactFetchSingleResponse;
-    
+
     protected List<XactTypeItem> mockXactTypeItemNotFoundFetchResponse;
     protected List<XactTypeItem> mockXactTypeItemFetchAllResponse;
     protected List<XactTypeItem> mockXactTypeItemFetchSingleResponse;
-    
+
     protected List<XactTypeItemActivity> mockXactTypeItemActivityNotFoundFetchResponse;
     protected List<XactTypeItemActivity> mockXactTypeItemActivityFetchAllResponse;
     protected List<XactTypeItemActivity> mockXactTypeItemActivityFetchSingleResponse;
-    
-    
-    protected List<Creditor> mockCreditorNotFoundFetchResponse;
-    protected List<Creditor> mockCreditorFetchAllResponse;
-    protected List<Creditor> mockCreditorFetchSingleResponse;
-    protected List<VwBusinessAddress> mockBusinessContactFetchSingleResponse;
-    protected List<VwBusinessAddress> mockBusinessContactFetchAllResponse;
-    protected List<VwBusinessAddress> mockBusinessContactNotFoundResponse;
-    protected List<CreditorType> mockCreditorTypeFetchAllResponse;
-    protected List<CreditorType> mockCreditorTypeFetchSingleResponse;
-    protected List<CreditorType> mockCreditorTypeNotFoundResponse;
-    protected List<VwCreditorXactHist> mockCreditorXactHistoryResponse;
-    protected List<VwCustomerXactHist> mockCustomerXactHistoryResponse;
-    protected List<GlAccounts> mockSingleCreditorGLAccountFetchResponse;
-    protected List<GlAccounts> mockSingleCustomerGLAccountFetchResponse;
 
     /**
      * @throws java.lang.Exception
@@ -83,22 +59,55 @@ public class XactApiTestData extends BaseAccountingDaoTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        this.mockCustomerFetchAllResponse = this.createMockFetchAllCustomerResponse();
-        this.mockCustomerFetchSingleResponse = this.createMockSingleCustomerFetchResponse();
-        this.mockCustomerNotFoundFetchResponse = this.createMockCustomerNotFoundSearchResultsResponse();
-        this.mockCreditorFetchAllResponse = this.createMockFetchAllCreditorResponse();
-        this.mockCreditorNotFoundFetchResponse = this.createMockCreditorNotFoundSearchResultsResponse();
-        this.mockCreditorFetchSingleResponse = this.createMockSingleCreditorFetchResponse();
-        this.mockCreditorTypeFetchAllResponse = this.createMockFetchAllCreditorTypeResponse();
-        this.mockCreditorTypeFetchSingleResponse = this.createMockFetchSingleCreditorTypeResponse();
-        this.mockCreditorTypeNotFoundResponse = this.createMockFetchNotFoundCreditorTypeResponse();
-        this.mockBusinessContactFetchSingleResponse = this.createMockSingleContactFetchResponse();
-        this.mockBusinessContactFetchAllResponse = this.createMockFetchAllContactResponse();
-        this.mockBusinessContactNotFoundResponse = this.createMockNotFoundContactFetchResponse();
-        this.mockCreditorXactHistoryResponse = this.createMockFetchCreditorXactHistoryResponse();
-        this.mockCustomerXactHistoryResponse = this.createMockFetchCustomerXactHistoryResponse();
-        this.mockSingleCreditorGLAccountFetchResponse = this.createMockSingleCreditorGLAccountFetchResponse();
-        this.mockSingleCustomerGLAccountFetchResponse = this.createMockSingleCustomerGLAccountFetchResponse();
+
+        this.mockCategoryFetchAllResponse = this
+                .createMockXactCategoryFetchAllsponse();
+        this.mockCategoryFetchSingleResponse = this
+                .createMockXactCategorySingleFetchResponse();
+        this.mockCategoryNotFoundFetchResponse = this
+                .createMockXactCategoryNotFoundResponse();
+
+        this.mockCodeFetchAllResponse = this.createMockXactCodeFetchAllsponse();
+        this.mockCodeFetchSingleResponse = this
+                .createMockXactCodeSingleFetchResponse();
+        this.mockCodeNotFoundFetchResponse = this
+                .createMockXactCodeNotFoundResponse();
+
+        this.mockCodeGroupFetchAllResponse = this
+                .createMockXactCodeGroupFetchAllsponse();
+        this.mockCodeGroupFetchSingleResponse = this
+                .createMockXactCodeGroupSingleFetchResponse();
+        this.mockCodeGroupNotFoundFetchResponse = this
+                .createMockXactCodeGroupNotFoundResponse();
+
+        this.mockXactTypeFetchAllResponse = this
+                .createMockXactTypeFetchAllsponse();
+        this.mockXactTypeFetchSingleResponse = this
+                .createMockXactTypeSingleFetchResponse();
+        this.mockXactTypeNotFoundFetchResponse = this
+                .createMockXactTypeNotFoundResponse();
+
+        this.mockXactFetchAllResponse = this.createMockXactFetchAllsponse();
+        this.mockXactFetchSingleResponse = this
+                .createMockXactSingleFetchResponse();
+        this.mockXactNotFoundFetchResponse = this
+                .createMockXactNotFoundResponse();
+
+        this.mockXactTypeItemFetchAllResponse = this
+                .createMockXactTypeItemFetchAllsponse();
+        this.mockXactTypeItemFetchSingleResponse = this
+                .createMockXactTypeItemSingleFetchResponse();
+        this.mockXactTypeItemNotFoundFetchResponse = this
+                .createMockXactTypeItemNotFoundResponse();
+
+        this.mockXactTypeItemActivityFetchAllResponse = this
+                .createMockXactTypeItemActivityFetchAllsponse();
+        this.mockXactTypeItemActivityFetchSingleResponse = this
+                .createMockXactTypeItemActivitySingleFetchResponse();
+        this.mockXactTypeItemActivityNotFoundFetchResponse = this
+                .createMockXactTypeItemActivityNotFoundResponse();
+
+        return;
     }
 
     /**
@@ -110,373 +119,271 @@ public class XactApiTestData extends BaseAccountingDaoTest {
         return;
     }
 
-    protected List<Customer> createMockCustomerNotFoundSearchResultsResponse() {
-        List<Customer> list = null;
-        return list;
-    }
-    
-    private List<Customer> createMockFetchAllCustomerResponse() {
-        List<Customer> list = new ArrayList<Customer>();
-        Customer o = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
-                333, "C1234589", "Customer 1");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCustomer(201, 1400, 0,
-                333, "C1400444", "Customer 2");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCustomer(202, 1500, 0,
-                333, "C747344", "Customer 3");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCustomer(203, 1600, 0,
-                333, "C5949493", "Customer 4");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCustomer(204, 1700, 0,
-                333, "C2229393", "Customer 5");
-        list.add(o);
-        return list;
-    }
-    
-    private List<Customer> createMockSingleCustomerFetchResponse() {
-        List<Customer> list = new ArrayList<Customer>();
-        Customer o = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
-                333, "C1234589", "Customer 1");
-        list.add(o);
-        return list;
-    }
-    
-    protected List<Creditor> createMockCreditorNotFoundSearchResultsResponse() {
-        List<Creditor> list = null;
+    private List<XactTypeItemActivity> createMockXactTypeItemActivityNotFoundResponse() {
+        List<XactTypeItemActivity> list = null;
         return list;
     }
 
-    private List<Creditor> createMockFetchAllCreditorResponse() {
-        List<Creditor> list = new ArrayList<Creditor>();
-        Creditor o = AccountingMockDataUtility.createMockOrmCreditor(200, 1351,
-                333, "C1234589", "123-456-789", 22);
+    private List<XactTypeItemActivity> createMockXactTypeItemActivityFetchAllsponse() {
+        List<XactTypeItemActivity> list = new ArrayList<XactTypeItemActivity>();
+        XactTypeItemActivity o = AccountingMockDataUtility
+                .createMockOrmXactTypeItemActivity(7001, 111111, 601, 31.11,
+                        "Item 1");
         list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(201, 1400,
-                444, "C1400444", "7437437JDJD8484", 22);
+
+        o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7002,
+                111111, 602, 20.00, "Item 1");
         list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(202, 1500,
-                555, "C1500555", "ABC123", 22);
+
+        o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7003,
+                111111, 603, 20.00, "Item 1");
         list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(203, 1600,
-                666, "C1600666", "XYZ321", 22);
+
+        o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7004,
+                111111, 604, 20.00, "Item 1");
         list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditor(204, 1700,
-                777, "C1700777", "7654312", 22);
+
+        o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7005,
+                111111, 605, 20.00, "Item 1");
         list.add(o);
         return list;
     }
 
-    
-    private List<Creditor> createMockSingleCreditorFetchResponse() {
-        List<Creditor> list = new ArrayList<Creditor>();
-        Creditor o = AccountingMockDataUtility.createMockOrmCreditor(200, 1351,
-                333, "C1234589", "123-456-789", 22);
+    private List<XactTypeItemActivity> createMockXactTypeItemActivitySingleFetchResponse() {
+        List<XactTypeItemActivity> list = new ArrayList<XactTypeItemActivity>();
+        XactTypeItemActivity o = AccountingMockDataUtility
+                .createMockOrmXactTypeItemActivity(7001, 111111, 601, 1.11,
+                        "Item 1");
         list.add(o);
         return list;
     }
 
-    private List<CreditorType> createMockFetchAllCreditorTypeResponse() {
-        List<CreditorType> list = new ArrayList<CreditorType>();
-        CreditorType o = AccountingMockDataUtility.createMockOrmCreditorType(100, "Creditor Type 1");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditorType(200, "Creditor Type 2");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditorType(300, "Creditor Type 3");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditorType(400, "Creditor Type 4");
-        list.add(o);
-        
-        o = AccountingMockDataUtility.createMockOrmCreditorType(500, "Creditor Type 5");
-        list.add(o);
-        return list;
-    }
-    
-    private List<CreditorType> createMockFetchSingleCreditorTypeResponse() {
-        List<CreditorType> list = new ArrayList<CreditorType>();
-        CreditorType o = AccountingMockDataUtility.createMockOrmCreditorType(100, "Creditor Type 1");
-        list.add(o);
+    private List<XactTypeItem> createMockXactTypeItemNotFoundResponse() {
+        List<XactTypeItem> list = null;
         return list;
     }
 
-    private List<CreditorType> createMockFetchNotFoundCreditorTypeResponse() {
-        List<CreditorType> list = null;
-        return list;
-    }
-    
-    private List<VwBusinessAddress> createMockFetchAllContactResponse() {
-        List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
-        VwBusinessAddress p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1351, "Company1", 2222,
-                        "94393 Hall Ave.", "Building 123", "Suite 300",
-                        "Room 45", "Dallas", "TX", 75232);
-        list.add(p);
-
-        p = AccountingMockDataUtility.createMockOrmBusinessContact(1400,
-                "Company2", 4444, "9382 Frank St.", null, null, null, "Irving",
-                "TX", 75240);
-        list.add(p);
-
-        p = AccountingMockDataUtility.createMockOrmBusinessContact(1500,
-                "Company3", 5555, "6718 Bernard Dr", "Building 4353",
-                "Suite 982", null, "Shreveport", "LA", 71118);
-        list.add(p);
-
-        p = AccountingMockDataUtility.createMockOrmBusinessContact(1600,
-                "Company4", 6666, "9328 Forest Ave", "Building 854",
-                "Suite 9212", "Room 555", "FLower Mound", "TX", 75028);
-        list.add(p);
-
-        p = AccountingMockDataUtility.createMockOrmBusinessContact(1700,
-                "Company5", 7777, "8327 Spring Ave", null, null, null, "Dallas",
-                "TX", 75232);
-        list.add(p);
-        return list;
-    }
-
-    private List<VwBusinessAddress> createMockSingleContactFetchResponse() {
-        List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
-        VwBusinessAddress p = AccountingMockDataUtility
-                .createMockOrmBusinessContact(1351, "ABC Company", 2222,
-                        "94393 Hall Ave.", "Building 123", "Suite 300",
-                        "Room 45", "Dallas", "TX", 75232);
-        list.add(p);
-        return list;
-    }
-    
-    private List<VwBusinessAddress> createMockNotFoundContactFetchResponse() {
-        List<VwBusinessAddress> list = null;
-        return list;
-    }
-
-    /**
-     * Setup mocks to retrieve single matching creditor and common business
-     * contact data.
-     * 
-     * @param busContactCriteria
-     * @param creditorCriteria
-     */
-    protected void setupSingleSubsidiaryContactInfoFetch(VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(busContactCriteria))).thenReturn(
-                            this.mockBusinessContactFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Business Contact for creditor fetch test case setup failed");
-        }
-
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
-                    .thenReturn(this.mockCreditorFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Creditor fetch test case setup failed");
-        }
-    }
-
-    /**
-     * Setup mocks to retrieve multiple matching creditor and common business
-     * contact data.
-     * 
-     * @param busContactCriteria
-     * @param creditorCriteria
-     */
-    protected void setupMultipleSubsidiaryContactInfoFetch(
-            VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
-        try {
-            when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
-                            this.mockBusinessContactFetchAllResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Single Business Contact for creditor fetch test case setup failed");
-        }
-
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
-                    .thenReturn(this.mockCreditorFetchAllResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Creditor fetch test case setup failed");
-        }
-    }
-    
-    protected void setupNotFoundSubsidiaryContactInfoFetch(
-            VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
-        try {
-            when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
-                            this.mockBusinessContactNotFoundResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Single Business Contact for creditor fetch test case setup failed");
-        }
-
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
-                    .thenReturn(this.mockCreditorNotFoundFetchResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Creditor fetch test case setup failed");
-        }
-    }
-
-    /**
-     * Setup mocks to retrieve single matching customer and common business
-     * contact data.
-     * 
-     * @param busContactCriteria
-     * @param customerCriteria
-     */
-    protected void setupSingleSubsidiaryContactInfoFetch(
-            VwBusinessAddress busContactCriteria, Customer customerCriteria) {
-        try {
-            when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
-                            this.mockBusinessContactFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Single Business Contact for customer fetch test case setup failed");
-        }
-
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(customerCriteria)))
-                    .thenReturn(this.mockCustomerFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Customer fetch test case setup failed");
-        }
-    }
-
-    /**
-     * Setup mocks to retrieve multiple matching customer and common business
-     * contact data.
-     * 
-     * @param busContactCriteria
-     * @param customerCriteria
-     */
-    protected void setupMultipleSubsidiaryContactInfoFetch(
-            VwBusinessAddress busContactCriteria, Customer customerCriteria) {
-        try {
-            when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
-                            this.mockBusinessContactFetchAllResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Single Business Contact for customer fetch test case setup failed");
-        }
-
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(customerCriteria)))
-                    .thenReturn(this.mockCustomerFetchAllResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Customer fetch test case setup failed");
-        }
-    }
-
-    
-    protected void setupNotFoundSubsidiaryContactInfoFetch(
-            VwBusinessAddress busContactCriteria, Customer customerCriteria) {
-        try {
-            when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
-                            this.mockBusinessContactNotFoundResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Single Business Contact for customer fetch test case setup failed");
-        }
-
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(customerCriteria)))
-                    .thenReturn(this.mockCustomerNotFoundFetchResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single Customer fetch test case setup failed");
-        }
-    }
-
-    private List<GlAccounts> createMockSingleCreditorGLAccountFetchResponse() {
-        List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, 2, 300, 1, "GL_200", "ACCT_PAY", "234",
-                "Accounts Payable", 1);
-        list.add(p);
-        return list;
-    }
-    
-    private List<VwCreditorXactHist> createMockFetchCreditorXactHistoryResponse() {
-        List<VwCreditorXactHist> list = new ArrayList<VwCreditorXactHist>();
-        VwCreditorXactHist o = AccountingMockDataUtility
-                .createMockOrmCreditorXactHistory(1200, 100, "C8434", 1000.00,
-                        new Date(), 1);
+    private List<XactTypeItem> createMockXactTypeItemFetchAllsponse() {
+        List<XactTypeItem> list = new ArrayList<XactTypeItem>();
+        XactTypeItem o = AccountingMockDataUtility
+                .createMockOrmXactTypeItem(601, 301, "Transaction Type Item 1");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1201,
-                100, "C8434", 32.00, new Date(), 1);
+        o = AccountingMockDataUtility.createMockOrmXactTypeItem(602, 301,
+                "Transaction Type Item 2");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1202,
-                100, "C8434", 1223.00, new Date(), 2);
+        o = AccountingMockDataUtility.createMockOrmXactTypeItem(603, 301,
+                "Transaction Type Item 3");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1203,
-                100, "C8434", 25.67, new Date(), 1);
+        o = AccountingMockDataUtility.createMockOrmXactTypeItem(604, 301,
+                "Transaction Type Item 4");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCreditorXactHistory(1204,
-                100, "C8434", 745.59, new Date(), 3);
+        o = AccountingMockDataUtility.createMockOrmXactTypeItem(605, 301,
+                "Transaction Type Item 5");
         list.add(o);
         return list;
     }
-    
-    
-    private List<GlAccounts> createMockSingleCustomerGLAccountFetchResponse() {
-        List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, 1, 100, 1, "GL_100", "ACCT_RCV", "1234",
-                "Accounts Receivable", 2);
-        list.add(p);
+
+    private List<XactTypeItem> createMockXactTypeItemSingleFetchResponse() {
+        List<XactTypeItem> list = new ArrayList<XactTypeItem>();
+        XactTypeItem o = AccountingMockDataUtility
+                .createMockOrmXactTypeItem(601, 301, "Transaction Type Item 1");
+        list.add(o);
         return list;
     }
-    
-    
-    private List<VwCustomerXactHist> createMockFetchCustomerXactHistoryResponse() {
-        List<VwCustomerXactHist> list = new ArrayList<VwCustomerXactHist>();
-        VwCustomerXactHist o = AccountingMockDataUtility
-                .createMockOrmCustomerXactHistory(1200, 100, 1351, 0, "C8434", 1000.00,
-                        new Date(), 1);
+
+    private List<Xact> createMockXactNotFoundResponse() {
+        List<Xact> list = null;
+        return list;
+    }
+
+    private List<Xact> createMockXactFetchAllsponse() {
+        List<Xact> list = new ArrayList<Xact>();
+        Xact o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
+                RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(2345, 100, 1351, 0, "C8434", 1000.00,
-                new Date(), 1);
+        o = AccountingMockDataUtility.createMockOrmXact(222222, 302, 4444,
+                RMT2Date.stringToDate("2017-02-14"), 222.11, 200,
+                "Check No 1234");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(3333, 100, 1351, 0, "C8434", 2000.00,
-                new Date(), 2);
+        o = AccountingMockDataUtility.createMockOrmXact(333333, 301, 3333,
+                RMT2Date.stringToDate("2017-03-15"), 333.11, 200, null);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(6543, 100, 1351, 0, "C8434", 3000.00,
-                new Date(), 3);
+        o = AccountingMockDataUtility.createMockOrmXact(444444, 301, 3333,
+                RMT2Date.stringToDate("2017-04-16"), 444.11, 200, null);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmCustomerXactHistory(8765, 100, 1351, 0, "C8434", 4000.00,
-                new Date(), 4);
+        o = AccountingMockDataUtility.createMockOrmXact(555555, 302, 3333,
+                RMT2Date.stringToDate("2017-05-17"), 555.11, 200,
+                "1111-1111-1111-1111");
+        list.add(o);
+        return list;
+    }
+
+    private List<Xact> createMockXactSingleFetchResponse() {
+        List<Xact> list = new ArrayList<Xact>();
+        Xact o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
+                RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
+        list.add(o);
+        return list;
+    }
+
+    private List<XactType> createMockXactTypeNotFoundResponse() {
+        List<XactType> list = null;
+        return list;
+    }
+
+    private List<XactType> createMockXactTypeFetchAllsponse() {
+        List<XactType> list = new ArrayList<XactType>();
+        XactType o = AccountingMockDataUtility.createMockOrmXactType(301, 1000,
+                "Transaction Type 1", "transaction type code 1", 1, -1, 400,
+                401, 200, 222, 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactType(302, 2000,
+                "Transaction Type 2", "transaction type code 2", 1, -1, 400,
+                401, 200, 222, 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactType(303, 3000,
+                "Transaction Type 3", "transaction type code 3", 1, -1, 400,
+                401, 200, 222, 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactType(304, 4000,
+                "Transaction Type 4", "transaction type code 4", 1, -1, 400,
+                401, 200, 222, 1);
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactType(305, 5000,
+                "Transaction Type 5", "transaction type code 5", 1, -1, 400,
+                401, 200, 222, 1);
+        list.add(o);
+        return list;
+    }
+
+    private List<XactType> createMockXactTypeSingleFetchResponse() {
+        List<XactType> list = new ArrayList<XactType>();
+        XactType o = AccountingMockDataUtility.createMockOrmXactType(301, 1000,
+                "Transaction Type 1", "transaction type code 1", 1, -1, 400,
+                401, 200, 222, 1);
+        list.add(o);
+        return list;
+    }
+
+    private List<XactCodeGroup> createMockXactCodeGroupNotFoundResponse() {
+        List<XactCodeGroup> list = null;
+        return list;
+    }
+
+    private List<XactCodeGroup> createMockXactCodeGroupFetchAllsponse() {
+        List<XactCodeGroup> list = new ArrayList<XactCodeGroup>();
+        XactCodeGroup o = AccountingMockDataUtility
+                .createMockOrmXactCodeGroup(10, "Code Group 10");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCodeGroup(20,
+                "Code Group 20");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCodeGroup(30,
+                "Code Group 30");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCodeGroup(40,
+                "Code Group 40");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCodeGroup(50,
+                "Code Group 50");
+        list.add(o);
+        return list;
+    }
+
+    private List<XactCodeGroup> createMockXactCodeGroupSingleFetchResponse() {
+        List<XactCodeGroup> list = new ArrayList<XactCodeGroup>();
+        XactCodeGroup o = AccountingMockDataUtility
+                .createMockOrmXactCodeGroup(10, "Code Group 10");
+        list.add(o);
+        return list;
+    }
+
+    private List<XactCategory> createMockXactCategoryNotFoundResponse() {
+        List<XactCategory> list = null;
+        return list;
+    }
+
+    private List<XactCategory> createMockXactCategoryFetchAllsponse() {
+        List<XactCategory> list = new ArrayList<XactCategory>();
+        XactCategory o = AccountingMockDataUtility.createMockOrmXactCategory(
+                1000, "transaction category 1", "catg code 1");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCategory(2000,
+                "transaction category 2", "catg code 2");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCategory(3000,
+                "transaction category 3", "catg code 3");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCategory(4000,
+                "transaction category 4", "catg code 4");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCategory(5000,
+                "transaction category 5", "catg code 5");
+        list.add(o);
+        return list;
+    }
+
+    private List<XactCategory> createMockXactCategorySingleFetchResponse() {
+        List<XactCategory> list = new ArrayList<XactCategory>();
+        XactCategory o = AccountingMockDataUtility.createMockOrmXactCategory(
+                1000, "transaction category 1", "catg code 1");
+        list.add(o);
+        return list;
+    }
+
+    private List<XactCodes> createMockXactCodeNotFoundResponse() {
+        List<XactCodes> list = null;
+        return list;
+    }
+
+    private List<XactCodes> createMockXactCodeFetchAllsponse() {
+        List<XactCodes> list = new ArrayList<XactCodes>();
+        XactCodes o = AccountingMockDataUtility.createMockOrmXactCode(201, 10,
+                "Transaction code 1");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCode(202, 10,
+                "Transaction code 2");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCode(203, 10,
+                "Transaction code 3");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCode(204, 10,
+                "Transaction code 4");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmXactCode(205, 10,
+                "Transaction code 5");
+        list.add(o);
+        return list;
+    }
+
+    private List<XactCodes> createMockXactCodeSingleFetchResponse() {
+        List<XactCodes> list = new ArrayList<XactCodes>();
+        XactCodes o = AccountingMockDataUtility.createMockOrmXactCode(201, 10,
+                "Transaction code 1");
         list.add(o);
         return list;
     }
