@@ -52,9 +52,9 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         super.setUp();
         this.mockCustomerFetchAllResponse = this.createMockFetchAllCustomerResponse();
         this.mockCustomerFetchSingleResponse = this.createMockSingleCustomerFetchResponse();
-        this.mockCustomerNotFoundFetchResponse = this.createMockCustomerNotFoundSearchResultsResponse();
+        this.mockCustomerNotFoundFetchResponse = this.createMockCustomerNotFoundResponse();
         this.mockCreditorFetchAllResponse = this.createMockFetchAllCreditorResponse();
-        this.mockCreditorNotFoundFetchResponse = this.createMockCreditorNotFoundSearchResultsResponse();
+        this.mockCreditorNotFoundFetchResponse = this.createMockCreditorNotFoundResponse();
         this.mockCreditorFetchSingleResponse = this.createMockSingleCreditorFetchResponse();
         this.mockCreditorTypeFetchAllResponse = this.createMockFetchAllCreditorTypeResponse();
         this.mockCreditorTypeFetchSingleResponse = this.createMockFetchSingleCreditorTypeResponse();
@@ -77,7 +77,7 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         return;
     }
 
-    protected List<Customer> createMockCustomerNotFoundSearchResultsResponse() {
+    private List<Customer> createMockCustomerNotFoundResponse() {
         List<Customer> list = null;
         return list;
     }
@@ -114,7 +114,7 @@ public class SubsidiaryApiTest extends BaseAccountingDaoTest {
         return list;
     }
     
-    protected List<Creditor> createMockCreditorNotFoundSearchResultsResponse() {
+    private List<Creditor> createMockCreditorNotFoundResponse() {
         List<Creditor> list = null;
         return list;
     }
