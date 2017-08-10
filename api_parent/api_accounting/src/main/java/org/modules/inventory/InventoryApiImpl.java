@@ -95,6 +95,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
 
     @Override
     public List<ItemMasterDto> getItem(ItemMasterDto criteria) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(criteria);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Criteria object is required", e);
+        }
         dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         try {
