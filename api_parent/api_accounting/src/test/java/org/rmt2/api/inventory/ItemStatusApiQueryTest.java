@@ -104,19 +104,19 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterStatus(200, "Item Status #2");
+                .createMockOrmItemMasterStatus(101, "Item Status #2");
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterStatus(300, "Item Status #3");
+                .createMockOrmItemMasterStatus(102, "Item Status #3");
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterStatus(400, "Item Status #4");
+                .createMockOrmItemMasterStatus(103, "Item Status #4");
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterStatus(500, "Item Status #5");
+                .createMockOrmItemMasterStatus(104, "Item Status #5");
         list.add(p);
         return list;
     }
@@ -143,6 +143,11 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ItemMasterStatusDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (100 + ndx));
+            Assert.assertEquals(obj.getEntityName(), "Item Status #" + (ndx + 1));
+        }
     }
 
     @Test

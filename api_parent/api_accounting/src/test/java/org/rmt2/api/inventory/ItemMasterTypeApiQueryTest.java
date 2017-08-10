@@ -104,19 +104,19 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterType(200, "Item Type #2");
+                .createMockOrmItemMasterType(101, "Item Type #2");
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterType(300, "Item Type #3");
+                .createMockOrmItemMasterType(102, "Item Type #3");
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterType(400, "Item Type #4");
+                .createMockOrmItemMasterType(103, "Item Type #4");
         list.add(p);
 
         p = AccountingMockDataUtility
-                .createMockOrmItemMasterType(500, "Item Type #5");
+                .createMockOrmItemMasterType(104, "Item Type #5");
         list.add(p);
         return list;
     }
@@ -143,6 +143,13 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ItemMasterTypeDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (100 + ndx));
+            Assert.assertEquals(obj.getItemTypeId(), (100 + ndx));
+            Assert.assertEquals(obj.getEntityName(), "Item Type #" + (ndx + 1));
+            Assert.assertEquals(obj.getItemTypeDescription(), "Item Type #" + (ndx + 1));
+        }
     }
 
     @Test

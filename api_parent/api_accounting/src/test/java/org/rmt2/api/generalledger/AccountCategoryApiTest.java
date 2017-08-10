@@ -102,16 +102,16 @@ public class AccountCategoryApiTest extends BaseAccountingDaoTest {
         GlAccountCategory p = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(400, 1, "Category2");
+        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(101, 2, "Category2");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(200, 2, "Category3");
+        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(102, 3, "Category3");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(300, 2, "Category4");
+        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(103, 4, "Category4");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(500, 2, "Category5");
+        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(104, 5, "Category5");
         list.add(p);
         return list;
     }
@@ -148,6 +148,26 @@ public class AccountCategoryApiTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            AccountCategoryDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getAcctCatgId(), (100 + ndx));
+            Assert.assertEquals(obj.getAcctTypeId(), (1 + ndx));
+            Assert.assertEquals(obj.getAcctCatgDescription(), "Category" + (ndx + 1));
+            try {
+                Assert.assertEquals(0, obj.getEntityId());
+                Assert.fail("Expected exception since method is not supported");
+            }
+            catch (Exception e) {
+                Assert.assertTrue(e instanceof UnsupportedOperationException);
+            }
+            try {
+                Assert.assertNotNull(obj.getEntityName());
+                Assert.fail("Expected exception since method is not supported");
+            }
+            catch (Exception e) {
+                Assert.assertTrue(e instanceof UnsupportedOperationException);
+            }
+        }
     }
 
     @Test

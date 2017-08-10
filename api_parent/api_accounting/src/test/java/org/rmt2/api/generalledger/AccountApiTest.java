@@ -105,31 +105,31 @@ public class AccountApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccounts> createMockFetchAllResponse() {
         List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 120, 1, "GL_100", "ACCT_RECV",
-                "134", "Accounts Receivable", 1);
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 120, 1, "AccountNo1", "AccountName1",
+                "AccoutCode1", "AccountDescription1", 1);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccounts(200, 2, 150, 1, "GL_201", "ACCT_PAY", "230",
-                "Accounts Payable", 2);
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(101, 2, 121, 1, "AccountNo2", "AccountName2", "AccoutCode2",
+                "AccountDescription2", 2);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccounts(300, 3, 160, 1, "GL_301", "OWNER_CAP", "330",
-                "Owner's Capital", 2);
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(102, 3, 122, 1, "AccountNo3", "AccountName3", "AccoutCode3",
+                "AccountDescription3", 2);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccounts(400, 4, 170, 1, "GL_401", "CRED_PURCH", "430",
-                "Creditor Purchases", 1);
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(103, 4, 123, 1, "AccountNo4", "AccountName4", "AccoutCode4",
+                "AccountDescription4", 1);
         list.add(p);
         return list;
     }
 
     private List<GlAccounts> createMockFetchUidMultiResultsReturnedResponse() {
         List<GlAccounts> list = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 120, 1, "GL_100", "ACCT_RECV",
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 120, 1, "AccountNo1", "ACCT_RECV",
                 "134", "Accounts Receivable", 1);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 150, 1, "GL_101", "CASH", "130",
+        p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 1, 150, 1, "AccountNo2", "CASH", "130",
                 "Cash", 1);
         list.add(p);
         return list;
@@ -156,6 +156,31 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(4, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            AccountDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getAcctId(), (100 + ndx));
+            Assert.assertEquals(obj.getAcctTypeId(), (1 + ndx));
+            Assert.assertEquals(obj.getAcctCatgId(), (120 + ndx));
+            Assert.assertEquals(obj.getAcctNo(), "AccountNo" + (ndx + 1));
+            Assert.assertEquals(obj.getAcctName(), "AccountName" + (ndx + 1));
+            Assert.assertEquals(obj.getAcctCode(), "AccoutCode" + (ndx + 1));
+            Assert.assertEquals(obj.getAcctDescription(), "AccountDescription" + (ndx + 1));
+            
+            try {
+                Assert.assertEquals(0, obj.getEntityId());
+                Assert.fail("Expected exception since method is not supported");
+            }
+            catch (Exception e) {
+                Assert.assertTrue(e instanceof UnsupportedOperationException);
+            }
+            try {
+                Assert.assertNotNull(obj.getEntityName());
+                Assert.fail("Expected exception since method is not supported");
+            }
+            catch (Exception e) {
+                Assert.assertTrue(e instanceof UnsupportedOperationException);
+            }
+        }
     }
 
     @Test

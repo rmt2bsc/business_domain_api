@@ -96,19 +96,19 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccountTypes> createMockFetchAllResponse() {
         List<GlAccountTypes> list = new ArrayList<GlAccountTypes>();
-        GlAccountTypes p = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes p = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "AccountType1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(400, 1, "Expense");
+        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(101, 1, "AccountType2");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(200, 2, "Liability");
+        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(102, 2, "AccountType3");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(300, 2, "Owner's Capital");
+        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(103, 2, "AccountType4");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(500, 2, "Revenue");
+        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(104, 2, "AccountType5");
         list.add(p);
         return list;
     }
@@ -145,6 +145,25 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            AccountTypeDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getAcctTypeId(), (100 + ndx));
+            Assert.assertEquals(obj.getAcctTypeDescription(), "AccountType" + (ndx + 1));
+            try {
+                Assert.assertEquals(0, obj.getEntityId());
+                Assert.fail("Expected exception since method is not supported");
+            }
+            catch (Exception e) {
+                Assert.assertTrue(e instanceof UnsupportedOperationException);
+            }
+            try {
+                Assert.assertNotNull(obj.getEntityName());
+                Assert.fail("Expected exception since method is not supported");
+            }
+            catch (Exception e) {
+                Assert.assertTrue(e instanceof UnsupportedOperationException);
+            }
+        }
     }
 
     @Test

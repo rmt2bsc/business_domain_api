@@ -93,6 +93,16 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            CreditorDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (200 + ndx));
+            Assert.assertEquals(obj.getCreditorId(), (200 + ndx));
+            Assert.assertEquals(obj.getContactId(), (1351 + ndx));
+            Assert.assertEquals(obj.getAccountNo(), "C123458" + ndx);
+            Assert.assertEquals(obj.getExtAccountNumber(), "7437437JDJD848" + ndx);
+            Assert.assertNull(obj.getEntityName());
+            Assert.assertNull(obj.getContactName());
+        }
     }
 
     @Test

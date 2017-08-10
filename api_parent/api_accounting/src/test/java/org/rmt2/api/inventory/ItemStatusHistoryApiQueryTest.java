@@ -112,22 +112,22 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         list.add(p);
 
         p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(11,
-                100, 1001, 12.50, 3, "2107-02-16", "2017-03-15",
+                101, 1001, 12.50, 3, "2107-02-16", "2017-03-15",
                 "Item Status History Description 2");
         list.add(p);
 
         p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(12,
-                200, 1000, 3.50, 3, "2107-01-01", "2017-02-15",
+                102, 1000, 3.50, 3, "2107-01-01", "2017-02-15",
                 "Item Status History Description 3");
         list.add(p);
 
         p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(13,
-                200, 1001, 3.50, 3, "2107-02-15", "2017-03-15",
+                103, 1001, 3.50, 3, "2107-02-15", "2017-03-15",
                 "Item Status History Description 4");
         list.add(p);
 
         p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(14,
-                300, 1003, 93.50, 3, "2107-02-15", "2017-03-15",
+                104, 1003, 93.50, 3, "2107-02-15", "2017-03-15",
                 "Item Status History Description 5");
         list.add(p);
         return list;
@@ -158,6 +158,12 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ItemMasterStatusHistDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (10 + ndx));
+            Assert.assertEquals(obj.getReason(), "Item Status History Description " + (ndx + 1));
+            Assert.assertNull(obj.getEntityName());
+        }
     }
 
     @Test

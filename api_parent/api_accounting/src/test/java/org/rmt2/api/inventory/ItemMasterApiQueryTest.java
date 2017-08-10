@@ -100,29 +100,66 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
     private List<ItemMaster> createMockFetchAllResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
         ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+                "100-111-111", "11111110", 1351, "Item # 1", 1, 1.23, true);
+        list.add(p);
+
+        p = AccountingMockDataUtility.createMockOrmItemMaster(101, 1,
+                "101-111-111", "11111111", 1352, "Item # 2", 2, 1.23, true);
         list.add(p);
 
         p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
-                "102-111-111", "10211111", 4321, "Item # 2", 15, 5, true);
+                "102-111-111", "11111112", 1353, "Item # 3", 3, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
-                "200-111-111", "20011111", 5555, "Item # 3", 115, 35.80, true);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
+                "103-111-111", "11111113", 1354, "Item # 4", 4, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
-                "300-111-111", "30011111", 1234, "Item # 4", 300, 0.99, true);
-        list.add(p);
-
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
-                "400-111-111", "40011111", 6543, "Item # 5", 1000, 21.99, true);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
+                "104-111-111", "11111114", 1355, "Item # 5", 5, 1.23, true);
         list.add(p);
         return list;
     }
 
     @Test
-    public void testFetchAll() {
+    public void testFetchAllWithCriteriaObject() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(ItemMaster.class)))
+                            .thenReturn(this.mockFetchAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Inventory Item Master fetch test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<ItemMasterDto> results = null;
+        ItemMaster im = null;
+        ItemMasterDto criteria = Rmt2ItemMasterDtoFactory.createItemMasterInstance(im);
+        try {
+            results = api.getItem(criteria);
+        } catch (InventoryApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ItemMasterDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (100 + ndx));
+            Assert.assertEquals(obj.getItemId(), (100 + ndx));
+            Assert.assertEquals(obj.getVendorId(), (1351 + ndx));
+            Assert.assertEquals(obj.getItemSerialNo(), (100 + ndx) + "-111-111");
+            Assert.assertEquals(obj.getVendorItemNo(), "1111111" + ndx);
+            Assert.assertEquals(obj.getItemName(), "Item # " + (ndx + 1));
+            Assert.assertEquals(obj.getEntityName(), "Item # " + (ndx + 1));
+            Assert.assertEquals(obj.getQtyOnHand(), (1 + ndx));
+            Assert.assertEquals(obj.getRetailPrice(), (obj.getQtyOnHand() * obj.getUnitCost()) * obj.getMarkup(), 0);
+        }
+    }
+
+    @Test
+    public void testFetchAllWithStringCriteria() {
         try {
             when(this.mockPersistenceClient
                     .retrieveList(any(ItemMaster.class)))
@@ -143,6 +180,18 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ItemMasterDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (100 + ndx));
+            Assert.assertEquals(obj.getItemId(), (100 + ndx));
+            Assert.assertEquals(obj.getVendorId(), (1351 + ndx));
+            Assert.assertEquals(obj.getItemSerialNo(), (100 + ndx) + "-111-111");
+            Assert.assertEquals(obj.getVendorItemNo(), "1111111" + ndx);
+            Assert.assertEquals(obj.getItemName(), "Item # " + (ndx + 1));
+            Assert.assertEquals(obj.getEntityName(), "Item # " + (ndx + 1));
+            Assert.assertEquals(obj.getQtyOnHand(), (1 + ndx));
+            Assert.assertEquals(obj.getRetailPrice(), (obj.getQtyOnHand() * obj.getUnitCost()) * obj.getMarkup(), 0);
+        }
         
         criteria = "item_id = 100";
         try {
@@ -152,17 +201,8 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
-        
-        ItemMasterDto criteriaObj = null;
-        try {
-            results = api.getItem(criteriaObj);
-        } catch (InventoryApiException e) {
-            e.printStackTrace();
-        }
-        Assert.assertNotNull(results);
-        Assert.assertEquals(5, results.size());
     }
-
+    
     @Test
     public void testFetchSingle() {
         try {

@@ -93,6 +93,17 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            CustomerDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (200 + ndx));
+            Assert.assertEquals(obj.getCustomerId(), (200 + ndx));
+            Assert.assertEquals(obj.getContactId(), (1351 + ndx));
+            Assert.assertEquals(obj.getPersonId(), 0);
+            Assert.assertEquals(obj.getAccountNo(), "C123458" + ndx);
+            Assert.assertEquals(obj.getDescription(), "Customer " + (ndx + 1));
+            Assert.assertEquals(obj.getEntityName(), "Customer " + (ndx + 1));
+            Assert.assertNull(obj.getContactName());
+        }
     }
 
     @Test
