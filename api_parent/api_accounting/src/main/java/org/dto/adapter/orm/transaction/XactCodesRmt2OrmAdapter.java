@@ -94,7 +94,7 @@ class XactCodesRmt2OrmAdapter extends TransactionDtoImpl implements
             return this.g.getXactCodeGrpId();
         }
         if (this.c != null) {
-            return this.c.getXactCodeGrpId();
+            return this.c.getXactCodeId();
         }
         return 0;
     }
