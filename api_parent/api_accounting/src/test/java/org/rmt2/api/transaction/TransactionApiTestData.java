@@ -342,19 +342,19 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
                 1000, "transaction category 1", "catg code 1");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactCategory(2000,
+        o = AccountingMockDataUtility.createMockOrmXactCategory(1001,
                 "transaction category 2", "catg code 2");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactCategory(3000,
+        o = AccountingMockDataUtility.createMockOrmXactCategory(1002,
                 "transaction category 3", "catg code 3");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactCategory(4000,
+        o = AccountingMockDataUtility.createMockOrmXactCategory(1003,
                 "transaction category 4", "catg code 4");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactCategory(5000,
+        o = AccountingMockDataUtility.createMockOrmXactCategory(1004,
                 "transaction category 5", "catg code 5");
         list.add(o);
         return list;
