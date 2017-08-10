@@ -210,15 +210,15 @@ public class XactDaoFactory extends RMT2Base {
         XactCodes obj = new XactCodes();
         if (criteria != null) {
             if (criteria.getEntityId() > 0) {
-                obj.addCriteria(XactCodeGroup.PROP_XACTCODEGRPID,
+                obj.addCriteria(XactCodes.PROP_XACTCODEID,
                         criteria.getEntityId());
             }
             if (criteria.getEntityName() != null) {
-                obj.addLikeClause(XactCodeGroup.PROP_DESCRIPTION,
+                obj.addLikeClause(XactCodes.PROP_DESCRIPTION,
                         criteria.getEntityName());
             }
             if (criteria.getGrpId() > 0) {
-                obj.addCriteria(XactCodeGroup.PROP_XACTCODEGRPID,
+                obj.addCriteria(XactCodes.PROP_XACTCODEGRPID,
                         criteria.getGrpId());
             }
         }
