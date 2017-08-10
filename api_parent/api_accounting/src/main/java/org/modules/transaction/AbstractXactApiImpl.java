@@ -156,10 +156,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             this.msg = "Unable to retrieve all transaction categories";
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -169,6 +165,19 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      */
     @Override
     public XactCategoryDto getCategoryById(Integer catgId) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(catgId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction category id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(catgId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction category id must be greater than zero", e);
+        }
+        
         XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
