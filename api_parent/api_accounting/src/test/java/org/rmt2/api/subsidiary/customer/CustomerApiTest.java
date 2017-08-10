@@ -33,7 +33,7 @@ import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.subsidiary.SubsidiaryException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.subsidiary.SubsidiaryApiTest;
+import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
 import org.rmt2.dao.AccountingMockDataUtility;
 import org.rmt2.jaxb.BusinessType;
 
@@ -49,7 +49,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class CustomerApiTest extends SubsidiaryApiTest {
+public class CustomerApiTest extends SubsidiaryApiTestData {
 
     
 
