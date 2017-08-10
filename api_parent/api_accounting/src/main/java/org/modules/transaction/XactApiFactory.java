@@ -19,19 +19,7 @@ public class XactApiFactory extends RMT2Base {
         return;
     }
 
-    // /**
-    // * Creates an instance of {@link XactApi} using the default transaction
-    // api
-    // * implementation.
-    // *
-    // * @return an instance of {@link XactApi}
-    // */
-    // public XactApi createDefaultXactApi() {
-    // XactApi api = new DefaultXactApiImpl();
-    // return api;
-    // }
-
-    /**
+     /**
      * Creates an instance of {@link XactApi} using the default transaction api
      * implementation and initializing it with a DAO connection.
      * 
