@@ -158,11 +158,9 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * @see org.dao.transaction.XactDao#fetchGroup(org.dto.XactCodeGroupDto)
      */
     @Override
-    public List<XactCodeGroupDto> fetchGroup(XactCodeGroupDto criteria)
-            throws XactDaoException {
+    public List<XactCodeGroupDto> fetchGroup(XactCodeGroupDto criteria) throws XactDaoException {
         XactCodeGroup ormCriteria = XactDaoFactory.createCriteria(criteria);
-        ormCriteria.addOrderBy(XactCodeGroup.PROP_DESCRIPTION,
-                ItemMaster.ORDERBY_ASCENDING);
+        ormCriteria.addOrderBy(XactCodeGroup.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<XactCodeGroup> results = null;
@@ -177,8 +175,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
 
         List<XactCodeGroupDto> list = new ArrayList<XactCodeGroupDto>();
         for (XactCodeGroup item : results) {
-            XactCodeGroupDto dto = Rmt2XactDtoFactory
-                    .createXactCodeGroupInstance(item);
+            XactCodeGroupDto dto = Rmt2XactDtoFactory.createXactCodeGroupInstance(item);
             list.add(dto);
         }
         return list;
@@ -193,8 +190,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
     public List<XactCodeDto> fetchCode(XactCodeDto criteria)
             throws XactDaoException {
         XactCodes ormCriteria = XactDaoFactory.createCriteria(criteria);
-        ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION,
-                ItemMaster.ORDERBY_ASCENDING);
+        ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<XactCodes> results = null;
