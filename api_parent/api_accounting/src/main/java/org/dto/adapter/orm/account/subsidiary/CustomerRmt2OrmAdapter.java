@@ -64,6 +64,7 @@ class CustomerRmt2OrmAdapter extends BusinessContactJaxbAdapter implements
      */
     @Override
     public void setEntityName(String value) {
+        this.c.setDescription(value);
         return;
     }
 
@@ -74,7 +75,7 @@ class CustomerRmt2OrmAdapter extends BusinessContactJaxbAdapter implements
      */
     @Override
     public String getEntityName() {
-        return null;
+        return this.c.getDescription();
     }
 
     /**
@@ -227,6 +228,16 @@ class CustomerRmt2OrmAdapter extends BusinessContactJaxbAdapter implements
             busId = this.c.getBusinessId();
         }
         return busId;
+    }
+
+    @Override
+    public void setDescription(String value) {
+        this.c.setDescription(value);
+    }
+
+    @Override
+    public String getDescription() {
+        return this.c.getDescription();
     }
 
 }
