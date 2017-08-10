@@ -3,7 +3,6 @@ package org.dto.adapter.orm.inventory;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dto.ItemMasterTypeDto;
 
-import com.RMT2Constants;
 import com.api.foundation.TransactionDtoImpl;
 
 /**
@@ -89,8 +88,7 @@ class ItemTypeRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setEntityId(int value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        this.i.setItemTypeId(value);
     }
 
     /**
@@ -98,8 +96,7 @@ class ItemTypeRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public int getEntityId() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        return this.i.getItemTypeId();
     }
 
     /**
@@ -107,8 +104,7 @@ class ItemTypeRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setEntityName(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        this.i.setDescription(value);
     }
 
     /**
@@ -116,8 +112,7 @@ class ItemTypeRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public String getEntityName() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        return this.i.getDescription();
     }
 
 }
