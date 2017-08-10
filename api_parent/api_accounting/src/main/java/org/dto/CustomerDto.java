@@ -27,5 +27,18 @@ public interface CustomerDto extends SubsidiaryDto {
      * Gets the value of member variable personId
      */
     int getPersonId();
+    
+    /**
+     * Set customer description
+     * 
+     * @param value
+     */
+    void setDescription(String value);
+    
+    /**
+     * Return customer description
+     * @return
+     */
+    String getDescription();
 
 }
