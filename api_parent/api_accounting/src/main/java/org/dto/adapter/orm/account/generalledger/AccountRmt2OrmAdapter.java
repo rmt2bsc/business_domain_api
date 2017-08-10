@@ -11,6 +11,7 @@ import org.dto.AccountDto;
 import org.dto.AccountExtDto;
 import org.dto.AccountTypeDto;
 
+import com.RMT2Constants;
 import com.api.foundation.TransactionDtoImpl;
 
 /**
@@ -225,7 +226,7 @@ class AccountRmt2OrmAdapter extends TransactionDtoImpl implements AccountDto,
      */
     @Override
     public void setEntityId(int value) {
-        this.a.setAcctId(value);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -235,7 +236,7 @@ class AccountRmt2OrmAdapter extends TransactionDtoImpl implements AccountDto,
      */
     @Override
     public int getEntityId() {
-        return this.a.getAcctId();
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -246,9 +247,7 @@ class AccountRmt2OrmAdapter extends TransactionDtoImpl implements AccountDto,
      */
     @Override
     public void setEntityName(String value) {
-        if (this.a != null) {
-            this.a.setName(value);
-        }
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -258,10 +257,7 @@ class AccountRmt2OrmAdapter extends TransactionDtoImpl implements AccountDto,
      */
     @Override
     public String getEntityName() {
-        if (this.a != null) {
-            return this.a.getName();
-        }
-        return null;
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
