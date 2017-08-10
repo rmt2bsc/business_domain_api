@@ -37,6 +37,8 @@ import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
 import com.util.RMT2Money;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * The base implementation of XactApi interface containing common transaction
@@ -53,8 +55,7 @@ import com.util.RMT2Money;
 public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         implements XactApi {
 
-    private static final Logger logger = Logger
-            .getLogger(AbstractXactApiImpl.class);
+    private static final Logger logger = Logger.getLogger(AbstractXactApiImpl.class);
 
     /**
      * Default constructor
@@ -208,17 +209,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     public List<XactCodeGroupDto> getAllGroups() throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeGroupDto> results = null;
+        XactCodeGroupDto criteria = Rmt2XactDtoFactory.createXactCodeGroupInstance(null);
         try {
-            results = dao.fetchGroup(null);
+            results = dao.fetchGroup(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve all transaction groups";
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -228,11 +226,23 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      */
     @Override
     public XactCodeGroupDto getGroup(Integer groupId) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(groupId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction group id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(groupId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction group id must be greater than zero", e);
+        }
+        
         XactDao dao = this.getXactDao();
         List<XactCodeGroupDto> results = null;
         try {
-            XactCodeGroupDto criteria = Rmt2XactDtoFactory
-                    .createXactCodeGroupInstance(null);
+            XactCodeGroupDto criteria = Rmt2XactDtoFactory.createXactCodeGroupInstance(null);
             criteria.setEntityId(groupId);
             results = dao.fetchGroup(criteria);
         } catch (Exception e) {
@@ -240,10 +250,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
                     + groupId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null || results.size() <= 0) {
             return null;
@@ -288,6 +294,18 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      */
     @Override
     public XactCodeDto getCode(Integer codeId) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(codeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction code id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(codeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction code id must be greater than zero", e);
+        }
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
@@ -325,13 +343,24 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getCodeByGroupId(int)
      */
     @Override
-    public List<XactCodeDto> getCodeByGroupId(Integer groupId)
-            throws XactApiException {
+    public List<XactCodeDto> getCodeByGroupId(Integer groupId) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(groupId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction group id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(groupId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction group id must be greater than zero", e);
+        }
+        
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
-            XactCodeDto criteria = Rmt2XactDtoFactory
-                    .createXactCodeInstance(null);
+            XactCodeDto criteria = Rmt2XactDtoFactory.createXactCodeInstance(null);
             criteria.setGrpId(groupId);
             results = dao.fetchCode(criteria);
             return results;
@@ -340,10 +369,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
                     + groupId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
