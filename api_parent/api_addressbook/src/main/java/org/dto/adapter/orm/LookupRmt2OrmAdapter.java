@@ -32,6 +32,9 @@ class LookupRmt2OrmAdapter extends TransactionDtoImpl implements LookupExtDto, L
      */
     private LookupRmt2OrmAdapter() {
         super();
+        this.grp = null;
+        this.code = null;
+        this.vwCode = null;
     }
 
     /**
@@ -78,8 +81,6 @@ class LookupRmt2OrmAdapter extends TransactionDtoImpl implements LookupExtDto, L
             lookup = new VwCodes();
         }
         this.vwCode = lookup;
-        this.grp = null;
-        this.code = null;
     }
 
     /*
