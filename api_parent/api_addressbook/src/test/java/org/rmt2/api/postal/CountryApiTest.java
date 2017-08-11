@@ -89,27 +89,27 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
     private List<Country> createMockFetchAllResponse() {
         List<Country> list = new ArrayList<Country>();
         Country o = new Country();
-        o.setCountryId(200);
-        o.setName("United States");
-        o.setCode("USA");
-        list.add(o);
-
-        o = new Country();
-        o.setCountryId(300);
-        o.setName("Mexico");
-        o.setCode("MEX");
-        list.add(o);
-
-        o = new Country();
         o.setCountryId(100);
-        o.setName("Canada");
-        o.setCode("CAN");
+        o.setName("CountryName1");
+        o.setCode("CountryCode1");
         list.add(o);
 
         o = new Country();
-        o.setCountryId(400);
-        o.setName("France");
-        o.setCode("FRA");
+        o.setCountryId(101);
+        o.setName("CountryName2");
+        o.setCode("CountryCode2");
+        list.add(o);
+
+        o = new Country();
+        o.setCountryId(102);
+        o.setName("CountryName3");
+        o.setCode("CountryCode3");
+        list.add(o);
+
+        o = new Country();
+        o.setCountryId(103);
+        o.setName("CountryName4");
+        o.setCode("CountryCode4");
         list.add(o);
         return list;
     }
@@ -144,6 +144,13 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(4, results.size());
+        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            CountryDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getCountryId(), (100 + ndx));
+            Assert.assertEquals(obj.getCountryName(), "CountryName" + (ndx + 1));
+            Assert.assertEquals(obj.getCountryCode(), "CountryCode" + (ndx + 1));
+        }
     }
 
     @Test

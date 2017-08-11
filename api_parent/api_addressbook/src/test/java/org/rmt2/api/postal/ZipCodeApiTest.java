@@ -91,19 +91,19 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
 
     private List<Zipcode> createMockFetchAllResponse() {
         List<Zipcode> list = new ArrayList<Zipcode>();
-        Zipcode p = this.createMockOrm(75232,75232, "TX", "Dallas", "214", "Dallas", 6);
+        Zipcode p = this.createMockOrm(75231,75231, "State1", "City1", "AreaCode1", "County1", 6);
         list.add(p);
 
-        p = this.createMockOrm(75028,75028, "TX", "Flower Mound", "972", "Denton", 6);
+        p = this.createMockOrm(75232,75232, "State2", "City2", "AreaCode2", "County2", 6);
         list.add(p);
 
-        p = this.createMockOrm(71106,71106, "LA", "Shreveport", "318", "Caddo", 6);
+        p = this.createMockOrm(75233,75233, "State3", "City3", "AreaCode3", "County3", 6);
         list.add(p);
 
-        p = this.createMockOrm(75240,75240, "TX", "Dallas", "214", "Dallas", 6);
+        p = this.createMockOrm(75234,75234, "State4", "City4", "AreaCode4", "County4", 6);
         list.add(p);
         
-        p = this.createMockOrm(91040,91040, "MO", "Kansas City", "816", "Jackson", 6);
+        p = this.createMockOrm(75235,75235, "State5", "City5", "AreaCode5", "County5", 6);
         list.add(p);
         
         return list;
@@ -194,6 +194,17 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ZipcodeDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getZip(), (75231 + ndx));
+            Assert.assertEquals(obj.getId(), (75231 + ndx));
+            Assert.assertEquals(obj.getStateCode(), "State" + (ndx + 1));
+            Assert.assertEquals(obj.getCity(), "City" + (ndx + 1));
+            Assert.assertEquals(obj.getAreaCode(), "AreaCode" + (ndx + 1));
+            Assert.assertEquals(obj.getCountyName(), "County" + (ndx + 1));
+            Assert.assertEquals(obj.getTimeZoneId(), 6);
+        }
     }
     
     @Test

@@ -99,22 +99,22 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         list.add(p);
 
         p = new GeneralCodes();
-        p.setCodeGrpId(200);
+        p.setCodeGrpId(100);
         p.setCodeId(501);
         p.setLongdesc("This is Code 2");
         p.setShortdesc("Code 2");
         list.add(p);
 
         p = new GeneralCodes();
-        p.setCodeGrpId(300);
-        p.setCodeId(503);
+        p.setCodeGrpId(100);
+        p.setCodeId(502);
         p.setLongdesc("This is Code 3");
         p.setShortdesc("Code 3");
         list.add(p);
 
         p = new GeneralCodes();
-        p.setCodeGrpId(400);
-        p.setCodeId(504);
+        p.setCodeGrpId(100);
+        p.setCodeId(503);
         p.setLongdesc("This is Code 4");
         p.setShortdesc("Code 4");
         list.add(p);
@@ -150,6 +150,14 @@ public class LookupCodeApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(4, results.size());
+        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            LookupCodeDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getGrpId(), 100);
+            Assert.assertEquals(obj.getCodeId(), (500 + ndx));
+            Assert.assertEquals(obj.getCodeLongName(), "This is Code " + (ndx + 1));
+            Assert.assertEquals(obj.getCodeShortName(), "Code " + (ndx + 1));
+        }
     }
 
     @Test

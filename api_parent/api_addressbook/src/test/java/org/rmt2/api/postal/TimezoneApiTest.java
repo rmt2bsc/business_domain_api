@@ -102,22 +102,22 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
         List<TimeZone> list = new ArrayList<TimeZone>();
         TimeZone p = new TimeZone();
         p.setTimeZoneId(100);
-        p.setDescr("Central");
+        p.setDescr("TimeZoneDescription1");
         list.add(p);
 
         p = new TimeZone();
-        p.setTimeZoneId(200);
-        p.setDescr("Mountain");
+        p.setTimeZoneId(101);
+        p.setDescr("TimeZoneDescription2");
         list.add(p);
 
         p = new TimeZone();
-        p.setTimeZoneId(300);
-        p.setDescr("Pacifc");
+        p.setTimeZoneId(102);
+        p.setDescr("TimeZoneDescription3");
         list.add(p);
 
         p = new TimeZone();
-        p.setTimeZoneId(400);
-        p.setDescr("Eastern");
+        p.setTimeZoneId(103);
+        p.setDescr("TimeZoneDescription4");
         list.add(p);
         return list;
     }
@@ -148,6 +148,12 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(4, results.size());
+        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            TimeZoneDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getTimeZoneId(), (100 + ndx));
+            Assert.assertEquals(obj.getTimeZoneDescr(), "TimeZoneDescription" + (ndx + 1));
+        }
     }
     
     @Test

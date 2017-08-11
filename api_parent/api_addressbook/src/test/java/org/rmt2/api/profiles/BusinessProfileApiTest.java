@@ -151,67 +151,72 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
     private List<VwBusinessAddress> createMockFetchAllResponse() {
         List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
         VwBusinessAddress b = new VwBusinessAddress();
-        b.setBusinessId(3333);
-        b.setBusLongname("Mondo");
-        b.setBusContactFirstname("Julianna");
-        b.setBusContactLastname("Young");
-        b.setBusContactPhone("2158882222");
-        b.setContactEmail("jules@gte.net");
+        b.setBusinessId(100);
+        b.setBusLongname("BusinessName1");
+        b.setBusContactFirstname("BusinessContactFirstName1");
+        b.setBusContactLastname("BusinessContactLastName1");
+        b.setBusContactPhone("BusinessContactPhone1");
+        b.setContactEmail("BusinessContactEmail1");
         b.setBusServTypeId(130);
-        b.setBusEntityTypeId(100);
-        b.setBusTaxId("94-7584738");
-        b.setBusWebsite("mondo.com");
+        b.setBusEntityTypeId(200);
+        b.setBusTaxId("BusinessTaxId1");
+        b.setBusWebsite("BusinessWebsite1");
 
-        b.setAddrId(1111);
-        b.setAddrBusinessId(3333);
-        b.setAddr1("8439 Elm St");
-        b.setAddr2("Suite 45");
-        b.setZipCity("dallas");
-        b.setZipState("TX");
+        b.setAddrId(10);
+        b.setAddrBusinessId(100);
+        b.setAddr1("Address1-1");
+        b.setAddr2("Address2-1");
+        b.setAddr3("Address3-1");
+        b.setAddr4("Address4-1");
+        b.setZipCity("City1");
+        b.setZipState("State1");
+        b.setAddrZip(75230);
+        list.add(b);
+
+        b = new VwBusinessAddress();
+        b.setBusinessId(101);
+        b.setBusLongname("BusinessName2");
+        b.setBusContactFirstname("BusinessContactFirstName2");
+        b.setBusContactLastname("BusinessContactLastName2");
+        b.setBusContactPhone("BusinessContactPhone2");
+        b.setContactEmail("BusinessContactEmail2");
+        b.setBusServTypeId(131);
+        b.setBusEntityTypeId(201);
+        b.setBusTaxId("BusinessTaxId2");
+        b.setBusWebsite("BusinessWebsite2");
+
+        b.setAddrId(11);
+        b.setAddrBusinessId(101);
+        b.setAddr1("Address1-2");
+        b.setAddr2("Address2-2");
+        b.setAddr3("Address3-2");
+        b.setAddr4("Address4-2");
+        b.setZipCity("City2");
+        b.setZipState("State2");
+        b.setAddrZip(75231);
+        list.add(b);
+
+        b = new VwBusinessAddress();
+        b.setBusinessId(102);
+        b.setBusLongname("BusinessName3");
+        b.setBusContactFirstname("BusinessContactFirstName3");
+        b.setBusContactLastname("BusinessContactLastName3");
+        b.setBusContactPhone("BusinessContactPhone3");
+        b.setContactEmail("BusinessContactEmail3");
+        b.setBusServTypeId(132);
+        b.setBusEntityTypeId(202);
+        b.setBusTaxId("BusinessTaxId3");
+        b.setBusWebsite("BusinessWebsite3");
+
+        b.setAddrId(12);
+        b.setAddrBusinessId(102);
+        b.setAddr1("Address1-3");
+        b.setAddr2("Address2-3");
+        b.setAddr3("Address3-3");
+        b.setAddr4("Address4-3");
+        b.setZipCity("City3");
+        b.setZipState("State3");
         b.setAddrZip(75232);
-        list.add(b);
-
-        b = new VwBusinessAddress();
-        b.setBusinessId(4444);
-        b.setBusLongname("Modis");
-        b.setBusContactFirstname("Allison");
-        b.setBusContactLastname("Wing");
-        b.setBusContactPhone("8175559999");
-        b.setContactEmail("allison@gte.net");
-        b.setBusServTypeId(130);
-        b.setBusEntityTypeId(100);
-        b.setBusTaxId("64-8888888");
-        b.setBusWebsite("modis.com");
-
-        b.setAddrId(55555);
-        b.setAddrBusinessId(4444);
-        b.setAddr1("77474 Heist Ave");
-        b.setZipCity("Boston");
-        b.setZipState("MA");
-        b.setAddrZip(65069);
-        list.add(b);
-
-        b = new VwBusinessAddress();
-        b.setBusinessId(1351);
-        b.setBusLongname("Ticket Master");
-        b.setBusContactFirstname("roy");
-        b.setBusContactLastname("terrell");
-        b.setBusContactPhone("9728882222");
-        b.setContactEmail("royterrell@gte.net");
-        b.setBusServTypeId(130);
-        b.setBusEntityTypeId(100);
-        b.setBusTaxId("75-9847382");
-        b.setBusWebsite("ticketmaster.com");
-
-        b.setAddrId(2222);
-        b.setAddrBusinessId(1351);
-        b.setAddr1("94393 Hall Ave.");
-        b.setAddr2("Suite 948");
-        b.setAddr3("P.O. Box 84763");
-        b.setZipCity("dallas");
-        b.setZipState("TX");
-        b.setAddrZip(75028);
-        b.setAddrZipext(1234);
         list.add(b);
 
         return list;
@@ -299,7 +304,8 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         Assert.assertNotNull(results);
         Assert.assertEquals(3, results.size());
 
-        for (ContactDto contact : results) {
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ContactDto contact = results.get(ndx);
             Assert.assertNotNull(contact);
             Assert.assertNotNull(contact.getContactType());
             Assert.assertEquals(ContactsConst.CONTACT_TYPE_BUSINESS, contact.getContactType());
@@ -311,6 +317,27 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             Assert.assertNotNull(busContact.getContactFirstname());
             Assert.assertNotNull(busContact.getContactLastname());
             Assert.assertNotNull(busContact.getContactEmail());
+            
+            Assert.assertEquals(busContact.getContactId(), (100 + ndx));
+            Assert.assertEquals(busContact.getContactName(), "BusinessName" + (ndx + 1));
+            Assert.assertEquals(busContact.getContactFirstname(), "BusinessContactFirstName" + (ndx + 1));
+            Assert.assertEquals(busContact.getContactLastname(), "BusinessContactLastName" + (ndx + 1));
+            Assert.assertEquals(busContact.getContactPhone(), "BusinessContactPhone" + (ndx + 1));
+            Assert.assertEquals(busContact.getContactEmail(), "BusinessContactEmail" + (ndx + 1));
+            Assert.assertEquals(busContact.getTaxId(), "BusinessTaxId" + (ndx + 1));
+            Assert.assertEquals(busContact.getWebsite(), "BusinessWebsite" + (ndx + 1));
+            Assert.assertEquals(busContact.getServTypeId(), (ndx + 130));
+            Assert.assertEquals(busContact.getEntityTypeId(), (ndx + 200));
+            
+            Assert.assertEquals(busContact.getAddrId(), (10 + ndx));
+            Assert.assertEquals(busContact.getAddr1(), "Address1-" + (ndx + 1));
+            Assert.assertEquals(busContact.getAddr2(), "Address2-" + (ndx + 1));
+            Assert.assertEquals(busContact.getAddr3(), "Address3-" + (ndx + 1));
+            Assert.assertEquals(busContact.getAddr4(), "Address4-" + (ndx + 1));
+            Assert.assertEquals(busContact.getCity(), "City" + (ndx + 1));
+            Assert.assertEquals(busContact.getState(), "State" + (ndx + 1));
+            Assert.assertEquals(busContact.getZip(), (75230 + ndx));
+            
         }
     }
 

@@ -92,36 +92,36 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
         List<State> list = new ArrayList<State>();
         State o = new State();
         o.setStateId(10);
-        o.setAbbrCode("TX");
-        o.setStateName("Texas");
+        o.setAbbrCode("AbbrCode1");
+        o.setStateName("StateName1");
         o.setCountryId(100);
         list.add(o);
 
         o = new State();
-        o.setStateId(20);
-        o.setAbbrCode("TN");
-        o.setStateName("Tennessee");
+        o.setStateId(11);
+        o.setAbbrCode("AbbrCode2");
+        o.setStateName("StateName2");
         o.setCountryId(100);
         list.add(o);
         
         o = new State();
-        o.setStateId(30);
-        o.setAbbrCode("LA");
-        o.setStateName("Louisiana");
+        o.setStateId(12);
+        o.setAbbrCode("AbbrCode3");
+        o.setStateName("StateName3");
         o.setCountryId(100);
         list.add(o);
         
         o = new State();
-        o.setStateId(40);
-        o.setAbbrCode("CA");
-        o.setStateName("California");
+        o.setStateId(13);
+        o.setAbbrCode("AbbrCode4");
+        o.setStateName("StateName4");
         o.setCountryId(100);
         list.add(o);
         
         o = new State();
-        o.setStateId(50);
-        o.setAbbrCode("NY");
-        o.setStateName("New York");
+        o.setStateId(14);
+        o.setAbbrCode("AbbrCode5");
+        o.setStateName("StateName5");
         o.setCountryId(100);
         list.add(o);
         return list;
@@ -154,6 +154,14 @@ public class RegionApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            RegionDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getStateId(), (10 + ndx));
+            Assert.assertEquals(obj.getCountryId(), 100);
+            Assert.assertEquals(obj.getStateCode(), "AbbrCode" + (ndx + 1));
+            Assert.assertEquals(obj.getStateName(), "StateName" + (ndx + 1));
+        }
     }
 
     @Test

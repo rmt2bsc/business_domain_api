@@ -92,17 +92,17 @@ public class LookupCodeGroupApiTest extends BaseAddressBookDaoTest {
         list.add(p);
 
         p = new GeneralCodesGroup();
-        p.setCodeGrpId(200);
+        p.setCodeGrpId(101);
         p.setDescription("Group 2");
         list.add(p);
 
         p = new GeneralCodesGroup();
-        p.setCodeGrpId(300);
+        p.setCodeGrpId(102);
         p.setDescription("Group 3");
         list.add(p);
 
         p = new GeneralCodesGroup();
-        p.setCodeGrpId(400);
+        p.setCodeGrpId(103);
         p.setDescription("Group 4");
         list.add(p);
         return list;
@@ -137,6 +137,12 @@ public class LookupCodeGroupApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(4, results.size());
+        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            LookupGroupDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getGrpId(), (100 + ndx));
+            Assert.assertEquals(obj.getGrpDescr(), "Group " + (ndx + 1));
+        }
     }
 
     @Test

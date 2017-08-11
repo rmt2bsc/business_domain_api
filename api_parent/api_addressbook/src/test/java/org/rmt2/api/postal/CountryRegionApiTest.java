@@ -94,40 +94,40 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
         List<VwStateCountry> list = new ArrayList<VwStateCountry>();
         VwStateCountry o = new VwStateCountry();
         o.setStateId(10);
-        o.setStateCode("TX");
-        o.setStateName("Texas");
+        o.setStateCode("StateCode1");
+        o.setStateName("StateName1");
         o.setCountryId(100);
         o.setCountryName("United States");
         list.add(o);
 
         o = new VwStateCountry();
-        o.setStateId(20);
-        o.setStateCode("TN");
-        o.setStateName("Tennessee");
+        o.setStateId(11);
+        o.setStateCode("StateCode2");
+        o.setStateName("StateName2");
         o.setCountryId(100);
         o.setCountryName("United States");
         list.add(o);
         
         o = new VwStateCountry();
-        o.setStateId(30);
-        o.setStateCode("LA");
-        o.setStateName("Louisiana");
+        o.setStateId(12);
+        o.setStateCode("StateCode3");
+        o.setStateName("StateName3");
         o.setCountryId(100);
         o.setCountryName("United States");
         list.add(o);
         
         o = new VwStateCountry();
-        o.setStateId(40);
-        o.setStateCode("CA");
-        o.setStateName("California");
+        o.setStateId(13);
+        o.setStateCode("StateCode4");
+        o.setStateName("StateName4");
         o.setCountryId(100);
         o.setCountryName("United States");
         list.add(o);
         
         o = new VwStateCountry();
-        o.setStateId(50);
-        o.setStateCode("NY");
-        o.setStateName("New York");
+        o.setStateId(14);
+        o.setStateCode("StateCode5");
+        o.setStateName("StateName5");
         o.setCountryId(100);
         o.setCountryName("United States");
         list.add(o);
@@ -163,6 +163,15 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            CountryRegionDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getStateId(), (10 + ndx));
+            Assert.assertEquals(obj.getCountryId(), 100);
+            Assert.assertEquals(obj.getCountryName(), "United States");
+            Assert.assertEquals(obj.getStateCode(), "StateCode" + (ndx + 1));
+            Assert.assertEquals(obj.getStateName(), "StateName" + (ndx + 1));
+        }
     }
 
     @Test
