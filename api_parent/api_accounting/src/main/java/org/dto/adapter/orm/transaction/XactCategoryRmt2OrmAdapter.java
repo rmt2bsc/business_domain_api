@@ -143,7 +143,7 @@ class XactCategoryRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setEntityId(int value) {
-        return;
+        this.xc.setXactCatgId(value);
     }
 
     /**
@@ -151,7 +151,7 @@ class XactCategoryRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public int getEntityId() {
-        return 0;
+        return this.xc.getXactCatgId();
     }
 
     /**
@@ -159,7 +159,7 @@ class XactCategoryRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setEntityName(String value) {
-        return;
+        this.xc.setDescription(value);
     }
 
     /**
@@ -167,7 +167,7 @@ class XactCategoryRmt2OrmAdapter extends TransactionDtoImpl implements
      */
     @Override
     public String getEntityName() {
-        return null;
+        return this.xc.getDescription();
     }
 
 }
