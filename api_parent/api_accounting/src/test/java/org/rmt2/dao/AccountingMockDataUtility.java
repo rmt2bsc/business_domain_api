@@ -19,7 +19,7 @@ import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
-import org.dao.mapping.orm.rmt2.Xact;
+import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.XactCategory;
 import org.dao.mapping.orm.rmt2.XactCodeGroup;
 import org.dao.mapping.orm.rmt2.XactCodes;
@@ -627,10 +627,10 @@ public class AccountingMockDataUtility {
      * @param negInstrNo
      * @return
      */
-    public static final Xact createMockOrmXact(int xactId, int xactTypeId,
+    public static final VwXactList createMockOrmXact(int xactId, int xactTypeId,
             int xactSubType, Date xactDate, double xactAmount, int tenderId, String negInstrNo) {
-        Xact o = new Xact();
-        o.setXactId(xactId);
+        VwXactList o = new VwXactList();
+        o.setId(xactId);
         o.setReason("reason for transaction id " + xactId);
         o.setXactTypeId(xactTypeId);
         o.setXactSubtypeId(xactSubType);
@@ -640,7 +640,7 @@ public class AccountingMockDataUtility {
         o.setNegInstrNo(negInstrNo);
         o.setPostedDate(xactDate);
         o.setConfirmNo(String.valueOf(xactDate.getTime()));
-        o.setEntityRefNo("Entity Ref No " + xactId);
+        o.setDocumentId(xactId + tenderId);
         return o;
     }
     
