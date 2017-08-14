@@ -153,64 +153,96 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
     private List<VwPersonAddress> createMockFetchAllResponse() {
         List<VwPersonAddress> list = new ArrayList<VwPersonAddress>();
         VwPersonAddress p = new VwPersonAddress();
-        p.setPersonId(1351);
-        p.setPerFirstname("Dennis");
-        p.setPerLastname("Chambers");
-        p.setPerMidname("Milton");
+        p.setPersonId(100);
+        p.setPerFirstname("Firstname1");
+        p.setPerLastname("Lastname1");
+        p.setPerMidname("MidName1");
         p.setPerTitle(100);
-        p.setPerEmail("royterrell@gte.net");
+        p.setPerEmail("Email1");
+        p.setPerSsn("SSN1");
+        p.setPerRaceId(10);
         p.setPerMaritalStatus(20);
-        p.setPerGenderId(12);
-        p.setPerSsn("345-59-4938");
-        p.setPerRaceId(30);
+        p.setPerGenderId(30);
 
-        p.setAddrId(1111);
-        p.setAddrBusinessId(3333);
-        p.setAddr1("8439 Elm St");
-        p.setAddr2("Suite 45");
-        p.setZipCity("dallas");
-        p.setZipState("TX");
+        p.setAddrId(1000);
+        p.setAddrPersonId(100);
+        p.setAddr1("Address1-1");
+        p.setAddr2("Address2-1");
+        p.setAddr3("Address3-1");
+        p.setAddr4("Address4-1");
+        p.setZipCity("City1");
+        p.setZipState("State1");
+        p.setAddrZip(75230);
+        
+        p.setAddrPhoneCell("CellPhone1");
+        p.setAddrPhoneFax("FaxPhone1");
+        p.setAddrPhoneHome("HomePhone1");
+        p.setAddrPhoneMain("MainPhone1");
+        p.setAddrPhonePager("PagerPhone1");
+        p.setAddrPhoneWork("WorkPhone1");
+        p.setAddrPhoneExt("ExtPhone1");
+        list.add(p);
+
+        p = new VwPersonAddress();
+        p.setPersonId(101);
+        p.setPerFirstname("Firstname2");
+        p.setPerLastname("Lastname2");
+        p.setPerMidname("MidName2");
+        p.setPerTitle(100);
+        p.setPerEmail("Email2");
+        p.setPerSsn("SSN2");
+        p.setPerRaceId(11);
+        p.setPerMaritalStatus(21);
+        p.setPerGenderId(31);
+
+        p.setAddrId(1001);
+        p.setAddrPersonId(101);
+        p.setAddr1("Address1-2");
+        p.setAddr2("Address2-2");
+        p.setAddr3("Address3-2");
+        p.setAddr4("Address4-2");
+        p.setZipCity("City2");
+        p.setZipState("State2");
+        p.setAddrZip(75231);
+        
+        p.setAddrPhoneCell("CellPhone2");
+        p.setAddrPhoneFax("FaxPhone2");
+        p.setAddrPhoneHome("HomePhone2");
+        p.setAddrPhoneMain("MainPhone2");
+        p.setAddrPhonePager("PagerPhone2");
+        p.setAddrPhoneWork("WorkPhone2");
+        p.setAddrPhoneExt("ExtPhone2");
+        list.add(p);
+
+        p = new VwPersonAddress();
+        p.setPersonId(102);
+        p.setPerFirstname("Firstname3");
+        p.setPerLastname("Lastname3");
+        p.setPerMidname("MidName3");
+        p.setPerTitle(100);
+        p.setPerEmail("Email3");
+        p.setPerSsn("SSN3");
+        p.setPerRaceId(12);
+        p.setPerMaritalStatus(22);
+        p.setPerGenderId(32);
+
+        p.setAddrId(1002);
+        p.setAddrPersonId(102);
+        p.setAddr1("Address1-3");
+        p.setAddr2("Address2-3");
+        p.setAddr3("Address3-3");
+        p.setAddr4("Address4-3");
+        p.setZipCity("City3");
+        p.setZipState("State3");
         p.setAddrZip(75232);
-        list.add(p);
-
-        p = new VwPersonAddress();
-        p.setPersonId(1351);
-        p.setPerFirstname("Harvey");
-        p.setPerLastname("Mason");
-        p.setPerMidname("Raye");
-        p.setPerTitle(100);
-        p.setPerEmail("harveymason@gte.net");
-        p.setPerMaritalStatus(20);
-        p.setPerGenderId(12);
-        p.setPerSsn("675-88-7563");
-        p.setPerRaceId(30);
-
-        p.setAddrId(55555);
-        p.setAddrBusinessId(4444);
-        p.setAddr1("77474 Heist Ave");
-        p.setZipCity("Boston");
-        p.setZipState("MA");
-        p.setAddrZip(65069);
-        list.add(p);
-
-        p = new VwPersonAddress();
-        p.setPersonId(1351);
-        p.setPerFirstname("Billy");
-        p.setPerLastname("Cobham");
-        p.setPerMidname("Raye");
-        p.setPerTitle(100);
-        p.setPerEmail("billycobham@gte.net");
-        p.setPerMaritalStatus(20);
-        p.setPerGenderId(12);
-        p.setPerSsn("234-12-4938");
-        p.setPerRaceId(30);
-
-        p.setAddrId(55555);
-        p.setAddrBusinessId(4444);
-        p.setAddr1("847 Reynoldston Lane");
-        p.setZipCity("Dallas");
-        p.setZipState("TX");
-        p.setAddrZip(75240);
+        
+        p.setAddrPhoneCell("CellPhone3");
+        p.setAddrPhoneFax("FaxPhone3");
+        p.setAddrPhoneHome("HomePhone3");
+        p.setAddrPhoneMain("MainPhone3");
+        p.setAddrPhonePager("PagerPhone3");
+        p.setAddrPhoneWork("WorkPhone3");
+        p.setAddrPhoneExt("ExtPhone3");
         list.add(p);
 
         return list;
@@ -286,7 +318,8 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
         Assert.assertNotNull(results);
         Assert.assertEquals(3, results.size());
 
-        for (ContactDto contact : results) {
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ContactDto contact = results.get(ndx);
             Assert.assertNotNull(contact);
             Assert.assertNotNull(contact.getContactType());
             Assert.assertEquals(ContactsConst.CONTACT_TYPE_PERSONAL, contact.getContactType());
@@ -298,6 +331,35 @@ public class PersonProfileApiTest extends BaseAddressBookDaoTest {
             Assert.assertNotNull(perContact.getFirstname());
             Assert.assertNotNull(perContact.getLastname());
             Assert.assertNotNull(perContact.getContactEmail());
+                
+                Assert.assertEquals(perContact.getContactId(), (100 + ndx));
+                Assert.assertEquals(perContact.getContactName(), "Firstname" + (ndx + 1) + " " + "Lastname" + (ndx + 1));
+                Assert.assertEquals(perContact.getFirstname(), "Firstname" + (ndx + 1));
+                Assert.assertEquals(perContact.getLastname(), "Lastname" + (ndx + 1));
+                Assert.assertEquals(perContact.getMidname(), "MidName" + (ndx + 1));
+//                Assert.assertEquals(perContact.getContactPhone(), "BusinessContactPhone" + (ndx + 1));
+                Assert.assertEquals(perContact.getContactEmail(), "Email" + (ndx + 1));
+                Assert.assertEquals(perContact.getSsn(), "SSN" + (ndx + 1));
+                Assert.assertEquals(perContact.getRaceId(), 10 + (ndx));
+                Assert.assertEquals(perContact.getMaritalStatusId(), 20 + (ndx));
+                Assert.assertEquals(perContact.getGenderId(), 30 + (ndx));
+                
+                Assert.assertEquals(perContact.getAddrId(), (1000 + ndx));
+                Assert.assertEquals(perContact.getAddr1(), "Address1-" + (ndx + 1));
+                Assert.assertEquals(perContact.getAddr2(), "Address2-" + (ndx + 1));
+                Assert.assertEquals(perContact.getAddr3(), "Address3-" + (ndx + 1));
+                Assert.assertEquals(perContact.getAddr4(), "Address4-" + (ndx + 1));
+                Assert.assertEquals(perContact.getCity(), "City" + (ndx + 1));
+                Assert.assertEquals(perContact.getState(), "State" + (ndx + 1));
+                Assert.assertEquals(perContact.getZip(), (75230 + ndx));
+                
+                Assert.assertEquals(contact.getPhoneCell(), "CellPhone" + (ndx + 1));
+                Assert.assertEquals(contact.getPhoneCompany(), "MainPhone" + (ndx + 1));
+                Assert.assertEquals(contact.getPhoneExt(), "ExtPhone" + (ndx + 1));
+                Assert.assertEquals(contact.getPhoneFax(), "FaxPhone" + (ndx + 1));
+                Assert.assertEquals(contact.getPhoneHome(), "HomePhone" + (ndx + 1));
+                Assert.assertEquals(contact.getPhonePager(), "PagerPhone" + (ndx + 1));
+                Assert.assertEquals(contact.getPhoneWork(), "WorkPhone" + (ndx + 1));
         }
     }
 

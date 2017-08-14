@@ -171,6 +171,11 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         b.setZipCity("City1");
         b.setZipState("State1");
         b.setAddrZip(75230);
+        
+        b.setAddrPhoneFax("FaxPhone1");
+        b.setAddrPhoneMain("MainPhone1");
+        b.setAddrPhoneWork("WorkPhone1");
+        b.setAddrPhoneExt("ExtPhone1");
         list.add(b);
 
         b = new VwBusinessAddress();
@@ -194,6 +199,11 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         b.setZipCity("City2");
         b.setZipState("State2");
         b.setAddrZip(75231);
+        
+        b.setAddrPhoneFax("FaxPhone2");
+        b.setAddrPhoneMain("MainPhone2");
+        b.setAddrPhoneWork("WorkPhone2");
+        b.setAddrPhoneExt("ExtPhone2");
         list.add(b);
 
         b = new VwBusinessAddress();
@@ -217,6 +227,11 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         b.setZipCity("City3");
         b.setZipState("State3");
         b.setAddrZip(75232);
+        
+        b.setAddrPhoneFax("FaxPhone3");
+        b.setAddrPhoneMain("MainPhone3");
+        b.setAddrPhoneWork("WorkPhone3");
+        b.setAddrPhoneExt("ExtPhone3");
         list.add(b);
 
         return list;
@@ -337,6 +352,11 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             Assert.assertEquals(busContact.getCity(), "City" + (ndx + 1));
             Assert.assertEquals(busContact.getState(), "State" + (ndx + 1));
             Assert.assertEquals(busContact.getZip(), (75230 + ndx));
+            
+            Assert.assertEquals(contact.getPhoneCompany(), "MainPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneExt(), "ExtPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneFax(), "FaxPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneWork(), "WorkPhone" + (ndx + 1));
             
         }
     }

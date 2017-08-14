@@ -136,47 +136,75 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
     private List<VwCommonContact> createMockFetchAllResponse() {
         List<VwCommonContact> list = new ArrayList<VwCommonContact>();
         VwCommonContact p = new VwCommonContact();
-        p.setContactId(1351);
-        p.setContactName("Dennis Chambers");
+        p.setContactId(100);
+        p.setContactName("ContactName1");
         p.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
 
-        p.setAddrId(2222);
-        p.setContactId(1351);
-        p.setAddr1("94393 Hall Ave.");
-        p.setZipCity("dallas");
-        p.setZipState("TX");
-        p.setAddrZip(75028);
-        p.setAddrZipext(1234);
+        p.setAddrId(1000);
+        p.setContactId(100);
+        p.setAddr1("Address1-1");
+        p.setAddr2("Address2-1");
+        p.setAddr3("Address3-1");
+        p.setAddr4("Address4-1");
+        p.setZipCity("City1");
+        p.setZipState("State1");
+        p.setAddrZip(75020);
+        p.setAddrZipext(1231);
+        p.setAddrPhoneCell("CellPhone1");
+        p.setAddrPhoneFax("FaxPhone1");
+        p.setAddrPhoneHome("HomePhone1");
+        p.setAddrPhoneMain("MainPhone1");
+        p.setAddrPhonePager("PagerPhone1");
+        p.setAddrPhoneWork("WorkPhone1");
+        p.setAddrPhoneExt("ExtPhone1");
         list.add(p);
 
         p = new VwCommonContact();
-        p.setContactId(2045);
-        p.setContactName("DQ Conenient Store");
+        p.setContactId(101);
+        p.setContactName("ContactName2");
         p.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
 
-        p.setAddrId(3333);
-        p.setContactId(2045);
-        p.setAddr1("6473 Lemmon Ave");
-        p.setAddr2("Building 847");
-        p.setAddr3("Room 947");
-        p.setZipCity("dallas");
-        p.setZipState("TX");
-        p.setAddrZip(75240);
-        p.setAddrZipext(9876);
+        p.setAddrId(1001);
+        p.setContactId(101);
+        p.setAddr1("Address1-2");
+        p.setAddr2("Address2-2");
+        p.setAddr3("Address3-2");
+        p.setAddr4("Address4-2");
+        p.setZipCity("City2");
+        p.setZipState("State2");
+        p.setAddrZip(75021);
+        p.setAddrZipext(1232);
+        p.setAddrPhoneCell("CellPhone2");
+        p.setAddrPhoneFax("FaxPhone2");
+        p.setAddrPhoneHome("HomePhone2");
+        p.setAddrPhoneMain("MainPhone2");
+        p.setAddrPhonePager("PagerPhone2");
+        p.setAddrPhoneWork("WorkPhone2");
+        p.setAddrPhoneExt("ExtPhone2");
         list.add(p);
 
         p = new VwCommonContact();
-        p.setContactId(3458);
-        p.setContactName("Billy Cobham");
+        p.setContactId(102);
+        p.setContactName("ContactName3");
         p.setContactType(ContactsConst.CONTACT_TYPE_PERSONAL);
 
-        p.setAddrId(4444);
-        p.setContactId(3458);
-        p.setAddr1("3333 Wingstop Ave");
-        p.setZipCity("dallas");
-        p.setZipState("TX");
-        p.setAddrZip(75232);
-        p.setAddrZipext(3333);
+        p.setAddrId(1002);
+        p.setContactId(102);
+        p.setAddr1("Address1-3");
+        p.setAddr2("Address2-3");
+        p.setAddr3("Address3-3");
+        p.setAddr4("Address4-3");
+        p.setZipCity("City3");
+        p.setZipState("State3");
+        p.setAddrZip(75022);
+        p.setAddrZipext(1233);
+        p.setAddrPhoneCell("CellPhone3");
+        p.setAddrPhoneFax("FaxPhone3");
+        p.setAddrPhoneHome("HomePhone3");
+        p.setAddrPhoneMain("MainPhone3");
+        p.setAddrPhonePager("PagerPhone3");
+        p.setAddrPhoneWork("WorkPhone3");
+        p.setAddrPhoneExt("ExtPhone3");
         list.add(p);
 
         return list;
@@ -252,7 +280,8 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         Assert.assertNotNull(results);
         Assert.assertEquals(3, results.size());
 
-        for (ContactDto contact : results) {
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ContactDto contact = results.get(ndx);
             Assert.assertNotNull(contact);
             Assert.assertNotNull(contact.getContactType());
             Assert.assertTrue(contact.getContactType().equalsIgnoreCase(ContactsConst.CONTACT_TYPE_PERSONAL)
@@ -264,6 +293,27 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
             Assert.assertNotNull(contact.getContactName());
             Assert.assertNotNull(contact.getCity());
             Assert.assertNotNull(contact.getState());
+            
+            
+            Assert.assertEquals(contact.getContactId(), (100 + ndx));
+            Assert.assertEquals(contact.getContactName(), "ContactName" + (ndx + 1));
+            
+            Assert.assertEquals(contact.getAddrId(), (1000 + ndx));
+            Assert.assertEquals(contact.getAddr1(), "Address1-" + (ndx + 1));
+            Assert.assertEquals(contact.getAddr2(), "Address2-" + (ndx + 1));
+            Assert.assertEquals(contact.getAddr3(), "Address3-" + (ndx + 1));
+            Assert.assertEquals(contact.getAddr4(), "Address4-" + (ndx + 1));
+            Assert.assertEquals(contact.getCity(), "City" + (ndx + 1));
+            Assert.assertEquals(contact.getState(), "State" + (ndx + 1));
+            Assert.assertEquals(contact.getZip(), (75020 + ndx));
+            
+            Assert.assertEquals(contact.getPhoneCell(), "CellPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneCompany(), "MainPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneExt(), "ExtPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneFax(), "FaxPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneHome(), "HomePhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhonePager(), "PagerPhone" + (ndx + 1));
+            Assert.assertEquals(contact.getPhoneWork(), "WorkPhone" + (ndx + 1));
         }
     }
 
