@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.Xact;
+import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.XactCategory;
 import org.dao.mapping.orm.rmt2.XactCodeGroup;
 import org.dao.mapping.orm.rmt2.XactCodes;
@@ -52,9 +52,9 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     protected List<XactType> mockXactTypeFetchAllResponse;
     protected List<XactType> mockXactTypeFetchSingleResponse;
 
-    protected List<Xact> mockXactNotFoundFetchResponse;
-    protected List<Xact> mockXactFetchAllResponse;
-    protected List<Xact> mockXactFetchSingleResponse;
+    protected List<VwXactList> mockXactNotFoundFetchResponse;
+    protected List<VwXactList> mockXactFetchAllResponse;
+    protected List<VwXactList> mockXactFetchSingleResponse;
 
     protected List<XactTypeItem> mockXactTypeItemNotFoundFetchResponse;
     protected List<XactTypeItem> mockXactTypeItemFetchAllResponse;
@@ -212,14 +212,14 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         return list;
     }
 
-    private List<Xact> createMockXactNotFoundResponse() {
-        List<Xact> list = null;
+    private List<VwXactList> createMockXactNotFoundResponse() {
+        List<VwXactList> list = null;
         return list;
     }
 
-    private List<Xact> createMockXactFetchAllsponse() {
-        List<Xact> list = new ArrayList<Xact>();
-        Xact o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
+    private List<VwXactList> createMockXactFetchAllsponse() {
+        List<VwXactList> list = new ArrayList<VwXactList>();
+        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
                 RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
         list.add(o);
 
@@ -243,9 +243,9 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         return list;
     }
 
-    private List<Xact> createMockXactSingleFetchResponse() {
-        List<Xact> list = new ArrayList<Xact>();
-        Xact o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
+    private List<VwXactList> createMockXactSingleFetchResponse() {
+        List<VwXactList> list = new ArrayList<VwXactList>();
+        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
                 RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
         list.add(o);
         return list;
