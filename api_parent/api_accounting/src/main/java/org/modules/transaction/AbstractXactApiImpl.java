@@ -108,22 +108,29 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      */
     @Override
     public XactDto getXactById(Integer xactId) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(xactId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(xactId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction id must be greater than zero", e);
+        }
+        
         XactDao dao = this.getXactDao();
         List<XactDto> results = null;
         try {
-            XactDto criteria = Rmt2XactDtoFactory
-                    .createXactInstance((Xact) null);
+            XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
             criteria.setXactId(xactId);
             results = dao.fetchXact(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve common transaction object by xact id: "
-                    + xactId;
+            this.msg = "Unable to retrieve common transaction object by xact id: " + xactId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null || results.size() <= 0) {
             return null;
