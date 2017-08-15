@@ -403,10 +403,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             this.msg = "Unable to retrieve all transaction type objects";
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -415,30 +411,38 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactType(int)
      */
     @Override
-    public XactTypeDto getXactType(Integer typeId) throws XactApiException {
+    public XactTypeDto getXactType(Integer xactTypeId) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(xactTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction type id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(xactTypeId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction type id must be greater than zero", e);
+        }
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
             XactTypeDto criteria = Rmt2XactDtoFactory
                     .createXactTypeInstance(null);
-            criteria.setXactTypeId(typeId);
+            criteria.setXactTypeId(xactTypeId);
             results = dao.fetchType(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction type objects by xact type id: "
-                    + typeId;
+                    + xactTypeId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null || results.size() <= 0) {
             return null;
         }
         if (results.size() > 1) {
             this.msg = "Common transaction type query should of returned only 1 object based on xact type id: "
-                    + typeId
+                    + xactTypeId
                     + ".  Instead "
                     + results.size()
                     + " objects were returned";
@@ -455,6 +459,18 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     @Override
     public List<XactTypeDto> getXactTypeByCatgId(Integer catgId)
             throws XactApiException {
+        try {
+            Verifier.verifyNotNull(catgId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction category id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(catgId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction category id must be greater than zero", e);
+        }
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
@@ -468,10 +484,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
                     + catgId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
