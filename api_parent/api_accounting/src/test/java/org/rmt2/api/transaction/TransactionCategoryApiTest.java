@@ -21,6 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -171,4 +172,28 @@ public class TransactionCategoryApiTest extends TransactionApiTestData {
             e.printStackTrace();
         }
     }
+    
+    @Test
+    public void testFetchWithException() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(XactCategory.class)))
+                            .thenThrow(CannotRetrieveException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all transaction category with exception test case setup failed");
+        }
+
+        XactApiFactory f = new XactApiFactory();
+        XactApi api = f.createDefaultXactApi(this.mockDaoClient);
+        List<XactCategoryDto> results = null;
+        try {
+            results = api.getAllCategory();
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof XactApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
+
 }

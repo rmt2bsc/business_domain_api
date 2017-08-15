@@ -14,6 +14,7 @@ import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
+import org.dao.subsidiary.CreditorDaoException;
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
 import org.dto.CreditorXactHistoryDto;
@@ -1199,6 +1200,144 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             Assert.fail("Expected exception due to input creditor object is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllNoContactDataWithException() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(Creditor.class)))
+                            .thenThrow(CreditorDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all creditors test case setup failed");
+        }
+
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+        List<CreditorDto> results = null;
+        try {
+            results = api.get(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateExistingCreditorWithException() {
+        Creditor mockCreditorSubsidiaryCriteria = new Creditor();
+        mockCreditorSubsidiaryCriteria.setCreditorId(1350);
+        VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
+
+        try {
+            when(this.mockPersistenceClient.updateRow(any(Creditor.class)))
+            .thenThrow(CreditorDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor updateRow with excetpion test case setup failed");
+        }
+
+        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+                "932-392-339", 1);
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.update(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testCreateNewCreditorWithException() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenReturn(
+                    this.mockSingleCreditorGLAccountFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Account fetch test case setup failed");
+        }
+
+        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        int newCreditorId = 1350;
+        try {
+            when(this.mockPersistenceClient.insertRow(any(Creditor.class), eq(true)))
+            .thenThrow(CreditorDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor insertRow test case setup failed");
+        }
+
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.update(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleCreditorTypeWithException() {
+        CreditorType mockCredCriteria = new CreditorType();
+        mockCredCriteria.setCreditorTypeId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria)))
+            .thenThrow(CreditorDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single creditor type fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorTypeDto results = null;
+        try {
+            results = api.getCreditorType(100);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchTransactionHistoryWithException() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwCreditorXactHist.class)))
+            .thenThrow(CreditorDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Creditor transaction history fetch test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        List<CreditorXactHistoryDto> results = null;
+        try {
+            results = api.getTransactionHistory(100);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorApiException);
+            Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
             e.printStackTrace();
         }
     }

@@ -22,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
@@ -176,6 +177,32 @@ public class TransactionApiTest extends TransactionApiTestData {
             Assert.fail("Expected exception due to input value is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchWithException() {
+        VwXactList mockCriteria = new VwXactList();
+        mockCriteria.setId(111111);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                            .thenThrow(CannotRetrieveException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact with exception test case setup failed");
+        }
+
+        XactApiFactory f = new XactApiFactory();
+        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
+        XactDto results = null;
+        criteria.setXactId(111111);
+        try {
+            results = api.getXactById(111111);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof XactApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
             e.printStackTrace();
         }
     }

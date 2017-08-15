@@ -13,6 +13,7 @@ import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
+import org.dao.subsidiary.CustomerDaoException;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
@@ -39,6 +40,7 @@ import org.rmt2.jaxb.BusinessType;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -943,6 +945,121 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Expected exception due to input customer object is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CustomerApiException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchWithException() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(Customer.class)))
+            .thenThrow(CannotRetrieveException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all customers with exception test case setup failed");
+        }
+
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
+        List<CustomerDto> results = null;
+        try {
+            results = api.get(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CustomerApiException);
+            Assert.assertTrue(e.getCause() instanceof CustomerDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchTransactionHistoryWithException() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwCustomerXactHist.class)))
+            .thenThrow(CustomerDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Customer transaction history fetch with exception test case setup failed");
+        }
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        List<CustomerXactHistoryDto> results = null;
+        try {
+            results = api.getTransactionHistory(100);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CustomerApiException);
+            Assert.assertTrue(e.getCause() instanceof CustomerDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateExistingCustomerWithException() {
+        Customer mockCustomerSubsidiaryCriteria = new Customer();
+        mockCustomerSubsidiaryCriteria.setCustomerId(200);
+        VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
+        this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCustomerSubsidiaryCriteria);
+
+        try {
+            when(this.mockPersistenceClient.updateRow(any(Customer.class)))
+            .thenThrow(CustomerDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Customer updateRow with exception test case setup failed");
+        }
+
+        Customer updateCustomer = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+                333, "C1234589", "Customer 1");
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.update(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CustomerApiException);
+            Assert.assertTrue(e.getCause() instanceof CustomerDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testCreateNewCustomerWithException() {
+        GlAccounts mockGLAcctCriteria = new GlAccounts();
+        mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTRCV);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria)))
+            .thenReturn(this.mockSingleCustomerGLAccountFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Account fetch with exception test case setup failed");
+        }
+
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+                333, "C1234589", "Customer 1");
+        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
+                "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
+
+        int newCustomerId = 1350;
+        try {
+            when(this.mockPersistenceClient.insertRow(any(Customer.class), eq(true)))
+            .thenThrow(CustomerDaoException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Customer insertRow test case setup failed");
+        }
+
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.update(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CustomerApiException);
+            Assert.assertTrue(e.getCause() instanceof CustomerDaoException);
             e.printStackTrace();
         }
     }
