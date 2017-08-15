@@ -258,28 +258,28 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
 
     private List<XactType> createMockXactTypeFetchAllsponse() {
         List<XactType> list = new ArrayList<XactType>();
-        XactType o = AccountingMockDataUtility.createMockOrmXactType(301, 1000,
-                "Transaction Type 1", "transaction type code 1", 1, -1, 400,
+        XactType o = AccountingMockDataUtility.createMockOrmXactType(300, 1000,
+                "TransactionType1", "TransactionTypeCode1", 1, -1, 400,
                 401, 200, 222, 1);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactType(302, 2000,
-                "Transaction Type 2", "transaction type code 2", 1, -1, 400,
+        o = AccountingMockDataUtility.createMockOrmXactType(301, 1000,
+                "TransactionType2", "TransactionTypeCode2", 1, -1, 400,
                 401, 200, 222, 1);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactType(303, 3000,
-                "Transaction Type 3", "transaction type code 3", 1, -1, 400,
+        o = AccountingMockDataUtility.createMockOrmXactType(302, 1000,
+                "TransactionType3", "TransactionTypeCode3", 1, -1, 400,
                 401, 200, 222, 1);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactType(304, 4000,
-                "Transaction Type 4", "transaction type code 4", 1, -1, 400,
+        o = AccountingMockDataUtility.createMockOrmXactType(303, 1000,
+                "TransactionType4", "TransactionTypeCode4", 1, -1, 400,
                 401, 200, 222, 1);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXactType(305, 5000,
-                "Transaction Type 5", "transaction type code 5", 1, -1, 400,
+        o = AccountingMockDataUtility.createMockOrmXactType(304, 1000,
+                "TransactionType5", "TransactionTypeCode5", 1, -1, 400,
                 401, 200, 222, 1);
         list.add(o);
         return list;
