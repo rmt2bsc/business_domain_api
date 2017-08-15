@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.dao.lookup.LookupDaoException;
 import org.dao.mapping.orm.rmt2.Country;
+import org.dao.postal.RegionCountryDaoException;
 import org.dto.CountryDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
@@ -25,6 +26,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
@@ -402,6 +404,106 @@ public class CountryApiTest extends BaseAddressBookDaoTest {
             results = api.deleteCountry(criteria.getCountryId());
             Assert.fail("Expected validation error for negative country id value");
         } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllDaoException() {
+        CountryDto criteria = Rmt2AddressBookDtoFactory.getNewCountryInstance();
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(Country.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All country fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<CountryDto> results = null;
+        try {
+            results = api.getCountry(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof RegionCountryDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertDaoException() {
+        CountryDto mockUpdateCountry = this.createMockDto(0, "United States", "USA");
+        try {
+            when(this.mockPersistenceClient.insertRow(any(Country.class), any(Boolean.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Country insert test case failed setting up mock update call");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCountry(mockUpdateCountry);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof RegionCountryDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateDaoException() {
+        Country mockOriginalCountry = new Country();
+        mockOriginalCountry.setCountryId(200);
+        mockOriginalCountry.setName("United States");
+        mockOriginalCountry.setCode("USA");
+        CountryDto mockUpdateCountry = this.createMockDto(200, "Modified United States", "MUSA");
+
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(Country.class))).thenReturn(mockOriginalCountry);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Country update test case failed setting up mock retrieve call");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(Country.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Country update test case failed setting up mock update call");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCountry(mockUpdateCountry);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof RegionCountryDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteDaoException() {
+        CountryDto criteria = Rmt2AddressBookDtoFactory.getNewCountryInstance();
+        criteria.setCountryId(200);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(Country.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Delete country by country id test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int results = 0;
+        try {
+            results = api.deleteCountry(criteria.getCountryId());
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof RegionCountryDaoException);
             e.printStackTrace();
         }
     }

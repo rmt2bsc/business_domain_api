@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.lookup.LookupDaoException;
 import org.dao.mapping.orm.rmt2.TimeZone;
+import org.dao.postal.ZipcodeDaoException;
 import org.dto.TimeZoneDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
@@ -24,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
@@ -255,5 +257,28 @@ public class TimezoneApiTest extends BaseAddressBookDaoTest {
             e.printStackTrace();
         }
         Assert.assertNull(rec);
+    }
+    
+    @Test
+    public void testFetchAllDaoException() {
+        TimeZoneDto criteria = Rmt2AddressBookDtoFactory.getNewTimezoneInstance();
+        
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(TimeZone.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All timezone fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<TimeZoneDto> results = null;
+        try {
+            results = api.getTimezone(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof ZipcodeDaoException);
+            e.printStackTrace();
+        }
     }
 }

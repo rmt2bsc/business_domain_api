@@ -28,7 +28,11 @@ import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotPersistException;
 import com.api.persistence.CannotProceedException;
+import com.api.persistence.CannotRemoveException;
+import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -573,6 +577,135 @@ public class AccountCategoryApiTest extends BaseAccountingDaoTest {
             Assert.fail("Expected exception to be thrown due to category name is blank is blank");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllWithException() {
+        AccountCategoryDto criteria = Rmt2AccountDtoFactory.createAccountCategoryInstance(null);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccountCategory.class)))
+                        .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All GL Acccount Type fetch test case setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<AccountCategoryDto> results = null;
+        try {
+            results = api.getAccountCategory(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testInsertWithException() {
+        AccountCategoryDto dto = Rmt2AccountDtoFactory.createAccountCategoryInstance(null);
+        dto.setAcctCatgId(0);
+        dto.setAcctTypeId(200);
+        dto.setAcctCatgDescription("Category Added");
+     
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccountCategory.class)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account category mock setup failed");
+        }
+        ResultSet mockResultSet = Mockito.mock(ResultSet.class);
+        try {
+            when(this.mockPersistenceClient.executeSql(any(String.class)))
+                    .thenReturn(mockResultSet);
+            when(mockResultSet.next()).thenReturn(true);
+            when(mockResultSet.getInt("next_seq")).thenReturn(554);   
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount Category insert row test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(any(GlAccountCategory.class), any(Boolean.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount Category insert row test case setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCategory(dto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotPersistException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithException() {
+        AccountCategoryDto dto = Rmt2AccountDtoFactory.createAccountCategoryInstance(null);
+        dto.setAcctCatgId(100);
+        dto.setAcctTypeId(200);
+        dto.setAcctCatgDescription("Category Modified");
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccountCategory.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update Category, validate category setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(GlAccountCategory.class)))
+                    .thenReturn(this.mockSingleFetchResponse.get(0));
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update Category, retreive delta category setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(GlAccountCategory.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update GL Category test case setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateCategory(dto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotPersistException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteWithException() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(Integer.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Delete account category mock setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteCategory(100);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRemoveException);
             e.printStackTrace();
         }
     }

@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.inventory.InventoryDaoException;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
@@ -30,6 +31,8 @@ import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -340,5 +343,78 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
             e.printStackTrace();
         }
         Assert.assertEquals(1, rc);
+    }
+    
+    @Test
+    public void testFetchAssignedItemsWithException() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(VwVendorItems.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Vendor Assigned Item fetch using criteria test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<VendorItemDto> results = null;
+        try {
+            results = api.getVendorAssignItems(1234);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testUpdateVendorItemWithException() {
+        VwVendorItems updateVendorItem = AccountingMockDataUtility
+                .createMockOrmVwVendorItems(100, "111-111-111", "11111111",
+                        1351, "Updated Item #1", 50, 1.55);
+
+        VendorItemDto updateDto = Rmt2ItemMasterDtoFactory
+                .createVendorItemInstance(updateVendorItem);
+
+        VwBusinessAddress busCriteria = new VwBusinessAddress();
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(eq(busCriteria)))
+                            .thenReturn(this.mockBusinessContactFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Business Contact fetch test case setup failed");
+        }
+
+        Creditor creditorCriteria = new Creditor();
+        creditorCriteria.setCreditorId(1351);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
+                    .thenReturn(this.mockCreditorFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Creditor fetch test case setup failed");
+        }
+
+        try {
+            when(this.mockPersistenceClient.updateRow(any(VendorItems.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Vendor Item update test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateVendorItem(updateDto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof InventoryDaoException);
+            e.printStackTrace();
+        }
     }
 }

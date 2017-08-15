@@ -26,6 +26,8 @@ import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -630,4 +632,53 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
             e.printStackTrace();
         }
    }
+    
+    @Test
+    public void testFetchAllCriteriaObjectWithException() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(ItemMaster.class)))
+                         .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Inventory Item Master fetch with exception test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<ItemMasterDto> results = null;
+        ItemMaster im = null;
+        ItemMasterDto criteria = Rmt2ItemMasterDtoFactory.createItemMasterInstance(im);
+        try {
+            results = api.getItem(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllStringArgWithException() {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(any(ItemMaster.class)))
+                         .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Inventory Item Master fetch with exception test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<ItemMasterDto> results = null;
+        String criteria = null;
+        try {
+            results = api.getItem(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
 }

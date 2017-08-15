@@ -26,6 +26,8 @@ import org.rmt2.api.BaseAccountingDaoTest;
 import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -312,4 +314,26 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
         Assert.assertNull(results);
     }
 
+    @Test
+    public void testFetchAllWithException() {
+        AccountTypeDto criteria = Rmt2AccountDtoFactory.createAccountTypeInstance(null);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccountTypes.class)))
+                   .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All GL Acccount Type fetch test case setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<AccountTypeDto> results = null;
+        try {
+            results = api.getAccountType(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
 }

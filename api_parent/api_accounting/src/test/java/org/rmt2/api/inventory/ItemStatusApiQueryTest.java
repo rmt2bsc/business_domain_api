@@ -26,6 +26,8 @@ import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -377,6 +379,30 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
                     "Expected exception to be thrown due item statusid is less than zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllWithException() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(ItemMasterStatus.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "All Inventory Item Master Status fetch test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<ItemMasterStatusDto> results = null;
+        ItemMasterStatusDto criteriaObj = null;
+        try {
+            results = api.getItemStatus(criteriaObj);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
             e.printStackTrace();
         }
     }

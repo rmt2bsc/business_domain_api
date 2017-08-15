@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.lookup.LookupDaoException;
 import org.dao.mapping.orm.rmt2.Zipcode;
+import org.dao.postal.ZipcodeDaoException;
 import org.dto.ZipcodeDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
@@ -24,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
@@ -335,5 +337,49 @@ public class ZipCodeApiTest extends BaseAddressBookDaoTest {
             e.printStackTrace();
         }
         Assert.assertNull(rec);
+    }
+    
+    @Test
+    public void testFetchAllDaoException() {
+        ZipcodeDto criteria = Rmt2AddressBookDtoFactory.getNewZipCodeInstance();
+        criteria.setTimeZoneId(6);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(Zipcode.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All zipcode fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<ZipcodeDto> results = null;
+        try {
+            results = api.getZipCode(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof ZipcodeDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchByUidDaoException() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(Zipcode.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("UID zipcode fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        ZipcodeDto rec = null;
+        try {
+            rec = api.getZipCode(71106);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof ZipcodeDaoException);
+            e.printStackTrace();
+        }
     }
 }

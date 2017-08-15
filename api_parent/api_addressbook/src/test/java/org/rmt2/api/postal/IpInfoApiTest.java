@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import org.dao.lookup.LookupDaoException;
 import org.dao.mapping.orm.rmt2.IpLocation;
+import org.dao.postal.IpDaoException;
 import org.dto.IpLocationDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
@@ -21,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
@@ -182,5 +184,24 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
         }
     }
     
-
+    @Test
+    public void testFetchSingleUsingLongValueDaoException() {
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(IpLocation.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("IP location with long value fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        IpLocationDto rec = null;
+        try {
+            rec = api.getIpInfo(123456789045L);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof IpDaoException);
+            e.printStackTrace();
+        }
+    }
 }

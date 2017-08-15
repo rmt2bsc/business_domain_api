@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.lookup.LookupDaoException;
 import org.dao.mapping.orm.rmt2.VwStateCountry;
+import org.dao.postal.RegionCountryDaoException;
 import org.dto.CountryRegionDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.junit.After;
@@ -24,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
@@ -236,6 +238,28 @@ public class CountryRegionApiTest extends BaseAddressBookDaoTest {
             api.getCountryRegion(null);
             Assert.fail("Expected exception to be thrown due to null criteria object input");
         } catch (PostalApiException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllDaoException() {
+        CountryRegionDto criteria = Rmt2AddressBookDtoFactory.getNewCountryRegionInstance();
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwStateCountry.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All country state/region fetch test case failed");
+        }
+        PostalApiFactory f = new PostalApiFactory();
+        PostalApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<CountryRegionDto> results = null;
+        try {
+            results = api.getCountryRegion(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof PostalApiException);
+            Assert.assertTrue(e.getCause() instanceof RegionCountryDaoException);
             e.printStackTrace();
         }
     }

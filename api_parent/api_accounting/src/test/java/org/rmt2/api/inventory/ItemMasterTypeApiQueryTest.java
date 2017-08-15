@@ -26,6 +26,8 @@ import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -384,4 +386,27 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
         }
     }
 
+    @Test
+    public void testFetchAllWithException() {
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(ItemMasterType.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "All Inventory Item Master Type fetch test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<ItemMasterTypeDto> results = null;
+        ItemMasterTypeDto criteriaObj = null;
+        try {
+            results = api.getItemType(criteriaObj);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
 }

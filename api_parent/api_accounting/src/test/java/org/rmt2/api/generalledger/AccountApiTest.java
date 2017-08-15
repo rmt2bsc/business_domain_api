@@ -29,7 +29,11 @@ import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.CannotPersistException;
 import com.api.persistence.CannotProceedException;
+import com.api.persistence.CannotRemoveException;
+import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -989,6 +993,134 @@ public class AccountApiTest extends BaseAccountingDaoTest {
             Assert.fail("Expected exception to be thrown due to account name is duplicated");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CannotProceedException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllWithException() {
+        AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All GL Acccount fetch test case setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<AccountDto> results = null;
+        try {
+            results = api.getAccount(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithException() {
+        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable modified", 1);
+        dto.setAcctTypeId(200);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account: Single GL Acccount fetch using criteria mock setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.retrieveObject(any(GlAccounts.class)))
+                    .thenReturn(this.mockSingleFetchResponse.get(0));
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Update account: Single GL Acccount fetch mock setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(GlAccounts.class)))
+                    .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount update row test case setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateAccount(dto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotPersistException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertWithException() {
+        AccountDto dto = AccountingMockDataUtility.createMockDtoGlAccounts(0, 200, 300, 0, null,
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
+     
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GlAccounts.class)))
+                    .thenReturn(this.mockNotFoundFetchResponse);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Insert account mock setup failed");
+        }
+        ResultSet mockResultSet = Mockito.mock(ResultSet.class);
+        try {
+            when(this.mockPersistenceClient.executeSql(any(String.class)))
+                    .thenReturn(mockResultSet);
+            when(mockResultSet.next()).thenReturn(true);
+            when(mockResultSet.getInt("next_seq")).thenReturn(554);   
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount insert row test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(any(GlAccounts.class), any(Boolean.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("GL Acccount insert row test case setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateAccount(dto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotPersistException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteWithException() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(Integer.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (GeneralLedgerDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Delete account mock setup failed");
+        }
+
+        GeneralLedgerApiFactory f = new GeneralLedgerApiFactory();
+        GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteAccount(100);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof GeneralLedgerApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRemoveException);
             e.printStackTrace();
         }
     }

@@ -25,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 @RunWith(PowerMockRunner.class)
@@ -383,6 +384,109 @@ public class LookupCodeGroupApiTest extends BaseAddressBookDaoTest {
             Assert.assertNotNull(e);
             String errMsg = e.getErrorStack();
             Assert.assertTrue(errMsg.contains("Lookup group criteria object cannot be null"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchAllWithException() {
+        LookupGroupDto criteria = Rmt2AddressBookDtoFactory.getNewCodeGroupInstance();
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(GeneralCodesGroup.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("All lookup code group fetch test case failed");
+        }
+
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
+        List<LookupGroupDto> results = null;
+        try {
+            results = api.getGroup(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof LookupDataApiException);
+            Assert.assertTrue(e.getCause() instanceof LookupDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertWithException() {
+        LookupGroupDto mockDto = this.createMockDto(0, "Test Group 3");
+        try {
+            when(this.mockPersistenceClient.insertRow(any(GeneralCodesGroup.class), any(Boolean.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code Group insert test case failed setting up mock insert call");
+        }
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateGroup(mockDto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof LookupDataApiException);
+            Assert.assertTrue(e.getCause() instanceof LookupDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateWithException() {
+        GeneralCodesGroup mockGeneralCodesGroup = new GeneralCodesGroup();
+        mockGeneralCodesGroup.setCodeGrpId(555);
+        mockGeneralCodesGroup.setDescription("Test Group 3");
+        GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
+        mockSelectCriteria.setCodeGrpId(555);
+        LookupGroupDto mockUpdateDto = this.createMockDto(555, "Modified Group 3");
+        try {
+            when(this.mockPersistenceClient.retrieveObject(eq(mockSelectCriteria))).thenReturn(mockGeneralCodesGroup);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code Group update test case failed setting up mock retrieve call");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(GeneralCodesGroup.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code Group update test case failed setting up mock update call");
+        }
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateGroup(mockUpdateDto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof LookupDataApiException);
+            Assert.assertTrue(e.getCause() instanceof LookupDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testDeleteWithException() {
+        GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
+        mockSelectCriteria.setCodeGrpId(555);
+        LookupGroupDto mockUpdateDto = this.createMockDto(555, "Modified Group 3");
+        try {
+            when(this.mockPersistenceClient.deleteRow(eq(mockSelectCriteria)))
+            .thenThrow(DatabaseException.class);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code Group delete test case failed setting up mock deleteRow call");
+        }
+       
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteGroup(mockUpdateDto.getGrpId());
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof LookupDataApiException);
+            Assert.assertTrue(e.getCause() instanceof LookupDaoException);
             e.printStackTrace();
         }
     }

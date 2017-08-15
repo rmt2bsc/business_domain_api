@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.inventory.InventoryDaoException;
 import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
@@ -36,6 +37,7 @@ import org.rmt2.dao.AccountingMockDataUtility;
 import com.InvalidDataException;
 import com.RMT2Base;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -155,7 +157,6 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         return list;
     }
     
-//    
 
     @Test
     public void testUpdateExistingWithAvailability() {
@@ -1673,6 +1674,78 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Expected exception due to item id is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdateItemMasterWithException() {
+        try {
+            ItemMaster im = new ItemMaster();
+            im.setItemId(100);
+            when(this.mockPersistenceClient.retrieveList(eq(im)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Fetch original Item Master for update test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(ItemMaster.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Item master update row with exception test case setup failed");
+        }
+
+        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(100,
+                1, "111-111-111", "11111111", 1234, "Modified Item #1", 5, 1.23,
+                true);
+        ItemMasterDto dto = Rmt2ItemMasterDtoFactory.createItemMasterInstance(im);
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.updateItemMaster(dto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof InventoryDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testInsertItemMasterWithException() {
+        try {
+            ItemMaster im = new ItemMaster();
+            im.setItemId(100);
+            when(this.mockPersistenceClient.retrieveList(eq(im)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Fetch original Item Master for update test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(any(ItemMaster.class), any(Boolean.class)))
+            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Item master update row with exception test case setup failed");
+        }
+
+        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(0,
+                1, "111-111-111", "11111111", 1234, "Modified Item #1", 5, 1.23,
+                true);
+        ItemMasterDto dto = Rmt2ItemMasterDtoFactory.createItemMasterInstance(im);
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.updateItemMaster(dto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InventoryApiException);
+            Assert.assertTrue(e.getCause() instanceof InventoryDaoException);
             e.printStackTrace();
         }
     }
