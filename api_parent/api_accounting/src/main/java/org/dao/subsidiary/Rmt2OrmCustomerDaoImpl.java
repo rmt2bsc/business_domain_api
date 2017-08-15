@@ -111,7 +111,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         try {
             results = this.client.retrieveList(obj);
         } catch (DatabaseException e) {
-            throw new CreditorDaoException(e);
+            throw new CustomerDaoException(e);
         }
 
         List<CustomerXactHistoryDto> list = new ArrayList<CustomerXactHistoryDto>();
