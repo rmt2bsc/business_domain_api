@@ -61,17 +61,8 @@ public class SubsidiaryTransactionCreationTest extends TransactionApiTestData {
         // Setup stub to return mock customer data
         Customer mockCustCriteria = new Customer();
         mockCustCriteria.setCustomerId(200);
-        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        
 //        this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
-        try {
-            when(this.mockPersistenceClient
-                    .retrieveList(eq(mockContactCritereia))).thenReturn(
-                            this.mockBusinessContactFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Single Business Contact for customer fetch test case setup failed");
-        }
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCustCriteria)))
                     .thenReturn(this.mockCustomerFetchSingleResponse);
@@ -80,6 +71,15 @@ public class SubsidiaryTransactionCreationTest extends TransactionApiTestData {
             Assert.fail("Single Customer fetch test case setup failed");
         }
 
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockContactCritereia)))
+                     .thenReturn(this.mockBusinessContactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Single Business Contact for customer fetch test case setup failed");
+        }
         
         // Setup stub to return not found creditor mock data.
         Creditor mockCredCriteria = new Creditor();
