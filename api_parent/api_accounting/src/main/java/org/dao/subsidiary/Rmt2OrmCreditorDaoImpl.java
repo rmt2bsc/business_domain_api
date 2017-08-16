@@ -178,7 +178,7 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         }
         // Retrieve creditor data from the database
         List<Creditor> results = this.fetch(ormCred);
-        if (results == null) {
+        if (results == null || results.isEmpty()) {
             return null;
         }
         

@@ -128,7 +128,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         List<Customer> results = null;
         try {
             results = this.client.retrieveList(criteria);
-            if (results == null) {
+            if (results == null || results.isEmpty()) {
                 return null;
             }
         } catch (DatabaseException e) {
