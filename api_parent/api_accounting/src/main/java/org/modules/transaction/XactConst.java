@@ -161,10 +161,13 @@ public class XactConst {
 
     public final static int XACT_TYPE_CREDITCHARGE = 180;
 
-    public final static int XACT_TYPE_REVERSE = 999;
+    /***************************************************
+     * Transaction Sub Types
+     ***************************************************/
+    public final static int XACT_SUBTYPE_REVERSE = 999;
 
-    public final static int XACT_TYPE_CANCEL = 888;
+    public final static int XACT_SUBTYPE_CANCEL = 888;
 
-    public final static int XACT_TYPE_FINAL = -100;
+    public final static int XACT_SUBTYPE_FINAL = -100;
 
 }
