@@ -188,6 +188,9 @@ public class Rmt2SubsidiaryDtoFactory extends RMT2Base {
      */
     public static final Map<Integer, SubsidiaryContactInfoDto> createContactMap(List<ContactDto> contacts) {
         Map<Integer, SubsidiaryContactInfoDto> map = new LinkedHashMap<Integer, SubsidiaryContactInfoDto>();
+        if (contacts == null) {
+            return null;
+        }
         for (ContactDto contact : contacts) {
             BusinessContactDto item = null;
             if (contact instanceof BusinessContactDto) {
