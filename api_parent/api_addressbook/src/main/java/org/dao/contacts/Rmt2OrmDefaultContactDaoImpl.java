@@ -448,7 +448,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
     public int maintainContact(ContactDto contact) throws ContactUpdateDaoException {
         this.validateContactBasicInfo(contact);
 
-        this.client.beginTrans();
+//        this.client.beginTrans();
         int rc = 0;
         boolean error = false;
         try {
@@ -470,14 +470,15 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         } catch (ContactUpdateDaoException e) {
             error = true;
             throw e;
-        } finally {
-            if (error) {
-                this.client.rollbackTrans();
-            }
-            else {
-                this.client.commitTrans();
-            }
-        }
+        } 
+//        finally {
+//            if (error) {
+//                this.client.rollbackTrans();
+//            }
+//            else {
+//                this.client.commitTrans();
+//            }
+//        }
     }
 
     /**
@@ -670,7 +671,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             return newPersonId;
         } catch (Exception e) {
             this.msg = "Insert operation failed tageting the Person table";
-            throw new DatabaseException(this.msg, e);
+            throw new PersonalContactUpdateDaoException(this.msg, e);
         }
     }
 
@@ -834,7 +835,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             return newBusinessId;
         } catch (Exception e) {
             this.msg = "Insert operation tageting business table failed";
-            throw new DatabaseException(this.msg, e);
+            throw new BusinessContactUpdateDaoException(this.msg, e);
         }
     }
 
@@ -904,7 +905,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             return rc;
         } catch (Exception e) {
             this.msg = "Update operation targeting business table failed for contact, " + contact.getBusinessId();
-            throw new DatabaseException(this.msg, e);
+            throw new BusinessContactUpdateDaoException(this.msg, e);
         }
     }
 
@@ -1062,7 +1063,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             throw new ContactUpdateDaoException(this.msg);
         }
 
-        this.client.beginTrans();
+//        this.client.beginTrans();
         int rc = 0;
         boolean error = false;
         try {
@@ -1084,14 +1085,15 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         } catch (ContactUpdateDaoException e) {
             error = true;
             throw e;
-        } finally {
-            if (error) {
-                this.client.rollbackTrans();
-            }
-            else {
-                this.client.commitTrans();
-            }
-        }
+        } 
+//        finally {
+//            if (error) {
+//                this.client.rollbackTrans();
+//            }
+//            else {
+//                this.client.commitTrans();
+//            }
+//        }
     }
 
     /**
@@ -1117,7 +1119,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             return rows;
         } catch (Exception e) {
             this.msg = "Unable to deleting common contact identified as: " + contact.getContactId();
-            throw new DatabaseException(this.msg, e);
+            throw new ContactUpdateDaoException(this.msg, e);
         }
 
     }
@@ -1140,7 +1142,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         } catch (Exception e) {
             this.msg = "Error occurred deleting assoicated address records from the address table for personal contact, "
                     + contactId;
-            throw new DatabaseException(this.msg, e);
+            throw new ContactUpdateDaoException(this.msg, e);
         }
 
         Person p = new Person();
@@ -1149,7 +1151,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             return rows += this.client.deleteRow(p);
         } catch (Exception e) {
             this.msg = "Error occurred deleting contact from the person table, " + contactId;
-            throw new DatabaseException(this.msg, e);
+            throw new ContactUpdateDaoException(this.msg, e);
         }
     }
 
@@ -1171,7 +1173,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         } catch (Exception e) {
             this.msg = "Error occurred deleting assoicated address records from the address table for business contact, "
                     + contactId;
-            throw new DatabaseException(this.msg, e);
+            throw new ContactUpdateDaoException(this.msg, e);
         }
 
         Business b = new Business();
@@ -1180,7 +1182,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
             return rows += this.client.deleteRow(b);
         } catch (Exception e) {
             this.msg = "Error occurred deleting contact from the business table, " + contactId;
-            throw new DatabaseException(this.msg, e);
+            throw new ContactUpdateDaoException(this.msg, e);
         }
     }
 
