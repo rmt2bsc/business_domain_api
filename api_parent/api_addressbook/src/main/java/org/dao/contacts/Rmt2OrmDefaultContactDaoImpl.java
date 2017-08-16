@@ -342,7 +342,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         List<VwBusinessAddress> results = null;
         try {
             results = this.client.retrieveList(criteria);
-            if (results == null) {
+            if (results == null || results.isEmpty()) {
                 return null;
             }
         } catch (DatabaseException e) {
