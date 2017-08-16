@@ -3,7 +3,6 @@ package org.modules.transaction;
 import java.util.List;
 
 import org.AccountingConst.SubsidiaryType;
-import org.dao.subsidiary.SubsidiaryDaoException;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -253,7 +252,7 @@ public interface XactApi extends TransactionApi {
      * @param subsidiaryId
      *            the unique id to use to lookup the subsidiary
      * @return an instance of {@link SubsidiaryType}
-     * @throws SubsidiaryDaoException
+     * @throws XactApiException
      */
-    SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws SubsidiaryDaoException;
+    SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws XactApiException;
 }
