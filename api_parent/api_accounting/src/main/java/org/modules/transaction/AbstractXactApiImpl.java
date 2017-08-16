@@ -963,7 +963,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *            {@link XactDto}.
      */
     private void reverse(XactDto xact) {
-        xact.setXactSubtypeId(XactConst.XACT_TYPE_REVERSE);
+        xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         xact.setXactAmount(xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         String reason1 = "Reversed Transaction " + xact.getXactId();
         String reason2 = (xact.getXactReason() == null ? "" : " "
@@ -1170,7 +1170,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * 
      * @param subsidiaryId
      *            the id of the subsidiary
-     * @return {@link SubsidiaryType}
+     * @return {@link SubsidiaryType} when the creditor or customer is found.  
+     *            Otherwise, null is returned.
      * @throws SubsidiaryDaoException
      */
     public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId)
@@ -1227,7 +1228,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     /**
      * Determines if <i>xact</i> can modified or adjusted.
      * <p>
-     * Typical transaction typess would be reversals, cancellations, and
+     * Typical transaction types would be reversals, cancellations, and
      * returns.
      * 
      * @param xact
@@ -1278,7 +1279,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             throw new XactApiException(
                     "The finalization of transaction failed due to invalid transaction type id");
         }
-        xact.setXactSubtypeId(XactConst.XACT_TYPE_FINAL);
+        xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
 
         XactDao dao = this.getXactDao();
         dao.setDaoUser(this.getApiUser());

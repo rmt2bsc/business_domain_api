@@ -1221,7 +1221,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             // dao.beginTrans();
             XactDto rc = this.cancelSalesOrder(salesOrderId,
-                    XactConst.XACT_TYPE_CANCEL);
+                    XactConst.XACT_SUBTYPE_CANCEL);
 
             // Change sales order status to cancelled
             this.changeSalesOrderStatus(salesOrderId,
@@ -1301,7 +1301,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                     * XactConst.REVERSE_MULTIPLIER);
             xact.setXactSubtypeId(xactTypeId);
             switch (xactTypeId) {
-                case XactConst.XACT_TYPE_CANCEL:
+                case XactConst.XACT_SUBTYPE_CANCEL:
                     xact.setXactReason("Cancelled Sales Order "
                             + so.getSalesOrderId());
                     break;
