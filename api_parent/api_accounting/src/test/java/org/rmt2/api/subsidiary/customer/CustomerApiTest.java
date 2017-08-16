@@ -878,7 +878,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     }
 
     @Test
-    public void testUpdateExistingCreditorWhereCustomerNotFound() {
+    public void testUpdateExistingCustomerWhereCustomerNotFound() {
         Customer mockCustomerSubsidiaryCriteria = new Customer();
         mockCustomerSubsidiaryCriteria.setCustomerId(200);
         VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
@@ -899,7 +899,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     }
     
     @Test
-    public void testUpdateExistingCustomerWithInvalidCreditorObject() {
+    public void testUpdateExistingCustomerWithInvalidCustomerObject() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
