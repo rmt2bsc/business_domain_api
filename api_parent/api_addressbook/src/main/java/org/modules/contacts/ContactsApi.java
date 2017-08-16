@@ -2,7 +2,6 @@ package org.modules.contacts;
 
 import java.util.List;
 
-import org.dao.contacts.ContactUpdateDaoException;
 import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
 
@@ -90,9 +89,9 @@ public interface ContactsApi extends TransactionApi {
      * @return an int value representing either the unique identifier of the
      *         contact inserted, or the total number of rows effected by the
      *         contact update operation.
-     * @throws ContactUpdateDaoException
+     * @throws ContactsApiException
      */
-    int updateContact(ContactDto contact) throws ContactUpdateDaoException;
+    int updateContact(ContactDto contact) throws ContactsApiException;
 
     /**
      * Deletes contact object.
@@ -110,7 +109,7 @@ public interface ContactsApi extends TransactionApi {
      *         when the total rows effected equals 3, this means that one
      *         contact and two contact addresses were deleted.
      * 
-     * @throws ContactUpdateDaoException
+     * @throws ContactsApiException
      */
-    int deleteContact(ContactDto contact) throws ContactUpdateDaoException;
+    int deleteContact(ContactDto contact) throws ContactsApiException;
 }
