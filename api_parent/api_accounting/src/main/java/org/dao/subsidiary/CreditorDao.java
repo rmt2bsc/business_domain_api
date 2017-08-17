@@ -14,6 +14,17 @@ import org.dto.CreditorTypeDto;
 public interface CreditorDao extends SubsidiaryDao {
 
     /**
+     * Fetches a single creditor record by creditor id.
+     * 
+     * @param creditorId
+     *         The unique identifier of the creditor record.
+     * @return an instance of {@link CreditorDto} or null when not found.
+     * @throws CreditorDaoException
+     */
+    CreditorDto fetch(int creditorId) throws CreditorDaoException;
+    
+    
+    /**
      * Fetches one or more creditor records based on the supplied selection
      * criteria.
      * 

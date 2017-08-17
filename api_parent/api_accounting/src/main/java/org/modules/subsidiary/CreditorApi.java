@@ -15,6 +15,17 @@ import org.dto.CreditorXactHistoryDto;
  */
 public interface CreditorApi extends SubsidiaryApi {
     /**
+     *  Fetch the creditor information using creditor id.
+     * <p>
+     * Business contact data is included in the results set.
+     * 
+     * @param customerId
+     * @return An instance of {@link CreditorDto} or null when no data is found.
+     * @throws CreditorApiException
+     */
+    CreditorDto get(Integer creditorId) throws CreditorApiException;
+    
+    /**
      * Fetch creditor object using its id.
      * 
      * @param id

@@ -13,6 +13,16 @@ import org.dto.CustomerDto;
 public interface CustomerDao extends SubsidiaryDao {
 
     /**
+     * Fetches a single customer record by customer id.
+     * 
+     * @param customerId
+     *         The unique identifier of the customer record.
+     * @return an instance of {@link CustomerDto} or null when not found.
+     * @throws CustomerDaoException
+     */
+    CustomerDto fetch(int customerId) throws CustomerDaoException;
+    
+    /**
      * Fetches one or more customer records based on the supplied selection
      * criteria.
      * 

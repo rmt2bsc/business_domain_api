@@ -47,6 +47,24 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         return;
     }
 
+    @Override
+    public CustomerDto fetch(int customerId) throws CustomerDaoException {
+        // Retrieve customer data
+        Customer criteria = new Customer();
+        criteria.setCustomerId(customerId);
+        try {
+            Customer results = (Customer) this.client.retrieveObject(criteria);
+            if (results == null) {
+                return null;
+            }
+            // Package data
+            CustomerDto dto = Rmt2SubsidiaryDtoFactory.createCustomerInstance(results, null);
+            return dto;
+        } catch (DatabaseException e) {
+            throw new CustomerDaoException(e);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -273,5 +291,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             throw new CustomerDaoException(e);
         }
     }
+
+    
 
 }

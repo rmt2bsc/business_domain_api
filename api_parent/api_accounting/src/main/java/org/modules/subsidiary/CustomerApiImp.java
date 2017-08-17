@@ -82,6 +82,29 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         this.daoFact = new SubsidiaryDaoFactory();
     }
 
+    @Override
+    public CustomerDto get(Integer customerId) throws CustomerApiException {
+        try {
+            Verifier.verifyNotNull(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(customerId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer Id must be greater than zero", e);
+        }
+        try {
+            return dao.fetch(customerId);
+        } catch (Exception e) {
+            this.msg = "Error retrieving single customer by customer id, " + customerId;
+            logger.error(this.msg, e);
+            throw new CustomerApiException(e);
+        }
+    }
+    
     /**
      * Retireve a list of customer subsidiary accounts combined with common contact data. 
      * <p>

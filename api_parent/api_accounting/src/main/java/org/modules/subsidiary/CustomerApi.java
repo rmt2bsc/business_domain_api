@@ -55,7 +55,18 @@ public interface CustomerApi extends SubsidiaryApi {
     List<CustomerDto> getByAcctNo(String acctNo) throws CustomerApiException;
 
     /**
-     * Fetch the customer/business contact information using customer criteria
+     *  Fetch the customer information using customer id.
+     * <p>
+     * Business contact data is included in the results set.
+     * 
+     * @param customerId
+     * @return An instance of {@link CustomerDto} or null when no data is found.
+     * @throws CustomerApiException
+     */
+    CustomerDto get(Integer customerId) throws CustomerApiException;
+    
+    /**
+     * Fetch the customer information using customer idcriteria
      * instance as the source of selection criteria.
      * 
      * @param criteria

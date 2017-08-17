@@ -83,6 +83,29 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         this.daoFact = new SubsidiaryDaoFactory();
     }
 
+    @Override
+    public CreditorDto get(Integer creditorId) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id must be greater than zero", e);
+        }
+        try {
+            return dao.fetch(creditorId);
+        } catch (Exception e) {
+            this.msg = "Error retrieving single creditor by creditor id, " + creditorId;
+            logger.error(this.msg, e);
+            throw new CreditorApiException(e);
+        }
+    }
+    
     /**
      * Retireve a list of creditor subsidiary accounts combined with common contact data. 
      * <p>
