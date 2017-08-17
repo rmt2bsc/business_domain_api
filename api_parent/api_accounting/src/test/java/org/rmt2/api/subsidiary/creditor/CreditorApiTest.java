@@ -111,8 +111,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         Creditor mockCriteria = new Creditor();
         mockCriteria.setCreditorId(200);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                            .thenReturn(this.mockCreditorFetchSingleResponse);
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria)))
+                            .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single creditor test case setup failed");
@@ -120,16 +120,20 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
 
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
-        criteria.setCreditorId(200);
-        List<CreditorDto> results = null;
+        CreditorDto results = null;
         try {
-            results = api.get(criteria);
+            results = api.get(200);
         } catch (CreditorApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(results.getEntityId(), (200));
+        Assert.assertEquals(results.getCreditorId(), (200));
+        Assert.assertEquals(results.getContactId(), (1351));
+        Assert.assertEquals(results.getAccountNo(), "C1234589");
+        Assert.assertEquals(results.getExtAccountNumber(), "123-456-789");
+        Assert.assertNull(results.getEntityName());
+        Assert.assertNull(results.getContactName());
     }
     
     @Test
@@ -138,7 +142,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         mockCriteria.setCreditorId(999);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                            .thenReturn(this.mockCreditorNotFoundFetchResponse);
+                            .thenReturn(null);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single creditor test case setup failed");
@@ -146,11 +150,9 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
 
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
-        criteria.setCreditorId(999);
-        List<CreditorDto> results = null;
+        CreditorDto results = null;
         try {
-            results = api.get(criteria);
+            results = api.get(999);
         } catch (CreditorApiException e) {
             e.printStackTrace();
         }
@@ -158,11 +160,50 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
     }
 
     @Test
+    public void testFetchSingleWithNullCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.get((Integer) null);
+            Assert.fail("Expected exception due to null selection criteria object");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleWithZeroCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.get(0);
+            Assert.fail("Expected exception due to input argument is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleWithNegativeCreditorId() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.get(-100);
+            Assert.fail("Expected exception due to input argument is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testFetchWithNullCriteriaObject() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         try {
-            api.get(null);
+            api.get((CreditorDto) null);
             Assert.fail("Expected exception due to null selection criteria object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);

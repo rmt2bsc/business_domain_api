@@ -113,8 +113,8 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         Customer mockCriteria = new Customer();
         mockCriteria.setCustomerId(200);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                            .thenReturn(this.mockCustomerFetchSingleResponse);
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria)))
+                            .thenReturn(this.mockCustomerFetchSingleResponse.get(0));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single customer test case setup failed");
@@ -122,17 +122,23 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
 
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
-        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
-        List<CustomerDto> results = null;
-        criteria.setCustomerId(200);
+        CustomerDto results = null;
         try {
-            results = api.get(criteria);
+            results = api.get(200);
         } catch (CustomerApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(results.getEntityId(), 200);
+        Assert.assertEquals(results.getCustomerId(), 200);
+        Assert.assertEquals(results.getContactId(), 1351);
+        Assert.assertEquals(results.getPersonId(), 0);
+        Assert.assertEquals(results.getAccountNo(), "C1234589");
+        Assert.assertEquals(results.getDescription(), "Customer 1");
+        Assert.assertEquals(results.getEntityName(), "Customer 1");
+        Assert.assertNull(results.getContactName());
     }
+    
     
     @Test
     public void testFetchSingleNotFound() {
@@ -140,7 +146,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         mockCriteria.setCustomerId(999);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                            .thenReturn(this.mockCustomerNotFoundFetchResponse);
+                            .thenReturn(null);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single customer test case setup failed");
@@ -148,11 +154,9 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
 
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
-        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
-        criteria.setCustomerId(999);
-        List<CustomerDto> results = null;
+        CustomerDto results = null;
         try {
-            results = api.get(criteria);
+            results = api.get(999);
         } catch (CustomerApiException e) {
             e.printStackTrace();
         }
@@ -160,11 +164,50 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     }
 
     @Test
+    public void testFetchSingleWithNullInput() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.get((Integer) null);
+            Assert.fail("Expected exception due to null input value");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleWithZeroInput() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.get(0);
+            Assert.fail("Expected exception due to zero input value");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testFetchSingleWithNegativeInput() {
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        try {
+            api.get(-100);
+            Assert.fail("Expected exception due to zero input value");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testFetchWithNullCriteriaObject() {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
-            api.get(null);
+            api.get((CustomerDto) null);
             Assert.fail("Expected exception due to null selection criteria object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
