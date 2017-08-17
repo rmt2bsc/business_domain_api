@@ -33,6 +33,7 @@ import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.subsidiary.SubsidiaryException;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
 import com.util.RMT2Money;
@@ -1077,7 +1078,15 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         catch (VerifyException e) {
             this.msg = "Subsidiary id is required";
             logger.error(this.msg);
-            throw new XactApiException(this.msg, e);           
+            throw new InvalidDataException(this.msg, e);           
+        }
+        try {
+            Verifier.verifyPositive(subsidiaryId);
+        }
+        catch (VerifyException e) {
+            this.msg = "Subsidiary id must be a value greater than zero";
+            logger.error(this.msg);
+            throw new InvalidDataException(this.msg, e);           
         }
         try {
             Verifier.verifyNotNull(xactId);
@@ -1085,7 +1094,23 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         catch (VerifyException e) {
             this.msg = "Transaction id is required";
             logger.error(this.msg);
-            throw new XactApiException(this.msg, e);           
+            throw new InvalidDataException(this.msg, e);           
+        }
+        try {
+            Verifier.verifyPositive(xactId);
+        }
+        catch (VerifyException e) {
+            this.msg = "Transaction id must be a value greater than zero";
+            logger.error(this.msg);
+            throw new InvalidDataException(this.msg, e);           
+        }
+        try {
+            Verifier.verifyNotNull(amount);
+        }
+        catch (VerifyException e) {
+            this.msg = "Transaction amount is required";
+            logger.error(this.msg);
+            throw new InvalidDataException(this.msg, e);           
         }
         
         int rc = 0;
@@ -1099,7 +1124,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         catch (VerifyException e) {
             this.msg = "Subsidiary id passed is invalid.  Must be SubsidiaryType.CREDITOR or SubsidiaryType.CUSTOMER";
             logger.error(this.msg);
-            throw new XactApiException(this.msg, e);           
+            throw new NotFoundException(this.msg, e);           
         }
         // validate transaction id
         XactDto xactDto = this.getXactById(xactId);
@@ -1112,7 +1137,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
                     + ", due to transaction id is not valid and/or does not exist: "
                     + xactId;
             logger.error(this.msg);
-            throw new XactApiException(this.msg, e);   
+            throw new NotFoundException(this.msg, e);   
         }
         
         XactDao xactDao = this.getXactDao();
@@ -1233,7 +1258,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(xactDao);
-        CreditorDto dto = (CreditorDto) api.getByCreditorId(creditorId);
+        CreditorDto dto = api.get(creditorId);
         return dto;
     }
 
@@ -1247,7 +1272,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(xactDao);
-        CustomerDto dto = (CustomerDto) api.getByCustomerId(customerId);
+        CustomerDto dto = api.get(customerId);
         return dto;
     }
 
