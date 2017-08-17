@@ -73,6 +73,24 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         }
     }
 
+    @Override
+    public CreditorDto fetch(int creditorId) throws CustomerDaoException {
+        // Retrieve Creditor data
+        Creditor criteria = new Creditor();
+        criteria.setCreditorId(creditorId);
+        try {
+            Creditor results = (Creditor) this.client.retrieveObject(criteria);
+            if (results == null) {
+                return null;
+            }
+            // Package data
+            CreditorDto dto = Rmt2SubsidiaryDtoFactory.createCreditorInstance(results, null);
+            return dto;
+        } catch (DatabaseException e) {
+            throw new CustomerDaoException(e);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 
