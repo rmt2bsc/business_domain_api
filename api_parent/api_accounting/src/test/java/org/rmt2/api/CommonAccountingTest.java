@@ -1,10 +1,7 @@
 package org.rmt2.api;
 
-import static org.junit.Assert.fail;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import testcases.StandAloneApiTest;
 
@@ -40,8 +37,8 @@ public class CommonAccountingTest extends StandAloneApiTest {
         return;
     }
 
-    @Test
-    public void test() {
-        fail("Not yet implemented");
-    }
+//    @Test
+//    public void test() {
+//        fail("Not yet implemented");
+//    }
 }
