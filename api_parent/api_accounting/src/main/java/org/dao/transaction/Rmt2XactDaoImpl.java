@@ -398,6 +398,15 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
         return xactId;
     }
 
+    /**
+     * Updates an existing transaction entry.
+     * 
+     * @param xact
+     *            The target transaction.
+     * @return total number of rows effected.
+     * @throws XactDaoException
+     */
+    @Override
     public int maintain(XactDto xact) throws XactDaoException {
         if (xact.getXactId() <= 0) {
             this.msg = "Error occurred updating transaction item...transaction id must be greater than zero";
