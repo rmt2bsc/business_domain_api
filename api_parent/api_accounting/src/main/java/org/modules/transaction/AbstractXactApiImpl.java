@@ -570,7 +570,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      */
     @Override
     public List<XactTypeItemActivityDto> getXactItems() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -581,8 +580,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      */
     @Override
     public void setXactItems(List<XactTypeItemActivityDto> value) {
-        // TODO Auto-generated method stub
-
+        return;
     }
 
     /*
@@ -1297,22 +1295,19 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     /**
      * Determines if <i>xact</i> can be modified or adjusted.
      * <p>
-     * Typical transaction types which cannot be modified are 
-     * <i>reversals</i>, <i>cancellations</i>, and <i>returns</i>.
+     * Typical transaction sub types which cannot be modified are 
+     * <i>reversals</i>, <i>cancellations</i>, <i>returns</i>, and <i>finalized</i>.
      * 
      * @param xact
      *            The transaction that is to be managed
      * @return true indicating that the transaction is eligible to be changed,
      *         and false indicating change is not allowd.
-     * @throws XactException
+     * @throws XactApiException
      *             when xact is invalid or null.
      */
     @Override
     public boolean isModifiable(XactDto xact) throws XactApiException {
-        if (xact == null) {
-            throw new XactApiException(
-                    "Transaction modifyable check failed to do transaction object is null");
-        }
+        this.preValidate(xact);
         return xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_NOT_ASSIGNED;
     }
 
