@@ -1,5 +1,7 @@
 package org.dto.adapter.orm.transaction;
 
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.dto.XactTypeItemActivityDto;
@@ -203,6 +205,76 @@ class XactTypeItemActivityRmt2OrmAdapter extends XactTypeItemRmt2OrmAdapter
     @Override
     public double getActivityAmount() {
         return this.xtia.getAmount();
+    }
+
+    @Override
+    public void setXactItemId(int value) {
+        this.xtia.setXactItemId(value);
+    }
+
+    @Override
+    public int getXactItemId() {
+        return this.xtia.getXactItemId();
+    }
+
+    @Override
+    public void setXactId(int value) {
+       this.xtia.setXactId(value);
+    }
+
+    @Override
+    public int getXactId() {
+        return this.xtia.getXactId();
+    }
+
+    @Override
+    public String getUpdateUserId() {
+        return this.xtia.getUserId();
+    }
+
+    @Override
+    public void setUpdateUserId(String updateUserId) {
+        this.xtia.setUserId(updateUserId);
+    }
+
+    @Override
+    public Date getDateCreated() {
+        return this.xtia.getDateCreated();
+    }
+
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.xtia.setDateCreated(dateCreated);
+    }
+
+    @Override
+    public Date getDateUpdated() {
+        return this.xtia.getDateUpdated();
+    }
+
+    @Override
+    public void setDateUpdated(Date dateUpdated) {
+        this.xtia.setDateUpdated(dateUpdated);
+    }
+
+    @Override
+    public String getIpCreated() {
+        return this.xtia.getIpCreated();
+    }
+
+    @Override
+    public void setIpCreated(String ipCreated) {
+        this.xtia.setIpCreated(ipCreated);
+    }
+
+    @Override
+    public String getIpUpdated() {
+        return this.xtia.getIpUpdated();
+    }
+
+    @Override
+    public void setIpUpdated(String ipUpdated) {
+        this.xtia.setIpUpdated(ipUpdated);
     }
 
 }
