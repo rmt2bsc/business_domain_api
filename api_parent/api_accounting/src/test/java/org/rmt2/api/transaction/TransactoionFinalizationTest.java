@@ -141,27 +141,6 @@ public class TransactoionFinalizationTest extends TransactionApiTestData {
     }
     
     @Test
-    public void testXactIdEqaulZeroInput() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
-        
-        // Build mock transaction object to be updated
-        VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
-        vwXact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
-        vwXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_CANCEL);
-        XactDto mockXact = Rmt2XactDtoFactory.createXactInstance(vwXact);
-        mockXact.setXactId(0);
-        try {
-            api.finalizeXact(mockXact);
-            Assert.fail("Expected excpetion due to Xact.xactId is zero");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof XactApiException);
-            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
-    
-    @Test
     public void testXactIdNegativeInput() {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
