@@ -500,8 +500,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      *         to indicate the number of items successfully processed.
      * @throws XactDaoException
      */
-    private int insert(Xact xact, List<XactTypeItemActivity> xactItems)
-            throws XactDaoException {
+    private int insert(Xact xact, List<XactTypeItemActivity> xactItems) throws XactDaoException {
         int totalItems = 0;
         int succesCount = 0;
         double totalItemAmount = 0;
