@@ -5,6 +5,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
@@ -19,12 +21,15 @@ import org.junit.runner.RunWith;
 import org.modules.transaction.XactApi;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactApiFactory;
+import org.modules.transaction.XactConst;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2Date;
 
 /**
  * Tests the creation of customer activity transactions.
@@ -116,8 +121,12 @@ public class CustomerSubsidiaryActivityTest extends TransactionApiTestData {
         VwXactList mockXactCriteria = new VwXactList();
         mockXactCriteria.setId(111111);
         try {
+            List<VwXactList> list = new ArrayList<VwXactList>();
+            VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, XactConst.XACT_TYPE_CASHPAY, 3333,
+                    RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
+            list.add(o);
             when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
-                            .thenReturn(this.mockXactWithConfirmNoFetchSingleResponse);
+                            .thenReturn(list);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single xact test case setup failed");
