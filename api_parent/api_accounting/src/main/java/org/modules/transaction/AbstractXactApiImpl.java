@@ -1070,7 +1070,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @throws XactApiException
      */
     @Override
-    public int createSubsidiaryTransaction(Integer subsidiaryId, Integer xactId, Double amount) 
+    public int createSubsidiaryActivity(Integer subsidiaryId, Integer xactId, Double amount) 
             throws XactApiException {
         try {
             Verifier.verifyNotNull(subsidiaryId);

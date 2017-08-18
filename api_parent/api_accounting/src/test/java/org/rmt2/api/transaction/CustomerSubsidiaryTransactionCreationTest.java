@@ -91,7 +91,7 @@ public class CustomerSubsidiaryTransactionCreationTest extends TransactionApiTes
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         int rc = 0;
         try {
-            rc = api.createSubsidiaryTransaction(200, 111111, 111.11);
+            rc = api.createSubsidiaryActivity(200, 111111, 111.11);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -133,7 +133,7 @@ public class CustomerSubsidiaryTransactionCreationTest extends TransactionApiTes
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(200, 111111, 111.11);
+            api.createSubsidiaryActivity(200, 111111, 111.11);
             Assert.fail("Expected excpetion due to Customer Activity DAO insert method failed");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);

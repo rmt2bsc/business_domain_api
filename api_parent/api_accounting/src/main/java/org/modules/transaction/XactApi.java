@@ -209,7 +209,7 @@ public interface XactApi extends TransactionApi {
     int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException;
 
        /**
-     * Creates transacction activity for a particular subsidiary.
+     * Creates transaction activity for a particular subsidiary.
      * 
      * @param subsidiaryId
      *            The id of the subsidiary account
@@ -220,7 +220,7 @@ public interface XactApi extends TransactionApi {
      * @return The new unique identifier of the subsidiary transaction.
      * @throws XactApiException
      */
-    int createSubsidiaryTransaction(Integer subsidiaryId, Integer xactId, Double amount)
+    int createSubsidiaryActivity(Integer subsidiaryId, Integer xactId, Double amount)
             throws XactApiException;
 
     /**

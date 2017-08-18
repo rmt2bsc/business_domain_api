@@ -201,7 +201,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
         try {
             // Create creditor activity (transaction history) regarding
             // the disbursement.
-            super.createSubsidiaryTransaction(creditorId, xactId, xactAmount);
+            super.createSubsidiaryActivity(creditorId, xactId, xactAmount);
         } catch (XactApiException e) {
             throw new DisbursementsApiException(e);
         }

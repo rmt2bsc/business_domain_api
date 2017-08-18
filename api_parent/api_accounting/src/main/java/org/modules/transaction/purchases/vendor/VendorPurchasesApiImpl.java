@@ -1408,7 +1408,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             xact = this.getXactById(po.getXactId());
             this.reverse(xact, null);
             // Associate transaction with creditor activity
-            this.createSubsidiaryTransaction(po.getCreditorId(),
+            this.createSubsidiaryActivity(po.getCreditorId(),
                     xact.getXactId(), xact.getXactAmount());
         } catch (XactApiException e) {
             throw new VendorPurchasesApiException(e);
@@ -1541,7 +1541,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             xactId = this.update(xact, null);
 
             // Associate transaction with creditor
-            this.createSubsidiaryTransaction(po.getCreditorId(), xactId,
+            this.createSubsidiaryActivity(po.getCreditorId(), xactId,
                     poTotal);
 
             // Associate transaction with PO
@@ -1591,7 +1591,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             try {
                 xact = this.getXactById(po.getXactId());
                 this.reverse(xact, null);
-                this.createSubsidiaryTransaction(po.getCreditorId(),
+                this.createSubsidiaryActivity(po.getCreditorId(),
                         xact.getXactId(), xact.getXactAmount());
             } catch (XactApiException e) {
                 throw new VendorPurchasesApiException(e);

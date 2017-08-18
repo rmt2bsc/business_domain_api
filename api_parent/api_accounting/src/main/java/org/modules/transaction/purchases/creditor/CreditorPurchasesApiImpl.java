@@ -366,7 +366,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
         }
         // Create the subsidiary entry for the creditor purchase transaction.
         try {
-            super.createSubsidiaryTransaction(xact.getCreditorId(),
+            super.createSubsidiaryActivity(xact.getCreditorId(),
                     xact.getXactId(), xact.getXactAmount());
             return xactId;
         } catch (XactApiException e) {

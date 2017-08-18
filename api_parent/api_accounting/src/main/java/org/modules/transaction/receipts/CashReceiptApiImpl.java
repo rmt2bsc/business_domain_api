@@ -195,7 +195,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
             xactId = this.update(xact, null);
             // Ensure that the customer activity is posted as a negative amount.
             xactAmount = xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER;
-            super.createSubsidiaryTransaction(customerId, xactId, xactAmount);
+            super.createSubsidiaryActivity(customerId, xactId, xactAmount);
             return xactId;
         } catch (XactApiException e) {
             throw new CashReceiptApiException(e);
@@ -233,7 +233,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
             // Apply a reversal multiplier on the revised base transaction
             // amount which will be used to offset the customer activity.
             xactAmount = xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER;
-            super.createSubsidiaryTransaction(customerId, xactId, xactAmount);
+            super.createSubsidiaryActivity(customerId, xactId, xactAmount);
             return xactId;
         } catch (XactApiException e) {
             throw new CashReceiptApiException(e);

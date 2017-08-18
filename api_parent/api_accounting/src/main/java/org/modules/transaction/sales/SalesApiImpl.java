@@ -974,7 +974,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
             // Create customer activity (transaction history) regarding sale
             // order transaction.
-            super.createSubsidiaryTransaction(order.getCustomerId(), xactId,
+            super.createSubsidiaryActivity(order.getCustomerId(), xactId,
                     revisedXactAmount);
         } catch (Exception e) {
             this.msg = "Sales order transaction creation failed";
@@ -1322,7 +1322,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         // order cancellation transaction. Basically this is a transaction
         // reversal.
         try {
-            super.createSubsidiaryTransaction(so.getCustomerId(), newXactId,
+            super.createSubsidiaryActivity(so.getCustomerId(), newXactId,
                     xact.getXactAmount());
         } catch (XactApiException e) {
             this.msg = "Problem cancelling sales order.  Unable to create customer transaction history for the cancellation transaction associated with the sales order invoice record";

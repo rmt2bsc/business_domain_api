@@ -58,7 +58,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(null, 111111, 111.11);
+            api.createSubsidiaryActivity(null, 111111, 111.11);
             Assert.fail("Expected an exception due to subsidiary id is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -71,7 +71,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(200, null, 111.11);
+            api.createSubsidiaryActivity(200, null, 111.11);
             Assert.fail("Expected an exception due to xact id is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -84,7 +84,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(200, 111111, null);
+            api.createSubsidiaryActivity(200, 111111, null);
             Assert.fail("Expected an exception due to amount id is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -97,7 +97,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(0, 111111, 111.11);
+            api.createSubsidiaryActivity(0, 111111, 111.11);
             Assert.fail("Expected an exception due to subsidiary id is zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -110,7 +110,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(200, 0, 111.11);
+            api.createSubsidiaryActivity(200, 0, 111.11);
             Assert.fail("Expected an exception due to xact id is zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -123,7 +123,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(-100, 111111, 111.11);
+            api.createSubsidiaryActivity(-100, 111111, 111.11);
             Assert.fail("Expected an exception due to subsidiary id is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -136,7 +136,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(200, -111111, 111.11);
+            api.createSubsidiaryActivity(200, -111111, 111.11);
             Assert.fail("Expected an exception due to xact id is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -151,7 +151,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         try {
             // This will work without stubbing any of the DAO fetch methods 
             // used to verfiy the existence of the customer or creditor.
-            api.createSubsidiaryTransaction(200, 111111, 111.11);
+            api.createSubsidiaryActivity(200, 111111, 111.11);
             Assert.fail("Expected an exception due to subsidiary type could not be determined");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof NotFoundException);
@@ -186,7 +186,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(200, 111111, 111.11);
+            api.createSubsidiaryActivity(200, 111111, 111.11);
             Assert.fail("Expected an exception due to Xact DAO fetch method errored");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);
@@ -221,7 +221,7 @@ public class SubsidiaryTransactionCreationValidationTest extends TransactionApiT
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryTransaction(200, 222222, 111.11);
+            api.createSubsidiaryActivity(200, 222222, 111.11);
             Assert.fail("Expected an exception due to Xact does not exists");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof NotFoundException);
