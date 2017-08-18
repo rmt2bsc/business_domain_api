@@ -695,8 +695,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     }
 
     /**
-     * Validates the base of the transaction. The following validations must be
-     * satified:
+     * Validates the base of the transaction that already exist for updating. 
+     * <p>
+     * The following validations must be satified:
      * <ul>
      * <li>Base transaction object is valid</li>
      * <li>Base transaction type id is greater than zero</li>
@@ -708,32 +709,49 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         // Execute custom pre validations
         this.preValidate(xact);
 
-        // Validate the Transaction Type
-        if (xact.getXactTypeId() <= 0) {
-            this.msg = "Transaction Type code must be greater than zero";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
+        try {
+            Verifier.verifyPositive(xact.getXactId());    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction id must be greater than zero", e);
+        }
+        try {
+            Verifier.verifyPositive(xact.getXactTypeId());    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction type id must be greater than zero", e);
         }
 
         // validate money expression
         String temp = String.valueOf(xact.getXactAmount());
-        try {
-            RMT2Money.validateMoney(temp);
-        } catch (InvalidDataException e) {
-            throw new XactApiException(e);
-        }
-
-        // // Validate tender id is set
-        // if (xact.getXactTenderId() <= 0) {
-        // this.msg = "Transaction tender id must be greater than zero";
-        // logger.error(this.msg);
-        // throw new XactApiException(this.msg);
-        // }
+        RMT2Money.validateMoney(temp);
 
         // Execute custom post validations
         this.postValidate(xact);
     }
 
+    /**
+     * Verifies that the said transaction is a proper candidate for finailization.
+     * <p>
+     * Aplplicable sub transaction types are: 
+     * <ul>
+     *    <li>cancellations</li>
+     *    <li>reversals</li>
+     * </ul>
+     * 
+     * @param xact
+     * @throws XactApiException
+     */
+    private void validateFinalization(XactDto xact) throws XactApiException {
+        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_REVERSE || xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_CANCEL) {
+            // This is valid
+        }
+        else {
+            throw new InvalidFinalizationAttemptException("Transaction sub type must be reversed or cancelled");
+        }
+    }
+    
+    
     /**
      * Override this method to execute custom logic before base transaction
      * validations.
@@ -1277,10 +1295,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     }
 
     /**
-     * Determines if <i>xact</i> can modified or adjusted.
+     * Determines if <i>xact</i> can be modified or adjusted.
      * <p>
-     * Typical transaction types would be reversals, cancellations, and
-     * returns.
+     * Typical transaction types which cannot be modified are 
+     * <i>reversals</i>, <i>cancellations</i>, and <i>returns</i>.
      * 
      * @param xact
      *            The transaction that is to be managed
@@ -1318,18 +1336,20 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         try {
             this.validate(xact);
         } catch (Exception e) {
-            this.msg = "Common transaction update failed validation checks";
+            this.msg = "Finalization of transaction failed due to common validation error";
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
-        if (xact.getXactId() <= 0) {
-            throw new XactApiException(
-                    "The finalization of transaction failed due to invalid transaction id");
+        
+        // Check if okay to finailze.
+        try {
+            this.validateFinalization(xact);
+        } catch (Exception e) {
+            this.msg = "Finalization of transaction failed due to transaction sub type incompatibilities";
+            logger.error(this.msg, e);
+            throw new XactApiException(this.msg, e);
         }
-        if (xact.getXactTypeId() <= 0) {
-            throw new XactApiException(
-                    "The finalization of transaction failed due to invalid transaction type id");
-        }
+        
         xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
 
         XactDao dao = this.getXactDao();
