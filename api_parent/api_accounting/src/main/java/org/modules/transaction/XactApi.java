@@ -233,7 +233,7 @@ public interface XactApi extends TransactionApi {
      * @throws XactApiException
      *             when xact is invalid or null.
      */
-    boolean isTransModifiable(XactDto xact) throws XactApiException;
+    boolean isModifiable(XactDto xact) throws XactApiException;
 
     /**
      * This method flags the transaction, <i>xact</i>, as finalized.

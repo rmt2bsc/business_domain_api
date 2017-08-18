@@ -221,7 +221,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
 
         try {
             // Cannot reverse payment transaction that has been finalized
-            if (!this.isTransModifiable(xact)) {
+            if (!this.isModifiable(xact)) {
                 msg = "Customer Payment cannot be reversed since it is already finalized";
                 logger.error(msg);
                 throw new CashReceiptApiException(msg);

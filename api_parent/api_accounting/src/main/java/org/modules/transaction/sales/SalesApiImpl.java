@@ -1271,7 +1271,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         XactDto xact;
         try {
             xact = this.getXactById(si.getXactId());
-            if (!super.isTransModifiable(xact)) {
+            if (!super.isModifiable(xact)) {
                 this.msg = "Sales Order cannot be cancelled, because its associated transaction has been finalized";
                 throw new SalesApiException(this.msg);
             }

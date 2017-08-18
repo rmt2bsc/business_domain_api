@@ -1308,12 +1308,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *             when xact is invalid or null.
      */
     @Override
-    public boolean isTransModifiable(XactDto xact) throws XactApiException {
+    public boolean isModifiable(XactDto xact) throws XactApiException {
         if (xact == null) {
             throw new XactApiException(
                     "Transaction modifyable check failed to do transaction object is null");
         }
-        return xact.getXactSubtypeId() == 0;
+        return xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_NOT_ASSIGNED;
     }
 
     /**

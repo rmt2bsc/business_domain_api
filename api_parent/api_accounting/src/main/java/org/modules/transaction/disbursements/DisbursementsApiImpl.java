@@ -249,7 +249,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
         int xactId = 0;
         try {
             // Cannot reverse payment transaction that has been finalized
-            if (!this.isTransModifiable(xact)) {
+            if (!this.isModifiable(xact)) {
                 msg = "Cash Disbursement cannot be reversed since it is already finalized";
                 logger.error(msg);
                 throw new DisbursementsApiException(msg);
