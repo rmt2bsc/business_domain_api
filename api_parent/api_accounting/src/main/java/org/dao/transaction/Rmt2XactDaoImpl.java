@@ -408,11 +408,6 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      */
     @Override
     public int maintain(XactDto xact) throws XactDaoException {
-        if (xact.getXactId() <= 0) {
-            this.msg = "Error occurred updating transaction item...transaction id must be greater than zero";
-            logger.error(this.msg);
-            throw new XactDaoException(this.msg);
-        }
         Xact ormXact = XactDaoFactory.createXact(xact);
         // Handle base transaction
         int xactId = 0;
