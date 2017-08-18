@@ -224,7 +224,7 @@ public interface XactApi extends TransactionApi {
             throws XactApiException;
 
     /**
-     * Determines if <i>xact</i> can modified or adjusted.
+     * Determines if <i>xact</i> can be modified or adjusted.
      * 
      * @param xact
      *            The transaction that is to be managed
