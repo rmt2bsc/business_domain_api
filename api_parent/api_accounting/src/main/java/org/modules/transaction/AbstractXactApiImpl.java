@@ -632,8 +632,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *            The target transaction
      */
     protected void preCreateXact(XactDto xact) {
-        java.util.Date today = new java.util.Date();
         if (xact.getXactDate() == null) {
+            java.util.Date today = new java.util.Date();
             xact.setXactDate(today);
         }
         return;
@@ -708,10 +708,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         this.preValidate(xact);
 
         try {
-            Verifier.verifyPositive(xact.getXactId());    
+            Verifier.verifyNotNegative(xact.getXactId());    
         }
         catch (VerifyException e) {
-            throw new InvalidDataException("Transaction id must be greater than zero", e);
+            throw new InvalidDataException("Transaction id cannot be negative", e);
         }
         try {
             Verifier.verifyPositive(xact.getXactTypeId());    
@@ -897,21 +897,29 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *            a List of {@link XactTypeItemActivityDto}
      * @throws XactApiException
      */
-    private void validateTransactionAmounts(XactDto xact,
-            List<XactTypeItemActivityDto> items) throws XactApiException {
+    private void validateTransactionAmounts(XactDto xact, List<XactTypeItemActivityDto> items) 
+            throws XactApiException {
         // Return to caller if transaction type item array has not been
         // initialized.
-        if (items == null) {
+        try {
+            Verifier.verifyNotNull(items);
+        }
+        catch (VerifyException e) {
             this.msg = "The list of common transaction items are invalid or null";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);            
         }
+
         // Verify that at least one item exists.
-        if (items.size() == 0) {
+        try {
+            Verifier.verifyPositive(items.size());
+        }
+        catch (VerifyException e) {
             this.msg = "A minimum of one transaction item must exist in order to process the common transaction";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);     
         }
+
         // Begin to sum each transaction type item amount.
         double totalItemAmount = 0;
         for (XactTypeItemActivityDto item : items) {
@@ -982,8 +990,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         xact.setXactAmount(xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         String reason1 = "Reversed Transaction " + xact.getXactId();
-        String reason2 = (xact.getXactReason() == null ? "" : " "
-                + xact.getXactReason());
+        String reason2 = (xact.getXactReason() == null ? "" : " " + xact.getXactReason());
         xact.setXactReason(reason1 + reason2);
         return;
     }
@@ -1002,8 +1009,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @return A List of {@link XactTypeItemActivityDto} objects that were
      *         reversed.
      */
-    private List<XactTypeItemActivityDto> reverse(
-            List<XactTypeItemActivityDto> xactItems) {
+    private List<XactTypeItemActivityDto> reverse(List<XactTypeItemActivityDto> xactItems) {
         if (xactItems == null) {
             return null;
         }
@@ -1030,8 +1036,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *            transaction item object that is to be reversed.
      */
     protected void reverse(XactTypeItemActivityDto xtia) {
-        double amount = xtia.getXactAmount() * XactConst.REVERSE_MULTIPLIER;
-        xtia.setXactAmount(amount);
+        double amount = xtia.getActivityAmount() * XactConst.REVERSE_MULTIPLIER;
+        xtia.setActivityAmount(amount);
 
         // Reset id to make it appear that this is a new entry.
         xtia.setXactTypeItemActvId(0);
@@ -1050,8 +1056,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @param xactItems
      *            Transaction items to be reversed.
      */
-    protected void preReverse(XactDto xact,
-            List<XactTypeItemActivityDto> xactItems) {
+    protected void preReverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         return;
     }
 
