@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.modules.transaction.XactApi;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactApiFactory;
+import org.modules.transaction.XactConst;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -81,8 +82,8 @@ public class TransactionApiTest extends TransactionApiTestData {
         Assert.assertNotNull(results);
         Assert.assertEquals(111111, results.getXactId());
         Assert.assertEquals("reason for transaction id " + results.getXactId(), results.getXactReason());
-        Assert.assertEquals(301, results.getXactTypeId());
-        Assert.assertEquals(3333, results.getXactSubtypeId());
+        Assert.assertEquals(XactConst.XACT_TYPE_CREDITCHARGE, results.getXactTypeId());
+        Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, results.getXactSubtypeId());
         Assert.assertEquals("2017-01-13", RMT2Date.formatDate(results.getXactDate(), "yyyy-MM-dd"));
         Assert.assertEquals(111.11, results.getXactAmount(), 0);
         Assert.assertEquals(200, results.getXactTenderId());
