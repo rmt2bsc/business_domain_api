@@ -164,6 +164,8 @@ public class XactConst {
     /***************************************************
      * Transaction Sub Types
      ***************************************************/
+    public final static int XACT_SUBTYPE_NOT_ASSIGNED = 0;
+    
     public final static int XACT_SUBTYPE_REVERSE = 999;
 
     public final static int XACT_SUBTYPE_CANCEL = 888;
