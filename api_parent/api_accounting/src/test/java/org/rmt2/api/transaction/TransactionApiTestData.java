@@ -15,6 +15,7 @@ import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
+import org.modules.transaction.XactConst;
 import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
 import org.rmt2.dao.AccountingMockDataUtility;
 
@@ -55,6 +56,7 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     protected List<VwXactList> mockXactNotFoundFetchResponse;
     protected List<VwXactList> mockXactFetchAllResponse;
     protected List<VwXactList> mockXactFetchSingleResponse;
+    protected List<VwXactList> mockXactWithConfirmNoFetchSingleResponse;
 
     protected List<XactTypeItem> mockXactTypeItemNotFoundFetchResponse;
     protected List<XactTypeItem> mockXactTypeItemFetchAllResponse;
@@ -107,6 +109,8 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         this.mockXactFetchAllResponse = this.createMockXactFetchAllsponse();
         this.mockXactFetchSingleResponse = this
                 .createMockXactSingleFetchResponse();
+        this.mockXactWithConfirmNoFetchSingleResponse = 
+                this.createMockXactSingleFetchResponse2();
         this.mockXactNotFoundFetchResponse = this
                 .createMockXactNotFoundResponse();
 
@@ -245,11 +249,20 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
 
     private List<VwXactList> createMockXactSingleFetchResponse() {
         List<VwXactList> list = new ArrayList<VwXactList>();
-        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
+        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, XactConst.XACT_TYPE_CREDITCHARGE, 3333,
                 RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
         list.add(o);
         return list;
     }
+    
+    private List<VwXactList> createMockXactSingleFetchResponse2() {
+        List<VwXactList> list = new ArrayList<VwXactList>();
+        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, XactConst.XACT_TYPE_CASHPAY, 3333,
+                RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
+        list.add(o);
+        return list;
+    }
+    
 
     private List<XactType> createMockXactTypeNotFoundResponse() {
         List<XactType> list = null;

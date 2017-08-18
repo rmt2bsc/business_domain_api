@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.VwXactList;
+import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.subsidiary.CustomerDaoException;
 import org.junit.After;
 import org.junit.Assert;
@@ -98,6 +99,58 @@ public class CustomerSubsidiaryActivityTest extends TransactionApiTestData {
         Assert.assertEquals(1, rc);
     }
 
+    @Test
+    public void testCreateCustomerTransactionAddConfirmationNumber() {
+        // Setup stub to return mock customer data
+        Customer mockCustCriteria = new Customer();
+        mockCustCriteria.setCustomerId(200);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCustCriteria)))
+                            .thenReturn(this.mockCustomerFetchSingleResponse.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single customer test case setup failed");
+        }
+
+        // Setup stub to retrieve mock transaction data.
+        VwXactList mockXactCriteria = new VwXactList();
+        mockXactCriteria.setId(111111);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
+                            .thenReturn(this.mockXactWithConfirmNoFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+        
+        // This stub test that the confirmation number is generated for applicable transaction type.
+        try {
+            when(this.mockPersistenceClient.updateRow(any(Xact.class)))
+                            .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update single xact with confirmation number test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(any(CustomerActivity.class), any(Boolean.class)))
+                            .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert customer activity case setup failed");
+        }
+        
+        XactApiFactory f = new XactApiFactory();
+        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        int rc = 0;
+        try {
+            rc = api.createSubsidiaryActivity(200, 111111, 111.11);
+        } catch (XactApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertEquals(1, rc);
+    }
+    
     @Test
     public void testActivityDaoInsertFailure() {
         // Setup stub to return mock customer data
