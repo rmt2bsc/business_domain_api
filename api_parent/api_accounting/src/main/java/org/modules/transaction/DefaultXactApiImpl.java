@@ -41,19 +41,7 @@ class DefaultXactApiImpl extends AbstractXactApiImpl {
     public int update(XactDto xact, List<XactTypeItemActivityDto> xactItems)
             throws XactApiException {
         XactDao dao = this.getXactDao();
-//        dao.beginTrans();
-        try {
-            int rc = super.update(xact, xactItems);
-//            dao.commitTrans();
-            return rc;
-        } catch (Exception e) {
-//            dao.rollbackTrans();
-            throw new XactApiException(e);
-        }
-//        } finally {
-//            dao.close();
-//        }
-
+        return super.update(xact, xactItems);
     }
 
 }
