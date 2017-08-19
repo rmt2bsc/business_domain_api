@@ -934,6 +934,11 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      *            {@link XactDto}.
      */
     private void reverse(XactDto xact) {
+        // Do not try to access xact if null. Defer proper validation and
+        // notification of xact to the update api method.
+        if (xact == null) {
+            return;
+        }
         xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         xact.setXactAmount(xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         String reason1 = "Reversed Transaction " + xact.getXactId();
@@ -954,10 +959,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @param xactItems
      *            Transaction items to be reversed.
      * @return A List of {@link XactTypeItemActivityDto} objects that were
-     *         reversed.
+     *         reversed or null when <i>xactItems</i> is null or empty.
      */
     private List<XactTypeItemActivityDto> reverse(List<XactTypeItemActivityDto> xactItems) {
-        if (xactItems == null) {
+        try {
+            Verifier.verifyNotEmpty(xactItems);
+        } catch (VerifyException e) {
+            logger.warn("There are no transaction item to process.  This is okay!");
             return null;
         }
         List<XactTypeItemActivityDto> newList = new ArrayList<XactTypeItemActivityDto>();
