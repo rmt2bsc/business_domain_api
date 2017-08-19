@@ -38,6 +38,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class TransactoionReversalTest extends TransactionApiTestData {
 
+    private static final int NEW_XACT_ID = 777;
     private XactDto mockXact;
     private List<XactTypeItemActivityDto> mockXactItemList;
 
@@ -58,7 +59,7 @@ public class TransactoionReversalTest extends TransactionApiTestData {
         // This is due to using back to back any matcher of r insertRow calls.
         try {
             when(this.mockPersistenceClient.insertRow(any(Xact.class), any(Boolean.class)))
-               .thenReturn(777);
+                    .thenReturn(NEW_XACT_ID);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Update xact test case setup failed");
@@ -99,7 +100,7 @@ public class TransactoionReversalTest extends TransactionApiTestData {
             e.printStackTrace();
             Assert.fail("An exception was not expected here...");
         }
-        Assert.assertEquals(777, rc);
-        Assert.assertEquals(777, this.mockXact.getXactId());
+        Assert.assertEquals(NEW_XACT_ID, rc);
+        Assert.assertEquals(NEW_XACT_ID, this.mockXact.getXactId());
     }
 }
