@@ -36,7 +36,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class TransactoionFinalizationTest extends TransactionApiTestData {
+public class FinalizeTransactionTest extends TransactionApiTestData {
 
     
 

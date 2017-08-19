@@ -36,7 +36,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class TransactoionReversalTest extends TransactionApiTestData {
+public class ReverseTransactionTest extends TransactionApiTestData {
 
     private static final int NEW_XACT_ID = 777;
     private XactDto mockXact;
