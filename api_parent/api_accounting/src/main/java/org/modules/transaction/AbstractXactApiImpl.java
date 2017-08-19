@@ -52,8 +52,7 @@ import com.util.assistants.VerifyException;
  * @author Roy Terrell
  * 
  */
-public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
-        implements XactApi {
+public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl implements XactApi {
 
     private static final Logger logger = Logger.getLogger(AbstractXactApiImpl.class);
 
@@ -109,18 +108,16 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     @Override
     public XactDto getXactById(Integer xactId) throws XactApiException {
         try {
-            Verifier.verifyNotNull(xactId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNull(xactId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction id is required", e);
         }
         try {
-            Verifier.verifyPositive(xactId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(xactId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction id must be greater than zero", e);
         }
-        
+
         XactDao dao = this.getXactDao();
         List<XactDto> results = null;
         try {
@@ -136,11 +133,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             return null;
         }
         if (results.size() > 1) {
-            this.msg = "Common transaction query should of returned only 1 object based on xact id: "
-                    + xactId
-                    + ".  Instead "
-                    + results.size()
-                    + " objects were returned";
+            this.msg = "Common transaction query should of returned only 1 object based on xact id: " + xactId
+                    + ".  Instead " + results.size() + " objects were returned";
             throw new XactApiException(this.msg);
         }
         return results.get(0);
@@ -173,28 +167,24 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     @Override
     public XactCategoryDto getCategoryById(Integer catgId) throws XactApiException {
         try {
-            Verifier.verifyNotNull(catgId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNull(catgId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction category id is required", e);
         }
         try {
-            Verifier.verifyPositive(catgId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(catgId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction category id must be greater than zero", e);
         }
-        
+
         XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
-            XactCategoryDto criteria = Rmt2XactDtoFactory
-                    .createXactCategoryInstance(null);
+            XactCategoryDto criteria = Rmt2XactDtoFactory.createXactCategoryInstance(null);
             criteria.setXactCatgId(catgId);
             results = dao.fetchCategory(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction category by category id: "
-                    + catgId;
+            this.msg = "Unable to retrieve transaction category by category id: " + catgId;
             throw new XactApiException(this.msg, e);
         }
         // finally {
@@ -207,10 +197,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         if (results.size() > 1) {
             this.msg = "Common category transaction query should of returned only 1 object based on xact category id: "
-                    + catgId
-                    + ".  Instead "
-                    + results.size()
-                    + " objects were returned";
+                    + catgId + ".  Instead " + results.size() + " objects were returned";
             throw new XactApiException(this.msg);
         }
         return results.get(0);
@@ -243,18 +230,16 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     @Override
     public XactCodeGroupDto getGroup(Integer groupId) throws XactApiException {
         try {
-            Verifier.verifyNotNull(groupId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNull(groupId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction group id is required", e);
         }
         try {
-            Verifier.verifyPositive(groupId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(groupId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction group id must be greater than zero", e);
         }
-        
+
         XactDao dao = this.getXactDao();
         List<XactCodeGroupDto> results = null;
         try {
@@ -262,8 +247,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             criteria.setEntityId(groupId);
             results = dao.fetchGroup(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction group by group id: "
-                    + groupId;
+            this.msg = "Unable to retrieve transaction group by group id: " + groupId;
             throw new XactApiException(this.msg, e);
         }
 
@@ -272,10 +256,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         if (results.size() > 1) {
             this.msg = "Common group transaction query should of returned only 1 object based on xact group id: "
-                    + groupId
-                    + ".  Instead "
-                    + results.size()
-                    + " objects were returned";
+                    + groupId + ".  Instead " + results.size() + " objects were returned";
             throw new XactApiException(this.msg);
         }
         return results.get(0);
@@ -311,27 +292,23 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     @Override
     public XactCodeDto getCode(Integer codeId) throws XactApiException {
         try {
-            Verifier.verifyNotNull(codeId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNull(codeId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction code id is required", e);
         }
         try {
-            Verifier.verifyPositive(codeId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(codeId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction code id must be greater than zero", e);
         }
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
-            XactCodeDto criteria = Rmt2XactDtoFactory
-                    .createXactCodeInstance(null);
+            XactCodeDto criteria = Rmt2XactDtoFactory.createXactCodeInstance(null);
             criteria.setEntityId(codeId);
             results = dao.fetchCode(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction code by code id: "
-                    + codeId;
+            this.msg = "Unable to retrieve transaction code by code id: " + codeId;
             throw new XactApiException(this.msg, e);
         }
         // finally {
@@ -344,10 +321,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         if (results.size() > 1) {
             this.msg = "Common code transaction query should of returned only 1 object based on xact group id: "
-                    + codeId
-                    + ".  Instead "
-                    + results.size()
-                    + " objects were returned";
+                    + codeId + ".  Instead " + results.size() + " objects were returned";
             throw new XactApiException(this.msg);
         }
         return results.get(0);
@@ -361,18 +335,16 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     @Override
     public List<XactCodeDto> getCodeByGroupId(Integer groupId) throws XactApiException {
         try {
-            Verifier.verifyNotNull(groupId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNull(groupId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction group id is required", e);
         }
         try {
-            Verifier.verifyPositive(groupId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(groupId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction group id must be greater than zero", e);
         }
-        
+
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
@@ -381,8 +353,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             results = dao.fetchCode(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve code transaction objects by group id: "
-                    + groupId;
+            this.msg = "Unable to retrieve code transaction objects by group id: " + groupId;
             throw new XactApiException(this.msg, e);
         }
     }
@@ -413,27 +384,23 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     @Override
     public XactTypeDto getXactType(Integer xactTypeId) throws XactApiException {
         try {
-            Verifier.verifyNotNull(xactTypeId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNull(xactTypeId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction type id is required", e);
         }
         try {
-            Verifier.verifyPositive(xactTypeId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(xactTypeId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction type id must be greater than zero", e);
         }
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
-            XactTypeDto criteria = Rmt2XactDtoFactory
-                    .createXactTypeInstance(null);
+            XactTypeDto criteria = Rmt2XactDtoFactory.createXactTypeInstance(null);
             criteria.setXactTypeId(xactTypeId);
             results = dao.fetchType(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction type objects by xact type id: "
-                    + xactTypeId;
+            this.msg = "Unable to retrieve transaction type objects by xact type id: " + xactTypeId;
             throw new XactApiException(this.msg, e);
         }
 
@@ -442,10 +409,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         }
         if (results.size() > 1) {
             this.msg = "Common transaction type query should of returned only 1 object based on xact type id: "
-                    + xactTypeId
-                    + ".  Instead "
-                    + results.size()
-                    + " objects were returned";
+                    + xactTypeId + ".  Instead " + results.size() + " objects were returned";
             throw new XactApiException(this.msg);
         }
         return results.get(0);
@@ -457,31 +421,26 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeByCatgId(int)
      */
     @Override
-    public List<XactTypeDto> getXactTypeByCatgId(Integer catgId)
-            throws XactApiException {
+    public List<XactTypeDto> getXactTypeByCatgId(Integer catgId) throws XactApiException {
         try {
-            Verifier.verifyNotNull(catgId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNull(catgId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction category id is required", e);
         }
         try {
-            Verifier.verifyPositive(catgId);    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(catgId);
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction category id must be greater than zero", e);
         }
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
-            XactTypeDto criteria = Rmt2XactDtoFactory
-                    .createXactTypeInstance(null);
+            XactTypeDto criteria = Rmt2XactDtoFactory.createXactTypeInstance(null);
             criteria.setXactCatgId(catgId);
             results = dao.fetchType(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction type objects by xact category id: "
-                    + catgId;
+            this.msg = "Unable to retrieve transaction type objects by xact category id: " + catgId;
             throw new XactApiException(this.msg, e);
         }
     }
@@ -492,8 +451,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeItemActivity(int)
      */
     @Override
-    public List<XactTypeItemActivityDto> getXactTypeItemActivity(Integer xactId)
-            throws XactApiException {
+    public List<XactTypeItemActivityDto> getXactTypeItemActivity(Integer xactId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeItemActivityDto> results = null;
         try {
@@ -503,8 +461,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             results = dao.fetchXactTypeItemActivity(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction item type activity objects by xact id: "
-                    + xactId;
+            this.msg = "Unable to retrieve transaction item type activity objects by xact id: " + xactId;
             throw new XactApiException(this.msg, e);
         }
         // finally {
@@ -519,8 +476,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeItemActivityExt(int)
      */
     @Override
-    public List<XactTypeItemActivityDto> getXactTypeItemActivityExt(Integer xactId)
-            throws XactApiException {
+    public List<XactTypeItemActivityDto> getXactTypeItemActivityExt(Integer xactId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeItemActivityDto> results = null;
         try {
@@ -530,8 +486,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             results = dao.fetchXactTypeItemActivityExt(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction item type activity objects by xact id: "
-                    + xactId;
+            this.msg = "Unable to retrieve transaction item type activity objects by xact id: " + xactId;
             throw new XactApiException(this.msg, e);
         }
     }
@@ -542,19 +497,16 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @see org.modules.transaction.XactApi#getXactTypeItemsByXactTypeId(int)
      */
     @Override
-    public List<XactTypeItemDto> getXactTypeItemsByXactTypeId(Integer xactTypeId)
-            throws XactApiException {
+    public List<XactTypeItemDto> getXactTypeItemsByXactTypeId(Integer xactTypeId) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeItemDto> results = null;
         try {
-            XactTypeItemDto criteria = Rmt2XactDtoFactory
-                    .createXactTypeItemInstance(null);
+            XactTypeItemDto criteria = Rmt2XactDtoFactory.createXactTypeItemInstance(null);
             criteria.setXactTypeId(xactTypeId);
             results = dao.fetchXactTypeItem(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve transaction type item objects by xact type id: "
-                    + xactTypeId;
+            this.msg = "Unable to retrieve transaction type item objects by xact type id: " + xactTypeId;
             throw new XactApiException(this.msg, e);
         }
         // finally {
@@ -590,8 +542,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * java.util.List)
      */
     @Override
-    public int update(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException {
+    public int update(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
 
         try {
             this.validate(xact, xactItems);
@@ -675,8 +626,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *             amount of each element of <i>xactItems</i> does not equal the
      *             transaction amount found in <i>xact</i>.
      */
-    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException {
+    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
         // Validate base transaction
         this.validate(xact);
 
@@ -693,7 +643,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     }
 
     /**
-     * Validates the base of the transaction that already exist for updating. 
+     * Validates the base of the transaction that already exist for updating.
      * <p>
      * The following validations must be satified:
      * <ul>
@@ -708,15 +658,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         this.preValidate(xact);
 
         try {
-            Verifier.verifyNotNegative(xact.getXactId());    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyNotNegative(xact.getXactId());
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction id cannot be negative", e);
         }
         try {
-            Verifier.verifyPositive(xact.getXactTypeId());    
-        }
-        catch (VerifyException e) {
+            Verifier.verifyPositive(xact.getXactTypeId());
+        } catch (VerifyException e) {
             throw new InvalidDataException("Transaction type id must be greater than zero", e);
         }
 
@@ -729,27 +677,28 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     }
 
     /**
-     * Verifies that the said transaction is a proper candidate for finailization.
+     * Verifies that the said transaction is a proper candidate for
+     * finailization.
      * <p>
-     * Aplplicable sub transaction types are: 
+     * Aplplicable sub transaction types are:
      * <ul>
-     *    <li>cancellations</li>
-     *    <li>reversals</li>
+     * <li>cancellations</li>
+     * <li>reversals</li>
      * </ul>
      * 
      * @param xact
      * @throws XactApiException
      */
     private void validateFinalization(XactDto xact) throws XactApiException {
-        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_REVERSE || xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_CANCEL) {
+        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_REVERSE
+                || xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_CANCEL) {
             // This is valid
         }
         else {
             throw new InvalidFinalizationAttemptException("Transaction sub type must be reversed or cancelled");
         }
     }
-    
-    
+
     /**
      * Override this method to execute custom logic before base transaction
      * validations.
@@ -781,8 +730,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         return;
     }
 
-    private void validate(List<XactTypeItemActivityDto> items)
-            throws XactApiException {
+    private void validate(List<XactTypeItemActivityDto> items) throws XactApiException {
         this.preValidate(items);
         if (items == null) {
             return;
@@ -800,8 +748,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @param items
      * @throws XactApiException
      */
-    protected void preValidate(List<XactTypeItemActivityDto> items)
-            throws XactApiException {
+    protected void preValidate(List<XactTypeItemActivityDto> items) throws XactApiException {
         return;
     }
 
@@ -812,8 +759,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @param items
      * @throws XactApiException
      */
-    protected void postValidate(List<XactTypeItemActivityDto> items)
-            throws XactApiException {
+    protected void postValidate(List<XactTypeItemActivityDto> items) throws XactApiException {
         return;
     }
 
@@ -848,8 +794,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             logger.error(this.msg);
             throw new XactApiException(this.msg);
         }
-        if (item.getXactTypeItemActvName() == null
-                || item.getXactTypeItemActvName().length() <= 0) {
+        if (item.getXactTypeItemActvName() == null || item.getXactTypeItemActvName().length() <= 0) {
             this.msg = "Transaction type item description property is required to have a value";
             logger.error(this.msg);
             throw new XactApiException(this.msg);
@@ -868,8 +813,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @param item
      * @throws XactApiException
      */
-    protected void preValidateXactItem(XactTypeItemActivityDto item)
-            throws XactApiException {
+    protected void preValidateXactItem(XactTypeItemActivityDto item) throws XactApiException {
         return;
     }
 
@@ -880,8 +824,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @param item
      * @throws XactApiException
      */
-    protected void postValidateXactItem(XactTypeItemActivityDto item)
-            throws XactApiException {
+    protected void postValidateXactItem(XactTypeItemActivityDto item) throws XactApiException {
         return;
     }
 
@@ -897,27 +840,24 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      *            a List of {@link XactTypeItemActivityDto}
      * @throws XactApiException
      */
-    private void validateTransactionAmounts(XactDto xact, List<XactTypeItemActivityDto> items) 
-            throws XactApiException {
+    private void validateTransactionAmounts(XactDto xact, List<XactTypeItemActivityDto> items) throws XactApiException {
         // Return to caller if transaction type item array has not been
         // initialized.
         try {
             Verifier.verifyNotNull(items);
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "The list of common transaction items are invalid or null";
             logger.error(this.msg);
-            throw new InvalidDataException(this.msg);            
+            throw new InvalidDataException(this.msg);
         }
 
         // Verify that at least one item exists.
         try {
             Verifier.verifyPositive(items.size());
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "A minimum of one transaction item must exist in order to process the common transaction";
             logger.error(this.msg);
-            throw new InvalidDataException(this.msg);     
+            throw new InvalidDataException(this.msg);
         }
 
         // Begin to sum each transaction type item amount.
@@ -933,10 +873,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         // Verify that transaction amount must equal the sum of all item
         // amounts.
         if (Math.abs(xact.getXactAmount()) != Math.abs(totalItemAmount)) {
-            this.msg = "The base transaction amount ["
-                    + Math.abs(xact.getXactAmount())
-                    + "] must equal the sum of all transaction item amounts ["
-                    + totalItemAmount + "]";
+            this.msg = "The base transaction amount [" + Math.abs(xact.getXactAmount())
+                    + "] must equal the sum of all transaction item amounts [" + totalItemAmount + "]";
             logger.error(this.msg);
             throw new XactApiException(this.msg);
         }
@@ -958,8 +896,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @throws XactApiException
      */
     @Override
-    public int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException {
+    public int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
         int rc = 0;
         this.preReverse(xact, xactItems);
         this.reverse(xact);
@@ -1071,8 +1008,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @param xactItems
      *            Transaction items to be reversed.
      */
-    protected void postReverse(XactDto xact,
-            List<XactTypeItemActivityDto> xactItems) {
+    protected void postReverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         return;
     }
 
@@ -1091,80 +1027,70 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * @throws XactApiException
      */
     @Override
-    public int createSubsidiaryActivity(Integer subsidiaryId, Integer xactId, Double amount) 
-            throws XactApiException {
+    public int createSubsidiaryActivity(Integer subsidiaryId, Integer xactId, Double amount) throws XactApiException {
         try {
             Verifier.verifyNotNull(subsidiaryId);
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "Subsidiary id is required";
             logger.error(this.msg);
-            throw new InvalidDataException(this.msg, e);           
+            throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyPositive(subsidiaryId);
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "Subsidiary id must be a value greater than zero";
             logger.error(this.msg);
-            throw new InvalidDataException(this.msg, e);           
+            throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyNotNull(xactId);
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "Transaction id is required";
             logger.error(this.msg);
-            throw new InvalidDataException(this.msg, e);           
+            throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyPositive(xactId);
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "Transaction id must be a value greater than zero";
             logger.error(this.msg);
-            throw new InvalidDataException(this.msg, e);           
+            throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyNotNull(amount);
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "Transaction amount is required";
             logger.error(this.msg);
-            throw new InvalidDataException(this.msg, e);           
+            throw new InvalidDataException(this.msg, e);
         }
-        
+
         int rc = 0;
         // Determine the type of subsidiary we are dealing with
         SubsidiaryType subType = this.evaluateSubsidiaryType(subsidiaryId);
-        
+
         // Verify that we were able to identify the subsidiary type
         try {
             Verifier.verifyNotNull(subType);
-        }
-        catch (VerifyException e) {
+        } catch (VerifyException e) {
             this.msg = "Subsidiary id passed is invalid.  Must be SubsidiaryType.CREDITOR or SubsidiaryType.CUSTOMER";
             logger.error(this.msg);
-            throw new NotFoundException(this.msg, e);           
+            throw new NotFoundException(this.msg, e);
         }
         // validate transaction id
         XactDto xactDto = this.getXactById(xactId);
         try {
             Verifier.verifyNotNull(xactDto);
-        }
-        catch (VerifyException e) {
-            this.msg = "Unable to create subidiary transaction activity for subsidiary, "
-                    + subsidiaryId
-                    + ", due to transaction id is not valid and/or does not exist: "
-                    + xactId;
+        } catch (VerifyException e) {
+            this.msg = "Unable to create subidiary transaction activity for subsidiary, " + subsidiaryId
+                    + ", due to transaction id is not valid and/or does not exist: " + xactId;
             logger.error(this.msg);
-            throw new NotFoundException(this.msg, e);   
+            throw new NotFoundException(this.msg, e);
         }
-        
+
         XactDao xactDao = this.getXactDao();
         // Create transaction for creditor
         if (subType == SubsidiaryType.CREDITOR) {
-            rc =  this.createTransactionHistoryForCreditor(xactDao, subsidiaryId, xactId, amount);
+            rc = this.createTransactionHistoryForCreditor(xactDao, subsidiaryId, xactId, amount);
         }
         // Create transaction for customer
         if (subType == SubsidiaryType.CUSTOMER) {
@@ -1173,14 +1099,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         return rc;
     }
 
-    private int createTransactionHistoryForCustomer(XactDao xactDao, XactDto xactDto, Integer subsidiaryId, Integer xactId,
-            Double amount) throws XactApiException {
+    private int createTransactionHistoryForCustomer(XactDao xactDao, XactDto xactDto, Integer subsidiaryId,
+            Integer xactId, Double amount) throws XactApiException {
         int rc = 0;
         SubsidiaryDaoFactory subsidiaryFactory = new SubsidiaryDaoFactory();
         CustomerDao custDao = subsidiaryFactory.createRmt2OrmCustomerDao(xactDao);
         custDao.setDaoUser(this.getApiUser());
-        CustomerXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory
-                .createCustomerTransactionInstance(null);
+        CustomerXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory.createCustomerTransactionInstance(null);
         xactHist.setCustomerId(subsidiaryId);
         xactHist.setXactId(xactId);
         xactHist.setActivityAmount(amount);
@@ -1197,20 +1122,18 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             } // end switch
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to create subidiary transaction activity for customer, "
-                    + subsidiaryId;
+            this.msg = "Unable to create subidiary transaction activity for customer, " + subsidiaryId;
             logger.error(this.msg);
             throw new XactApiException(this.msg, e);
-        } 
+        }
     }
-    
-    private int createTransactionHistoryForCreditor(XactDao xactDao, Integer subsidiaryId, Integer xactId,
-            Double amount) throws XactApiException {
+
+    private int createTransactionHistoryForCreditor(XactDao xactDao, Integer subsidiaryId, Integer xactId, Double amount)
+            throws XactApiException {
         SubsidiaryDaoFactory subsidiaryFactory = new SubsidiaryDaoFactory();
         CreditorDao credDao = subsidiaryFactory.createRmt2OrmCreditorDao(xactDao);
         credDao.setDaoUser(this.getApiUser());
-        CreditorXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory
-                .createCreditorTransactionInstance(null);
+        CreditorXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory.createCreditorTransactionInstance(null);
         xactHist.setCreditorId(subsidiaryId);
         xactHist.setXactId(xactId);
         xactHist.setActivityAmount(amount);
@@ -1218,13 +1141,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             // Create creditor transaction history entry
             return credDao.maintain(xactHist);
         } catch (Exception e) {
-            this.msg = "Unable to create subidiary transaction activity for creditor, "
-                    + subsidiaryId;
+            this.msg = "Unable to create subidiary transaction activity for creditor, " + subsidiaryId;
             logger.error(this.msg);
             throw new XactApiException(this.msg, e);
-        } 
+        }
     }
-    
+
     /**
      * Generates a generic confirmation number using the long number
      * representation of a java.util.Date object containing the current
@@ -1243,8 +1165,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
      * 
      * @param subsidiaryId
      *            the id of the subsidiary
-     * @return {@link SubsidiaryType} when the creditor or customer is found.  
-     *            Otherwise, null is returned.
+     * @return {@link SubsidiaryType} when the creditor or customer is found.
+     *         Otherwise, null is returned.
      * @throws XactApiException
      */
     public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws XactApiException {
@@ -1274,8 +1196,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         try {
             xactDao = this.getXactDao();
         } catch (XactApiException e) {
-            throw new SubsidiaryException(
-                    "Unable to retrieve creditor profile due to bad XactDao", e);
+            throw new SubsidiaryException("Unable to retrieve creditor profile due to bad XactDao", e);
         }
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(xactDao);
@@ -1288,8 +1209,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
         try {
             xactDao = this.getXactDao();
         } catch (XactApiException e) {
-            throw new SubsidiaryException(
-                    "Unable to retrieve customer profile due to bad XactDao", e);
+            throw new SubsidiaryException("Unable to retrieve customer profile due to bad XactDao", e);
         }
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CustomerApi api = f.createCustomerApi(xactDao);
@@ -1300,8 +1220,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
     /**
      * Determines if <i>xact</i> can be modified or adjusted.
      * <p>
-     * Typical transaction sub types which cannot be modified are 
-     * <i>reversals</i>, <i>cancellations</i>, <i>returns</i>, and <i>finalized</i>.
+     * Typical transaction sub types which cannot be modified are
+     * <i>reversals</i>, <i>cancellations</i>, <i>returns</i>, and
+     * <i>finalized</i>.
      * 
      * @param xact
      *            The transaction that is to be managed
@@ -1340,7 +1261,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
-        
+
         // Check if okay to finailze.
         try {
             this.validateFinalization(xact);
@@ -1349,7 +1270,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
-        
+
         xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
 
         XactDao dao = this.getXactDao();
@@ -1363,8 +1284,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl
             return;
         } catch (Exception e) {
             // dao.rollbackTrans();
-            this.msg = "Error occurred finalizing transaction: "
-                    + xact.getXactId();
+            this.msg = "Error occurred finalizing transaction: " + xact.getXactId();
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
