@@ -282,12 +282,10 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * XactTypeItemActivityDto)
      */
     @Override
-    public List<XactTypeItemActivityDto> fetchXactTypeItemActivity(
-            XactTypeItemActivityDto criteria) throws XactDaoException {
-        XactTypeItemActivity ormCriteria = XactDaoFactory
-                .createCriteria(criteria);
-        ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION,
-                ItemMaster.ORDERBY_ASCENDING);
+    public List<XactTypeItemActivityDto> fetchXactTypeItemActivity(XactTypeItemActivityDto criteria) 
+            throws XactDaoException {
+        XactTypeItemActivity ormCriteria = XactDaoFactory.createCriteria(criteria);
+        ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<XactTypeItemActivity> results = null;

@@ -146,23 +146,23 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         List<XactTypeItemActivity> list = new ArrayList<XactTypeItemActivity>();
         XactTypeItemActivity o = AccountingMockDataUtility
                 .createMockOrmXactTypeItemActivity(7001, 111111, 601, 31.11,
-                        "Item 1");
+                        "Item1");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7002,
-                111111, 602, 20.00, "Item 2");
+                111111, 602, 20.00, "Item2");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7003,
-                111111, 603, 20.00, "Item 3");
+                111111, 603, 20.00, "Item3");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7004,
-                111111, 604, 20.00, "Item 4");
+                111111, 604, 20.00, "Item4");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItemActivity(7005,
-                111111, 605, 20.00, "Item 5");
+                111111, 605, 20.00, "Item5");
         list.add(o);
         return list;
     }
