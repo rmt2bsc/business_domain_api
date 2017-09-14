@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.sql.ResultSet;
 import java.util.List;
 
+import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.dto.XactTypeItemActivityDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
@@ -24,16 +25,17 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2Date;
 
 /**
- * Tests transaction type item activity Api.
+ * Tests transaction type ite activity extension Api.
  * 
  * @author rterrell
  * 
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class TransactionTypeItemActivityApiTest extends TransactionApiTestData {
+public class TransactionTypeItemActivityExtApiTest extends TransactionApiTestData {
 
     /**
      * @throws java.lang.Exception
@@ -54,50 +56,68 @@ public class TransactionTypeItemActivityApiTest extends TransactionApiTestData {
 
     @Test
     public void testFetchDataXactId() {
-        XactTypeItemActivity mockCriteria = new XactTypeItemActivity();
+        VwXactTypeItemActivity mockCriteria = new VwXactTypeItemActivity();
         mockCriteria.setXactId(111111);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                            .thenReturn(this.mockXactTypeItemActivityFetchAllResponse);
+                            .thenReturn(this.mockVwXactTypeItemActivityFetchAllResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch all transaction activity item types test case setup failed");
+            Assert.fail("Fetch all transaction type item activity extension test case setup failed");
         }
 
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
-        XactTypeItemActivityDto criteria = Rmt2XactDtoFactory.createXactTypeItemActivityInstance((XactTypeItemActivity) null);
+        XactTypeItemActivityDto criteria = Rmt2XactDtoFactory.createXactTypeItemActivityExtInstance((VwXactTypeItemActivity) null);
         List<XactTypeItemActivityDto> results = null;
         criteria.setXactId(111111);
         try {
-            results = api.getXactTypeItemActivity(criteria.getXactId());
+            results = api.getXactTypeItemActivityExt(criteria.getXactId());
         } catch (XactApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
-        double totalAmount = 0;
+        double totalXactAmount = 0;
+        double totalActivityAmount = 0;
         for (int ndx = 0; ndx < results.size(); ndx++) {
             XactTypeItemActivityDto item = results.get(ndx);
-            Assert.assertEquals(7000 + (ndx + 1), item.getXactTypeItemActvId());
-            Assert.assertEquals(111111, item.getXactId());
-            Assert.assertEquals(600 + (ndx + 1), item.getXactItemId());
-            Assert.assertEquals("Item" + (ndx + 1), item.getXactTypeItemActvName());
-            totalAmount += item.getActivityAmount();
+            Assert.assertEquals(7000 + ndx, item.getXactTypeItemActvId());
+            Assert.assertEquals(1111111, item.getXactId());
+            Assert.assertEquals(20.00 + ndx, item.getXactAmount(), 0);
+            Assert.assertEquals(19.00 + ndx, item.getActivityAmount(), 0);
+            Assert.assertEquals(RMT2Date.stringToDate("2017-01-01"), item.getXactDate());
+            Assert.assertEquals(100 + ndx, item.getXactTypeId());
+            Assert.assertEquals(1000 + ndx, item.getXactItemId());
+            Assert.assertEquals("XT-" + ndx, item.getXactTypeCode());
+            Assert.assertEquals(200 + ndx, item.getXactCatgId());
+            Assert.assertEquals("XC-" + ndx, item.getXactCatgCode());
+            
+            // Test derived values set internally by factory
+            Assert.assertEquals("ItemName for " + (7000 + ndx), item.getXactTypeItemActvName());
+            Assert.assertEquals("XactReason" + item.getXactId(), item.getXactReason());
+            Assert.assertEquals("ConfirmationNo" + item.getXactId(), item.getXactConfirmNo());
+            Assert.assertEquals(Integer.parseInt(String.valueOf(item.getXactTypeItemActvId()) + String.valueOf(item.getXactCatgId())), item.getDocumentId());
+            Assert.assertEquals("XactTypeItemName" + item.getXactTypeId(), item.getXactItemName());
+            Assert.assertEquals("XactTypeDescription" + item.getXactTypeId(), item.getXactTypeDescription());
+            Assert.assertEquals("XactCategoryDescription" + item.getXactCatgId(), item.getXactCatgDescription());
+            totalXactAmount += item.getXactAmount();
+            totalActivityAmount += item.getActivityAmount();
         }
-        Assert.assertEquals(111.11, totalAmount, 0);
+        Assert.assertEquals(110.00, totalXactAmount, 0);
+        Assert.assertEquals(105.00, totalActivityAmount, 0);
     }
     
     @Test
     public void testFetchDataXactIdNotFound() {
-        XactTypeItemActivity mockCriteria = new XactTypeItemActivity();
+        VwXactTypeItemActivity mockCriteria = new VwXactTypeItemActivity();
         mockCriteria.setXactId(999999);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                            .thenReturn(this.mockXactTypeItemActivityNotFoundFetchResponse);
+                            .thenReturn(this.mockVwXactTypeItemActivityNotFoundFetchResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch all transaction activity item types test case setup failed");
+            Assert.fail("Fetch all transaction type item activity extension test case setup failed");
         }
 
         XactApiFactory f = new XactApiFactory();
@@ -106,7 +126,7 @@ public class TransactionTypeItemActivityApiTest extends TransactionApiTestData {
         List<XactTypeItemActivityDto> results = null;
         criteria.setXactId(999999);
         try {
-            results = api.getXactTypeItemActivity(criteria.getXactId());
+            results = api.getXactTypeItemActivityExt(criteria.getXactId());
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -118,7 +138,7 @@ public class TransactionTypeItemActivityApiTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.getXactTypeItemActivity(null);
+            api.getXactTypeItemActivityExt(null);
             Assert.fail("Expected exception due to input value is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -131,7 +151,7 @@ public class TransactionTypeItemActivityApiTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.getXactTypeItemActivity(0);
+            api.getXactTypeItemActivityExt(0);
             Assert.fail("Expected exception due to input value is zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -144,7 +164,7 @@ public class TransactionTypeItemActivityApiTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.getXactTypeItemActivity(-1234);
+            api.getXactTypeItemActivityExt(-1234);
             Assert.fail("Expected exception due to input value is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -154,20 +174,20 @@ public class TransactionTypeItemActivityApiTest extends TransactionApiTestData {
     
     @Test
     public void testFetchWithException() {
-        XactTypeItemActivity mockCriteria = new XactTypeItemActivity();
-        mockCriteria.setXactTypeItemActvId(1111111);
+        VwXactTypeItemActivity mockCriteria = new VwXactTypeItemActivity();
+        mockCriteria.setId(1111111);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
                             .thenThrow(CannotRetrieveException.class);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch single xact with exception test case setup failed");
+            Assert.fail("Fetch with exception test case setup failed");
         }
 
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.getXactTypeItemActivity(1111111);
+            api.getXactTypeItemActivityExt(1111111);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);
             Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);

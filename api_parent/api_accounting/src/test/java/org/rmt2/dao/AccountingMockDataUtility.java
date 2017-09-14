@@ -20,6 +20,7 @@ import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dao.mapping.orm.rmt2.VwXactList;
+import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.XactCategory;
 import org.dao.mapping.orm.rmt2.XactCodeGroup;
 import org.dao.mapping.orm.rmt2.XactCodes;
@@ -684,6 +685,45 @@ public class AccountingMockDataUtility {
         o.setDateCreated(new Date());
         o.setDateUpdated(o.getDateCreated());
         o.setUserId("testuser");
+        return o;
+    }
+    
+    /**
+     * 
+     * @param id
+     * @param xactId
+     * @param xactAmount
+     * @param xactDate
+     * @param itemAmount
+     * @param xactTypeId
+     * @param xactTypeItemId
+     * @param xactTypeXactCode
+     * @param xactCatgId
+     * @param xactCatgCode
+     * @return
+     */
+    public static final VwXactTypeItemActivity createMockOrmVwXactTypeItemActivity(
+            int id, int xactId, double xactAmount, String xactDate,
+            double itemAmount, int xactTypeId, int xactTypeItemId,
+            String xactTypeXactCode, int xactCatgId, String xactCatgCode) {
+        VwXactTypeItemActivity o = new VwXactTypeItemActivity();
+        o.setId(id);
+        o.setXactId(xactId);
+        o.setXactAmount(xactAmount);
+        o.setXactDate(RMT2Date.stringToDate(xactDate));
+        o.setXactTypeItemId(xactTypeItemId);
+        o.setItemAmount(itemAmount);
+        o.setItemName("ItemName for " + id);
+        o.setReason("XactReason" + xactId);
+        o.setConfirmNo("ConfirmationNo" + xactId);
+        o.setDocumentId(Integer.parseInt(String.valueOf(id) + String.valueOf(xactCatgId)));
+        o.setXactTypeId(xactTypeId);
+        o.setXactTypeItemName("XactTypeItemName" + xactTypeId);
+        o.setXactTypeDescription("XactTypeDescription" + xactTypeId);
+        o.setXactTypeXactCode(xactTypeXactCode);
+        o.setXactCategoryCode(xactCatgCode);
+        o.setXactCategoryId(xactCatgId);
+        o.setXactCategoryDescription("XactCategoryDescription" + xactCatgId);
         return o;
     }
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.VwXactList;
+import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.XactCategory;
 import org.dao.mapping.orm.rmt2.XactCodeGroup;
 import org.dao.mapping.orm.rmt2.XactCodes;
@@ -27,7 +28,7 @@ import com.util.RMT2Date;
  * Base transaction testing facility that is mainly responsible for setting up
  * mock data.
  * <p>
- * All derived transaction related Api unit tests should inherit this class to 
+ * All derived transaction related Api unit tests should inherit this class to
  * prevent duplicating common functionality.
  * 
  * @author rterrell
@@ -36,7 +37,7 @@ import com.util.RMT2Date;
 public class TransactionApiTestData extends SubsidiaryApiTestData {
     protected DaoClient mockDaoClient;
     protected PersistenceClient mockPersistenceClient;
-    
+
     protected List<XactCategory> mockCategoryNotFoundFetchResponse;
     protected List<XactCategory> mockCategoryFetchAllResponse;
     protected List<XactCategory> mockCategoryFetchSingleResponse;
@@ -65,6 +66,10 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     protected List<XactTypeItemActivity> mockXactTypeItemActivityFetchAllResponse;
     protected List<XactTypeItemActivity> mockXactTypeItemActivityFetchSingleResponse;
 
+    protected List<VwXactTypeItemActivity> mockVwXactTypeItemActivityNotFoundFetchResponse;
+    protected List<VwXactTypeItemActivity> mockVwXactTypeItemActivityFetchAllResponse;
+    protected List<VwXactTypeItemActivity> mockVwXactTypeItemActivityFetchSingleResponse;
+
     /**
      * @throws java.lang.Exception
      */
@@ -72,12 +77,13 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     public void setUp() throws Exception {
         super.setUp();
 
-        // Mock database connection since the common transaction Api expects 
+        // Mock database connection since the common transaction Api expects
         // derived Api modules to obtain and pass in an instance of DaoClient.
         this.mockDaoClient = Mockito.mock(DaoClient.class);
         this.mockPersistenceClient = Mockito.mock(PersistenceClient.class);
-        when(this.mockDaoClient.getClient()).thenReturn(this.mockPersistenceClient);
-        
+        when(this.mockDaoClient.getClient())
+                .thenReturn(this.mockPersistenceClient);
+
         this.mockCategoryFetchAllResponse = this
                 .createMockXactCategoryFetchAllsponse();
         this.mockCategoryFetchSingleResponse = this
@@ -124,6 +130,13 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
                 .createMockXactTypeItemActivitySingleFetchResponse();
         this.mockXactTypeItemActivityNotFoundFetchResponse = this
                 .createMockXactTypeItemActivityNotFoundResponse();
+        
+        this.mockVwXactTypeItemActivityFetchAllResponse = this
+                .createMockVwXactTypeItemActivityFetchAllsponse();
+        this.mockVwXactTypeItemActivityFetchSingleResponse = this
+                .createMockVwXactTypeItemActivitySingleFetchResponse();
+        this.mockVwXactTypeItemActivityNotFoundFetchResponse = this
+                .createMockVwXactTypeItemActivityNotFoundResponse();
 
         return;
     }
@@ -135,6 +148,45 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     public void tearDown() throws Exception {
         super.tearDown();
         return;
+    }
+
+    private List<VwXactTypeItemActivity> createMockVwXactTypeItemActivityNotFoundResponse() {
+        List<VwXactTypeItemActivity> list = null;
+        return list;
+    }
+
+    private List<VwXactTypeItemActivity> createMockVwXactTypeItemActivityFetchAllsponse() {
+        List<VwXactTypeItemActivity> list = new ArrayList<VwXactTypeItemActivity>();
+        VwXactTypeItemActivity o = AccountingMockDataUtility
+                .createMockOrmVwXactTypeItemActivity(7000, 1111111, 20.00,
+                        "2017-01-01", 19.00, 100, 1000, "XT-0", 200, "XC-0");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmVwXactTypeItemActivity(7001, 1111111, 21.00,
+                        "2017-01-01", 20.00, 101, 1001, "XT-1", 201, "XC-1");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmVwXactTypeItemActivity(7002, 1111111, 22.00,
+                "2017-01-01", 21.00, 102, 1002, "XT-2", 202, "XC-2");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmVwXactTypeItemActivity(7003, 1111111, 23.00,
+                "2017-01-01", 22.00, 103, 1003, "XT-3", 203, "XC-3");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createMockOrmVwXactTypeItemActivity(7004, 1111111, 24.00,
+                "2017-01-01", 23.00, 104, 1004, "XT-4", 204, "XC-4");
+        list.add(o);
+        return list;
+    }
+
+    private List<VwXactTypeItemActivity> createMockVwXactTypeItemActivitySingleFetchResponse() {
+        List<VwXactTypeItemActivity> list = new ArrayList<VwXactTypeItemActivity>();
+        VwXactTypeItemActivity o = AccountingMockDataUtility
+                .createMockOrmVwXactTypeItemActivity(7001, 111111, 20.00,
+                        "2017-01-01", 19.00, 100, 1000, "XT-1", 200, "XC-1");
+        list.add(o);
+        return list;
     }
 
     private List<XactTypeItemActivity> createMockXactTypeItemActivityNotFoundResponse() {
@@ -220,8 +272,8 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
 
     private List<VwXactList> createMockXactFetchAllsponse() {
         List<VwXactList> list = new ArrayList<VwXactList>();
-        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, 301, 3333,
-                RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
+        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, 301,
+                3333, RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXact(222222, 302, 4444,
@@ -246,13 +298,14 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
 
     private List<VwXactList> createMockXactSingleFetchResponse() {
         List<VwXactList> list = new ArrayList<VwXactList>();
-        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, XactConst.XACT_TYPE_CREDITCHARGE, 
-                XactConst.XACT_SUBTYPE_NOT_ASSIGNED, RMT2Date.stringToDate("2017-01-13"), 
-                111.11, 200, null);
+        VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111,
+                XactConst.XACT_TYPE_CREDITCHARGE,
+                XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
         list.add(o);
         return list;
     }
-    
+
     private List<XactType> createMockXactTypeNotFoundResponse() {
         List<XactType> list = null;
         return list;
@@ -261,28 +314,28 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     private List<XactType> createMockXactTypeFetchAllsponse() {
         List<XactType> list = new ArrayList<XactType>();
         XactType o = AccountingMockDataUtility.createMockOrmXactType(300, 1000,
-                "TransactionType1", "TransactionTypeCode1", 1, -1, 400,
-                401, 200, 222, 1);
+                "TransactionType1", "TransactionTypeCode1", 1, -1, 400, 401,
+                200, 222, 1);
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactType(301, 1000,
-                "TransactionType2", "TransactionTypeCode2", 1, -1, 400,
-                401, 200, 222, 1);
+                "TransactionType2", "TransactionTypeCode2", 1, -1, 400, 401,
+                200, 222, 1);
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactType(302, 1000,
-                "TransactionType3", "TransactionTypeCode3", 1, -1, 400,
-                401, 200, 222, 1);
+                "TransactionType3", "TransactionTypeCode3", 1, -1, 400, 401,
+                200, 222, 1);
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactType(303, 1000,
-                "TransactionType4", "TransactionTypeCode4", 1, -1, 400,
-                401, 200, 222, 1);
+                "TransactionType4", "TransactionTypeCode4", 1, -1, 400, 401,
+                200, 222, 1);
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactType(304, 1000,
-                "TransactionType5", "TransactionTypeCode5", 1, -1, 400,
-                401, 200, 222, 1);
+                "TransactionType5", "TransactionTypeCode5", 1, -1, 400, 401,
+                200, 222, 1);
         list.add(o);
         return list;
     }
