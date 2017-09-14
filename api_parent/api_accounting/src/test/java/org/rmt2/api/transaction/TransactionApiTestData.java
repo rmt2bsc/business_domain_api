@@ -236,23 +236,23 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     private List<XactTypeItem> createMockXactTypeItemFetchAllsponse() {
         List<XactTypeItem> list = new ArrayList<XactTypeItem>();
         XactTypeItem o = AccountingMockDataUtility
-                .createMockOrmXactTypeItem(601, 301, "Transaction Type Item 1");
+                .createMockOrmXactTypeItem(601, 301, "TransactionTypeItem1");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItem(602, 301,
-                "Transaction Type Item 2");
+                "TransactionTypeItem2");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItem(603, 301,
-                "Transaction Type Item 3");
+                "TransactionTypeItem3");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItem(604, 301,
-                "Transaction Type Item 4");
+                "TransactionTypeItem4");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXactTypeItem(605, 301,
-                "Transaction Type Item 5");
+                "TransactionTypeItem5");
         list.add(o);
         return list;
     }
@@ -260,7 +260,7 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     private List<XactTypeItem> createMockXactTypeItemSingleFetchResponse() {
         List<XactTypeItem> list = new ArrayList<XactTypeItem>();
         XactTypeItem o = AccountingMockDataUtility
-                .createMockOrmXactTypeItem(601, 301, "Transaction Type Item 1");
+                .createMockOrmXactTypeItem(601, 301, "TransactionTypeItem1");
         list.add(o);
         return list;
     }

@@ -518,6 +518,16 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public List<XactTypeItemDto> getXactTypeItemsByXactTypeId(Integer xactTypeId) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(xactTypeId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Transaction type id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(xactTypeId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Transaction type id must be greater than zero", e);
+        }
         XactDao dao = this.getXactDao();
         List<XactTypeItemDto> results = null;
         try {

@@ -4,6 +4,7 @@ import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.XactCategory;
 import org.dao.mapping.orm.rmt2.XactType;
+import org.dao.mapping.orm.rmt2.XactTypeItem;
 import org.dto.XactTypeDto;
 
 /**
@@ -63,6 +64,11 @@ class XactTypeRmt2OrmAdapter extends XactCategoryRmt2OrmAdapter implements
         }
         else if (obj instanceof XactType) {
             this.xt = (XactType) obj;
+        }
+        else if (obj instanceof XactTypeItem) {
+            XactTypeItem in = (XactTypeItem) obj;
+            this.xt = new XactType();
+            this.xt.setXactTypeId(in.getXactTypeId());
         }
         else if (obj instanceof VwXactList) {
             VwXactList in = (VwXactList) obj;
