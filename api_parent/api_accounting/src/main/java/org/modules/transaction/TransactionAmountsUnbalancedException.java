@@ -1,5 +1,7 @@
 package org.modules.transaction;
 
+import com.InvalidDataException;
+
 /**
  * Used to flag occurrences when the base transaction amount does not balance
  * with the sum of transaction detail item amounts.
@@ -7,7 +9,7 @@ package org.modules.transaction;
  * @author Roy Terrell
  * 
  */
-public class TransactionAmountsUnbalancedException extends XactApiException {
+public class TransactionAmountsUnbalancedException extends InvalidDataException {
     private static final long serialVersionUID = -1884703323759924257L;
 
     public TransactionAmountsUnbalancedException() {
