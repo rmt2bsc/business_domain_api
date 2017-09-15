@@ -12,6 +12,7 @@ import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 
+import com.InvalidDataException;
 import com.api.persistence.DaoClient;
 
 /**
@@ -301,21 +302,20 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      *            {@link XactDto} instance.
      * @param xactItems
      *            A List of {@link XactTypeItemActivityDto} instances.
-     * @throws XactApiException
+     * @throws InvalidDataException
      *             When <i>xact</i> does not meet basic validation requirements,
      *             <i>xactItems</i> is null or is empty, or basic validations
      *             fail.
      * @see {@link AbstractXactApiImpl#validate(XactDto, List)}
      */
-    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException {
+    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         // Transaction items are only required for general cash disbursement
         // type transactions
         if (!this.creditorDisb) {
             if (xactItems == null || xactItems.size() == 0) {
                 this.msg = "Non-Creditor cash disbursement transaction must contain at least one item detail";
                 logger.error(this.msg);
-                throw new XactApiException(this.msg);
+                throw new InvalidDataException(this.msg);
             }
         }
 

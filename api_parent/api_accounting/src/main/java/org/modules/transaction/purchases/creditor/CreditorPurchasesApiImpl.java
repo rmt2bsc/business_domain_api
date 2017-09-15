@@ -19,6 +19,7 @@ import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 
+import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
@@ -512,17 +513,16 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      *            {@link XactDto} instance.
      * @param items
      *            A List of {@link XactTypeItemActivityDto} instances.
-     * @throws XactApiException
+     * @throws InvalidDataException
      *             When <i>xact</i> does not meet basic validation requirements,
      *             <i>items</i> is null or is empty, or basic validations fail.
      */
     @Override
-    public void validate(XactDto xact, List<XactTypeItemActivityDto> items)
-            throws XactApiException {
+    public void validate(XactDto xact, List<XactTypeItemActivityDto> items) {
         if (items == null || items.size() == 0) {
             this.msg = "Creditor purchase transaction must contain at least one line item";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
         // Perform common validations
         super.validate(xact, items);
@@ -546,11 +546,11 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * 
      * @param xact
      *            The transaction object to be validated.
-     * @throws XactException
+     * @throws InvalidDataException
      *             Validation error occurred.
      */
     @Override
-    protected void postValidate(XactDto xact) throws XactApiException {
+    protected void postValidate(XactDto xact) {
         super.postValidate(xact);
         java.util.Date today = new java.util.Date();
 
@@ -558,13 +558,13 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
         if (xact.getXactDate() == null) {
             this.msg = "Creditor Purchase transaction date is required";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
         // Verify that the transacton date value is valid
         if (xact.getXactDate().getTime() > today.getTime()) {
             this.msg = "Creditor Purchase transaction date cannot be in the future";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
 
         // Verify that transaction tender has a value and is valid.
@@ -572,14 +572,14 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
                 && xact.getXactTenderId() != XactConst.TENDER_CREDITCARD) {
             this.msg = "Creditor Purchase Tender Type must be either Bank Credit Card or Finance Company Credit";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
 
         // Ensure that the source of the transction is entered.
         if (xact.getXactReason() == null || xact.getXactReason().equals("")) {
             this.msg = "Creditor purchase transaction reason/source cannot be blank...this is usually the name of the merchant or service provider";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
         return;
     }

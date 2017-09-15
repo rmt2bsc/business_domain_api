@@ -18,6 +18,7 @@ import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 
+import com.InvalidDataException;
 import com.api.config.ConfigConstants;
 import com.api.messaging.MessageException;
 import com.api.messaging.MessageManager;
@@ -288,15 +289,15 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
      * 
      * @param xact
      *            The transaction object to be validated
-     * @throws XactException
+     * @throws InvalidDataException
      *             Validation error occurred.
      */
-    protected void postValidate(XactDto xact) throws XactApiException {
+    protected void postValidate(XactDto xact) {
         // Ensure that reason has a value
         if (xact.getXactReason() == null || xact.getXactReason().equals("")) {
             this.msg = "Transaction reason cannot be blank";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
         return;
     }
