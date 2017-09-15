@@ -710,14 +710,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         }
 
         // validate money expression
-        String temp = String.valueOf(xact.getXactAmount());
-        // This logic is used in casses where xact amound is a decimal but probably 
-        // was entered as xxx.00.  Java has a tendency to strip away the last zero 
-        // to the right of the decimal when evaluating doubles to String.
-        if ((xact.getXactAmount() % 1) == 0 ) {
-            temp += "0";
-        }
-        RMT2Money.validateMoney(temp);
+        RMT2Money.validateMoney(xact.getXactAmount());
 
         // Execute custom post validations
         this.postValidate(xact);
