@@ -1,5 +1,7 @@
 package org.modules.transaction;
 
+import com.InvalidDataException;
+
 /**
  * Used to flag occurrences when a transaction is not accompanied with detail
  * items.
@@ -7,7 +9,7 @@ package org.modules.transaction;
  * @author Roy Terrell
  * 
  */
-public class TransactionItemsUnavailableException extends XactApiException {
+public class TransactionItemsUnavailableException extends InvalidDataException {
     private static final long serialVersionUID = -1884703323759924257L;
 
     public TransactionItemsUnavailableException() {
