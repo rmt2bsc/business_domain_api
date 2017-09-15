@@ -578,7 +578,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.validate(xact, xactItems);
         } catch (Exception e) {
             this.msg = "Common transaction update failed validation checks";
-            logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
 
@@ -593,7 +592,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.postCreateXact(xact);
             return rc;
         } catch (Exception e) {
-            this.msg = "Error occurred persisting common transaction changes";
+            this.msg = "Base transaction update failed";
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
@@ -649,16 +648,22 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @param xactItems
      *            A List of {@link XactTypeItemActivityDto} serving as the
      *            transaction items
-     * @throws XactApiException
+     * @throws InvalidDataException
      *             When <i>xact</i> does not meet basic validation requirements,
      *             one or more elements in <i>xactItems</i> do not meet basic
-     *             validation requirements, or the sum of the transaction item
+     *             validation requirements.
+     * @throws TransactionAmountsUnbalancedException the sum of the transaction item
      *             amount of each element of <i>xactItems</i> does not equal the
      *             transaction amount found in <i>xact</i>.
      */
-    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
+    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         // Validate base transaction
-        this.validate(xact);
+        try {
+            this.validate(xact);    
+        }
+        catch (Exception e) {
+            throw new InvalidDataException("base transaction failed validation", e);
+        }
 
         // Validate transaction items.
         try {
@@ -671,7 +676,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             logger.warn("There are no transaction items associated with the base transaction", e);
             return;
         } catch (Exception e) {
-            throw new XactApiException("List of transaction items failed validation", e);
+            throw new InvalidDataException("List of base transaction detail items failed validation", e);
         }
         // At this point, we have items. Make sure the reversal of the
         // transaction base and transaction items balance.
@@ -687,9 +692,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * <li>Base transaction type id is greater than zero</li>
      * </ul>
      * 
-     * @throws XactException
+     * @throws InvalidDataException
      */
-    private void validate(XactDto xact) throws XactApiException {
+    private void validate(XactDto xact) {
         // Execute custom pre validations
         this.preValidate(xact);
 
@@ -701,7 +706,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         try {
             Verifier.verifyPositive(xact.getXactTypeId());
         } catch (VerifyException e) {
-            throw new InvalidDataException("Transaction type id must be greater than zero", e);
+            throw new InvalidDataException("Transaction type id cannot be negative", e);
         }
 
         // validate money expression
@@ -741,16 +746,15 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * 
      * @param xact
      *            The transaction object to be validated
-     * @throws XactApiException
-     *             Validation error occurred.
+     * @throws InvalidDataException
+     *             xact is null
      */
-    protected void preValidate(XactDto xact) throws XactApiException {
+    protected void preValidate(XactDto xact) {
         try {
             Verifier.verifyNotNull(xact);
         } catch (VerifyException e) {
             this.msg = "Base transaction is required and cannot be null";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg, e);
         }
         return;
     }
@@ -761,14 +765,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * 
      * @param xact
      *            The transaction object to be validated.
-     * @throws XactApiException
+     * @throws InvalidDataException
      *             Validation error occurred.
      */
-    protected void postValidate(XactDto xact) throws XactApiException {
+    protected void postValidate(XactDto xact)  {
         return;
     }
 
-    private void validate(List<XactTypeItemActivityDto> items) throws XactApiException {
+    private void validate(List<XactTypeItemActivityDto> items) {
         // Pre validate the list of items as a whole
         this.preValidate(items);
 
@@ -790,10 +794,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * Items list validations.
      * 
      * @param items
-     * @throws XactApiException
-     *             when transaction items do not exist
+     * @throws TransactionItemsUnavailableException
+     *             when transaction items is null or empty
      */
-    protected void preValidate(List<XactTypeItemActivityDto> items) throws XactApiException {
+    protected void preValidate(List<XactTypeItemActivityDto> items) {
         // It is okay not to have any items.
         try {
             Verifier.verifyNotEmpty(items);
@@ -807,9 +811,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * list validations.
      * 
      * @param items
-     * @throws XactApiException
+     * @throws InvalidDataException
      */
-    protected void postValidate(List<XactTypeItemActivityDto> items) throws XactApiException {
+    protected void postValidate(List<XactTypeItemActivityDto> items) {
         return;
     }
 
@@ -826,11 +830,11 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @param item
      *            {@link com.bean.XactTypeItemActivity XactTypeItemActivity}
      *            instance.
-     * @throws XactApiException
+     * @throws InvalidDataException
      *             When <i>xtia</i> is null, its id property is less than or
      *             equal to zero, or its description property is null.
      */
-    private void validate(XactTypeItemActivityDto item) throws XactApiException {
+    private void validate(XactTypeItemActivityDto item) {
         // Execute custom pre validation logic.
         this.preValidateXactItem(item);
 
@@ -839,7 +843,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             this.msg = "Transaction type item id property is required to have a value";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg, e);
         }
 
         try {
@@ -847,7 +851,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             this.msg = "Transaction type item description property is required to have a value";
             logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg, e);
         }
 
         // Execute custom post validation logic.
@@ -863,15 +867,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * Activity validations.
      * 
      * @param item
-     * @throws XactApiException
+     * @throws InvalidDataException
      */
-    protected void preValidateXactItem(XactTypeItemActivityDto item) throws XactApiException {
+    protected void preValidateXactItem(XactTypeItemActivityDto item) {
         try {
             Verifier.verifyNotNull(item);
         } catch (VerifyException e) {
             this.msg = "Transaction type item activity object is invalid or null";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
+            throw new InvalidDataException(this.msg, e);
         }
     }
 
@@ -880,9 +883,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * Activity validations.
      * 
      * @param item
-     * @throws XactApiException
+     * @throws InvalidDataException
      */
-    protected void postValidateXactItem(XactTypeItemActivityDto item) throws XactApiException {
+    protected void postValidateXactItem(XactTypeItemActivityDto item) {
         return;
     }
 
