@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -177,6 +179,60 @@ public class PhotoAlbum extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final PhotoAlbum other = (PhotoAlbum) obj; 
+   if (EqualityAssistant.notEqual(this.albumId, other.albumId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.albumName, other.albumName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.albumDate, other.albumDate)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.location, other.location)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.servername, other.servername)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.sharename, other.sharename)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.albumId),
+               HashCodeAssistant.hashObject(this.albumName),
+               HashCodeAssistant.hashObject(this.albumDate),
+               HashCodeAssistant.hashObject(this.location),
+               HashCodeAssistant.hashObject(this.servername),
+               HashCodeAssistant.hashObject(this.sharename));
+} 
+
+@Override
+public String toString() {
+   return "PhotoAlbum [albumId=" + albumId + 
+          ", albumName=" + albumName + 
+          ", albumDate=" + albumDate + 
+          ", location=" + location + 
+          ", servername=" + servername + 
+          ", sharename=" + sharename  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

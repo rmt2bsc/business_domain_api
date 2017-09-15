@@ -245,15 +245,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.secured, other.secured)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.host, other.host)) {
       return false;
    }
@@ -263,16 +254,13 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.rsrcId),
-   HashCodeAssistant.hashObject(this.name),
-   HashCodeAssistant.hashObject(this.rsrcTypeId),
-   HashCodeAssistant.hashObject(this.rsrcSubtypeId),
-   HashCodeAssistant.hashObject(this.url),
-   HashCodeAssistant.hashObject(this.description),
-   HashCodeAssistant.hashObject(this.secured),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.host));
+               HashCodeAssistant.hashObject(this.name),
+               HashCodeAssistant.hashObject(this.rsrcTypeId),
+               HashCodeAssistant.hashObject(this.rsrcSubtypeId),
+               HashCodeAssistant.hashObject(this.url),
+               HashCodeAssistant.hashObject(this.description),
+               HashCodeAssistant.hashObject(this.secured),
+               HashCodeAssistant.hashObject(this.host));
 } 
 
 @Override
@@ -284,9 +272,6 @@ public String toString() {
           ", url=" + url + 
           ", description=" + description + 
           ", secured=" + secured + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", host=" + host  + "]";
 }
 

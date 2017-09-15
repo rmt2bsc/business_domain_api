@@ -130,9 +130,9 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.countryId),
-   HashCodeAssistant.hashObject(this.name),
-   HashCodeAssistant.hashObject(this.cntryVoidInd),
-   HashCodeAssistant.hashObject(this.code));
+               HashCodeAssistant.hashObject(this.name),
+               HashCodeAssistant.hashObject(this.cntryVoidInd),
+               HashCodeAssistant.hashObject(this.code));
 } 
 
 @Override

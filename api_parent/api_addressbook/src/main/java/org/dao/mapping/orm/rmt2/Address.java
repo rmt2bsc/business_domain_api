@@ -400,39 +400,27 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.phonePager, other.phonePager)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.addrId),
-   HashCodeAssistant.hashObject(this.personId),
-   HashCodeAssistant.hashObject(this.businessId),
-   HashCodeAssistant.hashObject(this.addr1),
-   HashCodeAssistant.hashObject(this.addr2),
-   HashCodeAssistant.hashObject(this.addr3),
-   HashCodeAssistant.hashObject(this.addr4),
-   HashCodeAssistant.hashObject(this.zip),
-   HashCodeAssistant.hashObject(this.zipext),
-   HashCodeAssistant.hashObject(this.phoneHome),
-   HashCodeAssistant.hashObject(this.phoneWork),
-   HashCodeAssistant.hashObject(this.phoneExt),
-   HashCodeAssistant.hashObject(this.phoneMain),
-   HashCodeAssistant.hashObject(this.phoneCell),
-   HashCodeAssistant.hashObject(this.phoneFax),
-   HashCodeAssistant.hashObject(this.phonePager),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.personId),
+               HashCodeAssistant.hashObject(this.businessId),
+               HashCodeAssistant.hashObject(this.addr1),
+               HashCodeAssistant.hashObject(this.addr2),
+               HashCodeAssistant.hashObject(this.addr3),
+               HashCodeAssistant.hashObject(this.addr4),
+               HashCodeAssistant.hashObject(this.zip),
+               HashCodeAssistant.hashObject(this.zipext),
+               HashCodeAssistant.hashObject(this.phoneHome),
+               HashCodeAssistant.hashObject(this.phoneWork),
+               HashCodeAssistant.hashObject(this.phoneExt),
+               HashCodeAssistant.hashObject(this.phoneMain),
+               HashCodeAssistant.hashObject(this.phoneCell),
+               HashCodeAssistant.hashObject(this.phoneFax),
+               HashCodeAssistant.hashObject(this.phonePager));
 } 
 
 @Override
@@ -452,10 +440,7 @@ public String toString() {
           ", phoneMain=" + phoneMain + 
           ", phoneCell=" + phoneCell + 
           ", phoneFax=" + phoneFax + 
-          ", phonePager=" + phonePager + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", phonePager=" + phonePager  + "]";
 }
 
 /**

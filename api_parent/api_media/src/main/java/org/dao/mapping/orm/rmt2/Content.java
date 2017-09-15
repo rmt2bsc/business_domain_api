@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -225,6 +227,80 @@ public class Content extends OrmBean {
   public int getProjectId() {
     return this.projectId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final Content other = (Content) obj; 
+   if (EqualityAssistant.notEqual(this.contentId, other.contentId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.mimeTypeId, other.mimeTypeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.imageData, other.imageData)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.textData, other.textData)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.appCode, other.appCode)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.moduleCode, other.moduleCode)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.filepath, other.filepath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.filename, other.filename)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.size, other.size)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectId, other.projectId)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.contentId),
+               HashCodeAssistant.hashObject(this.mimeTypeId),
+               HashCodeAssistant.hashObject(this.imageData),
+               HashCodeAssistant.hashObject(this.textData),
+               HashCodeAssistant.hashObject(this.appCode),
+               HashCodeAssistant.hashObject(this.moduleCode),
+               HashCodeAssistant.hashObject(this.filepath),
+               HashCodeAssistant.hashObject(this.filename),
+               HashCodeAssistant.hashObject(this.size),
+               HashCodeAssistant.hashObject(this.projectId));
+} 
+
+@Override
+public String toString() {
+   return "Content [contentId=" + contentId + 
+          ", mimeTypeId=" + mimeTypeId + 
+          ", imageData=" + imageData + 
+          ", textData=" + textData + 
+          ", appCode=" + appCode + 
+          ", moduleCode=" + moduleCode + 
+          ", filepath=" + filepath + 
+          ", filename=" + filename + 
+          ", size=" + size + 
+          ", projectId=" + projectId  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

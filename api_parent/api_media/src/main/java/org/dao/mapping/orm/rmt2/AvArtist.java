@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -65,6 +67,40 @@ public class AvArtist extends OrmBean {
   public String getName() {
     return this.name;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final AvArtist other = (AvArtist) obj; 
+   if (EqualityAssistant.notEqual(this.artistId, other.artistId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.name, other.name)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.artistId),
+               HashCodeAssistant.hashObject(this.name));
+} 
+
+@Override
+public String toString() {
+   return "AvArtist [artistId=" + artistId + 
+          ", name=" + name  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

@@ -172,15 +172,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.acctcatgdescr, other.acctcatgdescr)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -189,10 +180,7 @@ public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.accttypeid),
                HashCodeAssistant.hashObject(this.accttypedescr),
                HashCodeAssistant.hashObject(this.acctcatid),
-               HashCodeAssistant.hashObject(this.acctcatgdescr),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.acctcatgdescr));
 } 
 
 @Override
@@ -200,10 +188,7 @@ public String toString() {
    return "VwCategory [accttypeid=" + accttypeid + 
           ", accttypedescr=" + accttypedescr + 
           ", acctcatid=" + acctcatid + 
-          ", acctcatgdescr=" + acctcatgdescr + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", acctcatgdescr=" + acctcatgdescr  + "]";
 }
 
 /**

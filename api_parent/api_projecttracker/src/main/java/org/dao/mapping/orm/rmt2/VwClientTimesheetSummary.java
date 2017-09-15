@@ -206,13 +206,13 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.clientId),
-   HashCodeAssistant.hashObject(this.businessId),
-   HashCodeAssistant.hashObject(this.name),
-   HashCodeAssistant.hashObject(this.accountNo),
-   HashCodeAssistant.hashObject(this.statusId),
-   HashCodeAssistant.hashObject(this.statusName),
-   HashCodeAssistant.hashObject(this.statusDescr),
-   HashCodeAssistant.hashObject(this.timesheetCount));
+               HashCodeAssistant.hashObject(this.businessId),
+               HashCodeAssistant.hashObject(this.name),
+               HashCodeAssistant.hashObject(this.accountNo),
+               HashCodeAssistant.hashObject(this.statusId),
+               HashCodeAssistant.hashObject(this.statusName),
+               HashCodeAssistant.hashObject(this.statusDescr),
+               HashCodeAssistant.hashObject(this.timesheetCount));
 } 
 
 @Override

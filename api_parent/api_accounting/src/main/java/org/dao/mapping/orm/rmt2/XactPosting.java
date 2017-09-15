@@ -248,15 +248,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.postDate, other.postDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -269,10 +260,7 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.acctPeriodId),
                HashCodeAssistant.hashObject(this.period),
                HashCodeAssistant.hashObject(this.postAmount),
-               HashCodeAssistant.hashObject(this.postDate),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.postDate));
 } 
 
 @Override
@@ -284,10 +272,7 @@ public String toString() {
           ", acctPeriodId=" + acctPeriodId + 
           ", period=" + period + 
           ", postAmount=" + postAmount + 
-          ", postDate=" + postDate + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", postDate=" + postDate  + "]";
 }
 
 /**

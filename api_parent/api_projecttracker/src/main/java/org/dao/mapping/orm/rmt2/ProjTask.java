@@ -153,36 +153,21 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.billable, other.billable)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.taskId),
-   HashCodeAssistant.hashObject(this.description),
-   HashCodeAssistant.hashObject(this.billable),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.description),
+               HashCodeAssistant.hashObject(this.billable));
 } 
 
 @Override
 public String toString() {
    return "ProjTask [taskId=" + taskId + 
           ", description=" + description + 
-          ", billable=" + billable + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", billable=" + billable  + "]";
 }
 
 /**

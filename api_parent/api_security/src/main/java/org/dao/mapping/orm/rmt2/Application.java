@@ -172,27 +172,15 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.active, other.active)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.appId),
-   HashCodeAssistant.hashObject(this.name),
-   HashCodeAssistant.hashObject(this.description),
-   HashCodeAssistant.hashObject(this.active),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.name),
+               HashCodeAssistant.hashObject(this.description),
+               HashCodeAssistant.hashObject(this.active));
 } 
 
 @Override
@@ -200,10 +188,7 @@ public String toString() {
    return "Application [appId=" + appId + 
           ", name=" + name + 
           ", description=" + description + 
-          ", active=" + active + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", active=" + active  + "]";
 }
 
 /**

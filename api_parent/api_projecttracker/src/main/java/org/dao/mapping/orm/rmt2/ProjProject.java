@@ -191,28 +191,16 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.projId),
-   HashCodeAssistant.hashObject(this.clientId),
-   HashCodeAssistant.hashObject(this.description),
-   HashCodeAssistant.hashObject(this.effectiveDate),
-   HashCodeAssistant.hashObject(this.endDate),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.clientId),
+               HashCodeAssistant.hashObject(this.description),
+               HashCodeAssistant.hashObject(this.effectiveDate),
+               HashCodeAssistant.hashObject(this.endDate));
 } 
 
 @Override
@@ -221,10 +209,7 @@ public String toString() {
           ", clientId=" + clientId + 
           ", description=" + description + 
           ", effectiveDate=" + effectiveDate + 
-          ", endDate=" + endDate + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", endDate=" + endDate  + "]";
 }
 
 /**

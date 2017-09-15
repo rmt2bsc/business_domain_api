@@ -92,7 +92,7 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.endPeriodDay),
-   HashCodeAssistant.hashObject(this.eventSubmitFreq));
+               HashCodeAssistant.hashObject(this.eventSubmitFreq));
 } 
 
 @Override

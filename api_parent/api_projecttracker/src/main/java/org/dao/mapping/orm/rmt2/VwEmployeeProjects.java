@@ -396,23 +396,23 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.empProjId),
-   HashCodeAssistant.hashObject(this.empId),
-   HashCodeAssistant.hashObject(this.projId),
-   HashCodeAssistant.hashObject(this.projempEffectiveDate),
-   HashCodeAssistant.hashObject(this.projempEndDate),
-   HashCodeAssistant.hashObject(this.payRate),
-   HashCodeAssistant.hashObject(this.otPayRate),
-   HashCodeAssistant.hashObject(this.flatRate),
-   HashCodeAssistant.hashObject(this.comments),
-   HashCodeAssistant.hashObject(this.clientId),
-   HashCodeAssistant.hashObject(this.projectName),
-   HashCodeAssistant.hashObject(this.projEffectiveDate),
-   HashCodeAssistant.hashObject(this.projEndDate),
-   HashCodeAssistant.hashObject(this.clientName),
-   HashCodeAssistant.hashObject(this.accountNo),
-   HashCodeAssistant.hashObject(this.businessId),
-   HashCodeAssistant.hashObject(this.clientBillRate),
-   HashCodeAssistant.hashObject(this.clientOtBillRate));
+               HashCodeAssistant.hashObject(this.empId),
+               HashCodeAssistant.hashObject(this.projId),
+               HashCodeAssistant.hashObject(this.projempEffectiveDate),
+               HashCodeAssistant.hashObject(this.projempEndDate),
+               HashCodeAssistant.hashObject(this.payRate),
+               HashCodeAssistant.hashObject(this.otPayRate),
+               HashCodeAssistant.hashObject(this.flatRate),
+               HashCodeAssistant.hashObject(this.comments),
+               HashCodeAssistant.hashObject(this.clientId),
+               HashCodeAssistant.hashObject(this.projectName),
+               HashCodeAssistant.hashObject(this.projEffectiveDate),
+               HashCodeAssistant.hashObject(this.projEndDate),
+               HashCodeAssistant.hashObject(this.clientName),
+               HashCodeAssistant.hashObject(this.accountNo),
+               HashCodeAssistant.hashObject(this.businessId),
+               HashCodeAssistant.hashObject(this.clientBillRate),
+               HashCodeAssistant.hashObject(this.clientOtBillRate));
 } 
 
 @Override

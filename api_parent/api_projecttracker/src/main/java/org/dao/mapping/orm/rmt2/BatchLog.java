@@ -140,19 +140,15 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.batchDate, other.batchDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.id),
-   HashCodeAssistant.hashObject(this.batId),
-   HashCodeAssistant.hashObject(this.msg),
-   HashCodeAssistant.hashObject(this.batchDate),
-   HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.batId),
+               HashCodeAssistant.hashObject(this.msg),
+               HashCodeAssistant.hashObject(this.batchDate));
 } 
 
 @Override
@@ -160,8 +156,7 @@ public String toString() {
    return "BatchLog [id=" + id + 
           ", batId=" + batId + 
           ", msg=" + msg + 
-          ", batchDate=" + batchDate + 
-          ", userId=" + userId  + "]";
+          ", batchDate=" + batchDate  + "]";
 }
 
 /**

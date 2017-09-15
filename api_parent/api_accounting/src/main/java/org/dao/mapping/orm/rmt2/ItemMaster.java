@@ -356,21 +356,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.active, other.active)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -387,12 +372,7 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.markup),
                HashCodeAssistant.hashObject(this.retailPrice),
                HashCodeAssistant.hashObject(this.overrideRetail),
-               HashCodeAssistant.hashObject(this.active),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId),
-               HashCodeAssistant.hashObject(this.ipCreated),
-               HashCodeAssistant.hashObject(this.ipUpdated));
+               HashCodeAssistant.hashObject(this.active));
 } 
 
 @Override
@@ -408,12 +388,7 @@ public String toString() {
           ", markup=" + markup + 
           ", retailPrice=" + retailPrice + 
           ", overrideRetail=" + overrideRetail + 
-          ", active=" + active + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
-          ", ipCreated=" + ipCreated + 
-          ", ipUpdated=" + ipUpdated  + "]";
+          ", active=" + active  + "]";
 }
 
 /**

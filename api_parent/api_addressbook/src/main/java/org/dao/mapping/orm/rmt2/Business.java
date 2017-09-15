@@ -340,15 +340,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.website, other.website)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.categoryId, other.categoryId)) {
       return false;
    }
@@ -358,21 +349,18 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.businessId),
-   HashCodeAssistant.hashObject(this.entityTypeId),
-   HashCodeAssistant.hashObject(this.servTypeId),
-   HashCodeAssistant.hashObject(this.longname),
-   HashCodeAssistant.hashObject(this.shortname),
-   HashCodeAssistant.hashObject(this.contactFirstname),
-   HashCodeAssistant.hashObject(this.contactLastname),
-   HashCodeAssistant.hashObject(this.contactPhone),
-   HashCodeAssistant.hashObject(this.contactExt),
-   HashCodeAssistant.hashObject(this.contactEmail),
-   HashCodeAssistant.hashObject(this.taxId),
-   HashCodeAssistant.hashObject(this.website),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.categoryId));
+               HashCodeAssistant.hashObject(this.entityTypeId),
+               HashCodeAssistant.hashObject(this.servTypeId),
+               HashCodeAssistant.hashObject(this.longname),
+               HashCodeAssistant.hashObject(this.shortname),
+               HashCodeAssistant.hashObject(this.contactFirstname),
+               HashCodeAssistant.hashObject(this.contactLastname),
+               HashCodeAssistant.hashObject(this.contactPhone),
+               HashCodeAssistant.hashObject(this.contactExt),
+               HashCodeAssistant.hashObject(this.contactEmail),
+               HashCodeAssistant.hashObject(this.taxId),
+               HashCodeAssistant.hashObject(this.website),
+               HashCodeAssistant.hashObject(this.categoryId));
 } 
 
 @Override
@@ -389,9 +377,6 @@ public String toString() {
           ", contactEmail=" + contactEmail + 
           ", taxId=" + taxId + 
           ", website=" + website + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", categoryId=" + categoryId  + "]";
 }
 

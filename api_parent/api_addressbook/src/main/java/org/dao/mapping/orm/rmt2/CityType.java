@@ -92,7 +92,7 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.cityTypeId),
-   HashCodeAssistant.hashObject(this.descr));
+               HashCodeAssistant.hashObject(this.descr));
 } 
 
 @Override

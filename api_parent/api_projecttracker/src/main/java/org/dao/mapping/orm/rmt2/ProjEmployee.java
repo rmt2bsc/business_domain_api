@@ -341,15 +341,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.terminationDate, other.terminationDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.firstname, other.firstname)) {
       return false;
    }
@@ -377,22 +368,19 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.empId),
-   HashCodeAssistant.hashObject(this.empTypeId),
-   HashCodeAssistant.hashObject(this.managerId),
-   HashCodeAssistant.hashObject(this.empTitleId),
-   HashCodeAssistant.hashObject(this.loginId),
-   HashCodeAssistant.hashObject(this.startDate),
-   HashCodeAssistant.hashObject(this.terminationDate),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.firstname),
-   HashCodeAssistant.hashObject(this.lastname),
-   HashCodeAssistant.hashObject(this.ssn),
-   HashCodeAssistant.hashObject(this.email),
-   HashCodeAssistant.hashObject(this.loginName),
-   HashCodeAssistant.hashObject(this.companyName),
-   HashCodeAssistant.hashObject(this.isManager));
+               HashCodeAssistant.hashObject(this.empTypeId),
+               HashCodeAssistant.hashObject(this.managerId),
+               HashCodeAssistant.hashObject(this.empTitleId),
+               HashCodeAssistant.hashObject(this.loginId),
+               HashCodeAssistant.hashObject(this.startDate),
+               HashCodeAssistant.hashObject(this.terminationDate),
+               HashCodeAssistant.hashObject(this.firstname),
+               HashCodeAssistant.hashObject(this.lastname),
+               HashCodeAssistant.hashObject(this.ssn),
+               HashCodeAssistant.hashObject(this.email),
+               HashCodeAssistant.hashObject(this.loginName),
+               HashCodeAssistant.hashObject(this.companyName),
+               HashCodeAssistant.hashObject(this.isManager));
 } 
 
 @Override
@@ -404,9 +392,6 @@ public String toString() {
           ", loginId=" + loginId + 
           ", startDate=" + startDate + 
           ", terminationDate=" + terminationDate + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", firstname=" + firstname + 
           ", lastname=" + lastname + 
           ", ssn=" + ssn + 

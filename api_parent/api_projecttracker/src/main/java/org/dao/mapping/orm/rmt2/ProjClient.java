@@ -287,15 +287,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.otBillRate, other.otBillRate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.accountNo, other.accountNo)) {
       return false;
    }
@@ -320,19 +311,16 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.clientId),
-   HashCodeAssistant.hashObject(this.businessId),
-   HashCodeAssistant.hashObject(this.name),
-   HashCodeAssistant.hashObject(this.billRate),
-   HashCodeAssistant.hashObject(this.otBillRate),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.accountNo),
-   HashCodeAssistant.hashObject(this.contactFirstname),
-   HashCodeAssistant.hashObject(this.contactLastname),
-   HashCodeAssistant.hashObject(this.contactPhone),
-   HashCodeAssistant.hashObject(this.contactExt),
-   HashCodeAssistant.hashObject(this.contactEmail));
+               HashCodeAssistant.hashObject(this.businessId),
+               HashCodeAssistant.hashObject(this.name),
+               HashCodeAssistant.hashObject(this.billRate),
+               HashCodeAssistant.hashObject(this.otBillRate),
+               HashCodeAssistant.hashObject(this.accountNo),
+               HashCodeAssistant.hashObject(this.contactFirstname),
+               HashCodeAssistant.hashObject(this.contactLastname),
+               HashCodeAssistant.hashObject(this.contactPhone),
+               HashCodeAssistant.hashObject(this.contactExt),
+               HashCodeAssistant.hashObject(this.contactEmail));
 } 
 
 @Override
@@ -342,9 +330,6 @@ public String toString() {
           ", name=" + name + 
           ", billRate=" + billRate + 
           ", otBillRate=" + otBillRate + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", accountNo=" + accountNo + 
           ", contactFirstname=" + contactFirstname + 
           ", contactLastname=" + contactLastname + 

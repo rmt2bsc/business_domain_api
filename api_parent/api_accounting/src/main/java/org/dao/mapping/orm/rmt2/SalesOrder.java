@@ -220,21 +220,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.orderTotal, other.orderTotal)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.effectiveDate, other.effectiveDate)) {
       return false;
    }
@@ -247,11 +232,6 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.customerId),
                HashCodeAssistant.hashObject(this.invoiced),
                HashCodeAssistant.hashObject(this.orderTotal),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId),
-               HashCodeAssistant.hashObject(this.ipCreated),
-               HashCodeAssistant.hashObject(this.ipUpdated),
                HashCodeAssistant.hashObject(this.effectiveDate));
 } 
 
@@ -261,11 +241,6 @@ public String toString() {
           ", customerId=" + customerId + 
           ", invoiced=" + invoiced + 
           ", orderTotal=" + orderTotal + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
-          ", ipCreated=" + ipCreated + 
-          ", ipUpdated=" + ipUpdated + 
           ", effectiveDate=" + effectiveDate  + "]";
 }
 

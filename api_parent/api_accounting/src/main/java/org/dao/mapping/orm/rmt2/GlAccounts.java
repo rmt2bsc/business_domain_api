@@ -267,15 +267,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.acctBaltypeId, other.acctBaltypeId)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -289,10 +280,7 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.name),
                HashCodeAssistant.hashObject(this.code),
                HashCodeAssistant.hashObject(this.description),
-               HashCodeAssistant.hashObject(this.acctBaltypeId),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.acctBaltypeId));
 } 
 
 @Override
@@ -305,10 +293,7 @@ public String toString() {
           ", name=" + name + 
           ", code=" + code + 
           ", description=" + description + 
-          ", acctBaltypeId=" + acctBaltypeId + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", acctBaltypeId=" + acctBaltypeId  + "]";
 }
 
 /**

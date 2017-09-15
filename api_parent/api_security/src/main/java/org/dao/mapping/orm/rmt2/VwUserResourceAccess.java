@@ -415,24 +415,24 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.rsrcId),
-   HashCodeAssistant.hashObject(this.resrcName),
-   HashCodeAssistant.hashObject(this.resrcUrl),
-   HashCodeAssistant.hashObject(this.resrcDesc),
-   HashCodeAssistant.hashObject(this.resrcSecured),
-   HashCodeAssistant.hashObject(this.rsrcTypeId),
-   HashCodeAssistant.hashObject(this.resrcTypeName),
-   HashCodeAssistant.hashObject(this.rsrcSubtypeId),
-   HashCodeAssistant.hashObject(this.host),
-   HashCodeAssistant.hashObject(this.resrcSubtypeName),
-   HashCodeAssistant.hashObject(this.resrcSubtypeDesc),
-   HashCodeAssistant.hashObject(this.userUid),
-   HashCodeAssistant.hashObject(this.username),
-   HashCodeAssistant.hashObject(this.userFirstname),
-   HashCodeAssistant.hashObject(this.userLastname),
-   HashCodeAssistant.hashObject(this.userActiveStatus),
-   HashCodeAssistant.hashObject(this.userEmail),
-   HashCodeAssistant.hashObject(this.userGroupId),
-   HashCodeAssistant.hashObject(this.userGroupName));
+               HashCodeAssistant.hashObject(this.resrcName),
+               HashCodeAssistant.hashObject(this.resrcUrl),
+               HashCodeAssistant.hashObject(this.resrcDesc),
+               HashCodeAssistant.hashObject(this.resrcSecured),
+               HashCodeAssistant.hashObject(this.rsrcTypeId),
+               HashCodeAssistant.hashObject(this.resrcTypeName),
+               HashCodeAssistant.hashObject(this.rsrcSubtypeId),
+               HashCodeAssistant.hashObject(this.host),
+               HashCodeAssistant.hashObject(this.resrcSubtypeName),
+               HashCodeAssistant.hashObject(this.resrcSubtypeDesc),
+               HashCodeAssistant.hashObject(this.userUid),
+               HashCodeAssistant.hashObject(this.username),
+               HashCodeAssistant.hashObject(this.userFirstname),
+               HashCodeAssistant.hashObject(this.userLastname),
+               HashCodeAssistant.hashObject(this.userActiveStatus),
+               HashCodeAssistant.hashObject(this.userEmail),
+               HashCodeAssistant.hashObject(this.userGroupId),
+               HashCodeAssistant.hashObject(this.userGroupName));
 } 
 
 @Override

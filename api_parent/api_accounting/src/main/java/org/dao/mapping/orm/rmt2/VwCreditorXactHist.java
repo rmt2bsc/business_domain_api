@@ -458,12 +458,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.xactTypeName, other.xactTypeName)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.postedDate, other.postedDate)) {
       return false;
    }
@@ -504,8 +498,6 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.xactSubtypeId),
                HashCodeAssistant.hashObject(this.reason),
                HashCodeAssistant.hashObject(this.xactTypeName),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.userId),
                HashCodeAssistant.hashObject(this.postedDate),
                HashCodeAssistant.hashObject(this.confirmNo),
                HashCodeAssistant.hashObject(this.negInstrNo),
@@ -531,8 +523,6 @@ public String toString() {
           ", xactSubtypeId=" + xactSubtypeId + 
           ", reason=" + reason + 
           ", xactTypeName=" + xactTypeName + 
-          ", dateCreated=" + dateCreated + 
-          ", userId=" + userId + 
           ", postedDate=" + postedDate + 
           ", confirmNo=" + confirmNo + 
           ", negInstrNo=" + negInstrNo + 

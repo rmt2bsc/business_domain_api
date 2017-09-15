@@ -415,24 +415,24 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.contactId),
-   HashCodeAssistant.hashObject(this.contactName),
-   HashCodeAssistant.hashObject(this.contactType),
-   HashCodeAssistant.hashObject(this.addrId),
-   HashCodeAssistant.hashObject(this.addrPhoneCell),
-   HashCodeAssistant.hashObject(this.addrPhoneExt),
-   HashCodeAssistant.hashObject(this.addrPhoneFax),
-   HashCodeAssistant.hashObject(this.addrPhoneHome),
-   HashCodeAssistant.hashObject(this.addrPhoneMain),
-   HashCodeAssistant.hashObject(this.addrPhonePager),
-   HashCodeAssistant.hashObject(this.addrPhoneWork),
-   HashCodeAssistant.hashObject(this.addrZip),
-   HashCodeAssistant.hashObject(this.addrZipext),
-   HashCodeAssistant.hashObject(this.addr1),
-   HashCodeAssistant.hashObject(this.addr2),
-   HashCodeAssistant.hashObject(this.addr3),
-   HashCodeAssistant.hashObject(this.addr4),
-   HashCodeAssistant.hashObject(this.zipCity),
-   HashCodeAssistant.hashObject(this.zipState));
+               HashCodeAssistant.hashObject(this.contactName),
+               HashCodeAssistant.hashObject(this.contactType),
+               HashCodeAssistant.hashObject(this.addrId),
+               HashCodeAssistant.hashObject(this.addrPhoneCell),
+               HashCodeAssistant.hashObject(this.addrPhoneExt),
+               HashCodeAssistant.hashObject(this.addrPhoneFax),
+               HashCodeAssistant.hashObject(this.addrPhoneHome),
+               HashCodeAssistant.hashObject(this.addrPhoneMain),
+               HashCodeAssistant.hashObject(this.addrPhonePager),
+               HashCodeAssistant.hashObject(this.addrPhoneWork),
+               HashCodeAssistant.hashObject(this.addrZip),
+               HashCodeAssistant.hashObject(this.addrZipext),
+               HashCodeAssistant.hashObject(this.addr1),
+               HashCodeAssistant.hashObject(this.addr2),
+               HashCodeAssistant.hashObject(this.addr3),
+               HashCodeAssistant.hashObject(this.addr4),
+               HashCodeAssistant.hashObject(this.zipCity),
+               HashCodeAssistant.hashObject(this.zipState));
 } 
 
 @Override

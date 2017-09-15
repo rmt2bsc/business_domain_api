@@ -207,15 +207,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.genIndValue, other.genIndValue)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.permcol, other.permcol)) {
       return false;
    }
@@ -225,14 +216,11 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.codeId),
-   HashCodeAssistant.hashObject(this.codeGrpId),
-   HashCodeAssistant.hashObject(this.shortdesc),
-   HashCodeAssistant.hashObject(this.longdesc),
-   HashCodeAssistant.hashObject(this.genIndValue),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.permcol));
+               HashCodeAssistant.hashObject(this.codeGrpId),
+               HashCodeAssistant.hashObject(this.shortdesc),
+               HashCodeAssistant.hashObject(this.longdesc),
+               HashCodeAssistant.hashObject(this.genIndValue),
+               HashCodeAssistant.hashObject(this.permcol));
 } 
 
 @Override
@@ -242,9 +230,6 @@ public String toString() {
           ", shortdesc=" + shortdesc + 
           ", longdesc=" + longdesc + 
           ", genIndValue=" + genIndValue + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", permcol=" + permcol  + "]";
 }
 

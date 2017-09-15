@@ -263,16 +263,16 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.ipFrom),
-   HashCodeAssistant.hashObject(this.ipTo),
-   HashCodeAssistant.hashObject(this.countryCode),
-   HashCodeAssistant.hashObject(this.countryName),
-   HashCodeAssistant.hashObject(this.region),
-   HashCodeAssistant.hashObject(this.city),
-   HashCodeAssistant.hashObject(this.latitude),
-   HashCodeAssistant.hashObject(this.longitude),
-   HashCodeAssistant.hashObject(this.zipcode),
-   HashCodeAssistant.hashObject(this.timezone),
-   HashCodeAssistant.hashObject(this.ipId));
+               HashCodeAssistant.hashObject(this.ipTo),
+               HashCodeAssistant.hashObject(this.countryCode),
+               HashCodeAssistant.hashObject(this.countryName),
+               HashCodeAssistant.hashObject(this.region),
+               HashCodeAssistant.hashObject(this.city),
+               HashCodeAssistant.hashObject(this.latitude),
+               HashCodeAssistant.hashObject(this.longitude),
+               HashCodeAssistant.hashObject(this.zipcode),
+               HashCodeAssistant.hashObject(this.timezone),
+               HashCodeAssistant.hashObject(this.ipId));
 } 
 
 @Override

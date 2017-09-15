@@ -159,9 +159,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -171,8 +168,7 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.poStatusId),
                HashCodeAssistant.hashObject(this.poId),
                HashCodeAssistant.hashObject(this.effectiveDate),
-               HashCodeAssistant.hashObject(this.endDate),
-               HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.endDate));
 } 
 
 @Override
@@ -181,8 +177,7 @@ public String toString() {
           ", poStatusId=" + poStatusId + 
           ", poId=" + poId + 
           ", effectiveDate=" + effectiveDate + 
-          ", endDate=" + endDate + 
-          ", userId=" + userId  + "]";
+          ", endDate=" + endDate  + "]";
 }
 
 /**

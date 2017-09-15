@@ -226,18 +226,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.reason, other.reason)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -248,11 +236,7 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.soStatusId),
                HashCodeAssistant.hashObject(this.effectiveDate),
                HashCodeAssistant.hashObject(this.endDate),
-               HashCodeAssistant.hashObject(this.reason),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.userId),
-               HashCodeAssistant.hashObject(this.ipCreated),
-               HashCodeAssistant.hashObject(this.ipUpdated));
+               HashCodeAssistant.hashObject(this.reason));
 } 
 
 @Override
@@ -262,11 +246,7 @@ public String toString() {
           ", soStatusId=" + soStatusId + 
           ", effectiveDate=" + effectiveDate + 
           ", endDate=" + endDate + 
-          ", reason=" + reason + 
-          ", dateCreated=" + dateCreated + 
-          ", userId=" + userId + 
-          ", ipCreated=" + ipCreated + 
-          ", ipUpdated=" + ipUpdated  + "]";
+          ", reason=" + reason  + "]";
 }
 
 /**

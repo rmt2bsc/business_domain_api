@@ -191,28 +191,16 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetHistId),
-   HashCodeAssistant.hashObject(this.timesheetId),
-   HashCodeAssistant.hashObject(this.timesheetStatusId),
-   HashCodeAssistant.hashObject(this.effectiveDate),
-   HashCodeAssistant.hashObject(this.endDate),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.ipCreated),
-   HashCodeAssistant.hashObject(this.ipUpdated));
+               HashCodeAssistant.hashObject(this.timesheetId),
+               HashCodeAssistant.hashObject(this.timesheetStatusId),
+               HashCodeAssistant.hashObject(this.effectiveDate),
+               HashCodeAssistant.hashObject(this.endDate));
 } 
 
 @Override
@@ -221,10 +209,7 @@ public String toString() {
           ", timesheetId=" + timesheetId + 
           ", timesheetStatusId=" + timesheetStatusId + 
           ", effectiveDate=" + effectiveDate + 
-          ", endDate=" + endDate + 
-          ", userId=" + userId + 
-          ", ipCreated=" + ipCreated + 
-          ", ipUpdated=" + ipUpdated  + "]";
+          ", endDate=" + endDate  + "]";
 }
 
 /**

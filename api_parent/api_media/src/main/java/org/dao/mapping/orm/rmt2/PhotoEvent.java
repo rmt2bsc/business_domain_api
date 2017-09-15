@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -145,6 +147,50 @@ public class PhotoEvent extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final PhotoEvent other = (PhotoEvent) obj; 
+   if (EqualityAssistant.notEqual(this.eventId, other.eventId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.albumId, other.albumId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.eventName, other.eventName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.location, other.location)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.eventId),
+               HashCodeAssistant.hashObject(this.albumId),
+               HashCodeAssistant.hashObject(this.eventName),
+               HashCodeAssistant.hashObject(this.location));
+} 
+
+@Override
+public String toString() {
+   return "PhotoEvent [eventId=" + eventId + 
+          ", albumId=" + albumId + 
+          ", eventName=" + eventName + 
+          ", location=" + location  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

@@ -299,40 +299,20 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.comments, other.comments)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.empProjId),
-   HashCodeAssistant.hashObject(this.empId),
-   HashCodeAssistant.hashObject(this.projId),
-   HashCodeAssistant.hashObject(this.effectiveDate),
-   HashCodeAssistant.hashObject(this.endDate),
-   HashCodeAssistant.hashObject(this.hourlyRate),
-   HashCodeAssistant.hashObject(this.hourlyOverRate),
-   HashCodeAssistant.hashObject(this.flatRate),
-   HashCodeAssistant.hashObject(this.comments),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.ipCreated),
-   HashCodeAssistant.hashObject(this.ipUpdated));
+               HashCodeAssistant.hashObject(this.empId),
+               HashCodeAssistant.hashObject(this.projId),
+               HashCodeAssistant.hashObject(this.effectiveDate),
+               HashCodeAssistant.hashObject(this.endDate),
+               HashCodeAssistant.hashObject(this.hourlyRate),
+               HashCodeAssistant.hashObject(this.hourlyOverRate),
+               HashCodeAssistant.hashObject(this.flatRate),
+               HashCodeAssistant.hashObject(this.comments));
 } 
 
 @Override
@@ -345,12 +325,7 @@ public String toString() {
           ", hourlyRate=" + hourlyRate + 
           ", hourlyOverRate=" + hourlyOverRate + 
           ", flatRate=" + flatRate + 
-          ", comments=" + comments + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
-          ", ipCreated=" + ipCreated + 
-          ", ipUpdated=" + ipUpdated  + "]";
+          ", comments=" + comments  + "]";
 }
 
 /**

@@ -134,34 +134,19 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.description, other.description)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.xactCodeGrpId),
-               HashCodeAssistant.hashObject(this.description),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.description));
 } 
 
 @Override
 public String toString() {
    return "XactCodeGroup [xactCodeGrpId=" + xactCodeGrpId + 
-          ", description=" + description + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", description=" + description  + "]";
 }
 
 /**

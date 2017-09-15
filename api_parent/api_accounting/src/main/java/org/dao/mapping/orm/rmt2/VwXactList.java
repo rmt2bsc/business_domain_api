@@ -455,9 +455,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.createDate, other.createDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.documentId, other.documentId)) {
       return false;
    }
@@ -503,7 +500,6 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.xactTypeName),
                HashCodeAssistant.hashObject(this.reason),
                HashCodeAssistant.hashObject(this.createDate),
-               HashCodeAssistant.hashObject(this.userId),
                HashCodeAssistant.hashObject(this.documentId),
                HashCodeAssistant.hashObject(this.xactCatgId),
                HashCodeAssistant.hashObject(this.toMultiplier),
@@ -530,7 +526,6 @@ public String toString() {
           ", xactTypeName=" + xactTypeName + 
           ", reason=" + reason + 
           ", createDate=" + createDate + 
-          ", userId=" + userId + 
           ", documentId=" + documentId + 
           ", xactCatgId=" + xactCatgId + 
           ", toMultiplier=" + toMultiplier + 

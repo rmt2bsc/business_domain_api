@@ -301,18 +301,18 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetId),
-   HashCodeAssistant.hashObject(this.shortname),
-   HashCodeAssistant.hashObject(this.displayValue),
-   HashCodeAssistant.hashObject(this.endPeriod),
-   HashCodeAssistant.hashObject(this.documentId),
-   HashCodeAssistant.hashObject(this.day1Hrs),
-   HashCodeAssistant.hashObject(this.day2Hrs),
-   HashCodeAssistant.hashObject(this.day3Hrs),
-   HashCodeAssistant.hashObject(this.day4Hrs),
-   HashCodeAssistant.hashObject(this.day5Hrs),
-   HashCodeAssistant.hashObject(this.day6Hrs),
-   HashCodeAssistant.hashObject(this.day7Hrs),
-   HashCodeAssistant.hashObject(this.totalHrs));
+               HashCodeAssistant.hashObject(this.shortname),
+               HashCodeAssistant.hashObject(this.displayValue),
+               HashCodeAssistant.hashObject(this.endPeriod),
+               HashCodeAssistant.hashObject(this.documentId),
+               HashCodeAssistant.hashObject(this.day1Hrs),
+               HashCodeAssistant.hashObject(this.day2Hrs),
+               HashCodeAssistant.hashObject(this.day3Hrs),
+               HashCodeAssistant.hashObject(this.day4Hrs),
+               HashCodeAssistant.hashObject(this.day5Hrs),
+               HashCodeAssistant.hashObject(this.day6Hrs),
+               HashCodeAssistant.hashObject(this.day7Hrs),
+               HashCodeAssistant.hashObject(this.totalHrs));
 } 
 
 @Override

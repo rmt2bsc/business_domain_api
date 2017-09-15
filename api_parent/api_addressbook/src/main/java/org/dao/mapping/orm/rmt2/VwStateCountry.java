@@ -168,11 +168,11 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.stateId),
-   HashCodeAssistant.hashObject(this.stateCode),
-   HashCodeAssistant.hashObject(this.countryId),
-   HashCodeAssistant.hashObject(this.stateName),
-   HashCodeAssistant.hashObject(this.sttVoidInd),
-   HashCodeAssistant.hashObject(this.countryName));
+               HashCodeAssistant.hashObject(this.stateCode),
+               HashCodeAssistant.hashObject(this.countryId),
+               HashCodeAssistant.hashObject(this.stateName),
+               HashCodeAssistant.hashObject(this.sttVoidInd),
+               HashCodeAssistant.hashObject(this.countryName));
 } 
 
 @Override

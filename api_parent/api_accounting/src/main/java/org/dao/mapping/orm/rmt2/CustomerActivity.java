@@ -204,21 +204,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.amount, other.amount)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -227,12 +212,7 @@ public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.customerActvId),
                HashCodeAssistant.hashObject(this.customerId),
                HashCodeAssistant.hashObject(this.xactId),
-               HashCodeAssistant.hashObject(this.amount),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId),
-               HashCodeAssistant.hashObject(this.ipCreated),
-               HashCodeAssistant.hashObject(this.ipUpdated));
+               HashCodeAssistant.hashObject(this.amount));
 } 
 
 @Override
@@ -240,12 +220,7 @@ public String toString() {
    return "CustomerActivity [customerActvId=" + customerActvId + 
           ", customerId=" + customerId + 
           ", xactId=" + xactId + 
-          ", amount=" + amount + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
-          ", ipCreated=" + ipCreated + 
-          ", ipUpdated=" + ipUpdated  + "]";
+          ", amount=" + amount  + "]";
 }
 
 /**

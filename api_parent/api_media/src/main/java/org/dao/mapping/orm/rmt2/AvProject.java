@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -337,6 +339,110 @@ public class AvProject extends OrmBean {
   public String getArtWorkFilename() {
     return this.artWorkFilename;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final AvProject other = (AvProject) obj; 
+   if (EqualityAssistant.notEqual(this.projectId, other.projectId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.artistId, other.artistId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectTypeId, other.projectTypeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.genreId, other.genreId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.mediaTypeId, other.mediaTypeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.title, other.title)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.year, other.year)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.masterDupId, other.masterDupId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ripped, other.ripped)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.cost, other.cost)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contentId, other.contentId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.artWorkPath, other.artWorkPath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contentPath, other.contentPath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectComments, other.projectComments)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contentFilename, other.contentFilename)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.artWorkFilename, other.artWorkFilename)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.projectId),
+               HashCodeAssistant.hashObject(this.artistId),
+               HashCodeAssistant.hashObject(this.projectTypeId),
+               HashCodeAssistant.hashObject(this.genreId),
+               HashCodeAssistant.hashObject(this.mediaTypeId),
+               HashCodeAssistant.hashObject(this.title),
+               HashCodeAssistant.hashObject(this.year),
+               HashCodeAssistant.hashObject(this.masterDupId),
+               HashCodeAssistant.hashObject(this.ripped),
+               HashCodeAssistant.hashObject(this.cost),
+               HashCodeAssistant.hashObject(this.contentId),
+               HashCodeAssistant.hashObject(this.artWorkPath),
+               HashCodeAssistant.hashObject(this.contentPath),
+               HashCodeAssistant.hashObject(this.projectComments),
+               HashCodeAssistant.hashObject(this.contentFilename),
+               HashCodeAssistant.hashObject(this.artWorkFilename));
+} 
+
+@Override
+public String toString() {
+   return "AvProject [projectId=" + projectId + 
+          ", artistId=" + artistId + 
+          ", projectTypeId=" + projectTypeId + 
+          ", genreId=" + genreId + 
+          ", mediaTypeId=" + mediaTypeId + 
+          ", title=" + title + 
+          ", year=" + year + 
+          ", masterDupId=" + masterDupId + 
+          ", ripped=" + ripped + 
+          ", cost=" + cost + 
+          ", contentId=" + contentId + 
+          ", artWorkPath=" + artWorkPath + 
+          ", contentPath=" + contentPath + 
+          ", projectComments=" + projectComments + 
+          ", contentFilename=" + contentFilename + 
+          ", artWorkFilename=" + artWorkFilename  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

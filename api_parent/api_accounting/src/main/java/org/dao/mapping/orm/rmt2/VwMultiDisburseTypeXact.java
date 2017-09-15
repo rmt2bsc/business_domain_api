@@ -388,9 +388,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.createDate, other.createDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.xactCatgId, other.xactCatgId)) {
       return false;
    }
@@ -426,7 +423,6 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.reason),
                HashCodeAssistant.hashObject(this.xactDate),
                HashCodeAssistant.hashObject(this.createDate),
-               HashCodeAssistant.hashObject(this.userId),
                HashCodeAssistant.hashObject(this.xactCatgId),
                HashCodeAssistant.hashObject(this.xactTypeItemXactTypeId),
                HashCodeAssistant.hashObject(this.creditorId),
@@ -449,7 +445,6 @@ public String toString() {
           ", reason=" + reason + 
           ", xactDate=" + xactDate + 
           ", createDate=" + createDate + 
-          ", userId=" + userId + 
           ", xactCatgId=" + xactCatgId + 
           ", xactTypeItemXactTypeId=" + xactTypeItemXactTypeId + 
           ", creditorId=" + creditorId + 

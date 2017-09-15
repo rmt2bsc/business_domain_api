@@ -187,12 +187,12 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.appAccessId),
-   HashCodeAssistant.hashObject(this.appId),
-   HashCodeAssistant.hashObject(this.loginId),
-   HashCodeAssistant.hashObject(this.loggedin),
-   HashCodeAssistant.hashObject(this.loginDate),
-   HashCodeAssistant.hashObject(this.lastLoginDate),
-   HashCodeAssistant.hashObject(this.sessionId));
+               HashCodeAssistant.hashObject(this.appId),
+               HashCodeAssistant.hashObject(this.loginId),
+               HashCodeAssistant.hashObject(this.loggedin),
+               HashCodeAssistant.hashObject(this.loginDate),
+               HashCodeAssistant.hashObject(this.lastLoginDate),
+               HashCodeAssistant.hashObject(this.sessionId));
 } 
 
 @Override

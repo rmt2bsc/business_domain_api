@@ -210,29 +210,17 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.description, other.description)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.appRoleId),
-   HashCodeAssistant.hashObject(this.appId),
-   HashCodeAssistant.hashObject(this.roleId),
-   HashCodeAssistant.hashObject(this.code),
-   HashCodeAssistant.hashObject(this.name),
-   HashCodeAssistant.hashObject(this.description),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.appId),
+               HashCodeAssistant.hashObject(this.roleId),
+               HashCodeAssistant.hashObject(this.code),
+               HashCodeAssistant.hashObject(this.name),
+               HashCodeAssistant.hashObject(this.description));
 } 
 
 @Override
@@ -242,10 +230,7 @@ public String toString() {
           ", roleId=" + roleId + 
           ", code=" + code + 
           ", name=" + name + 
-          ", description=" + description + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", description=" + description  + "]";
 }
 
 /**

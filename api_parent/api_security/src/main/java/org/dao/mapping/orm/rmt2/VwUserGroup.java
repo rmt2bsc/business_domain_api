@@ -301,18 +301,18 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.loginId),
-   HashCodeAssistant.hashObject(this.username),
-   HashCodeAssistant.hashObject(this.firstname),
-   HashCodeAssistant.hashObject(this.lastname),
-   HashCodeAssistant.hashObject(this.birthDate),
-   HashCodeAssistant.hashObject(this.ssn),
-   HashCodeAssistant.hashObject(this.userDescription),
-   HashCodeAssistant.hashObject(this.startDate),
-   HashCodeAssistant.hashObject(this.terminationDate),
-   HashCodeAssistant.hashObject(this.email),
-   HashCodeAssistant.hashObject(this.active),
-   HashCodeAssistant.hashObject(this.groupId),
-   HashCodeAssistant.hashObject(this.groupDescription));
+               HashCodeAssistant.hashObject(this.username),
+               HashCodeAssistant.hashObject(this.firstname),
+               HashCodeAssistant.hashObject(this.lastname),
+               HashCodeAssistant.hashObject(this.birthDate),
+               HashCodeAssistant.hashObject(this.ssn),
+               HashCodeAssistant.hashObject(this.userDescription),
+               HashCodeAssistant.hashObject(this.startDate),
+               HashCodeAssistant.hashObject(this.terminationDate),
+               HashCodeAssistant.hashObject(this.email),
+               HashCodeAssistant.hashObject(this.active),
+               HashCodeAssistant.hashObject(this.groupId),
+               HashCodeAssistant.hashObject(this.groupDescription));
 } 
 
 @Override

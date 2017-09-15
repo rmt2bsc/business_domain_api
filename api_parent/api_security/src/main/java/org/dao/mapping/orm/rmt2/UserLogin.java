@@ -378,15 +378,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.active, other.active)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.loggedIn, other.loggedIn)) {
       return false;
    }
@@ -396,23 +387,20 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.loginId),
-   HashCodeAssistant.hashObject(this.grpId),
-   HashCodeAssistant.hashObject(this.username),
-   HashCodeAssistant.hashObject(this.firstname),
-   HashCodeAssistant.hashObject(this.lastname),
-   HashCodeAssistant.hashObject(this.birthDate),
-   HashCodeAssistant.hashObject(this.ssn),
-   HashCodeAssistant.hashObject(this.startDate),
-   HashCodeAssistant.hashObject(this.terminationDate),
-   HashCodeAssistant.hashObject(this.description),
-   HashCodeAssistant.hashObject(this.password),
-   HashCodeAssistant.hashObject(this.totalLogons),
-   HashCodeAssistant.hashObject(this.email),
-   HashCodeAssistant.hashObject(this.active),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.loggedIn));
+               HashCodeAssistant.hashObject(this.grpId),
+               HashCodeAssistant.hashObject(this.username),
+               HashCodeAssistant.hashObject(this.firstname),
+               HashCodeAssistant.hashObject(this.lastname),
+               HashCodeAssistant.hashObject(this.birthDate),
+               HashCodeAssistant.hashObject(this.ssn),
+               HashCodeAssistant.hashObject(this.startDate),
+               HashCodeAssistant.hashObject(this.terminationDate),
+               HashCodeAssistant.hashObject(this.description),
+               HashCodeAssistant.hashObject(this.password),
+               HashCodeAssistant.hashObject(this.totalLogons),
+               HashCodeAssistant.hashObject(this.email),
+               HashCodeAssistant.hashObject(this.active),
+               HashCodeAssistant.hashObject(this.loggedIn));
 } 
 
 @Override
@@ -431,9 +419,6 @@ public String toString() {
           ", totalLogons=" + totalLogons + 
           ", email=" + email + 
           ", active=" + active + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", loggedIn=" + loggedIn  + "]";
 }
 

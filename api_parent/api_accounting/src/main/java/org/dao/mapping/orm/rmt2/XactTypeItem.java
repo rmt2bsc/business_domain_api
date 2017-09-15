@@ -153,15 +153,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.name, other.name)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -169,20 +160,14 @@ public boolean equals(Object obj) {
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.xactItemId),
                HashCodeAssistant.hashObject(this.xactTypeId),
-               HashCodeAssistant.hashObject(this.name),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.name));
 } 
 
 @Override
 public String toString() {
    return "XactTypeItem [xactItemId=" + xactItemId + 
           ", xactTypeId=" + xactTypeId + 
-          ", name=" + name + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", name=" + name  + "]";
 }
 
 /**

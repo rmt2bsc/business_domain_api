@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -353,6 +355,115 @@ public class AvTracks extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final AvTracks other = (AvTracks) obj; 
+   if (EqualityAssistant.notEqual(this.trackId, other.trackId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectId, other.projectId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackNumber, other.trackNumber)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackTitle, other.trackTitle)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackHours, other.trackHours)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackMinutes, other.trackMinutes)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackSeconds, other.trackSeconds)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackDisc, other.trackDisc)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackProducer, other.trackProducer)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackComposer, other.trackComposer)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackLyricist, other.trackLyricist)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.locServername, other.locServername)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.locSharename, other.locSharename)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.locRootPath, other.locRootPath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.locPath, other.locPath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.locFilename, other.locFilename)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.comments, other.comments)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.trackId),
+               HashCodeAssistant.hashObject(this.projectId),
+               HashCodeAssistant.hashObject(this.trackNumber),
+               HashCodeAssistant.hashObject(this.trackTitle),
+               HashCodeAssistant.hashObject(this.trackHours),
+               HashCodeAssistant.hashObject(this.trackMinutes),
+               HashCodeAssistant.hashObject(this.trackSeconds),
+               HashCodeAssistant.hashObject(this.trackDisc),
+               HashCodeAssistant.hashObject(this.trackProducer),
+               HashCodeAssistant.hashObject(this.trackComposer),
+               HashCodeAssistant.hashObject(this.trackLyricist),
+               HashCodeAssistant.hashObject(this.locServername),
+               HashCodeAssistant.hashObject(this.locSharename),
+               HashCodeAssistant.hashObject(this.locRootPath),
+               HashCodeAssistant.hashObject(this.locPath),
+               HashCodeAssistant.hashObject(this.locFilename),
+               HashCodeAssistant.hashObject(this.comments));
+} 
+
+@Override
+public String toString() {
+   return "AvTracks [trackId=" + trackId + 
+          ", projectId=" + projectId + 
+          ", trackNumber=" + trackNumber + 
+          ", trackTitle=" + trackTitle + 
+          ", trackHours=" + trackHours + 
+          ", trackMinutes=" + trackMinutes + 
+          ", trackSeconds=" + trackSeconds + 
+          ", trackDisc=" + trackDisc + 
+          ", trackProducer=" + trackProducer + 
+          ", trackComposer=" + trackComposer + 
+          ", trackLyricist=" + trackLyricist + 
+          ", locServername=" + locServername + 
+          ", locSharename=" + locSharename + 
+          ", locRootPath=" + locRootPath + 
+          ", locPath=" + locPath + 
+          ", locFilename=" + locFilename + 
+          ", comments=" + comments  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

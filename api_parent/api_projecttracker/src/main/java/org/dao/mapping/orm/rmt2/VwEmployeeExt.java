@@ -377,22 +377,22 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.employeeId),
-   HashCodeAssistant.hashObject(this.loginId),
-   HashCodeAssistant.hashObject(this.loginName),
-   HashCodeAssistant.hashObject(this.startDate),
-   HashCodeAssistant.hashObject(this.terminationDate),
-   HashCodeAssistant.hashObject(this.titleId),
-   HashCodeAssistant.hashObject(this.typeId),
-   HashCodeAssistant.hashObject(this.managerId),
-   HashCodeAssistant.hashObject(this.firstname),
-   HashCodeAssistant.hashObject(this.lastname),
-   HashCodeAssistant.hashObject(this.shortname),
-   HashCodeAssistant.hashObject(this.companyName),
-   HashCodeAssistant.hashObject(this.ssn),
-   HashCodeAssistant.hashObject(this.isManager),
-   HashCodeAssistant.hashObject(this.email),
-   HashCodeAssistant.hashObject(this.employeeTitle),
-   HashCodeAssistant.hashObject(this.employeeType));
+               HashCodeAssistant.hashObject(this.loginId),
+               HashCodeAssistant.hashObject(this.loginName),
+               HashCodeAssistant.hashObject(this.startDate),
+               HashCodeAssistant.hashObject(this.terminationDate),
+               HashCodeAssistant.hashObject(this.titleId),
+               HashCodeAssistant.hashObject(this.typeId),
+               HashCodeAssistant.hashObject(this.managerId),
+               HashCodeAssistant.hashObject(this.firstname),
+               HashCodeAssistant.hashObject(this.lastname),
+               HashCodeAssistant.hashObject(this.shortname),
+               HashCodeAssistant.hashObject(this.companyName),
+               HashCodeAssistant.hashObject(this.ssn),
+               HashCodeAssistant.hashObject(this.isManager),
+               HashCodeAssistant.hashObject(this.email),
+               HashCodeAssistant.hashObject(this.employeeTitle),
+               HashCodeAssistant.hashObject(this.employeeType));
 } 
 
 @Override

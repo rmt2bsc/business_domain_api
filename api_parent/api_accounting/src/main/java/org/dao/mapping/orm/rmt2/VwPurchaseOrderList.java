@@ -331,9 +331,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.endDate, other.endDate)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.creditorId, other.creditorId)) {
       return false;
    }
@@ -366,7 +363,6 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.statusHistId),
                HashCodeAssistant.hashObject(this.effectiveDate),
                HashCodeAssistant.hashObject(this.endDate),
-               HashCodeAssistant.hashObject(this.userId),
                HashCodeAssistant.hashObject(this.creditorId),
                HashCodeAssistant.hashObject(this.businessId),
                HashCodeAssistant.hashObject(this.accountNumber),
@@ -386,7 +382,6 @@ public String toString() {
           ", statusHistId=" + statusHistId + 
           ", effectiveDate=" + effectiveDate + 
           ", endDate=" + endDate + 
-          ", userId=" + userId + 
           ", creditorId=" + creditorId + 
           ", businessId=" + businessId + 
           ", accountNumber=" + accountNumber + 

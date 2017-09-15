@@ -244,15 +244,15 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.projectTaskId),
-   HashCodeAssistant.hashObject(this.timesheetId),
-   HashCodeAssistant.hashObject(this.projectId),
-   HashCodeAssistant.hashObject(this.taskId),
-   HashCodeAssistant.hashObject(this.clientId),
-   HashCodeAssistant.hashObject(this.projectName),
-   HashCodeAssistant.hashObject(this.effectiveDate),
-   HashCodeAssistant.hashObject(this.endDate),
-   HashCodeAssistant.hashObject(this.taskName),
-   HashCodeAssistant.hashObject(this.billable));
+               HashCodeAssistant.hashObject(this.timesheetId),
+               HashCodeAssistant.hashObject(this.projectId),
+               HashCodeAssistant.hashObject(this.taskId),
+               HashCodeAssistant.hashObject(this.clientId),
+               HashCodeAssistant.hashObject(this.projectName),
+               HashCodeAssistant.hashObject(this.effectiveDate),
+               HashCodeAssistant.hashObject(this.endDate),
+               HashCodeAssistant.hashObject(this.taskName),
+               HashCodeAssistant.hashObject(this.billable));
 } 
 
 @Override

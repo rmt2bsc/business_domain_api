@@ -444,35 +444,31 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.hours, other.hours)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetId),
-   HashCodeAssistant.hashObject(this.clientId),
-   HashCodeAssistant.hashObject(this.employeeId),
-   HashCodeAssistant.hashObject(this.displayValue),
-   HashCodeAssistant.hashObject(this.timesheetBeginPeriod),
-   HashCodeAssistant.hashObject(this.timesheetEndPeriod),
-   HashCodeAssistant.hashObject(this.invoiceRefNo),
-   HashCodeAssistant.hashObject(this.extRef),
-   HashCodeAssistant.hashObject(this.documentId),
-   HashCodeAssistant.hashObject(this.projectId),
-   HashCodeAssistant.hashObject(this.taskId),
-   HashCodeAssistant.hashObject(this.eventId),
-   HashCodeAssistant.hashObject(this.projTaskId),
-   HashCodeAssistant.hashObject(this.projectName),
-   HashCodeAssistant.hashObject(this.taskName),
-   HashCodeAssistant.hashObject(this.effectiveDate),
-   HashCodeAssistant.hashObject(this.endDate),
-   HashCodeAssistant.hashObject(this.billable),
-   HashCodeAssistant.hashObject(this.eventDate),
-   HashCodeAssistant.hashObject(this.hours),
-   HashCodeAssistant.hashObject(this.dateCreated));
+               HashCodeAssistant.hashObject(this.clientId),
+               HashCodeAssistant.hashObject(this.employeeId),
+               HashCodeAssistant.hashObject(this.displayValue),
+               HashCodeAssistant.hashObject(this.timesheetBeginPeriod),
+               HashCodeAssistant.hashObject(this.timesheetEndPeriod),
+               HashCodeAssistant.hashObject(this.invoiceRefNo),
+               HashCodeAssistant.hashObject(this.extRef),
+               HashCodeAssistant.hashObject(this.documentId),
+               HashCodeAssistant.hashObject(this.projectId),
+               HashCodeAssistant.hashObject(this.taskId),
+               HashCodeAssistant.hashObject(this.eventId),
+               HashCodeAssistant.hashObject(this.projTaskId),
+               HashCodeAssistant.hashObject(this.projectName),
+               HashCodeAssistant.hashObject(this.taskName),
+               HashCodeAssistant.hashObject(this.effectiveDate),
+               HashCodeAssistant.hashObject(this.endDate),
+               HashCodeAssistant.hashObject(this.billable),
+               HashCodeAssistant.hashObject(this.eventDate),
+               HashCodeAssistant.hashObject(this.hours));
 } 
 
 @Override
@@ -496,8 +492,7 @@ public String toString() {
           ", endDate=" + endDate + 
           ", billable=" + billable + 
           ", eventDate=" + eventDate + 
-          ", hours=" + hours + 
-          ", dateCreated=" + dateCreated  + "]";
+          ", hours=" + hours  + "]";
 }
 
 /**

@@ -378,15 +378,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.email, other.email)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.categoryId, other.categoryId)) {
       return false;
    }
@@ -396,23 +387,20 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.personId),
-   HashCodeAssistant.hashObject(this.firstname),
-   HashCodeAssistant.hashObject(this.midname),
-   HashCodeAssistant.hashObject(this.lastname),
-   HashCodeAssistant.hashObject(this.maidenname),
-   HashCodeAssistant.hashObject(this.generation),
-   HashCodeAssistant.hashObject(this.shortname),
-   HashCodeAssistant.hashObject(this.title),
-   HashCodeAssistant.hashObject(this.genderId),
-   HashCodeAssistant.hashObject(this.maritalStatusId),
-   HashCodeAssistant.hashObject(this.birthDate),
-   HashCodeAssistant.hashObject(this.raceId),
-   HashCodeAssistant.hashObject(this.ssn),
-   HashCodeAssistant.hashObject(this.email),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.categoryId));
+               HashCodeAssistant.hashObject(this.firstname),
+               HashCodeAssistant.hashObject(this.midname),
+               HashCodeAssistant.hashObject(this.lastname),
+               HashCodeAssistant.hashObject(this.maidenname),
+               HashCodeAssistant.hashObject(this.generation),
+               HashCodeAssistant.hashObject(this.shortname),
+               HashCodeAssistant.hashObject(this.title),
+               HashCodeAssistant.hashObject(this.genderId),
+               HashCodeAssistant.hashObject(this.maritalStatusId),
+               HashCodeAssistant.hashObject(this.birthDate),
+               HashCodeAssistant.hashObject(this.raceId),
+               HashCodeAssistant.hashObject(this.ssn),
+               HashCodeAssistant.hashObject(this.email),
+               HashCodeAssistant.hashObject(this.categoryId));
 } 
 
 @Override
@@ -431,9 +419,6 @@ public String toString() {
           ", raceId=" + raceId + 
           ", ssn=" + ssn + 
           ", email=" + email + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", categoryId=" + categoryId  + "]";
 }
 

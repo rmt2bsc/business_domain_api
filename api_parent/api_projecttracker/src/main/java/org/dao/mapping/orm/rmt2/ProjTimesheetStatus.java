@@ -111,8 +111,8 @@ public boolean equals(Object obj) {
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetStatusId),
-   HashCodeAssistant.hashObject(this.name),
-   HashCodeAssistant.hashObject(this.description));
+               HashCodeAssistant.hashObject(this.name),
+               HashCodeAssistant.hashObject(this.description));
 } 
 
 @Override

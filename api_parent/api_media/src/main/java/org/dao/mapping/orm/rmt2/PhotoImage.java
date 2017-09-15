@@ -3,6 +3,8 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
+import com.util.assistants.EqualityAssistant;
+import com.util.assistants.HashCodeAssistant;
 import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
@@ -209,6 +211,70 @@ public class PhotoImage extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+
+@Override
+public boolean equals(Object obj) {
+   if (this == obj) {
+      return true;
+   }
+   if (obj == null) {
+      return false;
+   }
+   if (getClass() != obj.getClass()) {
+      return false;
+   }
+   final PhotoImage other = (PhotoImage) obj; 
+   if (EqualityAssistant.notEqual(this.imageId, other.imageId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.eventId, other.eventId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.mimeTypeId, other.mimeTypeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dirPath, other.dirPath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.fileName, other.fileName)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.fileSize, other.fileSize)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.fileExt, other.fileExt)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.url, other.url)) {
+      return false;
+   }
+   return true; 
+} 
+
+@Override
+public int hashCode() {
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.imageId),
+               HashCodeAssistant.hashObject(this.eventId),
+               HashCodeAssistant.hashObject(this.mimeTypeId),
+               HashCodeAssistant.hashObject(this.dirPath),
+               HashCodeAssistant.hashObject(this.fileName),
+               HashCodeAssistant.hashObject(this.fileSize),
+               HashCodeAssistant.hashObject(this.fileExt),
+               HashCodeAssistant.hashObject(this.url));
+} 
+
+@Override
+public String toString() {
+   return "PhotoImage [imageId=" + imageId + 
+          ", eventId=" + eventId + 
+          ", mimeTypeId=" + mimeTypeId + 
+          ", dirPath=" + dirPath + 
+          ", fileName=" + fileName + 
+          ", fileSize=" + fileSize + 
+          ", fileExt=" + fileExt + 
+          ", url=" + url  + "]";
+}
+
 /**
  * Stubbed initialization method designed to implemented by developer.
 

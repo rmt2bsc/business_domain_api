@@ -153,36 +153,21 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.roleId, other.roleId)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.grpRoleId),
-   HashCodeAssistant.hashObject(this.grpId),
-   HashCodeAssistant.hashObject(this.roleId),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId));
+               HashCodeAssistant.hashObject(this.grpId),
+               HashCodeAssistant.hashObject(this.roleId));
 } 
 
 @Override
 public String toString() {
    return "GroupRoles [grpRoleId=" + grpRoleId + 
           ", grpId=" + grpId + 
-          ", roleId=" + roleId + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId  + "]";
+          ", roleId=" + roleId  + "]";
 }
 
 /**

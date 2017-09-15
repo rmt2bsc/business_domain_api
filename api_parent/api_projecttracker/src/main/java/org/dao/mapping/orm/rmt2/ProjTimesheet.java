@@ -325,15 +325,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.invoiceRefNo, other.invoiceRefNo)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.comments, other.comments)) {
       return false;
    }
@@ -346,33 +337,22 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.documentId, other.documentId)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.timesheetId),
-   HashCodeAssistant.hashObject(this.clientId),
-   HashCodeAssistant.hashObject(this.empId),
-   HashCodeAssistant.hashObject(this.displayValue),
-   HashCodeAssistant.hashObject(this.beginPeriod),
-   HashCodeAssistant.hashObject(this.endPeriod),
-   HashCodeAssistant.hashObject(this.invoiceRefNo),
-   HashCodeAssistant.hashObject(this.dateCreated),
-   HashCodeAssistant.hashObject(this.dateUpdated),
-   HashCodeAssistant.hashObject(this.userId),
-   HashCodeAssistant.hashObject(this.comments),
-   HashCodeAssistant.hashObject(this.projId),
-   HashCodeAssistant.hashObject(this.extRef),
-   HashCodeAssistant.hashObject(this.documentId),
-   HashCodeAssistant.hashObject(this.ipCreated),
-   HashCodeAssistant.hashObject(this.ipUpdated));
+               HashCodeAssistant.hashObject(this.clientId),
+               HashCodeAssistant.hashObject(this.empId),
+               HashCodeAssistant.hashObject(this.displayValue),
+               HashCodeAssistant.hashObject(this.beginPeriod),
+               HashCodeAssistant.hashObject(this.endPeriod),
+               HashCodeAssistant.hashObject(this.invoiceRefNo),
+               HashCodeAssistant.hashObject(this.comments),
+               HashCodeAssistant.hashObject(this.projId),
+               HashCodeAssistant.hashObject(this.extRef),
+               HashCodeAssistant.hashObject(this.documentId));
 } 
 
 @Override
@@ -384,15 +364,10 @@ public String toString() {
           ", beginPeriod=" + beginPeriod + 
           ", endPeriod=" + endPeriod + 
           ", invoiceRefNo=" + invoiceRefNo + 
-          ", dateCreated=" + dateCreated + 
-          ", dateUpdated=" + dateUpdated + 
-          ", userId=" + userId + 
           ", comments=" + comments + 
           ", projId=" + projId + 
           ", extRef=" + extRef + 
-          ", documentId=" + documentId + 
-          ", ipCreated=" + ipCreated + 
-          ", ipUpdated=" + ipUpdated  + "]";
+          ", documentId=" + documentId  + "]";
 }
 
 /**
