@@ -1,12 +1,10 @@
 package org.dao.mapping.orm.rmt2;
 
 
-import java.util.Date;
-import java.io.*;
+import com.SystemException;
+import com.api.persistence.db.orm.OrmBean;
 import com.util.assistants.EqualityAssistant;
 import com.util.assistants.HashCodeAssistant;
-import com.api.persistence.db.orm.OrmBean;
-import com.SystemException;
 
 
 /**
@@ -223,21 +221,6 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.description, other.description)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.dateUpdated, other.dateUpdated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipCreated, other.ipCreated)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.ipUpdated, other.ipUpdated)) {
-      return false;
-   }
    return true; 
 } 
 
@@ -247,12 +230,7 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.xactId),
                HashCodeAssistant.hashObject(this.xactItemId),
                HashCodeAssistant.hashObject(this.amount),
-               HashCodeAssistant.hashObject(this.description),
-               HashCodeAssistant.hashObject(this.dateCreated),
-               HashCodeAssistant.hashObject(this.dateUpdated),
-               HashCodeAssistant.hashObject(this.userId),
-               HashCodeAssistant.hashObject(this.ipCreated),
-               HashCodeAssistant.hashObject(this.ipUpdated));
+               HashCodeAssistant.hashObject(this.description));
 } 
 
 @Override
