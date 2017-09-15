@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.transaction.TransactionAmountsUnbalancedException;
 import org.modules.transaction.XactApi;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactApiFactory;
@@ -352,6 +353,21 @@ public class TransactionUpdateApiTest extends TransactionApiTestData {
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);
             Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_TransactonOutOfBalance() {
+        this.mockXactDto.setXactAmount(1000.00);
+        XactApiFactory f = new XactApiFactory();
+        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        try {
+            api.update(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to empty xact type item activity name in transaction detail item object");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof XactApiException);
+            Assert.assertTrue(e.getCause() instanceof TransactionAmountsUnbalancedException);
             e.printStackTrace();
         }
     }
