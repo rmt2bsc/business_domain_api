@@ -11,12 +11,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modules.transaction.XactApi;
-import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactApiFactory;
 import org.modules.transaction.XactConst;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
@@ -58,7 +58,7 @@ public class ModifiableStateTransactionTest extends TransactionApiTestData {
             api.isModifiable(null);
             Assert.fail("Expected excpetion due to Xact input is null");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof XactApiException);
+            Assert.assertTrue(e instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
