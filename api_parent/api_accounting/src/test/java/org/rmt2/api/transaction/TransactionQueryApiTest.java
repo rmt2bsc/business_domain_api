@@ -28,14 +28,14 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
 /**
- * Tests general transaction Api.
+ * Tests general transaction query Api.
  * 
  * @author rterrell
  * 
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class TransactionApiTest extends TransactionApiTestData {
+public class TransactionQueryApiTest extends TransactionApiTestData {
 
     
 
