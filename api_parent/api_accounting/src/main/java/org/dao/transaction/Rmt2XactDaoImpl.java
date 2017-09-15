@@ -377,7 +377,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
                     + ", was created for the amount of $"
                     + xact.getXactAmount());
         } catch (Exception e) {
-            this.msg = "Unable to persist base transaction";
+            this.msg = "A database error prevented the creation of base transaction";
             logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
         }
@@ -385,10 +385,10 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
         int itemCount = 0;
         try {
             itemCount = this.insert(ormXact, ormItems);
-            logger.info("Transaction, " + xactId + ", created " + itemCount
+            logger.info("Base Transaction, " + xactId + ", created " + itemCount
                     + " activitiy items");
         } catch (Exception e) {
-            this.msg = "Error occurred creating a transaction item for transaction id, "
+            this.msg = "Error occurred creating a transaction detail item for base transaction id, "
                     + xactId;
             logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
@@ -426,9 +426,9 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * @param xact
      *            The target transaction.
      * @return New transaction id.
-     * @throws XactDaoException
+     * @throws DatabaseException
      */
-    private int insert(Xact xact) throws XactDaoException {
+    private int insert(Xact xact)  {
         int newXactId = 0;
         if (xact.getXactSubtypeId() <= 0) {
             xact.setNull("xactSubtypeId");
@@ -449,7 +449,8 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             xact.setXactId(newXactId);
             return newXactId;
         } catch (Exception e) {
-            throw new XactDaoException(e);
+            this.msg = "Unable to persist base transaction";
+            throw new DatabaseException(this.msg, e);
         }
     }
 
@@ -461,7 +462,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * @return total number of rows effected.
      * @throws XactDaoException
      */
-    private int update(Xact xact) throws XactDaoException {
+    private int update(Xact xact) {
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
@@ -478,7 +479,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             rc = this.client.updateRow(xact);
             return rc;
         } catch (Exception e) {
-            throw new XactDaoException(e);
+            throw new DatabaseException(e);
         }
     }
 
@@ -496,9 +497,9 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      *            expected to be of type {@link XactTypeItemActivity}
      * @return 0 when either _xactItems is null or has no items available. > 0
      *         to indicate the number of items successfully processed.
-     * @throws XactDaoException
+     * @throws DatabaseException
      */
-    private int insert(Xact xact, List<XactTypeItemActivity> xactItems) throws XactDaoException {
+    private int insert(Xact xact, List<XactTypeItemActivity> xactItems) {
         int totalItems = 0;
         int succesCount = 0;
         double totalItemAmount = 0;
@@ -531,9 +532,9 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * 
      * @param _xtia
      * @return int - id of new transaction type item activity object.
-     * @throws XactException
+     * @throws DatabaseException
      */
-    private int insert(XactTypeItemActivity xtia) throws XactDaoException {
+    private int insert(XactTypeItemActivity xtia) {
         int xactItemActivityId = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
@@ -548,7 +549,8 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             xtia.setXactTypeItemActvId(xactItemActivityId);
             return xactItemActivityId;
         } catch (Exception e) {
-            throw new XactDaoException(e);
+            this.msg = "Unable to persist base transaction detail item";
+            throw new DatabaseException(this.msg, e);
         }
     }
 
