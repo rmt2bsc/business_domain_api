@@ -80,7 +80,29 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
         }
     }
 
-  
+    /**
+     * This tests java way of handling whole dollar amounts when converting 
+     * from double to String.  This ususally will results in 100.00 translating 
+     * to 100.0.
+     */
+    @Test
+    public void testReverseFinalizationSuccess_WithEvenXactAmount() {
+        XactApiFactory f = new XactApiFactory();
+        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        
+        // Build mock transaction object to be updated
+        VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
+        vwXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        XactDto mockXact = Rmt2XactDtoFactory.createXactInstance(vwXact);
+        mockXact.setXactAmount(100.00);
+        try {
+            api.finalizeXact(mockXact);
+        } catch (XactApiException e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected here...");
+        }
+    }
+    
     @Test
     public void testCancellationFinalizationSuccess() {
         XactApiFactory f = new XactApiFactory();
@@ -204,7 +226,7 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
     }
     
     @Test
-    public void testXactAmountMinusDecimalInput() {
+    public void testXactAmount_InvalidDecimalDigits() {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         
@@ -213,7 +235,7 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
         vwXact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
         vwXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_CANCEL);
         XactDto mockXact = Rmt2XactDtoFactory.createXactInstance(vwXact);
-        mockXact.setXactAmount(800);
+        mockXact.setXactAmount(800.9);
         try {
             api.finalizeXact(mockXact);
             Assert.fail("Expected excpetion due to Xact.xactAmount has no decimal place");
