@@ -18,20 +18,22 @@ public interface DisbursementsApi extends XactApi {
      * Fetch cash disbursements by transaction
      * 
      * @param criteria
+     * @param customCriteria
      * @return
      * @throws DisbursementsApiException
      */
-    List<XactDto> getByTransaction(String criteria)
+    List<XactDto> getByTransaction(XactDto criteria, String customCriteria)
             throws DisbursementsApiException;
 
     /**
      * Fetch cash disbursements by transaction item.
      * 
      * @param criteria
+     * @param customCriteria
      * @return
      * @throws DisbursementsDaoException
      */
-    List<XactTypeItemActivityDto> getByTransactionItem(String criteria)
+    List<XactTypeItemActivityDto> getByTransactionItem(XactTypeItemActivityDto criteria, String customCriteria)
             throws DisbursementsApiException;
 
     /**
@@ -49,8 +51,9 @@ public interface DisbursementsApi extends XactApi {
             throws DisbursementsApiException;
 
     /**
-     * Creates a creditor related cash disbursement transaction or reverses and
-     * existing one.
+     * Creates a cash disbursement transaction or reverses and
+     * existing one in which the transaction is associated with a
+     * creditor.
      * 
      * @param xact
      *            The target transaction
@@ -61,6 +64,6 @@ public interface DisbursementsApi extends XactApi {
      * @return int
      * @throws DisbursementsDaoException
      */
-    int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items,
-            int creditorId) throws DisbursementsApiException;
+    int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId) 
+            throws DisbursementsApiException;
 }

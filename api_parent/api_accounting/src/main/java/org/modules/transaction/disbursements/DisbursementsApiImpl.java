@@ -14,6 +14,8 @@ import org.modules.transaction.XactConst;
 
 import com.InvalidDataException;
 import com.api.persistence.DaoClient;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * Class provides an implementation for managing disbursement transactions.
@@ -85,12 +87,19 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      * (java.lang.String)
      */
     @Override
-    public List<XactDto> getByTransaction(String criteria)
-            throws DisbursementsApiException {
-        String selectCriteria = this.parseCriteria(criteria);
+    public List<XactDto> getByTransaction(XactDto criteria, String customCriteria) throws DisbursementsApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Base Transaction criteria object cannot be null", e);
+        }
+        
+        String sqlCriteria = this.parseCriteria(customCriteria);
         List<XactDto> results;
         try {
-            results = dao.fetchDisbursmentByXact(selectCriteria);
+            criteria.setCriteria(sqlCriteria);
+            results = dao.fetchDisbursmentByXact(criteria);
             if (results == null) {
                 return null;
             }
@@ -98,7 +107,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
         } catch (DisbursementsDaoException e) {
             StringBuilder buf = new StringBuilder();
             buf.append("Database error occurred retrieving disbursements by transaction type using selection criteria, ");
-            buf.append(selectCriteria);
+            buf.append(criteria.toString());
+            buf.append(sqlCriteria);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new DisbursementsApiException(this.msg, e);
@@ -113,12 +123,20 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      * (java.lang.String)
      */
     @Override
-    public List<XactTypeItemActivityDto> getByTransactionItem(String criteria)
+    public List<XactTypeItemActivityDto> getByTransactionItem(XactTypeItemActivityDto criteria, String customCriteria)
             throws DisbursementsApiException {
-        String selectCriteria = this.parseCriteria(criteria);
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Transaction Type Item Activity criteria object cannot be null", e);
+        }
+        
+        String sqlCriteria = this.parseCriteria(customCriteria);
         List<XactTypeItemActivityDto> results;
         try {
-            results = dao.fetchDisbursmentByXactItem(selectCriteria);
+            criteria.setCriteria(sqlCriteria);
+            results = dao.fetchDisbursmentByXactItem(criteria);
             if (results == null) {
                 return null;
             }
@@ -126,7 +144,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
         } catch (DisbursementsDaoException e) {
             StringBuilder buf = new StringBuilder();
             buf.append("Database error occurred retrieving disbursements by transaction item type using selection criteria, ");
-            buf.append(selectCriteria);
+            buf.append(criteria);
+            buf.append(sqlCriteria);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new DisbursementsApiException(this.msg, e);
@@ -143,7 +162,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      * @return
      */
     private String parseCriteria(String criteria) {
-        return null;
+        return criteria;
     }
 
     /*
@@ -154,8 +173,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      * (org.dto.XactDto, java.util.List)
      */
     @Override
-    public int updateDisbursement(XactDto xact,
-            List<XactTypeItemActivityDto> items)
+    public int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items)
             throws DisbursementsApiException {
         // Identify this transaction as a non-creditor cash disbursement
         this.creditorDisb = false;
@@ -178,8 +196,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      * (org.dto.XactDto, java.util.List, int)
      */
     @Override
-    public int updateDisbursement(XactDto xact,
-            List<XactTypeItemActivityDto> items, int creditorId)
+    public int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId)
             throws DisbursementsApiException {
         // Identify this transaction as a creditor cash disbursement
         this.creditorDisb = true;
@@ -193,15 +210,14 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
         }
 
         // At this point a transaction was successfully created, and we need to
-        // reflect that tranaction
-        // in the creditor's activity table. Since the creditor activity amount
-        // will always post as an
-        // offset to the base transaction amount, take the revised base
-        // transaction amount an reverse it.
+        // reflect that tranaction in the creditor's activity table. Since the 
+        // creditor activity amount will always post as an offset to the base 
+        // transaction amount, take the revised base transaction amount an 
+        // reverse it.
         double xactAmount = xact.getXactAmount();
         try {
             // Create creditor activity (transaction history) regarding
-            // the disbursement.
+            // the disbursement.  The usual valdiations will take place in this call.
             super.createSubsidiaryActivity(creditorId, xactId, xactAmount);
         } catch (XactApiException e) {
             throw new DisbursementsApiException(e);
@@ -219,8 +235,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      * @return The id of the new transaction.
      * @throws DisbursementsApiException
      */
-    private int createDisbursement(XactDto xact,
-            List<XactTypeItemActivityDto> items)
+    private int createDisbursement(XactDto xact,  List<XactTypeItemActivityDto> items)
             throws DisbursementsApiException {
         int xactId = 0;
         try {

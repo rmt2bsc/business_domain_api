@@ -22,8 +22,7 @@ public interface DisbursementsDao extends XactDao {
      * @return
      * @throws DisbursementsDaoException
      */
-    List<XactDto> fetchDisbursmentByXact(String criteria)
-            throws DisbursementsDaoException;
+    List<XactDto> fetchDisbursmentByXact(XactDto criteria) throws DisbursementsDaoException;
 
     /**
      * Query cash disbursements by transaction item.
@@ -32,7 +31,7 @@ public interface DisbursementsDao extends XactDao {
      * @return
      * @throws DisbursementsDaoException
      */
-    List<XactTypeItemActivityDto> fetchDisbursmentByXactItem(String criteria)
+    List<XactTypeItemActivityDto> fetchDisbursmentByXactItem(XactTypeItemActivityDto criteria)
             throws DisbursementsDaoException;
 
     // /**

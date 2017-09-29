@@ -2,13 +2,10 @@ package org.dao.transaction.disbursements;
 
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
-import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.transaction.Rmt2XactDaoImpl;
 import org.dao.transaction.XactDaoException;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
-import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 
 import com.api.persistence.PersistenceClient;
 
@@ -19,8 +16,7 @@ import com.api.persistence.PersistenceClient;
  * @author Roy Terrell
  * 
  */
-public class Rmt2DisbursementsDaoImpl extends Rmt2XactDaoImpl implements
-        DisbursementsDao {
+public class Rmt2DisbursementsDaoImpl extends Rmt2XactDaoImpl implements DisbursementsDao {
 
     /**
      * Creates a Rmt2DisbursementDaoImpl object with its own persistent client.
@@ -55,12 +51,9 @@ public class Rmt2DisbursementsDaoImpl extends Rmt2XactDaoImpl implements
      * (java.lang.String)
      */
     @Override
-    public List<XactDto> fetchDisbursmentByXact(String criteria)
-            throws DisbursementsDaoException {
-        XactDto dto = Rmt2XactDtoFactory.createXactInstance((Xact) null,
-                criteria);
+    public List<XactDto> fetchDisbursmentByXact(XactDto criteria) throws DisbursementsDaoException {
         try {
-            return super.fetchXact(dto);
+            return super.fetchXact(criteria);
         } catch (XactDaoException e) {
             this.msg = "Error obtaining disbursment(s) by transaction";
             throw new DisbursementsDaoException(this.msg, e);
@@ -76,14 +69,11 @@ public class Rmt2DisbursementsDaoImpl extends Rmt2XactDaoImpl implements
      */
     @Override
     public List<XactTypeItemActivityDto> fetchDisbursmentByXactItem(
-            String criteria) throws DisbursementsDaoException {
-        XactTypeItemActivityDto dto = Rmt2XactDtoFactory
-                .createXactTypeItemActivityExtInstance(
-                        (VwXactTypeItemActivity) null, criteria);
+            XactTypeItemActivityDto criteria) throws DisbursementsDaoException {
         try {
-            return super.fetchXactTypeItemActivityExt(dto);
+            return super.fetchXactTypeItemActivityExt(criteria);
         } catch (XactDaoException e) {
-            this.msg = "Error obtaining disbursment(s) by transaction item";
+            this.msg = "Error obtaining disbursment(s) by transaction type item activity";
             throw new DisbursementsDaoException(this.msg, e);
         }
     }
