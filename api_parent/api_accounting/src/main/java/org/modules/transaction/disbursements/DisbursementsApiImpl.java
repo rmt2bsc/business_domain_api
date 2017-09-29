@@ -8,6 +8,7 @@ import org.dao.transaction.disbursements.DisbursementsDaoException;
 import org.dao.transaction.disbursements.DisbursementsDaoFactory;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
+import org.modules.CommonAccountingConst;
 import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
@@ -23,11 +24,9 @@ import com.util.assistants.VerifyException;
  * @author Roy Terrell
  * 
  */
-public class DisbursementsApiImpl extends AbstractXactApiImpl implements
-        DisbursementsApi {
+public class DisbursementsApiImpl extends AbstractXactApiImpl implements DisbursementsApi {
 
-    private static final Logger logger = Logger
-            .getLogger(DisbursementsApiImpl.class);
+    private static final Logger logger = Logger.getLogger(DisbursementsApiImpl.class);
 
     private DisbursementsDaoFactory daoFact;
 
@@ -40,7 +39,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      */
     DisbursementsApiImpl() {
         super();
-        this.dao = this.daoFact.createRmt2OrmDao();
+        this.dao = this.daoFact.createRmt2OrmDao(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
         this.setSharedDao(this.dao);
         return;
     }
@@ -49,6 +48,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      * Creates an DisbursementsApiImpl which creates a stand alone connection.
      * 
      * @param appName
+     *            the application name which should also translate to the JDBC
+     *            Datasource name.
      */
     protected DisbursementsApiImpl(String appName) {
         super();
@@ -259,9 +260,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
      *             If customer payment transction is final or a general
      *             transction error occurs.
      */
-    private int reverseDisbursement(XactDto xact,
-            List<XactTypeItemActivityDto> items)
-            throws DisbursementsApiException {
+    private int reverseDisbursement(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException {
         int xactId = 0;
         try {
             // Cannot reverse payment transaction that has been finalized
@@ -390,8 +389,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements
             case XactConst.TENDER_DEBITCARD:
             case XactConst.TENDER_INSURANCE:
             case XactConst.TENDER_MONEYORDER:
-                if (xact.getXactNegInstrNo() == null
-                        || xact.getXactNegInstrNo().equals("")) {
+                if (xact.getXactNegInstrNo() == null || xact.getXactNegInstrNo().equals("")) {
                     this.msg = "Transaction tender must be associated with a tender number";
                     logger.error(this.msg);
                     throw new XactApiException(this.msg);

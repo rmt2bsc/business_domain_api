@@ -37,18 +37,17 @@ public interface DisbursementsApi extends XactApi {
             throws DisbursementsApiException;
 
     /**
-     * Creates a general cash disbursement transaction or reverses and existing
+     * Creates a general cash disbursement transaction or reverses an existing
      * cash disbursement transaction.
      * 
      * @param xact
      *            The target transaction
      * @param items
      *            The transaction items
-     * @returnint
+     * @return int The transaction id of the newly created cash disbursement
      * @throws DisbursementsDaoException
      */
-    int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items)
-            throws DisbursementsApiException;
+    int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException;
 
     /**
      * Creates a cash disbursement transaction or reverses and
@@ -61,7 +60,7 @@ public interface DisbursementsApi extends XactApi {
      *            The transaction items
      * @param creditorId
      *            The id of creditor assoicated with the transaction
-     * @return int
+     * @return int The transaction id of the newly created cash disbursement
      * @throws DisbursementsDaoException
      */
     int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId) 

@@ -53,8 +53,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         is found
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> get(Date xactDate)
-            throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> get(Date xactDate) throws CreditorPurchasesApiException;
 
     /**
      * Retrieve one or more credit purchase transactions by custom selection
@@ -67,8 +66,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         is found
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> get(String criteria)
-            throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> get(String criteria) throws CreditorPurchasesApiException;
 
     /**
      * Retrieve one or more credit purchase transactions by creditor id.
@@ -79,8 +77,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         is found
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> getByCreditor(int creditorId)
-            throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> getByCreditor(int creditorId) throws CreditorPurchasesApiException;
 
     /**
      * Retrieve one or more credit purchase transactions by account number.
@@ -91,8 +88,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         is found
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> getByAcctNo(String accountNo)
-            throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> getByAcctNo(String accountNo) throws CreditorPurchasesApiException;
 
     /**
      * Retrieve one or more credit purchase transactions by transaction
@@ -104,8 +100,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         is found
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> getByConfirmNo(String confirmNo)
-            throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> getByConfirmNo(String confirmNo) throws CreditorPurchasesApiException;
 
     /**
      * Retrieve one or more credit purchase transactions by transaction reason.
@@ -116,8 +111,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         is found
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> getByReason(String reason)
-            throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> getByReason(String reason) throws CreditorPurchasesApiException;
 
     /**
      * Retrieves base creditor purchases transaction objects using
@@ -130,8 +124,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *             TODO
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> get(XactCreditChargeDto criteria)
-            throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> get(XactCreditChargeDto criteria) throws CreditorPurchasesApiException;
 
     /**
      * Retrieves all related detail items of a credit purchase transaction.
@@ -142,8 +135,7 @@ public interface CreditorPurchasesApi extends XactApi {
      * @throws CreditorPurchasesApiException
      *             TODO
      */
-    List<XactTypeItemActivityDto> getItems(int xactId)
-            throws CreditorPurchasesApiException;
+    List<XactTypeItemActivityDto> getItems(int xactId) throws CreditorPurchasesApiException;
 
     /**
      * Creates a new or reverses an existing creditor purchase transaction.
@@ -156,7 +148,6 @@ public interface CreditorPurchasesApi extends XactApi {
      * @return The id of the transaction created.
      * @throws CreditorPurchasesApiException
      */
-    int update(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items)
-            throws CreditorPurchasesApiException;
+    int update(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items) throws CreditorPurchasesApiException;
 
 }
