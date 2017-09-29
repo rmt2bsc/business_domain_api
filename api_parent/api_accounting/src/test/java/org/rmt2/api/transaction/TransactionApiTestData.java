@@ -273,25 +273,25 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     private List<VwXactList> createMockXactFetchAllsponse() {
         List<VwXactList> list = new ArrayList<VwXactList>();
         VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, 301,
-                3333, RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
+                3333, RMT2Date.stringToDate("2017-01-13"), 111.11, 200, "1111-1111-1111-1111");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXact(222222, 302, 4444,
                 RMT2Date.stringToDate("2017-02-14"), 222.11, 200,
-                "Check No 1234");
+                "2222-2222-2222-2222");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXact(333333, 301, 3333,
-                RMT2Date.stringToDate("2017-03-15"), 333.11, 200, null);
+                RMT2Date.stringToDate("2017-03-15"), 333.11, 200, "3333-3333-3333-3333");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXact(444444, 301, 3333,
-                RMT2Date.stringToDate("2017-04-16"), 444.11, 200, null);
+                RMT2Date.stringToDate("2017-04-16"), 444.11, 200, "4444-4444-4444-4444");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmXact(555555, 302, 3333,
                 RMT2Date.stringToDate("2017-05-17"), 555.11, 200,
-                "1111-1111-1111-1111");
+                "5555-5555-5555-5555");
         list.add(o);
         return list;
     }

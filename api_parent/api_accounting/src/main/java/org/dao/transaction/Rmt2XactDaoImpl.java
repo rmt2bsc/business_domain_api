@@ -99,10 +99,8 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
     @Override
     public List<XactDto> fetchXact(XactDto criteria) throws XactDaoException {
         VwXactList ormCriteria = XactDaoFactory.createCriteria(criteria);
-        ormCriteria.addOrderBy(VwXactList.PROP_XACTDATE,
-                VwXactList.ORDERBY_DESCENDING);
-        ormCriteria.addOrderBy(VwXactList.PROP_ID,
-                VwXactList.ORDERBY_DESCENDING);
+        ormCriteria.addOrderBy(VwXactList.PROP_XACTDATE, VwXactList.ORDERBY_DESCENDING);
+        ormCriteria.addOrderBy(VwXactList.PROP_ID, VwXactList.ORDERBY_DESCENDING);
 
         // Retrieve Data
         List<VwXactList> results = null;
