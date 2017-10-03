@@ -23,7 +23,7 @@ public class SalesApiException extends RMT2Exception {
         super(e);
     }
 
-    public SalesApiException(String msg, Exception e) {
+    public SalesApiException(String msg, Throwable e) {
         super(msg, e);
     }
 }

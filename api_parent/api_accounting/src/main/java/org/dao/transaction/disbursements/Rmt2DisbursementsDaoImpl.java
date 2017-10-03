@@ -3,7 +3,6 @@ package org.dao.transaction.disbursements;
 import java.util.List;
 
 import org.dao.transaction.Rmt2XactDaoImpl;
-import org.dao.transaction.XactDaoException;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
 
@@ -54,9 +53,8 @@ public class Rmt2DisbursementsDaoImpl extends Rmt2XactDaoImpl implements Disburs
     public List<XactDto> fetchDisbursmentByXact(XactDto criteria) throws DisbursementsDaoException {
         try {
             return super.fetchXact(criteria);
-        } catch (XactDaoException e) {
-            this.msg = "Error obtaining disbursment(s) by transaction";
-            throw new DisbursementsDaoException(this.msg, e);
+        } catch (Exception e) {
+            throw new DisbursementsDaoException("Error obtaining disbursment(s) by transaction", e);
         }
     }
 
@@ -68,11 +66,11 @@ public class Rmt2DisbursementsDaoImpl extends Rmt2XactDaoImpl implements Disburs
      * (java.lang.String)
      */
     @Override
-    public List<XactTypeItemActivityDto> fetchDisbursmentByXactItem(
-            XactTypeItemActivityDto criteria) throws DisbursementsDaoException {
+    public List<XactTypeItemActivityDto> fetchDisbursmentByXactItem(XactTypeItemActivityDto criteria) 
+            throws DisbursementsDaoException {
         try {
             return super.fetchXactTypeItemActivityExt(criteria);
-        } catch (XactDaoException e) {
+        } catch (Exception e) {
             this.msg = "Error obtaining disbursment(s) by transaction type item activity";
             throw new DisbursementsDaoException(this.msg, e);
         }

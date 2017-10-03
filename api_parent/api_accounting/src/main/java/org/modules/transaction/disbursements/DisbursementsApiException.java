@@ -23,7 +23,7 @@ public class DisbursementsApiException extends SalesApiException {
         super(e);
     }
 
-    public DisbursementsApiException(String msg, Exception e) {
+    public DisbursementsApiException(String msg, Throwable e) {
         super(msg, e);
     }
 }

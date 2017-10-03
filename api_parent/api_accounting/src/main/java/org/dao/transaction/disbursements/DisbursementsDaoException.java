@@ -40,7 +40,7 @@ public class DisbursementsDaoException extends XactDaoException {
      * @param msg
      * @param e
      */
-    public DisbursementsDaoException(String msg, Exception e) {
+    public DisbursementsDaoException(String msg, Throwable e) {
         super(msg, e);
     }
 

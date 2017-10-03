@@ -110,7 +110,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
                 return null;
             }
         } catch (DatabaseException e) {
-            throw new CannotRetrieveException(e);
+            throw new CannotRetrieveException("General transaction query failed", e);
         }
 
         List<XactDto> list = new ArrayList<XactDto>();

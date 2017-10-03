@@ -1,6 +1,6 @@
 package org.dao.transaction;
 
-import com.RMT2Exception;
+import com.RMT2RuntimeException;
 
 /**
  * Handles common transacton errors.
@@ -8,7 +8,7 @@ import com.RMT2Exception;
  * @author Roy Terrell
  * 
  */
-public class XactDaoException extends RMT2Exception {
+public class XactDaoException extends RMT2RuntimeException {
     private static final long serialVersionUID = -1884703323759924257L;
 
     public XactDaoException() {
@@ -23,7 +23,7 @@ public class XactDaoException extends RMT2Exception {
         super(e);
     }
 
-    public XactDaoException(String msg, Exception e) {
+    public XactDaoException(String msg, Throwable e) {
         super(msg, e);
     }
 }
