@@ -15,6 +15,7 @@ import org.modules.transaction.XactConst;
 
 import com.InvalidDataException;
 import com.api.persistence.DaoClient;
+import com.util.RMT2String2;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
 
@@ -96,6 +97,14 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throw new InvalidDataException("Base Transaction criteria object cannot be null", e);
         }
         
+        // Cannot return all cash disbursements transactions
+        try {
+            Verifier.verify(this.isXactCriteriaPropertySet(criteria));
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Cannot return all cash disbursements transactions.  At least one transaction criteria property must be set to filter data", e);
+        }
+        
         String sqlCriteria = this.parseCriteria(customCriteria);
         List<XactDto> results;
         try {
@@ -109,11 +118,37 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             StringBuilder buf = new StringBuilder();
             buf.append("Database error occurred retrieving disbursements by transaction type using selection criteria, ");
             buf.append(criteria.toString());
-            buf.append(sqlCriteria);
+            buf.append((sqlCriteria == null ? "No custom criteria" : sqlCriteria));
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new DisbursementsApiException(this.msg, e);
         }
+    }
+    
+    private boolean isXactCriteriaPropertySet(XactDto criteria) {
+        short criteriaCount = 0;
+        if (criteria.getXactId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getXactDate() != null) {
+            criteriaCount++;
+        }
+        if (criteria.getXactTypeId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getXactCatgId() > 0) {
+            criteriaCount++;
+        }
+        if (RMT2String2.isNotEmpty(criteria.getXactConfirmNo())) {
+            criteriaCount++;
+        }
+        if (criteria.getXactTenderId() > 0) {
+            criteriaCount++;
+        }
+        if (RMT2String2.isNotEmpty(criteria.getCriteria())) {
+            criteriaCount++;
+        }
+        return (criteriaCount > 0);
     }
 
     /*
