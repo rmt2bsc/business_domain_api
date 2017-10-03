@@ -14,8 +14,7 @@ import org.dto.XactDto;
  * @author rterrell
  * 
  */
-public class XactRmt2OrmAdapter extends XactTypeRmt2OrmAdapter implements
-        XactDto {
+public class XactRmt2OrmAdapter extends XactTypeRmt2OrmAdapter implements XactDto {
 
     private Xact x;
 
@@ -471,6 +470,14 @@ public class XactRmt2OrmAdapter extends XactTypeRmt2OrmAdapter implements
     @Override
     public String getXactCodeDescription() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        if (x != null) {
+            return x.toString();    
+        }
+        return "";
     }
 
 //    @Override
