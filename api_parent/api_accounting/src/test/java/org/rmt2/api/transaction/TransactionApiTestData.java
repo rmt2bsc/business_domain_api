@@ -301,7 +301,7 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111,
                 XactConst.XACT_TYPE_CREDITCHARGE,
                 XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
-                RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
+                RMT2Date.stringToDate("2017-01-13"), 111.11, 200, "1111-1111-1111-1111");
         list.add(o);
         return list;
     }
