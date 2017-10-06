@@ -22,7 +22,7 @@ public interface DisbursementsApi extends XactApi {
      * @return
      * @throws DisbursementsApiException
      */
-    List<XactDto> getByTransaction(XactDto criteria, String customCriteria)
+    List<XactDto> get(XactDto criteria, String customCriteria)
             throws DisbursementsApiException;
 
     /**
@@ -33,7 +33,7 @@ public interface DisbursementsApi extends XactApi {
      * @return
      * @throws DisbursementsDaoException
      */
-    List<XactTypeItemActivityDto> getByTransactionItem(XactTypeItemActivityDto criteria, String customCriteria)
+    List<XactTypeItemActivityDto> getItems(XactTypeItemActivityDto criteria, String customCriteria)
             throws DisbursementsApiException;
 
     /**

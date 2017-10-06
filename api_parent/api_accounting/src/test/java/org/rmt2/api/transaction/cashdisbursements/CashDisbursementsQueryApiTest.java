@@ -90,7 +90,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         List<XactDto> results = null;
         try {
             criteria.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
-            results = api.getByTransaction(criteria, null);
+            results = api.get(criteria, null);
         } catch (DisbursementsApiException e) {
             e.printStackTrace();
         }
@@ -148,7 +148,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         List<XactDto> results = null;
         criteria.setXactId(111111);
         try {
-            results = api.getByTransaction(criteria, null);
+            results = api.get(criteria, null);
         } catch (DisbursementsApiException e) {
             e.printStackTrace();
         }
@@ -192,7 +192,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         List<XactDto> results = null;
         criteria.setXactId(999999);
         try {
-            results = api.getByTransaction(criteria, null);
+            results = api.get(criteria, null);
         } catch (DisbursementsApiException e) {
             e.printStackTrace();
         }
@@ -204,7 +204,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.getByTransaction(null, null);
+            api.get(null, null);
             Assert.fail("Expected exception due to input value is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -218,7 +218,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         DisbursementsApi api = f.createApi(mockDaoClient);
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         try {
-            api.getByTransaction(criteria, null);
+            api.get(criteria, null);
             Assert.fail("Expected exception due to input value is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -233,7 +233,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         criteria.setXactReason("Reason is not a valid selection criteria property");
         try {
-            api.getByTransaction(criteria, null);
+            api.get(criteria, null);
             Assert.fail("Expected exception due to an unexpected property was set as selection criteria");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -259,7 +259,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         criteria.setXactId(999999);
         try {
-            api.getByTransaction(criteria, null);
+            api.get(criteria, null);
             Assert.fail("Expected a database exception to be thrown");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);

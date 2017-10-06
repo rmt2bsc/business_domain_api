@@ -89,7 +89,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (java.lang.String)
      */
     @Override
-    public List<XactDto> getByTransaction(XactDto criteria, String customCriteria) throws DisbursementsApiException {
+    public List<XactDto> get(XactDto criteria, String customCriteria) throws DisbursementsApiException {
         try {
             Verifier.verifyNotNull(criteria);
         }
@@ -159,7 +159,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (java.lang.String)
      */
     @Override
-    public List<XactTypeItemActivityDto> getByTransactionItem(XactTypeItemActivityDto criteria, String customCriteria)
+    public List<XactTypeItemActivityDto> getItems(XactTypeItemActivityDto criteria, String customCriteria)
             throws DisbursementsApiException {
         try {
             Verifier.verifyNotNull(criteria);
@@ -214,7 +214,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         // Identify this transaction as a non-creditor cash disbursement
         this.creditorDisb = false;
         int xactId = 0;
-        if (xact.getXactId() <= 0) {
+        if (xact.getXactId() == 0) {
             xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
             xactId = this.createDisbursement(xact, items);
         }
