@@ -29,7 +29,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
 /**
- * Tests transaction type ite activity extension Api.
+ * Tests cash disbursement transaction type item activity query Api.
  * 
  * @author rterrell
  * 

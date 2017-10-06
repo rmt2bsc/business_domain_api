@@ -31,7 +31,7 @@ import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
- * Tests transaction finalization.
+ * Tests transaction update as in creation.
  * 
  * @author rterrell
  * 
