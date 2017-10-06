@@ -125,32 +125,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         }
     }
     
-    private boolean isXactCriteriaPropertySet(XactDto criteria) {
-        short criteriaCount = 0;
-        if (criteria.getXactId() > 0) {
-            criteriaCount++;
-        }
-        if (criteria.getXactDate() != null) {
-            criteriaCount++;
-        }
-        if (criteria.getXactTypeId() > 0) {
-            criteriaCount++;
-        }
-        if (criteria.getXactCatgId() > 0) {
-            criteriaCount++;
-        }
-        if (RMT2String2.isNotEmpty(criteria.getXactConfirmNo())) {
-            criteriaCount++;
-        }
-        if (criteria.getXactTenderId() > 0) {
-            criteriaCount++;
-        }
-        if (RMT2String2.isNotEmpty(criteria.getCriteria())) {
-            criteriaCount++;
-        }
-        return (criteriaCount > 0);
-    }
-
+    
+    
     /*
      * (non-Javadoc)
      * 
@@ -166,6 +142,13 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         }
         catch (VerifyException e) {
             throw new InvalidDataException("Transaction Type Item Activity criteria object cannot be null", e);
+        }
+        // Cannot return all cash disbursements transactions items
+        try {
+            Verifier.verify(this.isXactCriteriaPropertySet(criteria));
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Cannot return all cash disbursements transactions.  At least one transaction criteria property must be set to filter data", e);
         }
         
         String sqlCriteria = this.parseCriteria(customCriteria);
@@ -201,6 +184,55 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         return criteria;
     }
 
+    private boolean isXactCriteriaPropertySet(XactDto criteria) {
+        short criteriaCount = 0;
+        if (criteria.getXactId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getXactDate() != null) {
+            criteriaCount++;
+        }
+        if (criteria.getXactTypeId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getXactCatgId() > 0) {
+            criteriaCount++;
+        }
+        if (RMT2String2.isNotEmpty(criteria.getXactConfirmNo())) {
+            criteriaCount++;
+        }
+        if (criteria.getXactTenderId() > 0) {
+            criteriaCount++;
+        }
+        if (RMT2String2.isNotEmpty(criteria.getCriteria())) {
+            criteriaCount++;
+        }
+        return (criteriaCount > 0);
+    }
+    
+    private boolean isXactCriteriaPropertySet(XactTypeItemActivityDto criteria) {
+        short criteriaCount = 0;
+        if (criteria.getXactId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getXactTypeItemActvId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getXactItemId() > 0) {
+            criteriaCount++;
+        }
+        if (criteria.getActivityAmount() > 0) {
+            criteriaCount++;
+        }
+        if (RMT2String2.isNotEmpty(criteria.getXactTypeItemActvName())) {
+            criteriaCount++;
+        }
+        if (RMT2String2.isNotEmpty(criteria.getCriteria())) {
+            criteriaCount++;
+        }
+        return (criteriaCount > 0);
+    }
+    
     /*
      * (non-Javadoc)
      * 
