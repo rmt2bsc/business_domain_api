@@ -209,7 +209,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (org.dto.XactDto, java.util.List)
      */
     @Override
-    public int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items)
+    public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items)
             throws DisbursementsApiException {
         // Identify this transaction as a non-creditor cash disbursement
         this.creditorDisb = false;
@@ -232,7 +232,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (org.dto.XactDto, java.util.List, int)
      */
     @Override
-    public int updateDisbursement(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId)
+    public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId)
             throws DisbursementsApiException {
         // Identify this transaction as a creditor cash disbursement
         this.creditorDisb = true;
