@@ -243,6 +243,13 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
     @Override
     public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items)
             throws DisbursementsApiException {
+        try {
+            this.validate(xact, items);    
+        }
+        catch (Exception e) {
+            throw new DisbursementsApiException("Cash Disbursement input data is not valid", e);
+        }
+        
         // Identify this transaction as a non-creditor cash disbursement
         this.creditorDisb = false;
         int xactId = 0;
@@ -266,6 +273,13 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
     @Override
     public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId)
             throws DisbursementsApiException {
+        try {
+            this.validate(xact, items);    
+        }
+        catch (Exception e) {
+            throw new DisbursementsApiException("Creditor Cash Disbursement input data is not valid", e);
+        }
+        
         // Identify this transaction as a creditor cash disbursement
         this.creditorDisb = true;
         int xactId = 0;
