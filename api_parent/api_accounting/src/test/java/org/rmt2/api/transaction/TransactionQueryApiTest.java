@@ -87,7 +87,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
         Assert.assertEquals("2017-01-13", RMT2Date.formatDate(results.getXactDate(), "yyyy-MM-dd"));
         Assert.assertEquals(111.11, results.getXactAmount(), 0);
         Assert.assertEquals(200, results.getXactTenderId());
-        Assert.assertNull(results.getXactNegInstrNo());
+        Assert.assertNotNull(results.getXactNegInstrNo());
         Assert.assertEquals(results.getXactDate(), results.getXactPostedDate());
         Assert.assertEquals(String.valueOf(results.getXactDate().getTime()), results.getXactConfirmNo());
         Assert.assertEquals(results.getXactId() + results.getXactTenderId(), results.getDocumentId());
