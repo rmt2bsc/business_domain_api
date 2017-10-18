@@ -33,6 +33,7 @@ import org.rmt2.api.transaction.TransactionApiTestData;
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2Date;
 
 /**
  * Tests cash disbursement transaction update Api functionality.
@@ -56,9 +57,9 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         super.setUp();
 
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0);
+        vwXact.setId(0);
+        vwXact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
         mockXactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
-        mockXactDto.setXactId(0);
-        mockXactDto.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
 
         mockXactItemsDto = new ArrayList<>();
         List<XactTypeItemActivity> items = this.mockXactTypeItemActivityFetchAllResponse;
@@ -375,6 +376,97 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof TransactionAmountsUnbalancedException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testValidation_TransactonDateNull() {
+        this.mockXactDto.setXactDate(null);
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        try {
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transaction date is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testValidation_TransactonDatePastCurrentDate() {
+        this.mockXactDto.setXactDate(RMT2Date.stringToDate("2050-12-31"));
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        try {
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transaction date is is past current date");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testValidation_TenderIdIsNegative() {
+        this.mockXactDto.setXactTenderId(-234);
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        try {
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to tender id is negative");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testValidation_TenderIdIsZero() {
+        this.mockXactDto.setXactTenderId(0);
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        try {
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to tender id is zero");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testValidation_NegotiableInstrumentNumberNull() {
+        this.mockXactDto.setXactTenderId(XactConst.TENDER_CREDITCARD);
+        this.mockXactDto.setXactNegInstrNo(null);
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        try {
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transacction negotialble instrument number is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testValidation_ReasonIsNull() {
+        this.mockXactDto.setXactReason(null);
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        try {
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transacction reason is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
