@@ -241,26 +241,26 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (org.dto.XactDto, java.util.List)
      */
     @Override
-    public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items)
-            throws DisbursementsApiException {
+    public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException {
+        // Identify this transaction as a non-creditor cash disbursement
+        this.creditorDisb = false;
+        
         try {
             this.validate(xact, items);    
         }
         catch (Exception e) {
-            throw new DisbursementsApiException("Cash Disbursement input data is not valid", e);
+            throw new DisbursementsApiException("Basic Cash Disbursement input data is not valid", e);
         }
         
-        // Identify this transaction as a non-creditor cash disbursement
-        this.creditorDisb = false;
-        int xactId = 0;
+        int newXactId = 0;
         if (xact.getXactId() == 0) {
             xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
-            xactId = this.createDisbursement(xact, items);
+            newXactId = this.createDisbursement(xact, items);
         }
         else {
-            xactId = this.reverseDisbursement(xact, items);
+            newXactId = this.reverseDisbursement(xact, items);
         }
-        return xactId;
+        return newXactId;
     }
 
     /*
@@ -274,17 +274,23 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
     public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId)
             throws DisbursementsApiException {
         
-        this.validate(xact, items, creditorId);
-
         // Identify this transaction as a creditor cash disbursement
         this.creditorDisb = true;
-        int xactId = 0;
-        if (xact.getXactId() <= 0) {
+        
+        try {
+            this.validate(xact, items, creditorId);
+        }
+        catch (Exception e) {
+            throw new DisbursementsApiException("Creditor Cash Disbursement input data is not valid", e);
+        }
+        
+        int newXctId = 0;
+        if (xact.getXactId() == 0) {
             xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBACCT);
-            xactId = this.createDisbursement(xact, items);
+            newXctId = this.createDisbursement(xact, items);
         }
         else {
-            xactId = this.reverseDisbursement(xact, items);
+            newXctId = this.reverseDisbursement(xact, items);
         }
 
         // At this point a transaction was successfully created, and we need to
@@ -296,11 +302,11 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         try {
             // Create creditor activity (transaction history) regarding
             // the disbursement.  The usual valdiations will take place in this call.
-            super.createSubsidiaryActivity(creditorId, xactId, xactAmount);
+            super.createSubsidiaryActivity(creditorId, newXctId, xactAmount);
         } catch (XactApiException e) {
             throw new DisbursementsApiException(e);
         }
-        return xactId;
+        return newXctId;
     }
 
     /**
@@ -337,7 +343,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      *             transction error occurs.
      */
     private int reverseDisbursement(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException {
-        int xactId = 0;
+        int newXactId = 0;
         try {
             // Cannot reverse payment transaction that has been finalized
             if (!this.isModifiable(xact)) {
@@ -345,14 +351,17 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
                 logger.error(msg);
                 throw new DisbursementsApiException(msg);
             }
-
-            this.finalizeXact(xact);
+            
+            // Reverse transaction
             xact.setXactDate(new java.util.Date());
             if (xact.getXactTenderId() == 0) {
                 xact.setXactTenderId(XactConst.TENDER_CASH);
             }
-            xactId = this.reverse(xact, items);
-            return xactId;
+            newXactId = this.reverse(xact, items);
+            
+            // Finalize Transaction
+            this.finalizeXact(xact);
+            return newXactId;
         } catch (XactApiException e) {
             throw new DisbursementsApiException(e);
         }

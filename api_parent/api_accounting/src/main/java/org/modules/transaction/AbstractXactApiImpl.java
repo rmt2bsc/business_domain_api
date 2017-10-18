@@ -699,6 +699,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         this.preValidate(xact);
 
         try {
+            // Transaction id can be greater than or equal to zero
             Verifier.verifyNotNegative(xact.getXactId());
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction id cannot be negative", e);
@@ -1304,6 +1305,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public void finalizeXact(XactDto xact) throws XactApiException {
+        // Do basic transaction validations
         try {
             this.validate(xact);
         } catch (Exception e) {
