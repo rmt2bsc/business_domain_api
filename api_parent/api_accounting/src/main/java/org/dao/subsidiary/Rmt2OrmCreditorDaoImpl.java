@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.dao.AccountingSqlConst;
 import org.dao.mapping.orm.rmt2.Creditor;
+import org.dao.mapping.orm.rmt2.CreditorActivity;
 import org.dao.mapping.orm.rmt2.CreditorType;
-import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
@@ -242,7 +242,7 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             throw new CreditorDaoException(
                     "Input creditor subsidiary transaction item object is invalid or null");
         }
-        CustomerActivity ca = SubsidiaryDaoFactory.createCustomerActivity(
+        CreditorActivity ca = SubsidiaryDaoFactory.createCreditorActivity(
                 creditorXact.getSubsidiaryId(), creditorXact.getXactId(),
                 creditorXact.getActivityAmount());
         UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());

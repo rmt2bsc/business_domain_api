@@ -260,11 +260,11 @@ public class SubsidiaryDaoFactory extends RMT2Base {
         }
     }
 
-    public static CreditorActivity createCreditorActivity(int customerId,
+    public static CreditorActivity createCreditorActivity(int creditorId,
             int xactId, double amount) {
         CreditorActivity obj = null;
         obj = SubsidiaryDaoFactory.createCreditorActivity();
-        obj.setCreditorId(customerId);
+        obj.setCreditorId(creditorId);
         obj.setXactId(xactId);
         obj.setAmount(amount);
         return obj;
