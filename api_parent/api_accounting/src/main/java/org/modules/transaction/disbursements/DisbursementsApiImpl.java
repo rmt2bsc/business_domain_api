@@ -273,13 +273,9 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
     @Override
     public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId)
             throws DisbursementsApiException {
-        try {
-            this.validate(xact, items);    
-        }
-        catch (Exception e) {
-            throw new DisbursementsApiException("Creditor Cash Disbursement input data is not valid", e);
-        }
         
+        this.validate(xact, items, creditorId);
+
         // Identify this transaction as a creditor cash disbursement
         this.creditorDisb = true;
         int xactId = 0;
@@ -321,7 +317,6 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throws DisbursementsApiException {
         int xactId = 0;
         try {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
             xactId = this.update(xact, items);
             return xactId;
         } catch (XactApiException e) {
@@ -374,6 +369,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * @param _xact
      *            The target transaction
      */
+    @Override
     protected void preCreateXact(XactDto xact) {
         double xactAmount = 0;
         super.preCreateXact(xact);
@@ -387,6 +383,9 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
     }
 
     /**
+     * This method checks the whether the cash disbursement transaction data is
+     * valid.
+     * <p>
      * This method checks if <i>xactItems</i> of the general cash disbursement
      * transaction is not null and contains at least one element with an
      * instance of {@link XactTypeItemActivityDto}. If successful, basic
@@ -403,6 +402,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      *             fail.
      * @see {@link AbstractXactApiImpl#validate(XactDto, List)}
      */
+    @Override
     protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         // Transaction items are only required for general cash disbursement
         // type transactions
@@ -416,6 +416,44 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
 
         // Perform common validations
         super.validate(xact, xactItems);
+    }
+
+    /**
+     * This method checks the whether the cash disbursement transaction data is
+     * valid.
+     * <p>
+     * if <i>xactItems</i> of the general cash disbursement transaction is not
+     * null, contains at least one element with an number. If successful, basic
+     * validations from the ancestor are performed for <i>xact</> and instance
+     * of {@link XactTypeItemActivityDto}, and the creditor id is a valid
+     * <i>xactItems</>.
+     * 
+     * @param xact
+     *            {@link XactDto} instance.
+     * @param xactItems
+     *            A List of {@link XactTypeItemActivityDto} instances.
+     * @param creditorId
+     *            the id of the creditor
+     * @throws InvalidDataException
+     *             When <i>xact</i> does not meet basic validation requirements,
+     *             <i>xactItems</i> is null or is empty, creditor id is null or
+     *             not greater than zero, or basic validations fail.
+     * @see {@link AbstractXactApiImpl#validate(XactDto, List)}
+     */
+    protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems, Integer creditorId) {
+        this.validate(xact, xactItems);
+
+        // Validate Creditor Id
+        try {
+            Verifier.verifyNotNull(creditorId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id for cash Disbursement cannot be null", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id for cash Disbursement must be greater than zero", e);
+        }
     }
 
     /**
@@ -437,30 +475,34 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * @throws XactApiException
      *             Validation error occurred.
      */
-    protected void postValidateXact(XactDto xact) throws XactApiException {
+    @Override
+    protected void postValidate(XactDto xact) {
         super.postValidate(xact);
+
         java.util.Date today = new java.util.Date();
 
         // Verify that transaction date has a value.
-        if (xact.getXactDate() == null) {
-            this.msg = "Transaction must be associated with a date";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
-
+        try {
+            Verifier.verifyNotNull(xact.getXactDate());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Cash disbursement transaction date cannot be null", e);
         }
+
         // Verify that the transacton date value is valid
-        if (xact.getXactDate().getTime() > today.getTime()) {
-            this.msg = "Transaction date cannot be greater than the current date";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
+        try {
+            Verifier.verify(xact.getXactDate().getTime() <= today.getTime());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Cash disbursement transaction date cannot be greater than the current date",
+                    e);
         }
 
         // Verify that transaction tender has a value and is valid.
-        if (xact.getXactTenderId() <= 0) {
-            this.msg = "Transaction must be associated with a tender";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
+        try {
+            Verifier.verifyPositive(xact.getXactTenderId());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Cash disbursement tender id must be greater than zero", e);
         }
+
         // Verify that the transaction's tender is assoicated with a negotiable
         // instrument number, if applicable
         switch (xact.getXactTenderId()) {
@@ -470,18 +512,19 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             case XactConst.TENDER_DEBITCARD:
             case XactConst.TENDER_INSURANCE:
             case XactConst.TENDER_MONEYORDER:
-                if (xact.getXactNegInstrNo() == null || xact.getXactNegInstrNo().equals("")) {
-                    this.msg = "Transaction tender must be associated with a tender number";
-                    logger.error(this.msg);
-                    throw new XactApiException(this.msg);
+                try {
+                    Verifier.verifyNotEmpty(xact.getXactNegInstrNo());
+                } catch (VerifyException e) {
+                    throw new InvalidDataException(
+                            "Cash disbursement transaction tender must be associated with a tender number", e);
                 }
         }
 
-        // Ensure that reaso is entered.
-        if (xact.getXactReason() == null || xact.getXactReason().equals("")) {
-            this.msg = "Transaction reason cannot be blank...Save failed.";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
+        // Ensure that transaction reason is entered.
+        try {
+            Verifier.verifyNotEmpty(xact.getXactReason());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Cash disbursement transaction reason cannot be null or empty", e);
         }
         return;
     }
