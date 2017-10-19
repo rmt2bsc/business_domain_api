@@ -304,7 +304,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             // the disbursement.  The usual valdiations will take place in this call.
             super.createSubsidiaryActivity(creditorId, newXctId, xactAmount);
         } catch (XactApiException e) {
-            throw new DisbursementsApiException(e);
+            throw new DisbursementsApiException("Unable to process cash disbursement transaction", e);
         }
         return newXctId;
     }
@@ -343,28 +343,40 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      *             transction error occurs.
      */
     private int reverseDisbursement(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException {
+        // Cannot reverse payment transaction that has been finalized
+        boolean xactModifiable = false;
+        try {
+            xactModifiable = this.isModifiable(xact);
+        }  catch (InvalidDataException e) {
+            throw new DisbursementsApiException("Failed to reverse Cash Disbursement due invalid data", e);
+        }
+        if (!xactModifiable) {
+            msg = "Cash Disbursement transaction is already finalized";
+            throw new DisbursementsApiException(msg);
+        }
+        
+        // Reverse transaction
         int newXactId = 0;
         try {
-            // Cannot reverse payment transaction that has been finalized
-            if (!this.isModifiable(xact)) {
-                msg = "Cash Disbursement cannot be reversed since it is already finalized";
-                logger.error(msg);
-                throw new DisbursementsApiException(msg);
+            if (xact.getXactDate() == null) {
+                xact.setXactDate(new java.util.Date());    
             }
-            
-            // Reverse transaction
-            xact.setXactDate(new java.util.Date());
             if (xact.getXactTenderId() == 0) {
                 xact.setXactTenderId(XactConst.TENDER_CASH);
             }
             newXactId = this.reverse(xact, items);
-            
-            // Finalize Transaction
-            this.finalizeXact(xact);
-            return newXactId;
         } catch (XactApiException e) {
-            throw new DisbursementsApiException(e);
+            throw new DisbursementsApiException("Error reversing Cash Disbursement transaction", e);
         }
+        
+        // Finalize Transaction
+        try {
+            this.finalizeXact(xact);
+        } catch (XactApiException e) {
+            throw new DisbursementsApiException("Error finalizing Cash Disbursement transaction after reversal", e);
+        }
+        
+        return newXactId;
     }
 
     /**
