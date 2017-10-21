@@ -25,6 +25,8 @@ import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
 import com.util.RMT2Date;
 import com.util.RMT2String;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * Api Implementation of CreditorPurchasesApi that manages creditor purchase
@@ -83,7 +85,20 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      * org.modules.transaction.purchases.creditor.CreditorPurchasesApi#get(int)
      */
     @Override
-    public XactCreditChargeDto get(int xactId) throws CreditorPurchasesApiException {
+    public XactCreditChargeDto get(Integer xactId) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotNull(xactId);
+        } catch (VerifyException e) {
+            this.msg = "Transaction Id is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+        try {
+            Verifier.verifyPositive(xactId);
+        } catch (VerifyException e) {
+            this.msg = "Transaction Id is required to be greater than zero";
+            throw new InvalidDataException(this.msg, e);
+        }
+
         XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setXactId(xactId);
         List<XactCreditChargeDto> results = this.get(criteria);
@@ -92,11 +107,11 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         }
         StringBuilder buf = new StringBuilder();
         if (results.size() > 1) {
-            buf.append("Error: Query method is expecting a single creditor transaction to be returned using transaction id, ");
+            buf.append("Error: Creditor purchase query returned too many rows for transaction id, ");
             buf.append(xactId);
             buf.append(".  Instead ");
             buf.append(results.size());
-            buf.append("  were returned.");
+            buf.append("  transactions were returned.");
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new CreditorPurchasesApiException(this.msg);
@@ -113,10 +128,11 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public List<XactCreditChargeDto> get(Date xactDate) throws CreditorPurchasesApiException {
-        if (xactDate == null) {
-            this.msg = "Transaction date cannot be null";
-            logger.error(this.msg);
-            throw new CreditorPurchasesApiException(this.msg);
+        try {
+            Verifier.verifyNotNull(xactDate);
+        } catch (VerifyException e) {
+            this.msg = "Transaction date is required";
+            throw new InvalidDataException(this.msg, e);
         }
         XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
                 .createCreditChargeInstance(null, null);
@@ -125,10 +141,10 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         try {
             return this.get(criteria);
         } catch (Exception e) {
-            msgBuf.append("Unable to retrieve creditor purchases by transaction date, ");
+            msgBuf.append("Error retrieving creditor purchases by transaction date, ");
             msgBuf.append(RMT2Date.formatDate(xactDate, "MM-dd-yyyy"));
             this.msg = msgBuf.toString();
-            logger.error(this.msg);
+            logger.error(this.msg, e);
             throw new CreditorPurchasesApiException(this.msg, e);
         }
     }
@@ -142,13 +158,19 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public List<XactCreditChargeDto> get(String criteria) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotEmpty(criteria);
+        } catch (VerifyException e) {
+            this.msg = "Custom criteria is required and cannot be null or empty";
+            throw new InvalidDataException(this.msg, e);
+        }
         XactCreditChargeDto criteriaObj = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteriaObj.setCriteria(criteria);
         StringBuilder msgBuf = new StringBuilder();
         try {
             return this.get(criteria);
         } catch (Exception e) {
-            msgBuf.append("Unable to retrieve creditor purchases using custom criteria: ");
+            msgBuf.append("Error retrieving creditor purchases using custom criteria: ");
             msgBuf.append(criteria);
             this.msg = msgBuf.toString();
             logger.error(this.msg);
@@ -164,14 +186,20 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      * (int)
      */
     @Override
-    public List<XactCreditChargeDto> getByCreditor(int creditorId) throws CreditorPurchasesApiException {
+    public List<XactCreditChargeDto> getByCreditor(Integer creditorId) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotNull(creditorId);
+        } catch (VerifyException e) {
+            this.msg = "Creditor Id is required";
+            throw new InvalidDataException(this.msg, e);
+        }
         XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setCreditorId(creditorId);
         StringBuilder msgBuf = new StringBuilder();
         try {
             return this.get(criteria);
         } catch (Exception e) {
-            msgBuf.append("Unable to retrieve creditor purchases using creditor id: ");
+            msgBuf.append("Error retrieving creditor purchases using creditor id: ");
             msgBuf.append(creditorId);
             this.msg = msgBuf.toString();
             logger.error(this.msg);
@@ -188,13 +216,19 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public List<XactCreditChargeDto> getByAcctNo(String accountNo) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotEmpty(accountNo);
+        } catch (VerifyException e) {
+            this.msg = "Account number is required";
+            throw new InvalidDataException(this.msg, e);
+        }
         XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setAccountNumber(accountNo);
         StringBuilder msgBuf = new StringBuilder();
         try {
             return this.get(criteria);
         } catch (Exception e) {
-            msgBuf.append("Unable to retrieve creditor purchases using creditor account number: ");
+            msgBuf.append("Error retrieving creditor purchases using creditor account number: ");
             msgBuf.append(accountNo);
             this.msg = msgBuf.toString();
             logger.error(this.msg);
@@ -210,13 +244,19 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public List<XactCreditChargeDto> getByConfirmNo(String confirmNo) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotEmpty(confirmNo);
+        } catch (VerifyException e) {
+            this.msg = "Confirmation number is required";
+            throw new InvalidDataException(this.msg, e);
+        }
         XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setXactConfirmNo(confirmNo);
         StringBuilder msgBuf = new StringBuilder();
         try {
             return this.get(criteria);
         } catch (Exception e) {
-            msgBuf.append("Unable to retrieve creditor purchases using creditor transaction confirmation number: ");
+            msgBuf.append("Error retrieving creditor purchases using creditor transaction confirmation number: ");
             msgBuf.append(confirmNo);
             this.msg = msgBuf.toString();
             logger.error(this.msg);
@@ -233,13 +273,19 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public List<XactCreditChargeDto> getByReason(String reason) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotEmpty(reason);
+        } catch (VerifyException e) {
+            this.msg = "Transaction reason is required";
+            throw new InvalidDataException(this.msg, e);
+        }
         XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setXactReason(reason);
         StringBuilder msgBuf = new StringBuilder();
         try {
             return this.get(criteria);
         } catch (Exception e) {
-            msgBuf.append("Unable to retrieve creditor purchases using creditor transaction reason/source description: ");
+            msgBuf.append("Error retrieving creditor purchases using creditor transaction reason/source description: ");
             msgBuf.append(reason);
             this.msg = msgBuf.toString();
             logger.error(this.msg);
@@ -256,17 +302,23 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public List<XactCreditChargeDto> get(XactCreditChargeDto criteria) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            this.msg = "Creditor criteria object is required";
+            throw new InvalidDataException(this.msg, e);
+        }
         StringBuilder msgBuf = new StringBuilder();
         List<XactCreditChargeDto> results;
         try {
             results = this.dao.fetch(criteria);
             if (results == null) {
-                msgBuf.append("Creditor purchase data was not found by multiple criteria object");
+                msgBuf.append("Creditor purchase data was not found using criteria object");
                 logger.warn(msgBuf);
                 return null;
             }
         } catch (CreditorPurchasesDaoException e) {
-            msgBuf.append("Database error occurred retrieving creditor purchases by multiple criteria object");
+            msgBuf.append("Database error occurred retrieving creditor purchases by criteria object");
             this.msg = msgBuf.toString();
             logger.error(this.msg);
             throw new CreditorPurchasesApiException(this.msg, e);
@@ -284,13 +336,19 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      * org.modules.transaction.purchases.creditor.CreditorPurchasesApi#get(int)
      */
     @Override
-    public List<XactTypeItemActivityDto> getItems(int xactId) throws CreditorPurchasesApiException {
+    public List<XactTypeItemActivityDto> getItems(Integer xactId) throws CreditorPurchasesApiException {
+        try {
+            Verifier.verifyNotNull(xactId);
+        } catch (VerifyException e) {
+            this.msg = "Transaction Id is required";
+            throw new InvalidDataException(this.msg, e);
+        }
         StringBuilder msgBuf = new StringBuilder();
         List<XactTypeItemActivityDto> results;
         try {
             results = this.dao.fetch(xactId);
             if (results == null) {
-                msgBuf.append("Creditor purchase item data was not found by transaction id, ");
+                msgBuf.append("Creditor purchase detail item(s) were not found by transaction id, ");
                 msgBuf.append(xactId);
                 logger.warn(msgBuf);
                 return null;
@@ -331,10 +389,15 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
     public int update(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items)
             throws CreditorPurchasesApiException {
 
-        if (xact == null) {
-            this.msg = "Creditor purchase transaction object cannot be null";
+        // We have to jump ahead of ancestor validation logic and check the
+        // validity of the transaction object since it is the source of the
+        // transaction id in which we need.
+        try {
+            Verifier.verifyNotNull(xact);
+        } catch (VerifyException e) {
+            this.msg = "Unable to access transaction id due to Creditor purchase transaction object is null";
             logger.error(this.msg);
-            throw new CreditorPurchasesApiException(this.msg);
+            throw new CreditorPurchasesApiException(this.msg, e);
         }
 
         // Determine if we are creating or reversing the cash disbursement
@@ -392,9 +455,15 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
     protected void preCreateXact(XactDto xact) {
         double xactAmount = 0;
         super.preCreateXact(xact);
+
+        // TODO: This line of code makes no sense since reason is validated
+        // prior to this method invocation. May need to delete.
         if (xact.getXactReason() == null || xact.getXactReason().equals("")) {
             return;
         }
+
+        // TODO: This line of code makes no sense since reason is validated
+        // prior to this method invocation. May need to delete.
         // Only modify reason for non-reversal cash receipts
         if (xact.getXactSubtypeId() == 0) {
             xact.setXactReason(xact.getXactReason());
@@ -406,6 +475,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             xactAmount = xact.getXactAmount();
             xact.setXactAmount(xactAmount);
         }
+
         int creditorId = 0;
         if (xact instanceof XactCreditChargeDto) {
             creditorId = ((XactCreditChargeDto) xact).getCreditorId();
@@ -448,23 +518,34 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      *             If the transaction has already bee flagged as finalized or if
      *             a general transction error occurs.
      */
-    protected int reversePurchase(XactCreditChargeDto xact,
-            List<XactTypeItemActivityDto> items)
+    protected int reversePurchase(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items)
             throws CreditorPurchasesApiException {
+        boolean xactModifiable = false;
         try {
-            int xactId = 0;
-            // Cannot reverse payment transaction that has been finalized
-            if (!this.isModifiable(xact)) {
-                msg = "Creditor purchase transaction cannot be reversed since it is already finalized";
-                logger.error(msg);
-                throw new CreditorPurchasesApiException(msg);
-            }
-            this.finalizeXact(xact);
-            xactId = this.reverse(xact, null);
-            return xactId;
-        } catch (XactApiException e) {
-            throw new CreditorPurchasesApiException(e);
+            xactModifiable = this.isModifiable(xact);
+        } catch (InvalidDataException e) {
+            throw new CreditorPurchasesApiException("Failed to reverse creditor purchase due invalid data", e);
         }
+        if (!xactModifiable) {
+            msg = "Creditor purchase transaction is already finalized";
+            throw new CreditorPurchasesApiException(msg);
+        }
+
+        // Reverse transaction
+        int newXactId = 0;
+        try {
+            newXactId = this.reverse(xact, items);
+        } catch (XactApiException e) {
+            throw new CreditorPurchasesApiException("Error reversing Creditor Purchases transaction", e);
+        }
+
+        // Finalize Transaction
+        try {
+            this.finalizeXact(xact);
+        } catch (XactApiException e) {
+            throw new CreditorPurchasesApiException("Error finalizing Creditor Purchase transaction after reversal", e);
+        }
+        return newXactId;
     }
 
     /**
@@ -479,7 +560,9 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
     @Override
     protected void preReverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         super.preReverse(xact, xactItems);
-        xact.setXactDate(new Date());
+        if (xact.getXactDate() == null) {
+            xact.setXactDate(new Date());
+        }
     }
 
     /**
@@ -497,13 +580,17 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public void validate(XactDto xact, List<XactTypeItemActivityDto> items) {
-        if (items == null || items.size() == 0) {
-            this.msg = "Creditor purchase transaction must contain at least one line item";
-            logger.error(this.msg);
-            throw new InvalidDataException(this.msg);
-        }
         // Perform common validations
         super.validate(xact, items);
+
+        // Creditor purchase requires at least one detail item. The above
+        // ancestor code will allow transactions withot detail items.
+        try {
+            Verifier.verifyNotEmpty(items);
+        } catch (VerifyException e) {
+            this.msg = "Creditor purchase transaction must contain at least one line item";
+            throw new InvalidDataException(this.msg, e);
+        }
     }
 
     /**
@@ -533,31 +620,36 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         java.util.Date today = new java.util.Date();
 
         // Verify that transaction date has a value.
-        if (xact.getXactDate() == null) {
-            this.msg = "Creditor Purchase transaction date is required";
-            logger.error(this.msg);
-            throw new InvalidDataException(this.msg);
+        try {
+            Verifier.verifyNotNull(xact.getXactDate());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Purchase transaction date is required", e);
         }
+
         // Verify that the transacton date value is valid
-        if (xact.getXactDate().getTime() > today.getTime()) {
-            this.msg = "Creditor Purchase transaction date cannot be in the future";
-            logger.error(this.msg);
-            throw new InvalidDataException(this.msg);
+        try {
+            Verifier.verifyTrue(xact.getXactDate().getTime() <= today.getTime());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Purchase transaction date cannot be in the future", e);
         }
 
-        // Verify that transaction tender has a value and is valid.
-        if (xact.getXactTenderId() != XactConst.TENDER_COMPANY_CREDIT
-                && xact.getXactTenderId() != XactConst.TENDER_CREDITCARD) {
-            this.msg = "Creditor Purchase Tender Type must be either Bank Credit Card or Finance Company Credit";
-            logger.error(this.msg);
-            throw new InvalidDataException(this.msg);
+        // Verify that transaction tender is either a credit card or company
+        // credit.
+        try {
+            Verifier.verifyFalse(xact.getXactTenderId() != XactConst.TENDER_COMPANY_CREDIT
+                    && xact.getXactTenderId() != XactConst.TENDER_CREDITCARD);
+        } catch (VerifyException e) {
+            throw new InvalidDataException(
+                    "Creditor Purchase Tender Type must be either Bank Credit Card or Finance Company Credit", e);
         }
 
-        // Ensure that the source of the transction is entered.
-        if (xact.getXactReason() == null || xact.getXactReason().equals("")) {
-            this.msg = "Creditor purchase transaction reason/source cannot be blank...this is usually the name of the merchant or service provider";
-            logger.error(this.msg);
-            throw new InvalidDataException(this.msg);
+        // Transaction reason is required.
+        try {
+            Verifier.verifyNotEmpty(xact.getXactReason());
+        } catch (VerifyException e) {
+            throw new InvalidDataException(
+                    "Creditor purchase transaction reason/source is required...this is usually the name of the merchant or service provider",
+                    e);
         }
         return;
     }
