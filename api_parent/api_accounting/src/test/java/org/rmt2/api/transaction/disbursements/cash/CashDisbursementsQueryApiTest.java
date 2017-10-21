@@ -1,4 +1,4 @@
-package org.rmt2.api.transaction.cashdisbursements;
+package org.rmt2.api.transaction.disbursements.cash;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;

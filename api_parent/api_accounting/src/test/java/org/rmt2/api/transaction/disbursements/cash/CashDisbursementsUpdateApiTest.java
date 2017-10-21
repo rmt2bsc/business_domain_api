@@ -1,4 +1,4 @@
-package org.rmt2.api.transaction.cashdisbursements;
+package org.rmt2.api.transaction.disbursements.cash;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.Creditor;
-import org.dao.mapping.orm.rmt2.CreditorActivity;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
@@ -40,18 +38,19 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
 /**
- * Tests creditor cash disbursement transaction update Api functionality.
+ * Tests cash disbursement transaction update Api functionality.
  * 
  * @author rterrell
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestData {
-
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
+        ResultSet.class })
+public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
+    
     private static final int NEW_XACT_ID = 1234567;
     private static final int EXISTING_XACT_ID = 1234000;
-    private static final int CREDITOR_ID = 71717;
+
     private XactDto mockXactDto;
     private List<XactTypeItemActivityDto> mockXactItemsDto;
 
@@ -64,13 +63,14 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
 
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0);
         vwXact.setId(0);
-        vwXact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBACCT);
+        vwXact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
         mockXactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
 
         mockXactItemsDto = new ArrayList<>();
         List<XactTypeItemActivity> items = this.mockXactTypeItemActivityFetchAllResponse;
         for (XactTypeItemActivity ormItem : items) {
-            XactTypeItemActivityDto item = Rmt2XactDtoFactory.createXactTypeItemActivityInstance(ormItem);
+            XactTypeItemActivityDto item = Rmt2XactDtoFactory
+                    .createXactTypeItemActivityInstance(ormItem);
             item.setXactId(0);
             item.setXactTypeItemActvId(0);
             mockXactItemsDto.add(item);
@@ -106,62 +106,33 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
 
     @Test
     public void testSuccess() {
-        Xact mockXact = this.buildXactOrm(this.mockXactDto);
+        Xact xact = this.buildXactOrm(this.mockXactDto);
         try {
-            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
-                    .thenReturn(500, 501, 502, 503, 504);
+            when(this.mockPersistenceClient.insertRow(
+                    any(XactTypeItemActivity.class), any(Boolean.class)))
+                            .thenReturn(500, 501, 502, 503, 504);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up cash disbursement transaction item activity update case failed");
         }
         try {
-            when(this.mockPersistenceClient.insertRow(eq(mockXact), eq(true))).thenReturn(NEW_XACT_ID);
+            when(this.mockPersistenceClient.insertRow(eq(xact), eq(true)))
+                    .thenReturn(1234567);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up cash disbursement base transaction update case failed");
         }
-
-        Creditor mockCriteria = new Creditor();
-        mockCriteria.setCreditorId(CREDITOR_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria)))
-                    .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single creditor test case setup failed");
-        }
-
-        VwXactList mockXactCriteria = new VwXactList();
-        mockXactCriteria.setId(NEW_XACT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
-                    .thenReturn(this.mockXactFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-
-        CreditorActivity mockCreditorActivity = new CreditorActivity();
-        mockCreditorActivity.setCreditorId(CREDITOR_ID);
-        mockCreditorActivity.setXactId(NEW_XACT_ID);
-        mockCreditorActivity.setAmount(mockXact.getXactAmount());
-        try {
-            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(987654);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up creditor activity insert case failed");
-        }
-
+        
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         int results = 0;
         try {
-            results = api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
+            results = api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
         } catch (DisbursementsApiException e) {
             Assert.fail("An unexpected exception occurred");
             e.printStackTrace();
         }
-        Assert.assertEquals(NEW_XACT_ID, results);
+        Assert.assertEquals(1234567, results);
     }
     
     @Test
@@ -204,17 +175,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Setting up cash disbursement base transaction update case failed");
         }
         
-        // Mock creditor data
-        Creditor mockCriteria = new Creditor();
-        mockCriteria.setCreditorId(CREDITOR_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria)))
-                    .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single creditor test case setup failed");
-        }
-
         // Mock transactoin fetch
         VwXactList mockXactCriteria = new VwXactList();
         mockXactCriteria.setId(NEW_XACT_ID);
@@ -226,18 +186,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Fetch single xact test case setup failed");
         }
 
-        //  Mock creditor transaction item activity
-        CreditorActivity mockCreditorActivity = new CreditorActivity();
-        mockCreditorActivity.setCreditorId(CREDITOR_ID);
-        mockCreditorActivity.setXactId(NEW_XACT_ID);
-        mockCreditorActivity.setAmount(mockXact.getXactAmount());
-        try {
-            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(987654);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up creditor activity insert case failed");
-        }
-
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         int results = 0;
@@ -245,14 +193,14 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
         try {
-            results = api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
+            results = api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
         } catch (DisbursementsApiException e) {
             Assert.fail("An unexpected exception occurred");
             e.printStackTrace();
         }
         Assert.assertEquals(NEW_XACT_ID, results);
     }
-    
+
     @Test
     public void testReversal_ExceptionDuringReversal() {
         Date mockXactDate = new Date();
@@ -293,17 +241,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Setting up cash disbursement base transaction update case failed");
         }
         
-        // Mock creditor data
-        Creditor mockCriteria = new Creditor();
-        mockCriteria.setCreditorId(CREDITOR_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria)))
-                    .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single creditor test case setup failed");
-        }
-
         // Mock transactoin fetch
         VwXactList mockXactCriteria = new VwXactList();
         mockXactCriteria.setId(NEW_XACT_ID);
@@ -315,32 +252,20 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Fetch single xact test case setup failed");
         }
 
-        //  Mock creditor transaction item activity
-        CreditorActivity mockCreditorActivity = new CreditorActivity();
-        mockCreditorActivity.setCreditorId(CREDITOR_ID);
-        mockCreditorActivity.setXactId(NEW_XACT_ID);
-        mockCreditorActivity.setAmount(mockXact.getXactAmount());
-        try {
-            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(987654);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up creditor activity insert case failed");
-        }
-
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
         try {
-            api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to database error");
         } catch (Exception e) {
-            e.printStackTrace();
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
             Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
         }
     }
     @Test
@@ -388,17 +313,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Setting up cash disbursement base transaction update case failed");
         }
         
-        // Mock creditor data
-        Creditor mockCriteria = new Creditor();
-        mockCriteria.setCreditorId(CREDITOR_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria)))
-                    .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single creditor test case setup failed");
-        }
-
         // Mock transactoin fetch
         VwXactList mockXactCriteria = new VwXactList();
         mockXactCriteria.setId(NEW_XACT_ID);
@@ -410,18 +324,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Fetch single xact test case setup failed");
         }
 
-        //  Mock creditor transaction item activity
-        CreditorActivity mockCreditorActivity = new CreditorActivity();
-        mockCreditorActivity.setCreditorId(CREDITOR_ID);
-        mockCreditorActivity.setXactId(NEW_XACT_ID);
-        mockCreditorActivity.setAmount(mockXact.getXactAmount());
-        try {
-            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(987654);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up creditor activity insert case failed");
-        }
-
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
@@ -429,7 +331,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         this.mockXactDto.setXactDate(mockXactDate);
         this.mockXactDto.setXactAmount(this.mockXactDto.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         try {
-            api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to database error");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -439,29 +341,28 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testReversal_IncorrectSubTypeId() {
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
-        Creditor mockCriteria = new Creditor();
-        mockCriteria.setCreditorId(CREDITOR_ID);
         try {
-            api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to transaction sub type id is not set to NOT ASSIGNED");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             e.printStackTrace();
         }
     }
-    
+
     @Test
     public void testValidation_NullXactItemList() {
         Xact xact = this.buildXactOrm(this.mockXactDto);
         try {
-            when(this.mockPersistenceClient.insertRow(eq(xact), eq(true))).thenReturn(NEW_XACT_ID);
+            when(this.mockPersistenceClient.insertRow(eq(xact), eq(true)))
+                    .thenReturn(1234567);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up general base transaction update case failed");
@@ -478,12 +379,12 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
-
+    
     @Test
-    public void testException_DuringXactUpdateFetch() {
+    public void testFetchWithExceptionDuringXactUpdate() {
         try {
-            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
-                    .thenReturn(500, 501, 502, 503, 504);
+            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), 
+                    any(Boolean.class))).thenReturn(500, 501, 502, 503, 504);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up general base transaction item activity update case failed");
@@ -491,7 +392,8 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
 
         Xact xact = this.buildXactOrm(this.mockXactDto);
         try {
-            when(this.mockPersistenceClient.insertRow(eq(xact), eq(true))).thenThrow(Exception.class);
+            when(this.mockPersistenceClient.insertRow(eq(xact), eq(true)))
+                    .thenThrow(Exception.class);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up general base transaction update case failed");
@@ -500,7 +402,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, this.mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown for Xact update");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -514,15 +416,15 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
     public void testFetchWithExceptionDuringXactItemUpdate() {
         try {
             when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), eq(true)))
-                    .thenThrow(Exception.class);
+                  .thenThrow(Exception.class);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up general base transaction item activity update case failed");
         }
-
+        
         Xact xact = this.buildXactOrm(this.mockXactDto);
         try {
-            when(this.mockPersistenceClient.insertRow(eq(xact), eq(true))).thenReturn(NEW_XACT_ID);
+            when(this.mockPersistenceClient.insertRow(eq(xact), eq(true))).thenReturn(1234567);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up general base transaction update case failed");
@@ -531,7 +433,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, this.mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown for Xact detail item update");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -546,7 +448,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(null, this.mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(null, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to null Xact");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -554,14 +456,14 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_NullXactItem() {
         mockXactItemsDto.add(null);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to null Item contained in Xact List object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -569,14 +471,14 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_NegativeXactId_InBase() {
         this.mockXactDto.setXactId(-123);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to negative xactId in base Xact object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -584,14 +486,14 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_NegativeXactTypeId_InBase() {
         this.mockXactDto.setXactTypeId(-123);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to negative transaction type id in base Xact object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -599,62 +501,59 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_NoDecimalInXactAmount_InBase() {
         this.mockXactDto.setXactAmount(123);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
-            Assert.fail(
-                    "Expected exception to be thrown due to transaction amount does not have decimal place in base xact");
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transaction amount does not have decimal place in base xact");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
-            Assert.assertTrue(e.getCause() instanceof TransactionAmountsUnbalancedException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_OneDecimalDigitInXactAmount_InBase() {
         this.mockXactDto.setXactAmount(123.1);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
-            Assert.fail(
-                    "Expected exception to be thrown due to transaction amount has only one digit behind decimal in base xact");
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transaction amount has only one digit behind decimal in base xact");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_NegativeXactItemId_InXactItem() {
         this.mockXactItemsDto.get(0).setXactItemId(-123);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
-            Assert.fail(
-                    "Expected exception to be thrown due to negative xact item id in transaction detail item object");
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to negative xact item id in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_ZeroXactItemId_InXactItem() {
         this.mockXactItemsDto.get(0).setXactItemId(0);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to zero xact item id in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -662,48 +561,45 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_NullXactTypeItemActvName_InXactItem() {
         this.mockXactItemsDto.get(0).setXactTypeItemActvName(null);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
-            Assert.fail(
-                    "Expected exception to be thrown due to null xact type item activity name in transaction detail item object");
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to null xact type item activity name in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_EmptyXactTypeItemActvName_InXactItem() {
         this.mockXactItemsDto.get(0).setXactTypeItemActvName("");
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
-            Assert.fail(
-                    "Expected exception to be thrown due to empty xact type item activity name in transaction detail item object");
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to empty xact type item activity name in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void testValidation_TransactonOutOfBalance() {
         this.mockXactDto.setXactAmount(1000.00);
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
-            Assert.fail(
-                    "Expected exception to be thrown due to empty xact type item activity name in transaction detail item object");
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to empty xact type item activity name in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof TransactionAmountsUnbalancedException);
@@ -717,7 +613,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to transaction date is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -732,8 +628,8 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
-            Assert.fail("Expected exception to be thrown due to transaction date is past current date");
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transaction date is is past current date");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof InvalidDataException);
@@ -747,7 +643,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to tender id is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -762,7 +658,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to tender id is zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -778,7 +674,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to transacction negotialble instrument number is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -793,7 +689,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
-            api.updateTrans(this.mockXactDto, mockXactItemsDto, CREDITOR_ID);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to transacction reason is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
