@@ -97,7 +97,7 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         mockXactOrm.setPostedDate(dto.getXactPostedDate());
         mockXactOrm.setReason(dto.getXactReason());
         mockXactOrm.setTenderId(dto.getXactTenderId());
-        mockXactOrm.setXactAmount(dto.getXactAmount() * -1);
+        mockXactOrm.setXactAmount(dto.getXactAmount());
         mockXactOrm.setXactDate(dto.getXactDate());
         mockXactOrm.setXactSubtypeId(dto.getXactSubtypeId());
         mockXactOrm.setXactTypeId(dto.getXactTypeId());
@@ -143,6 +143,7 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
         mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         
         // Mock transaction detail items reversal
         try {
@@ -208,6 +209,7 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
         mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         
         // Mock transaction detail items reversal
         try {
@@ -274,6 +276,7 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
         mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         
         // Mock transaction detail items reversal
         try {
@@ -285,8 +288,13 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         }
         
         // Mock base transaction reversal
+        Xact mockRevXact = this.buildXactOrm(this.mockXactDto);
+        mockRevXact.setXactId(0);
+        mockRevXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        mockRevXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockRevXact.setXactDate(mockXactDate);
         try {
-            when(this.mockPersistenceClient.insertRow(eq(mockXact), eq(true))).thenReturn(NEW_XACT_ID);
+            when(this.mockPersistenceClient.insertRow(eq(mockRevXact), eq(true))).thenReturn(NEW_XACT_ID);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up cash disbursement base transaction update case failed");
@@ -320,7 +328,8 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         DisbursementsApi api = f.createApi(mockDaoClient);
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
-        this.mockXactDto.setXactDate(mockXactDate);  
+        this.mockXactDto.setXactDate(mockXactDate);
+        this.mockXactDto.setXactAmount(this.mockXactDto.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         try {
             api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to database error");

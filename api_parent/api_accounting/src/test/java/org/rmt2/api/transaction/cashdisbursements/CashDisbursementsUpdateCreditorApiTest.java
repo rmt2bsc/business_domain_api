@@ -97,7 +97,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         mockXactOrm.setPostedDate(dto.getXactPostedDate());
         mockXactOrm.setReason(dto.getXactReason());
         mockXactOrm.setTenderId(dto.getXactTenderId());
-        mockXactOrm.setXactAmount(dto.getXactAmount() * -1);
+        mockXactOrm.setXactAmount(dto.getXactAmount());
         mockXactOrm.setXactDate(dto.getXactDate());
         mockXactOrm.setXactSubtypeId(dto.getXactSubtypeId());
         mockXactOrm.setXactTypeId(dto.getXactTypeId());
@@ -172,6 +172,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
         mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         
         // Mock transaction detail items reversal
         try {
@@ -260,6 +261,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
         mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         
         // Mock transaction detail items reversal
         try {
@@ -334,11 +336,11 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
             Assert.fail("Expected exception to be thrown due to database error");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
             Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
-            e.printStackTrace();
         }
     }
     @Test
@@ -349,6 +351,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
         mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
         mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         
         // Mock transaction detail items reversal
         try {
@@ -360,8 +363,13 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         }
         
         // Mock base transaction reversal
+        Xact mockRevXact = this.buildXactOrm(this.mockXactDto);
+        mockRevXact.setXactId(0);
+        mockRevXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        mockRevXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockRevXact.setXactDate(mockXactDate);
         try {
-            when(this.mockPersistenceClient.insertRow(eq(mockXact), eq(true))).thenReturn(NEW_XACT_ID);
+            when(this.mockPersistenceClient.insertRow(eq(mockRevXact), eq(true))).thenReturn(NEW_XACT_ID);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up cash disbursement base transaction update case failed");
@@ -419,6 +427,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
+        this.mockXactDto.setXactAmount(this.mockXactDto.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         try {
             api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
             Assert.fail("Expected exception to be thrown due to database error");

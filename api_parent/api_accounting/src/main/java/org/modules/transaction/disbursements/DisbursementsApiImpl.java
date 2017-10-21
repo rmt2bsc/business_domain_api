@@ -323,6 +323,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throws DisbursementsApiException {
         int xactId = 0;
         try {
+            // Make base transaction amount negative
+            xact.setXactAmount(xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
             xactId = this.update(xact, items);
             return xactId;
         } catch (XactApiException e) {
