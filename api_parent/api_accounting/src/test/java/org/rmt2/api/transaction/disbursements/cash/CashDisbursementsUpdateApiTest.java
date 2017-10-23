@@ -63,7 +63,7 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
 
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0);
         vwXact.setId(0);
-        vwXact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
+        vwXact.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
         mockXactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
 
         mockXactItemsDto = new ArrayList<>();

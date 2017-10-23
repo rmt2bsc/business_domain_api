@@ -149,17 +149,17 @@ public class XactConst {
 
     public final static int XACT_TYPE_SALESONACCTOUNT = 10;
 
-    public final static int XACT_TYPE_CASHDISBACCT = 20;
+    public final static int XACT_TYPE_CASH_DISBURSE_ACCOUNT = 20;
 
-    public final static int XACT_TYPE_CASHDISBEXP = 60;
+    public final static int XACT_TYPE_CASH_DISBURSE = 60;
 
-    public final static int XACT_TYPE_CASHDISBASSET = 70;
+    public final static int XACT_TYPE_CASH_DISBURSE_ASSET = 70;
 
     public final static int XACT_TYPE_SALESRETURNS = 90;
 
-    public final static int XACT_TYPE_INVPURCHASES = 130;
+    public final static int XACT_TYPE_VENDOR_PURCHASE = 130;
 
-    public final static int XACT_TYPE_CREDITCHARGE = 180;
+    public final static int XACT_TYPE_CREDITOR_PURCHASE = 180;
 
     /***************************************************
      * Transaction Sub Types

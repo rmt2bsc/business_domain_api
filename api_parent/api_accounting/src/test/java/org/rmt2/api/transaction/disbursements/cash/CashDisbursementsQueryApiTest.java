@@ -48,18 +48,18 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
     public void setUp() throws Exception {
         super.setUp();
 
-        // Set transction types to cash disbursements for expenses
+        // Set transction types to "cash disbursements" for expenses
         // and set xact sub type id to "not assigned"
 
         // fetch all mock response.
         for (VwXactList item : this.mockXactFetchAllResponse) {
-            item.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
+            item.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
             item.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         }
 
         // Handle single mock response
         VwXactList item = this.mockXactFetchSingleResponse.get(0);
-        item.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
+        item.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
         item.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
     }
 
@@ -75,7 +75,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
     @Test
     public void testFetchAllWithNullCustomSqlCriteria() {
         VwXactList mockCriteria = new VwXactList();
-        mockCriteria.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
+        mockCriteria.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
                     .thenReturn(this.mockXactFetchAllResponse);
@@ -89,7 +89,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         List<XactDto> results = null;
         try {
-            criteria.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
+            criteria.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
             results = api.get(criteria, null);
         } catch (DisbursementsApiException e) {
             e.printStackTrace();
@@ -104,7 +104,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
             XactDto item = results.get(ndx);
             Assert.assertEquals("reason for transaction id " + item.getXactId(),
                     item.getXactReason());
-            Assert.assertEquals(XactConst.XACT_TYPE_CASHDISBEXP,
+            Assert.assertEquals(XactConst.XACT_TYPE_CASH_DISBURSE,
                     item.getXactTypeId());
             Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
                     item.getXactSubtypeId());
@@ -158,7 +158,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         XactDto item = results.get(0);
         Assert.assertEquals("reason for transaction id " + item.getXactId(),
                 item.getXactReason());
-        Assert.assertEquals(XactConst.XACT_TYPE_CASHDISBEXP,
+        Assert.assertEquals(XactConst.XACT_TYPE_CASH_DISBURSE,
                 item.getXactTypeId());
         Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
                 item.getXactSubtypeId());

@@ -82,7 +82,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
         Assert.assertNotNull(results);
         Assert.assertEquals(111111, results.getXactId());
         Assert.assertEquals("reason for transaction id " + results.getXactId(), results.getXactReason());
-        Assert.assertEquals(XactConst.XACT_TYPE_CREDITCHARGE, results.getXactTypeId());
+        Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, results.getXactTypeId());
         Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, results.getXactSubtypeId());
         Assert.assertEquals("2017-01-13", RMT2Date.formatDate(results.getXactDate(), "yyyy-MM-dd"));
         Assert.assertEquals(111.11, results.getXactAmount(), 0);

@@ -1535,7 +1535,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
             xact.setXactAmount(poTotal);
             xact.setXactDate(new Date());
-            xact.setXactTypeId(XactConst.XACT_TYPE_INVPURCHASES);
+            xact.setXactTypeId(XactConst.XACT_TYPE_VENDOR_PURCHASE);
             xact.setXactReason("Submitted Inventory Purchase Order "
                     + po.getPoId());
             xactId = this.update(xact, null);
