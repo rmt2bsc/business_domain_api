@@ -82,8 +82,8 @@ abstract class AbstractSubsidiaryApiImpl<E> extends AbstractTransactionApiImpl
      * Fetch common subsidiary contact data based on the selection criteria 
      * containted in <i>criteria</i>.
      * <p>
-     * The properties, <i>contactId</i>, <i>contactName</i>, <i>taxId</i>, 
-     * and <i>phoneCompany</i> are used to build the query predicate.
+     * The properties, <i>contactIdList</i>, <i>contactId</i>, <i>contactName</i>, 
+     * <i>taxId</i>, and <i>phoneCompany</i> are used to build the query predicate.
      * 
      * @param criteria
      *            an instance of {@link SubsidiaryContactInfoDto} which each
@@ -91,6 +91,7 @@ abstract class AbstractSubsidiaryApiImpl<E> extends AbstractTransactionApiImpl
      *            criteria. The properties targeted in <i>crtieria</i> that are
      *            used to filter data can be:
      *            <ul>
+     *               <li><i>contactIdList</i> - a list of business id's.</li> 
      *               <li><i>contactId</i> - a single business id.</li> 
      *               <li><i>contactName</i> - the contact's name.</li> 
      *               <li><i>taxId</i> - the contact's tax id number.</li> 
