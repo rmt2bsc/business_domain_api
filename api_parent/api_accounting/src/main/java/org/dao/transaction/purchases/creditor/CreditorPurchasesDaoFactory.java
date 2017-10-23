@@ -86,8 +86,7 @@ public class CreditorPurchasesDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link SalesOrder}
      */
-    public static final VwXactCreditChargeList createCriteria(
-            XactCreditChargeDto criteria) {
+    public static final VwXactCreditChargeList createCriteria(XactCreditChargeDto criteria) {
         VwXactCreditChargeList obj = new VwXactCreditChargeList();
 
         // Default predicate to fetch all creditors of "creditor" type
