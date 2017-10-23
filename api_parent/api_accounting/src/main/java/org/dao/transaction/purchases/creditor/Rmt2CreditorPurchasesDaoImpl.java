@@ -1,20 +1,14 @@
 package org.dao.transaction.purchases.creditor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
-import org.dao.subsidiary.SubsidiaryDao;
-import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dao.transaction.Rmt2XactDaoImpl;
 import org.dao.transaction.XactDaoException;
-import org.dto.SubsidiaryContactInfoDto;
 import org.dto.XactCreditChargeDto;
 import org.dto.XactTypeItemActivityDto;
-import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.purchases.creditor.Rmt2CreditChargeDtoFactory;
 
@@ -75,27 +69,8 @@ class Rmt2CreditorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
     public List<XactCreditChargeDto> fetch(XactCreditChargeDto criteria)
             throws CreditorPurchasesDaoException {
 
-        // Get contact information based on selection crtieria
-        SubsidiaryDaoFactory subFact = new SubsidiaryDaoFactory();
-        SubsidiaryDao subDao = subFact.createRmt2OrmSubsidiaryDao();
-        SubsidiaryContactInfoDto subCriteria = Rmt2SubsidiaryDtoFactory
-                .createSubsidiaryInstance(null);
-        subCriteria.setContactName(criteria.getCreditorName());
-        subCriteria.setTaxId(criteria.getTaxId());
-        subCriteria.setPhoneCompany(criteria.getPhone());
-        Map<Integer, SubsidiaryContactInfoDto> contactInfo;
-        // TODO: To eliminate this error, DAO will have to be redesigned to 
-        //       where business business logic is moved to API  module.
-        contactInfo = subDao.fetch(subCriteria);
-
-        // Create an empty map in the event no results were returned.
-        if (contactInfo == null) {
-            contactInfo = new HashMap<Integer, SubsidiaryContactInfoDto>();
-        }
-
         // Get creditor data from local database
-        VwXactCreditChargeList dbCriteria = CreditorPurchasesDaoFactory
-                .createCriteria(criteria);
+        VwXactCreditChargeList dbCriteria = CreditorPurchasesDaoFactory.createCriteria(criteria);
         dbCriteria.addOrderBy(VwXactCreditChargeList.PROP_XACTDATE,
                 VwXactCreditChargeList.ORDERBY_DESCENDING);
         List<VwXactCreditChargeList> results = null;
@@ -111,10 +86,8 @@ class Rmt2CreditorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
         // Combine the results of local and remote query results
         List<XactCreditChargeDto> list = new ArrayList<XactCreditChargeDto>();
         for (VwXactCreditChargeList item : results) {
-            SubsidiaryContactInfoDto contactItem = contactInfo.get(item
-                    .getBusinessId());
             XactCreditChargeDto listItem = Rmt2CreditChargeDtoFactory
-                    .createCreditChargeInstance(item, contactItem);
+                    .createCreditChargeInstance(item, null);
             list.add(listItem);
         }
         return list;

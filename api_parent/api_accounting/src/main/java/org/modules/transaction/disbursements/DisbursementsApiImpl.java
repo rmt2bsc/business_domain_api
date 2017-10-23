@@ -254,7 +254,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         
         int newXactId = 0;
         if (xact.getXactId() == 0) {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
+            xact.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
             newXactId = this.createDisbursement(xact, items);
         }
         else {
@@ -286,7 +286,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         
         int newXctId = 0;
         if (xact.getXactId() == 0) {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBACCT);
+            xact.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE_ACCOUNT);
             newXctId = this.createDisbursement(xact, items);
         }
         else {

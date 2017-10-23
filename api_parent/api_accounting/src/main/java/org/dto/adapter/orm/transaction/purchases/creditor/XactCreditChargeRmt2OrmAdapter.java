@@ -27,8 +27,8 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      * Default constructor
      */
     XactCreditChargeRmt2OrmAdapter() {
-        this.x = null;
-        return;
+        this.x = new VwXactCreditChargeList();
+        this.c = Rmt2SubsidiaryDtoFactory.createSubsidiaryInstance(null);
     }
 
     /**
@@ -40,14 +40,13 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      * @param contactInfo
      *            an instance of {@link SubsidiaryContactInfoDto}
      */
-    public XactCreditChargeRmt2OrmAdapter(VwXactCreditChargeList xactList,
+    XactCreditChargeRmt2OrmAdapter(VwXactCreditChargeList xactList,
             SubsidiaryContactInfoDto contactInfo) {
         if (xactList == null) {
             xactList = new VwXactCreditChargeList();
         }
         if (contactInfo == null) {
-            contactInfo = Rmt2SubsidiaryDtoFactory
-                    .createSubsidiaryInstance(null);
+            contactInfo = Rmt2SubsidiaryDtoFactory.createSubsidiaryInstance(null);
         }
         this.x = xactList;
         this.c = contactInfo;

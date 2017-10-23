@@ -1,20 +1,26 @@
 package org.modules.transaction.purchases.creditor;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.dao.transaction.purchases.creditor.CreditorPurchasesDao;
 import org.dao.transaction.purchases.creditor.CreditorPurchasesDaoException;
 import org.dao.transaction.purchases.creditor.CreditorPurchasesDaoFactory;
 import org.dto.CreditorDto;
+import org.dto.SubsidiaryContactInfoDto;
 import org.dto.XactCreditChargeDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
+import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.purchases.creditor.Rmt2CreditChargeDtoFactory;
+import org.modules.CommonAccountingConst;
 import org.modules.subsidiary.CreditorApi;
 import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
+import org.modules.subsidiary.SubsidiaryException;
 import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
@@ -38,6 +44,8 @@ import com.util.assistants.VerifyException;
 class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPurchasesApi {
 
     private static final Logger logger = Logger.getLogger(CreditorPurchasesApiImpl.class);
+
+    private static final String DATA_UNAVAILABLE_INDICATOR = "Unavailable";
 
     private CreditorPurchasesDaoFactory daoFact;
 
@@ -293,12 +301,14 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Retrieves creditor purchases transaction objects, which includes contact
+     * information, using <i>criteria</i> as a filter.
      * 
-     * @see
-     * org.modules.transaction.purchases.creditor.CreditorPurchasesApi#get(org
-     * .dto.XactCreditChargeDto)
+     * @param criteria
+     *            an instance of {@link XactCreditChargeDto}
+     * @return A List of {@link XactCreditChargeDto} objects
+     * @throws CreditorPurchasesApiException
      */
     @Override
     public List<XactCreditChargeDto> get(XactCreditChargeDto criteria) throws CreditorPurchasesApiException {
@@ -309,10 +319,10 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             throw new InvalidDataException(this.msg, e);
         }
         StringBuilder msgBuf = new StringBuilder();
-        List<XactCreditChargeDto> results;
+        List<XactCreditChargeDto> credXactResults;
         try {
-            results = this.dao.fetch(criteria);
-            if (results == null) {
+            credXactResults = this.dao.fetch(criteria);
+            if (credXactResults == null) {
                 msgBuf.append("Creditor purchase data was not found using criteria object");
                 logger.warn(msgBuf);
                 return null;
@@ -323,10 +333,60 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             logger.error(this.msg);
             throw new CreditorPurchasesApiException(this.msg, e);
         }
-        msgBuf.append(results.size());
+
+        // Retrieve creditor contact info
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
+
+        CreditorDto cc = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+        cc.setAccountNo(criteria.getAccountNumber());
+        cc.setTaxId(criteria.getTaxId());
+        cc.setContactId(criteria.getCreditorId());
+        cc.setContactName(criteria.getCreditorName());
+        cc.setPhoneCompany(criteria.getPhone());
+
+        try {
+            contactResults = api.getContactInfo(cc);
+        } catch (SubsidiaryException e) {
+            String msg = "Error occurred retrieving contact data for creditor purchases result set";
+            logger.warn(msg);
+            // the contact fields for all transaction entries will be
+            // populated with "Unavailable".
+            contactResults = new HashMap<Integer, SubsidiaryContactInfoDto>();
+        }
+
+        // Add contact data to list of transactions
+        this.mergeContactInfo(credXactResults, contactResults);
+
+        msgBuf.append(credXactResults.size());
         msgBuf.append(" Creditor purchase object(s) were retrieved");
         logger.info(msgBuf);
-        return results;
+        return credXactResults;
+    }
+
+    /**
+     * Combines contact data to the list of creditor purchase transaction.
+     * 
+     * @param xactList
+     *            List of {@link XactCreditChargeDto}
+     * @param contactMap
+     *            Map of {@link SubsidiaryContactInfoDto} keyed by creditor id
+     */
+    private void mergeContactInfo(List<XactCreditChargeDto> xactList,
+            Map<Integer, SubsidiaryContactInfoDto> contactMap) {
+        for (XactCreditChargeDto xact : xactList) {
+            SubsidiaryContactInfoDto contact = contactMap.get(xact.getCreditorId());
+            if (contact != null) {
+                xact.setCreditorName(contact.getContactName());
+                xact.setPhone(contact.getContactPhone());
+            }
+            else {
+                xact.setCreditorName(DATA_UNAVAILABLE_INDICATOR);
+                xact.setPhone(DATA_UNAVAILABLE_INDICATOR);
+            }
+        }
+        return;
     }
 
     /*
@@ -403,7 +463,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         // Determine if we are creating or reversing the cash disbursement
         int xactId = 0;
         if (xact.getXactId() <= 0) {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CREDITCHARGE);
+            xact.setXactTypeId(XactConst.XACT_TYPE_CREDITOR_PURCHASE);
             xactId = this.createPurchase(xact, items);
         }
         else {
