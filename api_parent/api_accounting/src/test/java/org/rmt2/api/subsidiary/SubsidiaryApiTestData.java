@@ -269,7 +269,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "Single Business Contact for creditor fetch test case setup failed");
+                    "Multiple Business Contact for creditor fetch test case setup failed");
         }
 
         try {
@@ -277,7 +277,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
                     .thenReturn(this.mockCreditorFetchAllResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Single Creditor fetch test case setup failed");
+            Assert.fail("Multiple Creditor fetch test case setup failed");
         }
     }
     
