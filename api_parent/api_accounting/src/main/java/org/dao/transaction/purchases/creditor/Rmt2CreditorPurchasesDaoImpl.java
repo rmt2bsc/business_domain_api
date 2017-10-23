@@ -66,8 +66,7 @@ class Rmt2CreditorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      *             General data access errors.
      */
     @Override
-    public List<XactCreditChargeDto> fetch(XactCreditChargeDto criteria)
-            throws CreditorPurchasesDaoException {
+    public List<XactCreditChargeDto> fetch(XactCreditChargeDto criteria) throws CreditorPurchasesDaoException {
 
         // Get creditor data from local database
         VwXactCreditChargeList dbCriteria = CreditorPurchasesDaoFactory.createCriteria(criteria);
@@ -104,16 +103,14 @@ class Rmt2CreditorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      *             General database error.
      */
     @Override
-    public List<XactTypeItemActivityDto> fetch(int xactId)
-            throws CreditorPurchasesDaoException {
-        XactTypeItemActivityDto criteria = Rmt2XactDtoFactory
-                .createXactTypeItemActivityInstance((XactTypeItemActivity) null);
+    public List<XactTypeItemActivityDto> fetch(int xactId) throws CreditorPurchasesDaoException {
+        XactTypeItemActivity xtia = null;
+        XactTypeItemActivityDto criteria = Rmt2XactDtoFactory.createXactTypeItemActivityInstance(xtia);
         criteria.setXactId(xactId);
         try {
             return super.fetchXactTypeItemActivity(criteria);
         } catch (XactDaoException e) {
-            msg = "DB error occurred fetching detail items for transaction, "
-                    + xactId;
+            msg = "DB error occurred fetching detail items for transaction, " + xactId;
             throw new CreditorPurchasesDaoException(msg, e);
         }
     }
