@@ -1,4 +1,4 @@
-package org.rmt2.api.transaction.disbursements.creditor;
+package org.rmt2.api.transaction.purchases.creditor;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
