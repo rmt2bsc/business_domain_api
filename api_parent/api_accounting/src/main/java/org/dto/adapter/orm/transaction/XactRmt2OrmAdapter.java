@@ -2,6 +2,7 @@ package org.dto.adapter.orm.transaction;
 
 import java.util.Date;
 
+import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.Xact;
@@ -124,6 +125,23 @@ public class XactRmt2OrmAdapter extends XactTypeRmt2OrmAdapter implements XactDt
             this.x.setReason(in.getReason());
             this.x.setDocumentId(in.getDocumentId());
             this.x.setDateCreated(in.getCreateDate());
+            targetObject = true;
+        }
+        else if (obj instanceof VwXactCreditChargeList) {
+            VwXactCreditChargeList in = (VwXactCreditChargeList) obj;
+            this.x = new Xact();
+            this.x.setXactId(in.getXactId());
+            this.x.setXactTypeId(in.getXactTypeId());
+            this.x.setXactSubtypeId(in.getXactSubtypeId());
+            this.x.setXactDate(in.getXactDate());
+            this.x.setXactAmount(in.getXactAmount());
+            this.x.setTenderId(in.getTenderId());
+            this.x.setNegInstrNo(in.getNegInstrNo());
+            this.x.setConfirmNo(in.getConfirmNo());
+            this.x.setPostedDate(in.getPostedDate());
+            this.x.setReason(in.getReason());
+            this.x.setDocumentId(in.getDocumentId());
+            this.x.setDateCreated(in.getCreditorDateCreated());
             targetObject = true;
         }
         else if (obj instanceof VwXactTypeItemActivity) {
