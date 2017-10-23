@@ -19,6 +19,7 @@ import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
+import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.XactCategory;
@@ -724,6 +725,60 @@ public class AccountingMockDataUtility {
         o.setXactCategoryCode(xactCatgCode);
         o.setXactCategoryId(xactCatgId);
         o.setXactCategoryDescription("XactCategoryDescription" + xactCatgId);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param xactId
+     * @param creditorId
+     * @param businessId
+     * @param xactTypeId
+     * @param acctNo
+     * @param xactSubType
+     * @param xactDate
+     * @param xactAmount
+     * @param tenderId
+     * @param negInstrNo
+     * @return
+     */
+    public static final VwXactCreditChargeList createMockOrmXVwXactCreditChargeList(
+            int xactId, int creditorId, int businessId, int xactTypeId,
+            String acctNo, int xactSubType, double xactAmount, String xactDate,
+            int tenderId, String negInstrNo) {
+        VwXactCreditChargeList o = new VwXactCreditChargeList();
+        o.setCreditorId(creditorId);
+        o.setBusinessId(businessId);
+        o.setAccountNo(acctNo);
+        o.setCreditorTypeDescription("creditor");
+        o.setXactId(xactId);
+        o.setReason("reason for transaction id " + xactId);
+        o.setXactTypeId(xactTypeId);
+        o.setXactTypeName("XactTypeName" + xactTypeId);
+        o.setXactSubtypeId(xactSubType);
+        o.setXactDate(RMT2Date.stringToDate(xactDate));
+        o.setXactAmount(xactAmount);
+        o.setTenderId(tenderId);
+        o.setTenderDescription("TenderDescription" + tenderId);
+        o.setNegInstrNo(negInstrNo);
+        o.setPostedDate(o.getXactDate());
+        o.setConfirmNo(String.valueOf(o.getXactDate().getTime()));
+        o.setDocumentId(xactId + tenderId);
+        o.setXactEntryDate(o.getXactDate());
+        o.setCreditorDateCreated(o.getXactDate());
+        o.setCreditLimit(1500.50);
+        o.setApr(1.5);
+        o.setBalance(500.00);
+
+        o.setToMultiplier(1);
+        o.setFromMultiplier(-1);
+        o.setToAcctTypeId(888);
+        o.setFromAcctTypeId(999);
+        o.setToAcctCatgId(777);
+
+        o.setFromAcctCatgId(666);
+        o.setHasSubsidiary(1);
+
         return o;
     }
 }
