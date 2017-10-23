@@ -1,5 +1,6 @@
 package org.modules.transaction.purchases.creditor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +86,13 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         super(connection);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
     }
+    
+    @Override
+    public void init() {
+        super.init();
+        this.daoFact = new CreditorPurchasesDaoFactory();
+    }
+
 
     /*
      * (non-Javadoc)
@@ -336,18 +344,20 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
 
         // Retrieve creditor contact info
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorApi creditorApi = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
 
-        CreditorDto cc = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
-        cc.setAccountNo(criteria.getAccountNumber());
-        cc.setTaxId(criteria.getTaxId());
-        cc.setContactId(criteria.getCreditorId());
-        cc.setContactName(criteria.getCreditorName());
-        cc.setPhoneCompany(criteria.getPhone());
+        CreditorDto contactInfoCriteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+       
+        // Get list of business id's to use for fetching common contact records.
+        List<Integer> businessIdList = new ArrayList<Integer>();
+        for (XactCreditChargeDto item : credXactResults) {
+            businessIdList.add(item.getCreditorId());
+        }
+        contactInfoCriteria.setContactIdList(businessIdList);
 
         try {
-            contactResults = api.getContactInfo(cc);
+            contactResults = creditorApi.getContactInfo(contactInfoCriteria);
         } catch (SubsidiaryException e) {
             String msg = "Error occurred retrieving contact data for creditor purchases result set";
             logger.warn(msg);
@@ -371,12 +381,12 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      * @param xactList
      *            List of {@link XactCreditChargeDto}
      * @param contactMap
-     *            Map of {@link SubsidiaryContactInfoDto} keyed by creditor id
+     *            Map of {@link SubsidiaryContactInfoDto} keyed by business id
      */
     private void mergeContactInfo(List<XactCreditChargeDto> xactList,
             Map<Integer, SubsidiaryContactInfoDto> contactMap) {
         for (XactCreditChargeDto xact : xactList) {
-            SubsidiaryContactInfoDto contact = contactMap.get(xact.getCreditorId());
+            SubsidiaryContactInfoDto contact = contactMap.get(xact.getBusinessId());
             if (contact != null) {
                 xact.setCreditorName(contact.getContactName());
                 xact.setPhone(contact.getContactPhone());
@@ -713,5 +723,5 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         }
         return;
     }
-
+    
 }
