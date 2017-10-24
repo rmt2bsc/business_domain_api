@@ -94,6 +94,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
             results = api.get(criteria);
         } catch (CreditorPurchasesApiException e) {
             e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
@@ -122,6 +123,10 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
                     item.getXactConfirmNo());
             Assert.assertEquals(item.getXactId() + item.getXactTenderId(),
                     item.getDocumentId());
+            
+            // Contact info should be unavailable
+            Assert.assertEquals("Company" + (ndx + 1), item.getCreditorName());
+            Assert.assertEquals("3188889873", item.getPhone());
         }
     }
 
@@ -155,6 +160,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
             results = api.get(criteria);
         } catch (CreditorPurchasesApiException e) {
             e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -174,6 +180,10 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
         Assert.assertEquals(String.valueOf(item.getXactDate().getTime()), item.getXactConfirmNo());
         Assert.assertEquals(item.getXactId() + item.getXactTenderId(), item.getDocumentId());
+        
+        // Contact info should be unavailable
+        Assert.assertEquals("Company1", item.getCreditorName());
+        Assert.assertEquals("3188889873", item.getPhone());
     }
 
     @Test
@@ -219,7 +229,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
     }
 
     @Test
-    public void testFetchWithException() {
+    public void testFetch_WithTransactionFetchException() {
         // Mock method call to get creditor purchase transactions
         this.mockCriteria.setCreditorId(TEST_CREDITOR_ID);
         try {
@@ -243,6 +253,64 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
             Assert.assertTrue(e.getCause() instanceof CreditorPurchasesDaoException);
             e.printStackTrace();
+        }
+    }
+    
+    
+    @Test
+    public void testFetch_WithContactsFetchDbException() {
+        // Mock method call to get creditor purchase transactions 
+        this.mockCriteria.setAccountNo(TEST_ACCOUNT_NO);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
+                    .thenReturn(this.mockCreditPurchaseAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All creditor purchases transactions fetch test case setup failed");
+        }
+
+        // mock method to return contact info from the Contacts Api
+        Creditor mockCredCriteria = new Creditor();
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetchDbException(mockContactCritereia, mockCredCriteria);
+        
+        // Perform test
+        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
+        CreditorPurchasesApi api = f.createApi(mockDaoClient);
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance();
+        List<XactCreditChargeDto> results = null;
+        try {
+            criteria.setAccountNumber(TEST_ACCOUNT_NO);
+            results = api.get(criteria);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+
+        double amountSeed = 20.00;
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            XactCreditChargeDto item = results.get(ndx);
+            Assert.assertEquals("reason for transaction id " + item.getXactId(), item.getXactReason());
+            Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, item.getXactTypeId());
+            Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
+            Assert.assertEquals("2017-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
+
+            // Calcuate acutal transaction amount
+            double dollarAmt = (amountSeed + ndx);
+            Assert.assertEquals(dollarAmt, item.getXactAmount(), 0);
+
+            Assert.assertEquals(XactConst.TENDER_CREDITCARD, item.getXactTenderId());
+            String prefix = String.valueOf(((ndx + 1) * 1111));
+            Assert.assertEquals(prefix + "-0000-0000-0000", item.getXactNegInstrNo());
+            Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
+            Assert.assertEquals(String.valueOf(item.getXactDate().getTime()), item.getXactConfirmNo());
+            Assert.assertEquals(item.getXactId() + item.getXactTenderId(), item.getDocumentId());
+            
+            // Contact info should be unavailable
+            Assert.assertEquals("Unavailable", item.getCreditorName());
+            Assert.assertEquals("Unavailable", item.getPhone());
         }
     }
 }
