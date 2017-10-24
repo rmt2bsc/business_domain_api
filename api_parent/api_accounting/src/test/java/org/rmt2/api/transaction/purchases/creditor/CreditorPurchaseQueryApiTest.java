@@ -10,6 +10,7 @@ import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.subsidiary.SubsidiaryDaoConst;
+import org.dao.transaction.purchases.creditor.CreditorPurchasesDaoException;
 import org.dto.XactCreditChargeDto;
 import org.dto.adapter.orm.transaction.purchases.creditor.Rmt2CreditChargeDtoFactory;
 import org.junit.After;
@@ -24,7 +25,9 @@ import org.modules.transaction.purchases.creditor.CreditorPurchasesApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
@@ -40,6 +43,7 @@ import com.util.RMT2Date;
 public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
 
     private static final String TEST_ACCOUNT_NO = "1111";
+    private static final int TEST_CREDITOR_ID = 1111111;
     private VwXactCreditChargeList mockCriteria; 
     
     
@@ -121,141 +125,124 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         }
     }
 
-//    @Test
-//    public void testFetchSingleWithNullCustomSqlCriteria() {
-//        VwXactList mockCriteria = new VwXactList();
-//        mockCriteria.setId(111111);
-//        try {
-//            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-//                    .thenReturn(this.mockXactFetchSingleResponse);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Assert.fail("single cash disbursement fetch test case setup failed");
-//        }
-//
-//        DisbursementsApiFactory f = new DisbursementsApiFactory();
-//        DisbursementsApi api = f.createApi(mockDaoClient);
-//        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-//        List<XactDto> results = null;
-//        criteria.setXactId(111111);
-//        try {
-//            results = api.get(criteria, null);
-//        } catch (DisbursementsApiException e) {
-//            e.printStackTrace();
-//        }
-//        Assert.assertNotNull(results);
-//        Assert.assertEquals(1, results.size());
-//
-//        XactDto item = results.get(0);
-//        Assert.assertEquals("reason for transaction id " + item.getXactId(),
-//                item.getXactReason());
-//        Assert.assertEquals(XactConst.XACT_TYPE_CASH_DISBURSE,
-//                item.getXactTypeId());
-//        Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
-//                item.getXactSubtypeId());
-//        Assert.assertEquals("2017-01-13",
-//                RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
-//        Assert.assertEquals(111.11, item.getXactAmount(), 0);
-//        Assert.assertEquals(200, item.getXactTenderId());
-//        Assert.assertEquals("1111-1111-1111-1111", item.getXactNegInstrNo());
-//        Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
-//        Assert.assertEquals(String.valueOf(item.getXactDate().getTime()),
-//                item.getXactConfirmNo());
-//        Assert.assertEquals(item.getXactId() + item.getXactTenderId(),
-//                item.getDocumentId());
-//    }
-//
-//    @Test
-//    public void testFetchSingleNotFound() {
-//        VwXactList mockCriteria = new VwXactList();
-//        mockCriteria.setId(999999);
-//        try {
-//            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-//                    .thenReturn(this.mockXactNotFoundFetchResponse);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Assert.fail("single cash disbursement fetch test case setup failed");
-//        }
-//
-//        DisbursementsApiFactory f = new DisbursementsApiFactory();
-//        DisbursementsApi api = f.createApi(mockDaoClient);
-//        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-//        List<XactDto> results = null;
-//        criteria.setXactId(999999);
-//        try {
-//            results = api.get(criteria, null);
-//        } catch (DisbursementsApiException e) {
-//            e.printStackTrace();
-//        }
-//        Assert.assertNull(results);
-//    }
-//
-//    @Test
-//    public void testFetchWithNullTransactionInput() {
-//        DisbursementsApiFactory f = new DisbursementsApiFactory();
-//        DisbursementsApi api = f.createApi(mockDaoClient);
-//        try {
-//            api.get(null, null);
-//            Assert.fail("Expected exception due to input value is null");
-//        } catch (Exception e) {
-//            Assert.assertTrue(e instanceof InvalidDataException);
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Test
-//    public void testFetchWithNoTransactionPropertiesSet() {
-//        DisbursementsApiFactory f = new DisbursementsApiFactory();
-//        DisbursementsApi api = f.createApi(mockDaoClient);
-//        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-//        try {
-//            api.get(criteria, null);
-//            Assert.fail("Expected exception due to input value is null");
-//        } catch (Exception e) {
-//            Assert.assertTrue(e instanceof InvalidDataException);
-//            e.printStackTrace();
-//        }
-//    }
-//    
-//    @Test
-//    public void testFetchWithUnexpectedTransactionPropertySet() {
-//        DisbursementsApiFactory f = new DisbursementsApiFactory();
-//        DisbursementsApi api = f.createApi(mockDaoClient);
-//        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-//        criteria.setXactReason("Reason is not a valid selection criteria property");
-//        try {
-//            api.get(criteria, null);
-//            Assert.fail("Expected exception due to an unexpected property was set as selection criteria");
-//        } catch (Exception e) {
-//            Assert.assertTrue(e instanceof InvalidDataException);
-//            e.printStackTrace();
-//        }
-//    }
-//    
-// 
-//    @Test
-//    public void testFetchWithException() {
-//        VwXactList mockCriteria = new VwXactList();
-//        mockCriteria.setId(999999);
-//        try {
-//            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-//                    .thenThrow(DatabaseException.class);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Assert.fail("Fetch xact with exception test case setup failed");
-//        }
-//
-//        DisbursementsApiFactory f = new DisbursementsApiFactory();
-//        DisbursementsApi api = f.createApi(mockDaoClient);
-//        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-//        criteria.setXactId(999999);
-//        try {
-//            api.get(criteria, null);
-//            Assert.fail("Expected a database exception to be thrown");
-//        } catch (Exception e) {
-//            Assert.assertTrue(e instanceof DisbursementsApiException);
-//            Assert.assertTrue(e.getCause() instanceof DisbursementsDaoException);
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    public void testFetchSingle_WithNullCustomSqlCriteria() {
+        // Mock method call to get creditor purchase transactions
+        this.mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
+                    .thenReturn(this.mockCreditPurchaseSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Single creditor purchases transactions fetch test case setup failed");
+        }
+
+        // mock method to return contact info from the Contacts Api
+        Creditor mockCredCriteria = new Creditor();
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia,
+                mockCredCriteria);
+
+        // Perform test
+        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
+        CreditorPurchasesApi api = f.createApi(mockDaoClient);
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
+                .createCreditChargeInstance();
+        List<XactCreditChargeDto> results = null;
+        try {
+            criteria.setCreditorId(TEST_CREDITOR_ID);
+            results = api.get(criteria);
+        } catch (CreditorPurchasesApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+
+        double amountSeed = 20.00;
+        XactCreditChargeDto item = results.get(0);
+        Assert.assertEquals("reason for transaction id " + item.getXactId(), item.getXactReason());
+        Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, item.getXactTypeId());
+        Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
+        Assert.assertEquals("2017-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
+
+        // Calculate acutal transaction amount
+        Assert.assertEquals(amountSeed, item.getXactAmount(), 0);
+
+        Assert.assertEquals(XactConst.TENDER_CREDITCARD, item.getXactTenderId());
+        Assert.assertEquals("1111-0000-0000-0000", item.getXactNegInstrNo());
+        Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
+        Assert.assertEquals(String.valueOf(item.getXactDate().getTime()), item.getXactConfirmNo());
+        Assert.assertEquals(item.getXactId() + item.getXactTenderId(), item.getDocumentId());
+    }
+
+    @Test
+    public void testFetch_NotFound() {
+        // Mock method call to get creditor purchase transactions
+        this.mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
+                    .thenReturn(this.mockCreditPurchaseNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Single creditor purchases transactions fetch test case setup failed");
+        }
+
+        // Perform test
+        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
+        CreditorPurchasesApi api = f.createApi(mockDaoClient);
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
+                .createCreditChargeInstance();
+        List<XactCreditChargeDto> results = null;
+        try {
+            criteria.setCreditorId(TEST_CREDITOR_ID);
+            results = api.get(criteria);
+        } catch (CreditorPurchasesApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetchWithNullTransactionInput() {
+        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
+        CreditorPurchasesApi api = f.createApi(mockDaoClient);
+        XactCreditChargeDto criteria = null;
+        try {
+            api.get(criteria);
+            Assert.fail("Expected exception due to input value is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetchWithException() {
+        // Mock method call to get creditor purchase transactions
+        this.mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single creditor purchases transactions fetch test case setup failed");
+        }
+
+        // Perform test
+        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
+        CreditorPurchasesApi api = f.createApi(mockDaoClient);
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
+                .createCreditChargeInstance();
+        try {
+            criteria.setCreditorId(TEST_CREDITOR_ID);
+            api.get(criteria);
+            Assert.fail("Expected a database exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof CreditorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof CreditorPurchasesDaoException);
+            e.printStackTrace();
+        }
+    }
 }
