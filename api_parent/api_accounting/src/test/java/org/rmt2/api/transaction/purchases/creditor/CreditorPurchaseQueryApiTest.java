@@ -38,14 +38,12 @@ import com.util.RMT2Date;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
-        ResultSet.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
 
     private static final String TEST_ACCOUNT_NO = "1111";
     private static final int TEST_CREDITOR_ID = 1111111;
     private VwXactCreditChargeList mockCriteria; 
-    
     
     /**
      * @throws java.lang.Exception
