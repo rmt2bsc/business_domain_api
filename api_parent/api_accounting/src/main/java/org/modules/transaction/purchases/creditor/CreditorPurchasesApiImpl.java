@@ -345,8 +345,6 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         // Retrieve creditor contact info
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi creditorApi = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
-
         CreditorDto contactInfoCriteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
        
         // Get list of business id's to use for fetching common contact records.
@@ -355,12 +353,18 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             businessIdList.add(item.getCreditorId());
         }
         contactInfoCriteria.setContactIdList(businessIdList);
-
+        Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
         try {
             contactResults = creditorApi.getContactInfo(contactInfoCriteria);
         } catch (SubsidiaryException e) {
             String msg = "Error occurred retrieving contact data for creditor purchases result set";
             logger.warn(msg);
+        }
+        
+        try {
+            Verifier.verifyNotNull(contactResults);
+        }
+        catch (VerifyException e) {
             // the contact fields for all transaction entries will be
             // populated with "Unavailable".
             contactResults = new HashMap<Integer, SubsidiaryContactInfoDto>();
