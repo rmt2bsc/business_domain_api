@@ -566,7 +566,7 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public void setPhoneCompany(String value) {
-        return;
+        this.b.setContactPhone(value);
     }
 
     /*
@@ -576,7 +576,7 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public String getPhoneCompany() {
-        return null;
+        return this.b.getContactPhone();
     }
 
     /*
