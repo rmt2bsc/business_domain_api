@@ -386,6 +386,7 @@ public class AccountingMockDataUtility {
         VwBusinessAddress o = new VwBusinessAddress();
         o.setBusinessId(businessId);
         o.setBusLongname(contactName);
+        o.setAddrPhoneMain("3188889873");
         o.setBusEntityTypeId(1);
         o.setBusServTypeId(2);
         o.setAddrId(addressId);
