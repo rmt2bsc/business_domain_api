@@ -297,7 +297,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
             Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
             Assert.assertEquals("2017-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
 
-            // Calcuate acutal transaction amount
+            // Calculate acutal transaction amount
             double dollarAmt = (amountSeed + ndx);
             Assert.assertEquals(dollarAmt, item.getXactAmount(), 0);
 
