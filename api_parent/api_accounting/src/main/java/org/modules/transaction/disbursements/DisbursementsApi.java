@@ -69,7 +69,7 @@ public interface DisbursementsApi extends XactApi {
     int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException;
 
     /**
-     * Creates a cash disbursement transaction or reverses and
+     * Creates a cash disbursement transaction or reverses an
      * existing one in which the transaction is associated with a
      * creditor.
      * 
