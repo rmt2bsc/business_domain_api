@@ -473,16 +473,25 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             logger.error(this.msg);
             throw new CreditorPurchasesApiException(this.msg, e);
         }
+        
+        // Transaction type must be creditor purchases
+        try {
+            Verifier.verify( xact.getXactTypeId() == XactConst.XACT_TYPE_CREDITOR_PURCHASE);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Update transaction failed due to transaction type is required to be creditor purchases", e);
+        }
 
         // Determine if we are creating or reversing the cash disbursement
         int xactId = 0;
-        if (xact.getXactId() <= 0) {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CREDITOR_PURCHASE);
+        try {
+            Verifier.verifyNotNegative(xact.getXactId());
             xactId = this.createPurchase(xact, items);
         }
-        else {
+        catch (VerifyException e) {
             xactId = this.reversePurchase(xact, items);
         }
+
         // Create the subsidiary entry for the creditor purchase transaction.
         try {
             super.createSubsidiaryActivity(xact.getCreditorId(), xact.getXactId(), xact.getXactAmount());

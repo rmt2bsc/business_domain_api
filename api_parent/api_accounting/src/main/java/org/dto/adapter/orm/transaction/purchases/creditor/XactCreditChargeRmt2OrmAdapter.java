@@ -41,8 +41,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      * @param contactInfo
      *            an instance of {@link SubsidiaryContactInfoDto}
      */
-    XactCreditChargeRmt2OrmAdapter(VwXactCreditChargeList xactList,
-            SubsidiaryContactInfoDto contactInfo) {
+    XactCreditChargeRmt2OrmAdapter(VwXactCreditChargeList xactList, SubsidiaryContactInfoDto contactInfo) {
         this.updateObjHeirarchy(xactList);
         if (xactList == null) {
             xactList = new VwXactCreditChargeList();

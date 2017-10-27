@@ -39,11 +39,9 @@ public class Rmt2CreditChargeDtoFactory extends RMT2Base {
      * 
      * @return an instance of {@link XactCreditChargeDto}.
      */
-    public static final XactCreditChargeDto createCreditChargeInstance(
-            VwXactCreditChargeList creditXactOrmBean,
+    public static final XactCreditChargeDto createCreditChargeInstance(VwXactCreditChargeList creditXactOrmBean,
             SubsidiaryContactInfoDto contactInfo) {
-        return new XactCreditChargeRmt2OrmAdapter(creditXactOrmBean,
-                contactInfo);
+        return new XactCreditChargeRmt2OrmAdapter(creditXactOrmBean,  contactInfo);
     }
 
 }

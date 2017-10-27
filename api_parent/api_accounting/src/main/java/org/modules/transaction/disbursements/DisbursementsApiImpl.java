@@ -252,6 +252,14 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throw new DisbursementsApiException("Basic Cash Disbursement input data is not valid", e);
         }
         
+        // Transaction type must be cash disbursement
+        try {
+            Verifier.verify( xact.getXactTypeId() == XactConst.XACT_TYPE_CASH_DISBURSE);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Update transaction failed due to transaction type is required to be cash disbursement", e);
+        }
+        
         int newXactId = 0;
         if (xact.getXactId() == 0) {
             xact.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
@@ -282,6 +290,14 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         }
         catch (Exception e) {
             throw new DisbursementsApiException("Creditor Cash Disbursement input data is not valid", e);
+        }
+        
+        // Transaction type must be cash disbursement
+        try {
+            Verifier.verify( xact.getXactTypeId() == XactConst.XACT_TYPE_CASH_DISBURSE);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Update transaction failed due to transaction type must be account cash disbursement", e);
         }
         
         int newXctId = 0;

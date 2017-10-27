@@ -44,8 +44,7 @@ import com.util.RMT2Date;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
-        ResultSet.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
     
     private static final int NEW_XACT_ID = 1234567;
@@ -69,8 +68,7 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         mockXactItemsDto = new ArrayList<>();
         List<XactTypeItemActivity> items = this.mockXactTypeItemActivityFetchAllResponse;
         for (XactTypeItemActivity ormItem : items) {
-            XactTypeItemActivityDto item = Rmt2XactDtoFactory
-                    .createXactTypeItemActivityInstance(ormItem);
+            XactTypeItemActivityDto item = Rmt2XactDtoFactory.createXactTypeItemActivityInstance(ormItem);
             item.setXactId(0);
             item.setXactTypeItemActvId(0);
             mockXactItemsDto.add(item);
@@ -690,7 +688,23 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
             api.updateTrans(this.mockXactDto, mockXactItemsDto);
-            Assert.fail("Expected exception to be thrown due to transacction reason is null");
+            Assert.fail("Expected exception to be thrown due to transaction reason is null");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_InvalidTransactionTypeId() {
+        this.mockXactDto.setXactReason(null);
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        try {
+            this.mockXactDto.setXactTypeId(XactConst.XACT_TYPE_CREDITOR_PURCHASE);
+            api.updateTrans(this.mockXactDto, mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to invalid transacction type id");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof InvalidDataException);
