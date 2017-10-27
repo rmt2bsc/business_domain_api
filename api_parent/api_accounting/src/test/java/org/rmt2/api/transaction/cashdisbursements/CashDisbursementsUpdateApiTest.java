@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.VwXactList;
@@ -32,6 +33,7 @@ import org.rmt2.api.transaction.TransactionApiTestData;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
@@ -45,6 +47,9 @@ import com.util.RMT2Date;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
         ResultSet.class })
 public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
+    
+    private static final int NEW_XACT_ID = 1234567;
+    private static final int EXISTING_XACT_ID = 1234000;
 
     private XactDto mockXactDto;
     private List<XactTypeItemActivityDto> mockXactItemsDto;
@@ -92,7 +97,7 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
         mockXactOrm.setPostedDate(dto.getXactPostedDate());
         mockXactOrm.setReason(dto.getXactReason());
         mockXactOrm.setTenderId(dto.getXactTenderId());
-        mockXactOrm.setXactAmount(dto.getXactAmount() * -1);
+        mockXactOrm.setXactAmount(dto.getXactAmount());
         mockXactOrm.setXactDate(dto.getXactDate());
         mockXactOrm.setXactSubtypeId(dto.getXactSubtypeId());
         mockXactOrm.setXactTypeId(dto.getXactTypeId());
@@ -128,6 +133,228 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
             e.printStackTrace();
         }
         Assert.assertEquals(1234567, results);
+    }
+    
+    @Test
+    public void testReversal_Success() {
+        Date mockXactDate = new Date();
+        Xact mockXact = this.buildXactOrm(this.mockXactDto);
+        mockXact.setXactId(0);
+        mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
+        
+        // Mock transaction detail items reversal
+        try {
+            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
+                    .thenReturn(500, 501, 502, 503, 504);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement transaction item activity update case failed");
+        }
+        
+        // Mock base transaction reversal
+        try {
+            when(this.mockPersistenceClient.insertRow(eq(mockXact), eq(true))).thenReturn(NEW_XACT_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+
+        // Mock finalization
+        Xact mockFinalXact = this.buildXactOrm(this.mockXactDto);
+        mockFinalXact.setXactId(NEW_XACT_ID);
+        mockFinalXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
+        mockFinalXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockFinalXact.setXactDate(mockXactDate);
+        try {
+            when(this.mockPersistenceClient.updateRow(eq(mockFinalXact))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+        
+        // Mock transactoin fetch
+        VwXactList mockXactCriteria = new VwXactList();
+        mockXactCriteria.setId(NEW_XACT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
+                    .thenReturn(this.mockXactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        int results = 0;
+        this.mockXactDto.setXactId(EXISTING_XACT_ID);
+        this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        this.mockXactDto.setXactDate(mockXactDate);
+        try {
+            results = api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
+        } catch (DisbursementsApiException e) {
+            Assert.fail("An unexpected exception occurred");
+            e.printStackTrace();
+        }
+        Assert.assertEquals(NEW_XACT_ID, results);
+    }
+
+    @Test
+    public void testReversal_ExceptionDuringReversal() {
+        Date mockXactDate = new Date();
+        Xact mockXact = this.buildXactOrm(this.mockXactDto);
+        mockXact.setXactId(0);
+        mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
+        
+        // Mock transaction detail items reversal
+        try {
+            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
+                    .thenReturn(500, 501, 502, 503, 504);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement transaction item activity update case failed");
+        }
+        
+        // Mock base transaction reversal
+        try {
+            when(this.mockPersistenceClient.insertRow(eq(mockXact), eq(true))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+
+        // Mock finalization
+        Xact mockFinalXact = this.buildXactOrm(this.mockXactDto);
+        mockFinalXact.setXactId(NEW_XACT_ID);
+        mockFinalXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
+        mockFinalXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockFinalXact.setXactDate(mockXactDate);
+        try {
+            when(this.mockPersistenceClient.updateRow(eq(mockFinalXact))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+        
+        // Mock transactoin fetch
+        VwXactList mockXactCriteria = new VwXactList();
+        mockXactCriteria.setId(NEW_XACT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
+                    .thenReturn(this.mockXactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        this.mockXactDto.setXactId(EXISTING_XACT_ID);
+        this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        this.mockXactDto.setXactDate(mockXactDate);
+        try {
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to database error");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof XactApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void testReversal_ExceptionDuringFinalization() {
+        Date mockXactDate = new Date();
+        Xact mockXact = this.buildXactOrm(this.mockXactDto);
+        mockXact.setXactId(0);
+        mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockXact.setXactDate(mockXactDate);
+        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
+        
+        // Mock transaction detail items reversal
+        try {
+            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
+                    .thenReturn(500, 501, 502, 503, 504);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement transaction item activity update case failed");
+        }
+        
+        // Mock base transaction reversal
+        Xact mockRevXact = this.buildXactOrm(this.mockXactDto);
+        mockRevXact.setXactId(0);
+        mockRevXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        mockRevXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockRevXact.setXactDate(mockXactDate);
+        try {
+            when(this.mockPersistenceClient.insertRow(eq(mockRevXact), eq(true))).thenReturn(NEW_XACT_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+
+        // Mock finalization
+        Xact mockFinalXact = this.buildXactOrm(this.mockXactDto);
+        mockFinalXact.setXactId(NEW_XACT_ID);
+        mockFinalXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
+        mockFinalXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
+        mockFinalXact.setXactDate(mockXactDate);
+        try {
+            when(this.mockPersistenceClient.updateRow(eq(mockFinalXact))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+        
+        // Mock transactoin fetch
+        VwXactList mockXactCriteria = new VwXactList();
+        mockXactCriteria.setId(NEW_XACT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
+                    .thenReturn(this.mockXactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        this.mockXactDto.setXactId(EXISTING_XACT_ID);
+        this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        this.mockXactDto.setXactDate(mockXactDate);
+        this.mockXactDto.setXactAmount(this.mockXactDto.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
+        try {
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to database error");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            Assert.assertTrue(e.getCause() instanceof XactApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testReversal_IncorrectSubTypeId() {
+        DisbursementsApiFactory f = new DisbursementsApiFactory();
+        DisbursementsApi api = f.createApi(mockDaoClient);
+        this.mockXactDto.setXactId(EXISTING_XACT_ID);
+        this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        try {
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
+            Assert.fail("Expected exception to be thrown due to transaction sub type id is not set to NOT ASSIGNED");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DisbursementsApiException);
+            e.printStackTrace();
+        }
     }
 
     @Test

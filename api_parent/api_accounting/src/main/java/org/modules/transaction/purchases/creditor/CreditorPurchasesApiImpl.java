@@ -33,11 +33,9 @@ import com.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
-        CreditorPurchasesApi {
+class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPurchasesApi {
 
-    private static final Logger logger = Logger
-            .getLogger(CreditorPurchasesApiImpl.class);
+    private static final Logger logger = Logger.getLogger(CreditorPurchasesApiImpl.class);
 
     private CreditorPurchasesDaoFactory daoFact;
 
@@ -85,10 +83,8 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * org.modules.transaction.purchases.creditor.CreditorPurchasesApi#get(int)
      */
     @Override
-    public XactCreditChargeDto get(int xactId)
-            throws CreditorPurchasesApiException {
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance(null, null);
+    public XactCreditChargeDto get(int xactId) throws CreditorPurchasesApiException {
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setXactId(xactId);
         List<XactCreditChargeDto> results = this.get(criteria);
         if (results == null) {
@@ -116,8 +112,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * .util.Date)
      */
     @Override
-    public List<XactCreditChargeDto> get(Date xactDate)
-            throws CreditorPurchasesApiException {
+    public List<XactCreditChargeDto> get(Date xactDate) throws CreditorPurchasesApiException {
         if (xactDate == null) {
             this.msg = "Transaction date cannot be null";
             logger.error(this.msg);
@@ -146,10 +141,8 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * .lang.String)
      */
     @Override
-    public List<XactCreditChargeDto> get(String criteria)
-            throws CreditorPurchasesApiException {
-        XactCreditChargeDto criteriaObj = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance(null, null);
+    public List<XactCreditChargeDto> get(String criteria) throws CreditorPurchasesApiException {
+        XactCreditChargeDto criteriaObj = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteriaObj.setCriteria(criteria);
         StringBuilder msgBuf = new StringBuilder();
         try {
@@ -171,10 +164,8 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * (int)
      */
     @Override
-    public List<XactCreditChargeDto> getByCreditor(int creditorId)
-            throws CreditorPurchasesApiException {
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance(null, null);
+    public List<XactCreditChargeDto> getByCreditor(int creditorId) throws CreditorPurchasesApiException {
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setCreditorId(creditorId);
         StringBuilder msgBuf = new StringBuilder();
         try {
@@ -196,10 +187,8 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * (java.lang.String)
      */
     @Override
-    public List<XactCreditChargeDto> getByAcctNo(String accountNo)
-            throws CreditorPurchasesApiException {
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance(null, null);
+    public List<XactCreditChargeDto> getByAcctNo(String accountNo) throws CreditorPurchasesApiException {
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setAccountNumber(accountNo);
         StringBuilder msgBuf = new StringBuilder();
         try {
@@ -220,10 +209,8 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * getByConfirmNo(java.lang.String)
      */
     @Override
-    public List<XactCreditChargeDto> getByConfirmNo(String confirmNo)
-            throws CreditorPurchasesApiException {
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance(null, null);
+    public List<XactCreditChargeDto> getByConfirmNo(String confirmNo) throws CreditorPurchasesApiException {
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setXactConfirmNo(confirmNo);
         StringBuilder msgBuf = new StringBuilder();
         try {
@@ -245,10 +232,8 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * (java.lang.String)
      */
     @Override
-    public List<XactCreditChargeDto> getByReason(String reason)
-            throws CreditorPurchasesApiException {
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance(null, null);
+    public List<XactCreditChargeDto> getByReason(String reason) throws CreditorPurchasesApiException {
+        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setXactReason(reason);
         StringBuilder msgBuf = new StringBuilder();
         try {
@@ -270,9 +255,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * .dto.XactCreditChargeDto)
      */
     @Override
-    public List<XactCreditChargeDto> get(XactCreditChargeDto criteria)
-            throws CreditorPurchasesApiException {
-
+    public List<XactCreditChargeDto> get(XactCreditChargeDto criteria) throws CreditorPurchasesApiException {
         StringBuilder msgBuf = new StringBuilder();
         List<XactCreditChargeDto> results;
         try {
@@ -301,8 +284,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * org.modules.transaction.purchases.creditor.CreditorPurchasesApi#get(int)
      */
     @Override
-    public List<XactTypeItemActivityDto> getItems(int xactId)
-            throws CreditorPurchasesApiException {
+    public List<XactTypeItemActivityDto> getItems(int xactId) throws CreditorPurchasesApiException {
         StringBuilder msgBuf = new StringBuilder();
         List<XactTypeItemActivityDto> results;
         try {
@@ -346,8 +328,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      *             database access errors.
      */
     @Override
-    public int update(XactCreditChargeDto xact,
-            List<XactTypeItemActivityDto> items)
+    public int update(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items)
             throws CreditorPurchasesApiException {
 
         if (xact == null) {
@@ -367,8 +348,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
         }
         // Create the subsidiary entry for the creditor purchase transaction.
         try {
-            super.createSubsidiaryActivity(xact.getCreditorId(),
-                    xact.getXactId(), xact.getXactAmount());
+            super.createSubsidiaryActivity(xact.getCreditorId(), xact.getXactId(), xact.getXactAmount());
             return xactId;
         } catch (XactApiException e) {
             msg = "Unable to create subsiary entry for creditor purchase transacton";
@@ -387,8 +367,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return The id of the new transaction.
      * @throws CreditorPurchasesApiException
      */
-    protected int createPurchase(XactCreditChargeDto xact,
-            List<XactTypeItemActivityDto> items)
+    protected int createPurchase(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items)
             throws CreditorPurchasesApiException {
         try {
             int xactId = 0;
@@ -498,8 +477,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements
      *            Transaction items to be reversed.
      */
     @Override
-    protected void preReverse(XactDto xact,
-            List<XactTypeItemActivityDto> xactItems) {
+    protected void preReverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         super.preReverse(xact, xactItems);
         xact.setXactDate(new Date());
     }

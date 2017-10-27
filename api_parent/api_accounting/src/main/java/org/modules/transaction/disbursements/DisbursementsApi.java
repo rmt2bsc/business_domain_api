@@ -7,7 +7,26 @@ import org.dto.XactTypeItemActivityDto;
 import org.modules.transaction.XactApi;
 
 /**
- * An API interface form managing disbursement transactions.
+ * An API interface form managing cash disbursement transactions.
+ * <p>
+ * A <b>cash disbursement</b> transaction can be described as the purchase goods
+ * and services from a merchant on a cash basis at the time the transaction
+ * occurs. Additionally, cash disbursement transactions can be tendered by
+ * check, debit card, money order, or cashiers check.
+ * <p>
+ * When a cash disbursement is created, the base transaction amount is posted to
+ * the xact table as a negative value, which represents a decrease in the
+ * company's asset. When a cash disbursement is reversed, the base transaction
+ * amount is posted to the xact table as a positive value which increases the
+ * value of the company's asset.
+ * <p>
+ * Cash disbursement transactions require an addtional posting of transaction
+ * amounts to reflect the details of the transction which offsets the base
+ * transaction amount. When a cash disbursement is created, each transaction
+ * detial item amount is posted to the XactTypeItemActivity table as a positive
+ * value. Conversely, when a cash disbursement is reversed, the transaction
+ * detial item amount is posted as negative value decreasing the value of the
+ * asset account.
  * 
  * @author Roy Terrell
  * 

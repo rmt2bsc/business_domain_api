@@ -230,10 +230,10 @@ public interface XactApi extends TransactionApi {
      *            The transaction that is to be managed
      * @return true indicating the transaction is eligible to be changed, and
      *         false indicating change is not allowd.
-     * @throws XactApiException
+     * @throws com.InvalidDataException
      *             when xact is invalid or null.
      */
-    boolean isModifiable(XactDto xact) throws XactApiException;
+    boolean isModifiable(XactDto xact);
 
     /**
      * This method flags the transaction, <i>xact</i>, as finalized.

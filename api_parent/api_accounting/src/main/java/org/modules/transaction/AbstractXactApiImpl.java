@@ -1279,11 +1279,11 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      *            The transaction that is to be managed
      * @return true indicating that the transaction is eligible to be changed,
      *         and false indicating change is not allowd.
-     * @throws XactApiException
+     * @throws InvalidDataException
      *             when xact is invalid or null.
      */
     @Override
-    public boolean isModifiable(XactDto xact) throws XactApiException {
+    public boolean isModifiable(XactDto xact) {
         this.preValidate(xact);
         return xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_NOT_ASSIGNED;
     }
