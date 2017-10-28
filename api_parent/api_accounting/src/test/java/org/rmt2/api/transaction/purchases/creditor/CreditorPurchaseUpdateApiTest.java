@@ -117,6 +117,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
 
     @Test
     public void testSuccess() {
+        // Mock transaction details creation
         Xact xact = this.buildXactOrm(this.mockXactDto);
         try {
             when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
@@ -125,6 +126,8 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             e.printStackTrace();
             Assert.fail("Setting up creditor purchases transaction item activity update case failed");
         }
+
+        // Mock base transaction creation
         try {
             when(this.mockPersistenceClient.insertRow(eq(xact), eq(true))).thenReturn(1234567);
         } catch (Exception e) {
@@ -146,6 +149,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Fetch single creditor test case setup failed");
         }
 
+        // Mock transaction query
         VwXactList mockXactCriteria = new VwXactList();
         mockXactCriteria.setId(NEW_XACT_ID);
         try {
@@ -156,6 +160,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Fetch single xact test case setup failed");
         }
 
+        // Mock creditor transaction history post
         CreditorActivity mockCreditorActivity = new CreditorActivity();
         mockCreditorActivity.setCreditorId(CREDITOR_ID);
         mockCreditorActivity.setXactId(NEW_XACT_ID);
@@ -217,6 +222,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
         mockFinalXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
         mockFinalXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
         mockFinalXact.setXactDate(mockXactDate);
+        mockFinalXact.setXactAmount(mockFinalXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
         try {
             when(this.mockPersistenceClient.updateRow(eq(mockFinalXact))).thenReturn(1);
         } catch (Exception e) {
@@ -235,15 +241,40 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Fetch single xact test case setup failed");
         }
 
-        DisbursementsApiFactory f = new DisbursementsApiFactory();
-        DisbursementsApi api = f.createApi(mockDaoClient);
+        // Setup mock for creditor query
+        Creditor mockCriteria = new Creditor();
+        mockCriteria.setCreditorId(CREDITOR_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(
+                    this.mockCreditorFetchSingleResponse);
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria))).thenReturn(
+                    this.mockCreditorFetchSingleResponse.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single creditor test case setup failed");
+        }
+
+        // Mock creditor transaction history post
+        CreditorActivity mockCreditorActivity = new CreditorActivity();
+        mockCreditorActivity.setCreditorId(CREDITOR_ID);
+        mockCreditorActivity.setXactId(NEW_XACT_ID);
+        mockCreditorActivity.setAmount(mockFinalXact.getXactAmount());
+        try {
+            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(987654);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up creditor activity insert case failed");
+        }
+
+        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
+        CreditorPurchasesApi api = f.createApi(mockDaoClient);
         int results = 0;
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
         try {
-            results = api.updateTrans(this.mockXactDto, this.mockXactItemsDto);
-        } catch (DisbursementsApiException e) {
+            results = api.update(this.mockXactDto, this.mockXactItemsDto);
+        } catch (CreditorPurchasesApiException e) {
             Assert.fail("An unexpected exception occurred");
             e.printStackTrace();
         }

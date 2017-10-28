@@ -753,7 +753,7 @@ public class AccountingMockDataUtility {
         o.setAccountNo(acctNo);
         o.setCreditorTypeDescription("creditor");
         o.setXactId(xactId);
-        o.setReason("reason for transaction id " + xactId);
+        o.setReason("reason for transaction id " + creditorId);
         o.setXactTypeId(xactTypeId);
         o.setXactTypeName("XactTypeName" + xactTypeId);
         o.setXactSubtypeId(xactSubType);

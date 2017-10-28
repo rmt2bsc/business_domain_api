@@ -28,6 +28,7 @@ import org.modules.transaction.XactConst;
 
 import com.InvalidDataException;
 import com.NotFoundException;
+import com.RMT2RuntimeException;
 import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
 import com.util.RMT2Date;
@@ -485,7 +486,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         // Determine if we are creating or reversing the cash disbursement
         int xactId = 0;
         try {
-            Verifier.verifyNotNegative(xact.getXactId());
+            Verifier.verifyNotPositive(xact.getXactId());
             xactId = this.createPurchase(xact, items);
         }
         catch (VerifyException e) {
@@ -539,26 +540,18 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         double xactAmount = 0;
         super.preCreateXact(xact);
 
-        // TODO: This line of code makes no sense since reason is validated
-        // prior to this method invocation. May need to delete.
-        if (xact.getXactReason() == null || xact.getXactReason().equals("")) {
-            return;
+        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_NOT_ASSIGNED) {
+            // Assign negotiable instrument number to transactions
+            try {
+                this.assignNegotialbeInstrumentNumber(xact);
+            } catch (Exception e) {
+                throw new RMT2RuntimeException("Error assigning transaction negotiable instrument number", e);
+            }
         }
+        return;
+    }
 
-        // TODO: This line of code makes no sense since reason is validated
-        // prior to this method invocation. May need to delete.
-        // Only modify reason for non-reversal cash receipts
-        if (xact.getXactSubtypeId() == 0) {
-            xact.setXactReason(xact.getXactReason());
-
-            // Ensure that credit charge is posted to the base transaction table
-            // as a negative amount.
-            // xactAmount = _xact.getXactAmount() *
-            // XactConst.REVERSE_MULTIPLIER;
-            xactAmount = xact.getXactAmount();
-            xact.setXactAmount(xactAmount);
-        }
-
+    private void assignNegotialbeInstrumentNumber(XactDto xact) {
         int creditorId = 0;
         if (xact instanceof XactCreditChargeDto) {
             creditorId = ((XactCreditChargeDto) xact).getCreditorId();
@@ -590,7 +583,6 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         } finally {
             credApi = null;
         }
-        return;
     }
 
     /**
@@ -740,5 +732,4 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         }
         return;
     }
-    
 }

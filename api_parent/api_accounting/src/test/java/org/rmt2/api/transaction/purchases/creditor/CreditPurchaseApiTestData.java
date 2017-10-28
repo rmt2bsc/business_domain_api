@@ -71,7 +71,7 @@ public class CreditPurchaseApiTestData extends TransactionApiTestData {
     private List<VwXactCreditChargeList> createMockCreditPurchaseSingleResponse() {
         List<VwXactCreditChargeList> list = new ArrayList<VwXactCreditChargeList>();
         VwXactCreditChargeList o = AccountingMockDataUtility
-                .createMockOrmXVwXactCreditChargeList(7000, 1111111, 1351,
+.createMockOrmXVwXactCreditChargeList(7000, 111111, 1351,
                         XactConst.XACT_TYPE_CREDITOR_PURCHASE, "1111",
                         XactConst.XACT_SUBTYPE_NOT_ASSIGNED, 20.00,
                         "2017-01-01", XactConst.TENDER_CREDITCARD,
