@@ -575,9 +575,13 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
                 logger.error(this.msg);
                 throw new NotFoundException();
             }
-            String ccNoMask = RMT2String.maskCreditCardNumber(creditor
-                    .getExtAccountNumber());
-            xact.setXactNegInstrNo(ccNoMask);
+
+            // Try to use masked external credit card number in the event
+            // transaction negotiable instrument is not available.
+            if (xact.getXactNegInstrNo() == null) {
+                String ccNoMask = RMT2String.maskCreditCardNumber(creditor.getExtAccountNumber());
+                xact.setXactNegInstrNo(ccNoMask);
+            }
         } catch (CreditorApiException e) {
             this.msg = "Unable to create creditor purchase transction due to the occurrence of a database error while attempting to fetch creditor's profile from the database using creditor id: "
                     + creditorId;

@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorActivity;
+import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
@@ -136,8 +137,10 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
         Creditor mockCriteria = new Creditor();
         mockCriteria.setCreditorId(CREDITOR_ID);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
-                    .thenReturn(this.mockCreditorFetchSingleResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(
+                    this.mockCreditorFetchSingleResponse);
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria))).thenReturn(
+                    this.mockCreditorFetchSingleResponse.get(0));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single creditor test case setup failed");
@@ -164,6 +167,10 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Setting up creditor activity insert case failed");
         }
         
+        // mock method to return contact info from the Contacts Api
+        Creditor mockCredCriteria = new Creditor();
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
         
         CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
         CreditorPurchasesApi api = f.createApi(mockDaoClient);
