@@ -294,7 +294,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         
         // Transaction type must be cash disbursement
         try {
-            Verifier.verify( xact.getXactTypeId() == XactConst.XACT_TYPE_CASH_DISBURSE);
+            Verifier.verify(xact.getXactTypeId() == XactConst.XACT_TYPE_CASH_DISBURSE_ACCOUNT);
         }
         catch (VerifyException e) {
             throw new InvalidDataException("Update transaction failed due to transaction type must be account cash disbursement", e);
@@ -302,7 +302,6 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         
         int newXctId = 0;
         if (xact.getXactId() == 0) {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE_ACCOUNT);
             newXctId = this.createDisbursement(xact, items);
         }
         else {
@@ -341,7 +340,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         try {
             // Make base transaction amount negative
             xact.setXactAmount(xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
-            xactId = this.update(xact, items);
+            xactId = super.update(xact, items);
             return xactId;
         } catch (XactApiException e) {
             throw new DisbursementsApiException(e);

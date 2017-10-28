@@ -332,6 +332,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
+        this.mockXactDto.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE_ACCOUNT);
         try {
             api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
             Assert.fail("Expected exception to be thrown due to database error");
