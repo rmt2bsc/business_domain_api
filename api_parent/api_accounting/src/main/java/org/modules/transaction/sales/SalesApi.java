@@ -82,15 +82,13 @@ public interface SalesApi extends XactApi {
      * 
      * @param order
      *            an instance of {@link SalesOrderDto}.
-     * @param customerId
-     *            the unique identifier of the customer.
      * @param items
      *            a List of {@link SalesOrderItemDto} instances.
      * @return the id of the sales order created or zero when the sales order is
      *         updated.
      * @throws SalesApiException
      */
-    int updateSalesOrder(SalesOrderDto order, int customerId, List<SalesOrderItemDto> items) throws SalesApiException;
+    int updateSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) throws SalesApiException;
 
     /**
      * Updates the status of one or more invoiced sales orders to "Closed" when
@@ -154,4 +152,17 @@ public interface SalesApi extends XactApi {
      * @throws SalesApiException
      */
     int deleteSalesOrder(Integer salesOrderId) throws SalesApiException;
+
+    /**
+     * Calculates the sales order total at retail.
+     * <p>
+     * The sales order total encompasses item total, sales order fees, sales
+     * order taxes, and other charges.
+     * 
+     * @param salesOrderId
+     *            the sales order id
+     * @return the sales order total amount
+     * @throws SalesApiException
+     */
+    double calculateTotal(int salesOrderId) throws SalesApiException;
 }
