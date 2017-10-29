@@ -202,7 +202,30 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      */
     @Override
     public List<SalesOrderItemDto> getSalesOrderItems(Integer salesOrderId) throws SalesApiException {
-        return null;
+        try {
+            Verifier.verifyNotNull(salesOrderId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Sales order id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(salesOrderId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Sales order id must be greater than zero", e);
+        }
+
+        List<SalesOrderItemDto> results;
+        StringBuilder buf = new StringBuilder();
+
+        try {
+            results = dao.fetchSalesOrderItem(salesOrderId);
+            return results;
+        } catch (SalesOrderDaoException e) {
+            buf.append("Database error occurred retrieving sales order item(s) by sales order id, ");
+            buf.append(salesOrderId);
+            this.msg = buf.toString();
+            logger.error(this.msg);
+            throw new SalesApiException(this.msg, e);
+        }
     }
 
     /**
