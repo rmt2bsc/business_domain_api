@@ -40,6 +40,17 @@ import com.util.RMT2Date;
 import com.util.RMT2String;
 
 /**
+ * This class implements the functionality required for creating, maintaining,
+ * cancelling, refunding, and trackings sales orders.
+ * <p>
+ * When a sales order is invoiced, the base transaction amount is posted to the
+ * xact table as a positive value, and the customer activity amount is posted as
+ * a positive value which increases the value of the company's revenue and the
+ * customer's account. Conversely, when a sales order is cancelled or refunded,
+ * the base transaction amount is posted to the xact table as a negative value,
+ * and the customer activity amount is posted as negative value which decreases
+ * the value of the company's revenue and the customer's account.
+ * 
  * @author Roy Terrell
  * 
  */
@@ -707,20 +718,17 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             }
 
             // Take care of any single quote literals.
-            String reason = RMT2String.replaceAll(xact.getXactReason(), "''",
-                    "'");
+            String reason = RMT2String.replaceAll(xact.getXactReason(), "''", "'");
             xact.setXactReason(reason);
             // Revise transaction amount in the event other charges were
             // included.
-            double revisedXactAmount = this.getSalesOrderTotal(order
-                    .getSalesOrderId());
+            double revisedXactAmount = this.getSalesOrderTotal(order.getSalesOrderId());
             XactDao xactDao = this.getXactDao();
             xactDao.maintain(xact);
 
             // Create customer activity (transaction history) regarding sale
             // order transaction.
-            super.createSubsidiaryActivity(order.getCustomerId(), xactId,
-                    revisedXactAmount);
+            super.createSubsidiaryActivity(order.getCustomerId(), xactId, revisedXactAmount);
         } catch (Exception e) {
             this.msg = "Sales order transaction creation failed";
             throw new SalesApiException(this.msg, e);
