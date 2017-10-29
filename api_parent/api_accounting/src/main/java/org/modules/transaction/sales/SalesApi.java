@@ -135,6 +135,7 @@ public interface SalesApi extends XactApi {
     int cancelSalesOrder(Integer salesOrderId) throws SalesApiException;
 
     /**
+     * Refund sales order.
      * 
      * @param salesOrderId
      * @return
