@@ -119,7 +119,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public SalesOrderDto getSalesOrderById(int salesOrderId) throws SalesApiException {
+    public SalesOrderDto getSalesOrderById(Integer salesOrderId) throws SalesApiException {
         SalesOrderDto criteria = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(null);
         criteria.setSalesOrderId(salesOrderId);
         List<SalesOrderDto> results;
@@ -160,7 +160,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public SalesOrderStatusDto getSalesOrderStatusById(int statusId) throws SalesApiException {
+    public SalesOrderStatusDto getSalesOrderStatusById(Integer statusId) throws SalesApiException {
         SalesOrderStatusDto criteria = Rmt2SalesOrderDtoFactory.createSalesOrderStatusInstance(null);
         criteria.setSoStatusId(statusId);
 
@@ -200,7 +200,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * (int)
      */
     @Override
-    public SalesInvoiceDto getSalesOrderInvoiceBySalesOrder(int salesOrderId) throws SalesApiException {
+    public SalesInvoiceDto getSalesOrderInvoiceBySalesOrder(Integer salesOrderId) throws SalesApiException {
         SalesInvoiceDto criteria = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance((SalesInvoice) null);
         criteria.setSalesOrderId(salesOrderId);
         List<SalesInvoiceDto> results;
@@ -242,7 +242,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public SalesOrderStatusHistDto getCurrentSalesOrderStatus(int salesOrderId) throws SalesApiException {
+    public SalesOrderStatusHistDto getCurrentSalesOrderStatus(Integer salesOrderId) throws SalesApiException {
         SalesOrderStatusHistDto results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -914,7 +914,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public int cancelSalesOrder(int salesOrderId) throws SalesApiException {
+    public int cancelSalesOrder(Integer salesOrderId) throws SalesApiException {
         // Obtain the current status of the sales order
         SalesOrderStatusHistDto sosh;
         try {
@@ -1033,7 +1033,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @see org.modules.transaction.sales.SalesApi#deleteSalesOrder(int)
      */
     @Override
-    public int deleteSalesOrder(int salesOrderId) throws SalesApiException {
+    public int deleteSalesOrder(Integer salesOrderId) throws SalesApiException {
         int rc = 0;
 
         SalesOrderStatusHistDto sosh = this.getCurrentSalesOrderStatus(salesOrderId);
@@ -1155,7 +1155,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @see org.modules.transaction.sales.SalesApi#refundSalesOrder(int)
      */
     @Override
-    public int refundSalesOrder(int salesOrderId) throws SalesApiException {
+    public int refundSalesOrder(Integer salesOrderId) throws SalesApiException {
         // Obtain the current status of the sales order
         SalesOrderStatusHistDto sosh;
         try {

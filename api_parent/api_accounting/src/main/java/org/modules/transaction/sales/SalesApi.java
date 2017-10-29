@@ -30,7 +30,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesOrderDto}
      * @throws SalesApiException
      */
-    SalesOrderDto getSalesOrderById(int salesOrderId) throws SalesApiException;
+    SalesOrderDto getSalesOrderById(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Retrieves a sales order invoice by sales order id.
@@ -40,8 +40,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesInvoiceDto}
      * @throws SalesApiException
      */
-    SalesInvoiceDto getSalesOrderInvoiceBySalesOrder(int salesOrderId)
-            throws SalesApiException;
+    SalesInvoiceDto getSalesOrderInvoiceBySalesOrder(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Retrieves a sales order status by sales order status id.
@@ -51,8 +50,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesOrderStatusDto}
      * @throws SalesApiException
      */
-    SalesOrderStatusDto getSalesOrderStatusById(int statusId)
-            throws SalesApiException;
+    SalesOrderStatusDto getSalesOrderStatusById(Integer statusId) throws SalesApiException;
 
     /**
      * Retrieves the current status of a sales order.
@@ -62,8 +60,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesOrderStatusHistDto}
      * @throws SalesApiException
      */
-    SalesOrderStatusHistDto getCurrentSalesOrderStatus(int salesOrderId)
-            throws SalesApiException;
+    SalesOrderStatusHistDto getCurrentSalesOrderStatus(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Generates an invoice number.
@@ -72,36 +69,7 @@ public interface SalesApi extends XactApi {
      * @return Invoice number
      * @throws SalesApiException
      */
-    String createInvoiceNumber(SalesOrderDto salesOrder)
-            throws SalesApiException;
-
-    // /**
-    // * Calculates the sales order total at retail.
-    // *
-    // * @param salesOrderId
-    // * @return the sales order total amount
-    // * @throws SalesApiException
-    // */
-    // double getSalesOrderTotal(int salesOrderId) throws SalesApiException;
-
-    // /**
-    // * Verifies whether or not a sales order can change its status to
-    // * <i>newStatusId</i>.
-    // *
-    // * @param soId
-    // * The id of sales order
-    // * @param newStatusId
-    // * The id of the status to apply to the sales order
-    // * @return {@link SalesOrderStatusHistDto} object representing the current
-    // * sales order status before any change.
-    // * @throws SalesApiException
-    // * <i>salesOrderId</i> is not a valid sales order,
-    // * <i>newStatusId</i> is not a valid sales order status, or
-    // * moving the sales order status to <i>newStatusId</i> would
-    // * violate business rules.
-    // */
-    // SalesOrderStatusHistDto evaluateSalesOrderStatusChange(int salesOrderId,
-    // int newStatusId) throws SalesApiException;
+    String createInvoiceNumber(SalesOrderDto salesOrder) throws SalesApiException;
 
     /**
      * Creates a new or updates and existing sales order.
@@ -122,8 +90,7 @@ public interface SalesApi extends XactApi {
      *         updated.
      * @throws SalesApiException
      */
-    int updateSalesOrder(SalesOrderDto order, int customerId,
-            List<SalesOrderItemDto> items) throws SalesApiException;
+    int updateSalesOrder(SalesOrderDto order, int customerId, List<SalesOrderItemDto> items) throws SalesApiException;
 
     /**
      * Updates the status of one or more invoiced sales orders to "Closed" when
@@ -139,8 +106,7 @@ public interface SalesApi extends XactApi {
      * @return the total number of orders processed.
      * @throws SalesApiException
      */
-    int updateSalesOrderPaymentStatus(List<SalesOrderDto> orders, XactDto xact)
-            throws SalesApiException;
+    int updateSalesOrderPaymentStatus(List<SalesOrderDto> orders, XactDto xact) throws SalesApiException;
 
     /**
      * Creates a sales invoice from a selected sales order.
@@ -155,8 +121,8 @@ public interface SalesApi extends XactApi {
      * @return invoice id
      * @throws SalesApiException
      */
-    int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items,
-            boolean receivePayment) throws SalesApiException;
+    int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items, boolean receivePayment)
+            throws SalesApiException;
 
     /**
      * Cancels a sales order.
@@ -166,7 +132,7 @@ public interface SalesApi extends XactApi {
      * @return the transaction id of the sales order cancellation.
      * @throws SalesApiException
      */
-    int cancelSalesOrder(int salesOrderId) throws SalesApiException;
+    int cancelSalesOrder(Integer salesOrderId) throws SalesApiException;
 
     /**
      * 
@@ -174,7 +140,7 @@ public interface SalesApi extends XactApi {
      * @return
      * @throws SalesApiException
      */
-    int refundSalesOrder(int salesOrderId) throws SalesApiException;
+    int refundSalesOrder(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Deletes a sales order including its items.
@@ -186,5 +152,5 @@ public interface SalesApi extends XactApi {
      * @return totall number of sales orders deleted
      * @throws SalesApiException
      */
-    int deleteSalesOrder(int salesOrderId) throws SalesApiException;
+    int deleteSalesOrder(Integer salesOrderId) throws SalesApiException;
 }
