@@ -42,7 +42,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         found
      * @throws CreditorPurchasesApiException
      */
-    XactCreditChargeDto get(int xactId) throws CreditorPurchasesApiException;
+    XactCreditChargeDto get(Integer xactId) throws CreditorPurchasesApiException;
 
     /**
      * Retrieve one or more credit purchase transactions by transaction date.
@@ -77,7 +77,7 @@ public interface CreditorPurchasesApi extends XactApi {
      *         is found
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> getByCreditor(int creditorId) throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> getByCreditor(Integer creditorId) throws CreditorPurchasesApiException;
 
     /**
      * Retrieve one or more credit purchase transactions by account number.
@@ -135,7 +135,7 @@ public interface CreditorPurchasesApi extends XactApi {
      * @throws CreditorPurchasesApiException
      *             TODO
      */
-    List<XactTypeItemActivityDto> getItems(int xactId) throws CreditorPurchasesApiException;
+    List<XactTypeItemActivityDto> getItems(Integer xactId) throws CreditorPurchasesApiException;
 
     /**
      * Creates a new or reverses an existing creditor purchase transaction.

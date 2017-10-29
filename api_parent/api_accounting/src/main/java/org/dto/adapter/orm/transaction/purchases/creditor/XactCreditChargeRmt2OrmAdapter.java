@@ -19,16 +19,17 @@ import org.dto.adapter.orm.transaction.XactRmt2OrmAdapter;
 class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
         XactCreditChargeDto {
 
-    private VwXactCreditChargeList x;
+    private VwXactCreditChargeList vxccl;
 
-    private SubsidiaryContactInfoDto c;
+    private SubsidiaryContactInfoDto scid;
 
     /**
      * Default constructor
      */
     XactCreditChargeRmt2OrmAdapter() {
-        this.x = null;
-        return;
+        this.updateObjHeirarchy(null);
+        this.vxccl = new VwXactCreditChargeList();
+        this.scid = Rmt2SubsidiaryDtoFactory.createSubsidiaryInstance(null);
     }
 
     /**
@@ -40,17 +41,16 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      * @param contactInfo
      *            an instance of {@link SubsidiaryContactInfoDto}
      */
-    public XactCreditChargeRmt2OrmAdapter(VwXactCreditChargeList xactList,
-            SubsidiaryContactInfoDto contactInfo) {
+    XactCreditChargeRmt2OrmAdapter(VwXactCreditChargeList xactList, SubsidiaryContactInfoDto contactInfo) {
+        this.updateObjHeirarchy(xactList);
         if (xactList == null) {
             xactList = new VwXactCreditChargeList();
         }
         if (contactInfo == null) {
-            contactInfo = Rmt2SubsidiaryDtoFactory
-                    .createSubsidiaryInstance(null);
+            contactInfo = Rmt2SubsidiaryDtoFactory.createSubsidiaryInstance(null);
         }
-        this.x = xactList;
-        this.c = contactInfo;
+        this.vxccl = xactList;
+        this.scid = contactInfo;
     }
 
     /*
@@ -60,7 +60,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setCreditorId(int value) {
-        this.x.setCreditorId(value);
+        this.vxccl.setCreditorId(value);
     }
 
     /*
@@ -70,7 +70,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public int getCreditorId() {
-        return this.x.getCreditorId();
+        return this.vxccl.getCreditorId();
     }
 
     /*
@@ -80,7 +80,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setBusinessId(int value) {
-        this.x.setBusinessId(value);
+        this.vxccl.setBusinessId(value);
     }
 
     /*
@@ -90,7 +90,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public int getBusinessId() {
-        return this.x.getBusinessId();
+        return this.vxccl.getBusinessId();
     }
 
     /*
@@ -100,7 +100,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setCreditorName(String value) {
-        this.c.setContactName(value);
+        this.scid.setContactName(value);
     }
 
     /*
@@ -110,7 +110,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public String getCreditorName() {
-        return this.c.getContactName();
+        return this.scid.getContactName();
     }
 
     /*
@@ -120,7 +120,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setAccountNumber(String value) {
-        this.x.setAccountNo(value);
+        this.vxccl.setAccountNo(value);
     }
 
     /*
@@ -130,7 +130,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public String getAccountNumber() {
-        return this.x.getAccountNo();
+        return this.vxccl.getAccountNo();
     }
 
     /*
@@ -160,7 +160,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setActive(int value) {
-        this.x.setActive(value);
+        this.vxccl.setActive(value);
     }
 
     /*
@@ -170,7 +170,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public int getActive() {
-        return this.x.getActive();
+        return this.vxccl.getActive();
     }
 
     /*
@@ -180,7 +180,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setBalance(double value) {
-        this.x.setBalance(value);
+        this.vxccl.setBalance(value);
     }
 
     /*
@@ -190,7 +190,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public double getBalance() {
-        return this.x.getBalance();
+        return this.vxccl.getBalance();
     }
 
     /*
@@ -200,7 +200,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactId(int value) {
-        this.x.setXactId(value);
+        this.vxccl.setXactId(value);
     }
 
     /*
@@ -210,7 +210,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public int getXactId() {
-        return this.x.getXactId();
+        return this.vxccl.getXactId();
     }
 
     /*
@@ -220,7 +220,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactSubtypeId(int value) {
-        this.x.setXactSubtypeId(value);
+        this.vxccl.setXactSubtypeId(value);
     }
 
     /*
@@ -230,7 +230,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public int getXactSubtypeId() {
-        return this.x.getXactSubtypeId();
+        return this.vxccl.getXactSubtypeId();
     }
 
     /*
@@ -240,7 +240,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactDate(Date value) {
-        this.x.setXactDate(value);
+        this.vxccl.setXactDate(value);
     }
 
     /*
@@ -250,7 +250,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public Date getXactDate() {
-        return this.x.getXactDate();
+        return this.vxccl.getXactDate();
     }
 
     /*
@@ -260,7 +260,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactAmount(double value) {
-        this.x.setXactAmount(value);
+        this.vxccl.setXactAmount(value);
     }
 
     /*
@@ -270,7 +270,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public double getXactAmount() {
-        return this.x.getXactAmount();
+        return this.vxccl.getXactAmount();
     }
 
     /*
@@ -280,7 +280,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactTenderId(int value) {
-        this.x.setTenderId(value);
+        this.vxccl.setTenderId(value);
     }
 
     /*
@@ -290,7 +290,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public int getXactTenderId() {
-        return this.x.getTenderId();
+        return this.vxccl.getTenderId();
     }
 
     // /* (non-Javadoc)
@@ -316,7 +316,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactNegInstrNo(String value) {
-        this.x.setNegInstrNo(value);
+        this.vxccl.setNegInstrNo(value);
     }
 
     /*
@@ -326,7 +326,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public String getXactNegInstrNo() {
-        return this.x.getNegInstrNo();
+        return this.vxccl.getNegInstrNo();
     }
 
     /*
@@ -356,7 +356,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactConfirmNo(String value) {
-        this.x.setConfirmNo(value);
+        this.vxccl.setConfirmNo(value);
     }
 
     /*
@@ -366,7 +366,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public String getXactConfirmNo() {
-        return this.x.getConfirmNo();
+        return this.vxccl.getConfirmNo();
     }
 
     /*
@@ -396,7 +396,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setXactReason(String value) {
-        this.x.setReason(value);
+        this.vxccl.setReason(value);
     }
 
     /*
@@ -406,7 +406,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public String getXactReason() {
-        return this.x.getReason();
+        return this.vxccl.getReason();
     }
 
     /*
@@ -416,7 +416,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setDocumentId(int value) {
-        this.x.setDocumentId(value);
+        this.vxccl.setDocumentId(value);
     }
 
     /*
@@ -426,7 +426,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public int getDocumentId() {
-        return this.x.getDocumentId();
+        return this.vxccl.getDocumentId();
     }
 
     /*
@@ -436,7 +436,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setTaxId(String value) {
-        this.c.setTaxId(value);
+        this.scid.setTaxId(value);
     }
 
     /*
@@ -446,7 +446,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public String getTaxId() {
-        return c.getTaxId();
+        return scid.getTaxId();
     }
 
     /*
@@ -456,7 +456,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public void setPhone(String value) {
-        this.c.setPhoneCompany(value);
+        this.scid.setPhoneCompany(value);
     }
 
     /*
@@ -466,7 +466,7 @@ class XactCreditChargeRmt2OrmAdapter extends XactRmt2OrmAdapter implements
      */
     @Override
     public String getPhone() {
-        return this.c.getPhoneCompany();
+        return this.scid.getPhoneCompany();
     }
 
     // /* (non-Javadoc)

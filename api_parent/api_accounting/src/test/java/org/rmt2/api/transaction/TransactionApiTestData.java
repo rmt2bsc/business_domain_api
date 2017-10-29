@@ -299,7 +299,7 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     private List<VwXactList> createMockXactSingleFetchResponse() {
         List<VwXactList> list = new ArrayList<VwXactList>();
         VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111,
-                XactConst.XACT_TYPE_CREDITCHARGE,
+                XactConst.XACT_TYPE_CREDITOR_PURCHASE,
                 XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
                 RMT2Date.stringToDate("2017-01-13"), 111.11, 200, "1111-1111-1111-1111");
         list.add(o);

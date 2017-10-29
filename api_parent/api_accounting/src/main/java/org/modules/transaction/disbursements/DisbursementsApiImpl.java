@@ -252,9 +252,17 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throw new DisbursementsApiException("Basic Cash Disbursement input data is not valid", e);
         }
         
+        // Transaction type must be cash disbursement
+        try {
+            Verifier.verify( xact.getXactTypeId() == XactConst.XACT_TYPE_CASH_DISBURSE);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Update transaction failed due to transaction type is required to be cash disbursement", e);
+        }
+        
         int newXactId = 0;
         if (xact.getXactId() == 0) {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBEXP);
+            xact.setXactTypeId(XactConst.XACT_TYPE_CASH_DISBURSE);
             newXactId = this.createDisbursement(xact, items);
         }
         else {
@@ -284,9 +292,16 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throw new DisbursementsApiException("Creditor Cash Disbursement input data is not valid", e);
         }
         
+        // Transaction type must be cash disbursement
+        try {
+            Verifier.verify(xact.getXactTypeId() == XactConst.XACT_TYPE_CASH_DISBURSE_ACCOUNT);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Update transaction failed due to transaction type must be account cash disbursement", e);
+        }
+        
         int newXctId = 0;
         if (xact.getXactId() == 0) {
-            xact.setXactTypeId(XactConst.XACT_TYPE_CASHDISBACCT);
             newXctId = this.createDisbursement(xact, items);
         }
         else {
@@ -325,7 +340,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         try {
             // Make base transaction amount negative
             xact.setXactAmount(xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
-            xactId = this.update(xact, items);
+            xactId = super.update(xact, items);
             return xactId;
         } catch (XactApiException e) {
             throw new DisbursementsApiException(e);

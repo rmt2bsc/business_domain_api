@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.rmt2.api.BaseAccountingDaoTest;
 import org.rmt2.dao.AccountingMockDataUtility;
 
+import com.api.persistence.DatabaseException;
+
 /**
  * Common subsidiary testing facility that is mainly responsible for setting up mock data.
  * 
@@ -254,6 +256,31 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
     }
 
     /**
+     * 
+     * @param busContactCriteria
+     * @param creditorCriteria
+     */
+    protected void setupMultipleSubsidiaryContactInfoFetchDbException(
+            VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(eq(busContactCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Multiple Business Contact for creditor fetch database exception test case setup failed");
+        }
+
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(creditorCriteria)))
+                    .thenReturn(this.mockCreditorFetchAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Multiple Creditor fetch test case setup failed");
+        }
+    }
+    
+    /**
      * Setup mocks to retrieve multiple matching creditor and common business
      * contact data.
      * 
@@ -269,7 +296,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
-                    "Single Business Contact for creditor fetch test case setup failed");
+                    "Multiple Business Contact for creditor fetch test case setup failed");
         }
 
         try {
@@ -277,7 +304,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
                     .thenReturn(this.mockCreditorFetchAllResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Single Creditor fetch test case setup failed");
+            Assert.fail("Multiple Creditor fetch test case setup failed");
         }
     }
     

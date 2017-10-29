@@ -1,5 +1,6 @@
 package org.dto.adapter.orm.transaction;
 
+import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.XactCategory;
@@ -46,6 +47,18 @@ class XactTypeRmt2OrmAdapter extends XactCategoryRmt2OrmAdapter implements
         return;
     }
 
+    protected XactTypeRmt2OrmAdapter(VwXactCreditChargeList xactType) {
+        this.updateObjHeirarchy(xactType);
+
+        if (xactType != null) {
+            // Setup XactCategory instance at the ancestor level.
+            XactCategory xc = new XactCategory();
+            xc.setXactCatgId(xactType.getXactCatgId());
+            this.updateObjHeirarchy(xc);
+        }
+        return;
+    }
+    
     /**
      * Tries to cast <i>obj</i> as a <i>XactType</i> object.
      * <p>
@@ -82,6 +95,20 @@ class XactTypeRmt2OrmAdapter extends XactCategoryRmt2OrmAdapter implements
             this.xt.setFromAcctTypeId(in.getFromAcctTypeId());
             this.xt.setFromAcctCatgId(in.getFromAcctCatgId());
             this.xt.setHasSubsidiary(in.getHasSubsidiary());
+        }
+        else if (obj instanceof VwXactCreditChargeList) {
+            VwXactCreditChargeList in = (VwXactCreditChargeList) obj;
+            this.xt = new XactType();
+            this.xt.setXactTypeId(in.getXactTypeId());
+            this.xt.setXactCatgId(in.getXactCatgId());
+            this.xt.setDescription(in.getXactTypeName());
+            this.xt.setToMultiplier(in.getToMultiplier());
+            this.xt.setFromMultiplier(in.getFromMultiplier());
+            this.xt.setToAcctTypeId(in.getToAcctTypeId());
+            this.xt.setFromAcctTypeId(in.getFromAcctTypeId());
+            this.xt.setFromAcctCatgId(in.getFromAcctCatgId());
+            this.xt.setHasSubsidiary(in.getHasSubsidiary());
+//            targetObject = true;
         }
         else if (obj instanceof VwXactTypeItemActivity) {
             VwXactTypeItemActivity in = (VwXactTypeItemActivity) obj;

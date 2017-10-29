@@ -670,9 +670,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.validate(xactItems);
         } catch (TransactionItemsUnavailableException e) {
             // At this level, it is okay to save a transaction without
-            // transaction items. For some transactions (accounts with
-            // subsidiaries), it is okay to not have any transaction detail
-            // items.
+            // transaction items. Some transactions (accounts with
+            // subsidiaries), are not required to have any transaction detail
+            // items. If a transaction requires detail items, then make
+            // provisions to validate that use case at the descendent level.
             logger.warn("There are no transaction items associated with the base transaction", e);
             return;
         } catch (Exception e) {

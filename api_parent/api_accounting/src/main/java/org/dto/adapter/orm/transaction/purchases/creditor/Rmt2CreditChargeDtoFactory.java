@@ -17,6 +17,15 @@ public class Rmt2CreditChargeDtoFactory extends RMT2Base {
 
     /**
      * Create an instance of <i>XactCreditChargeDto</i>.
+     * 
+     * @return an instance of {@link XactCreditChargeDto}.
+     */
+    public static final XactCreditChargeDto createCreditChargeInstance() {
+        return new XactCreditChargeRmt2OrmAdapter();
+    }
+
+    /**
+     * Create an instance of <i>XactCreditChargeDto</i>.
      * <p>
      * A brand new instance of XactCreditChargeDto is created when
      * <i>creditXactOrmBean</i> and <i>contactInfo</i> is null. Otherwise,
@@ -30,11 +39,9 @@ public class Rmt2CreditChargeDtoFactory extends RMT2Base {
      * 
      * @return an instance of {@link XactCreditChargeDto}.
      */
-    public static final XactCreditChargeDto createCreditChargeInstance(
-            VwXactCreditChargeList creditXactOrmBean,
+    public static final XactCreditChargeDto createCreditChargeInstance(VwXactCreditChargeList creditXactOrmBean,
             SubsidiaryContactInfoDto contactInfo) {
-        return new XactCreditChargeRmt2OrmAdapter(creditXactOrmBean,
-                contactInfo);
+        return new XactCreditChargeRmt2OrmAdapter(creditXactOrmBean,  contactInfo);
     }
 
 }
