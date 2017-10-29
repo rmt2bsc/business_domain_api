@@ -66,10 +66,8 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public List<SalesOrderDto> fetchSalesOrder(SalesOrderDto criteria)
-            throws SalesOrderDaoException {
-        SalesOrder obj = SalesOrderDaoFactory
-                .createCriteriaSalesOrder(criteria);
+    public List<SalesOrderDto> fetchSalesOrder(SalesOrderDto criteria) throws SalesOrderDaoException {
+        SalesOrder obj = SalesOrderDaoFactory.createCriteriaSalesOrder(criteria);
         List<SalesOrder> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -92,10 +90,8 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesInvoiceDaoException
      */
     @Override
-    public List<SalesInvoiceDto> fetchSalesInvoice(SalesInvoiceDto criteria)
-            throws SalesInvoiceDaoException {
-        SalesInvoice obj = SalesOrderDaoFactory
-                .createCriteriaSalesInvoice(criteria);
+    public List<SalesInvoiceDto> fetchSalesInvoice(SalesInvoiceDto criteria) throws SalesInvoiceDaoException {
+        SalesInvoice obj = SalesOrderDaoFactory.createCriteriaSalesInvoice(criteria);
         List<SalesInvoice> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -118,10 +114,8 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesInvoiceDaoException
      */
     @Override
-    public List<SalesInvoiceDto> fetchSalesInvoiceExt(SalesInvoiceDto criteria)
-            throws SalesInvoiceDaoException {
-        VwSalesOrderInvoice obj = SalesOrderDaoFactory
-                .createCriteriaSalesInvoiceExt(criteria);
+    public List<SalesInvoiceDto> fetchSalesInvoiceExt(SalesInvoiceDto criteria) throws SalesInvoiceDaoException {
+        VwSalesOrderInvoice obj = SalesOrderDaoFactory.createCriteriaSalesInvoiceExt(criteria);
         List<VwSalesOrderInvoice> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -144,8 +138,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public List<SalesOrderItemDto> fetchSalesOrderItem(int salesOrderId)
-            throws SalesOrderDaoException {
+    public List<SalesOrderItemDto> fetchSalesOrderItem(int salesOrderId) throws SalesOrderDaoException {
         SalesOrderItems criteria = new SalesOrderItems();
         criteria.addCriteria(SalesOrderItems.PROP_SOID, salesOrderId);
         List<SalesOrderItems> results = null;
@@ -171,10 +164,8 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public List<SalesInvoiceDto> fetchExtSalesOrder(SalesInvoiceDto criteria)
-            throws SalesOrderDaoException {
-        VwSalesOrderInvoice obj = SalesOrderDaoFactory
-                .createCriteriaExtSalesOrder(criteria);
+    public List<SalesInvoiceDto> fetchExtSalesOrder(SalesInvoiceDto criteria) throws SalesOrderDaoException {
+        VwSalesOrderInvoice obj = SalesOrderDaoFactory.createCriteriaExtSalesOrder(criteria);
         List<VwSalesOrderInvoice> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -198,11 +189,9 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public List<SalesOrderItemDto> fetchExtSalesOrderItem(int salesOrderId)
-            throws SalesOrderDaoException {
+    public List<SalesOrderItemDto> fetchExtSalesOrderItem(int salesOrderId) throws SalesOrderDaoException {
         VwSalesorderItemsBySalesorder criteria = new VwSalesorderItemsBySalesorder();
-        criteria.addCriteria(VwSalesorderItemsBySalesorder.PROP_SOID,
-                salesOrderId);
+        criteria.addCriteria(VwSalesorderItemsBySalesorder.PROP_SOID, salesOrderId);
         List<VwSalesorderItemsBySalesorder> results = null;
         try {
             results = this.client.retrieveList(criteria);
@@ -226,10 +215,8 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public List<SalesOrderStatusDto> fetchSalesOrderStatus(
-            SalesOrderStatusDto criteria) throws SalesOrderDaoException {
-        SalesOrderStatus obj = SalesOrderDaoFactory
-                .createCriteriaSalesOrderStatus(criteria);
+    public List<SalesOrderStatusDto> fetchSalesOrderStatus(SalesOrderStatusDto criteria) throws SalesOrderDaoException {
+        SalesOrderStatus obj = SalesOrderDaoFactory.createCriteriaSalesOrderStatus(criteria);
         List<SalesOrderStatus> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -254,10 +241,9 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public List<SalesOrderStatusHistDto> fetchSalesOrderStatusHistory(
-            SalesOrderStatusHistDto criteria) throws SalesOrderDaoException {
-        SalesOrderStatusHist obj = SalesOrderDaoFactory
-                .createCriteriaSalesOrderStatusHist(criteria);
+    public List<SalesOrderStatusHistDto> fetchSalesOrderStatusHistory(SalesOrderStatusHistDto criteria)
+            throws SalesOrderDaoException {
+        SalesOrderStatusHist obj = SalesOrderDaoFactory.createCriteriaSalesOrderStatusHist(criteria);
         List<SalesOrderStatusHist> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -281,8 +267,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public SalesOrderStatusHistDto fetchCurrentSalesOrderStatus(int salesOrderId)
-            throws SalesOrderDaoException {
+    public SalesOrderStatusHistDto fetchCurrentSalesOrderStatus(int salesOrderId) throws SalesOrderDaoException {
         SalesOrderStatusHist obj = new SalesOrderStatusHist();
         obj.addCriteria(SalesOrderStatusHist.PROP_SOID, salesOrderId);
         String criteria = " end_date is null";
@@ -444,8 +429,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public int deleteSalesOrderItems(int salesOrderId)
-            throws SalesOrderDaoException {
+    public int deleteSalesOrderItems(int salesOrderId) throws SalesOrderDaoException {
         SalesOrderItems soi = new SalesOrderItems();
         int rc = 0;
         try {
@@ -466,8 +450,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @see org.dao.transaction.sales.SalesOrderDao#deleteSalesOrderStatus(int)
      */
     @Override
-    public int deleteSalesOrderStatus(int salesOrderId)
-            throws SalesOrderDaoException {
+    public int deleteSalesOrderStatus(int salesOrderId) throws SalesOrderDaoException {
         SalesOrderStatusHist sosh = new SalesOrderStatusHist();
         int rc = 0;
         try {
@@ -491,8 +474,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     @Override
-    public int maintain(SalesOrderStatusHistDto status)
-            throws SalesOrderDaoException {
+    public int maintain(SalesOrderStatusHistDto status) throws SalesOrderDaoException {
         // Determine if we are creating or modifying a Sales Order Status
         // History.
         int rc;
@@ -517,8 +499,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @return the id of the new sales order status histroy item
      * @throws SalesOrderDaoException
      */
-    private int createSalesOrderStatusHist(SalesOrderStatusHist sosh)
-            throws SalesOrderDaoException {
+    private int createSalesOrderStatusHist(SalesOrderStatusHist sosh) throws SalesOrderDaoException {
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
@@ -544,8 +525,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @return The total number of rows effected by the transaction.
      * @throws SalesOrderDaoException
      */
-    private int updateSalesOrderStatusHist(SalesOrderStatusHist sosh)
-            throws SalesOrderDaoException {
+    private int updateSalesOrderStatusHist(SalesOrderStatusHist sosh) throws SalesOrderDaoException {
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
@@ -568,11 +548,9 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * SalesInvoiceDto)
      */
     @Override
-    public int maintainInvoice(SalesInvoiceDto invoice)
-            throws SalesInvoiceDaoException {
+    public int maintainInvoice(SalesInvoiceDto invoice) throws SalesInvoiceDaoException {
         if (invoice == null) {
-            throw new SalesInvoiceDaoException(
-                    "Sales invoice DTO cannot be null");
+            throw new SalesInvoiceDaoException("Sales invoice DTO cannot be null");
         }
 
         int rc;
