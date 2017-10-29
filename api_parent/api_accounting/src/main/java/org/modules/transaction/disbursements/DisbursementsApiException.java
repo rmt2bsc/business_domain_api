@@ -1,6 +1,6 @@
 package org.modules.transaction.disbursements;
 
-import org.modules.transaction.sales.SalesApiException;
+import org.modules.transaction.XactApiException;
 
 /**
  * Handles Disbursement API errors.
@@ -8,7 +8,7 @@ import org.modules.transaction.sales.SalesApiException;
  * @author Roy Terrell
  * 
  */
-public class DisbursementsApiException extends SalesApiException {
+public class DisbursementsApiException extends XactApiException {
     private static final long serialVersionUID = -1884703323759924257L;
 
     public DisbursementsApiException() {

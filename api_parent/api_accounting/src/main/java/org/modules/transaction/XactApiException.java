@@ -23,7 +23,7 @@ public class XactApiException extends RMT2Exception {
         super(e);
     }
 
-    public XactApiException(String msg, Exception e) {
+    public XactApiException(String msg, Throwable e) {
         super(msg, e);
     }
 }
