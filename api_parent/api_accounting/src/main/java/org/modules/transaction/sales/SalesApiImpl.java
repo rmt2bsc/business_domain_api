@@ -114,6 +114,33 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         this.daoFact = new SalesOrderDaoFactory();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.modules.transaction.sales.SalesApi#getSalesOrder(org.dto.SalesOrderDto
+     * )
+     */
+    @Override
+    public List<SalesOrderDto> getSalesOrder(SalesOrderDto criteria) throws SalesApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Sales order selection criteria object is required", e);
+        }
+
+        List<SalesOrderDto> results = null;
+        try {
+            return dao.fetchSalesOrder(criteria);
+        } catch (SalesOrderDaoException e) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("Database error occurred retrieving sales order data");
+            buf.append(criteria.toString());
+            this.msg = buf.toString();
+            throw new SalesApiException(this.msg, e);
+        }
+    }
+
     /**
      * Retrieves a sales order by sales order id from the <i>sales_order</i>
      * table.
@@ -141,7 +168,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         List<SalesOrderDto> results;
         StringBuilder buf = new StringBuilder();
         try {
-            results = dao.fetchSalesOrder(criteria);
+            results = this.getSalesOrder(criteria);
             if (results == null) {
                 return null;
             }
@@ -164,6 +191,18 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             throw new SalesApiException(this.msg);
         }
         return results.get(0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.modules.transaction.sales.SalesApi#getSalesOrderItems(java.lang.Integer
+     * )
+     */
+    @Override
+    public List<SalesOrderItemDto> getSalesOrderItems(Integer salesOrderId) throws SalesApiException {
+        return null;
     }
 
     /**
@@ -1334,5 +1373,4 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws SubsidiaryDaoException {
         return SubsidiaryType.CUSTOMER;
     }
-
 }

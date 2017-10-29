@@ -23,6 +23,17 @@ import org.modules.transaction.XactApi;
 public interface SalesApi extends XactApi {
 
     /**
+     * Retrieves sales order based on selection criteria.
+     * 
+     * @param criteria
+     *            an instance of {@link SalesOrderDto} which contains the
+     *            selection criteria
+     * @return a List of {@link SalesOrderDto} objects
+     * @throws SalesApiException
+     */
+    List<SalesOrderDto> getSalesOrder(SalesOrderDto criteria) throws SalesApiException;
+
+    /**
      * Retrieves a sales order by sales order id.
      * 
      * @param salesOrderId
@@ -31,6 +42,15 @@ public interface SalesApi extends XactApi {
      * @throws SalesApiException
      */
     SalesOrderDto getSalesOrderById(Integer salesOrderId) throws SalesApiException;
+
+    /**
+     * Retireve sales order items.
+     * 
+     * @param salesOrderId
+     * @return
+     * @throws SalesApiException
+     */
+    List<SalesOrderItemDto> getSalesOrderItems(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Retrieves a sales order invoice by sales order id.

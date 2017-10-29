@@ -13,6 +13,8 @@ import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
+import org.dao.mapping.orm.rmt2.SalesInvoice;
+import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
@@ -780,6 +782,53 @@ public class AccountingMockDataUtility {
         o.setFromAcctCatgId(666);
         o.setHasSubsidiary(1);
 
+        return o;
+    }
+
+    /**
+     * 
+     * @param id
+     * @param customerId
+     * @param invoiced
+     * @param orderTotal
+     * @param effectiveDate
+     * @return
+     */
+    public static final SalesOrder createMockOrmSalesOrder(int id, int customerId, int invoiced, double orderTotal,
+            String effectiveDate) {
+        SalesOrder o = new SalesOrder();
+        o.setSoId(id);
+        o.setCustomerId(customerId);
+        o.setInvoiced(invoiced);
+        o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
+        o.setOrderTotal(orderTotal);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        o.setIpCreated("111.222.101.100");
+        o.setIpUpdated(o.getIpCreated());
+        return o;
+    }
+
+    /**
+     * 
+     * @param id
+     * @param salesOrderId
+     * @param xactId
+     * @param invoiceNo
+     * @return
+     */
+    public static final SalesInvoice createMockOrmSalesInvoice(int id, int salesOrderId, int xactId, String invoiceNo) {
+        SalesInvoice o = new SalesInvoice();
+        o.setInvoiceId(id);
+        o.setSoId(salesOrderId);
+        o.setXactId(xactId);
+        o.setInvoiceNo(invoiceNo);
+        o.setDateCreated(new Date());
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        o.setIpCreated("111.222.101.100");
+        o.setIpUpdated(o.getIpCreated());
         return o;
     }
 }
