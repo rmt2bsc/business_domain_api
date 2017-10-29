@@ -100,7 +100,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         double amountSeed = 20.00;
         for (int ndx = 0; ndx < results.size(); ndx++) {
             XactCreditChargeDto item = results.get(ndx);
-            Assert.assertEquals("reason for transaction id " + item.getXactId(),
+            Assert.assertEquals("reason for transaction id " + item.getCreditorId(),
                     item.getXactReason());
             Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE,
                     item.getXactTypeId());
@@ -165,7 +165,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
 
         double amountSeed = 20.00;
         XactCreditChargeDto item = results.get(0);
-        Assert.assertEquals("reason for transaction id " + item.getXactId(), item.getXactReason());
+        Assert.assertEquals("reason for transaction id " + item.getCreditorId(), item.getXactReason());
         Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, item.getXactTypeId());
         Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
         Assert.assertEquals("2017-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
@@ -290,7 +290,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         double amountSeed = 20.00;
         for (int ndx = 0; ndx < results.size(); ndx++) {
             XactCreditChargeDto item = results.get(ndx);
-            Assert.assertEquals("reason for transaction id " + item.getXactId(), item.getXactReason());
+            Assert.assertEquals("reason for transaction id " + item.getCreditorId(), item.getXactReason());
             Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, item.getXactTypeId());
             Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
             Assert.assertEquals("2017-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
