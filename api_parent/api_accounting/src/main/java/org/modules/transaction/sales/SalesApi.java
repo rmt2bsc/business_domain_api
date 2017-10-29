@@ -13,9 +13,9 @@ import org.modules.transaction.XactApi;
 /**
  * An API interface form managing sales related transactions.
  * 
- * Functional examples would be the creation and management of sales orders,
- * sales invoices, and cash receipts. Also provides various methods to create
- * and maintain historical occurrences of sales related transactions.
+ * Functional capabilities would be the creation and management of sales orders
+ * and sales invoices. Also provides various methods to create and maintain
+ * historical occurrences of sales related transactions.
  * 
  * @author Roy Terrell
  * 
