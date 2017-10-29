@@ -15,6 +15,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
+import org.dao.mapping.orm.rmt2.SalesOrderItems;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
@@ -830,5 +831,27 @@ public class AccountingMockDataUtility {
         o.setIpCreated("111.222.101.100");
         o.setIpUpdated(o.getIpCreated());
         return o;
+    }
+
+    /**
+     * 
+     * @param soItemId
+     * @param itemId
+     * @param soId
+     * @param qty
+     * @param cost
+     * @return
+     */
+    public static final SalesOrderItems createMockOrmSalesOrderItem(int soItemId, int itemId, int soId, double qty,
+            double cost) {
+        SalesOrderItems i = new SalesOrderItems();
+        i.setSoItemId(soItemId);
+        i.setItemId(itemId);
+        i.setSoId(soId);
+        i.setOrderQty(qty);
+        i.setInitUnitCost(cost);
+        i.setInitMarkup(3.0);
+        i.setItemNameOverride(null);
+        return i;
     }
 }
