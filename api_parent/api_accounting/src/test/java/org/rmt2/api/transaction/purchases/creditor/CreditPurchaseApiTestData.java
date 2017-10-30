@@ -6,8 +6,8 @@ import java.util.List;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.junit.Before;
 import org.modules.transaction.XactConst;
+import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.transaction.TransactionApiTestData;
-import org.rmt2.dao.AccountingMockDataUtility;
 
 public class CreditPurchaseApiTestData extends TransactionApiTestData {
 

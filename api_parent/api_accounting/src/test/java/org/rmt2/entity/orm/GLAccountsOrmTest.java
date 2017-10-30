@@ -1,12 +1,13 @@
-package org.rmt2.dao;
+package org.rmt2.entity.orm;
 
-import org.dao.mapping.orm.rmt2.ItemMaster;
+import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.rmt2.api.AccountingMockDataUtility;
 
-public class ItemMasterOrmTest {
+public class GLAccountsOrmTest {
 
     @Before
     public void setUp() throws Exception {
@@ -18,8 +19,8 @@ public class ItemMasterOrmTest {
 
     @Test
     public void testToString() {
-        ItemMaster o =  AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+        GlAccounts o =  AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
         String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -28,70 +29,62 @@ public class ItemMasterOrmTest {
     @Test
     public void testEquality() {
         boolean result = false;
-        ItemMaster o1 = new ItemMaster();
-        ItemMaster o2 = null;
+        GlAccounts o1 = new GlAccounts();
+        GlAccounts o2 = null;
 
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
-        o2 = new ItemMaster();
+        o1 = AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
+        o2 = new GlAccounts();
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setItemId(100);
+        o2.setAcctId(100);
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setItemTypeId(1);
+        o2.setAcctTypeId(200);
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setItemSerialNo("111-111-111");
+        o2.setAcctCatgId(300);
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setVendorItemNo("11111111");
+        o2.setAcctSeq(1);
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setCreditorId(1234);
+        o2.setAcctNo("GL_100");
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setDescription("Item # 1");
+        o2.setName("ACCT_RECV");
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setQtyOnHand(5);
+        o2.setCode("234");
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setUnitCost(1.23);
+        o2.setDescription("Accounts Receivable");
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setMarkup(3);
-        result = o1.equals(o2);
-        Assert.assertFalse(result);
-        
-        o2.setRetailPrice((o2.getQtyOnHand() * o2.getUnitCost()) * o2.getMarkup());
-        result = o1.equals(o2);
-        Assert.assertFalse(result);
-        
-        o2.setActive(1);
+        o2.setAcctBaltypeId(1);
         result = o1.equals(o2);
         Assert.assertTrue(result);
     }
 
     @Test
     public void testHashCode() {
-        ItemMaster o1 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+        GlAccounts o1 = AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
 
-        ItemMaster o2 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+        GlAccounts o2 = AccountingMockDataUtility.createMockOrmGlAccounts(100, 200, 300, 1, "GL_100",
+                "ACCT_RECV", "234", "Accounts Receivable", 1);
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

@@ -194,6 +194,7 @@ class AccountRmt2OrmAdapter extends TransactionDtoImpl implements AccountDto,
         this.a.setAcctTypeId(obj.getAcctTypeId());
         this.a.setAcctCatgId(obj.getAcctCatId());
         this.a.setAcctSeq(obj.getAcctSeq());
+        this.a.setAcctNo(obj.getAcctNo());
         this.a.setName(obj.getName());
         this.a.setCode(obj.getCode());
         this.a.setDescription(obj.getDescription());

@@ -17,8 +17,8 @@ import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.BaseAccountingDaoTest;
-import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.api.persistence.DatabaseException;
 

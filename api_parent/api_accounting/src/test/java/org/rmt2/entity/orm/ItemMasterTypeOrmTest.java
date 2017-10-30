@@ -1,12 +1,13 @@
-package org.rmt2.dao;
+package org.rmt2.entity.orm;
 
-import org.dao.mapping.orm.rmt2.ItemMasterStatus;
+import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.rmt2.api.AccountingMockDataUtility;
 
-public class ItemMasterStatusOrmTest {
+public class ItemMasterTypeOrmTest {
 
     @Before
     public void setUp() throws Exception {
@@ -18,7 +19,7 @@ public class ItemMasterStatusOrmTest {
 
     @Test
     public void testToString() {
-        ItemMasterStatus o =  AccountingMockDataUtility.createMockOrmItemMasterStatus(100, "Description 1");
+        ItemMasterType o =  AccountingMockDataUtility.createMockOrmItemMasterType(100, "Description 1");
         String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -27,18 +28,18 @@ public class ItemMasterStatusOrmTest {
     @Test
     public void testEquality() {
         boolean result = false;
-        ItemMasterStatus o1 = new ItemMasterStatus();
-        ItemMasterStatus o2 = null;
+        ItemMasterType o1 = new ItemMasterType();
+        ItemMasterType o2 = null;
 
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmItemMasterStatus(100, "Description 1");
-        o2 = new ItemMasterStatus();
+        o1 = AccountingMockDataUtility.createMockOrmItemMasterType(100, "Description 1");
+        o2 = new ItemMasterType();
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setItemStatusId(100);
+        o2.setItemTypeId(100);
         result = o1.equals(o2);
         Assert.assertFalse(result);
    
@@ -49,9 +50,9 @@ public class ItemMasterStatusOrmTest {
 
     @Test
     public void testHashCode() {
-        ItemMasterStatus o1 = AccountingMockDataUtility.createMockOrmItemMasterStatus(100, "Description 1");
+        ItemMasterType o1 = AccountingMockDataUtility.createMockOrmItemMasterType(100, "Description 1");
 
-        ItemMasterStatus o2 = AccountingMockDataUtility.createMockOrmItemMasterStatus(100, "Description 1");
+        ItemMasterType o2 = AccountingMockDataUtility.createMockOrmItemMasterType(100, "Description 1");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

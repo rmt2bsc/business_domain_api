@@ -24,7 +24,7 @@ import org.modules.transaction.XactApiFactory;
 import org.modules.transaction.XactConst;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.dao.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataUtility;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;

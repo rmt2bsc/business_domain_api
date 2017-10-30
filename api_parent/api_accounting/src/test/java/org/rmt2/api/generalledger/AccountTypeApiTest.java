@@ -22,8 +22,8 @@ import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.BaseAccountingDaoTest;
-import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.CannotRetrieveException;

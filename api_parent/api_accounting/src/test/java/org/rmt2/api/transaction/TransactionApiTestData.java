@@ -17,8 +17,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
 import org.modules.transaction.XactConst;
+import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
-import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.api.persistence.DaoClient;
 import com.api.persistence.PersistenceClient;

@@ -34,8 +34,8 @@ import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.subsidiary.SubsidiaryException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
-import org.rmt2.dao.AccountingMockDataUtility;
 import org.rmt2.jaxb.BusinessType;
 
 import com.InvalidDataException;

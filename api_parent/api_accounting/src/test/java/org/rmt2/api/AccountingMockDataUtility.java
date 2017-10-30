@@ -1,4 +1,4 @@
-package org.rmt2.dao;
+package org.rmt2.api;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -16,6 +16,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.VwAccount;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
@@ -101,6 +102,39 @@ public class AccountingMockDataUtility {
         return orm;
     }
 
+    /**
+     * 
+     * @param acctId
+     * @param acctTypeId
+     * @param acctCatgId
+     * @param acctSeq
+     * @param acctNo
+     * @param acctName
+     * @param acctCode
+     * @param acctDescription
+     * @param acctBalTypeId
+     * @return
+     */
+    public static final VwAccount createMockOrmVwAccounts(int acctId,
+            int acctTypeId, int acctCatgId, int acctSeq, String acctNo,
+            String acctName, String acctCode, String acctDescription,
+            int acctBalTypeId) {
+        VwAccount orm = new VwAccount();
+        orm.setId(acctId);
+        orm.setAcctTypeId(acctTypeId);
+        orm.setBalanceTypeId(acctBalTypeId);
+        orm.setAcctCatId(acctCatgId);
+        orm.setAcctNo(acctNo);
+        orm.setAcctSeq(acctSeq);
+        orm.setCode(acctCode);
+        orm.setDescription(acctDescription);
+        orm.setName(acctName);
+        orm.setAccttypedescr("AccountTypeDescription" + acctId);
+        orm.setAcctcatgdescr("AccountCategoryDescription" + acctCatgId);
+        return orm;
+    }
+    
+    
     /**
      * 
      * @param id

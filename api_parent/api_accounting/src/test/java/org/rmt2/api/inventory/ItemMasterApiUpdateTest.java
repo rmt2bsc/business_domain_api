@@ -31,8 +31,8 @@ import org.modules.inventory.InventoryApiFactory;
 import org.modules.inventory.InventoryConst;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.BaseAccountingDaoTest;
-import org.rmt2.dao.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.RMT2Base;

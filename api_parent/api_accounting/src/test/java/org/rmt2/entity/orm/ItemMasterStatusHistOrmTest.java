@@ -1,10 +1,11 @@
-package org.rmt2.dao;
+package org.rmt2.entity.orm;
 
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.rmt2.api.AccountingMockDataUtility;
 
 import com.util.RMT2Date;
 

@@ -1,12 +1,13 @@
-package org.rmt2.dao;
+package org.rmt2.entity.orm;
 
-import org.dao.mapping.orm.rmt2.VwVendorItems;
+import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.rmt2.api.AccountingMockDataUtility;
 
-public class VwVendorItemOrmTest {
+public class ItemMasterOrmTest {
 
     @Before
     public void setUp() throws Exception {
@@ -18,8 +19,8 @@ public class VwVendorItemOrmTest {
 
     @Test
     public void testToString() {
-        VwVendorItems o =  AccountingMockDataUtility.createMockOrmVwVendorItems(
-                100, "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23);
+        ItemMaster o =  AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -28,19 +29,23 @@ public class VwVendorItemOrmTest {
     @Test
     public void testEquality() {
         boolean result = false;
-        VwVendorItems o1 = new VwVendorItems();
-        VwVendorItems o2 = null;
+        ItemMaster o1 = new ItemMaster();
+        ItemMaster o2 = null;
 
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmVwVendorItems(
-                100, "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23);
-        o2 = new VwVendorItems();
+        o1 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+        o2 = new ItemMaster();
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
         o2.setItemId(100);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+        
+        o2.setItemTypeId(1);
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
@@ -70,16 +75,24 @@ public class VwVendorItemOrmTest {
         
         o2.setMarkup(3);
         result = o1.equals(o2);
+        Assert.assertFalse(result);
+        
+        o2.setRetailPrice((o2.getQtyOnHand() * o2.getUnitCost()) * o2.getMarkup());
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+        
+        o2.setActive(1);
+        result = o1.equals(o2);
         Assert.assertTrue(result);
     }
 
     @Test
     public void testHashCode() {
-        VwVendorItems o1 = AccountingMockDataUtility.createMockOrmVwVendorItems(
-                100, "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23);
+        ItemMaster o1 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
 
-        VwVendorItems o2 = AccountingMockDataUtility.createMockOrmVwVendorItems(
-                100, "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23);
+        ItemMaster o2 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }
