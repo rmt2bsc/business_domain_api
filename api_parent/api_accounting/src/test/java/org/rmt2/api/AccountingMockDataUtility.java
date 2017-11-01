@@ -16,12 +16,15 @@ import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.SalesOrderStatus;
+import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VwAccount;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
@@ -829,10 +832,10 @@ public class AccountingMockDataUtility {
      * @param effectiveDate
      * @return
      */
-    public static final SalesOrder createMockOrmSalesOrder(int id, int customerId, int invoiced, double orderTotal,
+    public static final SalesOrder createMockOrmSalesOrder(int SalesOrderId, int customerId, int invoiced, double orderTotal,
             String effectiveDate) {
         SalesOrder o = new SalesOrder();
-        o.setSoId(id);
+        o.setSoId(SalesOrderId);
         o.setCustomerId(customerId);
         o.setInvoiced(invoiced);
         o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
@@ -853,9 +856,9 @@ public class AccountingMockDataUtility {
      * @param invoiceNo
      * @return
      */
-    public static final SalesInvoice createMockOrmSalesInvoice(int id, int salesOrderId, int xactId, String invoiceNo) {
+    public static final SalesInvoice createMockOrmSalesInvoice(int salesInvoiceId, int salesOrderId, int xactId, String invoiceNo) {
         SalesInvoice o = new SalesInvoice();
-        o.setInvoiceId(id);
+        o.setInvoiceId(salesInvoiceId);
         o.setSoId(salesOrderId);
         o.setXactId(xactId);
         o.setInvoiceNo(invoiceNo);
@@ -888,4 +891,91 @@ public class AccountingMockDataUtility {
         i.setItemNameOverride(null);
         return i;
     }
+   
+    /**
+     * 
+     * @param invoiceId
+     * @param salesOrderId
+     * @param saleOrderDate
+     * @param orderTotal
+     * @param orderStatusId
+     * @param invoiceNo
+     * @param invoiced
+     * @param invoiceDate
+     * @param xactId
+     * @param customerId
+     * @param acctId
+     * @param acctNo
+     * @return
+     */
+    public static final VwSalesOrderInvoice createMockOrmVwSalesOrderInvoice(
+            int invoiceId, int salesOrderId, String saleOrderDate,
+            double orderTotal, int orderStatusId, String invoiceNo,
+            int invoiced, String invoiceDate, int xactId, int customerId,
+            int acctId, String acctNo) {
+        VwSalesOrderInvoice o = new VwSalesOrderInvoice();
+        o.setInvoiceId(invoiceId);
+        o.setInvoiceDate(RMT2Date.stringToDate(invoiceDate));
+        o.setInvoiceNo(invoiceNo);
+        o.setXactId(xactId);
+
+        o.setCustomerId(customerId);
+        o.setAccountNo(acctNo);
+        o.setAcctId(acctId);
+        o.setDescription("Description" + acctId);
+        o.setCreditLimit(1000.00);
+
+        o.setSalesOrderId(salesOrderId);
+        o.setInvoiced(invoiced);
+        o.setSalesOrderDate(RMT2Date.stringToDate(saleOrderDate));
+        o.setOrderTotal(orderTotal);
+        o.setOrderStatusId(orderStatusId);
+        o.setOrderStatusDescr("SalesOrderStatus" + orderStatusId);
+
+        return o;
+    }
+    
+    
+    /**
+     * 
+     * @param salesOrderStatusId
+     * @param description
+     * @return
+     */
+    public static final SalesOrderStatus createMockOrmSalesOrderStatus(int salesOrderStatusId,
+            String description) {
+        SalesOrderStatus o = new SalesOrderStatus();
+        o.setSoStatusId(salesOrderStatusId);
+        o.setDescription(description);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param soStatusHistId
+     * @param soId
+     * @param soStatusId
+     * @param effectiveDate
+     * @param endDate
+     * @return
+     */
+    public static final SalesOrderStatusHist createMockOrmSalesOrderStatusHist(
+            int soStatusHistId, int soId, int soStatusId, String effectiveDate,
+            String endDate) {
+        SalesOrderStatusHist o = new SalesOrderStatusHist();
+        o.setSoStatusHistId(soStatusHistId);
+        o.setSoId(soId);
+        o.setSoStatusId(soStatusId);
+        o.setReason("SalesOrderStatusHistoryReason" + soStatusId);
+        o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
+        o.setEndDate(endDate == null ? null : RMT2Date.stringToDate(endDate));
+        
+        o.setDateCreated(new Date());
+        o.setUserId("testuser");
+        o.setIpCreated("111.222.101.100");
+        o.setIpUpdated(o.getIpCreated());
+        return o;
+    }
+    
+    
 }

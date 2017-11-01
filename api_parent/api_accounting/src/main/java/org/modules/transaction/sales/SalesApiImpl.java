@@ -131,7 +131,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
         List<SalesOrderDto> results = null;
         try {
-            return dao.fetchSalesOrder(criteria);
+            results = dao.fetchSalesOrder(criteria);
+            return results;
         } catch (SalesOrderDaoException e) {
             StringBuilder buf = new StringBuilder();
             buf.append("Database error occurred retrieving sales order data");
@@ -305,7 +306,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         List<SalesInvoiceDto> results;
         StringBuilder buf = new StringBuilder();
         try {
-            results = dao.fetchSalesInvoiceExt(criteria);
+            results = dao.fetchExtSalesInvoice(criteria);
             if (results == null) {
                 return null;
             }

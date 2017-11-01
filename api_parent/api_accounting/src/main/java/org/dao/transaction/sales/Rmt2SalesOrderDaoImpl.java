@@ -114,7 +114,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesInvoiceDaoException
      */
     @Override
-    public List<SalesInvoiceDto> fetchSalesInvoiceExt(SalesInvoiceDto criteria) throws SalesInvoiceDaoException {
+    public List<SalesInvoiceDto> fetchExtSalesInvoice(SalesInvoiceDto criteria) throws SalesInvoiceDaoException {
         VwSalesOrderInvoice obj = SalesOrderDaoFactory.createCriteriaSalesInvoiceExt(criteria);
         List<VwSalesOrderInvoice> results = null;
         try {
@@ -151,31 +151,6 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             throw new SalesOrderDaoException(e);
         }
         return SalesOrderDaoFactory.createSalesOrderItem(results);
-    }
-
-    /**
-     * Retrieves extended sales order data from the
-     * <i>vw_sales_order_invoice</i> view based on selection criteria contained
-     * in <i>criteria</i>.
-     * 
-     * @param criteria
-     *            an instance of {@link SalesInvoiceDto}
-     * @return a List of {@link SalesInvoiceDto} or null when no data is found
-     * @throws SalesOrderDaoException
-     */
-    @Override
-    public List<SalesInvoiceDto> fetchExtSalesOrder(SalesInvoiceDto criteria) throws SalesOrderDaoException {
-        VwSalesOrderInvoice obj = SalesOrderDaoFactory.createCriteriaExtSalesOrder(criteria);
-        List<VwSalesOrderInvoice> results = null;
-        try {
-            results = this.client.retrieveList(obj);
-            if (results == null) {
-                return null;
-            }
-        } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
-        }
-        return SalesOrderDaoFactory.createExtSalesInvoice(results);
     }
 
     /**

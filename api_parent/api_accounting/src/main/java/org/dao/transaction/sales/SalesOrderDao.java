@@ -43,15 +43,16 @@ public interface SalesOrderDao extends XactDao {
             throws SalesInvoiceDaoException;
 
     /**
-     * Queries extended sales invoice data based on selectin criteria contained
-     * in <i>criteria</i>
+     * Queries extended sales order information, which includes sales order,
+     * sales invoice, and customer related data, based on selectin criteria
+     * contained in <i>criteria</i>
      * 
      * @param criteria
      *            an instance of {@link SalesInvoiceDto}
      * @return a List of {@link SalesInvoiceDto} or null when no data is found
      * @throws SalesInvoiceDaoException
      */
-    List<SalesInvoiceDto> fetchSalesInvoiceExt(SalesInvoiceDto criteria)
+    List<SalesInvoiceDto> fetchExtSalesInvoice(SalesInvoiceDto criteria)
             throws SalesInvoiceDaoException;
 
     /**
@@ -63,19 +64,6 @@ public interface SalesOrderDao extends XactDao {
      * @throws SalesOrderDaoException
      */
     List<SalesOrderItemDto> fetchSalesOrderItem(int salesOrderId)
-            throws SalesOrderDaoException;
-
-    /**
-     * Queries extended sales order information, which includes sales order,
-     * sales invoice, and customer related data, based on selectin criteria
-     * contained in <i>criteria</i>
-     * 
-     * @param criteria
-     *            an instance of {@link SalesInvoiceDto}
-     * @return a List of {@link SalesInvoiceDto} or null when no data is found
-     * @throws SalesOrderDaoException
-     */
-    List<SalesInvoiceDto> fetchExtSalesOrder(SalesInvoiceDto criteria)
             throws SalesOrderDaoException;
 
     /**
