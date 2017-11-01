@@ -339,7 +339,13 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      *            the id of the sales order
      * @return an instance of {@link SalesOrderStatusHistDto} representing the
      *         current status.
-     * @throws SalesApiException
+     * @throws SalesApiException DAO related errors
+     * @throws InvalidInvalidDataException
+     *             <i>salesOrderId</i> is null or less than or equal to zero.
+     * @throws MissingCurrentStatusException
+     *             Current status could not be obtained due to a sales order id
+     *             that is non existent or the sales order history does not
+     *             contain a current status which is an anomaly.
      */
     @Override
     public SalesOrderStatusHistDto getCurrentSalesOrderStatus(Integer salesOrderId) throws SalesApiException {
@@ -359,7 +365,10 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             results = dao.fetchCurrentSalesOrderStatus(salesOrderId);
             if (results == null) {
-                return null;
+                throw new MissingCurrentStatusException(
+                        "Unable to obtain current status of sales order [sales order id="
+                                + salesOrderId
+                                + "].  Either the sales order id is invalid or there is a database anomaly");
             }
             return results;
         } catch (SalesOrderDaoException e) {
