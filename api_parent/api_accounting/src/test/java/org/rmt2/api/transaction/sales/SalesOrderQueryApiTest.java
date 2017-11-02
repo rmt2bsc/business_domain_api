@@ -6,22 +6,18 @@ import static org.mockito.Mockito.when;
 import java.sql.ResultSet;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.Creditor;
-import org.dao.mapping.orm.rmt2.VwBusinessAddress;
-import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
-import org.dao.subsidiary.SubsidiaryDaoConst;
-import org.dao.transaction.purchases.creditor.CreditorPurchasesDaoException;
-import org.dto.XactCreditChargeDto;
-import org.dto.adapter.orm.transaction.purchases.creditor.Rmt2CreditChargeDtoFactory;
+import org.dao.mapping.orm.rmt2.SalesOrder;
+import org.dao.transaction.sales.SalesOrderDaoException;
+import org.dto.SalesOrderDto;
+import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modules.transaction.XactConst;
-import org.modules.transaction.purchases.creditor.CreditorPurchasesApi;
-import org.modules.transaction.purchases.creditor.CreditorPurchasesApiException;
-import org.modules.transaction.purchases.creditor.CreditorPurchasesApiFactory;
+import org.modules.transaction.sales.SalesApi;
+import org.modules.transaction.sales.SalesApiException;
+import org.modules.transaction.sales.SalesApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -29,7 +25,6 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
 
 /**
  * Tests sales order / sales invoice transaction query Api.
@@ -41,9 +36,7 @@ import com.util.RMT2Date;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
 
-    private static final String TEST_ACCOUNT_NO = "1111";
-    private static final int TEST_CREDITOR_ID = 1111111;
-    private VwXactCreditChargeList mockCriteria; 
+    private static final int TEST_SALES_ORDER_ID = 1000;
     
     /**
      * @throws java.lang.Exception
@@ -51,9 +44,6 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-
-        this.mockCriteria = new VwXactCreditChargeList();
-        this.mockCriteria.setCreditorTypeId(SubsidiaryDaoConst.CREDITOR_TYPE_CREDITOR);
     }
 
     /**
@@ -66,249 +56,264 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     }
 
     @Test
-    public void testFetchAll_WithNullCustomSqlCriteria() {
-        // Mock method call to get creditor purchase transactions 
-        this.mockCriteria.setAccountNo(TEST_ACCOUNT_NO);
+    public void testFetchAll_SalesOrders() {
+        // Mock method call to get multiple sales orders
+        SalesOrder so = new SalesOrder();
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
-                    .thenReturn(this.mockCreditPurchaseAllResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockSalesOrderAllResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("All creditor purchases transactions fetch test case setup failed");
+            Assert.fail("All Sales order fetch test case setup failed");
         }
 
-        // mock method to return contact info from the Contacts Api
-        Creditor mockCredCriteria = new Creditor();
-        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
-        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
-        
         // Perform test
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance();
-        List<XactCreditChargeDto> results = null;
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesOrderDto criteria = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(null);
+        List<SalesOrderDto> results = null;
         try {
-            criteria.setAccountNumber(TEST_ACCOUNT_NO);
-            results = api.get(criteria);
-        } catch (CreditorPurchasesApiException e) {
+            results = api.getSalesOrder(criteria);
+        } catch (SalesApiException e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
-
-        double amountSeed = 20.00;
-        for (int ndx = 0; ndx < results.size(); ndx++) {
-            XactCreditChargeDto item = results.get(ndx);
-            Assert.assertEquals("reason for transaction id " + item.getCreditorId(),
-                    item.getXactReason());
-            Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE,
-                    item.getXactTypeId());
-            Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
-                    item.getXactSubtypeId());
-            Assert.assertEquals("2017-01-01",
-                    RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
-
-            // Calcuate acutal transaction amount
-            double dollarAmt = (amountSeed + ndx);
-            Assert.assertEquals(dollarAmt, item.getXactAmount(), 0);
-
-            Assert.assertEquals(XactConst.TENDER_CREDITCARD, item.getXactTenderId());
-            String prefix = String.valueOf(((ndx + 1) * 1111));
-            Assert.assertEquals(prefix + "-0000-0000-0000", item.getXactNegInstrNo());
-            Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
-            Assert.assertEquals(String.valueOf(item.getXactDate().getTime()),
-                    item.getXactConfirmNo());
-            Assert.assertEquals(item.getXactId() + item.getXactTenderId(),
-                    item.getDocumentId());
-            
-            // Contact info should be unavailable
-            Assert.assertEquals("Company" + (ndx + 1), item.getCreditorName());
-            Assert.assertEquals("3188889873", item.getPhone());
-        }
     }
 
     @Test
-    public void testFetchSingle_WithNullCustomSqlCriteria() {
-        // Mock method call to get creditor purchase transactions
-        this.mockCriteria.setCreditorId(TEST_CREDITOR_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
-                    .thenReturn(this.mockCreditPurchaseSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Single creditor purchases transactions fetch test case setup failed");
-        }
-
-        // mock method to return contact info from the Contacts Api
-        Creditor mockCredCriteria = new Creditor();
-        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
-        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia,
-                mockCredCriteria);
-
+    public void testFetchAll_Null_Criteria() {
         // Perform test
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance();
-        List<XactCreditChargeDto> results = null;
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesOrderDto criteria = null;
         try {
-            criteria.setCreditorId(TEST_CREDITOR_ID);
-            results = api.get(criteria);
-        } catch (CreditorPurchasesApiException e) {
-            e.printStackTrace();
-            Assert.fail("Test failed due to unexpected exception thrown");
-        }
-        Assert.assertNotNull(results);
-        Assert.assertEquals(1, results.size());
-
-        double amountSeed = 20.00;
-        XactCreditChargeDto item = results.get(0);
-        Assert.assertEquals("reason for transaction id " + item.getCreditorId(), item.getXactReason());
-        Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, item.getXactTypeId());
-        Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
-        Assert.assertEquals("2017-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
-
-        // Calculate acutal transaction amount
-        Assert.assertEquals(amountSeed, item.getXactAmount(), 0);
-
-        Assert.assertEquals(XactConst.TENDER_CREDITCARD, item.getXactTenderId());
-        Assert.assertEquals("1111-0000-0000-0000", item.getXactNegInstrNo());
-        Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
-        Assert.assertEquals(String.valueOf(item.getXactDate().getTime()), item.getXactConfirmNo());
-        Assert.assertEquals(item.getXactId() + item.getXactTenderId(), item.getDocumentId());
-        
-        // Contact info should be unavailable
-        Assert.assertEquals("Company1", item.getCreditorName());
-        Assert.assertEquals("3188889873", item.getPhone());
-    }
-
-    @Test
-    public void testFetch_NotFound() {
-        // Mock method call to get creditor purchase transactions
-        this.mockCriteria.setCreditorId(TEST_CREDITOR_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
-                    .thenReturn(this.mockCreditPurchaseNotFoundResponse);
+            api.getSalesOrder(criteria);
+            Assert.fail("Test failed due to exception was expected");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Single creditor purchases transactions fetch test case setup failed");
-        }
-
-        // Perform test
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance();
-        List<XactCreditChargeDto> results = null;
-        try {
-            criteria.setCreditorId(TEST_CREDITOR_ID);
-            results = api.get(criteria);
-        } catch (CreditorPurchasesApiException e) {
-            e.printStackTrace();
-        }
-        Assert.assertNull(results);
-    }
-
-    @Test
-    public void testFetchWithNullTransactionInput() {
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
-        XactCreditChargeDto criteria = null;
-        try {
-            api.get(criteria);
-            Assert.fail("Expected exception due to input value is null");
-        } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
-            e.printStackTrace();
         }
     }
-
+    
     @Test
-    public void testFetch_WithTransactionFetchException() {
-        // Mock method call to get creditor purchase transactions
-        this.mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+    public void testFetchAll_Db_Exception() {
+        // Mock method call to force databae exception
+        SalesOrder so = new SalesOrder();
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
                     .thenThrow(DatabaseException.class);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Single creditor purchases transactions fetch test case setup failed");
+            Assert.fail("All Sales order fetch test case setup failed");
         }
-
+        
         // Perform test
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory
-                .createCreditChargeInstance();
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesOrderDto criteria = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(null);
         try {
-            criteria.setCreditorId(TEST_CREDITOR_ID);
-            api.get(criteria);
-            Assert.fail("Expected a database exception to be thrown");
+            api.getSalesOrder(criteria);
+            Assert.fail("Test failed due to exception was expected");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof CreditorPurchasesDaoException);
             e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesOrderDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
     
-    
     @Test
-    public void testFetch_WithContactsFetchDbException() {
-        // Mock method call to get creditor purchase transactions 
-        this.mockCriteria.setAccountNo(TEST_ACCOUNT_NO);
+    public void testFetchSingle_SalesOrders() {
+        SalesOrder so = new SalesOrder();
+        so.setSoId(TEST_SALES_ORDER_ID);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
-                    .thenReturn(this.mockCreditPurchaseAllResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+            .thenReturn(this.mockSalesOrderSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("All creditor purchases transactions fetch test case setup failed");
+            Assert.fail(
+                    "Single slaes order fetch test case setup failed");
         }
 
-        // mock method to return contact info from the Contacts Api
-        Creditor mockCredCriteria = new Creditor();
-        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
-        this.setupMultipleSubsidiaryContactInfoFetchDbException(mockContactCritereia, mockCredCriteria);
-        
         // Perform test
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance();
-        List<XactCreditChargeDto> results = null;
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesOrderDto results = null;
         try {
-            criteria.setAccountNumber(TEST_ACCOUNT_NO);
-            results = api.get(criteria);
-        } catch (Exception e) {
+            results = api.getSalesOrder(TEST_SALES_ORDER_ID);
+        } catch (SalesApiException e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(5, results.size());
+    }
 
-        double amountSeed = 20.00;
-        for (int ndx = 0; ndx < results.size(); ndx++) {
-            XactCreditChargeDto item = results.get(ndx);
-            Assert.assertEquals("reason for transaction id " + item.getCreditorId(), item.getXactReason());
-            Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, item.getXactTypeId());
-            Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
-            Assert.assertEquals("2017-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
-
-            // Calculate acutal transaction amount
-            double dollarAmt = (amountSeed + ndx);
-            Assert.assertEquals(dollarAmt, item.getXactAmount(), 0);
-
-            Assert.assertEquals(XactConst.TENDER_CREDITCARD, item.getXactTenderId());
-            String prefix = String.valueOf(((ndx + 1) * 1111));
-            Assert.assertEquals(prefix + "-0000-0000-0000", item.getXactNegInstrNo());
-            Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
-            Assert.assertEquals(String.valueOf(item.getXactDate().getTime()), item.getXactConfirmNo());
-            Assert.assertEquals(item.getXactId() + item.getXactTenderId(), item.getDocumentId());
-            
-            // Contact info should be unavailable
-            Assert.assertEquals("Unavailable", item.getCreditorName());
-            Assert.assertEquals("Unavailable", item.getPhone());
+    @Test
+    public void testFetchSingle_Null_SalesOrderId() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        Integer criteria = null;
+        try {
+            api.getSalesOrder(criteria);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
         }
+    }
+    
+    @Test
+    public void testFetchSingle_Zero_SalesOrderId() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        Integer criteria = 0;
+        try {
+            api.getSalesOrder(criteria);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testFetchSingle_Too_Many_Rows_Return() {
+        SalesOrder so = new SalesOrder();
+        so.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+            .thenReturn(this.mockSalesOrderAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single slaes order fetch test case setup failed");
+        }
+        
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getSalesOrder(TEST_SALES_ORDER_ID);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+        }
+    }
+    
+    @Test
+    public void testFetchSingle_Db_Exception() {
+        // Mock method call to force databae exception
+        SalesOrder so = new SalesOrder();
+        so.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order fetch test case setup failed");
+        }
+        
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getSalesOrder(TEST_SALES_ORDER_ID);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof SalesOrderDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testFetchAll_SalesOrderItems() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetchAll_SalesOrderItems_Null_SalesOrderId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetchAll_SalesOrderItems_Zero_SalesOrderId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetchAll_SalesOrderItems_Db_Exception() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetchSingle_SalesInvoice() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetchSingle_SalesInvoice_Null_SalesOrderId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetchSingle_SalesInvoice_Zero_SalesOrderId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetchSingle_SalesInvoice_Db_Exception() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_CurrentStatus() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_CurrentStatus_Null_SalesOrderId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_CurrentStatus_Zero_SalesOrderId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_CurrentStatus_Db_Exception() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_CurrentStatus_EmptyResults_Exception() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_SalesOrderStatus() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_SalesOrderStatus_Null_StatusId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_SalesOrderStatus_Zero_StatusId() {
+        Assert.fail("Test Needs Implementation");
+    }
+    
+    @Test
+    public void testFetch_SalesOrderStatus_Too_Many_Rows_Return() {
+        Assert.fail("Test Needs Implementation");
     }
 }
