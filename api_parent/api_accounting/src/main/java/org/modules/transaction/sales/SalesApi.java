@@ -51,6 +51,15 @@ public interface SalesApi extends XactApi {
      * @throws SalesApiException
      */
     List<SalesOrderItemDto> getLineItems(Integer salesOrderId) throws SalesApiException;
+    
+    /**
+     * Retireve sales order items.
+     * 
+     * @param salesOrderId
+     * @return
+     * @throws SalesApiException
+     */
+    List<SalesOrderItemDto> getLineItemsExt(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Retrieves a sales order invoice by sales order id.

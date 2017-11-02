@@ -454,4 +454,14 @@ class SalesOrderItemRmt2OrmAdapter extends SalesOrderRmt2OrmAdapter implements
         return this.im.getRetailPrice();
     }
 
+    @Override
+    public int getImVendorId() {
+        return this.im.getCreditorId();
+    }
+
+    @Override
+    public void setImVendorId(int vendorId) {
+        this.im.setCreditorId(vendorId);
+    }
+
 }

@@ -530,8 +530,7 @@ public class SalesOrderDaoFactory extends RMT2Base {
         }
         List<SalesOrderItemDto> list = new ArrayList<SalesOrderItemDto>();
         for (VwSalesorderItemsBySalesorder item : items) {
-            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory
-                    .createSalesOrderItemInstance(item);
+            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
             list.add(dto);
         }
         return list;

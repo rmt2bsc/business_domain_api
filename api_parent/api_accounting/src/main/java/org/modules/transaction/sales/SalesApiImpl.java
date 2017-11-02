@@ -229,6 +229,44 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     }
 
     /**
+     * Retireve sales order items.
+     * <p>
+     * Each sales order item object in the result set will contain extra data
+     * pertaiing to sales order, customer, vendor, item master, and item master type.
+     * 
+     * @param salesOrderId
+     * @return
+     * @throws SalesApiException
+     */
+    @Override
+    public List<SalesOrderItemDto> getLineItemsExt(Integer salesOrderId)
+            throws SalesApiException {
+        try {
+            Verifier.verifyNotNull(salesOrderId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Sales order id is required", e);
+        }
+        try {
+            Verifier.verifyPositive(salesOrderId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Sales order id must be greater than zero", e);
+        }
+
+        List<SalesOrderItemDto> results;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = dao.fetchExtSalesOrderItem(salesOrderId);
+            return results;
+        } catch (SalesOrderDaoException e) {
+            buf.append("Sales Order DAO error occurred fetching line items for sales order id, ");
+            buf.append(salesOrderId);
+            this.msg = buf.toString();
+            logger.error(this.msg);
+            throw new SalesApiException(this.msg, e);
+        }
+    }
+    
+    /**
      * Retrieves a sales order status by sales order status id from the
      * <i>sales_order_status</i> table..
      * 
@@ -329,6 +367,17 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         return results.get(0);
     }
 
+    /**
+     * Retrieves a list of sales order invoices using selection criteira.
+     * <p>
+     * The DTO returned from the query will contain information that extends beyond
+     * the sale invoice entity such as sales order, sales order status, and customer 
+     * information.
+     * 
+     * @param criteria
+     * @return List of {@link SalesInvoiceDto}
+     * @throws SalesApiException
+     */
     @Override
     public List<SalesInvoiceDto> getInvoice(SalesInvoiceDto criteria) throws SalesApiException {
         try {

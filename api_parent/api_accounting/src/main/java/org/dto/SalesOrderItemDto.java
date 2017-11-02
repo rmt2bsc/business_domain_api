@@ -178,5 +178,17 @@ public interface SalesOrderItemDto extends SalesOrderDto {
      * Get item master retail price
      */
     double getImRetailPrice();
+    
+    /**
+     * Get the vendor id of the item
+     * @return
+     */
+    int getImVendorId();
+    
+    /**
+     * Set the vendor of the item.
+     * @param vendorId
+     */
+    void setImVendorId(int vendorId);
 
 }
