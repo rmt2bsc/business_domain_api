@@ -135,7 +135,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             return results;
         } catch (SalesOrderDaoException e) {
             StringBuilder buf = new StringBuilder();
-            buf.append("Database error occurred retrieving sales order data");
+            buf.append("Sales order DAO error occurred");
             buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new SalesApiException(this.msg, e);
@@ -152,7 +152,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public SalesOrderDto getSalesOrderById(Integer salesOrderId) throws SalesApiException {
+    public SalesOrderDto getSalesOrder(Integer salesOrderId) throws SalesApiException {
         try {
             Verifier.verifyNotNull(salesOrderId);
         } catch (VerifyException e) {
@@ -173,8 +173,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             if (results == null) {
                 return null;
             }
-        } catch (SalesOrderDaoException e) {
-            buf.append("Database error occurred retrieving sales order by id, ");
+        } catch (SalesApiException e) {
+            buf.append("Sales order DAO error occurred when retrieving sales order by id, ");
             buf.append(salesOrderId);
             this.msg = buf.toString();
             logger.error(this.msg);
@@ -182,7 +182,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         if (results.size() > 1) {
-            buf.append("Error: Query method is expecting a single sales order to be returned using sales order id, ");
+            buf.append("Error: Method was expecting a single sales order to be returned using sales order id, ");
             buf.append(salesOrderId);
             buf.append(".  Instead ");
             buf.append(results.size());
@@ -202,7 +202,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * )
      */
     @Override
-    public List<SalesOrderItemDto> getSalesOrderItems(Integer salesOrderId) throws SalesApiException {
+    public List<SalesOrderItemDto> getLineItems(Integer salesOrderId) throws SalesApiException {
         try {
             Verifier.verifyNotNull(salesOrderId);
         } catch (VerifyException e) {
@@ -239,7 +239,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public SalesOrderStatusDto getSalesOrderStatusById(Integer statusId) throws SalesApiException {
+    public SalesOrderStatusDto getStatus(Integer statusId) throws SalesApiException {
         try {
             Verifier.verifyNotNull(statusId);
         } catch (VerifyException e) {
@@ -289,7 +289,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * (int)
      */
     @Override
-    public SalesInvoiceDto getSalesOrderInvoiceBySalesOrder(Integer salesOrderId) throws SalesApiException {
+    public SalesInvoiceDto getInvoice(Integer salesOrderId) throws SalesApiException {
         try {
             Verifier.verifyNotNull(salesOrderId);
         } catch (VerifyException e) {
@@ -348,7 +348,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      *             contain a current status which is an anomaly.
      */
     @Override
-    public SalesOrderStatusHistDto getCurrentSalesOrderStatus(Integer salesOrderId) throws SalesApiException {
+    public SalesOrderStatusHistDto getCurrentStatus(Integer salesOrderId) throws SalesApiException {
         try {
             Verifier.verifyNotNull(salesOrderId);
         } catch (VerifyException e) {
@@ -406,7 +406,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             logger.error(this.msg);
             throw new SalesOrderStatusInvalidException(this.msg);
         }
-        SalesOrderStatusHistDto sosh = this.getCurrentSalesOrderStatus(salesOrderId);
+        SalesOrderStatusHistDto sosh = this.getCurrentStatus(salesOrderId);
         int currentStatusId = (sosh == null ? SalesApiConst.STATUS_CODE_NEW : sosh.getSoStatusId());
 
         // Begin to evaluate current and destination sales order statuses
@@ -741,7 +741,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
     private boolean isValidSalesOrder(int salesOrderId) throws SalesApiException {
         try {
-            if (this.getSalesOrderById(salesOrderId) == null) {
+            if (this.getSalesOrder(salesOrderId) == null) {
                 return false;
             }
             return true;
@@ -752,7 +752,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
     private boolean isValidSalesOrderStatus(int statusId) throws SalesApiException {
         try {
-            if (this.getSalesOrderStatusById(statusId) == null) {
+            if (this.getStatus(statusId) == null) {
                 return false;
             }
             return true;
@@ -1069,7 +1069,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             throw new InvalidDataException("Sales order id must be greater than zero", e);
         }
 
-        SalesOrderDto so = this.getSalesOrderById(salesOrderId);
+        SalesOrderDto so = this.getSalesOrder(salesOrderId);
         try {
             Verifier.verifyNotNull(so);
         } catch (VerifyException e) {
@@ -1115,7 +1115,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         // Verify that sales order invoice exists
-        SalesInvoiceDto si = this.getSalesOrderInvoiceBySalesOrder(so.getSalesOrderId());
+        SalesInvoiceDto si = this.getInvoice(so.getSalesOrderId());
         if (si == null) {
             this.msg = "Problem cancelling sales order.  Unable to fetch sales order invoice record";
             throw new SalesApiException(this.msg);
@@ -1193,8 +1193,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         int rc = 0;
-        SalesOrderStatusHistDto sosh = this.getCurrentSalesOrderStatus(salesOrderId);
-        SalesOrderStatusDto sos = this.getSalesOrderStatusById(sosh.getSoStatusId());
+        SalesOrderStatusHistDto sosh = this.getCurrentStatus(salesOrderId);
+        SalesOrderStatusDto sos = this.getStatus(sosh.getSoStatusId());
         switch (sos.getSoStatusId()) {
             case SalesApiConst.STATUS_CODE_QUOTE:
             case SalesApiConst.STATUS_CODE_NEW:
@@ -1335,7 +1335,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             throw new InvalidDataException("Sales order id must be greater than zero", e);
         }
 
-        SalesOrderDto so = this.getSalesOrderById(salesOrderId);
+        SalesOrderDto so = this.getSalesOrder(salesOrderId);
         try {
             Verifier.verifyNotNull(so);
         } catch (VerifyException e) {
