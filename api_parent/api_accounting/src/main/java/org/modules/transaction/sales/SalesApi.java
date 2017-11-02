@@ -41,7 +41,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesOrderDto}
      * @throws SalesApiException
      */
-    SalesOrderDto getSalesOrderById(Integer salesOrderId) throws SalesApiException;
+    SalesOrderDto getSalesOrder(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Retireve sales order items.
@@ -50,7 +50,7 @@ public interface SalesApi extends XactApi {
      * @return
      * @throws SalesApiException
      */
-    List<SalesOrderItemDto> getSalesOrderItems(Integer salesOrderId) throws SalesApiException;
+    List<SalesOrderItemDto> getLineItems(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Retrieves a sales order invoice by sales order id.
@@ -60,7 +60,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesInvoiceDto}
      * @throws SalesApiException
      */
-    SalesInvoiceDto getSalesOrderInvoiceBySalesOrder(Integer salesOrderId) throws SalesApiException;
+    SalesInvoiceDto getInvoice(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Retrieves a sales order status by sales order status id.
@@ -70,7 +70,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesOrderStatusDto}
      * @throws SalesApiException
      */
-    SalesOrderStatusDto getSalesOrderStatusById(Integer statusId) throws SalesApiException;
+    SalesOrderStatusDto getStatus(Integer statusId) throws SalesApiException;
 
     /**
      * Retrieves the current status of a sales order.
@@ -80,7 +80,7 @@ public interface SalesApi extends XactApi {
      * @return an instance of {@link SalesOrderStatusHistDto}
      * @throws SalesApiException
      */
-    SalesOrderStatusHistDto getCurrentSalesOrderStatus(Integer salesOrderId) throws SalesApiException;
+    SalesOrderStatusHistDto getCurrentStatus(Integer salesOrderId) throws SalesApiException;
 
     /**
      * Generates an invoice number.
