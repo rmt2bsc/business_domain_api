@@ -63,6 +63,15 @@ public interface SalesApi extends XactApi {
     SalesInvoiceDto getInvoice(Integer salesOrderId) throws SalesApiException;
 
     /**
+     * Retrieves a list of sales order invoices using selection criteira.
+     * 
+     * @param criteria
+     * @return List of {@link SalesInvoiceDto}
+     * @throws SalesApiException
+     */
+    List<SalesInvoiceDto> getInvoice(SalesInvoiceDto criteria) throws SalesApiException;
+
+    /**
      * Retrieves a sales order status by sales order status id.
      * 
      * @param statusId

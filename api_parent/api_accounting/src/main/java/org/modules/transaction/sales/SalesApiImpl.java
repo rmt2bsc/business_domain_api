@@ -216,12 +216,11 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
         List<SalesOrderItemDto> results;
         StringBuilder buf = new StringBuilder();
-
         try {
             results = dao.fetchSalesOrderItem(salesOrderId);
             return results;
         } catch (SalesOrderDaoException e) {
-            buf.append("Database error occurred retrieving sales order item(s) by sales order id, ");
+            buf.append("Sales Order DAO error occurred fetching line items for sales order id, ");
             buf.append(salesOrderId);
             this.msg = buf.toString();
             logger.error(this.msg);
@@ -325,10 +324,32 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             buf.append(results.size());
             buf.append("  were returned.");
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new SalesApiException(this.msg);
         }
         return results.get(0);
+    }
+
+    @Override
+    public List<SalesInvoiceDto> getInvoice(SalesInvoiceDto criteria) throws SalesApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Extended Sales order criteria object is required", e);
+        }
+
+        List<SalesInvoiceDto> results;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = dao.fetchExtSalesInvoice(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (SalesInvoiceDaoException e) {
+            buf.append("Sales order DAO error occurred retrieving extended sales order invoice data");
+            this.msg = buf.toString();
+            throw new SalesApiException(this.msg, e);
+        }
+        return results;
     }
 
     /**
