@@ -75,7 +75,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
                 return null;
             }
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error fetching sales order using selection criteria: " + obj.toString(), e);
         }
         return SalesOrderDaoFactory.createSalesOrder(results);
     }
