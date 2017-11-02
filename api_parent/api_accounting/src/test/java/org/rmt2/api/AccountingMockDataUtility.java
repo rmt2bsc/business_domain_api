@@ -832,7 +832,8 @@ public class AccountingMockDataUtility {
      * @param effectiveDate
      * @return
      */
-    public static final SalesOrder createMockOrmSalesOrder(int SalesOrderId, int customerId, int invoiced, double orderTotal,
+    public static final SalesOrder createMockOrmSalesOrder(int SalesOrderId,
+            int customerId, int invoiced, double orderTotal,
             String effectiveDate) {
         SalesOrder o = new SalesOrder();
         o.setSoId(SalesOrderId);
@@ -856,7 +857,9 @@ public class AccountingMockDataUtility {
      * @param invoiceNo
      * @return
      */
-    public static final SalesInvoice createMockOrmSalesInvoice(int salesInvoiceId, int salesOrderId, int xactId, String invoiceNo) {
+    public static final SalesInvoice createMockOrmSalesInvoice(
+            int salesInvoiceId, int salesOrderId, int xactId,
+            String invoiceNo) {
         SalesInvoice o = new SalesInvoice();
         o.setInvoiceId(salesInvoiceId);
         o.setSoId(salesOrderId);
@@ -879,8 +882,8 @@ public class AccountingMockDataUtility {
      * @param cost
      * @return
      */
-    public static final SalesOrderItems createMockOrmSalesOrderItem(int soItemId, int itemId, int soId, double qty,
-            double cost) {
+    public static final SalesOrderItems createMockOrmSalesOrderItem(
+            int soItemId, int itemId, int soId, double qty, double cost) {
         SalesOrderItems i = new SalesOrderItems();
         i.setSoItemId(soItemId);
         i.setItemId(itemId);
