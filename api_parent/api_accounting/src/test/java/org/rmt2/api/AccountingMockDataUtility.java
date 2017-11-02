@@ -25,6 +25,7 @@ import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
+import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
@@ -891,10 +892,60 @@ public class AccountingMockDataUtility {
         i.setOrderQty(qty);
         i.setInitUnitCost(cost);
         i.setInitMarkup(3.0);
-        i.setItemNameOverride(null);
+        i.setItemNameOverride("ItemNameOverride" + itemId);
+        i.setBackOrderQty(100);
         return i;
     }
    
+    /**
+     * 
+     * @param items
+     * @param so
+     * @param cust
+     * @param im
+     * @param imt
+     * @return
+     */
+    public static final VwSalesorderItemsBySalesorder createMockOrmVwSalesorderItemsBySalesorder(
+            SalesOrderItems items, SalesOrder so, Customer cust, ItemMaster im,
+            ItemMasterType imt) {
+        VwSalesorderItemsBySalesorder i = new VwSalesorderItemsBySalesorder();
+
+        // Sales order
+        i.setSoId(so.getSoId());
+        i.setInvoiced(so.getInvoiced());
+
+        // Customer
+        i.setCustomerId(cust.getCustomerId());
+        i.setBusinessId(cust.getBusinessId());
+        i.setPersonId(cust.getPersonId());
+
+        // Item Master
+        i.setCreditorId(im.getCreditorId());
+        i.setItemName(im.getDescription());
+        i.setVendorItemNo(im.getVendorItemNo());
+        i.setItemSerialNo(im.getItemSerialNo());
+        i.setQtyOnHand(im.getQtyOnHand());
+        i.setUnitCost(im.getUnitCost());
+        i.setMarkup(im.getMarkup());
+        i.setRetailPrice(im.getRetailPrice());
+
+        // Item Master Type
+        i.setItemTypeId(imt.getItemTypeId());
+        i.setItemTypeDescr(imt.getDescription());
+
+        // Sales order item
+        i.setSalesOrderItemId(items.getSoItemId());
+        i.setItemId(items.getItemId());
+        i.setOrderQty(items.getOrderQty());
+        i.setInitUnitCost(items.getInitUnitCost());
+        i.setInitMarkup(items.getInitMarkup());
+        i.setItemNameOverride(items.getItemNameOverride());
+        i.setBackOrderQty(items.getBackOrderQty());
+        return i;
+    }
+    
+    
     /**
      * 
      * @param invoiceId

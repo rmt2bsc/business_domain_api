@@ -1,12 +1,19 @@
 package org.rmt2.entity.adapter;
 
+import org.dao.mapping.orm.rmt2.Customer;
+import org.dao.mapping.orm.rmt2.ItemMaster;
+import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.SalesOrder;
+import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
 import org.dto.SalesOrderDto;
+import org.dto.SalesOrderItemDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.modules.inventory.InventoryConst;
 import org.rmt2.api.AccountingMockDataUtility;
 
 import com.util.RMT2Date;
@@ -28,7 +35,7 @@ public class SalesOrderAdapterTest {
     }
 
     @Test
-    public void testAccountAdapter() {
+    public void testSalesOrderAdapter() {
         SalesOrder o = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
                 2000, 0, 300.00, "2017-01-01");
         SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(o);
@@ -54,4 +61,103 @@ public class SalesOrderAdapterTest {
         }
     }
  
+    @Test
+    public void testSalesLineItemAdapter() {
+        SalesOrderItems o = AccountingMockDataUtility
+                .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(o);
+
+        Assert.assertEquals(88880, dto.getSoItemId());
+        Assert.assertEquals(1000, dto.getSalesOrderId());
+        Assert.assertEquals(33330, dto.getItemId());
+        Assert.assertEquals(1, dto.getOrderQty(), 0);
+        Assert.assertEquals(20.00, dto.getInitUnitCost(), 0);
+        Assert.assertEquals(3, dto.getInitMarkup(), 0);
+        Assert.assertEquals("ItemNameOverride" + dto.getItemId(), dto.getItemNameOverride());
+        Assert.assertEquals(100, dto.getBackOrderQty(), 0);
+        try {
+            Assert.assertEquals(0, dto.getEntityId());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+        try {
+            Assert.assertNull(dto.getEntityName());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+    }
+    
+    @Test
+    public void testSalesLineItemExtAdapter() {
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(2000,
+                1351, 0, 333, "C1234580", "Customer 1");
+        SalesOrder so = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
+                2000, 0, 300.00, "2017-01-01");
+        ItemMasterType imt = AccountingMockDataUtility
+                .createMockOrmItemMasterType(InventoryConst.ITEM_TYPE_MERCH,
+                        "ItemTypeMerchandise");
+        SalesOrderItems soi = AccountingMockDataUtility
+                .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(
+                123450, InventoryConst.ITEM_TYPE_MERCH, "1111-111-110",
+                "11111110", 1351, "Item1", 10, 20.00, true);
+
+        VwSalesorderItemsBySalesorder o = AccountingMockDataUtility
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
+                        imt);
+
+        // Properties that are expected to have values
+        SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(o);    
+        
+        // Check data from sales order item
+        Assert.assertEquals(88880, dto.getSoItemId());
+        Assert.assertEquals(1000, dto.getSalesOrderId());
+        Assert.assertEquals(33330, dto.getItemId());
+        Assert.assertEquals(1, dto.getOrderQty(), 0);
+        Assert.assertEquals(20.00, dto.getInitUnitCost(), 0);
+        Assert.assertEquals(3, dto.getInitMarkup(), 0);
+        Assert.assertEquals("ItemNameOverride" + dto.getItemId(), dto.getItemNameOverride());
+        Assert.assertEquals(100, dto.getBackOrderQty(), 0);
+        
+        // Check data from customer
+        Assert.assertEquals(2000, dto.getCustomerId());
+        Assert.assertEquals(1351, dto.getBusinessId());
+        Assert.assertEquals(0, dto.getPersonId());
+        
+        // Check data from sales order
+        Assert.assertEquals(1000, dto.getSalesOrderId());
+        
+        // Check data from item master type
+        Assert.assertEquals(InventoryConst.ITEM_TYPE_MERCH, dto.getImItemTypeId());
+        Assert.assertEquals("ItemTypeMerchandise", dto.getImItemTypeDescription());
+        
+        // Check data from item master
+        Assert.assertEquals(1351, dto.getImVendorId());
+        Assert.assertEquals("Item1", dto.getImName());
+        Assert.assertEquals("11111110", dto.getImVendorItemNo());
+        Assert.assertEquals("1111-111-110", dto.getImSerialNo());
+        Assert.assertEquals(10, dto.getImQtyOnHand());
+        Assert.assertEquals(20.00, dto.getImUnitCost(), 0);
+        Assert.assertEquals(3, dto.getImMarkup(), 0);
+        Assert.assertEquals(((dto.getImQtyOnHand() * dto.getImUnitCost()) * dto.getImMarkup()), dto.getImRetailPrice(), 0);
+        
+        // Properties that are not expected to have values.
+        Assert.assertEquals(0, dto.getOrderTotal(), 0);
+        Assert.assertNull(dto.getSaleOrderDate());
+        
+        try {
+            Assert.assertEquals(0, dto.getEntityId());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+        try {
+            Assert.assertNull(dto.getEntityName());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+    }
 }

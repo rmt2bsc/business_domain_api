@@ -3,13 +3,18 @@ package org.rmt2.api.transaction.sales;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.mapping.orm.rmt2.Customer;
+import org.dao.mapping.orm.rmt2.ItemMaster;
+import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
 import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
+import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
 import org.junit.Before;
+import org.modules.inventory.InventoryConst;
 import org.modules.transaction.sales.SalesApiConst;
 import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.transaction.TransactionApiTestData;
@@ -27,7 +32,8 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     protected List<VwSalesOrderInvoice> mockVwSalesOrderInvoiceNotFoundResponse;
     protected List<VwSalesOrderInvoice> mockVwSalesOrderInvoiceAllResponse;
     protected List<VwSalesOrderInvoice> mockVwSalesOrderInvoiceSingleResponse;
-    
+    protected List<VwSalesorderItemsBySalesorder> mockVwSalesorderItemsBySalesorderNotFoundResponse;
+    protected List<VwSalesorderItemsBySalesorder> mockVwSalesorderItemsBySalesorderAllResponse;
     protected List<SalesOrderStatusHist> mockStatusHistoryNotFoundResponse;
     protected List<SalesOrderStatusHist> mockStatusHistoryAllResponse;
     protected List<SalesOrderStatus> mockStatusNotFoundResponse;
@@ -50,6 +56,9 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
 
         this.mockSalesOrderItemsNotFoundResponse = this.createMockSalesOrderItemsNotFoundResponse();
         this.mockSalesOrderItemsAllResponse = this.createMockSalesOrderItemsAllsponse();
+        
+        this.mockVwSalesorderItemsBySalesorderNotFoundResponse = this.createMockVwSalesorderItemsBySalesorderNotFoundsponse();
+        this.mockVwSalesorderItemsBySalesorderAllResponse = this.createMockVwSalesorderItemsBySalesorderAllsponse();
         
         this.mockVwSalesOrderInvoiceNotFoundResponse = this.createMockVwSalesOrderInvoiceNotFoundResponse();
         this.mockVwSalesOrderInvoiceAllResponse = this.createMockVwSalesOrderInvoiceAllsponse();
@@ -164,6 +173,75 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
+    private List<VwSalesorderItemsBySalesorder> createMockVwSalesorderItemsBySalesorderNotFoundsponse() {
+        List<VwSalesorderItemsBySalesorder> list = null;
+        return list;
+    }
+    
+    private List<VwSalesorderItemsBySalesorder> createMockVwSalesorderItemsBySalesorderAllsponse() {
+        List<VwSalesorderItemsBySalesorder> list = new ArrayList<VwSalesorderItemsBySalesorder>();
+
+        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(2000,
+                1351, 0, 333, "C1234580", "Customer 1");
+        SalesOrder so = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
+                2000, 0, 300.00, "2017-01-01");
+        ItemMasterType imt = AccountingMockDataUtility
+                .createMockOrmItemMasterType(InventoryConst.ITEM_TYPE_MERCH,
+                        "ItemTypeMerchandise");
+        SalesOrderItems soi = AccountingMockDataUtility
+                .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(
+                123450, InventoryConst.ITEM_TYPE_MERCH, "1111-111-110",
+                "11111110", 1351, "Item1", 10, 20.00, true);
+
+        VwSalesorderItemsBySalesorder o = AccountingMockDataUtility
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
+                        imt);
+        list.add(o);
+
+        soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88881,
+                33331, 1000, 1, 20.00);
+        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+                InventoryConst.ITEM_TYPE_MERCH, "1111-111-111", "11111111",
+                1351, "Item2", 10, 20.00, true);
+        o = AccountingMockDataUtility
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
+                        imt);
+        list.add(o);
+
+        soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88882,
+                33332, 1000, 1, 20.00);
+        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+                InventoryConst.ITEM_TYPE_MERCH, "1111-111-112", "11111112",
+                1351, "Item3", 10, 20.00, true);
+        o = AccountingMockDataUtility
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
+                        imt);
+        list.add(o);
+
+        soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88883,
+                33333, 1000, 1, 20.00);
+        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+                InventoryConst.ITEM_TYPE_MERCH, "1111-111-113", "11111113",
+                1351, "Item4", 10, 20.00, true);
+        o = AccountingMockDataUtility
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
+                        imt);
+        list.add(o);
+
+        soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88884,
+                33334, 1000, 1, 20.00);
+        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+                InventoryConst.ITEM_TYPE_MERCH, "1111-111-114", "11111114",
+                1351, "Item5", 10, 20.00, true);
+        o = AccountingMockDataUtility
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
+                        imt);
+        list.add(o);
+        return list;
+    }
+    
+    
     private List<VwSalesOrderInvoice> createMockVwSalesOrderInvoiceNotFoundResponse() {
         List<VwSalesOrderInvoice> list = null;
         return list;
