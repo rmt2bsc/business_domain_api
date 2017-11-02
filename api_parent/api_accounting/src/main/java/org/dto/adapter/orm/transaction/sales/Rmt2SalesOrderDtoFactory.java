@@ -5,10 +5,8 @@ import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
 import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
-
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
-
 import org.dto.SalesInvoiceDto;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
@@ -133,8 +131,7 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
      *            an instance of {@link VwSalesOrderInvoice}
      * @return an instance of {@link SalesInvoiceDto}.
      */
-    public static final SalesInvoiceDto createSalesIvoiceInstance(
-            VwSalesOrderInvoice ormBean) {
+    public static final SalesInvoiceDto createSalesIvoiceInstance(VwSalesOrderInvoice ormBean) {
         return new SalesInvoiceRmt2OrmAdapter(ormBean);
     }
 }

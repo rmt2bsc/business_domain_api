@@ -437,8 +437,7 @@ public class SalesOrderDaoFactory extends RMT2Base {
         }
         List<SalesInvoiceDto> list = new ArrayList<SalesInvoiceDto>();
         for (VwSalesOrderInvoice item : items) {
-            SalesInvoiceDto dto = Rmt2SalesOrderDtoFactory
-                    .createSalesIvoiceInstance(item);
+            SalesInvoiceDto dto = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance(item);
             list.add(dto);
         }
         return list;
@@ -460,8 +459,7 @@ public class SalesOrderDaoFactory extends RMT2Base {
         }
         List<SalesOrderItemDto> list = new ArrayList<SalesOrderItemDto>();
         for (SalesOrderItems item : items) {
-            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory
-                    .createSalesOrderItemInstance(item);
+            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
             list.add(dto);
         }
         return list;
