@@ -858,9 +858,8 @@ public class AccountingMockDataUtility {
      * @param invoiceNo
      * @return
      */
-    public static final SalesInvoice createMockOrmSalesInvoice(
-            int salesInvoiceId, int salesOrderId, int xactId,
-            String invoiceNo) {
+    public static final SalesInvoice createMockOrmSalesInvoice(int salesInvoiceId, 
+            int salesOrderId, int xactId, String invoiceNo) {
         SalesInvoice o = new SalesInvoice();
         o.setInvoiceId(salesInvoiceId);
         o.setSoId(salesOrderId);

@@ -8,8 +8,11 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
+import org.dao.transaction.sales.SalesInvoiceDaoException;
 import org.dao.transaction.sales.SalesOrderDaoException;
+import org.dto.SalesInvoiceDto;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
@@ -84,6 +87,32 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
     }
+    
+    @Test
+    public void testFetchAll_SalesOrders_NotFound() {
+        // Mock method call to get multiple sales orders
+        SalesOrder so = new SalesOrder();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockSalesOrderNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesOrderDto criteria = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(null);
+        List<SalesOrderDto> results = null;
+        try {
+            results = api.getSalesOrder(criteria);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
+    }
 
     @Test
     public void testFetchAll_Null_Criteria() {
@@ -136,8 +165,7 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
             .thenReturn(this.mockSalesOrderSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Single slaes order fetch test case setup failed");
+            Assert.fail("Single slaes order fetch test case setup failed");
         }
 
         // Perform test
@@ -151,6 +179,31 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
+    }
+    
+    @Test
+    public void testFetchSingle_SalesOrders_NotFound() {
+        SalesOrder so = new SalesOrder();
+        so.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+            .thenReturn(this.mockSalesOrderNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single slaes order fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesOrderDto results = null;
+        try {
+            results = api.getSalesOrder(TEST_SALES_ORDER_ID);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
     }
 
     @Test
@@ -261,6 +314,31 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     }
     
     @Test
+    public void testFetchAll_SalesOrderItems_NotFound() {
+        SalesOrderItems so = new SalesOrderItems();
+        so.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                .thenReturn(this.mockSalesOrderItemsNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single sales order items fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        List<SalesOrderItemDto> results = null;
+        try {
+            results = api.getLineItems(TEST_SALES_ORDER_ID);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
     public void testFetchAll_SalesOrderItems_Null_SalesOrderId() {
         // Perform test
         SalesApiFactory f = new SalesApiFactory();
@@ -339,6 +417,30 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     }
     
     @Test
+    public void testFetchAll_ExtSalesOrderItems_NotFound() {
+        VwSalesorderItemsBySalesorder so = new VwSalesorderItemsBySalesorder();
+        so.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Extended sales order items fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        List<SalesOrderItemDto> results = null;
+        try {
+            results = api.getLineItemsExt(TEST_SALES_ORDER_ID);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
     public void testFetchAll_ExtSalesOrderItems_Null_SalesOrderId() {
         // Perform test
         SalesApiFactory f = new SalesApiFactory();
@@ -393,22 +495,240 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     
     @Test
     public void testFetchSingle_SalesInvoice() {
-        Assert.fail("Test Needs Implementation");
+        // Mock method call to get multiple sales orders
+        VwSalesOrderInvoice so = new VwSalesOrderInvoice();
+        so.setSalesOrderId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockVwSalesOrderInvoiceSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order invoice fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesInvoiceDto results = null;
+        try {
+            results = api.getInvoice(TEST_SALES_ORDER_ID);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+    }
+    
+    @Test
+    public void testFetchSingle_SalesInvoice_NotFound() {
+        // Mock method call to get multiple sales orders
+        VwSalesOrderInvoice so = new VwSalesOrderInvoice();
+        so.setSalesOrderId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockVwSalesOrderInvoiceNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order invoice fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesInvoiceDto results = null;
+        try {
+            results = api.getInvoice(TEST_SALES_ORDER_ID);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
+    public void testFetchSingle_SalesInvoice_Too_Many_Rows_Returned() {
+        // Mock method call to get multiple sales orders
+        VwSalesOrderInvoice so = new VwSalesOrderInvoice();
+        so.setSalesOrderId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockVwSalesOrderInvoiceAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order invoice fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getInvoice(TEST_SALES_ORDER_ID);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+        }
     }
     
     @Test
     public void testFetchSingle_SalesInvoice_Null_SalesOrderId() {
-        Assert.fail("Test Needs Implementation");
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        Integer nullSalesOrderId = null;
+        try {
+            api.getInvoice(nullSalesOrderId);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
     }
     
     @Test
     public void testFetchSingle_SalesInvoice_Zero_SalesOrderId() {
-        Assert.fail("Test Needs Implementation");
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        Integer salesOrderId = 0;
+        try {
+            api.getInvoice(salesOrderId);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
     }
     
     @Test
     public void testFetchSingle_SalesInvoice_Db_Exception() {
-        Assert.fail("Test Needs Implementation");
+        // Mock method call to get multiple sales orders
+        VwSalesOrderInvoice so = new VwSalesOrderInvoice();
+        so.setSalesOrderId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order invoice fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getInvoice(TEST_SALES_ORDER_ID);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesInvoiceDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    
+    @Test
+    public void testFetchMultiple_SalesInvoice() {
+        // Mock method call to get multiple sales orders
+        VwSalesOrderInvoice so = new VwSalesOrderInvoice();
+        so.setSalesOrderId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockVwSalesOrderInvoiceAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order invoice fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        List<SalesInvoiceDto> results = null;
+        try {
+            VwSalesOrderInvoice item = null;
+            SalesInvoiceDto criteria = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance(item);
+            criteria.setSalesOrderId(TEST_SALES_ORDER_ID);
+            results = api.getInvoice(criteria);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+    }
+    
+    @Test
+    public void testFetchMultiple_SalesInvoice_NotFound() {
+        // Mock method call to get multiple sales orders
+        VwSalesOrderInvoice so = new VwSalesOrderInvoice();
+        so.setSalesOrderId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockVwSalesOrderInvoiceNotFoundResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order invoice fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        List<SalesInvoiceDto> results = null;
+        try {
+            VwSalesOrderInvoice item = null;
+            SalesInvoiceDto criteria = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance(item);
+            criteria.setSalesOrderId(TEST_SALES_ORDER_ID);
+            results = api.getInvoice(criteria);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
+    }
+    
+    
+    @Test
+    public void testFetchMultiple_SalesInvoice_Null_Crtieria_Object() {
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            SalesInvoiceDto criteria = null;
+            api.getInvoice(criteria);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+
+    @Test
+    public void testFetchMultiple_SalesInvoice_Db_Exception() {
+        // Mock method call to get multiple sales orders
+        VwSalesOrderInvoice so = new VwSalesOrderInvoice();
+        so.setSalesOrderId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order invoice fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            VwSalesOrderInvoice item = null;
+            SalesInvoiceDto criteria = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance(item);
+            criteria.setSalesOrderId(TEST_SALES_ORDER_ID);
+            api.getInvoice(criteria);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesInvoiceDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
     }
     
     @Test

@@ -3,9 +3,12 @@ package org.rmt2.entity.adapter;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
+import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
+import org.dto.SalesInvoiceDto;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
@@ -14,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.modules.inventory.InventoryConst;
+import org.modules.transaction.sales.SalesApiConst;
 import org.rmt2.api.AccountingMockDataUtility;
 
 import com.util.RMT2Date;
@@ -157,6 +161,69 @@ public class SalesOrderAdapterTest {
             Assert.assertNull(dto.getEntityName());
             Assert.fail("Expected UnsupportedOperationException to be thrown");
         } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+    }
+    
+    @Test
+    public void testVwSalesOrderInvoiceAdapter() {
+        VwSalesOrderInvoice o =  AccountingMockDataUtility
+                .createMockOrmVwSalesOrderInvoice(7000, 1000, "2017-01-01",
+                        300.00, SalesApiConst.STATUS_CODE_INVOICED, "80000", 1,
+                        "2017-01-10", 444440, 2000, 1234, "111-111");
+        SalesInvoiceDto dto = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance(o);
+
+        Assert.assertEquals(7000, dto.getInvoiceId());
+        Assert.assertEquals(1000, dto.getSalesOrderId());
+        Assert.assertEquals(RMT2Date.stringToDate("2017-01-01"), dto.getSaleOrderDate());
+        Assert.assertEquals(300.00, dto.getOrderTotal(), 0);
+        Assert.assertEquals(SalesApiConst.STATUS_CODE_INVOICED, dto.getSoStatusId());
+        Assert.assertEquals("80000", dto.getInvoiceNo());
+        Assert.assertTrue(dto.isInvoiced());
+        Assert.assertEquals(RMT2Date.stringToDate("2017-01-10"), dto.getInvoiceDate());
+        Assert.assertEquals(444440, dto.getXactId());
+        Assert.assertEquals(2000, dto.getCustomerId());
+        Assert.assertEquals(1234, dto.getAcctId());
+        Assert.assertEquals("111-111", dto.getAccountNo());
+        Assert.assertEquals("SalesOrderStatus" + dto.getSoStatusId(), dto.getSoStatusDescription());
+        
+
+        try {
+            Assert.assertEquals(0, dto.getEntityId());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+        try {
+            Assert.assertNull(dto.getEntityName());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+    }
+    
+    @Test
+    public void testSalesInvoiceAdapter() {
+        SalesInvoice o = AccountingMockDataUtility
+                .createMockOrmSalesInvoice(7000, 1000, 5000, "80000");
+        SalesInvoiceDto dto = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance(o);
+        
+        Assert.assertEquals(7000, dto.getInvoiceId());
+        Assert.assertEquals(1000, dto.getSalesOrderId());
+        Assert.assertEquals(5000, dto.getXactId());
+        Assert.assertEquals("80000", dto.getInvoiceNo());
+        try {
+            Assert.assertEquals(0, dto.getEntityId());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        }
+        catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+        try {
+            Assert.assertNull(dto.getEntityName());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        }
+        catch (UnsupportedOperationException e) {
             // Test succeeded...
         }
     }
