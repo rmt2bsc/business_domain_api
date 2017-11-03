@@ -78,6 +78,7 @@ class SalesInvoiceRmt2OrmAdapter extends SalesOrderRmt2OrmAdapter implements
             so.setInvoiced(ext.getInvoiced());
             so.setDateCreated(ext.getSalesOrderDate());
             so.setOrderTotal(ext.getOrderTotal());
+            so.setEffectiveDate(ext.getSalesOrderDate());
             this.updateObjHeirarchy(so);
 
             // Initialize sales order status object

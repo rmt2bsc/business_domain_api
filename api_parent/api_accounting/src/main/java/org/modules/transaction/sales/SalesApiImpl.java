@@ -348,10 +348,9 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 return null;
             }
         } catch (SalesInvoiceDaoException e) {
-            buf.append("Database error occurred retrieving sales order invoice by sales order id, ");
+            buf.append("DAO error occurred fetching sales order invoice by sales order id, ");
             buf.append(salesOrderId);
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new SalesApiException(this.msg, e);
         }
 

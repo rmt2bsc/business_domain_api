@@ -123,7 +123,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
                 return null;
             }
         } catch (Exception e) {
-            throw new SalesInvoiceDaoException(e);
+            throw new SalesInvoiceDaoException("Unable to fetch extended sales order invoice", e);
         }
         return SalesOrderDaoFactory.createExtSalesInvoice(results);
     }

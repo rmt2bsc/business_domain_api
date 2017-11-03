@@ -167,8 +167,7 @@ public class SalesOrderDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link VwSalesOrderInvoice}
      */
-    public static final VwSalesOrderInvoice createCriteriaSalesInvoiceExt(
-            SalesInvoiceDto criteria) {
+    public static final VwSalesOrderInvoice createCriteriaSalesInvoiceExt(SalesInvoiceDto criteria) {
         VwSalesOrderInvoice obj = new VwSalesOrderInvoice();
         if (criteria != null) {
             if (criteria.getInvoiceId() > 0) {
