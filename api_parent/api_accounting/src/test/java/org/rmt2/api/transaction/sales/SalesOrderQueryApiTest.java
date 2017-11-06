@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
@@ -16,6 +17,7 @@ import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dto.SalesInvoiceDto;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
+import org.dto.SalesOrderStatusDto;
 import org.dto.SalesOrderStatusHistDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.junit.After;
@@ -25,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modules.transaction.sales.MissingCurrentStatusException;
 import org.modules.transaction.sales.SalesApi;
+import org.modules.transaction.sales.SalesApiConst;
 import org.modules.transaction.sales.SalesApiException;
 import org.modules.transaction.sales.SalesApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -240,6 +243,21 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     }
     
     @Test
+    public void testFetchSingle_Negative_SalesOrderId() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        Integer criteria = -1;
+        try {
+            api.getSalesOrder(criteria);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
     public void testFetchSingle_Too_Many_Rows_Return() {
         SalesOrder so = new SalesOrder();
         so.setSoId(TEST_SALES_ORDER_ID);
@@ -370,6 +388,20 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     }
     
     @Test
+    public void testFetchAll_SalesOrderItems_Negative_SalesOrderId() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getLineItems(-1);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
     public void testFetchAll_SalesOrderItems_Db_Exception() {
         SalesOrderItems so = new SalesOrderItems();
         so.setSoId(TEST_SALES_ORDER_ID);
@@ -464,6 +496,20 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         SalesApi api = f.createApi(mockDaoClient);
         try {
             api.getLineItemsExt(0);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testFetchAll_ExtSalesOrderItems_Negative_SalesOrderId() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getLineItemsExt(-1);
             Assert.fail("Test failed due to exception was expected");
         } catch (Exception e) {
             e.printStackTrace();
@@ -592,6 +638,20 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         SalesApiFactory f = new SalesApiFactory();
         SalesApi api = f.createApi(mockDaoClient);
         Integer salesOrderId = 0;
+        try {
+            api.getInvoice(salesOrderId);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testFetchSingle_SalesInvoice_Negative_SalesOrderId() {
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        Integer salesOrderId = -1;
         try {
             api.getInvoice(salesOrderId);
             Assert.fail("Test failed due to exception was expected");
@@ -775,9 +835,8 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         // Perform test
         SalesApiFactory f = new SalesApiFactory();
         SalesApi api = f.createApi(mockDaoClient);
-        SalesOrderStatusHistDto results = null;
         try {
-            results = api.getCurrentStatus(TEST_SALES_ORDER_ID);
+            api.getCurrentStatus(TEST_SALES_ORDER_ID);
             Assert.fail("Test failed due to exception was expected");
         } catch (Exception e) {
             e.printStackTrace();
@@ -814,6 +873,20 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     }
     
     @Test
+    public void testFetch_CurrentStatus_Negative_SalesOrderId() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getCurrentStatus(-1);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
     public void testFetch_CurrentStatus_Db_Exception() {
         // Mock method call to get current status of sales order.
         SalesOrderStatusHist so = new SalesOrderStatusHist();
@@ -842,21 +915,121 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     
     @Test
     public void testFetch_SalesOrderStatus() {
-        Assert.fail("Test Needs Implementation");
+        // Mock method call to get current status of sales order.
+        SalesOrderStatus so = new SalesOrderStatus();
+        so.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockStatusSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order status fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        SalesOrderStatusDto results = null;
+        try {
+            results = api.getStatus(SalesApiConst.STATUS_CODE_QUOTE);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
     }
     
     @Test
     public void testFetch_SalesOrderStatus_Null_StatusId() {
-        Assert.fail("Test Needs Implementation");
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getStatus(null);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
     }
     
     @Test
     public void testFetch_SalesOrderStatus_Zero_StatusId() {
-        Assert.fail("Test Needs Implementation");
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getStatus(0);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testFetch_SalesOrderStatus_Negative_StatusId() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getStatus(-1);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
     }
     
     @Test
     public void testFetch_SalesOrderStatus_Too_Many_Rows_Return() {
-        Assert.fail("Test Needs Implementation");
+        // Mock method call to get current status of sales order.
+        SalesOrderStatus so = new SalesOrderStatus();
+        so.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenReturn(this.mockStatusAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order status fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getStatus(SalesApiConst.STATUS_CODE_QUOTE);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+        }
+    }
+    
+    @Test
+    public void testFetch_SalesOrderStatus_Db_Exception() {
+        // Mock method call to get current status of sales order.
+        SalesOrderStatus so = new SalesOrderStatus();
+        so.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order status fetch test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getStatus(SalesApiConst.STATUS_CODE_QUOTE);
+            Assert.fail("Test failed due to exception was expected");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesOrderDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
     }
 }

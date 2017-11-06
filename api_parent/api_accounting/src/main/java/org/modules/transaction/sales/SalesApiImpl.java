@@ -298,7 +298,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 return null;
             }
         } catch (SalesOrderDaoException e) {
-            buf.append("Database error occurred retrieving sales order status by status id, ");
+            buf.append("DAO error occurred retrieving sales order status by status id, ");
             buf.append(statusId);
             this.msg = buf.toString();
             logger.error(this.msg);

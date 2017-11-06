@@ -38,7 +38,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     protected List<SalesOrderStatusHist> mockStatusHistoryAllResponse;
     protected List<SalesOrderStatus> mockStatusNotFoundResponse;
     protected List<SalesOrderStatus> mockStatusAllResponse;
-    
+    protected List<SalesOrderStatus> mockStatusSingleResponse;
     
     /**
      * @throws java.lang.Exception
@@ -66,6 +66,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
 
         this.mockStatusNotFoundResponse = this.createMockSalesOrderStatusNotFoundResponse();
         this.mockStatusAllResponse = this.createMockSalesOrderStatusAllResponse();
+        this.mockStatusSingleResponse = this.createMockSalesOrderStatusSingleResponse();
         
         this.mockStatusHistoryAllResponse = this.createMockSalesOrderStatusHistoryAllResponse();
         this.mockStatusHistoryNotFoundResponse = null;
@@ -296,6 +297,14 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
+    private List<SalesOrderStatus> createMockSalesOrderStatusSingleResponse() {
+        List<SalesOrderStatus> list = new ArrayList<SalesOrderStatus>();
+        SalesOrderStatus o = AccountingMockDataUtility.createMockOrmSalesOrderStatus(
+                SalesApiConst.STATUS_CODE_QUOTE, "Quote");
+        list.add(o);
+        return list;
+    }
+    
     private List<SalesOrderStatus> createMockSalesOrderStatusAllResponse() {
         List<SalesOrderStatus> list = new ArrayList<SalesOrderStatus>();
         SalesOrderStatus o = AccountingMockDataUtility

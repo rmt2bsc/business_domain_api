@@ -544,15 +544,13 @@ public class SalesOrderDaoFactory extends RMT2Base {
      * @return List of {@link SalesOrderStatusDto} objects or null if items is
      *         null or empty
      */
-    public static final List<SalesOrderStatusDto> createSalesOrderStatus(
-            List<SalesOrderStatus> items) {
+    public static final List<SalesOrderStatusDto> createSalesOrderStatus(List<SalesOrderStatus> items) {
         if (items == null || items.isEmpty()) {
             return null;
         }
         List<SalesOrderStatusDto> list = new ArrayList<SalesOrderStatusDto>();
         for (SalesOrderStatus item : items) {
-            SalesOrderStatusDto dto = Rmt2SalesOrderDtoFactory
-                    .createSalesOrderStatusInstance(item);
+            SalesOrderStatusDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderStatusInstance(item);
             list.add(dto);
         }
         return list;

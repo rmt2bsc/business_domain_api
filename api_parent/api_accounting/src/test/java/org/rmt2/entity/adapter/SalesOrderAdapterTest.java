@@ -6,12 +6,14 @@ import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
 import org.dto.SalesInvoiceDto;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
+import org.dto.SalesOrderStatusDto;
 import org.dto.SalesOrderStatusHistDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.junit.After;
@@ -256,6 +258,30 @@ public class SalesOrderAdapterTest {
             Assert.assertNull(dto.getEntityName());
             Assert.fail("Expected UnsupportedOperationException to be thrown");
         } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+    }
+    
+    @Test
+    public void testSalesOrderStatusAdapter() {
+        SalesOrderStatus o = AccountingMockDataUtility.createMockOrmSalesOrderStatus(
+                SalesApiConst.STATUS_CODE_QUOTE, "Quote");
+        SalesOrderStatusDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderStatusInstance(o);
+        
+        Assert.assertEquals(SalesApiConst.STATUS_CODE_QUOTE, dto.getSoStatusId());
+        Assert.assertEquals("Quote", dto.getSoStatusDescription());
+        try {
+            Assert.assertEquals(0, dto.getEntityId());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        }
+        catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+        try {
+            Assert.assertNull(dto.getEntityName());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        }
+        catch (UnsupportedOperationException e) {
             // Test succeeded...
         }
     }
