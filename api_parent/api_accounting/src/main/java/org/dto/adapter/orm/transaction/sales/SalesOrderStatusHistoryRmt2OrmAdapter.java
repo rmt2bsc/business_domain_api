@@ -13,8 +13,8 @@ import org.dto.SalesOrderStatusHistDto;
  * @author Roy Terrell
  * 
  */
-public class SalesOrderStatusHistoryRmt2OrmAdapter extends
-        SalesOrderStatusRmt2OrmAdapter implements SalesOrderStatusHistDto {
+public class SalesOrderStatusHistoryRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter
+        implements SalesOrderStatusHistDto {
 
     private SalesOrderStatusHist hist;
 
@@ -34,8 +34,7 @@ public class SalesOrderStatusHistoryRmt2OrmAdapter extends
      *            an instance of {@link SalesOrderStatusHist} or null when the
      *            desired arises to create a newly instantiated instance.
      */
-    protected SalesOrderStatusHistoryRmt2OrmAdapter(
-            SalesOrderStatusHist soStatHist) {
+    protected SalesOrderStatusHistoryRmt2OrmAdapter(SalesOrderStatusHist soStatHist) {
         // Initialize sales order status history object
         this.updateObjHeirarchy(soStatHist);
 
@@ -43,6 +42,12 @@ public class SalesOrderStatusHistoryRmt2OrmAdapter extends
         SalesOrderStatus s = new SalesOrderStatus();
         s.setSoStatusId(this.hist.getSoStatusId());
         this.updateObjHeirarchy(s);
+        
+        this.setDateCreated(soStatHist.getDateCreated());
+        this.setUpdateUserId(soStatHist.getUserId());
+        this.setIpCreated(soStatHist.getIpCreated());
+        this.setIpUpdated(soStatHist.getIpUpdated());
+
         return;
     }
 
@@ -66,10 +71,10 @@ public class SalesOrderStatusHistoryRmt2OrmAdapter extends
             return;
         }
         this.hist = stat;
-        this.dateCreated = stat.getDateCreated();
-        this.ipCreated = stat.getIpCreated();
-        this.ipUpdated = stat.getIpUpdated();
-        this.updateUserId = stat.getUserId();
+        // this.setDateCreated(stat.getDateCreated());
+        // this.setUpdateUserId(stat.getUserId());
+        // this.setIpCreated(stat.getIpCreated());
+        // this.setIpUpdated(stat.getIpUpdated());
         return;
     }
 

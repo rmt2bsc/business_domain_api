@@ -6,11 +6,13 @@ import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
+import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
 import org.dto.SalesInvoiceDto;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
+import org.dto.SalesOrderStatusHistDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -224,6 +226,36 @@ public class SalesOrderAdapterTest {
             Assert.fail("Expected UnsupportedOperationException to be thrown");
         }
         catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+    }
+
+    @Test
+    public void testSalesOrderStatusHistoryAdapter() {
+        SalesOrderStatusHist o = AccountingMockDataUtility.createMockOrmSalesOrderStatusHist(70, 1000,
+                SalesApiConst.STATUS_CODE_NEW, "2017-01-10", "2017-01-31");
+        SalesOrderStatusHistDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderStatusHistoryInstance(o);
+
+        Assert.assertEquals(70, dto.getSoStatusHistId());
+        Assert.assertEquals(1000, dto.getSoId());
+        Assert.assertEquals(SalesApiConst.STATUS_CODE_NEW, dto.getSoStatusId());
+        Assert.assertEquals(RMT2Date.stringToDate("2017-01-10"), dto.getEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2017-01-31"), dto.getEndDate());
+        Assert.assertEquals("SalesOrderStatusHistoryReason" + dto.getSoStatusId(), dto.getReason());
+        Assert.assertEquals(dto.getEffectiveDate(), dto.getDateCreated());
+        Assert.assertEquals("testuser", dto.getUpdateUserId());
+        Assert.assertEquals("111.222.101.100", dto.getIpCreated());
+        Assert.assertEquals("111.222.101.100", dto.getIpUpdated());
+        try {
+            Assert.assertEquals(0, dto.getEntityId());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Test succeeded...
+        }
+        try {
+            Assert.assertNull(dto.getEntityName());
+            Assert.fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
             // Test succeeded...
         }
     }

@@ -67,6 +67,8 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         this.mockStatusNotFoundResponse = this.createMockSalesOrderStatusNotFoundResponse();
         this.mockStatusAllResponse = this.createMockSalesOrderStatusAllResponse();
         
+        this.mockStatusHistoryAllResponse = this.createMockSalesOrderStatusHistoryAllResponse();
+        this.mockStatusHistoryNotFoundResponse = null;
         return;
     }
 

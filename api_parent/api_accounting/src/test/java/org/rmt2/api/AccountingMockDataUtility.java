@@ -1023,7 +1023,7 @@ public class AccountingMockDataUtility {
         o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
         o.setEndDate(endDate == null ? null : RMT2Date.stringToDate(endDate));
         
-        o.setDateCreated(new Date());
+        o.setDateCreated(RMT2Date.stringToDate(effectiveDate));
         o.setUserId("testuser");
         o.setIpCreated("111.222.101.100");
         o.setIpUpdated(o.getIpCreated());
