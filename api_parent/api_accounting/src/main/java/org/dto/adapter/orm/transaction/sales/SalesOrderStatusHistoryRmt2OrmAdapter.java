@@ -43,10 +43,10 @@ public class SalesOrderStatusHistoryRmt2OrmAdapter extends SalesOrderStatusRmt2O
         s.setSoStatusId(this.hist.getSoStatusId());
         this.updateObjHeirarchy(s);
         
-        this.setDateCreated(soStatHist.getDateCreated());
-        this.setUpdateUserId(soStatHist.getUserId());
-        this.setIpCreated(soStatHist.getIpCreated());
-        this.setIpUpdated(soStatHist.getIpUpdated());
+        this.dateCreated = soStatHist.getDateCreated();
+        this.updateUserId = soStatHist.getUserId();
+        this.ipCreated = soStatHist.getIpCreated();
+        this.ipUpdated = soStatHist.getIpUpdated();
 
         return;
     }
