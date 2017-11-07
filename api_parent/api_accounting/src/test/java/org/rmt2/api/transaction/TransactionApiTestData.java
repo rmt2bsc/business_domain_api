@@ -1,7 +1,5 @@
 package org.rmt2.api.transaction;
 
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +13,10 @@ import org.dao.mapping.orm.rmt2.XactTypeItem;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.junit.After;
 import org.junit.Before;
-import org.mockito.Mockito;
 import org.modules.transaction.XactConst;
 import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
 
-import com.api.persistence.DaoClient;
-import com.api.persistence.PersistenceClient;
 import com.util.RMT2Date;
 
 /**
@@ -35,9 +30,6 @@ import com.util.RMT2Date;
  * 
  */
 public class TransactionApiTestData extends SubsidiaryApiTestData {
-    protected DaoClient mockDaoClient;
-    protected PersistenceClient mockPersistenceClient;
-
     protected List<XactCategory> mockCategoryNotFoundFetchResponse;
     protected List<XactCategory> mockCategoryFetchAllResponse;
     protected List<XactCategory> mockCategoryFetchSingleResponse;
@@ -76,14 +68,6 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-
-        // Mock database connection since the common transaction Api expects
-        // derived Api modules to obtain and pass in an instance of DaoClient.
-        this.mockDaoClient = Mockito.mock(DaoClient.class);
-        this.mockPersistenceClient = Mockito.mock(PersistenceClient.class);
-        when(this.mockDaoClient.getClient())
-                .thenReturn(this.mockPersistenceClient);
-
         this.mockCategoryFetchAllResponse = this
                 .createMockXactCategoryFetchAllsponse();
         this.mockCategoryFetchSingleResponse = this

@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
+import com.api.persistence.DaoClient;
 import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
@@ -20,6 +21,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 public class BaseAccountingDaoTest {
     protected PersistenceClient mockPersistenceClient;
+    protected DaoClient mockDaoClient;
 
     /**
      * 
@@ -35,8 +37,12 @@ public class BaseAccountingDaoTest {
      */
     @Before
     public void setUp() throws Exception {
+        // Mock database connection since the common transaction Api expects
+        // derived Api modules to obtain and pass in an instance of DaoClient.
         PowerMockito.mockStatic(Rmt2OrmClientFactory.class);
+        this.mockDaoClient = Mockito.mock(DaoClient.class);
         this.mockPersistenceClient = Mockito.mock(PersistenceClient.class);
+        when(this.mockDaoClient.getClient()).thenReturn(this.mockPersistenceClient);
         when(Rmt2OrmClientFactory.createOrmClientInstance(any(String.class))).thenReturn(this.mockPersistenceClient);
         return;
     }
