@@ -27,6 +27,8 @@ import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.DaoClient;
 import com.api.xml.RMT2XmlUtility;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * API implementation of CashReceiptApi for managing cash receipts transactions.
@@ -43,11 +45,9 @@ import com.api.xml.RMT2XmlUtility;
  * @author Roy Terrell
  * 
  */
-public class CashReceiptApiImpl extends AbstractXactApiImpl implements
-        CashReceiptApi {
+public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashReceiptApi {
 
-    private static final Logger logger = Logger
-            .getLogger(CashReceiptApiImpl.class);
+    private static final Logger logger = Logger.getLogger(CashReceiptApiImpl.class);
 
     private SalesOrderDaoFactory daoFact;
 
@@ -101,34 +101,54 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
      * 
      * @param order
      * @param amount
-     * @throws CashReceiptApiException
+     * @throws {@link CashReceiptApiException}
+     * @throws {@link InvalidDataException}
      */
-    public void applyCustomerPayment(SalesOrderDto order, double amount)
+    public void applyPaymentToInvoice(SalesOrderDto salesOrder, Double cashPaymentAmount) 
             throws CashReceiptApiException {
+        
+        // Sales order object cannot be null
+        try {
+            Verifier.verifyNotNull(salesOrder);
+        }
+        catch (VerifyException e ) {
+            this.msg = "Sales order object is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+        
+        //  Cash payment amound cannot be null
+        try {
+            Verifier.verifyNotNull(cashPaymentAmount);
+        }
+        catch (VerifyException e ) {
+            this.msg = "Cash receipt amount is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+        
         XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-        xact.setXactAmount(amount);
+        xact.setXactAmount(cashPaymentAmount);
         xact.setXactReason("Full payment received for sales order #"
-                + order.getSalesOrderId());
+                + salesOrder.getSalesOrderId());
         xact.setXactTypeId(XactConst.XACT_TYPE_CASHPAY);
 
         // Create cash receipt transaction for the given sales order.
         // being reversed.
         try {
-            this.createCashPayment(xact, order.getCustomerId());
+            this.receivePayment(xact, salesOrder.getCustomerId());
         } catch (CashReceiptApiException e) {
             this.msg = "Unable to apply customer payment sales order, "
-                    + order.getSalesOrderId();
+                    + salesOrder.getSalesOrderId();
             logger.error(this.msg);
             throw new CashReceiptApiException(this.msg, e);
         }
 
         // Send email confirmation
         try {
-            this.emailPaymentConfirmation(order.getSalesOrderId(),
+            this.emailPaymentConfirmation(salesOrder.getSalesOrderId(),
                     xact.getXactId());
         } catch (CashReceiptApiException e) {
             this.msg = "Error notifying customer of payment confirmation via SMTP for sales order id, "
-                    + order.getSalesOrderId();
+                    + salesOrder.getSalesOrderId();
             logger.error(this.msg);
             throw new CashReceiptApiException(this.msg, e);
         }
@@ -136,40 +156,55 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
 
     /**
      * Creates a customer payment transaction or reverses and existing customer
-     * payment transaction. If the transaction id that is encapsulated in xact
-     * is 0, then a new customer payment transaction is created. Otherwise, an
-     * existing customer payment transaction is reversed.
+     * payment transaction. If <i>xact</i>'s transaction id is equal zero, then
+     * a new customer payment transaction is created. Otherwise, an existing
+     * customer payment transaction is reversed.
      * 
      * @param xact
      *            Source transaction.
      * @param customerId
      *            The id of the customer of this transaction.
      * @return The id of the sales order payment transaction.
-     * @throws CashReceiptApiException
+     * @throws {@link CashReceiptApiException}
+     * @throws {@link InvalidDataException}
      */
     @Override
-    public int createCashPayment(XactDto xact, int customerId)
-            throws CashReceiptApiException {
-
-        if (xact == null) {
-            this.msg = "Transaction object cannot be null";
-            logger.error(this.msg);
-            throw new CashReceiptApiException(this.msg);
+    public int receivePayment(XactDto xact, Integer customerId) throws CashReceiptApiException {
+        // Transaction object cannot be null
+        try {
+            Verifier.verifyNotNull(xact);
         }
-        // Customer Id must be a value greater than zero.
-        if (customerId <= 0) {
-            this.msg = "Customer id is invalid";
-            logger.error(this.msg);
-            throw new CashReceiptApiException(this.msg);
+        catch (VerifyException e ) {
+            this.msg = "Cash Receipt Transaction object is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+        
+        //  Customer id cannot be null
+        try {
+            Verifier.verifyNotNull(customerId);
+        }
+        catch (VerifyException e ) {
+            this.msg = "Customer Id is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+        
+        // Customer id must be greater than zero
+        try {
+            Verifier.verifyPositive(customerId);
+        }
+        catch (VerifyException e ) {
+            this.msg = "Customer Id must be a value greater than zero";
+            throw new InvalidDataException(this.msg, e);
         }
 
         // Determine if we are creating or reversing the customer payment.
         int xactId = 0;
-        if (xact.getXactId() <= 0) {
-            xactId = this.createCustomerPayment(xact, customerId);
-        }
-        else {
+        try {
+            Verifier.verifyPositive(xact.getXactId());
             xactId = this.reverseCustomerPayment(xact, customerId);
+        }
+        catch (VerifyException e ) {
+            xactId = this.createCustomerPayment(xact, customerId);
         }
         return xactId;
     }
@@ -186,8 +221,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
      * @return The id of the new customer payment transaction.
      * @throws CashReceiptApiException
      */
-    protected int createCustomerPayment(XactDto xact, int customerId)
-            throws CashReceiptApiException {
+    protected int createCustomerPayment(XactDto xact, int customerId) throws CashReceiptApiException {
         int xactId = 0;
         double xactAmount = 0;
 
@@ -215,8 +249,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
      *             If customer payment transction is final or a general
      *             transction error occurs.
      */
-    protected int reverseCustomerPayment(XactDto xact, int customerId)
-            throws CashReceiptApiException {
+    protected int reverseCustomerPayment(XactDto xact, int customerId) throws CashReceiptApiException {
         int xactId = 0;
         double xactAmount = 0;
 
@@ -250,8 +283,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
      * @param xactItems
      *            The transaction items that are to be reversed.
      */
-    protected void preReverse(XactDto xact,
-            List<XactTypeItemActivityDto> xactItems) {
+    protected void preReverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         super.preReverse(xact, xactItems);
         xact.setXactDate(null);
         return;
@@ -312,8 +344,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements
      *            the transaction id
      * @throws CashReceiptApiException
      */
-    public void emailPaymentConfirmation(int salesOrderId, int xactId)
-            throws CashReceiptApiException {
+    public void emailPaymentConfirmation(int salesOrderId, int xactId) throws CashReceiptApiException {
 
         CashReceiptDaoFactory fact = new CashReceiptDaoFactory();
         CashReceiptDao dao = fact.createRmt2OrmDao(this.dao);
