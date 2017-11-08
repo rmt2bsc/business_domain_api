@@ -442,7 +442,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             }
             return results;
         } catch (SalesOrderDaoException e) {
-            buf.append("Database error occurred retrieving the current status for sales order, ");
+            buf.append("DAO error occurred retrieving the current status for sales order, ");
             buf.append(salesOrderId);
             this.msg = buf.toString();
             logger.error(this.msg);
@@ -487,8 +487,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             currentStatusId = SalesApiConst.STATUS_CODE_NEW;
         }
         
-//        int currentStatusId = (sosh == null ? SalesApiConst.STATUS_CODE_NEW : sosh.getSoStatusId());
-
         // Determine if it is okay to navigate from the current sales order 
         // status to the new destination status. 
         switch (newStatusId) {
@@ -623,14 +621,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 // Persist sales order item
                 dao.maintain(item);
             }
-//          int itemCount = items.size();
-//            for (int ndx = 0; ndx < itemCount; ndx++) {
-//                items.get(ndx).setSalesOrderId(order.getSalesOrderId());
-//                // Gather inventory details for sales order item.
-//                this.setupSalesOrderItemInvDetails(items.get(ndx));
-//                // Persist sales order item
-//                dao.maintain(items.get(ndx));
-//            }
             // For new orders, change the order status to "quote"
             if (newOrder) {
                 this.changeSalesOrderStatus(order.getSalesOrderId(), 
