@@ -168,7 +168,7 @@ public class AccountingMockDataUtility {
         i.setUnitCost(unitCost);
         i.setActive(active ? 1 : 0);
         i.setOverrideRetail(0);
-        i.setMarkup(3);
+        i.setMarkup(5);
         i.setRetailPrice((qty * unitCost) * i.getMarkup());
         return i;
     }
@@ -892,7 +892,7 @@ public class AccountingMockDataUtility {
         i.setInitUnitCost(cost);
         i.setInitMarkup(3.0);
         i.setItemNameOverride("ItemNameOverride" + itemId);
-        i.setBackOrderQty(100);
+        i.setBackOrderQty(0);
         return i;
     }
    

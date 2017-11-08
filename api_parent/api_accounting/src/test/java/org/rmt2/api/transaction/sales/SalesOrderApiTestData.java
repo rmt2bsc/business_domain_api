@@ -28,6 +28,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     protected List<SalesInvoice> mockSalesInvoiceAllResponse;
     protected List<SalesInvoice> mockSalesInvoiceSingleResponse;
     protected List<SalesOrderItems> mockSalesOrderItemsNotFoundResponse;
+    protected List<SalesOrderItems> mockSalesOrderItemsSingleResponse;
     protected List<SalesOrderItems> mockSalesOrderItemsAllResponse;
     protected List<VwSalesOrderInvoice> mockVwSalesOrderInvoiceNotFoundResponse;
     protected List<VwSalesOrderInvoice> mockVwSalesOrderInvoiceAllResponse;
@@ -59,7 +60,8 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         this.mockSalesInvoiceSingleResponse = this.createMockSalesInvoiceSingleResponse();
 
         this.mockSalesOrderItemsNotFoundResponse = this.createMockSalesOrderItemsNotFoundResponse();
-        this.mockSalesOrderItemsAllResponse = this.createMockSalesOrderItemsAllsponse();
+        this.mockSalesOrderItemsSingleResponse = createMockSalesOrderItemsSingleResponse();
+        this.mockSalesOrderItemsAllResponse = this.createMockSalesOrderItemsAllResponse();
         
         this.mockVwSalesorderItemsBySalesorderNotFoundResponse = this.createMockVwSalesorderItemsBySalesorderNotFoundsponse();
         this.mockVwSalesorderItemsBySalesorderAllResponse = this.createMockVwSalesorderItemsBySalesorderAllsponse();
@@ -160,7 +162,15 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
-    private List<SalesOrderItems> createMockSalesOrderItemsAllsponse() {
+    private List<SalesOrderItems> createMockSalesOrderItemsSingleResponse() {
+        List<SalesOrderItems> list = new ArrayList<SalesOrderItems>();
+        SalesOrderItems o = AccountingMockDataUtility
+                .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        list.add(o);
+        return list;
+    }
+    
+    private List<SalesOrderItems> createMockSalesOrderItemsAllResponse() {
         List<SalesOrderItems> list = new ArrayList<SalesOrderItems>();
         SalesOrderItems o = AccountingMockDataUtility
                 .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
@@ -394,32 +404,32 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     
     private List<ItemMaster> createMockItemMasterSingleFetchResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(33330, 1,
+                "111-111-111", "11111111", 1234, "Item1", 2, 1.23, true);
         list.add(p);
         return list;
     }
     
     private List<ItemMaster> createMockItemMasterFetchAllResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
-                "100-111-111", "11111110", 1351, "Item # 1", 1, 1.23, true);
+        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(33330, 1,
+                "100-111-111", "11111110", 1351, "Item1", 1, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(101, 1,
-                "101-111-111", "11111111", 1352, "Item # 2", 2, 1.23, true);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(33331, 1,
+                "101-111-111", "11111111", 1352, "Item2", 2, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
-                "102-111-111", "11111112", 1353, "Item # 3", 3, 1.23, true);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(33332, 1,
+                "102-111-111", "11111112", 1353, "Item3", 3, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
-                "103-111-111", "11111113", 1354, "Item # 4", 4, 1.23, true);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(33333, 1,
+                "103-111-111", "11111113", 1354, "Item4", 4, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
-                "104-111-111", "11111114", 1355, "Item # 5", 5, 1.23, true);
+        p = AccountingMockDataUtility.createMockOrmItemMaster(33334, 1,
+                "104-111-111", "11111114", 1355, "Item5", 5, 1.23, true);
         list.add(p);
         return list;
     }

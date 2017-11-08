@@ -49,26 +49,15 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
     private SalesOrder newSalesOrderOrm;
     private SalesOrderDto newSalesOrderDto;
     private List<SalesOrderItemDto> newLineItemListDto;
+    private List<SalesOrderItemDto> newSingleLineItemListDto;
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        // Setup new mock sales order and sales order line item DTO's
-        this.newSalesOrderOrm = this.mockSalesOrderSingleResponse.get(0);
-        this.newSalesOrderDto = Rmt2SalesOrderDtoFactory.
-                createSalesOrderInstance(this.newSalesOrderOrm);
-        this.newSalesOrderDto.setSalesOrderId(0);
-        this.newLineItemListDto = new ArrayList<>();
-        for (SalesOrderItems item : this.mockSalesOrderItemsAllResponse) {
-            item.setSoId(0);
-            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
-            this.newLineItemListDto.add(dto);
-        }
-        
-        
+        this.modifyMockData();
+        this.setupBasicMockStubs();
     }
 
     /**
@@ -80,10 +69,28 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
         return;
     }
     
- 
-    @Test
-    public void testUpdate_To_Quote_Status_Success() {
-        // Setup mock for validating line items
+    private void modifyMockData() {
+     // Setup new mock sales order and sales order line item DTO's
+        this.newSalesOrderOrm = this.mockSalesOrderSingleResponse.get(0);
+        this.newSalesOrderDto = Rmt2SalesOrderDtoFactory.
+                createSalesOrderInstance(this.newSalesOrderOrm);
+        this.newSalesOrderDto.setSalesOrderId(0);
+        this.newLineItemListDto = new ArrayList<>();
+        for (SalesOrderItems item : this.mockSalesOrderItemsAllResponse) {
+            item.setSoId(0);
+            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
+            this.newLineItemListDto.add(dto);
+        }
+        this.newSingleLineItemListDto = new ArrayList<>();
+        for (SalesOrderItems item : this.mockSalesOrderItemsSingleResponse) {
+            item.setSoId(0);
+            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
+            this.newSingleLineItemListDto.add(dto);
+        }
+    }
+    
+    private void setupBasicMockStubs() {
+     // Setup mock for validating line items
         try {
             // Use "isA" matcher instead of "any" to prevent "any" from 
             // overriding "eq" when both matchers are used interchangeable as 
@@ -118,19 +125,19 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
             Assert.fail("Fetch single customer test case setup failed");
         }
         
-        // Setup mock for adding sales order line items
+        // Setup mock for adding base sales order
         try {
-            when(this.mockPersistenceClient.insertRow(any(SalesOrderItems.class), any(Boolean.class)))
-                            .thenReturn(500, 501, 502, 503, 504);
+            when(this.mockPersistenceClient.insertRow(eq(this.newSalesOrderOrm), eq(true)))
+                            .thenReturn(TEST_NEW_SALES_ORDER_ID);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up sales order line item update case failed");
         }
         
-        // Setup mock for adding base sales order
+        // Setup mock for adding sales order line items
         try {
-            when(this.mockPersistenceClient.insertRow(eq(this.newSalesOrderOrm), eq(true)))
-                            .thenReturn(TEST_NEW_SALES_ORDER_ID);
+            when(this.mockPersistenceClient.insertRow(isA(SalesOrderItems.class), any(Boolean.class)))
+                            .thenReturn(88880, 88881, 88882, 88883, 88884);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up sales order line item update case failed");
@@ -161,7 +168,11 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
             e.printStackTrace();
             Assert.fail("All Sales order current status fetch test case setup failed");
         }
-        
+    }
+    
+ 
+    @Test
+    public void testUpdate_Create_SalesOrder_Success() {
         // Perform test
         SalesApiFactory f = new SalesApiFactory();
         SalesApi api = f.createApi(mockDaoClient);
@@ -175,4 +186,53 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
         Assert.assertEquals(TEST_NEW_SALES_ORDER_ID, results);
     }
     
+    
+    @Test
+    public void testUpdate_Create_SalesOrder_With_BackOrder_Success() {
+        // Setup backorder data
+        SalesOrderItemDto lineItem = this.newSingleLineItemListDto.get(0);
+        lineItem.setBackOrderQty(0);
+        lineItem.setOrderQty(5);
+        
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        int results = 0;
+        try {
+            results = api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(TEST_NEW_SALES_ORDER_ID, results);
+        Assert.assertEquals(3, lineItem.getBackOrderQty(), 0);
+        Assert.assertEquals(2, lineItem.getOrderQty(), 0);
+        
+    }
+    
+    @Test
+    public void testUpdate_Create_SalesOrder_Using_ItemMaster_Cost_Success() {
+        
+        // Force app to use unit cost and markup from item master.
+        SalesOrderItemDto lineItem = this.newSingleLineItemListDto.get(0);
+        lineItem.setBackOrderQty(0);
+        lineItem.setInitMarkup(0);
+        lineItem.setInitUnitCost(0);
+        
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        int results = 0;
+        try {
+            results = api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(TEST_NEW_SALES_ORDER_ID, results);
+        Assert.assertEquals(0, lineItem.getBackOrderQty(), 0);
+        Assert.assertEquals(5, lineItem.getInitMarkup(), 0);
+        Assert.assertEquals(1.23, lineItem.getInitUnitCost(), 0);
+        
+    }
 }
