@@ -93,19 +93,19 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmSalesOrder(1001, 2000, 0,
-                600.00, "2017-01-01");
+                600.00, "2017-02-01");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmSalesOrder(1002, 2000, 0,
-                900.00, "2017-02-01");
+                900.00, "2017-03-01");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmSalesOrder(1003, 2000, 0,
-                1200.00, "2017-03-01");
+                1200.00, "2017-04-01");
         list.add(o);
 
         o = AccountingMockDataUtility.createMockOrmSalesOrder(1004, 2000, 0,
-                1500.00, "2017-04-01");
+                1500.00, "2017-05-01");
         list.add(o);
         return list;
     }
@@ -202,52 +202,47 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         SalesOrderItems soi = AccountingMockDataUtility
                 .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
         ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(
-                123450, InventoryConst.ITEM_TYPE_MERCH, "1111-111-110",
-                "11111110", 1351, "Item1", 10, 20.00, true);
+                33330, InventoryConst.ITEM_TYPE_MERCH, "1111-111-110",
+                "11111110", 77770, "Item1", 10, 20.00, true);
 
         VwSalesorderItemsBySalesorder o = AccountingMockDataUtility
-                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
-                        imt);
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im, imt);
         list.add(o);
 
         soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88881,
                 33331, 1000, 1, 20.00);
-        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+        im = AccountingMockDataUtility.createMockOrmItemMaster(33331,
                 InventoryConst.ITEM_TYPE_MERCH, "1111-111-111", "11111111",
-                1351, "Item2", 10, 20.00, true);
+                77770, "Item2", 10, 20.00, true);
         o = AccountingMockDataUtility
-                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
-                        imt);
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im, imt);
         list.add(o);
 
         soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88882,
                 33332, 1000, 1, 20.00);
-        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+        im = AccountingMockDataUtility.createMockOrmItemMaster(33332,
                 InventoryConst.ITEM_TYPE_MERCH, "1111-111-112", "11111112",
-                1351, "Item3", 10, 20.00, true);
+                77770, "Item3", 10, 20.00, true);
         o = AccountingMockDataUtility
-                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
-                        imt);
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im, imt);
         list.add(o);
 
         soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88883,
                 33333, 1000, 1, 20.00);
-        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+        im = AccountingMockDataUtility.createMockOrmItemMaster(33333,
                 InventoryConst.ITEM_TYPE_MERCH, "1111-111-113", "11111113",
-                1351, "Item4", 10, 20.00, true);
+                77770, "Item4", 10, 20.00, true);
         o = AccountingMockDataUtility
-                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
-                        imt);
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im, imt);
         list.add(o);
 
         soi = AccountingMockDataUtility.createMockOrmSalesOrderItem(88884,
                 33334, 1000, 1, 20.00);
-        im = AccountingMockDataUtility.createMockOrmItemMaster(123451,
+        im = AccountingMockDataUtility.createMockOrmItemMaster(33334,
                 InventoryConst.ITEM_TYPE_MERCH, "1111-111-114", "11111114",
-                1351, "Item5", 10, 20.00, true);
+                77770, "Item5", 10, 20.00, true);
         o = AccountingMockDataUtility
-                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
-                        imt);
+                .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im, imt);
         list.add(o);
         return list;
     }

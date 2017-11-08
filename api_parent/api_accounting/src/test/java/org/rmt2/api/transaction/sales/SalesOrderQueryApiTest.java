@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.inventory.InventoryConst;
 import org.modules.transaction.sales.MissingCurrentStatusException;
 import org.modules.transaction.sales.SalesApi;
 import org.modules.transaction.sales.SalesApiConst;
@@ -37,6 +38,8 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2Date;
+import com.util.RMT2String;
 
 /**
  * Tests sales order / sales invoice transaction query Api.
@@ -92,6 +95,15 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            SalesOrderDto item = results.get(ndx);
+            Assert.assertEquals((1000 + ndx), item.getSalesOrderId());
+            Assert.assertEquals(2000, item.getCustomerId());
+            Assert.assertFalse(item.isInvoiced());
+            Assert.assertEquals((300 * (ndx + 1)), item.getOrderTotal(), 0);
+            String effDate = RMT2String.replace("2017-0%-01", String.valueOf((ndx + 1)), "%");
+            Assert.assertEquals(RMT2Date.stringToDate(effDate), item.getSaleOrderDate());
+        }
     }
     
     @Test
@@ -185,6 +197,10 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
+        Assert.assertEquals(1000, results.getSalesOrderId());
+        Assert.assertEquals(2000, results.getCustomerId());
+        Assert.assertFalse(results.isInvoiced());
+        Assert.assertEquals(RMT2Date.stringToDate("2017-01-01"), results.getSaleOrderDate());
     }
     
     @Test
@@ -332,6 +348,24 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        double totalAmt = 0;
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            SalesOrderItemDto item = results.get(ndx);
+            try {
+                Assert.assertEquals(Integer.parseInt("8888" + ndx), item.getSoItemId());
+            } catch(NumberFormatException e) {
+                Assert.fail("Unable to convert calculated sales order item id String value to an integer for index " + ndx);
+            }
+            
+            try {
+                Assert.assertEquals(Integer.parseInt("3333" + ndx), item.getItemId());
+            } catch(NumberFormatException e) {
+                Assert.fail("Unable to convert calculated sales order inventory item id String value to an integer for index " + ndx);
+            }
+            Assert.assertEquals(1000, item.getSalesOrderId());
+            totalAmt += item.getOrderQty() * (item.getInitUnitCost() * item.getInitMarkup());
+        }
+        Assert.assertEquals(300.00, totalAmt, 0);
     }
     
     @Test
@@ -431,7 +465,8 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         VwSalesorderItemsBySalesorder so = new VwSalesorderItemsBySalesorder();
         so.setSoId(TEST_SALES_ORDER_ID);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(so))).thenReturn(this.mockVwSalesorderItemsBySalesorderAllResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+               .thenReturn(this.mockVwSalesorderItemsBySalesorderAllResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Single Extended sales order items fetch test case setup failed");
@@ -449,6 +484,51 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        double totalAmt = 0;
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            SalesOrderItemDto item = results.get(ndx);
+
+            // Test constant values for all line items
+            Assert.assertEquals(2000, item.getCustomerId());
+            Assert.assertEquals(1351, item.getBusinessId());
+            Assert.assertEquals(0, item.getPersonId());
+            Assert.assertEquals(0, item.getAcctId());
+            Assert.assertNull(item.getAccountNo());
+            
+            Assert.assertEquals(1000, item.getSalesOrderId());
+            Assert.assertFalse(item.isInvoiced());
+            Assert.assertEquals(0, item.getOrderTotal(), 0);
+            Assert.assertNull(item.getSaleOrderDate());
+            
+            Assert.assertEquals(InventoryConst.ITEM_TYPE_MERCH, item.getImItemTypeId());
+            Assert.assertEquals("ItemTypeMerchandise", item.getImItemTypeDescription());
+
+            // Test variable values for all line items
+            try {
+                Assert.assertEquals(Integer.parseInt("8888" + ndx), item.getSoItemId());
+            } catch(NumberFormatException e) {
+                Assert.fail("Unable to convert calculated sales order item id String value to an integer for index " + ndx);
+            }
+            
+            try {
+                Assert.assertEquals(Integer.parseInt("3333" + ndx), item.getItemId());
+            } catch(NumberFormatException e) {
+                Assert.fail("Unable to convert calculated sales order inventory item id String value to an integer for index " + ndx);
+            }
+            Assert.assertEquals(1, item.getOrderQty(), 0);
+            Assert.assertEquals(20, item.getInitUnitCost(), 0);
+            Assert.assertEquals(3, item.getInitMarkup(), 0);
+            totalAmt += item.getOrderQty() * (item.getInitUnitCost() * item.getInitMarkup());
+            
+            Assert.assertEquals("1111-111-11" + ndx, item.getImSerialNo());
+            Assert.assertEquals("1111111" + ndx, item.getImVendorItemNo());
+            Assert.assertEquals(77770, item.getImVendorId());
+            Assert.assertEquals("Item" + (ndx + 1), item.getImName());
+            Assert.assertEquals(10, item.getImQtyOnHand(), 0);
+            Assert.assertEquals(20, item.getImUnitCost(), 0);
+            Assert.assertEquals(3, item.getImMarkup(), 0);
+        }
+        Assert.assertEquals(300.00, totalAmt, 0);
     }
     
     @Test
@@ -566,6 +646,11 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
+        Assert.assertEquals(7000, results.getInvoiceId());
+        Assert.assertEquals(1000, results.getSalesOrderId());
+        Assert.assertEquals(444440, results.getXactId());
+        Assert.assertEquals("80000", results.getInvoiceNo());
+        
     }
     
     @Test
@@ -717,6 +802,26 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            SalesInvoiceDto item = results.get(ndx);
+            Assert.assertEquals(7000 + ndx, item.getInvoiceId());
+            Assert.assertEquals(1000 + ndx, item.getSalesOrderId());
+            Assert.assertEquals(444440, item.getXactId());
+            Assert.assertEquals("8000" + ndx, item.getInvoiceNo());
+            
+            String salesOrderDate = RMT2String.replace("2017-0%-01", String.valueOf((ndx + 1)), "%");
+            Assert.assertEquals(RMT2Date.stringToDate(salesOrderDate), item.getSaleOrderDate());
+            
+            Assert.assertEquals(300.00 * (ndx + 1), item.getOrderTotal(), 0);
+            Assert.assertEquals(SalesApiConst.STATUS_CODE_INVOICED, item.getSoStatusId());
+            Assert.assertTrue(item.isInvoiced());
+            
+            String invoiceDate = RMT2String.replace("2017-0%-10", String.valueOf((ndx + 1)), "%");
+            Assert.assertEquals(RMT2Date.stringToDate(invoiceDate), item.getInvoiceDate());
+            Assert.assertEquals(2000, item.getCustomerId());
+            Assert.assertEquals(1234, item.getAcctId());
+            Assert.assertEquals("111-111", item.getAccountNo());
+        }
     }
     
     @Test
@@ -818,6 +923,11 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
+        Assert.assertEquals(71, results.getSoStatusHistId());
+        Assert.assertEquals(1000, results.getSoId());
+        Assert.assertEquals(SalesApiConst.STATUS_CODE_QUOTE, results.getSoStatusId());
+        Assert.assertEquals(RMT2Date.stringToDate("2017-02-10"), results.getEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2017-02-28"), results.getEndDate());
     }
 
     @Test
@@ -937,6 +1047,8 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
+        Assert.assertEquals(SalesApiConst.STATUS_CODE_QUOTE, results.getSoStatusId());
+        Assert.assertEquals("Quote", results.getSoStatusDescription());
     }
     
     @Test
