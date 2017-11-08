@@ -1,6 +1,8 @@
 package org.modules.transaction.sales;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
@@ -69,6 +71,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     private SalesOrderDaoFactory daoFact;
 
     private SalesOrderDao dao;
+    
+    private Map<Integer, ItemMasterDto> itemMasterCache;
 
     /**
      * Creates an SalesApiImpl which creates a stand alone connection.
@@ -113,6 +117,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     public void init() {
         super.init();
         this.daoFact = new SalesOrderDaoFactory();
+        this.itemMasterCache = new HashMap<>();
     }
 
     /*
@@ -810,9 +815,12 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             InventoryApiFactory invFact = new InventoryApiFactory();
             InventoryApi invApi = invFact.createApi(this.dao);
             try {
-                Object test = invApi.getItemById(item.getItemId());
+                ItemMasterDto imDto = invApi.getItemById(item.getItemId());
                 try {
-                    Verifier.verifyNotNull(test);
+                    Verifier.verifyNotNull(imDto);
+                    // add inventory item to the internal item master cache.
+                    this.itemMasterCache.put(item.getItemId(), imDto);
+                    
                 } catch (VerifyException e) {
                     buf.append("Item id, ");
                     buf.append(item.getItemId());
@@ -865,27 +873,32 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     private void setupSalesOrderItemInvDetails(SalesOrderItemDto soi) throws SalesApiException {
         double backOrderQty = 0;
         StringBuilder buf = new StringBuilder();
-        ItemMasterDto im;
-        InventoryApi invApi;
+        ItemMasterDto im = null;
         try {
-            InventoryApiFactory invFact = new InventoryApiFactory();
-            invApi = invFact.createApi();
-            im = invApi.getItemById(soi.getItemId());
-        } catch (InventoryApiException e) {
-            buf.append("Unable to obtain inventory details for item, ");
-            buf.append(soi.getItemId());
-            buf.append(", needed to populate sales order item");
+            im = this.itemMasterCache.get(soi.getItemId());
+            Verifier.verifyNotNull(im);
+        }
+        catch (VerifyException e) {
+            buf.append("Inventory item doe not exist in the item master cache sale order line item, ");
+            buf.append(soi.getSoItemId());
             this.msg = buf.toString();
             throw new SalesApiException(this.msg, e);
-        } finally {
-            invApi = null;
         }
-
+        catch (Exception e) {
+            buf.append("Unable to obtain inventory details for item, ");
+            buf.append(soi.getItemId());
+            buf.append(", in order to populate sales order item");
+            this.msg = buf.toString();
+            throw new SalesApiException(this.msg, e);
+        }
+        
+        
         // Compare order quantity of item to actual inventory quantity on
         // hand to determine if back order is required.
         if (soi.getOrderQty() > im.getQtyOnHand()) {
             backOrderQty = soi.getOrderQty() - im.getQtyOnHand();
             soi.setBackOrderQty(backOrderQty);
+            soi.setOrderQty(im.getQtyOnHand());
         }
         // Assign inventory markup provided it is not set at the sales order item level
         if (soi.getInitMarkup() <= 0) {
