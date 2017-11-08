@@ -126,23 +126,26 @@ public interface SalesApi extends XactApi {
      *         updated.
      * @throws SalesApiException
      */
-    int updateSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) throws SalesApiException;
+    int updateSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) 
+            throws SalesApiException;
 
     /**
-     * Updates the status of one or more invoiced sales orders to "Closed" when
-     * a payment is received.
+     * Closes selected invoiced sales orders based on payment on account transaction.
      * <p>
-     * The total amount of selected invoices must not exceed the amount of
-     * payment received for the account.
+     * Updates the status of one or more invoiced sales orders to "Closed" when
+     * a payment is received. The total amount of selected invoices must equal 
+     * the amount of payment received for the account.
      * 
      * @param order
      *            a List of orders covering the payment.
-     * @param xact
+     * @param paymentXact
      *            an isntance of {@link XactDto} representing the payment
      * @return the total number of orders processed.
      * @throws SalesApiException
+     * @throws InvalidDataException Validation error
      */
-    int updateSalesOrderPaymentStatus(List<SalesOrderDto> orders, XactDto xact) throws SalesApiException;
+    int closeSalesOrderForPayment(List<SalesOrderDto> orders, XactDto paymentXact) 
+            throws SalesApiException;
 
     /**
      * Creates a sales invoice from a selected sales order.
@@ -157,8 +160,8 @@ public interface SalesApi extends XactApi {
      * @return invoice id
      * @throws SalesApiException
      */
-    int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items, boolean receivePayment)
-            throws SalesApiException;
+    int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items, 
+            boolean receivePayment) throws SalesApiException;
 
     /**
      * Cancels a sales order.

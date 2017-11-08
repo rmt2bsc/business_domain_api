@@ -640,37 +640,50 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * Updates the status of one or more invoiced sales orders to "Closed" when
      * a payment is received.
      * <p>
-     * The total amount of selected invoices must not exceed the amount of
-     * payment received for the account.
+     * The total amount of selected invoices must equal the amount of
+     * payment transaction received for the account.
      * 
      * @param order
      *            a List of orders covering the payment.
-     * @param xact
+     * @param paymentXact
      *            an isntance of {@link XactDto} representing the payment
      * @return the total number of orders processed.
      * @throws SalesApiException
      *             <i>orders</i> and/or <i>xaact</i> is null or the sum of all
      *             order totals belonging to <i>orders</i> does not equal
-     *             transaction amount of <i>xact</i>.
+     *             transaction amount of <i>paymentXact</i>.
+     * @throws InvalidDataException <i>orders</i> or <i>paymentXact</i> are null.
      */
-    public int updateSalesOrderPaymentStatus(List<SalesOrderDto> orders, XactDto xact) throws SalesApiException {
-
-        if (orders == null || xact == null) {
-            this.msg = "The list of sales orders and/or the transaction object are invalid";
-            throw new SalesApiException(this.msg);
+    public int closeSalesOrderForPayment(List<SalesOrderDto> orders, XactDto paymentXact) throws SalesApiException {
+        try {
+            Verifier.verifyNotNull(orders);
+        } catch (VerifyException e) {
+            this.msg = "The list of sales orders is required";
+            throw new InvalidDataException(this.msg, e);
         }
-        if (orders.size() <= 0) {
+        try {
+            Verifier.verifyPositive(orders.size());
+        } catch (VerifyException e) {
+            this.msg = "There are no sales orders to close out";
             return 0;
+        }
+        try {
+            Verifier.verifyNotNull(paymentXact);
+        } catch (VerifyException e) {
+            this.msg = "Payment transaction is required";
+            throw new InvalidDataException(this.msg, e);
         }
 
         // Verify that total of selected orders equals transaction amount
-        double orderTotal = 0;
+        double combinedSalesOrderTotal = 0;
         for (SalesOrderDto order : orders) {
-            orderTotal += order.getOrderTotal();
+            combinedSalesOrderTotal += order.getOrderTotal();
         }
-        if (orderTotal != xact.getXactAmount()) {
+        try {
+            Verifier.verify(combinedSalesOrderTotal == paymentXact.getXactAmount());
+        } catch (VerifyException e) {
             this.msg = "The total dollar amount of selected invoices must be equal to the payment amount received";
-            throw new SalesApiException(this.msg);
+            throw new SalesApiException(this.msg, e);
         }
 
         // Close out each sales order
