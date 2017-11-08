@@ -21,6 +21,7 @@ import org.dto.SalesOrderStatusHistDto;
 import org.dto.XactDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
+import org.modules.CommonAccountingConst;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
@@ -465,8 +466,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      *             moving the sales order status to <i>newStatusId</i> would
      *             violate business rules.
      */
-    private SalesOrderStatusHistDto evaluateSalesOrderStatusChange(int salesOrderId, int newStatusId)
-            throws SalesApiException {
+    private SalesOrderStatusHistDto evaluateSalesOrderStatusChange(int salesOrderId, 
+            int newStatusId) throws SalesApiException {
         StringBuilder buf = new StringBuilder();
         if (!this.isValidSalesOrderStatus(newStatusId)) {
             buf.append("The destination sales order status id is invalid,  ");
@@ -475,17 +476,27 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             logger.error(this.msg);
             throw new SalesOrderStatusInvalidException(this.msg);
         }
-        SalesOrderStatusHistDto sosh = this.getCurrentStatus(salesOrderId);
-        int currentStatusId = (sosh == null ? SalesApiConst.STATUS_CODE_NEW : sosh.getSoStatusId());
+        
+        // Get current status of sales order
+        SalesOrderStatusHistDto sosh = null;
+        int currentStatusId = 0;
+        try {
+            sosh = this.getCurrentStatus(salesOrderId);    
+            currentStatusId = sosh.getSoStatusId();
+        } catch (MissingCurrentStatusException e) {
+            currentStatusId = SalesApiConst.STATUS_CODE_NEW;
+        }
+        
+//        int currentStatusId = (sosh == null ? SalesApiConst.STATUS_CODE_NEW : sosh.getSoStatusId());
 
-        // Begin to evaluate current and destination sales order statuses
+        // Determine if it is okay to navigate from the current sales order 
+        // status to the new destination status. 
         switch (newStatusId) {
             case SalesApiConst.STATUS_CODE_QUOTE:
                 if (currentStatusId != SalesApiConst.STATUS_CODE_NEW) {
                     this.msg = "Quote status can only be assigned when the sales order is new";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(
-                            this.msg);
+                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
                 }
                 break;
 
@@ -493,8 +504,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 if (currentStatusId != SalesApiConst.STATUS_CODE_QUOTE) {
                     this.msg = "Sales order must be in Quote status before changing to Invoiced";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(
-                            this.msg);
+                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
                 }
                 break;
 
@@ -502,8 +512,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 if (currentStatusId != SalesApiConst.STATUS_CODE_INVOICED) {
                     this.msg = "Sales order must be in Invoiced status before changing to Closed";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(
-                            this.msg);
+                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
                 }
                 break;
 
@@ -511,8 +520,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 if (currentStatusId != SalesApiConst.STATUS_CODE_INVOICED) {
                     this.msg = "Sales order must be in Invoiced status before changing to Cancelled";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(
-                            this.msg);
+                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
                 }
                 break;
 
@@ -525,8 +533,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                     default:
                         this.msg = "Sales order must be in Invoiced or Closed statuses before changing to Refunded";
                         logger.error(this.msg);
-                        throw new SalesOrderStatusInvalidDestinationException(
-                                this.msg);
+                        throw new SalesOrderStatusInvalidDestinationException(this.msg);
                 } // end inner switch
                 break;
 
@@ -538,21 +545,25 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     private SalesOrderStatusHistDto changeSalesOrderStatus(int salesOrderId, int newStatusId) throws SalesApiException {
         try {
             // Verify that it is okay to move to invoice status
-            SalesOrderStatusHistDto sosh = this.evaluateSalesOrderStatusChange(
-                    salesOrderId, newStatusId);
+            SalesOrderStatusHistDto sosh = 
+                    this.evaluateSalesOrderStatusChange(salesOrderId, newStatusId);
+                    
             // Terminate the current status
             if (sosh != null) {
                 dao.maintain(sosh);
             }
             // Create new invoice status.
-            sosh = Rmt2SalesOrderDtoFactory
-                    .createSalesOrderStatusHistoryInstance(null);
+            sosh = Rmt2SalesOrderDtoFactory.createSalesOrderStatusHistoryInstance(null);
             sosh.setSoId(salesOrderId);
             sosh.setSoStatusId(newStatusId);
             dao.maintain(sosh);
             return sosh;
         } catch (SalesOrderDaoException e) {
-            throw new SalesApiException(e);
+            this.msg = "DAO error occurred while attempting to update the sales order status history";
+            throw new SalesApiException(this.msg, e);
+        } catch (SalesOrderStatusInvalidDestinationException | SalesOrderStatusInvalidException e) {
+            this.msg = "Unable to update sales order status history due to the destination status id failed validations";
+            throw new SalesApiException(this.msg, e);
         }
     }
 
@@ -576,14 +587,15 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public int updateSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) throws SalesApiException {
+    public int updateSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) 
+            throws SalesApiException {
         logger.info("Began processing sales order " + order.getSalesOrderId() + "...");
         try {
             logger.info("Validating sales order...");
             this.validate(order, items);
         } catch (Exception e) {
             StringBuilder buf = new StringBuilder();
-            buf.append("Sales order validation failed for sales order  ");
+            buf.append("Sales order failed validation check ===> Sales order Id: ");
             buf.append((order.getSalesOrderId() > 0 ? order.getSalesOrderId() : SalesApiImpl.SALES_ORDER_NEW_TAG));
             this.msg = buf.toString();
             throw new SalesApiException(this.msg, e);
@@ -604,23 +616,33 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
             // Persist the sales order items
             logger.info("Adding new sales order items.");
-            int itemCount = items.size();
-            for (int ndx = 0; ndx < itemCount; ndx++) {
-                items.get(ndx).setSalesOrderId(order.getSalesOrderId());
+            for (SalesOrderItemDto item : items) {
+                item.setSalesOrderId(order.getSalesOrderId());
                 // Gather inventory details for sales order item.
-                this.setupSalesOrderItemInvDetails(items.get(ndx));
+                this.setupSalesOrderItemInvDetails(item);
                 // Persist sales order item
-                dao.maintain(items.get(ndx));
+                dao.maintain(item);
             }
+//          int itemCount = items.size();
+//            for (int ndx = 0; ndx < itemCount; ndx++) {
+//                items.get(ndx).setSalesOrderId(order.getSalesOrderId());
+//                // Gather inventory details for sales order item.
+//                this.setupSalesOrderItemInvDetails(items.get(ndx));
+//                // Persist sales order item
+//                dao.maintain(items.get(ndx));
+//            }
             // For new orders, change the order status to "quote"
             if (newOrder) {
-                this.changeSalesOrderStatus(order.getSalesOrderId(), SalesApiConst.STATUS_CODE_QUOTE);
+                this.changeSalesOrderStatus(order.getSalesOrderId(), 
+                        SalesApiConst.STATUS_CODE_QUOTE);
             }
+            logger.info("Processing sales order " + order.getSalesOrderId() + " complete!");
             return rc;
         } catch (SalesOrderDaoException e) {
+            logger.error("Processing sales order " + order.getSalesOrderId() + " completed with errors!");
             throw new SalesApiException(e);
         } finally {
-            logger.info("Processing sales order " + order.getSalesOrderId() + " complete!");
+            
         }
     }
 
@@ -710,7 +732,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         boolean newOrder = order.getSalesOrderId() == 0;
         if (!newOrder) {
             try {
-                Verifier.verify(!this.isValidSalesOrder(order.getSalesOrderId()));
+                Verifier.verify(this.isValidSalesOrder(order.getSalesOrderId()));
             } catch (VerifyException e) {
                 this.msg = "Sales order does not exist.  Sales order id: " + order.getSalesOrderId();
                 throw new NotFoundException(this.msg, e);
@@ -721,7 +743,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         // validate customer
-        this.validateCustomer(order.getCustomerId());
+        this.validateCustomer(order.getCustomerId());    
 
         // validate item(s)
         this.validateSalesOrderItems(items);
@@ -735,10 +757,10 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         SubsidiaryApiFactory custFact = new SubsidiaryApiFactory();
-        CustomerApi custApi = custFact.createCustomerApi();
+        CustomerApi custApi = custFact.createCustomerApi(CommonAccountingConst.APP_NAME);
         StringBuilder buf = new StringBuilder();
         try {
-            Object test = custApi.getByCustomerId(customerId);
+            Object test = custApi.get(customerId);
             if (test == null) {
                 buf.append("Customer does not exists for sales order update operation.  Customer Id [");
                 buf.append(customerId);
@@ -862,10 +884,12 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             backOrderQty = soi.getOrderQty() - im.getQtyOnHand();
             soi.setBackOrderQty(backOrderQty);
         }
-        // Apply to database
+        // Assign inventory markup provided it is not set at the sales order item level
         if (soi.getInitMarkup() <= 0) {
             soi.setInitMarkup(im.getMarkup());
         }
+        
+        // Assign inventory unit cost provided it is not set at the sales order item level
         if (soi.getInitUnitCost() <= 0) {
             soi.setInitUnitCost(im.getUnitCost());
         }
@@ -979,6 +1003,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     /**
      * Create cash receipt transaction of the entire amount of sales order.
      * <p>
+     * The entire amount of the sales order entails the total of all line 
+     * items, sales order fees, taxes, and other sales order charges.
      * This transaction will change the status of the sales order to "Closed".
      * 
      * @param order
@@ -1028,7 +1054,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         CashReceiptApiFactory crFact = new CashReceiptApiFactory();
         CashReceiptApi crApi = crFact.createApi(this.dao);
         try {
-            crApi.applyPaymentToInvoice(order, order.getCustomerId());
+            crApi.applyPaymentToInvoice(order, amount);
         } catch (CashReceiptApiException e) {
             this.msg = "Unable to apply customer payment sales order, " + order.getSalesOrderId();
             throw new SalesApiException(this.msg, e);

@@ -35,46 +35,28 @@ public class SalesOrderStatusHistoryRmt2OrmAdapter extends SalesOrderStatusRmt2O
      *            desired arises to create a newly instantiated instance.
      */
     protected SalesOrderStatusHistoryRmt2OrmAdapter(SalesOrderStatusHist soStatHist) {
-        // Initialize sales order status history object
-        this.updateObjHeirarchy(soStatHist);
-
-        // Initialize sales order status object
-        SalesOrderStatus s = new SalesOrderStatus();
-        s.setSoStatusId(this.hist.getSoStatusId());
-        this.updateObjHeirarchy(s);
-        
-        this.dateCreated = soStatHist.getDateCreated();
-        this.updateUserId = soStatHist.getUserId();
-        this.ipCreated = soStatHist.getIpCreated();
-        this.ipUpdated = soStatHist.getIpUpdated();
-
-        return;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.api.foundation.TransactionDtoImpl#initDataObject(java.lang.Object)
-     */
-    @Override
-    protected void updateObjHeirarchy(Object obj) {
-        super.updateObjHeirarchy(obj);
         SalesOrderStatusHist stat = null;
-        if (obj == null) {
+        if (soStatHist == null) {
             stat = new SalesOrderStatusHist();
         }
-        else if (obj instanceof SalesOrderStatusHist) {
-            stat = (SalesOrderStatusHist) obj;
+        else if (soStatHist instanceof SalesOrderStatusHist) {
+            stat = (SalesOrderStatusHist) soStatHist;
         }
         else {
             return;
         }
         this.hist = stat;
-        // this.setDateCreated(stat.getDateCreated());
-        // this.setUpdateUserId(stat.getUserId());
-        // this.setIpCreated(stat.getIpCreated());
-        // this.setIpUpdated(stat.getIpUpdated());
+
+        // Initialize sales order status object
+        SalesOrderStatus s = new SalesOrderStatus();
+        s.setSoStatusId(stat.getSoStatusId());
+        this.updateObjHeirarchy(s);
+        
+        this.dateCreated = stat.getDateCreated();
+        this.updateUserId = stat.getUserId();
+        this.ipCreated = stat.getIpCreated();
+        this.ipUpdated = stat.getIpUpdated();
+
         return;
     }
 

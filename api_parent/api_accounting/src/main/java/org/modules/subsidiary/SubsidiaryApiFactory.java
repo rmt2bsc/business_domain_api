@@ -28,10 +28,7 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * @return an instance of {@link CustomerApi}
      */
     public CustomerApi createCustomerApi() {
-        // CustomerApi api = new CustomerApiImp();
-        // return api;
-        return this
-                .createCustomerApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
+        return this.createCustomerApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**

@@ -137,8 +137,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         StringBuffer msgBuf = new StringBuffer();
         try {
             ItemMaster im = null;
-            ItemMasterDto criteria = Rmt2InventoryDtoFactory
-                    .createItemMasterInstance(im);
+            ItemMasterDto criteria = Rmt2InventoryDtoFactory.createItemMasterInstance(im);
             criteria.setItemId(itemId);
             results = this.getItem(criteria);
         } catch (Exception e) {

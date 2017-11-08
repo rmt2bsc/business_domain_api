@@ -40,6 +40,10 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     protected List<SalesOrderStatus> mockStatusAllResponse;
     protected List<SalesOrderStatus> mockStatusSingleResponse;
     
+    protected List<ItemMaster> mockSingleItemMasterFetchResponse;
+    protected List<ItemMaster> mockAllItemMasterResponse;
+    protected List<ItemMaster> mockNotFoundItemMasterResponse;
+    
     /**
      * @throws java.lang.Exception
      */
@@ -70,6 +74,10 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         
         this.mockStatusHistoryAllResponse = this.createMockSalesOrderStatusHistoryAllResponse();
         this.mockStatusHistoryNotFoundResponse = null;
+        
+        this.mockSingleItemMasterFetchResponse = this.createMockItemMasterSingleFetchResponse();
+        this.mockAllItemMasterResponse = this.createMockItemMasterFetchAllResponse();
+        this.mockNotFoundItemMasterResponse = this.createMockItemMasterNotFoundResponse();
         return;
     }
 
@@ -305,6 +313,22 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
     
+    /**
+     * 
+     * @param statusId
+     * @param description
+     * @return
+     */
+    public static final List<SalesOrderStatus> createMockSingleSalesOrderStatus(
+            int statusId, String description) {
+        List<SalesOrderStatus> list = new ArrayList<>();
+        SalesOrderStatus o = AccountingMockDataUtility
+                .createMockOrmSalesOrderStatus(statusId, description);
+        list.add(o);
+        return list;
+    }
+    
+    
     private List<SalesOrderStatus> createMockSalesOrderStatusAllResponse() {
         List<SalesOrderStatus> list = new ArrayList<SalesOrderStatus>();
         SalesOrderStatus o = AccountingMockDataUtility
@@ -367,4 +391,42 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         list.add(o);
         return list;
     }
+    
+    private List<ItemMaster> createMockItemMasterNotFoundResponse() {
+        List<ItemMaster> list = null;
+        return list;
+    }
+    
+    private List<ItemMaster> createMockItemMasterSingleFetchResponse() {
+        List<ItemMaster> list = new ArrayList<ItemMaster>();
+        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+        list.add(p);
+        return list;
+    }
+    
+    private List<ItemMaster> createMockItemMasterFetchAllResponse() {
+        List<ItemMaster> list = new ArrayList<ItemMaster>();
+        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+                "100-111-111", "11111110", 1351, "Item # 1", 1, 1.23, true);
+        list.add(p);
+
+        p = AccountingMockDataUtility.createMockOrmItemMaster(101, 1,
+                "101-111-111", "11111111", 1352, "Item # 2", 2, 1.23, true);
+        list.add(p);
+
+        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+                "102-111-111", "11111112", 1353, "Item # 3", 3, 1.23, true);
+        list.add(p);
+
+        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
+                "103-111-111", "11111113", 1354, "Item # 4", 4, 1.23, true);
+        list.add(p);
+
+        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
+                "104-111-111", "11111114", 1355, "Item # 5", 5, 1.23, true);
+        list.add(p);
+        return list;
+    }
+
 }

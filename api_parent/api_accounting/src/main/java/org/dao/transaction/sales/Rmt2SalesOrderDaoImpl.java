@@ -20,6 +20,8 @@ import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import com.api.persistence.PersistenceClient;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link SalesOrderDao}. It provides functionality that
@@ -288,13 +290,20 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
         int rc;
         SalesOrder so = SalesOrderDaoFactory.createOrmSalesOrder(order);
 
-        if (order.getSalesOrderId() <= 0) {
+        try {
+            Verifier.verifyPositive(order.getSalesOrderId());
+            rc = this.updateSalesOrder(so);
+        }catch (VerifyException e) {
             rc = this.createSalesOrder(so);
             order.setSalesOrderId(rc);
         }
-        else {
-            rc = this.updateSalesOrder(so);
-        }
+//        if (order.getSalesOrderId() <= 0) {
+//            rc = this.createSalesOrder(so);
+//            order.setSalesOrderId(rc);
+//        }
+//        else {
+//            rc = this.updateSalesOrder(so);
+//        }
         return rc;
     }
 
@@ -357,8 +366,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
     @Override
     public int maintain(SalesOrderItemDto item) throws SalesOrderDaoException {
         int rc = 0;
-        SalesOrderItems soi = SalesOrderDaoFactory
-                .createOrmSalesOrderItem(item);
+        SalesOrderItems soi = SalesOrderDaoFactory.createOrmSalesOrderItem(item);
         try {
             rc = this.client.insertRow(soi, true);
             item.setSoItemId(rc);

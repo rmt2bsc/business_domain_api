@@ -163,7 +163,7 @@ public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
     }
     
     @Test
-    public void testFetchSingle_SalesOrders() {
+    public void testFetchSingle_SalesOrder() {
         SalesOrder so = new SalesOrder();
         so.setSoId(TEST_SALES_ORDER_ID);
         try {
