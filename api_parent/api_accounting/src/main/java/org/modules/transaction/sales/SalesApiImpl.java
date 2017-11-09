@@ -609,9 +609,12 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             this.validate(order, items);
         } catch (InvalidDataException e) {
             StringBuilder buf = new StringBuilder();
-            buf.append("Sales order failed validation check ===> Sales order Id: ");
-            buf.append((order.getSalesOrderId() > 0 ? order.getSalesOrderId()
-                    : SalesApiImpl.SALES_ORDER_NEW_TAG));
+            buf.append("Sales order failed validation check");
+            if (order != null) {
+                buf.append("===> Sales order Id: ");
+                buf.append((order.getSalesOrderId() > 0 ? order.getSalesOrderId()
+                        : SalesApiImpl.SALES_ORDER_NEW_TAG));
+            }
             this.msg = buf.toString();
             throw new SalesApiException(this.msg, e);
         } catch (NotFoundException e) {
@@ -763,10 +766,10 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         boolean newOrder = order.getSalesOrderId() == 0;
         if (!newOrder) {
             try {
-                Verifier.verify(this.isValidSalesOrder(order.getSalesOrderId()));
-            } catch (VerifyException e) {
-                this.msg = "Sales order does not exist.  Sales order id: " + order.getSalesOrderId();
-                throw new NotFoundException(this.msg, e);
+                this.validateSalesOrder(order.getSalesOrderId());
+            } catch (NotFoundException e) {
+                this.msg = "Sales order could not be found";
+                throw new SalesApiException(this.msg, e);
             } catch (SalesApiException e) {
                 this.msg = "I/O error occurred validating sales order [" + order.getSalesOrderId() + "]";
                 throw new SalesApiException(this.msg, e);
@@ -797,7 +800,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 buf.append(customerId);
                 buf.append("]");
                 this.msg = buf.toString();
-                logger.error(this.msg);
                 throw new NotFoundException(this.msg);
             }
             // Hold the customer for future use and prevent excessive DB I/O
@@ -865,24 +867,15 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
     }
 
-    private boolean isValidSalesOrder(int salesOrderId) throws SalesApiException {
-        try {
-            if (this.getSalesOrder(salesOrderId) == null) {
-                return false;
-            }
-            return true;
-        } catch (Exception e) {
-            throw new SalesApiException("Sales order failed validation", e);
+    private void validateSalesOrder(int salesOrderId) throws SalesApiException {
+        if (this.getSalesOrder(salesOrderId) == null) {
+            throw new NotFoundException("Sales order does not exist for sales order id: " + salesOrderId);
         }
     }
 
     private void validateSalesOrderStatus(int statusId) throws SalesApiException {
-        try {
-            if (this.getStatus(statusId) == null) {
-                throw new NotFoundException("Sales order status does not exist");
-            }
-        } catch (Exception e) {
-            throw new SalesOrderStatusInvalidException("Sales order status failed validation", e);
+        if (this.getStatus(statusId) == null) {
+            throw new NotFoundException("Sales order status does not exist");
         }
     }
 
