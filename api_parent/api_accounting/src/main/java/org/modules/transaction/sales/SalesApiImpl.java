@@ -14,6 +14,7 @@ import org.dao.transaction.sales.SalesInvoiceDaoException;
 import org.dao.transaction.sales.SalesOrderDao;
 import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dao.transaction.sales.SalesOrderDaoFactory;
+import org.dto.CustomerDto;
 import org.dto.ItemMasterDto;
 import org.dto.SalesInvoiceDto;
 import org.dto.SalesOrderDto;
@@ -72,6 +73,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     private SalesOrderDao dao;
     
     private Map<Integer, ItemMasterDto> itemMasterCache;
+    
+    private CustomerDto customer;
 
     /**
      * Creates an SalesApiImpl which creates a stand alone connection.
@@ -775,8 +778,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         CustomerApi custApi = custFact.createCustomerApi(CommonAccountingConst.APP_NAME);
         StringBuilder buf = new StringBuilder();
         try {
-            Object test = custApi.get(customerId);
-            if (test == null) {
+            CustomerDto custDto = custApi.get(customerId);
+            if (custDto == null) {
                 buf.append("Customer does not exists for sales order update operation.  Customer Id [");
                 buf.append(customerId);
                 buf.append("]");
@@ -784,6 +787,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 logger.error(this.msg);
                 throw new SalesOrderCustomerIdInvalidException(this.msg);
             }
+            // Hold the customer for future use and prevent excessive DB I/O
+            this.customer = custDto;
         } catch (CustomerApiException e) {
             buf.append("Database error occurred while validating the existinece of customer,  ");
             buf.append(customerId);
