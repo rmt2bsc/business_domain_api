@@ -509,7 +509,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             case SalesApiConst.STATUS_CODE_QUOTE:
                 if (currentStatusId != SalesApiConst.STATUS_CODE_NEW) {
                     this.msg = "Quote status can only be assigned when the sales order is new";
-                    logger.error(this.msg);
                     throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
@@ -517,7 +516,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             case SalesApiConst.STATUS_CODE_INVOICED:
                 if (currentStatusId != SalesApiConst.STATUS_CODE_QUOTE) {
                     this.msg = "Sales order must be in Quote status before changing to Invoiced";
-                    logger.error(this.msg);
                     throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
@@ -525,7 +523,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             case SalesApiConst.STATUS_CODE_CLOSED:
                 if (currentStatusId != SalesApiConst.STATUS_CODE_INVOICED) {
                     this.msg = "Sales order must be in Invoiced status before changing to Closed";
-                    logger.error(this.msg);
                     throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
@@ -533,7 +530,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             case SalesApiConst.STATUS_CODE_CANCELLED:
                 if (currentStatusId != SalesApiConst.STATUS_CODE_INVOICED) {
                     this.msg = "Sales order must be in Invoiced status before changing to Cancelled";
-                    logger.error(this.msg);
                     throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
@@ -546,7 +542,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
                     default:
                         this.msg = "Sales order must be in Invoiced or Closed statuses before changing to Refunded";
-                        logger.error(this.msg);
                         throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 } // end inner switch
                 break;
