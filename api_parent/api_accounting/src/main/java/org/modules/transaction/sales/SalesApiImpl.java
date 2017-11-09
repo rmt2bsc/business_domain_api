@@ -591,7 +591,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     @Override
     public int updateSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) 
             throws SalesApiException {
-        logger.info("Began processing sales order " + order.getSalesOrderId() + "...");
+        logger.info("Recieved sales order");
         try {
             logger.info("Validating sales order...");
             this.validate(order, items);
@@ -613,6 +613,10 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         logger.info("Validating sales order complete.");
 
         // Determine if new or existing
+        logger.info("Began processing sales order "
+                + (order.getSalesOrderId() > 0 ? order.getSalesOrderId()
+                        : SalesApiImpl.SALES_ORDER_NEW_TAG)
+                + "...");
         boolean newOrder = order.getSalesOrderId() == 0;
         int rc = 0;
         dao.setDaoUser(this.getApiUser());
