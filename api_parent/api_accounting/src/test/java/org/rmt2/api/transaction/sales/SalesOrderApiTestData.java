@@ -75,7 +75,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         this.mockStatusSingleResponse = createMockSalesOrderStatusSingleResponse();
         
         this.mockStatusHistoryAllResponse = createMockSalesOrderStatusHistoryAllResponse();
-        this.mockStatusHistoryNotFoundResponse = null;
+        this.mockStatusHistoryNotFoundResponse = createMockSalesOrderStatusHistoryNotFoundResponse();
         
         this.mockSingleItemMasterFetchResponse = createMockItemMasterSingleFetchResponse();
         this.mockAllItemMasterResponse = createMockItemMasterFetchAllResponse();
@@ -359,6 +359,11 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         o = AccountingMockDataUtility.createMockOrmSalesOrderStatus(
                 SalesApiConst.STATUS_CODE_CLOSED, "Closed");
         list.add(o);
+        return list;
+    }
+    
+    public static final List<SalesOrderStatusHist> createMockSalesOrderStatusHistoryNotFoundResponse() {
+        List<SalesOrderStatusHist> list = null;
         return list;
     }
     

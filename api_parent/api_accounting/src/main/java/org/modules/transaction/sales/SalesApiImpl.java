@@ -144,7 +144,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         } catch (SalesOrderDaoException e) {
             StringBuilder buf = new StringBuilder();
             buf.append("Sales order DAO error occurred");
-            buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new SalesApiException(this.msg, e);
         }
@@ -309,7 +308,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             buf.append("DAO error occurred retrieving sales order status by status id, ");
             buf.append(statusId);
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new SalesApiException(this.msg, e);
         }
 
@@ -452,7 +450,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             buf.append("DAO error occurred retrieving the current status for sales order, ");
             buf.append(salesOrderId);
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new SalesApiException(this.msg, e);
         }
     }
@@ -473,7 +470,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      *             moving the sales order status to <i>newStatusId</i> would
      *             violate business rules.
      */
-    private SalesOrderStatusHistDto evaluateSalesOrderStatusChange(int salesOrderId, 
+    private SalesOrderStatusHistDto evaluateStatusChange(int salesOrderId, 
             int newStatusId) throws SalesApiException {
         StringBuilder buf = new StringBuilder();
         if (!this.isValidSalesOrderStatus(newStatusId)) {
@@ -551,13 +548,13 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             // Verify that it is okay to move to invoice status
             SalesOrderStatusHistDto sosh = 
-                    this.evaluateSalesOrderStatusChange(salesOrderId, newStatusId);
+                    this.evaluateStatusChange(salesOrderId, newStatusId);
                     
             // Terminate the current status
             if (sosh != null) {
                 dao.maintain(sosh);
             }
-            // Create new invoice status.
+            // Create new status.
             sosh = Rmt2SalesOrderDtoFactory.createSalesOrderStatusHistoryInstance(null);
             sosh.setSoId(salesOrderId);
             sosh.setSoStatusId(newStatusId);
@@ -632,7 +629,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             for (SalesOrderItemDto item : items) {
                 item.setSalesOrderId(order.getSalesOrderId());
                 // Gather inventory details for sales order item.
-                this.setupSalesOrderItemInvDetails(item);
+                this.setupCalculationDetails(item);
                 // Persist sales order item
                 dao.maintain(item);
             }
@@ -645,7 +642,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             return rc;
         } catch (SalesOrderDaoException e) {
             logger.error("Processing sales order " + order.getSalesOrderId() + " completed with errors!");
-            throw new SalesApiException(e);
+            throw new SalesApiException("DAO error occurred applying updates to sales order", e);
         } finally {
             
         }
@@ -790,7 +787,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             // Hold the customer for future use and prevent excessive DB I/O
             this.customer = custDto;
         } catch (CustomerApiException e) {
-            buf.append("Database error occurred while validating the existinece of customer,  ");
+            buf.append("Unable to validate the existinece of customer,  ");
             buf.append(customerId);
             this.msg = buf.toString();
             logger.error(this.msg);
@@ -845,7 +842,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 buf.append(item.getItemId());
                 buf.append(", against inventory");
                 this.msg = buf.toString();
-                logger.error(this.msg);
                 throw new SalesApiException(this.msg, e);
             } finally {
                 invApi = null;
@@ -860,7 +856,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             }
             return true;
         } catch (Exception e) {
-            throw new SalesApiException(this.msg, e);
+            throw new SalesApiException("Sales order failed validation", e);
         }
     }
 
@@ -871,18 +867,19 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             }
             return true;
         } catch (Exception e) {
-            throw new SalesApiException(this.msg, e);
+            throw new SalesApiException("Sales order status failed validation", e);
         }
     }
 
     /**
-     * Gather inventory item details to populate sales order item.
+     * Gather inventory item details which are used to calculate unit cost 
+     * and backorder quantity.
      * 
      * @param soi
      *            an instance of {@link SalesOrderItemDto}
      * @throws SalesApiException
      */
-    private void setupSalesOrderItemInvDetails(SalesOrderItemDto soi) throws SalesApiException {
+    private void setupCalculationDetails(SalesOrderItemDto soi) throws SalesApiException {
         double backOrderQty = 0;
         StringBuilder buf = new StringBuilder();
         ItemMasterDto im = null;
@@ -904,7 +901,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             throw new SalesApiException(this.msg, e);
         }
         
-        
         // Compare order quantity of item to actual inventory quantity on
         // hand to determine if back order is required.
         if (soi.getOrderQty() > im.getQtyOnHand()) {
@@ -912,6 +908,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             soi.setBackOrderQty(backOrderQty);
             soi.setOrderQty(im.getQtyOnHand());
         }
+        
         // Assign inventory markup provided it is not set at the sales order item level
         if (soi.getInitMarkup() <= 0) {
             soi.setInitMarkup(im.getMarkup());
