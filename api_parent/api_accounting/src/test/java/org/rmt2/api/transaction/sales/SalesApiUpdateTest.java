@@ -31,6 +31,7 @@ import org.modules.transaction.sales.SalesApi;
 import org.modules.transaction.sales.SalesApiConst;
 import org.modules.transaction.sales.SalesApiException;
 import org.modules.transaction.sales.SalesApiFactory;
+import org.modules.transaction.sales.SalesOrderStatusInvalidException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -499,9 +500,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof SalesApiException);
-            Assert.assertTrue(e.getCause() instanceof SalesApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof SalesOrderDaoException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertTrue(e.getCause() instanceof SalesOrderStatusInvalidException);
         }   
     }
     

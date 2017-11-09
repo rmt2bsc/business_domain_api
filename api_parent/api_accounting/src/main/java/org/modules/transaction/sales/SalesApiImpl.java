@@ -473,13 +473,25 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     private SalesOrderStatusHistDto evaluateStatusChange(int salesOrderId, 
             int newStatusId) throws SalesApiException {
         StringBuilder buf = new StringBuilder();
-        if (!this.isValidSalesOrderStatus(newStatusId)) {
+        try {
+            Verifier.verifyNotNegative(newStatusId);
+            this.validateSalesOrderStatus(newStatusId); 
+        }
+        catch (VerifyException e) {
             buf.append("The destination sales order status id is invalid,  ");
             buf.append(newStatusId);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new SalesOrderStatusInvalidException(this.msg);
         }
+        catch (Exception e) {
+            buf.append("The new destination sales order status id failed validations,  ");
+            buf.append(newStatusId);
+            this.msg = buf.toString();
+            logger.error(this.msg);
+            throw new SalesOrderStatusInvalidException(this.msg, e);
+        }
+        
         
         // Get current status of sales order
         SalesOrderStatusHistDto sosh = null;
@@ -498,7 +510,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 if (currentStatusId != SalesApiConst.STATUS_CODE_NEW) {
                     this.msg = "Quote status can only be assigned when the sales order is new";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
+                    throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
 
@@ -506,7 +518,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 if (currentStatusId != SalesApiConst.STATUS_CODE_QUOTE) {
                     this.msg = "Sales order must be in Quote status before changing to Invoiced";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
+                    throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
 
@@ -514,7 +526,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 if (currentStatusId != SalesApiConst.STATUS_CODE_INVOICED) {
                     this.msg = "Sales order must be in Invoiced status before changing to Closed";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
+                    throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
 
@@ -522,7 +534,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 if (currentStatusId != SalesApiConst.STATUS_CODE_INVOICED) {
                     this.msg = "Sales order must be in Invoiced status before changing to Cancelled";
                     logger.error(this.msg);
-                    throw new SalesOrderStatusInvalidDestinationException(this.msg);
+                    throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 }
                 break;
 
@@ -535,7 +547,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                     default:
                         this.msg = "Sales order must be in Invoiced or Closed statuses before changing to Refunded";
                         logger.error(this.msg);
-                        throw new SalesOrderStatusInvalidDestinationException(this.msg);
+                        throw new OutOfSyncSalesOrderStatusesException(this.msg);
                 } // end inner switch
                 break;
 
@@ -563,7 +575,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         } catch (SalesOrderDaoException e) {
             this.msg = "DAO error occurred while attempting to update the sales order status history";
             throw new SalesApiException(this.msg, e);
-        } catch (SalesOrderStatusInvalidDestinationException | SalesOrderStatusInvalidException e) {
+        } catch (OutOfSyncSalesOrderStatusesException | SalesOrderStatusInvalidException | NotFoundException e) {
             this.msg = "Unable to update sales order status history due to the destination status id failed validations";
             throw new SalesApiException(this.msg, e);
         }
@@ -786,7 +798,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 buf.append("]");
                 this.msg = buf.toString();
                 logger.error(this.msg);
-                throw new SalesOrderCustomerIdInvalidException(this.msg);
+                throw new NotFoundException(this.msg);
             }
             // Hold the customer for future use and prevent excessive DB I/O
             this.customer = custDto;
@@ -809,7 +821,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         try {
-            Verifier.verifyPositive(items.size());
+            Verifier.verifyNotEmpty(items);
         } catch (VerifyException e) {
             throw new InvalidDataException("There must be at least one detail item associated with sales order", e);
         }
@@ -864,14 +876,13 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
     }
 
-    private boolean isValidSalesOrderStatus(int statusId) throws SalesApiException {
+    private void validateSalesOrderStatus(int statusId) throws SalesApiException {
         try {
             if (this.getStatus(statusId) == null) {
-                return false;
+                throw new NotFoundException("Sales order status does not exist");
             }
-            return true;
         } catch (Exception e) {
-            throw new SalesApiException("Sales order status failed validation", e);
+            throw new SalesOrderStatusInvalidException("Sales order status failed validation", e);
         }
     }
 
