@@ -40,7 +40,6 @@ import org.modules.transaction.receipts.CashReceiptApiFactory;
 
 import com.InvalidDataException;
 import com.NotFoundException;
-import com.RMT2RuntimeException;
 import com.api.persistence.DaoClient;
 import com.util.RMT2Date;
 import com.util.RMT2String;
@@ -596,10 +595,18 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             logger.info("Validating sales order...");
             this.validate(order, items);
-        } catch (Exception e) {
+        } catch (InvalidDataException e) {
             StringBuilder buf = new StringBuilder();
             buf.append("Sales order failed validation check ===> Sales order Id: ");
-            buf.append((order.getSalesOrderId() > 0 ? order.getSalesOrderId() : SalesApiImpl.SALES_ORDER_NEW_TAG));
+            buf.append((order.getSalesOrderId() > 0 ? order.getSalesOrderId()
+                    : SalesApiImpl.SALES_ORDER_NEW_TAG));
+            this.msg = buf.toString();
+            throw new SalesApiException(this.msg, e);
+        } catch (NotFoundException e) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("Sales order validation failed.  Unable to cross reference customer or inventory resource for Sales order Id: ");
+            buf.append((order.getSalesOrderId() > 0 ? order.getSalesOrderId()
+                    : SalesApiImpl.SALES_ORDER_NEW_TAG));
             this.msg = buf.toString();
             throw new SalesApiException(this.msg, e);
         }
@@ -746,7 +753,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 throw new NotFoundException(this.msg, e);
             } catch (SalesApiException e) {
                 this.msg = "I/O error occurred validating sales order [" + order.getSalesOrderId() + "]";
-                throw new RMT2RuntimeException(this.msg, e);
+                throw new SalesApiException(this.msg, e);
             }
         }
 
@@ -782,7 +789,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             buf.append(customerId);
             this.msg = buf.toString();
             logger.error(this.msg);
-            throw new RMT2RuntimeException(this.msg, e);
+            throw new SalesApiException(this.msg, e);
         } finally {
             custApi = null;
         }
@@ -834,7 +841,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 buf.append(", against inventory");
                 this.msg = buf.toString();
                 logger.error(this.msg);
-                throw new RMT2RuntimeException(this.msg, e);
+                throw new SalesApiException(this.msg, e);
             } finally {
                 invApi = null;
             }
@@ -928,6 +935,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     public int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items, boolean receivePayment)
             throws SalesApiException {
 
+        // Perform an update on the sales order in the event any changes were made.
         int rc = this.updateSalesOrder(order, items);
         try {
             rc = this.invoiceSalesOrder(order);
@@ -1192,7 +1200,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             sosh = dao.fetchCurrentSalesOrderStatus(salesOrderId);
             if (sosh == null || sosh.getSoStatusId() != SalesApiConst.STATUS_CODE_INVOICED) {
-                this.msg = "Problem cancelling sales order.  Discovered that the current sales order status is not set as \"Invoiced\"";
+                this.msg = "Error cancelling sales order.  Sales order is required to be in \"INVOICE\" status in order to cancel";
                 throw new SalesApiException(this.msg);
             }
         } catch (SalesOrderDaoException e) {

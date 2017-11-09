@@ -46,10 +46,14 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
     private static final int TEST_SALES_ORDER_ID = 1000;
     private static final int TEST_CUSTOMER_ID = 2000;
     
+    private SalesOrder existingSalesOrderOrm;
+    private SalesOrderDto existingSalesOrderDto;
     private SalesOrder newSalesOrderOrm;
     private SalesOrderDto newSalesOrderDto;
     private List<SalesOrderItemDto> newLineItemListDto;
     private List<SalesOrderItemDto> newSingleLineItemListDto;
+    private List<SalesOrderItemDto> existingLineItemListDto;
+    
     /**
      * @throws java.lang.Exception
      */
@@ -70,13 +74,14 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
     }
     
     private void modifyMockData() {
-     // Setup new mock sales order and sales order line item DTO's
-        this.newSalesOrderOrm = this.mockSalesOrderSingleResponse.get(0);
+        // Setup new mock sales order and sales order line item DTO's
+        this.newSalesOrderOrm = SalesOrderApiTestData.createMockSalesOrderSingleResponse().get(0);
         this.newSalesOrderDto = Rmt2SalesOrderDtoFactory.
                 createSalesOrderInstance(this.newSalesOrderOrm);
         this.newSalesOrderDto.setSalesOrderId(0);
         this.newLineItemListDto = new ArrayList<>();
-        for (SalesOrderItems item : this.mockSalesOrderItemsAllResponse) {
+        List<SalesOrderItems> items = SalesOrderApiTestData.createMockSalesOrderItemsAllResponse();
+        for (SalesOrderItems item : items) {
             item.setSoId(0);
             SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
             this.newLineItemListDto.add(dto);
@@ -86,6 +91,17 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
             item.setSoId(0);
             SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
             this.newSingleLineItemListDto.add(dto);
+        }
+        
+        // Setup exisitng mock sales order and sales order line item DTO's
+        this.existingSalesOrderOrm = SalesOrderApiTestData.createMockSalesOrderSingleResponse().get(0);
+        this.existingSalesOrderDto = Rmt2SalesOrderDtoFactory.
+                createSalesOrderInstance(this.existingSalesOrderOrm);
+        this.existingLineItemListDto = new ArrayList<>();
+        items = SalesOrderApiTestData.createMockSalesOrderItemsAllResponse();
+        for (SalesOrderItems item : items) {
+            SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
+            this.existingLineItemListDto.add(dto);
         }
     }
     
@@ -123,6 +139,15 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single customer test case setup failed");
+        }
+        
+        // Setup mock for updating existing base sales order
+        try {
+            when(this.mockPersistenceClient.updateRow(eq(this.existingSalesOrderOrm)))
+                            .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up sales order line item update case failed");
         }
         
         // Setup mock for adding base sales order
@@ -234,5 +259,20 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
         Assert.assertEquals(5, lineItem.getInitMarkup(), 0);
         Assert.assertEquals(1.23, lineItem.getInitUnitCost(), 0);
         
+    }
+    
+    @Test
+    public void testUpdate_Update_SalesOrder_Success() {
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        int results = 0;
+        try {
+            results = api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(1, results);
     }
 }

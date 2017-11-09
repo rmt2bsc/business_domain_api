@@ -51,44 +51,44 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        this.mockSalesOrderNotFoundResponse = this.createMockSalesOrderNotFoundResponse();
-        this.mockSalesOrderAllResponse = this.createMockSalesOrderAllsponse();
-        this.mockSalesOrderSingleResponse = this.createMockSalesOrderSingleResponse();
+        this.mockSalesOrderNotFoundResponse = createMockSalesOrderNotFoundResponse();
+        this.mockSalesOrderAllResponse = createMockSalesOrderAllsponse();
+        this.mockSalesOrderSingleResponse = createMockSalesOrderSingleResponse();
         
-        this.mockSalesInvoiceNotFoundResponse = this.createMockSalesInvoiceNotFoundResponse();
-        this.mockSalesInvoiceAllResponse = this.createMockSalesInvoiceAllsponse();
-        this.mockSalesInvoiceSingleResponse = this.createMockSalesInvoiceSingleResponse();
+        this.mockSalesInvoiceNotFoundResponse = createMockSalesInvoiceNotFoundResponse();
+        this.mockSalesInvoiceAllResponse = createMockSalesInvoiceAllsponse();
+        this.mockSalesInvoiceSingleResponse = createMockSalesInvoiceSingleResponse();
 
-        this.mockSalesOrderItemsNotFoundResponse = this.createMockSalesOrderItemsNotFoundResponse();
+        this.mockSalesOrderItemsNotFoundResponse = createMockSalesOrderItemsNotFoundResponse();
         this.mockSalesOrderItemsSingleResponse = createMockSalesOrderItemsSingleResponse();
-        this.mockSalesOrderItemsAllResponse = this.createMockSalesOrderItemsAllResponse();
+        this.mockSalesOrderItemsAllResponse = createMockSalesOrderItemsAllResponse();
         
-        this.mockVwSalesorderItemsBySalesorderNotFoundResponse = this.createMockVwSalesorderItemsBySalesorderNotFoundsponse();
-        this.mockVwSalesorderItemsBySalesorderAllResponse = this.createMockVwSalesorderItemsBySalesorderAllsponse();
+        this.mockVwSalesorderItemsBySalesorderNotFoundResponse = createMockVwSalesorderItemsBySalesorderNotFoundsponse();
+        this.mockVwSalesorderItemsBySalesorderAllResponse = createMockVwSalesorderItemsBySalesorderAllsponse();
         
-        this.mockVwSalesOrderInvoiceNotFoundResponse = this.createMockVwSalesOrderInvoiceNotFoundResponse();
-        this.mockVwSalesOrderInvoiceAllResponse = this.createMockVwSalesOrderInvoiceAllsponse();
-        this.mockVwSalesOrderInvoiceSingleResponse = this.createMockVwSalesOrderInvoiceSingleResponse();
+        this.mockVwSalesOrderInvoiceNotFoundResponse = createMockVwSalesOrderInvoiceNotFoundResponse();
+        this.mockVwSalesOrderInvoiceAllResponse = createMockVwSalesOrderInvoiceAllsponse();
+        this.mockVwSalesOrderInvoiceSingleResponse = createMockVwSalesOrderInvoiceSingleResponse();
 
-        this.mockStatusNotFoundResponse = this.createMockSalesOrderStatusNotFoundResponse();
-        this.mockStatusAllResponse = this.createMockSalesOrderStatusAllResponse();
-        this.mockStatusSingleResponse = this.createMockSalesOrderStatusSingleResponse();
+        this.mockStatusNotFoundResponse = createMockSalesOrderStatusNotFoundResponse();
+        this.mockStatusAllResponse = createMockSalesOrderStatusAllResponse();
+        this.mockStatusSingleResponse = createMockSalesOrderStatusSingleResponse();
         
-        this.mockStatusHistoryAllResponse = this.createMockSalesOrderStatusHistoryAllResponse();
+        this.mockStatusHistoryAllResponse = createMockSalesOrderStatusHistoryAllResponse();
         this.mockStatusHistoryNotFoundResponse = null;
         
-        this.mockSingleItemMasterFetchResponse = this.createMockItemMasterSingleFetchResponse();
-        this.mockAllItemMasterResponse = this.createMockItemMasterFetchAllResponse();
-        this.mockNotFoundItemMasterResponse = this.createMockItemMasterNotFoundResponse();
+        this.mockSingleItemMasterFetchResponse = createMockItemMasterSingleFetchResponse();
+        this.mockAllItemMasterResponse = createMockItemMasterFetchAllResponse();
+        this.mockNotFoundItemMasterResponse = createMockItemMasterNotFoundResponse();
         return;
     }
 
-    private List<SalesOrder> createMockSalesOrderNotFoundResponse() {
+    public static final List<SalesOrder> createMockSalesOrderNotFoundResponse() {
         List<SalesOrder> list = null;
         return list;
     }
 
-    private List<SalesOrder> createMockSalesOrderAllsponse() {
+    public static final List<SalesOrder> createMockSalesOrderAllsponse() {
         List<SalesOrder> list = new ArrayList<SalesOrder>();
         SalesOrder o = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
                 2000, 0, 300.00, "2017-01-01");
@@ -112,7 +112,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
-    private List<SalesOrder> createMockSalesOrderSingleResponse() {
+    public static final List<SalesOrder> createMockSalesOrderSingleResponse() {
         List<SalesOrder> list = new ArrayList<SalesOrder>();
         SalesOrder o = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
                 2000, 0, 100.00, "2017-01-01");
@@ -120,12 +120,12 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
-    private List<SalesInvoice> createMockSalesInvoiceNotFoundResponse() {
+    public static final List<SalesInvoice> createMockSalesInvoiceNotFoundResponse() {
         List<SalesInvoice> list = null;
         return list;
     }
 
-    private List<SalesInvoice> createMockSalesInvoiceAllsponse() {
+    public static final List<SalesInvoice> createMockSalesInvoiceAllsponse() {
         List<SalesInvoice> list = new ArrayList<SalesInvoice>();
         SalesInvoice o = AccountingMockDataUtility
                 .createMockOrmSalesInvoice(7000, 1000, 5000, "80000");
@@ -149,7 +149,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
-    private List<SalesInvoice> createMockSalesInvoiceSingleResponse() {
+    public static final List<SalesInvoice> createMockSalesInvoiceSingleResponse() {
         List<SalesInvoice> list = new ArrayList<SalesInvoice>();
         SalesInvoice o = AccountingMockDataUtility
                 .createMockOrmSalesInvoice(7000, 1000, 5000, "80000");
@@ -157,12 +157,12 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
-    private List<SalesOrderItems> createMockSalesOrderItemsNotFoundResponse() {
+    public static final List<SalesOrderItems> createMockSalesOrderItemsNotFoundResponse() {
         List<SalesOrderItems> list = null;
         return list;
     }
 
-    private List<SalesOrderItems> createMockSalesOrderItemsSingleResponse() {
+    public static final List<SalesOrderItems> createMockSalesOrderItemsSingleResponse() {
         List<SalesOrderItems> list = new ArrayList<SalesOrderItems>();
         SalesOrderItems o = AccountingMockDataUtility
                 .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
@@ -170,7 +170,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
     
-    private List<SalesOrderItems> createMockSalesOrderItemsAllResponse() {
+    public static final List<SalesOrderItems> createMockSalesOrderItemsAllResponse() {
         List<SalesOrderItems> list = new ArrayList<SalesOrderItems>();
         SalesOrderItems o = AccountingMockDataUtility
                 .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
@@ -194,12 +194,12 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
-    private List<VwSalesorderItemsBySalesorder> createMockVwSalesorderItemsBySalesorderNotFoundsponse() {
+    public static final List<VwSalesorderItemsBySalesorder> createMockVwSalesorderItemsBySalesorderNotFoundsponse() {
         List<VwSalesorderItemsBySalesorder> list = null;
         return list;
     }
     
-    private List<VwSalesorderItemsBySalesorder> createMockVwSalesorderItemsBySalesorderAllsponse() {
+    public static final List<VwSalesorderItemsBySalesorder> createMockVwSalesorderItemsBySalesorderAllsponse() {
         List<VwSalesorderItemsBySalesorder> list = new ArrayList<VwSalesorderItemsBySalesorder>();
 
         Customer cust = AccountingMockDataUtility.createMockOrmCustomer(2000,
@@ -258,12 +258,12 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     }
     
     
-    private List<VwSalesOrderInvoice> createMockVwSalesOrderInvoiceNotFoundResponse() {
+    public static final List<VwSalesOrderInvoice> createMockVwSalesOrderInvoiceNotFoundResponse() {
         List<VwSalesOrderInvoice> list = null;
         return list;
     }
 
-    private List<VwSalesOrderInvoice> createMockVwSalesOrderInvoiceAllsponse() {
+    public static final List<VwSalesOrderInvoice> createMockVwSalesOrderInvoiceAllsponse() {
         List<VwSalesOrderInvoice> list = new ArrayList<VwSalesOrderInvoice>();
         VwSalesOrderInvoice o = AccountingMockDataUtility
                 .createMockOrmVwSalesOrderInvoice(7000, 1000, "2017-01-01",
@@ -293,7 +293,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
 
-    private List<VwSalesOrderInvoice> createMockVwSalesOrderInvoiceSingleResponse() {
+    public static final List<VwSalesOrderInvoice> createMockVwSalesOrderInvoiceSingleResponse() {
         List<VwSalesOrderInvoice> list = new ArrayList<VwSalesOrderInvoice>();
         VwSalesOrderInvoice o = AccountingMockDataUtility
                 .createMockOrmVwSalesOrderInvoice(7000, 1000, "2017-01-01",
@@ -305,12 +305,12 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     
     
     
-    private List<SalesOrderStatus> createMockSalesOrderStatusNotFoundResponse() {
+    public static final List<SalesOrderStatus> createMockSalesOrderStatusNotFoundResponse() {
         List<SalesOrderStatus> list = null;
         return list;
     }
 
-    private List<SalesOrderStatus> createMockSalesOrderStatusSingleResponse() {
+    public static final List<SalesOrderStatus> createMockSalesOrderStatusSingleResponse() {
         List<SalesOrderStatus> list = new ArrayList<SalesOrderStatus>();
         SalesOrderStatus o = AccountingMockDataUtility.createMockOrmSalesOrderStatus(
                 SalesApiConst.STATUS_CODE_QUOTE, "Quote");
@@ -334,7 +334,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
     }
     
     
-    private List<SalesOrderStatus> createMockSalesOrderStatusAllResponse() {
+    public static final List<SalesOrderStatus> createMockSalesOrderStatusAllResponse() {
         List<SalesOrderStatus> list = new ArrayList<SalesOrderStatus>();
         SalesOrderStatus o = AccountingMockDataUtility
                 .createMockOrmSalesOrderStatus(SalesApiConst.STATUS_CODE_NEW, "New");
@@ -362,7 +362,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
     
-    private List<SalesOrderStatusHist> createMockSalesOrderStatusHistoryAllResponse() {
+    public static final List<SalesOrderStatusHist> createMockSalesOrderStatusHistoryAllResponse() {
         List<SalesOrderStatusHist> list = new ArrayList<SalesOrderStatusHist>();
         SalesOrderStatusHist o = AccountingMockDataUtility
                 .createMockOrmSalesOrderStatusHist(70, 1000,
@@ -397,12 +397,12 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
     
-    private List<ItemMaster> createMockItemMasterNotFoundResponse() {
+    public static final List<ItemMaster> createMockItemMasterNotFoundResponse() {
         List<ItemMaster> list = null;
         return list;
     }
     
-    private List<ItemMaster> createMockItemMasterSingleFetchResponse() {
+    public static final List<ItemMaster> createMockItemMasterSingleFetchResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
         ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(33330, 1,
                 "111-111-111", "11111111", 1234, "Item1", 2, 1.23, true);
@@ -410,7 +410,7 @@ public class SalesOrderApiTestData extends TransactionApiTestData {
         return list;
     }
     
-    private List<ItemMaster> createMockItemMasterFetchAllResponse() {
+    public static final List<ItemMaster> createMockItemMasterFetchAllResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
         ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(33330, 1,
                 "100-111-111", "11111110", 1351, "Item1", 1, 1.23, true);

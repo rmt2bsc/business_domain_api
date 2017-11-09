@@ -297,13 +297,6 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             rc = this.createSalesOrder(so);
             order.setSalesOrderId(rc);
         }
-//        if (order.getSalesOrderId() <= 0) {
-//            rc = this.createSalesOrder(so);
-//            order.setSalesOrderId(rc);
-//        }
-//        else {
-//            rc = this.updateSalesOrder(so);
-//        }
         return rc;
     }
 
