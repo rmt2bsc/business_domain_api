@@ -19,7 +19,7 @@ import org.modules.transaction.sales.SalesApiConst;
 import org.rmt2.api.AccountingMockDataUtility;
 import org.rmt2.api.transaction.TransactionApiTestData;
 
-public class SalesOrderApiTestData extends TransactionApiTestData {
+public class SalesApiTestData extends TransactionApiTestData {
 
     protected List<SalesOrder> mockSalesOrderNotFoundResponse;
     protected List<SalesOrder> mockSalesOrderAllResponse;

@@ -47,7 +47,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
+public class SalesApiUpdateTest extends SalesApiTestData {
     private static final int TEST_NEW_SALES_ORDER_ID = 7654321;
     private static final int TEST_SALES_ORDER_ID = 1000;
     private static final int TEST_CUSTOMER_ID = 2000;
@@ -82,12 +82,12 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
     
     private void modifyMockData() {
         // Setup new mock sales order and sales order line item DTO's
-        this.newSalesOrderOrm = SalesOrderApiTestData.createMockSalesOrderSingleResponse().get(0);
+        this.newSalesOrderOrm = SalesApiTestData.createMockSalesOrderSingleResponse().get(0);
         this.newSalesOrderDto = Rmt2SalesOrderDtoFactory.
                 createSalesOrderInstance(this.newSalesOrderOrm);
         this.newSalesOrderDto.setSalesOrderId(0);
         this.newLineItemListDto = new ArrayList<>();
-        List<SalesOrderItems> items = SalesOrderApiTestData.createMockSalesOrderItemsAllResponse();
+        List<SalesOrderItems> items = SalesApiTestData.createMockSalesOrderItemsAllResponse();
         for (SalesOrderItems item : items) {
             item.setSoId(0);
             SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
@@ -101,11 +101,11 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
         }
         
         // Setup exisitng mock sales order and sales order line item DTO's
-        this.existingSalesOrderOrm = SalesOrderApiTestData.createMockSalesOrderSingleResponse().get(0);
+        this.existingSalesOrderOrm = SalesApiTestData.createMockSalesOrderSingleResponse().get(0);
         this.existingSalesOrderDto = Rmt2SalesOrderDtoFactory.
                 createSalesOrderInstance(this.existingSalesOrderOrm);
         this.existingLineItemListDto = new ArrayList<>();
-        items = SalesOrderApiTestData.createMockSalesOrderItemsAllResponse();
+        items = SalesApiTestData.createMockSalesOrderItemsAllResponse();
         for (SalesOrderItems item : items) {
             SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
             this.existingLineItemListDto.add(dto);
@@ -178,7 +178,7 @@ public class SalesOrderUpdateApiTest extends SalesOrderApiTestData {
         // Setup mock for new sales order status verification
         SalesOrderStatus mockNextSalesOrderStatusFetchCriteria = new SalesOrderStatus();
         mockNextSalesOrderStatusFetchCriteria.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
-        List<SalesOrderStatus> mockNextSalesOrderStatusFetchResponse = SalesOrderApiTestData
+        List<SalesOrderStatus> mockNextSalesOrderStatusFetchResponse = SalesApiTestData
                 .createMockSingleSalesOrderStatus(SalesApiConst.STATUS_CODE_QUOTE,
                         "Quote");
         try {

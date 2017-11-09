@@ -49,7 +49,7 @@ import com.util.RMT2String;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class SalesOrderQueryApiTest extends SalesOrderApiTestData {
+public class SalesApiQueryTest extends SalesApiTestData {
 
     private static final int TEST_SALES_ORDER_ID = 1000;
     
