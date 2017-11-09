@@ -108,8 +108,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             return results;
         } catch (Exception e) {
             this.msg = "Error querying inventory item(s)";
-            logger.error(this.msg, e);
-            throw new InventoryApiException(e);
+            throw new InventoryApiException(this.msg, e);
         }
     }
     
@@ -141,10 +140,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             criteria.setItemId(itemId);
             results = this.getItem(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve inventory item by item id: "
-                    + itemId;
-            logger.error(this.msg, e);
-            throw new InventoryApiException(e);
+            this.msg = "Unable to retrieve inventory item by item id: " + itemId;
+            throw new InventoryApiException(this.msg, e);
         }
 
         if (results == null) {

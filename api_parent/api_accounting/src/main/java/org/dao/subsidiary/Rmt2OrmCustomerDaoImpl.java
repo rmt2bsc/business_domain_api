@@ -61,7 +61,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             CustomerDto dto = Rmt2SubsidiaryDtoFactory.createCustomerInstance(results, null);
             return dto;
         } catch (DatabaseException e) {
-            throw new CustomerDaoException(e);
+            throw new CustomerDaoException("Database Error fetching customer data by customer id, " + customerId, e);
         }
     }
     

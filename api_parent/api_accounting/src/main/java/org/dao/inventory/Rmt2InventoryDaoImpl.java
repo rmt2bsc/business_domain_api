@@ -144,7 +144,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
                 return null;
             }
         } catch (DatabaseException e) {
-            throw new CannotRetrieveException(e);
+            throw new CannotRetrieveException("Database Error occurred fetching inventory item master using the following selection criteria: " + obj.toString(), e);
         }
 
         List<ItemMasterDto> list = new ArrayList<ItemMasterDto>();

@@ -176,7 +176,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
                 return null;
             }
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error fetching extended sales order item using selection criteria: " + criteria.toString(), e);
         }
         return SalesOrderDaoFactory.createExtSalesOrderItem(results);
     }
@@ -201,7 +201,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
                 return null;
             }
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error fetching sales order status using selection criteria: " + obj.toString(), e);
         }
         return SalesOrderDaoFactory.createSalesOrderStatus(results);
     }
@@ -256,7 +256,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
                 return null;
             }
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error fetching sales order status history using selection criteria: " + obj.toString(), e);
         }
         SalesOrderStatusHistDto dto = Rmt2SalesOrderDtoFactory
                 .createSalesOrderStatusHistoryInstance(results);
@@ -320,7 +320,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             soId = this.client.insertRow(so, true);
             return soId;
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error inserting base sales order: " + so.toString(), e);
         }
     }
 
@@ -343,7 +343,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             rc = this.client.updateRow(so);
             return rc;
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error updating base sales order: " + so.toString(), e);
         }
     }
 
@@ -365,7 +365,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             item.setSoItemId(rc);
             return rc;
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error deleting sales order  line item: " + soi.toString(), e);
         }
     }
 
@@ -414,7 +414,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             rc = this.client.deleteRow(soi);
             return rc;
         } catch (Exception e) {
-            this.msg = "An error occurred trying to delete items from sales order, "
+            this.msg = "Database error occurred deleting items from sales order, "
                     + salesOrderId;
             throw new SalesOrderDaoException(this.msg, e);
         }
@@ -488,7 +488,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             rc = this.client.insertRow(sosh, true);
             return rc;
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error inserting sales order status history: " + sosh.toString(), e);
         }
     }
 
@@ -513,7 +513,7 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
             rc = this.client.updateRow(sosh);
             return rc;
         } catch (Exception e) {
-            throw new SalesOrderDaoException(e);
+            throw new SalesOrderDaoException("Error updating sales order status history: " + sosh.toString(), e);
         }
     }
 

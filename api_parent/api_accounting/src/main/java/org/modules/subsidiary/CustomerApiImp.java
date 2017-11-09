@@ -99,9 +99,8 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         try {
             return dao.fetch(customerId);
         } catch (Exception e) {
-            this.msg = "Error retrieving single customer by customer id, " + customerId;
-            logger.error(this.msg, e);
-            throw new CustomerApiException(e);
+            this.msg = "DAO error retrieving single customer";
+            throw new CustomerApiException(this.msg, e);
         }
     }
     
