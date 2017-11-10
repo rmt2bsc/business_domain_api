@@ -10,11 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.Customer;
+import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.ItemMaster;
+import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
 import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
+import org.dao.mapping.orm.rmt2.VwXactList;
+import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.subsidiary.CustomerDaoException;
 import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dto.SalesOrderDto;
@@ -27,6 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modules.inventory.InventoryApiException;
 import org.modules.subsidiary.CustomerApiException;
+import org.modules.transaction.XactConst;
 import org.modules.transaction.sales.OutOfSyncSalesOrderStatusesException;
 import org.modules.transaction.sales.SalesApi;
 import org.modules.transaction.sales.SalesApiConst;
@@ -36,6 +41,7 @@ import org.modules.transaction.sales.SalesOrderCustomerIdInvalidException;
 import org.modules.transaction.sales.SalesOrderStatusInvalidException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.AccountingMockDataUtility;
 
 import com.InvalidDataException;
 import com.NotFoundException;
@@ -43,6 +49,7 @@ import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2Date;
 
 /**
  * Tests sales order / sales invoice transaction query Api.
@@ -57,6 +64,9 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     private static final int TEST_SALES_ORDER_ID = 1000;
     private static final int TEST_CUSTOMER_ID = 2000;
     private static final int TEST_NEW_SALES_ORDER_STAT_HIST_ID = 9999999;
+    private static final int TEST_NEW_XACT_ID = 1234567890;
+    private static final int TEST_EXISTING_XACT_ID = 54321;
+    private static final int TEST_NEW_INVOICE_ID = 700000;
     
     private SalesOrder existingSalesOrderOrm;
     private SalesOrderDto existingSalesOrderDto;
@@ -65,6 +75,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     private List<SalesOrderItemDto> newLineItemListDto;
     private List<SalesOrderItemDto> newSingleLineItemListDto;
     private List<SalesOrderItemDto> existingLineItemListDto;
+    private List<VwXactList> mockSingleXact;
     
     /**
      * @throws java.lang.Exception
@@ -115,6 +126,20 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(item);
             this.existingLineItemListDto.add(dto);
         }
+        
+        // Create Single Xact response data
+        this.mockSingleXact = this.createMockSingleXactData();
+        
+    }
+    
+    private List<VwXactList> createMockSingleXactData() {
+        List<VwXactList> list = new ArrayList<VwXactList>();
+        VwXactList o = AccountingMockDataUtility.createMockOrmXact(TEST_EXISTING_XACT_ID,
+                XactConst.XACT_TYPE_SALESONACCTOUNT,
+                XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                RMT2Date.stringToDate("2017-01-13"), 300.00, 200, "1111-1111-1111-1111");
+        list.add(o);
+        return list;
     }
     
     private void setupBasicMockStubs() {
@@ -779,8 +804,6 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_SalesOrder_Destination_Status_OutOfSync() {
         // Setup mock to get the current status of the sales order
-//        SalesOrderStatusHist mockCurrentSalesOrderStatus = new SalesOrderStatusHist();
-//        mockCurrentSalesOrderStatus.setSoId(TEST_NEW_SALES_ORDER_ID);
         try {
             // Ensure that current status returned is "Invoice"
             when(this.mockPersistenceClient.retrieveObject(isA(SalesOrderStatusHist.class)))
@@ -801,5 +824,98 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             Assert.assertTrue(e instanceof SalesApiException);
             Assert.assertTrue(e.getCause() instanceof OutOfSyncSalesOrderStatusesException);
         }   
+    }
+    
+    @Test
+    public void test_Invoice_NoImmediatePayment_SalesOrder_Success() {
+        // Mock base transaction creation stub.
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true)))
+                    .thenReturn(TEST_NEW_XACT_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update xact test case setup failed");
+        }
+        
+        // Mock base transaction query verification stub.
+        VwXactList mockCriteria = new VwXactList();
+        mockCriteria.setId(TEST_NEW_XACT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                            .thenReturn(this.mockSingleXact);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+        
+        // Mock create customer transaction activity stub.
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(CustomerActivity.class), eq(true)))
+                            .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert customer activity case setup failed");
+        }
+        
+        // Mock sales invoice transaction creation stub.
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(SalesInvoice.class), eq(true)))
+                    .thenReturn(TEST_NEW_INVOICE_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update xact test case setup failed");
+        }        
+        
+        
+        // Setup mock for invoice sales order status verification
+        SalesOrderStatus mockNextSalesOrderStatusFetchCriteria = new SalesOrderStatus();
+        mockNextSalesOrderStatusFetchCriteria.setSoStatusId(SalesApiConst.STATUS_CODE_INVOICED);
+        List<SalesOrderStatus> mockNextSalesOrderStatusFetchResponse = SalesApiTestData
+                .createMockSingleSalesOrderStatus(SalesApiConst.STATUS_CODE_INVOICED,
+                        "Invoice");
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockNextSalesOrderStatusFetchCriteria)))
+            .thenReturn(mockNextSalesOrderStatusFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single slaes order fetch test case setup failed");
+        }
+        
+        // Setup mock to get the current sales order status as "QUOTE"
+        SalesOrderStatusHist mockCurrentSalesOrderStatus = new SalesOrderStatusHist();
+        mockCurrentSalesOrderStatus.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            // Ensure that current status returned is "Quote"
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCurrentSalesOrderStatus)))
+                    .thenReturn(this.mockStatusHistoryAllResponse.get(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order current status fetch test case setup failed");
+        }
+        
+        // Setup mock to get all line items of a sales order stub
+        SalesOrderItems so = new SalesOrderItems();
+        so.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so)))
+                .thenReturn(this.mockSalesOrderItemsAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single sales order items fetch test case setup failed");
+        }
+        
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        int results = 0;
+        try {
+            this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+            results = api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, false);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(TEST_NEW_INVOICE_ID, results);
+        Assert.assertEquals(true, this.existingSalesOrderDto.isInvoiced());
     }
 }

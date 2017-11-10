@@ -960,6 +960,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     }
 
     private int createSalesOrderTransaction(SalesOrderDto order) throws SalesApiException {
+        // Setup transaction
         logger.info("Creating transaction for sales order " + order.getSalesOrderId() + "...");
         XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         try {
@@ -997,39 +998,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     
     private int createSalesOrderInvoice(SalesOrderDto order, int xactId) throws SalesApiException {
         logger.info("Began creating invoice for sales order " + order.getSalesOrderId() + "...");
-        // Create Transaction
-//        XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-//        try {
-//            logger.info("Creating transaction entry for sales order.");
-//            xact.setXactAmount(order.getOrderTotal());
-//            xact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
-//            int xactId = 0;
-//            xactId = super.update(xact, null);
-//            // Verify change
-//            xact = super.getXactById(xactId);
-//            if (xact == null) {
-//                this.msg = "Unable to verify the invoicing of sales order " + order.getSalesOrderId() + ".";
-//                throw new SalesApiException(this.msg);
-//            }
-//
-//            // Take care of any single quote literals.
-//            String reason = RMT2String.replaceAll(xact.getXactReason(), "''", "'");
-//            xact.setXactReason(reason);
-//            
-//            XactDao xactDao = this.getXactDao();
-//            xactDao.maintain(xact);
-//
-//            // Create customer activity (transaction history) regarding sale
-//            // order transaction.
-//            logger.info("Creating customer subsidiary activity entries.");
-//            super.createSubsidiaryActivity(order.getCustomerId(), xactId, order.getOrderTotal());
-//        } catch (Exception e) {
-//            this.msg = "Sales order transaction creation failed";
-//            throw new SalesApiException(this.msg, e);
-//        } finally {
-//            logger.info("Invoicing of sales order " + order.getSalesOrderId() + " complete!");
-//        }
-
         // Setup invoice
         int invoiceId = 0;
         String invoiceNumber = this.createInvoiceNumber(order);
@@ -1046,7 +1014,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
         // Flag Sales order base as invoiced.
         try {
-//            order.setOrderTotal(xact.getXactAmount());
             order.setInvoiced(true);
             dao.maintain(order);
         } catch (SalesOrderDaoException e) {
@@ -1276,7 +1243,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             }
         } catch (Exception e) {
             this.msg = "Problem occurred updating inventory by invoiced sales order items";
-            throw new SalesApiException(this.msg);
+            throw new SalesApiException(this.msg, e);
         } finally {
             invFact = null;
         }
