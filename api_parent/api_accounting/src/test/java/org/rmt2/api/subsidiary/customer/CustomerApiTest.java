@@ -76,8 +76,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     @Test
     public void testFetchAllNoContactData() {
         try {
-            when(this.mockPersistenceClient
-                    .retrieveList(any(Customer.class)))
+            when(this.mockPersistenceClient.retrieveList(any(Customer.class)))
                             .thenReturn(this.mockCustomerFetchAllResponse);
         } catch (Exception e) {
             e.printStackTrace();
@@ -640,8 +639,8 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     @Test
     public void testFetchTransactionHistory() {
         try {
-            when(this.mockPersistenceClient.retrieveList(any(VwCustomerXactHist.class))).thenReturn(
-                            this.mockCustomerXactHistoryResponse);
+            when(this.mockPersistenceClient.retrieveList(any(VwCustomerXactHist.class)))
+                  .thenReturn(this.mockCustomerXactHistoryResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Customer transaction history fetch test case setup failed");
