@@ -939,17 +939,18 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     @Override
     public int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items, boolean receivePayment)
             throws SalesApiException {
-
-        // Perform an update on the sales order in the event any changes were made.
+        // Recalculate and update sales order in the event other charges were included.
+        this.calculateTotal(order, items);
         int rc = this.updateSalesOrder(order, items);
         try {
-            rc = this.invoiceSalesOrder(order);
+            int xactId = this.createSalesOrderTransaction(order);
+            int invoiceId = this.createSalesOrderInvoice(order, xactId);
             if (receivePayment) {
-                this.applyFullSalesOrderPayment(order, order.getOrderTotal());
+                this.applyFullInvoicePayment(order, order.getOrderTotal());
             }
             this.msg = "The invoicing of sales order, " + order.getSalesOrderId() + ", was successful!!!!";
             logger.info(this.msg);
-            return rc;
+            return invoiceId;
         } catch (Exception e) {
             dao.rollbackTrans();
             this.msg = "Sales order API update failed";
@@ -958,7 +959,119 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
     }
 
-    private int invoiceSalesOrder(SalesOrderDto order) throws SalesApiException {
+    private int createSalesOrderTransaction(SalesOrderDto order) throws SalesApiException {
+        logger.info("Creating transaction for sales order " + order.getSalesOrderId() + "...");
+        XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
+        try {
+            logger.info("Creating transaction entry for sales order.");
+            xact.setXactAmount(order.getOrderTotal());
+            xact.setXactReason("Transaction created for the invoicing of sales order, "
+                            + order.getSalesOrderId());
+            xact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
+            int xactId = 0;
+            xactId = super.update(xact, null);
+            
+            // Verify transaction was stored properly
+            xact = super.getXactById(xactId);
+            try {
+                Verifier.verifyNotNull(xact);
+            } catch (VerifyException e) {
+                this.msg = "Unable to verify transaction for sales order " + order.getSalesOrderId() + ".";
+                throw new SalesApiException(this.msg);
+            }
+     
+            // Create customer activity (transaction history) regarding sale
+            // order transaction.
+            logger.info("Creating customer subsidiary activity entries.");
+            super.createSubsidiaryActivity(order.getCustomerId(), xactId, order.getOrderTotal());
+            
+            logger.info("Transaction number created succesfully for sales order: " + xactId);
+            return xactId;
+        } catch (Exception e) {
+            this.msg = "Sales order transaction creation failed";
+            throw new SalesApiException(this.msg, e);
+        } finally {
+            logger.info("Creation of sales order transaction completed!");
+        }
+    }
+    
+    private int createSalesOrderInvoice(SalesOrderDto order, int xactId) throws SalesApiException {
+        logger.info("Began creating invoice for sales order " + order.getSalesOrderId() + "...");
+        // Create Transaction
+//        XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
+//        try {
+//            logger.info("Creating transaction entry for sales order.");
+//            xact.setXactAmount(order.getOrderTotal());
+//            xact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
+//            int xactId = 0;
+//            xactId = super.update(xact, null);
+//            // Verify change
+//            xact = super.getXactById(xactId);
+//            if (xact == null) {
+//                this.msg = "Unable to verify the invoicing of sales order " + order.getSalesOrderId() + ".";
+//                throw new SalesApiException(this.msg);
+//            }
+//
+//            // Take care of any single quote literals.
+//            String reason = RMT2String.replaceAll(xact.getXactReason(), "''", "'");
+//            xact.setXactReason(reason);
+//            
+//            XactDao xactDao = this.getXactDao();
+//            xactDao.maintain(xact);
+//
+//            // Create customer activity (transaction history) regarding sale
+//            // order transaction.
+//            logger.info("Creating customer subsidiary activity entries.");
+//            super.createSubsidiaryActivity(order.getCustomerId(), xactId, order.getOrderTotal());
+//        } catch (Exception e) {
+//            this.msg = "Sales order transaction creation failed";
+//            throw new SalesApiException(this.msg, e);
+//        } finally {
+//            logger.info("Invoicing of sales order " + order.getSalesOrderId() + " complete!");
+//        }
+
+        // Setup invoice
+        int invoiceId = 0;
+        String invoiceNumber = this.createInvoiceNumber(order);
+        SalesInvoiceDto si = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance((SalesInvoice) null);
+        si.setInvoiceNo(invoiceNumber);
+        si.setSalesOrderId(order.getSalesOrderId());
+        si.setXactId(xactId);
+        try {
+            invoiceId = dao.maintainInvoice(si);
+        } catch (SalesInvoiceDaoException e) {
+            this.msg = "Sales order invoice creation failed";
+            throw new SalesApiException(this.msg, e);
+        }
+
+        // Flag Sales order base as invoiced.
+        try {
+//            order.setOrderTotal(xact.getXactAmount());
+            order.setInvoiced(true);
+            dao.maintain(order);
+        } catch (SalesOrderDaoException e) {
+            this.msg = "Switching sales order invoiced flag to true failed";
+            throw new SalesApiException(this.msg, e);
+        }
+
+        // Change the order status to "invoiced"
+        this.changeSalesOrderStatus(order.getSalesOrderId(), SalesApiConst.STATUS_CODE_INVOICED);
+
+        // Deallocate inventory based on order quantity of each sales order item
+        this.updateInventory(order.getSalesOrderId(), SalesApiConst.UPDATE_INV_ADD);
+
+        return invoiceId;
+    }
+    
+    /**
+     * The old version responsible for invoicing a sales order.
+     * @param order
+     * @return
+     * @throws SalesApiException
+     * @deprecated Remove this version once method, createSalesOrderTransaction, is 
+     *             implemented correctly.
+     */
+    private int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) throws SalesApiException {
         logger.info("Began invoicing sales order " + order.getSalesOrderId() + "...");
         // Create Transaction
         XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
@@ -980,7 +1093,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             xact.setXactReason(reason);
             // Revise transaction amount in the event other charges were
             // included.
-            double revisedXactAmount = this.calculateTotal(order.getSalesOrderId());
+            double revisedXactAmount = this.calculateTotal(order, items);
             XactDao xactDao = this.getXactDao();
             xactDao.maintain(xact);
 
@@ -1047,7 +1160,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      *             The sales order total in <i>order</i> does not equal
      *             <i>amount</i>.
      */
-    private void applyFullSalesOrderPayment(SalesOrderDto order, double amount) throws SalesApiException {
+    private void applyFullInvoicePayment(SalesOrderDto order, double amount) throws SalesApiException {
         logger.info("Began creating cash receipt of sales order " + order.getSalesOrderId() + "...");
         if (order.getOrderTotal() != amount) {
             this.msg = "Sales order total and the desired payment amount must equal in order to fulfill full payment on the sales order, "
@@ -1354,23 +1467,26 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     @Override
-    public double calculateTotal(int salesOrderId) throws SalesApiException {
+    public double calculateTotal(SalesOrderDto base, List<SalesOrderItemDto> items) throws SalesApiException {
         try {
-            Verifier.verifyNotNull(salesOrderId);
+            Verifier.verifyNotNull(base);
         } catch (VerifyException e) {
-            throw new InvalidDataException("Sales order id is required", e);
+            throw new InvalidDataException("Sales order DTO is required", e);
         }
         try {
-            Verifier.verifyPositive(salesOrderId);
+            Verifier.verifyNotNull(items);
         } catch (VerifyException e) {
-            throw new InvalidDataException("Sales order id must be greater than zero", e);
+            throw new InvalidDataException("Sales order line items is required", e);
         }
 
         double soTotal = 0;
-        soTotal += this.calcSalesOrderItemTotal(salesOrderId);
-        soTotal += this.calcSalesOrderFees(salesOrderId);
-        soTotal += this.calcSalesOrderTaxes(salesOrderId);
-        soTotal += this.calcSalesOrderOtherCharges(salesOrderId);
+        soTotal += this.calcSalesOrderItemTotal(items);
+        soTotal += this.calcSalesOrderFees(base, items);
+        soTotal += this.calcSalesOrderTaxes(base, items);
+        soTotal += this.calcSalesOrderOtherCharges(base, items);
+        
+        // Ensure that the base's order total is updated
+        base.setOrderTotal(soTotal);
         return soTotal;
     }
 
@@ -1378,25 +1494,26 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * Calculates sales order item total. Override the method to implement
      * customizations for item total
      * 
-     * @param salesOrderId
-     *            The sales order id of of items to calculate
+     * @param items
+     *            an instance of List&lt;{@link SalesOrderItemDto}&gt;  
      * @return Total retail dollar amount of all items of a sales order
      * @throws SalesApiException
      */
-    private double calcSalesOrderItemTotal(int salesOrderId) throws SalesApiException {
-        List<SalesOrderItemDto> items = null;
-        double amt = 0;
-
-        try {
-            items = dao.fetchSalesOrderItem(salesOrderId);
-        } catch (SalesOrderDaoException e) {
-            this.msg = "Error fetching items for sales order, " + salesOrderId;
-            logger.info(this.msg, e);
-            throw new SalesApiException(this.msg, e);
-        }
+    private double calcSalesOrderItemTotal(List<SalesOrderItemDto> items) throws SalesApiException {
+//        List<SalesOrderItemDto> items = null;
+//        double amt = 0;
+//
+//        try {
+//            items = dao.fetchSalesOrderItem(salesOrderId);
+//        } catch (SalesOrderDaoException e) {
+//            this.msg = "Error fetching items for sales order, " + salesOrderId;
+//            logger.info(this.msg, e);
+//            throw new SalesApiException(this.msg, e);
+//        }
         if (items == null) {
             return 0;
         }
+        double amt = 0;
         for (SalesOrderItemDto soi : items) {
             amt += soi.getOrderQty() * (soi.getInitUnitCost() * soi.getInitMarkup());
         }
@@ -1407,12 +1524,14 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * Calculates sales order fees. Override the method to implement
      * customizations for fee calculations
      * 
-     * @param _orderId
-     *            The sales order id used to calculate fees
+     * @param base
+     *            an instance of {@link SalesOrderDto}
+     * @param items
+     *            an instance of List&lt;{@link SalesOrderItemDto}&gt;  
      * @return Fee amount
      * @throws SalesApiException
      */
-    private double calcSalesOrderFees(int _orderId) throws SalesApiException {
+    private double calcSalesOrderFees(SalesOrderDto base, List<SalesOrderItemDto> items) throws SalesApiException {
         return 0;
     }
 
@@ -1420,24 +1539,28 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * Calculates sales order taxes. Override the method to implement
      * customizations for sales order tax calculations
      * 
-     * @param _orderId
-     *            The sales order id used to calculate taxes
+     * @param base
+     *            an instance of {@link SalesOrderDto}
+     * @param items
+     *            an instance of List&lt;{@link SalesOrderItemDto}&gt;  
      * @return Sales Order tax amount
      * @throws SalesApiException
      */
-    private double calcSalesOrderTaxes(int _orderId) throws SalesApiException {
+    private double calcSalesOrderTaxes(SalesOrderDto base, List<SalesOrderItemDto> items) throws SalesApiException {
         return 0;
     }
 
     /**
      * Calculate other charges pertaining to the sales order
      * 
-     * @param _orderId
-     *            The id of the sales order to calculate other charges
+     * @param base
+     *            an instance of {@link SalesOrderDto}
+     * @param items
+     *            an instance of List&lt;{@link SalesOrderItemDto}&gt;  
      * @return The amount of other charges
      * @throws SalesApiException
      */
-    private double calcSalesOrderOtherCharges(int _orderId) throws SalesApiException {
+    private double calcSalesOrderOtherCharges(SalesOrderDto base, List<SalesOrderItemDto> items) throws SalesApiException {
         return 0;
     }
 

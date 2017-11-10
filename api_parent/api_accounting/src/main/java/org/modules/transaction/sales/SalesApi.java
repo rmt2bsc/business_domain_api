@@ -200,10 +200,12 @@ public interface SalesApi extends XactApi {
      * The sales order total encompasses item total, sales order fees, sales
      * order taxes, and other charges.
      * 
-     * @param salesOrderId
-     *            the sales order id
+     * @param base
+     *            an instance of {@link SalesOrderDto}
+     * @param items
+     *            an instance of List&lt;{@link SalesOrderItemDto}&gt;           
      * @return the sales order total amount
      * @throws SalesApiException
      */
-    double calculateTotal(int salesOrderId) throws SalesApiException;
+    double calculateTotal(SalesOrderDto base, List<SalesOrderItemDto> items) throws SalesApiException;
 }

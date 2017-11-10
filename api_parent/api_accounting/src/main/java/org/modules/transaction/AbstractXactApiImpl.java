@@ -636,8 +636,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * not null. <i>xactItems</i> is not required and is checked only when it is
      * not null. When <i>xactItems</i> contains one or more items, the sum of
      * those items must equal the transaction amount found in <i>xact</i>. This
-     * method does not recognize the transaction details when the transaction is
-     * linked to a subsidiary account (Creditor or Customer).
+     * method does not recognize the transaction details when the transaction 
+     * (sales orders and/or purchases)is linked to a subsidiary account 
+     * (Creditor or Customer).
      * <p>
      * Override this method to add specific validations pertaining to the
      * business requirement of the descendent.
@@ -670,10 +671,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.validate(xactItems);
         } catch (TransactionItemsUnavailableException e) {
             // At this level, it is okay to save a transaction without
-            // transaction items. Some transactions (accounts with
-            // subsidiaries), are not required to have any transaction detail
-            // items. If a transaction requires detail items, then make
-            // provisions to validate that use case at the descendent level.
+            // transaction line items. Some Subsidiary accounts (customers and
+            // creditors) have deidcated entities (sales orders and purchases)
+            // to maintain their own transaction line items and are not required
+            // to have any transaction detail items. If a transaction requires
+            // detail items, then make provisions to validate that use case at
+            // the descendent level.
             logger.warn("There are no transaction items associated with the base transaction", e);
             return;
         } catch (Exception e) {
