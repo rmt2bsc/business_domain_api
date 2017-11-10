@@ -892,7 +892,7 @@ public class AccountingMockDataUtility {
         i.setInitUnitCost(cost);
         i.setInitMarkup(3.0);
         i.setItemNameOverride("ItemNameOverride" + itemId);
-        i.setBackOrderQty(0);
+        i.setBackOrderQty(100);
         return i;
     }
    

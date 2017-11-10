@@ -148,7 +148,7 @@ public class SalesOrderAdapterTest {
         Assert.assertEquals("1111-111-110", dto.getImSerialNo());
         Assert.assertEquals(10, dto.getImQtyOnHand());
         Assert.assertEquals(20.00, dto.getImUnitCost(), 0);
-        Assert.assertEquals(3, dto.getImMarkup(), 0);
+        Assert.assertEquals(5, dto.getImMarkup(), 0);
         Assert.assertEquals(((dto.getImQtyOnHand() * dto.getImUnitCost()) * dto.getImMarkup()), dto.getImRetailPrice(), 0);
         
         // Properties that are not expected to have values.

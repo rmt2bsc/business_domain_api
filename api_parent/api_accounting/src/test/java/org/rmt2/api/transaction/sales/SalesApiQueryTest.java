@@ -526,7 +526,7 @@ public class SalesApiQueryTest extends SalesApiTestData {
             Assert.assertEquals("Item" + (ndx + 1), item.getImName());
             Assert.assertEquals(10, item.getImQtyOnHand(), 0);
             Assert.assertEquals(20, item.getImUnitCost(), 0);
-            Assert.assertEquals(3, item.getImMarkup(), 0);
+            Assert.assertEquals(5, item.getImMarkup(), 0);
         }
         Assert.assertEquals(300.00, totalAmt, 0);
     }

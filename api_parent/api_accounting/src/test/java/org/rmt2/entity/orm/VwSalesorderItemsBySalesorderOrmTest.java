@@ -123,7 +123,7 @@ public class VwSalesorderItemsBySalesorderOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o2.setMarkup(3);
+        o2.setMarkup(5);
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
