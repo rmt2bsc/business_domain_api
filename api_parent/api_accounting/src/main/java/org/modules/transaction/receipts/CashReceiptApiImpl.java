@@ -144,8 +144,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
 
         // Send email confirmation
         try {
-            this.emailPaymentConfirmation(salesOrder.getSalesOrderId(),
-                    xact.getXactId());
+            this.emailPaymentConfirmation(salesOrder.getSalesOrderId(), xact.getXactId());
         } catch (CashReceiptApiException e) {
             this.msg = "Error notifying customer of payment confirmation via SMTP for sales order id, "
                     + salesOrder.getSalesOrderId();
@@ -345,7 +344,6 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
      * @throws CashReceiptApiException
      */
     public void emailPaymentConfirmation(int salesOrderId, int xactId) throws CashReceiptApiException {
-
         CashReceiptDaoFactory fact = new CashReceiptDaoFactory();
         CashReceiptDao dao = fact.createRmt2OrmDao(this.dao);
         String custData;
