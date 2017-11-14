@@ -1045,4 +1045,54 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         Assert.assertEquals(TEST_NEW_INVOICE_ID, results);
         Assert.assertEquals(true, this.existingSalesOrderDto.isInvoiced());
     }
+    
+    @Test
+    public void test_Validation_Invoicing_SalesOrder_Null() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Validation_Invoicing_SalesOrder_NotFound() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Validation_Invoicing_Customer_NotFound() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Validation_Invoicing_SalesOrderItemList_Null() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Invoicing_Db_Exception_Xact_Verification_Error() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Invoicing_Db_Exception_Invoice_Creation_Error() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Invoicing_Db_Exception_Setting_SalesOrder_Invoiced_Flag() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Invoicing_Db_Exception_Status_OutOfSync() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Invoicing_Db_Exception_CashReceipt_Payment() {
+        Assert.fail("Please implement method");
+    }
+    
+    @Test
+    public void test_Invoicing_Db_Exception_CashReceipt_Email_Confirmation() {
+        Assert.fail("Please implement method");
+    }
 }
