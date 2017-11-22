@@ -1044,27 +1044,92 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
         Assert.assertEquals(TEST_NEW_INVOICE_ID, results);
         Assert.assertEquals(true, this.existingSalesOrderDto.isInvoiced());
-    }
+    } 
     
     @Test
     public void test_Validation_Invoicing_SalesOrder_Null() {
-        Assert.fail("Please implement method");
-    }
-    
-    @Test
-    public void test_Validation_Invoicing_SalesOrder_NotFound() {
-        Assert.fail("Please implement method");
-    }
-    
-    @Test
-    public void test_Validation_Invoicing_Customer_NotFound() {
-        Assert.fail("Please implement method");
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            api.invoiceSalesOrder(null, this.existingLineItemListDto, true);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
     }
     
     @Test
     public void test_Validation_Invoicing_SalesOrderItemList_Null() {
-        Assert.fail("Please implement method");
+     // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, null, true);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
     }
+    
+    
+    @Test
+    public void test_Validation_Invoicing_SalesOrder_NotFound() {
+        // Setup mock for not found sales order validation error
+        SalesOrder so = new SalesOrder();
+        so.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(so))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single sales order fetch test case setup failed");
+        }
+      
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof NotFoundException);
+        }
+    }
+    
+    @Test
+    public void test_Validation_Invoicing_Customer_NotFound() {
+        // Setup mock for not found customer validation error
+        Customer mockCustomerCriteria = new Customer();
+        mockCustomerCriteria.setCustomerId(TEST_CUSTOMER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCustomerCriteria)))
+                            .thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single customer test case setup failed");
+        }
+      
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof NotFoundException);
+        }
+    }
+    
+    
     
     @Test
     public void test_Invoicing_Db_Exception_Xact_Verification_Error() {
