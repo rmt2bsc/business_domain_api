@@ -20,6 +20,7 @@ import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.subsidiary.CustomerDaoException;
+import org.dao.transaction.XactDaoException;
 import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
@@ -32,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modules.inventory.InventoryApiException;
 import org.modules.subsidiary.CustomerApiException;
+import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 import org.modules.transaction.sales.OutOfSyncSalesOrderStatusesException;
 import org.modules.transaction.sales.SalesApi;
@@ -1129,16 +1131,70 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
     }
     
-    
-    
     @Test
     public void test_Invoicing_Db_Exception_Xact_Verification_Error() {
-        Assert.fail("Please implement method");
+        // Mock base transaction creation stub.
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true)))
+                    .thenReturn(TEST_NEW_XACT_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update xact test case setup failed");
+        }
+        
+        // Mock base transaction query verification stub.
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwXactList.class)))
+                            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+      
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof XactApiException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof CannotRetrieveException);
+            Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof DatabaseException);
+        }
     }
     
     @Test
     public void test_Invoicing_Db_Exception_Invoice_Creation_Error() {
-        Assert.fail("Please implement method");
+        // Mock base transaction creation stub.
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true)))
+            .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update xact test case setup failed");
+        }
+        
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof XactApiException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof XactDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof XactDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause().getCause().getCause() instanceof DatabaseException);
+        }
     }
     
     @Test
