@@ -262,7 +262,8 @@ public class CashDisbursementsUpdateApiTest extends TransactionApiTestData {
             Assert.assertTrue(e instanceof DisbursementsApiException);
             Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof XactDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }

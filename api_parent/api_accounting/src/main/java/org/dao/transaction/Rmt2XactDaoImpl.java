@@ -448,7 +448,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             return newXactId;
         } catch (Exception e) {
             this.msg = "Unable to persist base transaction";
-            throw new DatabaseException(this.msg, e);
+            throw new XactDaoException(this.msg, e);
         }
     }
 

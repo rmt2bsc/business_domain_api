@@ -341,7 +341,8 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
             Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof XactDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }
