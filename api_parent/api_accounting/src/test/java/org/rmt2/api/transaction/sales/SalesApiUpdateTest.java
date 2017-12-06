@@ -21,6 +21,7 @@ import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.subsidiary.CustomerDaoException;
 import org.dao.transaction.XactDaoException;
+import org.dao.transaction.sales.SalesInvoiceDaoException;
 import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
@@ -1199,7 +1200,45 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     
     @Test
     public void test_Invoicing_Db_Exception_Setting_SalesOrder_Invoiced_Flag() {
-        Assert.fail("Please implement method");
+        // Mock base transaction creation stub.
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(SalesInvoice.class), eq(true)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update xact test case setup failed");
+        }
+
+        // Mock base transaction creation stub.
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true))).thenReturn(TEST_NEW_XACT_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update xact test case setup failed");
+        }
+
+        // Mock base transaction query verification stub.
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwXactList.class))).thenReturn(this.mockSingleXact);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+        // Perform test
+        SalesApiFactory f = new SalesApiFactory();
+        SalesApi api = f.createApi(mockDaoClient);
+        try {
+            this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SalesApiException);
+            Assert.assertTrue(e.getCause() instanceof SalesApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof SalesInvoiceDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+        }
     }
     
     @Test
