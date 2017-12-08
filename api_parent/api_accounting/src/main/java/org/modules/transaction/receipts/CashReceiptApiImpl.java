@@ -352,7 +352,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         } catch (CashReceiptDaoException e) {
             this.msg = "Unable to retreive customer payment email confirmation body";
             logger.error(this.msg);
-            throw new CashReceiptApiException(this.msg);
+            throw new CashReceiptApiException(this.msg, e);
         }
         String appRoot = "c:/tmp/";
         StringBuffer xmlBuf = new StringBuffer();

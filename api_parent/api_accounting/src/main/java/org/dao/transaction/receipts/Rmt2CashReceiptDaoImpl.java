@@ -119,7 +119,8 @@ public class Rmt2CashReceiptDaoImpl extends Rmt2XactDaoImpl implements
                 cust.setBalance(bal);
             }
             else {
-                this.msg = "Sales order was not found: " + salesOrderId;
+                this.msg = "Unable to perform cash receipts confirmation due to customer, " + so.getCustomerId()
+                        + ", was not found";
                 throw new CashReceiptDaoException(this.msg);
             }
         } catch (SubsidiaryDaoException e) {
