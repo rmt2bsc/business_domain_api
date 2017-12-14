@@ -11,14 +11,5 @@ import org.dao.transaction.XactDao;
  */
 public interface CashReceiptDao extends XactDao {
 
-    /**
-     * 
-     * @param salesOrderId
-     * @param xactId
-     * @return
-     * @throws CashReceiptDaoException
-     */
-    String buildPaymentConfirmation(int salesOrderId, int xactId)
-            throws CashReceiptDaoException;
 
 }
