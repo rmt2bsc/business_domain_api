@@ -1,6 +1,5 @@
 package org.modules.transaction.receipts;
 
-import org.dao.transaction.receipts.CashReceiptDaoException;
 import org.dto.SalesOrderDto;
 import org.dto.XactDto;
 import org.modules.transaction.XactApi;
@@ -31,9 +30,10 @@ public interface CashReceiptApi extends XactApi {
      * 
      * @param order
      * @param amount
+     * @return boolean true when transaction succeeded, false otherwise.
      * @throws CashReceiptApiException
      */
-    void applyPaymentToInvoice(SalesOrderDto order, Double amount) throws CashReceiptApiException;
+    boolean applyPaymentToInvoice(SalesOrderDto order, Double amount) throws CashReceiptApiException;
 
     /**
      * Emails the payment confirmation to the customer.
@@ -42,16 +42,17 @@ public interface CashReceiptApi extends XactApi {
      *            the sales order id
      * @param xactId
      *            the transaction id
+     * @return true upon success and false otherwise.
      * @throws CashReceiptApiException
      */
-    void emailPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException;
+    boolean emailPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException;
     
     /**
      * 
      * @param salesOrderId
      * @param xactId
      * @return
-     * @throws CashReceiptDaoException
+     * @throws CashReceiptApiException
      */
-    String buildPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptDaoException;
+    String buildPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException;
 }
