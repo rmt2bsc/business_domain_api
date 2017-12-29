@@ -34,8 +34,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return An instance of {@link PurchaseOrderDto}
      * @throws VendorPurchasesApiException
      */
-    PurchaseOrderDto getPurchaseOrder(int poId)
-            throws VendorPurchasesApiException;
+    PurchaseOrderDto getPurchaseOrder(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Finds one or more purchase order using custom selection criteria.
@@ -45,8 +44,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A List of {@link PurchaseOrderDto} objects
      * @throws VendorPurchasesApiException
      */
-    List<PurchaseOrderDto> getPurchaseOrder(String customCriteria)
-            throws VendorPurchasesApiException;
+    List<PurchaseOrderDto> getPurchaseOrder(String customCriteria) throws VendorPurchasesApiException;
 
     /**
      * Finds a single purchase order item using _poItemId.
@@ -58,8 +56,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return An instance of {@link PurchaseOrderItemDto}
      * @throws VendorPurchasesApiException
      */
-    PurchaseOrderItemDto getPurchaseOrderItem(int poItemId)
-            throws VendorPurchasesApiException;
+    PurchaseOrderItemDto getPurchaseOrderItem(Integer poItemId) throws VendorPurchasesApiException;
 
     /**
      * Finds all items belonging to a purchase order identified as, value
@@ -69,8 +66,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A List of {@link PurchaseOrderItemDto} objects
      * @throws VendorPurchasesApiException
      */
-    List<PurchaseOrderItemDto> getPurchaseOrderItems(int poId)
-            throws VendorPurchasesApiException;
+    List<PurchaseOrderItemDto> getPurchaseOrderItems(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Finds one vendor item object using vendorId and itemId
@@ -82,8 +78,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A List of {@link VendorItemDto} objects
      * @throws VendorPurchasesApiException
      */
-    List<VendorItemDto> getVendorItem(int vendorId, int itemId)
-            throws VendorPurchasesApiException;
+    List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException;
 
     /**
      * Retreives the current inventory information for a vendor's item.
@@ -98,8 +93,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return An instance of {@link VwVendorItemDto}
      * @throws VendorPurchasesApiException
      */
-    VwVendorItemDto getCurrentItemByVendor(int vendorId, int itemId)
-            throws VendorPurchasesApiException;
+    VwVendorItemDto getCurrentItemByVendor(Integer vendorId, Integer itemId) throws VendorPurchasesApiException;
 
     /**
      * Retrieve a list of purchase order items for a vendor in which each item
@@ -113,8 +107,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A List of {@link PurchaseOrderItemDto} objects
      * @throws VendorPurchasesApiException
      */
-    List<PurchaseOrderItemDto> getVendorItemPurchaseOrderItems(int vendorId,
-            int poId) throws VendorPurchasesApiException;
+    List<PurchaseOrderItemDto> getVendorItemPurchaseOrderItems(Integer vendorId, Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Retrieves the purchase order status based on the value of _poStatusId.
@@ -124,8 +117,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return An instance of {@link PurchaseOrderStatusDto}
      * @throws VendorPurchasesApiException
      */
-    PurchaseOrderStatusDto getPurchaseOrderStatus(int poStatusId)
-            throws VendorPurchasesApiException;
+    PurchaseOrderStatusDto getPurchaseOrderStatus(Integer poStatusId) throws VendorPurchasesApiException;
 
     /**
      * Retrieves the current status of a purchase order.
@@ -135,8 +127,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return An instance of {@link PurchaseOrderStatusHistDto}
      * @throws VendorPurchasesApiException
      */
-    PurchaseOrderStatusHistDto getCurrentPurchaseOrderHistory(int poId)
-            throws VendorPurchasesApiException;
+    PurchaseOrderStatusHistDto getCurrentPurchaseOrderHistory(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Retrieves the status history of a purchase order.
@@ -146,8 +137,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A List of {@link PurchaseOrderStatusHistDto} objects
      * @throws VendorPurchasesApiException
      */
-    List<PurchaseOrderStatusHistDto> getPurchaseOrderHistory(int poId)
-            throws VendorPurchasesApiException;
+    List<PurchaseOrderStatusHistDto> getPurchaseOrderHistory(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Retrieves a list of inventory items which have not been assoicated with a
@@ -160,8 +150,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A List of {@l VwVendorItemDto} objects
      * @throws VendorPurchasesApiException
      */
-    List<VwVendorItemDto> getPurchaseOrderAvailableItems(int vendorId, int poId)
-            throws VendorPurchasesApiException;
+    List<VwVendorItemDto> getPurchaseOrderAvailableItems(Integer vendorId, Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Creates a new or updates an existing purchase order and its items.
@@ -173,9 +162,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return int
      * @throws VendorPurchasesApiException
      */
-    int updatePurchaseOrder(PurchaseOrderDto po,
-            List<PurchaseOrderItemDto> items)
-            throws VendorPurchasesApiException;
+    int updatePurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException;
 
     /**
      * Deletes a purchase order.
@@ -185,7 +172,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return int
      * @throws VendorPurchasesApiException
      */
-    int deletePurchaseOrder(int poId) throws VendorPurchasesApiException;
+    int deletePurchaseOrder(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Deletes one purchase order item.
@@ -197,7 +184,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return int
      * @throws VendorPurchasesApiException
      */
-    int deleteItem(int poId, int poItemId) throws VendorPurchasesApiException;
+    int deleteItem(Integer poId, Integer poItemId) throws VendorPurchasesApiException;
 
     /**
      * Deletes all items belonging to a purchase order.
@@ -207,7 +194,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return int
      * @throws VendorPurchasesApiException
      */
-    int deleteAllItems(int poId) throws VendorPurchasesApiException;
+    int deleteAllItems(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Assigns a new status to a purchase order.
@@ -218,8 +205,7 @@ public interface VendorPurchasesApi extends XactApi {
      *            The id of status that is to be assigned to the purchase order.
      * @throws VendorPurchasesException
      */
-    void setPurchaseOrderStatus(int poId, int newStatusId)
-            throws VendorPurchasesApiException;
+    void setPurchaseOrderStatus(Integer poId, Integer newStatusId) throws VendorPurchasesApiException;
 
     /**
      * This method will perform a purchases, returns, and allowances transaction
@@ -229,8 +215,7 @@ public interface VendorPurchasesApi extends XactApi {
      *            The id of a valid purchase order.
      * @throws VendorPurchasesApiException
      */
-    void doVendorPurchaseReturnAllow(int purchaseOrderId)
-            throws VendorPurchasesApiException;
+    void doVendorPurchaseReturnAllow(Integer purchaseOrderId) throws VendorPurchasesApiException;
 
     /**
      * Creates a purchase order transaction.
@@ -242,9 +227,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return Transaction Id.
      * @throws VendorPurchasesApiException
      */
-    int submitPurchaseOrder(PurchaseOrderDto po,
-            List<PurchaseOrderItemDto> items)
-            throws VendorPurchasesApiException;
+    int submitPurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException;
 
     /**
      * Computes the total amount of a purchase order.
@@ -254,7 +237,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A decimal value.
      * @throws VendorPurchasesApiException
      */
-    double calcPurchaseOrderTotal(int poId) throws VendorPurchasesApiException;
+    double calcPurchaseOrderTotal(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Cancels a purchase order.
@@ -263,7 +246,7 @@ public interface VendorPurchasesApi extends XactApi {
      *            The id of target purchase order
      * @throws VendorPurchasesApiException
      */
-    void cancelPurchaseOrder(int poId) throws VendorPurchasesApiException;
+    void cancelPurchaseOrder(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Creates a purchases, returns, and allowances transaction for a purchase
@@ -275,7 +258,6 @@ public interface VendorPurchasesApi extends XactApi {
      *            The items that are to be returned.
      * @throws VendorPurchasesApiException
      */
-    void returnPurchaseOrder(int poId, List<PurchaseOrderItemDto> items)
-            throws VendorPurchasesApiException;
+    void returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException;
 
 }

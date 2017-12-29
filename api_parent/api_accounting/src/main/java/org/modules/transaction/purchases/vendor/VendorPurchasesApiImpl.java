@@ -26,9 +26,9 @@ import org.dto.XactTypeItemActivityDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 import org.modules.inventory.InventoryApi;
+import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.modules.inventory.InventoryConst;
-import org.modules.inventory.InventoryApiException;
 import org.modules.subsidiary.CreditorApi;
 import org.modules.subsidiary.CreditorApiException;
 import org.modules.subsidiary.SubsidiaryApiFactory;
@@ -48,11 +48,9 @@ import com.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
-        VendorPurchasesApi {
+class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurchasesApi {
 
-    private static final Logger logger = Logger
-            .getLogger(VendorPurchasesApiImpl.class);
+    private static final Logger logger = Logger.getLogger(VendorPurchasesApiImpl.class);
 
     private VendorPurchasesDaoFactory daoFact;
 
@@ -103,10 +101,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public PurchaseOrderDto getPurchaseOrder(int poId)
-            throws VendorPurchasesApiException {
-        PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory
-                .createPurchaseOrderInstance(null);
+    public PurchaseOrderDto getPurchaseOrder(Integer poId) throws VendorPurchasesApiException {
+        PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(null);
         criteria.setPoId(poId);
         List<PurchaseOrderDto> results;
         try {
@@ -137,8 +133,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<PurchaseOrderDto> getPurchaseOrder(String customCriteria)
-            throws VendorPurchasesApiException {
+    public List<PurchaseOrderDto> getPurchaseOrder(String customCriteria) throws VendorPurchasesApiException {
         PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory
                 .createPurchaseOrderInstance(null);
         criteria.setCriteria(customCriteria);
@@ -168,10 +163,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public PurchaseOrderItemDto getPurchaseOrderItem(int poItemId)
-            throws VendorPurchasesApiException {
-        PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory
-                .createPurchaseOrderItemInstance(null);
+    public PurchaseOrderItemDto getPurchaseOrderItem(Integer poItemId) throws VendorPurchasesApiException {
+        PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(null);
         criteria.setPoItemId(poItemId);
         List<PurchaseOrderItemDto> results;
         try {
@@ -203,10 +196,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<PurchaseOrderItemDto> getPurchaseOrderItems(int poId)
-            throws VendorPurchasesApiException {
-        PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory
-                .createPurchaseOrderItemInstance(null);
+    public List<PurchaseOrderItemDto> getPurchaseOrderItems(Integer poId) throws VendorPurchasesApiException {
+        PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(null);
         criteria.setPoId(poId);
         List<PurchaseOrderItemDto> results;
         try {
@@ -233,8 +224,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<VendorItemDto> getVendorItem(int vendorId, int itemId)
-            throws VendorPurchasesApiException {
+    public List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
         VendorItemDto criteria = Rmt2PurchaseOrderDtoFactory
                 .createVendorItemInstance(null);
         criteria.setVendorId(vendorId);
@@ -247,7 +237,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            buf.append("DAO failed Purchase Order Vendor Item Fetch using vendor Id [");
+            buf.append(
+                    "DAO failed Purchase Order Vendor Item Fetch using vendor Id [");
             buf.append(vendorId);
             buf.append(" and item id [");
             buf.append(itemId);
@@ -272,18 +263,18 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<PurchaseOrderItemDto> getVendorItemPurchaseOrderItems(
-            int vendorId, int poId) throws VendorPurchasesApiException {
+    public List<PurchaseOrderItemDto> getVendorItemPurchaseOrderItems(Integer vendorId, Integer poId) 
+            throws VendorPurchasesApiException {
         List<PurchaseOrderItemDto> results;
         StringBuffer buf = new StringBuffer();
         try {
-            results = this.dao.fetchCombinedVendorPurchaseOrderItem(vendorId,
-                    poId);
+            results = this.dao.fetchCombinedVendorPurchaseOrderItem(vendorId, poId);
             if (results == null) {
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            buf.append("DAO failed Purchase Order Combined Item Fetch using vendor Id [");
+            buf.append(
+                    "DAO failed Purchase Order Combined Item Fetch using vendor Id [");
             buf.append(vendorId);
             buf.append(" and PO id [");
             buf.append(poId);
@@ -307,13 +298,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<VwVendorItemDto> getPurchaseOrderAvailableItems(int vendorId,
-            int poId) throws VendorPurchasesApiException {
+    public List<VwVendorItemDto> getPurchaseOrderAvailableItems(Integer vendorId, Integer poId)
+            throws VendorPurchasesApiException {
         List<VwVendorItemDto> results;
         StringBuffer buf = new StringBuffer();
         try {
-            results = this.dao
-                    .fetchUnassignedPurchaseOrderItems(vendorId, poId);
+            results = this.dao.fetchUnassignedPurchaseOrderItems(vendorId, poId);
             if (results == null) {
                 return null;
             }
@@ -344,10 +334,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public VwVendorItemDto getCurrentItemByVendor(int vendorId, int itemId)
-            throws VendorPurchasesApiException {
-        VwVendorItemDto criteria = Rmt2PurchaseOrderDtoFactory
-                .createVendorItemExtInstance(null);
+    public VwVendorItemDto getCurrentItemByVendor(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
+        VwVendorItemDto criteria = Rmt2PurchaseOrderDtoFactory.createVendorItemExtInstance(null);
         criteria.setVendorId(vendorId);
         criteria.setItemId(itemId);
         List<VwVendorItemDto> results;
@@ -368,7 +356,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             throw new VendorPurchasesApiException(msg, e);
         }
         if (results.size() > 1) {
-            buf.append("DAO failed Purchase Order local/external Vendor Item Fetch:  too many rows returned using Vendor Id: ");
+            buf.append(
+                    "DAO failed Purchase Order local/external Vendor Item Fetch:  too many rows returned using Vendor Id: ");
             buf.append(vendorId);
             buf.append(" and item id [");
             buf.append(itemId);
@@ -389,10 +378,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public PurchaseOrderStatusDto getPurchaseOrderStatus(int poStatusId)
-            throws VendorPurchasesApiException {
-        PurchaseOrderStatusDto criteria = Rmt2PurchaseOrderDtoFactory
-                .createPurchaseOrderStatusInstance(null);
+    public PurchaseOrderStatusDto getPurchaseOrderStatus(Integer poStatusId) throws VendorPurchasesApiException {
+        PurchaseOrderStatusDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderStatusInstance(null);
         criteria.setPoStatusId(poStatusId);
         List<PurchaseOrderStatusDto> results;
         StringBuffer buf = new StringBuffer();
@@ -410,7 +397,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             throw new VendorPurchasesApiException(msg, e);
         }
         if (results.size() > 1) {
-            buf.append("DAO failed Purchase Order status Fetch:  too many rows returned using PO Status Id: ");
+            buf.append(
+                    "DAO failed Purchase Order status Fetch:  too many rows returned using PO Status Id: ");
             buf.append(poStatusId);
             buf.append("]");
             msg = buf.toString();
@@ -429,10 +417,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public PurchaseOrderStatusHistDto getCurrentPurchaseOrderHistory(int poId)
-            throws VendorPurchasesApiException {
-        PurchaseOrderStatusHistDto criteria = Rmt2PurchaseOrderDtoFactory
-                .createPurchaseOrderStatusHistoryInstance(null);
+    public PurchaseOrderStatusHistDto getCurrentPurchaseOrderHistory(Integer poId) throws VendorPurchasesApiException {
+        PurchaseOrderStatusHistDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderStatusHistoryInstance(null);
         criteria.setPoId(poId);
         List<PurchaseOrderStatusHistDto> results;
         StringBuffer buf = new StringBuffer();
@@ -442,7 +428,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            buf.append("DAO failed Purchase Order current status Fetch using po id [");
+            buf.append(
+                    "DAO failed Purchase Order current status Fetch using po id [");
             buf.append(poId);
             buf.append("]");
             msg = buf.toString();
@@ -450,7 +437,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             throw new VendorPurchasesApiException(msg, e);
         }
         if (results.size() > 1) {
-            buf.append("DAO failed Purchase Order current status Fetch:  too many rows returned using PO Id: ");
+            buf.append(
+                    "DAO failed Purchase Order current status Fetch:  too many rows returned using PO Id: ");
             buf.append(poId);
             buf.append("]");
             msg = buf.toString();
@@ -469,7 +457,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<PurchaseOrderStatusHistDto> getPurchaseOrderHistory(int poId)
+    public List<PurchaseOrderStatusHistDto> getPurchaseOrderHistory(Integer poId)
             throws VendorPurchasesApiException {
         PurchaseOrderStatusHistDto criteria = Rmt2PurchaseOrderDtoFactory
                 .createPurchaseOrderStatusHistoryInstance(null);
@@ -499,8 +487,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return
      * @throws VendorPurchasesApiException
      */
-    private PurchaseOrderStatusHistDto getCurrentPurchaseOrderStatus(int poId)
-            throws VendorPurchasesApiException {
+    private PurchaseOrderStatusHistDto getCurrentPurchaseOrderStatus(int poId) throws VendorPurchasesApiException {
         PurchaseOrderStatusHistDto criteria = Rmt2PurchaseOrderDtoFactory
                 .createPurchaseOrderStatusHistoryInstance(null);
         criteria.setPoId(poId);
@@ -531,8 +518,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return an instance of {@link CreditorDto}
      * @throws VendorPurchasesException
      */
-    private CreditorDto getVendorProfile(int vendorId)
-            throws VendorPurchasesApiException {
+    private CreditorDto getVendorProfile(int vendorId) throws VendorPurchasesApiException {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi credApi = f.createCreditorApi(this.getSharedDao());
         // Get creditor data to used as validating metric
@@ -555,8 +541,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return an instance of {@link CreditorTypeDto}
      * @throws VendorPurchasesException
      */
-    private CreditorTypeDto getCreditorTypeProfileForVendor()
-            throws VendorPurchasesApiException {
+    private CreditorTypeDto getCreditorTypeProfileForVendor() throws VendorPurchasesApiException {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi credApi = f.createCreditorApi(this.getSharedDao());
         // Get creditor data to used as validating metric
@@ -591,8 +576,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *             validation errors or general database access error
      */
     @Override
-    public int updatePurchaseOrder(PurchaseOrderDto po,
-            List<PurchaseOrderItemDto> items)
+    public int updatePurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
 
         this.validateBasic(po, items);
@@ -616,8 +600,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return
      * @throws VendorPurchasesApiException
      */
-    private int createPurchaseOrder(PurchaseOrderDto po,
-            List<PurchaseOrderItemDto> items)
+    private int createPurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
         int poId = 0;
         try {
@@ -645,8 +628,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return
      * @throws VendorPurchasesApiException
      */
-    private int updatePurchaseOrder(PurchaseOrderDto po,
-            List<PurchaseOrderItemDto> items, boolean refresh)
+    private int updatePurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items, boolean refresh)
             throws VendorPurchasesApiException {
 
         StringBuffer buf = new StringBuffer();
@@ -660,7 +642,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                 && statusId != VendorPurchasesConst.PURCH_STATUS_FINALIZE) {
             buf.append("Purchase order #");
             buf.append(po.getPoId());
-            buf.append(" was denied updates.   Must be in Quote or Submitted status.");
+            buf.append(
+                    " was denied updates.   Must be in Quote or Submitted status.");
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new PurchaseOrderBadStatusException(msg);
@@ -704,8 +687,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return The total number of rows effect by transaction.
      * @throws VendorPurchasesApiException
      */
-    private int insertPurchaseOrderItems(int poId,
-            List<PurchaseOrderItemDto> items)
+    private int insertPurchaseOrderItems(int poId, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
         int rc = 0;
         try {
@@ -740,8 +722,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *         completely received.
      * @throws VendorPurchasesApiException
      */
-    private int updatePurchaseOrderItems(int poId,
-            List<PurchaseOrderItemDto> items)
+    private int updatePurchaseOrderItems(int poId, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
         int rc = 0;
         int poUncollectCnt = 0;
@@ -774,8 +755,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                         try {
                             rc = this.updatePurchaseOrderItem(deltaPoi);
                             // Add item's uncollected order quantity
-                            poUncollectCnt += (deltaPoi.getVendorQtyOnHand() - deltaPoi
-                                    .getQtyRcvd());
+                            poUncollectCnt += (deltaPoi.getVendorQtyOnHand()
+                                    - deltaPoi.getQtyRcvd());
                         } catch (NotFoundException e) {
                             continue;
                         }
@@ -863,8 +844,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                 invApi.updateItemMaster(im);
             } catch (InventoryApiException e) {
                 this.msg = "Problemu updating inventory for Purchase order item, "
-                        + deltaItem.getItemId()
-                        + ", of PO #"
+                        + deltaItem.getItemId() + ", of PO #"
                         + deltaItem.getPoId() + ":  " + e.getMessage();
                 throw new VendorPurchasesApiException(e);
             }
@@ -890,7 +870,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public int deletePurchaseOrder(int poId) throws VendorPurchasesApiException {
+    public int deletePurchaseOrder(Integer poId) throws VendorPurchasesApiException {
         PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory
                 .createPurchaseOrderInstance(null);
         criteria.setPoId(poId);
@@ -904,7 +884,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
         if (statusId != VendorPurchasesConst.PURCH_STATUS_QUOTE) {
             buf.append("Purchase order #");
             buf.append(poId);
-            buf.append(" cannot be deleted.   Must be in Quote status to perform deletes.");
+            buf.append(
+                    " cannot be deleted.   Must be in Quote status to perform deletes.");
             logger.error(this.msg);
             throw new PurchaseOrderBadStatusException(this.msg);
         }
@@ -942,8 +923,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public int deleteItem(int poId, int poItemId)
-            throws VendorPurchasesApiException {
+    public int deleteItem(Integer poId, Integer poItemId) throws VendorPurchasesApiException {
 
         PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory
                 .createPurchaseOrderItemInstance(null);
@@ -980,7 +960,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public int deleteAllItems(int poId) throws VendorPurchasesApiException {
+    public int deleteAllItems(Integer poId) throws VendorPurchasesApiException {
         PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory
                 .createPurchaseOrderItemInstance(null);
         criteria.setPoId(poId);
@@ -995,7 +975,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             logger.info(msg);
             return rc;
         } catch (VendorPurchasesDaoException e) {
-            buf.append("DAO failed Purchase Order Item Delete All operation using PO Id [");
+            buf.append(
+                    "DAO failed Purchase Order Item Delete All operation using PO Id [");
             buf.append(poId);
             buf.append("]");
             msg = buf.toString();
@@ -1014,10 +995,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public void setPurchaseOrderStatus(int poId, int newStatusId)
-            throws VendorPurchasesApiException {
-        PurchaseOrderStatusHistDto posh = this
-                .getCurrentPurchaseOrderStatus(poId);
+    public void setPurchaseOrderStatus(Integer poId, Integer newStatusId) throws VendorPurchasesApiException {
+        PurchaseOrderStatusHistDto posh = this.getCurrentPurchaseOrderStatus(poId);
         if (posh == null) {
             msg = "Unable to change purchase order status due to current status does not exist";
             logger.error(msg);
@@ -1064,10 +1043,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *             order. The exception should give a detail explanation as to
      *             the reason why the status cannot be changed.
      */
-    protected int verifyStatusChange(int poId, int newStatusId)
-            throws VendorPurchasesApiException {
-        PurchaseOrderStatusHistDto posh = this
-                .getCurrentPurchaseOrderStatus(poId);
+    protected int verifyStatusChange(int poId, int newStatusId) throws VendorPurchasesApiException {
+        PurchaseOrderStatusHistDto posh = this.getCurrentPurchaseOrderStatus(poId);
         int currentStatusId = 0;
         boolean error = false;
         currentStatusId = (posh == null ? VendorPurchasesConst.NEW_PO_STATUS
@@ -1136,8 +1113,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      *             <i>po</i> or <i>items</i> are null
      */
-    protected void validateBasic(PurchaseOrderDto po,
-            List<PurchaseOrderItemDto> items)
+    protected void validateBasic(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
         if (po == null) {
             this.msg = "Base purchase order object is invalid";
@@ -1168,8 +1144,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *             if the vendor value is less than or equal to zero, or vendor
      *             does not exist, or creditor is not a vendor type.
      */
-    protected void validatePurchaseOrder(PurchaseOrderDto po)
-            throws VendorPurchasesApiException {
+    protected void validatePurchaseOrder(PurchaseOrderDto po) throws VendorPurchasesApiException {
         // Get vendor data to used as validating metric
         CreditorTypeDto creditorType = this.getCreditorTypeProfileForVendor();
 
@@ -1203,7 +1178,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * <li>Item Master Id must be a valid and is greater than zero</li>
      * <li>The selected item master id must be a tangible and resalable
      * inventory item</li>
-     * <li>The value of quantity orderd must be greater than or equal to zero</li>
+     * <li>The value of quantity orderd must be greater than or equal to
+     * zero</li>
      * <li>The value of quantity received must be less than or equal to quantity
      * ordered</li>
      * </ul>
@@ -1212,8 +1188,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *            The purchase order item being evaluated.
      * @throws VendorPurchasesApiException
      */
-    protected void validatePurchaseOrderItem(PurchaseOrderItemDto poi)
-            throws VendorPurchasesApiException {
+    protected void validatePurchaseOrderItem(PurchaseOrderItemDto poi) throws VendorPurchasesApiException {
         PurchaseOrder po = null;
         try {
             if (poi == null) {
@@ -1322,8 +1297,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *             master error occurs, a database error occurs, or a system
      *             error occurrs.
      */
-    private int pullPurchaseOrderInventory(List<PurchaseOrderItemDto> items)
-            throws VendorPurchasesApiException {
+    private int pullPurchaseOrderInventory(List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
         int availQty = 0;
         int qtyRtn = 0;
         int totalOrderQty = 0;
@@ -1375,13 +1349,13 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * <p>
      * This method executes a purchases, returns, and allowances transaction
      * which will allow one or more items of the purchase order to be returned.
-     * It is required for the purchase order to be in "Received" or
-     * "Partially Received" status before a return is performed. Inventory will
-     * be pulled for each item involved in this transaction. The purchase order
-     * will be flagged with a status of "Returned" when the summation of
-     * quantity ordered minus quantity returned for each item of the purchase
-     * order equals zero. Otherwise, the purchase order will be placed in
-     * Partially Returned status.
+     * It is required for the purchase order to be in "Received" or "Partially
+     * Received" status before a return is performed. Inventory will be pulled
+     * for each item involved in this transaction. The purchase order will be
+     * flagged with a status of "Returned" when the summation of quantity
+     * ordered minus quantity returned for each item of the purchase order
+     * equals zero. Otherwise, the purchase order will be placed in Partially
+     * Returned status.
      * 
      * @param poId
      *            The id of target purchase order
@@ -1392,7 +1366,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *             an item, database error occurs, or a system error occurs.
      */
     @Override
-    public void returnPurchaseOrder(int poId, List<PurchaseOrderItemDto> items)
+    public void returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
         PurchaseOrderDto po = this.getPurchaseOrder(poId);
         XactDto xact = null;
@@ -1408,8 +1382,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             xact = this.getXactById(po.getXactId());
             this.reverse(xact, null);
             // Associate transaction with creditor activity
-            this.createSubsidiaryActivity(po.getCreditorId(),
-                    xact.getXactId(), xact.getXactAmount());
+            this.createSubsidiaryActivity(po.getCreditorId(), xact.getXactId(),
+                    xact.getXactAmount());
         } catch (XactApiException e) {
             throw new VendorPurchasesApiException(e);
         }
@@ -1439,8 +1413,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public double calcPurchaseOrderTotal(int poId)
-            throws VendorPurchasesApiException {
+    public double calcPurchaseOrderTotal(Integer poId) throws VendorPurchasesApiException {
         double total = 0;
 
         total += this.calculateItemTotal(poId);
@@ -1457,8 +1430,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return Item Total
      * @throws VendorPurchasesApiException
      */
-    private double calculateItemTotal(int poId)
-            throws VendorPurchasesApiException {
+    private double calculateItemTotal(int poId) throws VendorPurchasesApiException {
         List<PurchaseOrderItemDto> items = null;
         double total = 0;
 
@@ -1493,8 +1465,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @return Other fee total.
      * @throws VendorPurchasesApiException
      */
-    private double calculateOtherFees(int poId)
-            throws VendorPurchasesApiException {
+    private double calculateOtherFees(int poId) throws VendorPurchasesApiException {
         return 0;
     }
 
@@ -1518,8 +1489,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public int submitPurchaseOrder(PurchaseOrderDto po,
-            List<PurchaseOrderItemDto> items)
+    public int submitPurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
         double poTotal = 0;
         int xactId = 0;
@@ -1536,13 +1506,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
             xact.setXactAmount(poTotal);
             xact.setXactDate(new Date());
             xact.setXactTypeId(XactConst.XACT_TYPE_VENDOR_PURCHASE);
-            xact.setXactReason("Submitted Inventory Purchase Order "
-                    + po.getPoId());
+            xact.setXactReason(
+                    "Submitted Inventory Purchase Order " + po.getPoId());
             xactId = this.update(xact, null);
 
             // Associate transaction with creditor
-            this.createSubsidiaryActivity(po.getCreditorId(), xactId,
-                    poTotal);
+            this.createSubsidiaryActivity(po.getCreditorId(), xactId, poTotal);
 
             // Associate transaction with PO
             po.setXactId(xactId);
@@ -1573,8 +1542,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      *             If current status cannot be cancelled
      */
     @Override
-    public void cancelPurchaseOrder(int poId)
-            throws VendorPurchasesApiException {
+    public void cancelPurchaseOrder(Integer poId) throws VendorPurchasesApiException {
         PurchaseOrderDto po = this.getPurchaseOrder(poId);
         XactDto xact = null;
         int currentStatus = 0;
@@ -1613,8 +1581,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
      * @throws VendorPurchasesApiException
      */
     @Override
-    public void doVendorPurchaseReturnAllow(int purchaseOrderId)
-            throws VendorPurchasesApiException {
+    public void doVendorPurchaseReturnAllow(Integer purchaseOrderId) throws VendorPurchasesApiException {
         return;
     }
 
@@ -1634,8 +1601,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements
                 logger.error(this.msg);
                 throw new NotFoundException();
             }
-            String ccNoMask = RMT2String.maskCreditCardNumber(creditor
-                    .getExtAccountNumber());
+            String ccNoMask = RMT2String
+                    .maskCreditCardNumber(creditor.getExtAccountNumber());
             xact.setXactNegInstrNo(ccNoMask);
         } catch (CreditorApiException e) {
             this.msg = "Unable to create vendor purchase order transction due to the occurrence of a database error while attempting to fetch vendor's profile from the database using creditor id: "
