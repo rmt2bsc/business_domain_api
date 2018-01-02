@@ -73,8 +73,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<PurchaseOrderDto> fetchPurchaseOrder(PurchaseOrderDto criteria)
-            throws VendorPurchasesDaoException {
+    public List<PurchaseOrderDto> fetchPurchaseOrder(PurchaseOrderDto criteria) throws VendorPurchasesDaoException {
 
         PurchaseOrder obj = VendorPurchasesDaoFactory.createCriteria(criteria);
         obj.addOrderBy(PurchaseOrder.PROP_POID, PurchaseOrder.ORDERBY_ASCENDING);
@@ -112,12 +111,10 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<PurchaseOrderItemDto> fetchPurchaseOrderItem(
-            PurchaseOrderItemDto criteria) throws VendorPurchasesDaoException {
-        PurchaseOrderItems obj = VendorPurchasesDaoFactory
-                .createCriteria(criteria);
-        obj.addOrderBy(PurchaseOrderItems.PROP_POITEMID,
-                PurchaseOrderItems.ORDERBY_ASCENDING);
+    public List<PurchaseOrderItemDto> fetchPurchaseOrderItem(PurchaseOrderItemDto criteria) 
+            throws VendorPurchasesDaoException {
+        PurchaseOrderItems obj = VendorPurchasesDaoFactory.createCriteria(criteria);
+        obj.addOrderBy(PurchaseOrderItems.PROP_POITEMID, PurchaseOrderItems.ORDERBY_ASCENDING);
 
         List<PurchaseOrderItems> results = null;
         try {
@@ -148,13 +145,10 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<VendorItemDto> fetchVendorItem(VendorItemDto criteria)
-            throws VendorPurchasesDaoException {
+    public List<VendorItemDto> fetchVendorItem(VendorItemDto criteria) throws VendorPurchasesDaoException {
         VendorItems obj = VendorPurchasesDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(VendorItems.PROP_CREDITORID,
-                VendorItems.ORDERBY_ASCENDING);
-        obj.addOrderBy(VendorItems.PROP_VENDORITEMNO,
-                VendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VendorItems.PROP_CREDITORID, VendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VendorItems.PROP_VENDORITEMNO, VendorItems.ORDERBY_ASCENDING);
 
         List<VendorItems> results = null;
         try {
@@ -189,15 +183,11 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<VwVendorItemDto> fetchLocalExternalItem(VwVendorItemDto criteria)
-            throws VendorPurchasesDaoException {
+    public List<VwVendorItemDto> fetchLocalExternalItem(VwVendorItemDto criteria) throws VendorPurchasesDaoException {
         VwVendorItems obj = VendorPurchasesDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(VwVendorItems.PROP_DESCRIPTION,
-                VwVendorItems.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwVendorItems.PROP_CREDITORID,
-                VwVendorItems.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwVendorItems.PROP_VENDORITEMNO,
-                VwVendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwVendorItems.PROP_DESCRIPTION, VwVendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwVendorItems.PROP_CREDITORID, VwVendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwVendorItems.PROP_VENDORITEMNO, VwVendorItems.ORDERBY_ASCENDING);
 
         List<VwVendorItems> results = null;
         try {
@@ -233,14 +223,11 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<PurchaseOrderItemDto> fetchCombinedVendorPurchaseOrderItem(
-            int vendorId, int poId) throws VendorPurchasesDaoException {
-        VwVendorItemPurchaseOrderItem obj = VendorPurchasesDaoFactory
-                .createCriteria(vendorId, poId);
-        obj.addOrderBy(VendorItems.PROP_CREDITORID,
-                VendorItems.ORDERBY_ASCENDING);
-        obj.addOrderBy(VendorItems.PROP_VENDORITEMNO,
-                VendorItems.ORDERBY_ASCENDING);
+    public List<PurchaseOrderItemDto> fetchCombinedVendorPurchaseOrderItem(int vendorId, int poId) 
+            throws VendorPurchasesDaoException {
+        VwVendorItemPurchaseOrderItem obj = VendorPurchasesDaoFactory.createCriteria(vendorId, poId);
+        obj.addOrderBy(VendorItems.PROP_CREDITORID, VendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VendorItems.PROP_VENDORITEMNO, VendorItems.ORDERBY_ASCENDING);
 
         List<VwVendorItemPurchaseOrderItem> results = null;
         try {
@@ -273,23 +260,17 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<VwVendorItemDto> fetchUnassignedPurchaseOrderItems(
-            int vendorId, int poId) throws VendorPurchasesDaoException {
+    public List<VwVendorItemDto> fetchUnassignedPurchaseOrderItems(int vendorId, int poId) 
+            throws VendorPurchasesDaoException {
 
         // Build SQL custom where clause
-        String sql = RMT2String.replace(
-                VendorPurchasesConst.SQL_UNASSIGNED_PO_ITEMS,
-                String.valueOf(poId), "?");
+        String sql = RMT2String.replace(VendorPurchasesConst.SQL_UNASSIGNED_PO_ITEMS, String.valueOf(poId), "?");
 
         VwVendorItems obj = VendorPurchasesDaoFactory.createCriteria(vendorId);
         obj.addCustomCriteria(sql);
-        obj.addOrderBy(VwVendorItems.PROP_CREDITORID,
-                VendorItems.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwVendorItems.PROP_DESCRIPTION,
-                VendorItems.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwVendorItems.PROP_VENDORITEMNO,
-                VendorItems.ORDERBY_ASCENDING);
-
+        obj.addOrderBy(VwVendorItems.PROP_CREDITORID, VendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwVendorItems.PROP_DESCRIPTION, VendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwVendorItems.PROP_VENDORITEMNO, VendorItems.ORDERBY_ASCENDING);
         List<VwVendorItems> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -302,8 +283,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
 
         List<VwVendorItemDto> list = new ArrayList<VwVendorItemDto>();
         for (VwVendorItems item : results) {
-            VwVendorItemDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createVendorItemExtInstance(item);
+            VwVendorItemDto dto = Rmt2PurchaseOrderDtoFactory.createVendorItemExtInstance(item);
             list.add(dto);
         }
         return list;
@@ -320,12 +300,9 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<PurchaseOrderStatusDto> fetchStatus(
-            PurchaseOrderStatusDto criteria) throws VendorPurchasesDaoException {
-        PurchaseOrderStatus obj = VendorPurchasesDaoFactory
-                .createCriteria(criteria);
-        obj.addOrderBy(PurchaseOrderStatus.PROP_DESCRIPTION,
-                PurchaseOrderStatus.ORDERBY_ASCENDING);
+    public List<PurchaseOrderStatusDto> fetchStatus(PurchaseOrderStatusDto criteria) throws VendorPurchasesDaoException {
+        PurchaseOrderStatus obj = VendorPurchasesDaoFactory.createCriteria(criteria);
+        obj.addOrderBy(PurchaseOrderStatus.PROP_DESCRIPTION, PurchaseOrderStatus.ORDERBY_ASCENDING);
 
         List<PurchaseOrderStatus> results = null;
         try {
@@ -339,8 +316,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
 
         List<PurchaseOrderStatusDto> list = new ArrayList<PurchaseOrderStatusDto>();
         for (PurchaseOrderStatus item : results) {
-            PurchaseOrderStatusDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createPurchaseOrderStatusInstance(item);
+            PurchaseOrderStatusDto dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderStatusInstance(item);
             list.add(dto);
         }
         return list;
@@ -366,32 +342,25 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<PurchaseOrderStatusHistDto> fetchPurchaseOrderHistory(
-            PurchaseOrderStatusHistDto criteria, boolean currentStatusOnly)
+    public List<PurchaseOrderStatusHistDto> fetchPurchaseOrderHistory(PurchaseOrderStatusHistDto criteria, boolean currentStatusOnly)
             throws VendorPurchasesDaoException {
-        List<PurchaseOrderStatusHist> results = this
-                .fetchPurchaseOrderHistoryOrm(criteria, currentStatusOnly);
+        List<PurchaseOrderStatusHist> results = this.fetchPurchaseOrderHistoryOrm(criteria, currentStatusOnly);
         List<PurchaseOrderStatusHistDto> list = new ArrayList<PurchaseOrderStatusHistDto>();
         for (PurchaseOrderStatusHist item : results) {
-            PurchaseOrderStatusHistDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createPurchaseOrderStatusHistoryInstance(item);
+            PurchaseOrderStatusHistDto dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderStatusHistoryInstance(item);
             list.add(dto);
         }
         return list;
     }
 
-    private List<PurchaseOrderStatusHist> fetchPurchaseOrderHistoryOrm(
-            PurchaseOrderStatusHistDto criteria, boolean currentStatusOnly)
+    private List<PurchaseOrderStatusHist> fetchPurchaseOrderHistoryOrm(PurchaseOrderStatusHistDto criteria, boolean currentStatusOnly)
             throws VendorPurchasesDaoException {
         if (currentStatusOnly) {
             criteria.setCriteria(VendorPurchasesConst.SQL_CURRENT_PO_STATUS);
         }
-        PurchaseOrderStatusHist obj = VendorPurchasesDaoFactory
-                .createCriteria(criteria);
-        obj.addOrderBy(PurchaseOrderStatusHist.PROP_EFFECTIVEDATE,
-                PurchaseOrderStatus.ORDERBY_DESCENDING);
-        obj.addOrderBy(PurchaseOrderStatusHist.PROP_POSTATUSHISTID,
-                PurchaseOrderStatus.ORDERBY_DESCENDING);
+        PurchaseOrderStatusHist obj = VendorPurchasesDaoFactory.createCriteria(criteria);
+        obj.addOrderBy(PurchaseOrderStatusHist.PROP_EFFECTIVEDATE, PurchaseOrderStatus.ORDERBY_DESCENDING);
+        obj.addOrderBy(PurchaseOrderStatusHist.PROP_POSTATUSHISTID, PurchaseOrderStatus.ORDERBY_DESCENDING);
 
         List<PurchaseOrderStatusHist> results = null;
         try {
@@ -420,13 +389,11 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public int deletePurchaseOrder(PurchaseOrderDto criteria)
-            throws VendorPurchasesDaoException {
+    public int deletePurchaseOrder(PurchaseOrderDto criteria) throws VendorPurchasesDaoException {
         PurchaseOrder obj = VendorPurchasesDaoFactory.createCriteria(criteria);
         try {
             int results = this.client.deleteRow(obj);
-            logger.info(results
-                    + " rows were deleted from the purchase_order table");
+            logger.info(results  + " rows were deleted from the purchase_order table");
             return results;
         } catch (Exception e) {
             throw new VendorPurchasesDaoException(e);
@@ -447,14 +414,11 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public int deletePurchaseOrderItem(PurchaseOrderItemDto criteria)
-            throws VendorPurchasesDaoException {
-        PurchaseOrderItems obj = VendorPurchasesDaoFactory
-                .createCriteria(criteria);
+    public int deletePurchaseOrderItem(PurchaseOrderItemDto criteria) throws VendorPurchasesDaoException {
+        PurchaseOrderItems obj = VendorPurchasesDaoFactory.createCriteria(criteria);
         try {
             int results = this.client.deleteRow(obj);
-            logger.info(results
-                    + " rows were deleted from the purchase_order_items table");
+            logger.info(results + " rows were deleted from the purchase_order_items table");
             return results;
         } catch (Exception e) {
             throw new VendorPurchasesDaoException(e);
@@ -479,8 +443,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public int maintainPurchaseOrder(PurchaseOrderDto po)
-            throws VendorPurchasesDaoException {
+    public int maintainPurchaseOrder(PurchaseOrderDto po) throws VendorPurchasesDaoException {
         PurchaseOrder p = VendorPurchasesDaoFactory.createPurchaseOrderOrm(po);
         int rc = 0;
         if (p.getPoId() <= 0) {
@@ -502,10 +465,8 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public int maintainPurchaseOrderItem(PurchaseOrderItemDto item)
-            throws VendorPurchasesDaoException {
-        PurchaseOrderItems i = VendorPurchasesDaoFactory
-                .createPurchaseOrderItemOrm(item);
+    public int maintainPurchaseOrderItem(PurchaseOrderItemDto item) throws VendorPurchasesDaoException {
+        PurchaseOrderItems i = VendorPurchasesDaoFactory.createPurchaseOrderItemOrm(item);
         int rc = 0;
         if (i.getPoItemId() <= 0) {
             rc = this.createPurchaseOrderItem(i);
@@ -525,8 +486,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @return The new purchase order id
      * @throws VendorPurchasesException
      */
-    private int createPurchaseOrder(PurchaseOrder po)
-            throws VendorPurchasesDaoException {
+    private int createPurchaseOrder(PurchaseOrder po) throws VendorPurchasesDaoException {
         int poId = 0;
 
         // We must be working with a valid po at this point, so add to the
@@ -564,8 +524,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @return The new purchase order id
      * @throws VendorPurchasesException
      */
-    private int updatePurchaseOrder(PurchaseOrder po)
-            throws VendorPurchasesDaoException {
+    private int updatePurchaseOrder(PurchaseOrder po) throws VendorPurchasesDaoException {
         int rc = 0;
 
         // We must be working with a valid po at this point, so add to the
@@ -578,8 +537,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
             po.setUserId(ut.getLoginId());
             po.addCriteria(PurchaseOrder.PROP_POID, po.getPoId());
             rc = this.client.updateRow(po);
-            msg = "purchase order, " + po.getPoId()
-                    + " , was updated successfully to the database";
+            msg = "purchase order, " + po.getPoId() + " , was updated successfully to the database";
             logger.info(msg);
             return rc;
         } catch (Exception e) {
@@ -597,8 +555,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @return The total number of rows effect by transaction.
      * @throws VendorPurchasesDaoException
      */
-    private int createPurchaseOrderItem(PurchaseOrderItems item)
-            throws VendorPurchasesDaoException {
+    private int createPurchaseOrderItem(PurchaseOrderItems item) throws VendorPurchasesDaoException {
         // We must be working with a valid list of PO Items at this point, so
         // add to the database
         UserTimestamp ut = null;
@@ -633,8 +590,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @return The total number of rows effect by transaction.
      * @throws VendorPurchasesDaoException
      */
-    private int updatePurchaseOrderItem(PurchaseOrderItems item)
-            throws VendorPurchasesDaoException {
+    private int updatePurchaseOrderItem(PurchaseOrderItems item) throws VendorPurchasesDaoException {
         // We must be working with a valid list of PO Items at this point, so
         // add to the database
         UserTimestamp ut = null;
@@ -645,14 +601,11 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
             item.setDateUpdated(ut.getDateCreated());
             item.setUserId(ut.getLoginId());
             rc = this.client.updateRow(item);
-            msg = "Purchase order item, " + rc
-                    + " , was updated successfully to the database for PO id, "
-                    + item.getPoId();
+            msg = "Purchase order item, " + rc  + " , was updated successfully to the database for PO id, "  + item.getPoId();
             logger.info(msg);
             return rc;
         } catch (Exception e) {
-            msg = "Failed to update a purchase order item to database for PO id, "
-                    + item.getPoId();
+            msg = "Failed to update a purchase order item to database for PO id, "  + item.getPoId();
             logger.error(msg, e);
             throw new VendorPurchasesDaoException(e);
         }
@@ -677,15 +630,14 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesException
      */
     @Override
-    public void changePurchaseOrderStatus(PurchaseOrderStatusHistDto dto,
-            int newStatusId) throws VendorPurchasesDaoException {
+    public void changePurchaseOrderStatus(PurchaseOrderStatusHistDto dto, int newStatusId) 
+            throws VendorPurchasesDaoException {
         if (dto == null) {
             msg = "Unable to change purchase order status due to PO status history object is invalid";
             logger.warn(msg);
             return;
         }
-        PurchaseOrderStatusHist posh = VendorPurchasesDaoFactory
-                .createPurchaseOrderStatusHist(dto);
+        PurchaseOrderStatusHist posh = VendorPurchasesDaoFactory.createPurchaseOrderStatusHist(dto);
         // Close out current status
         if (posh != null) {
             this.updatePurchaseOrderStatusHist(posh);
@@ -706,12 +658,10 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @return the id of the new purchase order status histroy item
      * @throws VendorPurchasesDaoException
      */
-    private int createPurchaseOrderStatusHist(int poId, int newStatusId)
-            throws VendorPurchasesDaoException {
+    private int createPurchaseOrderStatusHist(int poId, int newStatusId) throws VendorPurchasesDaoException {
         try {
             int rc = 0;
-            PurchaseOrderStatusHist posh = VendorPurchasesDaoFactory
-                    .createPurchaseOrderStatusHist(poId, newStatusId);
+            PurchaseOrderStatusHist posh = VendorPurchasesDaoFactory.createPurchaseOrderStatusHist(poId, newStatusId);
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             posh.setEffectiveDate(ut.getDateCreated());
             posh.setNull("endDate");
@@ -732,15 +682,13 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @return The total number of rows effected by the transaction.
      * @throws VendorPurchasesDaoException
      */
-    private int updatePurchaseOrderStatusHist(PurchaseOrderStatusHist posh)
-            throws VendorPurchasesDaoException {
+    private int updatePurchaseOrderStatusHist(PurchaseOrderStatusHist posh) throws VendorPurchasesDaoException {
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             posh.setEndDate(ut.getDateCreated());
             posh.setUserId(ut.getLoginId());
-            posh.addCriteria(PurchaseOrderStatusHist.PROP_POSTATUSHISTID,
-                    posh.getPoStatusHistId());
+            posh.addCriteria(PurchaseOrderStatusHist.PROP_POSTATUSHISTID, posh.getPoStatusHistId());
             rc = this.client.updateRow(posh);
             return rc;
         } catch (Exception e) {
