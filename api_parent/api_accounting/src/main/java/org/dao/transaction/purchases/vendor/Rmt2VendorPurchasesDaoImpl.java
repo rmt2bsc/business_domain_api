@@ -90,8 +90,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
 
         List<PurchaseOrderDto> list = new ArrayList<PurchaseOrderDto>();
         for (PurchaseOrder item : results) {
-            PurchaseOrderDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createPurchaseOrderInstance(item);
+            PurchaseOrderDto dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(item);
             list.add(dto);
         }
         return list;
@@ -128,8 +127,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
 
         List<PurchaseOrderItemDto> list = new ArrayList<PurchaseOrderItemDto>();
         for (PurchaseOrderItems item : results) {
-            PurchaseOrderItemDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createPurchaseOrderItemInstance(item);
+            PurchaseOrderItemDto dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(item);
             list.add(dto);
         }
         return list;
@@ -162,8 +160,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
 
         List<VendorItemDto> list = new ArrayList<VendorItemDto>();
         for (VendorItems item : results) {
-            VendorItemDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createVendorItemInstance(item);
+            VendorItemDto dto = Rmt2PurchaseOrderDtoFactory.createVendorItemInstance(item);
             list.add(dto);
         }
         return list;
@@ -201,8 +198,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
 
         List<VwVendorItemDto> list = new ArrayList<VwVendorItemDto>();
         for (VwVendorItems item : results) {
-            VwVendorItemDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createVendorItemExtInstance(item);
+            VwVendorItemDto dto = Rmt2PurchaseOrderDtoFactory.createVendorItemExtInstance(item);
             list.add(dto);
         }
         return list;
@@ -241,8 +237,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
 
         List<PurchaseOrderItemDto> list = new ArrayList<PurchaseOrderItemDto>();
         for (VwVendorItemPurchaseOrderItem item : results) {
-            PurchaseOrderItemDto dto = Rmt2PurchaseOrderDtoFactory
-                    .createPurchaseOrderExternalItemInstance(item);
+            PurchaseOrderItemDto dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderExternalItemInstance(item);
             list.add(dto);
         }
         return list;
@@ -574,8 +569,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
                     + item.getPoId();
             logger.info(msg);
         } catch (Exception e) {
-            msg = "Failed to insert a purchase order item to database for PO id, "
-                    + item.getPoId();
+            msg = "Failed to insert a purchase order item to database for PO id, " + item.getPoId();
             logger.error(msg, e);
             throw new VendorPurchasesDaoException(e);
         }
