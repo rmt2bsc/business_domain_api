@@ -661,10 +661,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         // Determine if purchase order is ready to be placed in "Received"
         // status. The purchase order quantity of all items must have been
         // received and the current purchase order status must be "Submitted".
-        if (rc == VendorPurchasesConst.PO_UPDATE_RECEIVED
-                && statusId == VendorPurchasesConst.PURCH_STATUS_FINALIZE) {
-            this.setPurchaseOrderStatus(po.getPoId(),
-                    VendorPurchasesConst.PURCH_STATUS_RECEIVED);
+        if (rc == VendorPurchasesConst.PO_UPDATE_RECEIVED && statusId == VendorPurchasesConst.PURCH_STATUS_FINALIZE) {
+            this.setPurchaseOrderStatus(po.getPoId(), VendorPurchasesConst.PURCH_STATUS_RECEIVED);
         }
         return rc;
     }
