@@ -13,11 +13,16 @@ import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
+import org.dao.mapping.orm.rmt2.PurchaseOrder;
+import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
+import org.dao.mapping.orm.rmt2.PurchaseOrderStatus;
+import org.dao.mapping.orm.rmt2.PurchaseOrderStatusHist;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
 import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
+import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwAccount;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
@@ -26,6 +31,7 @@ import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
+import org.dao.mapping.orm.rmt2.VwVendorItemPurchaseOrderItem;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
@@ -1030,5 +1036,164 @@ public class AccountingMockDataUtility {
         return o;
     }
     
+    /**
+     * 
+     * @param poId
+     * @param xactId
+     * @param creditorId
+     * @param amount
+     * @param refNo
+     * @return
+     */
+    public static final PurchaseOrder createPurchaseOrder(int poId, int xactId,
+            int creditorId, double amount, String refNo) {
+        PurchaseOrder o = new PurchaseOrder();
+        o.setPoId(poId);
+        o.setXactId(xactId);
+        o.setCreditorId(creditorId);
+        o.setTotal(amount);
+        o.setRefNo(refNo);
+        o.setDateCreated(RMT2Date.stringToDate("2017-01-01"));
+        o.setDateUpdated(o.getDateCreated());
+        o.setUserId("testuser");
+        return o;
+    }
     
+    /**
+     * 
+     * @param poItemId
+     * @param poId
+     * @param itemId
+     * @param unitCost
+     * @param qty
+     * @param qtyRcvd
+     * @param qtyRtn
+     * @return
+     */
+    public static final PurchaseOrderItems createPurchaseOrderItem(int poItemId,
+            int poId, int itemId, double unitCost, int qty, int qtyRcvd,
+            int qtyRtn) {
+        PurchaseOrderItems o = new PurchaseOrderItems();
+        o.setPoItemId(poItemId);
+        o.setPoId(poId);
+        o.setItemId(itemId);
+        o.setUnitCost(unitCost);
+        o.setQty(qty);
+        o.setQtyRcvd(qtyRcvd);
+        o.setQtyRtn(qtyRtn);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param itemId
+     * @param creditorId
+     * @param vendorItemNo
+     * @param itemSerialNo
+     * @param unitCost
+     * @return
+     */
+    public static final VendorItems createVendorItems(int itemId,
+            int creditorId, String vendorItemNo, String itemSerialNo,
+            double unitCost) {
+        VendorItems o = new VendorItems();
+        o.setItemId(itemId);
+        o.setCreditorId(creditorId);
+        o.setVendorItemNo(vendorItemNo);
+        o.setItemSerialNo(itemSerialNo);
+        o.setUnitCost(unitCost);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param poId
+     * @param itemId
+     * @param vendorId
+     * @param unitCost
+     * @param qtyOrderd
+     * @param qtyOnHand
+     * @param qtyReceived
+     * @param qtyReturned
+     * @param overrideRetail
+     * @return
+     */
+    public static final VwVendorItemPurchaseOrderItem createVwVendorItemPurchaseOrderItem(
+            int poId, int itemId, int vendorId, double unitCost, int qtyOrderd,
+            int qtyOnHand, int qtyReceived, int qtyReturned,
+            int overrideRetail) {
+        VwVendorItemPurchaseOrderItem o = new VwVendorItemPurchaseOrderItem();
+        o.setPoId(poId);
+        o.setItemId(itemId);
+        o.setVendorId(vendorId);
+        o.setUnitCost(unitCost);
+        o.setQtyOrderd(qtyOrderd);
+        o.setQtyOnHand(qtyOnHand);
+        o.setQtyReceived(qtyReceived);
+        o.setQtyReturned(qtyReturned);
+        o.setOverrideRetail(overrideRetail);
+        o.setMarkup(3);
+        o.setVendorItemNo("VendorItemNo-" + poId + "-" + itemId);
+        o.setItemSerialNo("ItemSerialNo-" + poId + "-" + itemId);
+        o.setDescription("Description-" + poId + "-" + itemId);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param itemId
+     * @param vendorId
+     * @param unitCost
+     * @param qtyOnHand
+     * @param overrideRetail
+     * @return
+     */
+    public static final VwVendorItems createVwVendorItems(int itemId,
+            int vendorId, double unitCost, int qtyOnHand, int overrideRetail) {
+        VwVendorItems o = new VwVendorItems();
+        o.setItemId(itemId);
+        o.setCreditorId(vendorId);
+        o.setUnitCost(unitCost);
+        o.setQtyOnHand(qtyOnHand);
+        o.setOverrideRetail(overrideRetail);
+        o.setMarkup(3);
+        o.setVendorItemNo("VendorItemNo-" + vendorId + "-" + itemId);
+        o.setItemSerialNo("ItemSerialNo-" + vendorId + "-" + itemId);
+        o.setDescription("Description-" + vendorId + "-" + itemId);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param statusId
+     * @param description
+     * @return
+     */
+    public static final PurchaseOrderStatus createPurchaseOrderStatus(int statusId, String description) {
+        PurchaseOrderStatus o = new PurchaseOrderStatus();
+        o.setPoStatusId(statusId);
+        o.setDescription(description);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param poStatusHistId
+     * @param poStatusId
+     * @param poId
+     * @param effectiveDate
+     * @param endDate
+     * @return
+     */
+    public static final PurchaseOrderStatusHist createPurchaseOrderStatusHist(int poStatusHistId, 
+            int poStatusId, int poId, String effectiveDate, String endDate) {
+        PurchaseOrderStatusHist o = new PurchaseOrderStatusHist();
+        o.setPoStatusHistId(poStatusHistId);
+        o.setPoStatusId(poStatusId);
+        o.setPoId(poId);
+        o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
+        o.setEndDate(endDate == null ? null : RMT2Date.stringToDate(endDate));
+        o.setUserId("testuser");
+        return o;
+    }
 }
