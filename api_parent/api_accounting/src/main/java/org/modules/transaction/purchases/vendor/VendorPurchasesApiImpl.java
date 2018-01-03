@@ -36,10 +36,13 @@ import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 
+import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
 import com.util.RMT2String;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * Api Implementation of {@link VendorPurchasesApi} that manages vendor purchase
@@ -99,9 +102,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            The Id of the purchase order.
      * @return An instance of {@link PurchaseOrderDto}
      * @throws VendorPurchasesApiException
+     * @throws {@link InvalidDataException} <i>poId</i> is null or less than or equal to zero.
      */
     @Override
     public PurchaseOrderDto getPurchaseOrder(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(null);
         criteria.setPoId(poId);
         List<PurchaseOrderDto> results;
@@ -163,6 +169,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public PurchaseOrderItemDto getPurchaseOrderItem(Integer poItemId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderItemId(poItemId);
+        
         PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(null);
         criteria.setPoItemId(poItemId);
         List<PurchaseOrderItemDto> results;
@@ -196,6 +204,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public List<PurchaseOrderItemDto> getPurchaseOrderItems(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(null);
         criteria.setPoId(poId);
         List<PurchaseOrderItemDto> results;
@@ -224,6 +234,9 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
+        this.validateVendorId(vendorId);
+        this.validateVendorItemId(itemId);
+        
         VendorItemDto criteria = Rmt2PurchaseOrderDtoFactory.createVendorItemInstance(null);
         criteria.setVendorId(vendorId);
         criteria.setItemId(itemId);
@@ -263,6 +276,10 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     @Override
     public List<PurchaseOrderItemDto> getVendorItemPurchaseOrderItems(Integer vendorId, Integer poId) 
             throws VendorPurchasesApiException {
+        
+        this.validatePurchaseOrderId(poId);
+        this.validateVendorId(vendorId);
+        
         List<PurchaseOrderItemDto> results;
         StringBuffer buf = new StringBuffer();
         try {
@@ -294,10 +311,14 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            The id of the purchase order.
      * @return A List of {@l VwVendorItemDto} objects
      * @throws VendorPurchasesApiException
+     * @throws {@link InvalidDataException}
      */
     @Override
     public List<VwVendorItemDto> getPurchaseOrderAvailableItems(Integer vendorId, Integer poId)
             throws VendorPurchasesApiException {
+        this.validateVendorId(vendorId);
+        this.validatePurchaseOrderId(poId);
+        
         List<VwVendorItemDto> results;
         StringBuffer buf = new StringBuffer();
         try {
@@ -333,6 +354,9 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public VwVendorItemDto getCurrentItemByVendor(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
+        this.validateVendorItemId(itemId);
+        this.validateVendorId(vendorId);
+        
         VwVendorItemDto criteria = Rmt2PurchaseOrderDtoFactory.createVendorItemExtInstance(null);
         criteria.setVendorId(vendorId);
         criteria.setItemId(itemId);
@@ -377,6 +401,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public PurchaseOrderStatusDto getPurchaseOrderStatus(Integer poStatusId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderStatusId(poStatusId);
+        
         PurchaseOrderStatusDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderStatusInstance(null);
         criteria.setPoStatusId(poStatusId);
         List<PurchaseOrderStatusDto> results;
@@ -416,6 +442,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public PurchaseOrderStatusHistDto getCurrentPurchaseOrderHistory(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         PurchaseOrderStatusHistDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderStatusHistoryInstance(null);
         criteria.setPoId(poId);
         List<PurchaseOrderStatusHistDto> results;
@@ -453,9 +481,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            The purchase order id
      * @return A List of {@link PurchaseOrderStatusHistDto} objects
      * @throws VendorPurchasesApiException
+     * @throws {@link InvalidDataException}
      */
     @Override
     public List<PurchaseOrderStatusHistDto> getPurchaseOrderHistory(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         PurchaseOrderStatusHistDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderStatusHistoryInstance(null);
         criteria.setPoId(poId);
         List<PurchaseOrderStatusHistDto> results;
@@ -542,7 +573,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         // Get creditor data to used as validating metric
         try {
             CreditorTypeDto ct = null;
-            // Vendor must exist in the database.
+            // Vendor type must exist in the database.
             ct = credApi.getCreditorType(AccountingConst.CREDITORTYPE_VENDOR);
             return ct;
         } catch (CreditorApiException e) {
@@ -574,8 +605,9 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     public int updatePurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
 
-        this.validateBasic(po, items);
         this.validatePurchaseOrder(po);
+        this.validatePurchaseOrderItems(items);
+        
         int rc = 0;
         if (po.getPoId() == 0) {
             // Returns new Purchase order id
@@ -856,6 +888,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public int deletePurchaseOrder(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(null);
         criteria.setPoId(poId);
         StringBuffer buf = new StringBuffer();
@@ -906,6 +940,9 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public int deleteItem(Integer poId, Integer poItemId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        this.validatePurchaseOrderItemId(poItemId);
+        
         PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(null);
         criteria.setPoId(poId);
         criteria.setPoItemId(poItemId);
@@ -941,6 +978,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public int deleteAllItems(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         PurchaseOrderItemDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(null);
         criteria.setPoId(poId);
         StringBuffer buf = new StringBuffer();
@@ -975,6 +1014,9 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public void setPurchaseOrderStatus(Integer poId, Integer newStatusId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        this.validatePurchaseOrderStatusId(newStatusId);
+        
         PurchaseOrderStatusHistDto posh = this.getCurrentPurchaseOrderStatus(poId);
         if (posh == null) {
             msg = "Unable to change purchase order status due to current status does not exist";
@@ -1082,30 +1124,6 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     }
 
     /**
-     * Performs validity checks on the purchase order objects.
-     * 
-     * @param po
-     *            an instance of {@link PurchaseOrderDto}
-     * @param items
-     *            a List of {@link PurchaseOrderItemDto}
-     * @throws VendorPurchasesApiException
-     *             <i>po</i> or <i>items</i> are null
-     */
-    protected void validateBasic(PurchaseOrderDto po, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
-        if (po == null) {
-            this.msg = "Base purchase order object is invalid";
-            logger.error(this.msg);
-            throw new PurchaseOrderValidationException(this.msg);
-        }
-        if (items == null) {
-            this.msg = "Purchase order items object is invalid";
-            logger.error(this.msg);
-            throw new PurchaseOrderValidationException(this.msg);
-        }
-        return;
-    }
-
-    /**
      * Validates base purchase order data.
      * <p>
      * <p>
@@ -1122,24 +1140,42 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *             does not exist, or creditor is not a vendor type.
      */
     protected void validatePurchaseOrder(PurchaseOrderDto po) throws VendorPurchasesApiException {
-        // Get vendor data to used as validating metric
-        CreditorTypeDto creditorType = this.getCreditorTypeProfileForVendor();
+        try {
+            Verifier.verifyNotNull(po);
+        }
+        catch (VerifyException e) {
+            throw new PurchaseOrderValidationException("Purchase order DTO object is required");
+        }
 
         // Vendor id must be greater than zero.
-        if (po.getCreditorId() <= 0) {
-            this.msg = "Vendor id must be greater than zero";
-            logger.error(this.msg);
-            throw new PurchaseOrderValidationException(this.msg);
+        try {
+            Verifier.verifyPositive(po.getCreditorId()); 
+        }
+        catch (VerifyException e) {
+            throw new PurchaseOrderValidationException("Purchase order's vendor id must be greater than zero");
         }
 
         // Vendor must exist in the database.
         CreditorDto vendor = this.getVendorProfile(po.getCreditorId());
+        try {
+            Verifier.verifyNotNull(vendor);
+        }
+        catch (VerifyException e) {
+            throw new PurchaseOrderValidationException("Vendor does not exist for creditor id, " + po.getCreditorId());
+        }
 
+        // Get vendor data to used as validating metric
+        CreditorTypeDto creditorType = this.getCreditorTypeProfileForVendor();
+        try {
+            Verifier.verifyNotNull(creditorType);
+        }
+        catch (VerifyException e) {
+            throw new PurchaseOrderValidationException("Unable to obtain Creditor Type DTO for Vendor profile");
+        }
+        
         // Vendor must be of type vendor.
         if (vendor.getCreditorTypeId() != creditorType.getEntityId()) {
-            this.msg = "Vendor must be of type vendor";
-            logger.error(this.msg);
-            throw new PurchaseOrderValidationException(this.msg);
+            throw new PurchaseOrderValidationException("Vendor must be of type vendor profile");
         }
     }
 
@@ -1344,6 +1380,9 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public void returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        this.validatePurchaseOrderItems(items);
+        
         PurchaseOrderDto po = this.getPurchaseOrder(poId);
         XactDto xact = null;
         int rc = 0;
@@ -1390,6 +1429,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public double calcPurchaseOrderTotal(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         double total = 0;
 
         total += this.calculateItemTotal(poId);
@@ -1467,6 +1508,9 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     @Override
     public int submitPurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
+        this.validatePurchaseOrder(po);
+        this.validatePurchaseOrderItems(items);
+        
         double poTotal = 0;
         int xactId = 0;
         XactDto xact = null;
@@ -1516,6 +1560,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public void cancelPurchaseOrder(Integer poId) throws VendorPurchasesApiException {
+        this.validatePurchaseOrderId(poId);
+        
         PurchaseOrderDto po = this.getPurchaseOrder(poId);
         XactDto xact = null;
         int currentStatus = 0;
@@ -1596,4 +1642,94 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         super.preReverse(xact, xactItems);
     }
 
+    private void validatePurchaseOrderId(Integer poId) {
+        try {
+            Verifier.verifyNotNull(poId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Purchase Order Id is required");
+        }
+        try {
+            Verifier.verifyPositive(poId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Purchase Order Id must be greater than zero");
+        }
+    }
+    
+    private void validateVendorId(Integer vendorId) {
+        try {
+            Verifier.verifyNotNull(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Id is required");
+        }
+        try {
+            Verifier.verifyPositive(vendorId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Id must be greater than zero");
+        }
+    }
+    
+    private void validatePurchaseOrderItemId(Integer poItemId) {
+        try {
+            Verifier.verifyNotNull(poItemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Purchase Order Item Id is required");
+        }
+        try {
+            Verifier.verifyPositive(poItemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Purchase Order Item Id must be greater than zero");
+        }
+    }
+    
+    private void validatePurchaseOrderStatusId(Integer poStatusId) {
+        try {
+            Verifier.verifyNotNull(poStatusId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Purchase Order Status Id is required");
+        }
+        try {
+            Verifier.verifyPositive(poStatusId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Purchase Order Status Id must be greater than zero");
+        }
+    }
+    
+    private void validateVendorItemId(Integer vendorItemId) {
+        try {
+            Verifier.verifyNotNull(vendorItemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Item Id is required");
+        }
+        try {
+            Verifier.verifyPositive(vendorItemId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Item Id must be greater than zero");
+        }
+    }
+    
+    private void validatePurchaseOrderItems(List<PurchaseOrderItemDto> items) {
+        try {
+            Verifier.verifyNotNull(items);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("List of purchase order items is required");
+        }
+        
+        try {
+            Verifier.verifyPositive(items.size());    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("List of purchase order items must contain at least one item");
+        }
+    }
 }
