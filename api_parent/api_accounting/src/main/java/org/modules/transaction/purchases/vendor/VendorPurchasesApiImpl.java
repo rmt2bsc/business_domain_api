@@ -131,6 +131,38 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     }
 
     /**
+     * Finds one or more purchase order using purchase order selection criteria.
+     * 
+     * @param criteria
+     *            an instance of {@link PurchaseOrderDto}
+     * @return A List of {@link PurchaseOrderDto} objects
+     * @throws VendorPurchasesApiException
+     */
+    @Override
+    public List<PurchaseOrderDto> getPurchaseOrder(PurchaseOrderDto criteria) throws VendorPurchasesApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Purchase order selection criteria object is required");
+        }
+        
+        List<PurchaseOrderDto> results;
+        try {
+            results = this.dao.fetchPurchaseOrder(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (VendorPurchasesDaoException e) {
+            msg = "DAO failed Purchase Order Fetch using purchase order selection criteria: "
+                    + criteria.toString();
+            logger.error(msg, e);
+            throw new VendorPurchasesApiException(msg, e);
+        }
+        return results;
+    }
+    
+    /**
      * Finds one or more purchase order using custom selection criteria.
      * 
      * @param customCriteria
@@ -142,19 +174,14 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     public List<PurchaseOrderDto> getPurchaseOrder(String customCriteria) throws VendorPurchasesApiException {
         PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(null);
         criteria.setCriteria(customCriteria);
-        List<PurchaseOrderDto> results;
         try {
-            results = this.dao.fetchPurchaseOrder(criteria);
-            if (results == null) {
-                return null;
-            }
+            return this.getPurchaseOrder(criteria);
         } catch (VendorPurchasesDaoException e) {
             msg = "DAO failed Purchase Order Fetch using custom criteria: "
                     + customCriteria;
             logger.error(msg, e);
             throw new VendorPurchasesApiException(msg, e);
         }
-        return results;
     }
 
     /**

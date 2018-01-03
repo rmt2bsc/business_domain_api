@@ -45,6 +45,16 @@ public interface VendorPurchasesApi extends XactApi {
      * @throws VendorPurchasesApiException
      */
     List<PurchaseOrderDto> getPurchaseOrder(String customCriteria) throws VendorPurchasesApiException;
+    
+    /**
+     * Finds one or more purchase orders based on purchase order selection criteria.
+     * 
+     * @param criteria
+     *            An instance of {@link PurchaseOrderDto}.
+     * @return A List of {@link PurchaseOrderDto} objects
+     * @throws VendorPurchasesApiException
+     */
+    List<PurchaseOrderDto> getPurchaseOrder(PurchaseOrderDto criteria) throws VendorPurchasesApiException;
 
     /**
      * Finds a single purchase order item using _poItemId.
