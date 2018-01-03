@@ -1,13 +1,14 @@
 package org.modules.transaction.purchases.vendor;
 
+import com.InvalidDataException;
+
 /**
  * Handles validation errors for base purchase orders.
  * 
  * @author Roy Terrell
  * 
  */
-public class PurchaseOrderValidationException extends
-        VendorPurchasesApiException {
+public class PurchaseOrderValidationException extends  InvalidDataException {
 
     private static final long serialVersionUID = -7365644983317529733L;
 
