@@ -6,25 +6,22 @@ import static org.mockito.Mockito.when;
 import java.sql.ResultSet;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.Creditor;
-import org.dao.mapping.orm.rmt2.VwBusinessAddress;
-import org.dto.XactCreditChargeDto;
-import org.dto.adapter.orm.transaction.purchases.creditor.Rmt2CreditChargeDtoFactory;
+import org.dao.mapping.orm.rmt2.PurchaseOrder;
+import org.dto.PurchaseOrderDto;
+import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modules.transaction.XactConst;
-import org.modules.transaction.purchases.creditor.CreditorPurchasesApi;
-import org.modules.transaction.purchases.creditor.CreditorPurchasesApiException;
-import org.modules.transaction.purchases.creditor.CreditorPurchasesApiFactory;
+import org.modules.transaction.purchases.vendor.VendorPurchasesApi;
+import org.modules.transaction.purchases.vendor.VendorPurchasesApiException;
+import org.modules.transaction.purchases.vendor.VendorPurchasesApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
 
 /**
  * Tests creditor purchases transaction query Api.
@@ -58,65 +55,30 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
 
     @Test
     public void testFetchAll_PurchaseOrders() {
-        // Mock method call to get creditor purchase transactions 
-        this.mockCriteria.setAccountNo(TEST_ACCOUNT_NO);
+        // Mock method call to get vendor purchase orders 
+        PurchaseOrder mockCriteria = new PurchaseOrder();
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(this.mockCriteria)))
-                    .thenReturn(this.mockCreditPurchaseAllResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockPurchaseOrders);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("All creditor purchases transactions fetch test case setup failed");
+            Assert.fail("All vendor purchase orders fetch test case setup failed");
         }
 
-        // mock method to return contact info from the Contacts Api
-        Creditor mockCredCriteria = new Creditor();
-        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
-        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
-        
         // Perform test
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
-        XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance();
-        List<XactCreditChargeDto> results = null;
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        PurchaseOrderDto criteria = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(null);
+        List<PurchaseOrderDto> results = null;
         try {
-            criteria.setAccountNumber(TEST_ACCOUNT_NO);
-            results = api.get(criteria);
-        } catch (CreditorPurchasesApiException e) {
+            results = api.getPurchaseOrder(criteria);
+        } catch (VendorPurchasesApiException e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
 
-        double amountSeed = 20.00;
-        for (int ndx = 0; ndx < results.size(); ndx++) {
-            XactCreditChargeDto item = results.get(ndx);
-            Assert.assertEquals("reason for transaction id " + item.getCreditorId(),
-                    item.getXactReason());
-            Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE,
-                    item.getXactTypeId());
-            Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
-                    item.getXactSubtypeId());
-            Assert.assertEquals("2017-01-01",
-                    RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
-
-            // Calcuate acutal transaction amount
-            double dollarAmt = (amountSeed + ndx);
-            Assert.assertEquals(dollarAmt, item.getXactAmount(), 0);
-
-            Assert.assertEquals(XactConst.TENDER_CREDITCARD, item.getXactTenderId());
-            String prefix = String.valueOf(((ndx + 1) * 1111));
-            Assert.assertEquals(prefix + "-0000-0000-0000", item.getXactNegInstrNo());
-            Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
-            Assert.assertEquals(String.valueOf(item.getXactDate().getTime()),
-                    item.getXactConfirmNo());
-            Assert.assertEquals(item.getXactId() + item.getXactTenderId(),
-                    item.getDocumentId());
-            
-            // Contact info should be unavailable
-            Assert.assertEquals("Company" + (ndx + 1), item.getCreditorName());
-            Assert.assertEquals("3188889873", item.getPhone());
-        }
     }
 
     @Test

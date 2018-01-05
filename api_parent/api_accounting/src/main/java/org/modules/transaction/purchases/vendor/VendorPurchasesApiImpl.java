@@ -95,6 +95,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
     }
 
+    @Override
+    public void init() {
+        super.init();
+        this.daoFact = new VendorPurchasesDaoFactory();
+    }
+    
     /**
      * Finds a purchase order that is associated with value.
      * 
@@ -1759,4 +1765,6 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             throw new InvalidDataException("List of purchase order items must contain at least one item");
         }
     }
+
+    
 }
