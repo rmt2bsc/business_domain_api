@@ -7,8 +7,10 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
+import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
 import org.dao.transaction.purchases.vendor.VendorPurchasesDaoException;
 import org.dto.PurchaseOrderDto;
+import org.dto.PurchaseOrderItemDto;
 import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -81,7 +83,6 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
-
     }
 
     @Test
@@ -223,8 +224,73 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
+    public void testValidation_FetchSinglePurchaseOrder_Zero_PO_Id() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        Integer criteria = 0;
+        try {
+            api.getPurchaseOrder(criteria);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
     public void testFetchPurchaseOrderItems() {
-        Assert.fail("Implement test case");
+        // Mock method call to get vendor purchase order items 
+        PurchaseOrderItems mockCriteria = new PurchaseOrderItems();
+        mockCriteria.setPoId(TEST_PO_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockPurchaseOrderItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All vendor purchase order items fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        List<PurchaseOrderItemDto> results = null;
+        try {
+            results = api.getPurchaseOrderItems(TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+    }
+    
+    @Test
+    public void testValidation_FetchPurchaseOrderItems_Null_PO_Id() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderItems(null);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_FetchPurchaseOrderItems_Zero_PO_Id() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderItems(0);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
     }
     
     @Test

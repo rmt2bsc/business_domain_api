@@ -24,6 +24,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     protected List<PurchaseOrder> mockPurchaseOrder;
     protected List<PurchaseOrder> mockPurchaseOrders;
     protected List<PurchaseOrderItems> mockPurchaseOrderItems;
+    protected List<PurchaseOrderItems> mockPurchaseOrderItem;
     protected List<VendorItems> mockVendorItems;
     protected List<VwVendorItemPurchaseOrderItem> mockVwVendorItemPurchaseOrderItems;
     protected List<VwVendorItems> mockVwVendorItems;
@@ -78,6 +79,13 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         return list;
     }
 
+    private List<PurchaseOrderItems> createMockPurchaseOrderItem() {
+        List<PurchaseOrderItems> list = new ArrayList<PurchaseOrderItems>();
+        PurchaseOrderItems o = AccountingMockDataUtility.createPurchaseOrderItem(330, 7000, 100, 100.00, 11, 4, 0);
+        list.add(o);
+        return list;
+    }
+    
     private List<PurchaseOrderItems> createMockPurchaseOrderItems() {
         List<PurchaseOrderItems> list = new ArrayList<PurchaseOrderItems>();
         PurchaseOrderItems o = AccountingMockDataUtility.createPurchaseOrderItem(330, 7000, 100, 100.00, 11, 4, 0);
