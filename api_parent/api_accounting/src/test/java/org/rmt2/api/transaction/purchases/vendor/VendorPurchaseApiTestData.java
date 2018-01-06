@@ -21,6 +21,7 @@ import org.rmt2.api.transaction.TransactionApiTestData;
  *
  */
 public class VendorPurchaseApiTestData extends TransactionApiTestData {
+    protected List<PurchaseOrder> mockPurchaseOrder;
     protected List<PurchaseOrder> mockPurchaseOrders;
     protected List<PurchaseOrderItems> mockPurchaseOrderItems;
     protected List<VendorItems> mockVendorItems;
@@ -34,6 +35,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        this.mockPurchaseOrder = this.createMockSinglePurchaseOrder();
         this.mockPurchaseOrders = this.createMockPurchaseOrders();
         this.mockPurchaseOrderItems = this.createMockPurchaseOrderItems();
         this.mockVendorItems = this.createMockVendorItems();
@@ -43,21 +45,35 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         return;
     }
 
+    private List<PurchaseOrder> createMockSinglePurchaseOrder() {
+        List<PurchaseOrder> list = new ArrayList<PurchaseOrder>();
+        PurchaseOrder o = AccountingMockDataUtility.createPurchaseOrder(330,
+                7000, 1111111, 100.00, "330-0000-0000-0000");
+        list.add(o);
+        return list;
+    }
+
+    
     private List<PurchaseOrder> createMockPurchaseOrders() {
         List<PurchaseOrder> list = new ArrayList<PurchaseOrder>();
-        PurchaseOrder o = AccountingMockDataUtility.createPurchaseOrder(330, 7000, 1111111, 100.00, "330-0000-0000-0000");
+        PurchaseOrder o = AccountingMockDataUtility.createPurchaseOrder(330,
+                7000, 1111111, 100.00, "330-0000-0000-0000");
         list.add(o);
 
-        o =  AccountingMockDataUtility.createPurchaseOrder(331, 7000, 1111111, 200.00, "331-0000-0000-0000");
+        o = AccountingMockDataUtility.createPurchaseOrder(331, 7000, 1111111,
+                200.00, "331-0000-0000-0000");
         list.add(o);
 
-        o = AccountingMockDataUtility.createPurchaseOrder(332, 7000, 1111111, 300.00, "332-0000-0000-0000");
+        o = AccountingMockDataUtility.createPurchaseOrder(332, 7000, 1111111,
+                300.00, "332-0000-0000-0000");
         list.add(o);
 
-        o = AccountingMockDataUtility.createPurchaseOrder(333, 7000, 1111111, 400.00, "333-0000-0000-0000");
+        o = AccountingMockDataUtility.createPurchaseOrder(333, 7000, 1111111,
+                400.00, "333-0000-0000-0000");
         list.add(o);
 
-        o = AccountingMockDataUtility.createPurchaseOrder(334, 7000, 1111111, 500.00, "334-0000-0000-0000");
+        o = AccountingMockDataUtility.createPurchaseOrder(334, 7000, 1111111,
+                500.00, "334-0000-0000-0000");
         list.add(o);
         return list;
     }

@@ -213,14 +213,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            msg = "DAO failed Purchase Order Item Fetch using PO Item Id: "
-                    + poItemId;
+            msg = "DAO failed Purchase Order Item Fetch using PO Item Id: " + poItemId;
             logger.error(msg, e);
             throw new VendorPurchasesApiException(msg, e);
         }
         if (results.size() > 1) {
-            msg = "DAO failed Purchase Order Item Fetch:  too many rows returned using PO Item Id: "
-                    + poItemId;
+            msg = "DAO failed Purchase Order Item Fetch:  too many rows returned using PO Item Id: " + poItemId;
             logger.error(msg);
             throw new VendorPurchasesApiException(msg);
         }
