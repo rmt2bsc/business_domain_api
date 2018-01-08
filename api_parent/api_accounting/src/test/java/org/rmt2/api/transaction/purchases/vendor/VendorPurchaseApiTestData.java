@@ -38,6 +38,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         super.setUp();
         this.mockPurchaseOrder = this.createMockSinglePurchaseOrder();
         this.mockPurchaseOrders = this.createMockPurchaseOrders();
+        this.mockPurchaseOrderItem = this.createMockPurchaseOrderItem();
         this.mockPurchaseOrderItems = this.createMockPurchaseOrderItems();
         this.mockVendorItems = this.createMockVendorItems();
         this.mockVwVendorItemPurchaseOrderItems = this.createMockVwVendorItemPurchaseOrderItems();
@@ -81,26 +82,26 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
 
     private List<PurchaseOrderItems> createMockPurchaseOrderItem() {
         List<PurchaseOrderItems> list = new ArrayList<PurchaseOrderItems>();
-        PurchaseOrderItems o = AccountingMockDataUtility.createPurchaseOrderItem(330, 7000, 100, 100.00, 11, 4, 0);
+        PurchaseOrderItems o = AccountingMockDataUtility.createPurchaseOrderItem(8880, 330, 100, 100.00, 11, 4, 0);
         list.add(o);
         return list;
     }
     
     private List<PurchaseOrderItems> createMockPurchaseOrderItems() {
         List<PurchaseOrderItems> list = new ArrayList<PurchaseOrderItems>();
-        PurchaseOrderItems o = AccountingMockDataUtility.createPurchaseOrderItem(330, 7000, 100, 100.00, 11, 4, 0);
+        PurchaseOrderItems o = AccountingMockDataUtility.createPurchaseOrderItem(8880, 330, 100, 100.00, 11, 4, 0);
         list.add(o);
         
-        o =  AccountingMockDataUtility.createPurchaseOrderItem(331, 7000, 101, 200.00, 10, 3, 0);
+        o =  AccountingMockDataUtility.createPurchaseOrderItem(8881, 330, 101, 200.00, 10, 3, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createPurchaseOrderItem(332, 7000, 102, 300.00, 9, 2, 0);
+        o = AccountingMockDataUtility.createPurchaseOrderItem(8882, 330, 102, 300.00, 9, 2, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createPurchaseOrderItem(333, 7000, 103, 400.00, 8, 1, 0);
+        o = AccountingMockDataUtility.createPurchaseOrderItem(8883, 330, 103, 400.00, 8, 1, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createPurchaseOrderItem(334, 7000, 104, 500.00, 7, 0, 5);
+        o = AccountingMockDataUtility.createPurchaseOrderItem(8884, 330, 104, 500.00, 7, 0, 5);
         list.add(o);
         return list;
     }

@@ -129,21 +129,17 @@ public class VendorPurchasesDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link PurchaseOrderItems}
      */
-    public static final PurchaseOrderItems createCriteria(
-            PurchaseOrderItemDto criteria) {
+    public static final PurchaseOrderItems createCriteria(PurchaseOrderItemDto criteria) {
         PurchaseOrderItems obj = new PurchaseOrderItems();
         if (criteria != null) {
             if (criteria.getPoId() > 0) {
-                obj.addCriteria(PurchaseOrderItems.PROP_POID,
-                        criteria.getPoId());
+                obj.addCriteria(PurchaseOrderItems.PROP_POID, criteria.getPoId());
             }
             if (criteria.getPoItemId() > 0) {
-                obj.addCriteria(PurchaseOrderItems.PROP_POITEMID,
-                        criteria.getPoItemId());
+                obj.addCriteria(PurchaseOrderItems.PROP_POITEMID, criteria.getPoItemId());
             }
             if (criteria.getItemId() > 0) {
-                obj.addCriteria(PurchaseOrderItems.PROP_ITEMID,
-                        criteria.getItemId());
+                obj.addCriteria(PurchaseOrderItems.PROP_ITEMID, criteria.getItemId());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());

@@ -12,8 +12,8 @@ import org.dao.mapping.orm.rmt2.VwVendorItemPurchaseOrderItem;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.PurchaseOrderDto;
 import org.dto.PurchaseOrderItemDto;
-import org.dto.PurchaseOrderReturnItemDto;
 import org.dto.PurchaseOrderReturnDto;
+import org.dto.PurchaseOrderReturnItemDto;
 import org.dto.PurchaseOrderStatusDto;
 import org.dto.PurchaseOrderStatusHistDto;
 import org.dto.VendorItemDto;
@@ -73,9 +73,13 @@ public class Rmt2PurchaseOrderDtoFactory extends RMT2Base {
      *            an instance of {@link PurchaseOrderItems}
      * @return an instance of {@link PurchaseOrderItemDto}.
      */
-    public static final PurchaseOrderItemDto createPurchaseOrderItemInstance(
-            PurchaseOrderItems ormBean) {
-        return new PurchaseOrderItemRmt2OrmAdapter(ormBean);
+    public static final PurchaseOrderItemDto createPurchaseOrderItemInstance(PurchaseOrderItems ormBean) {
+        PurchaseOrder po = null;
+        if (ormBean != null) {
+            po = new PurchaseOrder();
+            po.setPoId(ormBean.getPoId());    
+        }
+        return new PurchaseOrderItemRmt2OrmAdapter(ormBean, po);
     }
 
     /**

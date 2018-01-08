@@ -3,7 +3,6 @@ package org.dto.adapter.orm.transaction.purchaseorder;
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
 import org.dao.mapping.orm.rmt2.VwVendorItemPurchaseOrderItem;
-
 import org.dto.PurchaseOrderItemDto;
 
 /**
@@ -53,8 +52,7 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
      *            an instance of {@link PurchaseOrder} or null when the desired
      *            arises to create a newly instantiated instance.
      */
-    protected PurchaseOrderItemRmt2OrmAdapter(PurchaseOrderItems item,
-            PurchaseOrder po) {
+    protected PurchaseOrderItemRmt2OrmAdapter(PurchaseOrderItems item, PurchaseOrder po) {
         super(po);
         if (item == null) {
             item = new PurchaseOrderItems();
