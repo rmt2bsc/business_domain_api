@@ -128,7 +128,7 @@ class VwVendorItemsRmt2OrmAdapter extends AbstractBaseDtoImpl implements VwVendo
      */
     @Override
     public void setMarkup(double value) {
-        this.setMarkup(value);
+        this.i.setMarkup(value);
     }
 
     /* (non-Javadoc)
@@ -136,7 +136,7 @@ class VwVendorItemsRmt2OrmAdapter extends AbstractBaseDtoImpl implements VwVendo
      */
     @Override
     public double getMarkup() {
-        return this.getMarkup();
+        return this.i.getMarkup();
     }
 
     /* (non-Javadoc)
@@ -144,7 +144,7 @@ class VwVendorItemsRmt2OrmAdapter extends AbstractBaseDtoImpl implements VwVendo
      */
     @Override
     public void setOverrideRetail(int value) {
-        this.setOverrideRetail(value);
+        this.i.setOverrideRetail(value);
     }
 
     /* (non-Javadoc)
@@ -152,7 +152,7 @@ class VwVendorItemsRmt2OrmAdapter extends AbstractBaseDtoImpl implements VwVendo
      */
     @Override
     public int getOverrideRetail() {
-        return this.getOverrideRetail();
+        return this.i.getOverrideRetail();
     }
 
     /* (non-Javadoc)

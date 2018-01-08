@@ -4,13 +4,17 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
+import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dao.transaction.purchases.vendor.VendorPurchasesDaoException;
 import org.dto.PurchaseOrderDto;
 import org.dto.PurchaseOrderItemDto;
+import org.dto.VwVendorItemDto;
 import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -423,6 +427,106 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
             api.getPurchaseOrderItem(TEST_PO_ITEM_ID);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof VendorPurchasesDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testFetch_PurchaseOrderAvailableItems() {
+        // Mock method call to get vendor purchase orders 
+        VwVendorItems mockCriteria = new VwVendorItems();
+        Set<String> customSql = new HashSet<>();
+        customSql.add("item_id not in ( select item_id from purchase_order_items where po_id = " + TEST_PO_ID + ")");
+        mockCriteria.setCustomCriteria(customSql);
+        mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockVwVendorItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All vendor purchase orders fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        List<VwVendorItemDto> results = null;
+        try {
+            results = api.getPurchaseOrderAvailableItems(TEST_CREDITOR_ID, TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            VwVendorItemDto item = results.get(ndx);
+            Assert.assertEquals(330 + ndx, item.getItemId());
+            Assert.assertEquals(TEST_CREDITOR_ID, item.getVendorId());
+            Assert.assertEquals(90.00 + ndx, item.getUnitCost(), 0);
+            Assert.assertEquals(100.00 + ndx, item.getQtyOnHand(), 0);
+            Assert.assertEquals(0, item.getOverrideRetail());
+            Assert.assertEquals(3, item.getMarkup(), 0);
+            Assert.assertEquals("VendorItemNo-" + item.getVendorId() + "-" + item.getItemId(), item.getVendorItemNo());
+            Assert.assertEquals("ItemSerialNo-" + item.getVendorId() + "-" + item.getItemId(), item.getItemSerialNo());
+            Assert.assertEquals("Description-" + item.getVendorId() + "-" + item.getItemId(), item.getItemName());
+        }
+    }
+    
+    @Test
+    public void testFetch_PurchaseOrderAvailableItems_NotFound() {
+        // Mock method call to get vendor purchase orders 
+        VwVendorItems mockCriteria = new VwVendorItems();
+        Set<String> customSql = new HashSet<>();
+        customSql.add("item_id not in ( select item_id from purchase_order_items where po_id = " + TEST_PO_ID + ")");
+        mockCriteria.setCustomCriteria(customSql);
+        mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All vendor purchase orders fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        List<VwVendorItemDto> results = null;
+        try {
+            results = api.getPurchaseOrderAvailableItems(TEST_CREDITOR_ID, TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
+    }
+    
+    @Test
+    public void testFetch_PurchaseOrderAvailableItems_DB_Error() {
+        // Mock method call to get vendor purchase orders 
+        VwVendorItems mockCriteria = new VwVendorItems();
+        Set<String> customSql = new HashSet<>();
+        customSql.add("item_id not in ( select item_id from purchase_order_items where po_id = " + TEST_PO_ID + ")");
+        mockCriteria.setCustomCriteria(customSql);
+        mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All vendor purchase orders fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderAvailableItems(TEST_CREDITOR_ID, TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (VendorPurchasesApiException e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof VendorPurchasesApiException);
             Assert.assertTrue(e.getCause() instanceof VendorPurchasesDaoException);

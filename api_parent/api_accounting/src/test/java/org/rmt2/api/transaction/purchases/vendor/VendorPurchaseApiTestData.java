@@ -156,20 +156,20 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
                 1111111, 90.00, 100, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(331, 1111111, 80.00,
-                80, 0);
+        o = AccountingMockDataUtility.createVwVendorItems(331, 1111111, 91.00,
+                101, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(332, 1111111, 70.00,
-                60, 0);
+        o = AccountingMockDataUtility.createVwVendorItems(332, 1111111, 92.00,
+                102, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(333, 1111111, 60.00,
-                40, 0);
+        o = AccountingMockDataUtility.createVwVendorItems(333, 1111111, 93.00,
+                103, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(334, 1111111, 50.00,
-                20, 0);
+        o = AccountingMockDataUtility.createVwVendorItems(334, 1111111, 94.00,
+                104, 0);
         list.add(o);
         return list;
     }
