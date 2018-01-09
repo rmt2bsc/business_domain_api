@@ -1099,10 +1099,10 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         PurchaseOrderStatusHistDto posh = this.getCurrentPurchaseOrderStatus(poId);
         int currentStatusId = 0;
         boolean error = false;
-        currentStatusId = (posh == null ? VendorPurchasesConst.NEW_PO_STATUS : posh.getPoStatusId());
+        currentStatusId = (posh == null ? VendorPurchasesConst.PURCH_STATUS_NEW : posh.getPoStatusId());
         switch (newStatusId) {
             case VendorPurchasesConst.PURCH_STATUS_QUOTE:
-                if (currentStatusId != VendorPurchasesConst.NEW_PO_STATUS) {
+                if (currentStatusId != VendorPurchasesConst.PURCH_STATUS_NEW) {
                     this.msg = "Quote status can only be assigned when the purchase order is new";
                     error = true;
                 }

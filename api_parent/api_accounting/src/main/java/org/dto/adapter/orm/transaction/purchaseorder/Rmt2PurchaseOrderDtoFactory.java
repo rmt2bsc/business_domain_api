@@ -200,6 +200,10 @@ public class Rmt2PurchaseOrderDtoFactory extends RMT2Base {
     public static final PurchaseOrderStatusHistDto createPurchaseOrderStatusHistoryInstance(
             PurchaseOrderStatusHist ormBean) {
         PurchaseOrderStatus status = null;
+        if (ormBean != null) {
+            status = new PurchaseOrderStatus();
+            status.setPoStatusId(ormBean.getPoStatusId());
+        }
         return new PurchaseOrderStatusHistoryRmt2OrmAdapter(ormBean, status);
     }
 

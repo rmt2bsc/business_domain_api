@@ -4,16 +4,20 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
+import org.dao.mapping.orm.rmt2.PurchaseOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
+import org.dao.transaction.purchases.vendor.VendorPurchasesConst;
 import org.dao.transaction.purchases.vendor.VendorPurchasesDaoException;
 import org.dto.PurchaseOrderDto;
 import org.dto.PurchaseOrderItemDto;
+import org.dto.PurchaseOrderStatusHistDto;
 import org.dto.VwVendorItemDto;
 import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 import org.junit.After;
@@ -31,6 +35,7 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2Date;
 
 /**
  * Tests creditor purchases transaction query Api.
@@ -588,5 +593,128 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof InvalidDataException);
         }
+    }
+    
+    @Test
+    public void testFetch_PurchaseOrderHistoryAll() {
+        // Mock method call to get purchase order history 
+        PurchaseOrderStatusHist mockCriteria = new PurchaseOrderStatusHist();
+        mockCriteria.setPoId(TEST_PO_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockPurchaseOrderStatusHistory);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All vendor purchase order history fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        List<PurchaseOrderStatusHistDto> results = null;
+        try {
+            results = api.getPurchaseOrderHistory(TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(4, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            PurchaseOrderStatusHistDto item = results.get(ndx);
+            Assert.assertEquals(1 + ndx, item.getPoStatusHistId());
+            Assert.assertEquals(TEST_PO_ID, item.getPoId());
+            if (ndx == 0) {
+                Assert.assertTrue(item.getPoStatusId() < 0);
+            }
+            else {
+                Assert.assertTrue(item.getPoStatusId() > 0);
+            }
+            Date dt = RMT2Date.stringToDate("2017-" + (ndx + 1) + "-" + (ndx +1));
+            Assert.assertEquals(dt, item.getEffectiveDate());
+            if (ndx < 3) {
+                Assert.assertEquals(dt, item.getEndDate());
+            }
+            else {
+                Assert.assertNull(item.getEndDate());
+            }
+        }
+    }
+    
+    @Test
+    public void testValidate_PurchaseOrderHistoryAll_Null_PO_Id() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderHistory(null);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);    
+        }
+    }
+    
+    @Test
+    public void testValidate_PurchaseOrderHistoryAll_Negative_PO_Id() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderHistory(-1);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);    
+        }
+    }
+    
+    @Test
+    public void testValidate_PurchaseOrderHistoryAll_Zero_PO_Id() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderHistory(0);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);    
+        }
+    }
+    
+    @Test
+    public void testFetch_PurchaseOrderHistoryCurrentStatusOnly() {
+        // Mock method call to get purchase order history 
+        PurchaseOrderStatusHist mockCriteria = new PurchaseOrderStatusHist();
+        Set<String> customSql = new HashSet<>();
+        customSql.add("end_date is null");
+        mockCriteria.setCustomCriteria(customSql);
+        mockCriteria.setPoId(TEST_PO_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockPurchaseOrderCurrentStatusHistory);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All vendor purchase orders fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        PurchaseOrderStatusHistDto results = null;
+        try {
+            results = api.getCurrentPurchaseOrderHistory(TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.getPoStatusHistId());
+        Assert.assertEquals(TEST_PO_ID, results.getPoId());
+        Assert.assertEquals(VendorPurchasesConst.PURCH_STATUS_QUOTE, results.getPoStatusId());
+        Date dt = RMT2Date.stringToDate("2017-01-02");
+        Assert.assertEquals(dt, results.getEffectiveDate());
+        Assert.assertNull(results.getEndDate());
     }
 }

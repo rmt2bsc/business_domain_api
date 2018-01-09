@@ -12,7 +12,7 @@ public class VendorPurchasesConst {
      * Indicates that the purchase order is new and has not been assigned a
      * status.
      */
-    public static final int NEW_PO_STATUS = -1;
+    public static final int PURCH_STATUS_NEW = -1;
 
     /** Quote Purchases Status Code */
     public static final int PURCH_STATUS_QUOTE = 1;

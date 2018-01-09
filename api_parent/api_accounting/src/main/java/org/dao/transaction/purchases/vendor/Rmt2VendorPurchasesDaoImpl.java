@@ -337,8 +337,8 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<PurchaseOrderStatusHistDto> fetchPurchaseOrderHistory(PurchaseOrderStatusHistDto criteria, boolean currentStatusOnly)
-            throws VendorPurchasesDaoException {
+    public List<PurchaseOrderStatusHistDto> fetchPurchaseOrderHistory(PurchaseOrderStatusHistDto criteria, 
+            boolean currentStatusOnly) throws VendorPurchasesDaoException {
         List<PurchaseOrderStatusHist> results = this.fetchPurchaseOrderHistoryOrm(criteria, currentStatusOnly);
         List<PurchaseOrderStatusHistDto> list = new ArrayList<PurchaseOrderStatusHistDto>();
         for (PurchaseOrderStatusHist item : results) {
@@ -348,8 +348,8 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
         return list;
     }
 
-    private List<PurchaseOrderStatusHist> fetchPurchaseOrderHistoryOrm(PurchaseOrderStatusHistDto criteria, boolean currentStatusOnly)
-            throws VendorPurchasesDaoException {
+    private List<PurchaseOrderStatusHist> fetchPurchaseOrderHistoryOrm(PurchaseOrderStatusHistDto criteria, 
+            boolean currentStatusOnly) throws VendorPurchasesDaoException {
         if (currentStatusOnly) {
             criteria.setCriteria(VendorPurchasesConst.SQL_CURRENT_PO_STATUS);
         }

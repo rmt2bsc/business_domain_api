@@ -6,6 +6,7 @@ import java.util.List;
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
 import org.dao.mapping.orm.rmt2.PurchaseOrderStatus;
+import org.dao.mapping.orm.rmt2.PurchaseOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwVendorItemPurchaseOrderItem;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
@@ -29,6 +30,8 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     protected List<VwVendorItemPurchaseOrderItem> mockVwVendorItemPurchaseOrderItems;
     protected List<VwVendorItems> mockVwVendorItems;
     protected List<PurchaseOrderStatus> mockPurchaseOrderStatuses;
+    protected List<PurchaseOrderStatusHist> mockPurchaseOrderStatusHistory;
+    protected List<PurchaseOrderStatusHist> mockPurchaseOrderCurrentStatusHistory;
 
     /**
      * @throws java.lang.Exception
@@ -44,6 +47,8 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         this.mockVwVendorItemPurchaseOrderItems = this.createMockVwVendorItemPurchaseOrderItems();
         this.mockVwVendorItems = this.createMockVwVendorItems();
         this.mockPurchaseOrderStatuses = this.createMockPurchaseOrderStatuses();
+        this.mockPurchaseOrderStatusHistory = this.createMockPurchaseOrderStatusHistory();
+        this.mockPurchaseOrderCurrentStatusHistory = this.createMockPurchaseOrderCurrentStatusHistory();
         return;
     }
 
@@ -199,6 +204,43 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
 
         o = AccountingMockDataUtility.createPurchaseOrderStatus(
                 VendorPurchasesConst.PURCH_STATUS_RETURN, "Return");
+        list.add(o);
+
+        return list;
+    }
+    
+    private List<PurchaseOrderStatusHist> createMockPurchaseOrderCurrentStatusHistory() {
+        List<PurchaseOrderStatusHist> list = new ArrayList<PurchaseOrderStatusHist>();
+        PurchaseOrderStatusHist o = AccountingMockDataUtility
+                .createPurchaseOrderStatusHist(1,
+                        VendorPurchasesConst.PURCH_STATUS_QUOTE, 330,
+                        "2017-01-02", null);
+        list.add(o);
+
+        return list;
+    }
+    
+    private List<PurchaseOrderStatusHist> createMockPurchaseOrderStatusHistory() {
+        List<PurchaseOrderStatusHist> list = new ArrayList<PurchaseOrderStatusHist>();
+        PurchaseOrderStatusHist o = AccountingMockDataUtility
+                .createPurchaseOrderStatusHist(1,
+                        VendorPurchasesConst.PURCH_STATUS_NEW, 330, "2017-01-01",
+                        "2017-01-01");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createPurchaseOrderStatusHist(2,
+                VendorPurchasesConst.PURCH_STATUS_QUOTE, 330, "2017-02-02",
+                "2017-02-02");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createPurchaseOrderStatusHist(3,
+                VendorPurchasesConst.PURCH_STATUS_RECEIVED, 330, "2017-03-03",
+                "2017-03-03");
+        list.add(o);
+
+        o = AccountingMockDataUtility.createPurchaseOrderStatusHist(4,
+                VendorPurchasesConst.PURCH_STATUS_FINALIZE, 330, "2017-04-04",
+                null);
         list.add(o);
 
         return list;

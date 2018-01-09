@@ -324,16 +324,13 @@ public class VendorPurchasesDaoFactory extends RMT2Base {
         PurchaseOrderStatusHist obj = new PurchaseOrderStatusHist();
         if (criteria != null) {
             if (criteria.getPoStatusHistId() > 0) {
-                obj.addCriteria(PurchaseOrderStatusHist.PROP_POSTATUSHISTID,
-                        criteria.getPoStatusHistId());
+                obj.addCriteria(PurchaseOrderStatusHist.PROP_POSTATUSHISTID, criteria.getPoStatusHistId());
             }
             if (criteria.getPoStatusId() > 0) {
-                obj.addCriteria(PurchaseOrderStatusHist.PROP_POSTATUSID,
-                        criteria.getPoStatusId());
+                obj.addCriteria(PurchaseOrderStatusHist.PROP_POSTATUSID, criteria.getPoStatusId());
             }
             if (criteria.getPoId() > 0) {
-                obj.addCriteria(PurchaseOrderStatusHist.PROP_POID,
-                        criteria.getPoId());
+                obj.addCriteria(PurchaseOrderStatusHist.PROP_POID, criteria.getPoId());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
