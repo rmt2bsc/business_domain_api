@@ -436,7 +436,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     
     @Test
     public void testFetch_PurchaseOrderAvailableItems() {
-        // Mock method call to get vendor purchase orders 
+        // Mock method call to get purchase order available items 
         VwVendorItems mockCriteria = new VwVendorItems();
         Set<String> customSql = new HashSet<>();
         customSql.add("item_id not in ( select item_id from purchase_order_items where po_id = " + TEST_PO_ID + ")");
@@ -478,7 +478,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     
     @Test
     public void testFetch_PurchaseOrderAvailableItems_NotFound() {
-        // Mock method call to get vendor purchase orders 
+        // Mock method call to get purchase order available items 
         VwVendorItems mockCriteria = new VwVendorItems();
         Set<String> customSql = new HashSet<>();
         customSql.add("item_id not in ( select item_id from purchase_order_items where po_id = " + TEST_PO_ID + ")");
@@ -506,7 +506,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     
     @Test
     public void testFetch_PurchaseOrderAvailableItems_DB_Error() {
-        // Mock method call to get vendor purchase orders 
+        // Mock method call to get purchase order available items
         VwVendorItems mockCriteria = new VwVendorItems();
         Set<String> customSql = new HashSet<>();
         customSql.add("item_id not in ( select item_id from purchase_order_items where po_id = " + TEST_PO_ID + ")");
