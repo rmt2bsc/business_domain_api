@@ -27,6 +27,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     protected List<PurchaseOrderItems> mockPurchaseOrderItems;
     protected List<PurchaseOrderItems> mockPurchaseOrderItem;
     protected List<VendorItems> mockVendorItems;
+    protected List<VendorItems> mockVendorItem;
     protected List<VwVendorItemPurchaseOrderItem> mockVwVendorItemPurchaseOrderItems;
     protected List<VwVendorItems> mockVwVendorItems;
     protected List<VwVendorItems> mockVwVendorItem;
@@ -45,6 +46,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         this.mockPurchaseOrderItem = this.createMockPurchaseOrderItem();
         this.mockPurchaseOrderItems = this.createMockPurchaseOrderItems();
         this.mockVendorItems = this.createMockVendorItems();
+        this.mockVendorItem = this.createMockVendorItem();
         this.mockVwVendorItemPurchaseOrderItems = this.createMockVwVendorItemPurchaseOrderItems();
         this.mockVwVendorItems = this.createMockVwVendorItems();
         this.mockVwVendorItem = this.createMockSingleVwVendorItems();
@@ -113,21 +115,28 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         return list;
     }
     
+    private List<VendorItems> createMockVendorItem() {
+        List<VendorItems> list = new ArrayList<VendorItems>();
+        VendorItems o = AccountingMockDataUtility.createVendorItems(8880, 1111111, "111-111", "111-ABC", 90.00);
+        list.add(o);
+        return list;
+    }
+    
     private List<VendorItems> createMockVendorItems() {
         List<VendorItems> list = new ArrayList<VendorItems>();
-        VendorItems o = AccountingMockDataUtility.createVendorItems(330, 1111111, "111-111", "111-ABC", 90.00);
+        VendorItems o = AccountingMockDataUtility.createVendorItems(8880, 1111111, "111-111", "111-ABC", 90.00);
         list.add(o);
         
-        o =  AccountingMockDataUtility.createVendorItems(330, 1111111, "111-222", "222-ABC", 80.00);
+        o =  AccountingMockDataUtility.createVendorItems(8881, 1111111, "111-222", "222-ABC", 80.00);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVendorItems(330, 1111111, "111-333", "333-ABC", 70.00);
+        o = AccountingMockDataUtility.createVendorItems(8882, 1111111, "111-333", "333-ABC", 70.00);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVendorItems(330, 1111111, "111-444", "444-ABC", 60.00);
+        o = AccountingMockDataUtility.createVendorItems(8883, 1111111, "111-444", "444-ABC", 60.00);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVendorItems(330, 1111111, "111-555", "555-ABC", 50.00);
+        o = AccountingMockDataUtility.createVendorItems(8884, 1111111, "111-555", "555-ABC", 50.00);
         list.add(o);
         return list;
     }

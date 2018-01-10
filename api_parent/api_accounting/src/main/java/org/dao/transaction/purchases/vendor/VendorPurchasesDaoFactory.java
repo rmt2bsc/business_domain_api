@@ -167,16 +167,13 @@ public class VendorPurchasesDaoFactory extends RMT2Base {
         VendorItems obj = new VendorItems();
         if (criteria != null) {
             if (criteria.getVendorId() > 0) {
-                obj.addCriteria(VendorItems.PROP_CREDITORID,
-                        criteria.getVendorId());
+                obj.addCriteria(VendorItems.PROP_CREDITORID, criteria.getVendorId());
             }
             if (criteria.getVendorItemNo() != null) {
-                obj.addLikeClause(VendorItems.PROP_VENDORITEMNO,
-                        criteria.getVendorItemNo());
+                obj.addLikeClause(VendorItems.PROP_VENDORITEMNO, criteria.getVendorItemNo());
             }
             if (criteria.getVendorItemSerialNo() != null) {
-                obj.addCriteria(VendorItems.PROP_ITEMSERIALNO,
-                        criteria.getVendorItemSerialNo());
+                obj.addCriteria(VendorItems.PROP_ITEMSERIALNO, criteria.getVendorItemSerialNo());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
