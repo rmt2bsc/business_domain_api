@@ -103,7 +103,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return An instance of {@link VwVendorItemDto}
      * @throws VendorPurchasesApiException
      */
-    VwVendorItemDto getCurrentItemByVendor(Integer vendorId, Integer itemId) throws VendorPurchasesApiException;
+    VwVendorItemDto getVendorItemInventoryInfo(Integer vendorId, Integer itemId) throws VendorPurchasesApiException;
 
     /**
      * Retrieve a list of purchase order items for a vendor in which each item

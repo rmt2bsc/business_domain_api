@@ -384,7 +384,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * @throws VendorPurchasesApiException
      */
     @Override
-    public VwVendorItemDto getCurrentItemByVendor(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
+    public VwVendorItemDto getVendorItemInventoryInfo(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
         this.validateVendorItemId(itemId);
         this.validateVendorId(vendorId);
         
