@@ -305,7 +305,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<PurchaseOrderItemDto> getVendorItemPurchaseOrderItems(Integer vendorId, Integer poId) 
+    public List<PurchaseOrderItemDto> getPurchaseOrderVendorInventoryItems(Integer vendorId, Integer poId) 
             throws VendorPurchasesApiException {
         
         this.validatePurchaseOrderId(poId);
@@ -383,7 +383,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * @throws VendorPurchasesApiException
      */
     @Override
-    public VwVendorItemDto getVendorItemInventoryInfo(Integer vendorId, Integer itemMasterId) throws VendorPurchasesApiException {
+    public VwVendorItemDto getVendorInventoryItem(Integer vendorId, Integer itemMasterId) throws VendorPurchasesApiException {
         this.validateItemMasterId(itemMasterId);
         this.validateVendorId(vendorId);
         

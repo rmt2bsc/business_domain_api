@@ -737,7 +737,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         VwVendorItemDto results = null;
         try {
-            results = api.getVendorItemInventoryInfo(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
+            results = api.getVendorInventoryItem(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
         } catch (VendorPurchasesApiException e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
@@ -777,7 +777,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         VwVendorItemDto results = null;
         try {
-            results = api.getVendorItemInventoryInfo(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
+            results = api.getVendorInventoryItem(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
         } catch (VendorPurchasesApiException e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
@@ -804,7 +804,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
+            api.getVendorInventoryItem(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -831,7 +831,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
+            api.getVendorInventoryItem(TEST_CREDITOR_ID, TEST_PO_ITEM_ID);
             Assert.fail(
                     "Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
@@ -850,7 +850,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(null, TEST_PO_ITEM_ID);
+            api.getVendorInventoryItem(null, TEST_PO_ITEM_ID);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -864,7 +864,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(TEST_CREDITOR_ID, null);
+            api.getVendorInventoryItem(TEST_CREDITOR_ID, null);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -878,7 +878,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(0, TEST_PO_ITEM_ID);
+            api.getVendorInventoryItem(0, TEST_PO_ITEM_ID);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -892,7 +892,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(TEST_CREDITOR_ID, 0);
+            api.getVendorInventoryItem(TEST_CREDITOR_ID, 0);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -906,7 +906,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(-123, TEST_PO_ITEM_ID);
+            api.getVendorInventoryItem(-123, TEST_PO_ITEM_ID);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -920,7 +920,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
-            api.getVendorItemInventoryInfo(TEST_CREDITOR_ID, -123);
+            api.getVendorInventoryItem(TEST_CREDITOR_ID, -123);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();

@@ -100,7 +100,7 @@ public interface VendorPurchasesApi extends XactApi {
      * @return An instance of {@link VwVendorItemDto}
      * @throws VendorPurchasesApiException
      */
-    VwVendorItemDto getVendorItemInventoryInfo(Integer vendorId, Integer itemMasterId) throws VendorPurchasesApiException;
+    VwVendorItemDto getVendorInventoryItem(Integer vendorId, Integer itemMasterId) throws VendorPurchasesApiException;
 
     /**
      * Retrieve a list of purchase order items for a vendor in which each item
@@ -114,7 +114,8 @@ public interface VendorPurchasesApi extends XactApi {
      * @return A List of {@link PurchaseOrderItemDto} objects
      * @throws VendorPurchasesApiException
      */
-    List<PurchaseOrderItemDto> getVendorItemPurchaseOrderItems(Integer vendorId, Integer poId) throws VendorPurchasesApiException;
+    List<PurchaseOrderItemDto> getPurchaseOrderVendorInventoryItems(Integer vendorId, Integer poId) 
+            throws VendorPurchasesApiException;
 
     /**
      * Retrieves the purchase order status based on the value of _poStatusId.
