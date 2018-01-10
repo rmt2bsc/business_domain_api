@@ -266,7 +266,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     @Override
     public List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
         this.validateVendorId(vendorId);
-        this.validateVendorItemId(itemId);
+        this.validateItemMasterId(itemId);
         
         VendorItemDto criteria = Rmt2PurchaseOrderDtoFactory.createVendorItemInstance(null);
         criteria.setVendorId(vendorId);
@@ -384,7 +384,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public VwVendorItemDto getVendorItemInventoryInfo(Integer vendorId, Integer itemMasterId) throws VendorPurchasesApiException {
-        this.validateVendorItemId(itemMasterId);
+        this.validateItemMasterId(itemMasterId);
         this.validateVendorId(vendorId);
         
         VwVendorItemDto criteria = Rmt2PurchaseOrderDtoFactory.createVendorItemExtInstance(null);
@@ -1732,18 +1732,18 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         }
     }
     
-    private void validateVendorItemId(Integer vendorItemId) {
+    private void validateItemMasterId(Integer itemMasterId) {
         try {
-            Verifier.verifyNotNull(vendorItemId);    
+            Verifier.verifyNotNull(itemMasterId);    
         }
         catch (VerifyException e) {
-            throw new InvalidDataException("Vendor Item Id is required");
+            throw new InvalidDataException("Item Master Id is required");
         }
         try {
-            Verifier.verifyPositive(vendorItemId);    
+            Verifier.verifyPositive(itemMasterId);    
         }
         catch (VerifyException e) {
-            throw new InvalidDataException("Vendor Item Id must be greater than zero");
+            throw new InvalidDataException("Item Master Id must be greater than zero");
         }
     }
     
