@@ -260,11 +260,11 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            The id of the vendor
      * @param itemId
      *            The id of the inventory item
-     * @return A List of {@link VendorItemDto} objects
+     * @return An instance of {@link VendorItemDto}
      * @throws VendorPurchasesApiException
      */
     @Override
-    public List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
+    public VendorItemDto getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
         this.validateVendorId(vendorId);
         this.validateItemMasterId(itemId);
         
@@ -279,8 +279,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            buf.append(
-                    "DAO failed Purchase Order Vendor Item Fetch using vendor Id [");
+            buf.append("DAO failed Purchase Order Vendor Item Fetch using vendor Id [");
             buf.append(vendorId);
             buf.append(" and item id [");
             buf.append(itemId);
@@ -289,7 +288,13 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             logger.error(msg, e);
             throw new VendorPurchasesApiException(msg, e);
         }
-        return results;
+        
+        if (results.size() > 1) {
+            msg = "DAO failed Purchase Order Vendor Item Fetch:  too many rows returned";
+            logger.error(msg);
+            throw new VendorPurchasesApiException(msg);
+        }
+        return results.get(0);
     }
 
     /**
