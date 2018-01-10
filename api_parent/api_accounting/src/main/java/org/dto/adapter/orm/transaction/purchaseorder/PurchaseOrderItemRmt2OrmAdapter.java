@@ -80,9 +80,6 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
         }
         this.i = null;
         this.vipo = vi;
-        this.dateCreated = i.getDateCreated();
-        this.dateUpdated = i.getDateUpdated();
-        this.updateUserId = i.getUserId();
         return;
     }
     
@@ -330,7 +327,7 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
     @Override
     public String getVendorItemSerialNo() {
         if (vipo != null) {
-            this.vipo.getItemSerialNo();
+            return this.vipo.getItemSerialNo();
         }
         return null;
     }
@@ -433,6 +430,74 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
             return this.vipo.getOverrideRetail();
         }
         return 0;
+    }
+
+    @Override
+    public void setPoId(int value) {
+        try {
+            super.setPoId(value);
+        }
+        catch (Exception e) {
+            if (this.i != null) {
+                this.i.setPoId(value);
+            }
+            else {
+                this.vipo.setPoId(value);    
+            }
+        }
+    }
+
+    @Override
+    public int getPoId() {
+        try {
+            return super.getPoId();
+        }
+        catch (Exception e) {
+            if (this.i != null) {
+                return this.i.getPoId();
+            }
+            else {
+                return this.vipo.getPoId();    
+            }
+        }
+    }
+
+    @Override
+    public void setCreditorId(int value) {
+        try {
+            super.setCreditorId(value);
+        }
+        catch (Exception e) {
+            this.vipo.setVendorId(value);    
+        }
+    }
+
+    @Override
+    public int getCreditorId() {
+        try {
+            return super.getCreditorId();
+        }
+        catch (Exception e) {
+            return this.vipo.getVendorId();    
+        }
+    }
+
+    @Override
+    public void setEntityName(String value) {
+        try {
+            super.setEntityName(value);    
+        }
+        catch (Exception e) {
+            this.vipo.setDescription(value);
+        }
+    }
+
+    @Override
+    public String getEntityName() {
+        if (this.vipo != null) {
+            return this.vipo.getDescription();
+        }
+        return null;
     }
 
 }

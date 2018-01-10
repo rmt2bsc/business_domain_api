@@ -135,24 +135,24 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     private List<VwVendorItemPurchaseOrderItem> createMockVwVendorItemPurchaseOrderItems() {
         List<VwVendorItemPurchaseOrderItem> list = new ArrayList<VwVendorItemPurchaseOrderItem>();
         VwVendorItemPurchaseOrderItem o = AccountingMockDataUtility
-                .createVwVendorItemPurchaseOrderItem(7000, 330, 1111111, 90.00,
+                .createVwVendorItemPurchaseOrderItem(330, 8880, 1111111, 100.00,
                         10, 100, 0, 0, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(7000,
-                331, 1111111, 80.00, 10, 80, 0, 0, 0);
+        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(330,
+                8881, 1111111, 101.00, 11, 101, 0, 0, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(7000,
-                332, 1111111, 70.00, 10, 60, 0, 0, 0);
+        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(330,
+                8882, 1111111, 102.00, 12, 102, 0, 0, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(7000,
-                333, 1111111, 60.00, 10, 40, 0, 0, 0);
+        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(330,
+                8883, 1111111, 103.00, 13, 103, 0, 0, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(7000,
-                334, 1111111, 50.00, 10, 20, 0, 0, 0);
+        o = AccountingMockDataUtility.createVwVendorItemPurchaseOrderItem(330,
+                8884, 1111111, 104.00, 14, 104, 0, 0, 0);
         list.add(o);
         return list;
     }

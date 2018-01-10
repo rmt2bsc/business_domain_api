@@ -1133,9 +1133,9 @@ public class AccountingMockDataUtility {
         o.setQtyReturned(qtyReturned);
         o.setOverrideRetail(overrideRetail);
         o.setMarkup(3);
-        o.setVendorItemNo("VendorItemNo-" + poId + "-" + itemId);
-        o.setItemSerialNo("ItemSerialNo-" + poId + "-" + itemId);
-        o.setDescription("Description-" + poId + "-" + itemId);
+        o.setVendorItemNo("VendorItemNo-" + vendorId + "-" + poId);
+        o.setItemSerialNo("ItemSerialNo-" + vendorId + "-" + poId);
+        o.setDescription("Description-" + vendorId + "-" + poId);
         return o;
     }
     

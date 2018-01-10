@@ -319,8 +319,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            buf.append(
-                    "DAO failed Purchase Order Combined Item Fetch using vendor Id [");
+            buf.append("DAO failed Purchase Order Combined Item Fetch using vendor Id [");
             buf.append(vendorId);
             buf.append(" and PO id [");
             buf.append(poId);
@@ -408,8 +407,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             throw new VendorPurchasesApiException(msg, e);
         }
         if (results.size() > 1) {
-            buf.append(
-                    "DAO failed Purchase Order local/external Vendor Item Fetch:  too many rows returned using Vendor Id: ");
+            buf.append("DAO failed Purchase Order local/external Vendor Item Fetch:  too many rows returned using Vendor Id: ");
             buf.append(vendorId);
             buf.append(" and item id [");
             buf.append(itemMasterId);
@@ -451,8 +449,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             throw new VendorPurchasesApiException(msg, e);
         }
         if (results.size() > 1) {
-            buf.append(
-                    "DAO failed Purchase Order status Fetch:  too many rows returned using PO Status Id: ");
+            buf.append("DAO failed Purchase Order status Fetch:  too many rows returned using PO Status Id: ");
             buf.append(poStatusId);
             buf.append("]");
             msg = buf.toString();
@@ -484,8 +481,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            buf.append(
-                    "DAO failed Purchase Order current status Fetch using po id [");
+            buf.append("DAO failed Purchase Order current status Fetch using po id [");
             buf.append(poId);
             buf.append("]");
             msg = buf.toString();
@@ -493,8 +489,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             throw new VendorPurchasesApiException(msg, e);
         }
         if (results.size() > 1) {
-            buf.append(
-                    "DAO failed Purchase Order current status Fetch:  too many rows returned using PO Id: ");
+            buf.append("DAO failed Purchase Order current status Fetch:  too many rows returned using PO Id: ");
             buf.append(poId);
             buf.append("]");
             msg = buf.toString();
