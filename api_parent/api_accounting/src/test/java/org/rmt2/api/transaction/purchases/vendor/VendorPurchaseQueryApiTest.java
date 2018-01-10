@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
+import org.dao.mapping.orm.rmt2.PurchaseOrderStatus;
 import org.dao.mapping.orm.rmt2.PurchaseOrderStatusHist;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwVendorItemPurchaseOrderItem;
@@ -19,6 +20,7 @@ import org.dao.transaction.purchases.vendor.VendorPurchasesConst;
 import org.dao.transaction.purchases.vendor.VendorPurchasesDaoException;
 import org.dto.PurchaseOrderDto;
 import org.dto.PurchaseOrderItemDto;
+import org.dto.PurchaseOrderStatusDto;
 import org.dto.PurchaseOrderStatusHistDto;
 import org.dto.VendorItemDto;
 import org.dto.VwVendorItemDto;
@@ -131,7 +133,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
 
     @Test
-    public void testFetch_PurchaseOrder_NotFound() {
+    public void testError_PurchaseOrder_NotFound() {
         // Mock method call to get vendor purchase orders 
         PurchaseOrder mockCriteria = new PurchaseOrder();
         mockCriteria.setPoId(TEST_PO_ID);
@@ -156,7 +158,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
 
     @Test
-    public void testFetchSingle_PurchaseOrder_TooManyRowsRetunred() {
+    public void testError_Single_PurchaseOrder_TooManyRowsRetunred() {
         // Mock method call to get vendor purchase orders 
         PurchaseOrder mockCriteria = new PurchaseOrder();
         mockCriteria.setPoId(TEST_PO_ID);
@@ -181,7 +183,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_PurchaseOrder_DB_Error() {
+    public void testError_PurchaseOrder_DB_Error() {
         // Mock method call to get vendor purchase orders 
         PurchaseOrder mockCriteria = new PurchaseOrder();
         mockCriteria.setPoId(TEST_PO_ID);
@@ -308,7 +310,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_PurchaseOrderItems_NotFound() {
+    public void testError_PurchaseOrderItems_NotFound() {
         // Mock method call to get vendor purchase order items 
         PurchaseOrderItems mockCriteria = new PurchaseOrderItems();
         mockCriteria.setPoId(TEST_PO_ID);
@@ -367,7 +369,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetchSingle_PurchaseOrderItem_NotFound() {
+    public void testError_Single_PurchaseOrderItem_NotFound() {
         // Mock method call to get vendor purchase order items 
         PurchaseOrderItems mockCriteria = new PurchaseOrderItems();
         mockCriteria.setPoItemId(TEST_PO_ITEM_ID);
@@ -392,7 +394,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetchSingle_PurchaseOrderItem_TooManyRows() {
+    public void testError_Single_PurchaseOrderItem_TooManyRows() {
         // Mock method call to get vendor purchase order items
         PurchaseOrderItems mockCriteria = new PurchaseOrderItems();
         mockCriteria.setPoItemId(TEST_PO_ITEM_ID);
@@ -417,7 +419,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
 
     @Test
-    public void testFetchSingle_PurchaseOrderItem_DB_Error() {
+    public void testError_Single_PurchaseOrderItem_DB_Error() {
         // Mock method call to get vendor purchase order items
         PurchaseOrderItems mockCriteria = new PurchaseOrderItems();
         mockCriteria.setPoItemId(TEST_PO_ITEM_ID);
@@ -486,7 +488,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_PurchaseOrderAvailableItems_NotFound() {
+    public void testError_PurchaseOrderAvailableItems_NotFound() {
         // Mock method call to get purchase order available items 
         VwVendorItems mockCriteria = new VwVendorItems();
         Set<String> customSql = new HashSet<>();
@@ -514,7 +516,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_PurchaseOrderAvailableItems_DB_Error() {
+    public void testError_PurchaseOrderAvailableItems_DB_Error() {
         // Mock method call to get purchase order available items
         VwVendorItems mockCriteria = new VwVendorItems();
         Set<String> customSql = new HashSet<>();
@@ -763,7 +765,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_VendorItemInventoryData_NotFound() {
+    public void testError_VendorItemInventoryData_NotFound() {
         // Mock method call to get vendor item inventory data
         VwVendorItems mockCriteria = new VwVendorItems();
         mockCriteria.setCreditorId(TEST_CREDITOR_ID);
@@ -791,7 +793,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     
     
     @Test
-    public void testFetch_VendorItemInventoryData_TooManyRowsReturned() {
+    public void testError_VendorItemInventoryData_TooManyRowsReturned() {
         // Mock method call to get vendor item inventory data
         VwVendorItems mockCriteria = new VwVendorItems();
         mockCriteria.setCreditorId(TEST_CREDITOR_ID);
@@ -817,7 +819,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_VendorItemInventoryData_DB_Error() {
+    public void testError_VendorItemInventoryData_DB_Error() {
         // Mock method call to get vendor item inventory data
         VwVendorItems mockCriteria = new VwVendorItems();
         mockCriteria.setCreditorId(TEST_CREDITOR_ID);
@@ -976,7 +978,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     
     
     @Test
-    public void testFetch_PurchaseOrderVendorInventoryItems_NotFound() {
+    public void testError_PurchaseOrderVendorInventoryItems_NotFound() {
         // Mock method call to get purchase order items that contains combined vendor/inventory info
         VwVendorItemPurchaseOrderItem mockCriteria = new VwVendorItemPurchaseOrderItem();
         mockCriteria.setVendorId(TEST_CREDITOR_ID);
@@ -1002,7 +1004,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
    }
     
     @Test
-    public void testFetch_PurchaseOrderVendorInventoryItems_DB_Error() {
+    public void testError_PurchaseOrderVendorInventoryItems_DB_Error() {
         // Mock method call to get purchase order items that contains combined vendor/inventory info
         VwVendorItemPurchaseOrderItem mockCriteria = new VwVendorItemPurchaseOrderItem();
         mockCriteria.setVendorId(TEST_CREDITOR_ID);
@@ -1146,7 +1148,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
    }
     
     @Test
-    public void testFetch_SingleVendorItem_NotFound() {
+    public void testError_SingleVendorItem_NotFound() {
         // Mock method call to get a single vendor item.
         VendorItems mockCriteria = new VendorItems();
         mockCriteria.setCreditorId(TEST_CREDITOR_ID);
@@ -1172,7 +1174,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
    }
     
     @Test
-    public void testFetch_SingleVendorItem_TooManyRows() {
+    public void testError_SingleVendorItem_TooManyRows() {
         // Mock method call to get a single vendor item.
         VendorItems mockCriteria = new VendorItems();
         mockCriteria.setCreditorId(TEST_CREDITOR_ID);
@@ -1198,7 +1200,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
    }
     
     @Test
-    public void testFetch_SingleVendorItem_DB_Error() {
+    public void testError_SingleVendorItem_DB_Error() {
         // Mock method call to get a single vendor item.
         VendorItems mockCriteria = new VendorItems();
         mockCriteria.setCreditorId(TEST_CREDITOR_ID);
@@ -1226,7 +1228,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
    }
     
     @Test
-    public void testFetch_SingleVendorItem_Null_VendorId() {
+    public void testValidation_SingleVendorItem_Null_VendorId() {
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
@@ -1240,7 +1242,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_SingleVendorItem_Null_VendorItemNo() {
+    public void testValidation_SingleVendorItem_Null_VendorItemNo() {
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
@@ -1254,7 +1256,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_SingleVendorItem_Empty_VendorItemNo() {
+    public void testValidation_SingleVendorItem_Empty_VendorItemNo() {
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
@@ -1268,7 +1270,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_SingleVendorItem_Negative_VendorId() {
+    public void testValidation_SingleVendorItem_Negative_VendorId() {
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
@@ -1282,12 +1284,159 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
     }
     
     @Test
-    public void testFetch_SingleVendorItem_Zero_VendorId() {
+    public void testValidation_SingleVendorItem_Zero_VendorId() {
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
             api.getVendorItem(0, TEST_VENDOR_ITEM_NO);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testFetch_SinglePurchaseOrderStatus() {
+        // Mock method call to get a single purchase order status.
+        PurchaseOrderStatus mockCriteria = new PurchaseOrderStatus();
+        mockCriteria.setPoStatusId(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockPurchaseOrderStatus);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("A purchase order status fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        PurchaseOrderStatusDto results = null;
+        try {
+            results = api.getPurchaseOrderStatus(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(VendorPurchasesConst.PURCH_STATUS_QUOTE, results.getPoStatusId());
+        Assert.assertEquals("Quote", results.getPoStatusDescription());
+   }
+    
+    @Test
+    public void testError_SinglePurchaseOrderStatus_NotFound() {
+        // Mock method call to get a single purchase order status.
+        PurchaseOrderStatus mockCriteria = new PurchaseOrderStatus();
+        mockCriteria.setPoStatusId(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("A purchase order status fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        PurchaseOrderStatusDto results = null;
+        try {
+            results = api.getPurchaseOrderStatus(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertNull(results);
+   }
+    
+    @Test
+    public void testError_SinglePurchaseOrderStatus_TooManyRows() {
+        // Mock method call to get a single purchase order status.
+        PurchaseOrderStatus mockCriteria = new PurchaseOrderStatus();
+        mockCriteria.setPoStatusId(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockPurchaseOrderStatuses);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("A purchase order status fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderStatus(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+        }
+    }
+    
+    @Test
+    public void testError_SinglePurchaseOrderStatus_DB_Error() {
+        // Mock method call to get a single purchase order status.
+        PurchaseOrderStatus mockCriteria = new PurchaseOrderStatus();
+        mockCriteria.setPoStatusId(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("A purchase order status fetch test case setup failed");
+        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderStatus(VendorPurchasesConst.PURCH_STATUS_QUOTE);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof VendorPurchasesDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testValidation_SinglePurchaseOrderStatus_Null_PoStatusId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderStatus(null);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_SinglePurchaseOrderStatus_Zero_PoStatusId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderStatus(0);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_SinglePurchaseOrderStatus_Negative_PoStatusId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.getPurchaseOrderStatus(-1230);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();

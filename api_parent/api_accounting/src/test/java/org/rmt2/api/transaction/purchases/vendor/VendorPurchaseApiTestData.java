@@ -32,6 +32,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     protected List<VwVendorItems> mockVwVendorItems;
     protected List<VwVendorItems> mockVwVendorItem;
     protected List<PurchaseOrderStatus> mockPurchaseOrderStatuses;
+    protected List<PurchaseOrderStatus> mockPurchaseOrderStatus;
     protected List<PurchaseOrderStatusHist> mockPurchaseOrderStatusHistory;
     protected List<PurchaseOrderStatusHist> mockPurchaseOrderCurrentStatusHistory;
 
@@ -51,6 +52,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         this.mockVwVendorItems = this.createMockVwVendorItems();
         this.mockVwVendorItem = this.createMockSingleVwVendorItems();
         this.mockPurchaseOrderStatuses = this.createMockPurchaseOrderStatuses();
+        this.mockPurchaseOrderStatus = this.createMockPurchaseOrderStatus();
         this.mockPurchaseOrderStatusHistory = this.createMockPurchaseOrderStatusHistory();
         this.mockPurchaseOrderCurrentStatusHistory = this.createMockPurchaseOrderCurrentStatusHistory();
         return;
@@ -198,11 +200,18 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         return list;
     }
     
+    private List<PurchaseOrderStatus> createMockPurchaseOrderStatus() {
+        List<PurchaseOrderStatus> list = new ArrayList<PurchaseOrderStatus>();
+        PurchaseOrderStatus o = AccountingMockDataUtility
+                .createPurchaseOrderStatus(VendorPurchasesConst.PURCH_STATUS_QUOTE, "Quote");
+        list.add(o);
+        return list;
+    }
+    
     private List<PurchaseOrderStatus> createMockPurchaseOrderStatuses() {
         List<PurchaseOrderStatus> list = new ArrayList<PurchaseOrderStatus>();
         PurchaseOrderStatus o = AccountingMockDataUtility
-                .createPurchaseOrderStatus(
-                        VendorPurchasesConst.PURCH_STATUS_QUOTE, "Quote");
+                .createPurchaseOrderStatus(VendorPurchasesConst.PURCH_STATUS_QUOTE, "Quote");
         list.add(o);
 
         o = AccountingMockDataUtility.createPurchaseOrderStatus(
