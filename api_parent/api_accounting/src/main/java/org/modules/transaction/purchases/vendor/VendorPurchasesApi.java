@@ -83,12 +83,12 @@ public interface VendorPurchasesApi extends XactApi {
      * 
      * @param vendorId
      *            The id of the vendor
-     * @param itemId
-     *            The id of the inventory item
+     * @param vendorItemNo
+     *            The external vendor item number
      * @return An instance of {@link VendorItemDto}
      * @throws VendorPurchasesApiException
      */
-    VendorItemDto getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException;
+    VendorItemDto getVendorItem(Integer vendorId, String vendorItemNo) throws VendorPurchasesApiException;
 
     /**
      * Retreives the current vendor item information for a given ItemMaster item.

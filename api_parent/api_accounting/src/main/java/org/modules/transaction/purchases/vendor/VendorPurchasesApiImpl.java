@@ -258,19 +258,24 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * 
      * @param vendorId
      *            The id of the vendor
-     * @param itemId
-     *            The id of the inventory item
+     * @param vendorItemNo
+     *            The external vendor item number
      * @return An instance of {@link VendorItemDto}
      * @throws VendorPurchasesApiException
      */
     @Override
-    public VendorItemDto getVendorItem(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
+    public VendorItemDto getVendorItem(Integer vendorId, String vendorItemNo) throws VendorPurchasesApiException {
         this.validateVendorId(vendorId);
-        this.validateItemMasterId(itemId);
+        try {
+            Verifier.verifyNotEmpty(vendorItemNo);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Vendor Item Number is required");
+        }
         
         VendorItemDto criteria = Rmt2PurchaseOrderDtoFactory.createVendorItemInstance(null);
         criteria.setVendorId(vendorId);
-        criteria.setItemId(itemId);
+        criteria.setVendorItemNo(vendorItemNo);
         List<VendorItemDto> results;
         StringBuffer buf = new StringBuffer();
         try {
@@ -281,8 +286,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         } catch (VendorPurchasesDaoException e) {
             buf.append("DAO failed Purchase Order Vendor Item Fetch using vendor Id [");
             buf.append(vendorId);
-            buf.append(" and item id [");
-            buf.append(itemId);
+            buf.append(" and vendor item number [");
+            buf.append(vendorItemNo);
             buf.append("]");
             msg = buf.toString();
             logger.error(msg, e);
