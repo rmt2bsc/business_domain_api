@@ -394,7 +394,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         List<VwVendorItemDto> results;
         StringBuffer buf = new StringBuffer();
         try {
-            results = this.dao.fetchLocalExternalItem(criteria);
+            results = this.dao.fetchInternalExternalItemData(criteria);
             if (results == null) {
                 return null;
             }

@@ -53,7 +53,7 @@ public interface VendorPurchasesDao extends XactDao {
     List<VendorItemDto> fetchVendorItem(VendorItemDto criteria) throws VendorPurchasesDaoException;
     
     /**
-     * Fetches either the item master version or the external vendor item version of an 
+     * Fetches the item master version and the external vendor item version of an 
      * inventory item using vendor id and item id.
      * <p>
      * This can be used to fetch external items specific to a particular vendor.   
@@ -64,7 +64,7 @@ public interface VendorPurchasesDao extends XactDao {
      * @return List of {@link VwVendorItemDto} or null when no data is found.
      * @throws VendorPurchasesDaoException
      */
-    List<VwVendorItemDto> fetchLocalExternalItem(VwVendorItemDto criteria) throws VendorPurchasesDaoException;
+    List<VwVendorItemDto> fetchInternalExternalItemData(VwVendorItemDto criteria) throws VendorPurchasesDaoException;
     
     /**
      * Fetch combined purchase order item and vendor item as it pertains to a given vendor and purchase order.

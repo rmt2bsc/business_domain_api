@@ -167,7 +167,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
     }
 
     /**
-     * Fetches either the item master version or the external vendor item
+     * Fetches the item master version and the external vendor item
      * version of an inventory item using vendor id and item id from the
      * <i>vw_vendor_items</> view.
      * <p>
@@ -180,7 +180,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      * @throws VendorPurchasesDaoException
      */
     @Override
-    public List<VwVendorItemDto> fetchLocalExternalItem(VwVendorItemDto criteria) throws VendorPurchasesDaoException {
+    public List<VwVendorItemDto> fetchInternalExternalItemData(VwVendorItemDto criteria) throws VendorPurchasesDaoException {
         VwVendorItems obj = VendorPurchasesDaoFactory.createCriteria(criteria);
         obj.addOrderBy(VwVendorItems.PROP_DESCRIPTION, VwVendorItems.ORDERBY_ASCENDING);
         obj.addOrderBy(VwVendorItems.PROP_CREDITORID, VwVendorItems.ORDERBY_ASCENDING);
