@@ -371,26 +371,25 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     }
 
     /**
-     * Retreives the current inventory information for a vendor's item.
+     * Retreives the vendor item data of an ItemMaster item.
      * <p>
-     * Either the item master version or the external vendor item information of
-     * an inventory item is targetd.
+     * The external vendor item information of the inventory ItemMaster item is returned.
      * 
      * @param vendorId
      *            The vendor id
-     * @param itemId
-     *            The id of the item to retrieve
+     * @param itemMasterId
+     *            The item master id of the item to retrieve
      * @return An instance of {@link VwVendorItemDto}
      * @throws VendorPurchasesApiException
      */
     @Override
-    public VwVendorItemDto getVendorItemInventoryInfo(Integer vendorId, Integer itemId) throws VendorPurchasesApiException {
-        this.validateVendorItemId(itemId);
+    public VwVendorItemDto getVendorItemInventoryInfo(Integer vendorId, Integer itemMasterId) throws VendorPurchasesApiException {
+        this.validateVendorItemId(itemMasterId);
         this.validateVendorId(vendorId);
         
         VwVendorItemDto criteria = Rmt2PurchaseOrderDtoFactory.createVendorItemExtInstance(null);
         criteria.setVendorId(vendorId);
-        criteria.setItemId(itemId);
+        criteria.setItemId(itemMasterId);
         List<VwVendorItemDto> results;
         StringBuffer buf = new StringBuffer();
         try {
@@ -402,7 +401,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             buf.append("DAO failed Purchase Order local/external Vendor Item Fetch using vendor Id [");
             buf.append(vendorId);
             buf.append(" and item id [");
-            buf.append(itemId);
+            buf.append(itemMasterId);
             buf.append("]");
             msg = buf.toString();
             logger.error(msg, e);
@@ -413,7 +412,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                     "DAO failed Purchase Order local/external Vendor Item Fetch:  too many rows returned using Vendor Id: ");
             buf.append(vendorId);
             buf.append(" and item id [");
-            buf.append(itemId);
+            buf.append(itemMasterId);
             buf.append("]");
             msg = buf.toString();
             logger.error(msg);

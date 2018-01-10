@@ -29,6 +29,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     protected List<VendorItems> mockVendorItems;
     protected List<VwVendorItemPurchaseOrderItem> mockVwVendorItemPurchaseOrderItems;
     protected List<VwVendorItems> mockVwVendorItems;
+    protected List<VwVendorItems> mockVwVendorItem;
     protected List<PurchaseOrderStatus> mockPurchaseOrderStatuses;
     protected List<PurchaseOrderStatusHist> mockPurchaseOrderStatusHistory;
     protected List<PurchaseOrderStatusHist> mockPurchaseOrderCurrentStatusHistory;
@@ -46,6 +47,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         this.mockVendorItems = this.createMockVendorItems();
         this.mockVwVendorItemPurchaseOrderItems = this.createMockVwVendorItemPurchaseOrderItems();
         this.mockVwVendorItems = this.createMockVwVendorItems();
+        this.mockVwVendorItem = this.createMockSingleVwVendorItems();
         this.mockPurchaseOrderStatuses = this.createMockPurchaseOrderStatuses();
         this.mockPurchaseOrderStatusHistory = this.createMockPurchaseOrderStatusHistory();
         this.mockPurchaseOrderCurrentStatusHistory = this.createMockPurchaseOrderCurrentStatusHistory();
@@ -155,25 +157,33 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         return list;
     }
     
+    private List<VwVendorItems> createMockSingleVwVendorItems() {
+        List<VwVendorItems> list = new ArrayList<VwVendorItems>();
+        VwVendorItems o = AccountingMockDataUtility.createVwVendorItems(8880,
+                1111111, 90.00, 100, 0);
+        list.add(o);
+        return list;
+    }
+    
     private List<VwVendorItems> createMockVwVendorItems() {
         List<VwVendorItems> list = new ArrayList<VwVendorItems>();
-        VwVendorItems o = AccountingMockDataUtility.createVwVendorItems(330,
+        VwVendorItems o = AccountingMockDataUtility.createVwVendorItems(8880,
                 1111111, 90.00, 100, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(331, 1111111, 91.00,
+        o = AccountingMockDataUtility.createVwVendorItems(8881, 1111111, 91.00,
                 101, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(332, 1111111, 92.00,
+        o = AccountingMockDataUtility.createVwVendorItems(8882, 1111111, 92.00,
                 102, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(333, 1111111, 93.00,
+        o = AccountingMockDataUtility.createVwVendorItems(8883, 1111111, 93.00,
                 103, 0);
         list.add(o);
 
-        o = AccountingMockDataUtility.createVwVendorItems(334, 1111111, 94.00,
+        o = AccountingMockDataUtility.createVwVendorItems(8884, 1111111, 94.00,
                 104, 0);
         list.add(o);
         return list;
