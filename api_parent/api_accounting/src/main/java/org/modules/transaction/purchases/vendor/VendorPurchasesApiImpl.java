@@ -1304,19 +1304,32 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     /**
      * Calculates the net order quantity of a purchase order item. The net order
      * quantity is basically the order quantity of a purchase order item
-     * available to be applied to inventory based on the current state of a
+     * that is available to be applied to inventory based on the current state of a
      * purchase order item's order quantity, quantity received, and quantity
-     * returned. The formula for this calculation is:
+     * returned. 
      * <p>
+     * <u><b>Legend</b></u><br>
+     * <ol>
+     *    <li>order quantity - The initial quantity of merchandise a warehouse has ordered.</li>
+     *    <li>quantity received - The quantity of merchandise items the warehouse received.</li>
+     *    <li>quantity returned - the quantity amount of merchandise items the warehouse returned.</li>
+     *    <li></li>
+     *    <li></li>
+     * </ol>
+     * The formula for calculating the net order quantity is:
      * <p>
-     * Beginning order quantity - (beginning order quantity - quantity received)
-     * - quantity returned.
+     * Beginning order quantity - (beginning order quantity - quantity received) - quantity returned.
      * 
      * @param poItem
      * @return The net order quantity
      */
-    private int calculateItemNetOrderQty(PurchaseOrderItemDto poItem) {
-        int begOrdQty = poItem.getVendorQtyOnHand();
+    protected int calculateItemNetOrderQty(PurchaseOrderItemDto poItem) {
+        // TODO: Since I changed begOrdQty to obtain its value from qtyOrdered instead 
+        //       of vendorQtyOnHand. verify this against the database view to see what 
+        //       column "QtyOrdered" actually points to in regards to DB view, 
+        //       Vw_Vendor_Item_Purchase_Order_Item. 
+//        int begOrdQty = poItem.getVendorQtyOnHand();
+        int begOrdQty = poItem.getQtyOrdered();
         int returnQty = poItem.getQtyRtn();
         int recvQty = poItem.getQtyRcvd();
         int remainOrdQty = 0;
