@@ -339,7 +339,10 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
      */
     @Override
     public void setVendorQtyOnHand(int value) {
-        if (vipo != null) {
+        if (this.i != null) {
+            this.i.setQty(value);
+        }
+        else if (vipo != null) {
             this.vipo.setQtyOnHand(value);
         }
     }
@@ -351,7 +354,10 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
      */
     @Override
     public int getVendorQtyOnHand() {
-        if (vipo != null) {
+        if (this.i != null) {
+            return this.i.getQty();
+        }
+        else if (vipo != null) {
             return this.vipo.getQtyOnHand();
         }
         return 0;
@@ -364,7 +370,10 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
      */
     @Override
     public void setVendorUnitCost(double value) {
-        if (vipo != null) {
+        if (this.i != null) {
+            this.i.setUnitCost(value);
+        }
+        else if (vipo != null) {
             this.vipo.setUnitCost(value);
         }
     }
@@ -376,7 +385,10 @@ class PurchaseOrderItemRmt2OrmAdapter extends PurchaseOrderRmt2OrmAdapter
      */
     @Override
     public double getVendorUnitCost() {
-        if (vipo != null) {
+        if (this.i != null) {
+            return this.i.getUnitCost();
+        }
+        else if (vipo != null) {
             return this.vipo.getUnitCost();
         }
         return 0;

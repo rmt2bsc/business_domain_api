@@ -1474,35 +1474,43 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            The Id of the target purchase order
      * @return Total amount
      * @throws VendorPurchasesApiException
+     *             data access errors
+     * @throws CannotCalculatePurchaseOrderException
+     *             purchase order has no items or does not exist.
+     * @throws InvalidDataException
+     *             <i>poId</i> is null or zero.
      */
     @Override
     public double calcPurchaseOrderTotal(Integer poId) throws VendorPurchasesApiException {
         this.validatePurchaseOrderId(poId);
-        
+        List<PurchaseOrderItemDto> items = this.getPurchaseOrderItems(poId);
+        if (items == null) {
+            this.msg = "Unable to calculate purchase order total due to purchase order 1) has no items or 2) does not exist";
+            throw new CannotCalculatePurchaseOrderException(this.msg);
+        }
         double total = 0;
-
-        total += this.calculateItemTotal(poId);
-        total += this.calculateTaxes(poId);
-        total += this.calculateOtherFees(poId);
+        total += this.calculateItemTotal(items);
+        total += this.calculateTaxes(items);
+        total += this.calculateOtherFees(items);
         return total;
     }
 
     /**
      * Calculates the purchase order item total which is Qty * Unit Cost.
      * 
-     * @param poId
-     *            The id of the target purchase order
+     * @param items
+     *            the list of purchase order items to sum
      * @return Item Total
      * @throws VendorPurchasesApiException
      */
-    private double calculateItemTotal(int poId) throws VendorPurchasesApiException {
-        List<PurchaseOrderItemDto> items = null;
+    private double calculateItemTotal(List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
+//        List<PurchaseOrderItemDto> items = null;
         double total = 0;
 
-        items = this.getPurchaseOrderItems(poId);
-        if (items == null) {
-            return 0;
-        }
+//        items = this.getPurchaseOrderItems(poId);
+//        if (items == null) {
+//            return 0;
+//        }
         // Cycle through all items summing each as (qty * unit_price)
         for (PurchaseOrderItemDto poi : items) {
             total += poi.getVendorUnitCost() * poi.getQtyOrdered();
@@ -1513,24 +1521,24 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     /**
      * Calculates the purchase order taxes.
      * 
-     * @param poId
-     *            The id of the target purchase order
+     * @param items
+     *            the list of purchase order items to sum
      * @return Purchase order tax amount.
      * @throws VendorPurchasesApiException
      */
-    private double calculateTaxes(int poId) throws VendorPurchasesApiException {
+    private double calculateTaxes(List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
         return 0;
     }
 
     /**
      * Calculate other fees that may be applicable to the purchase order.
      * 
-     * @param poId
-     *            The id of the target purchase order
+     * @param items
+     *            the list of purchase order items to sum
      * @return Other fee total.
      * @throws VendorPurchasesApiException
      */
-    private double calculateOtherFees(int poId) throws VendorPurchasesApiException {
+    private double calculateOtherFees(List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
         return 0;
     }
 
