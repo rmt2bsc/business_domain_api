@@ -129,7 +129,7 @@ public class VendorPurchaseQueryApiTest extends VendorPurchaseApiTestData {
         Assert.assertEquals(TEST_PO_ID, results.getPoId());
         Assert.assertEquals(TEST_XACT_ID, results.getXactId());
         Assert.assertEquals(TEST_CREDITOR_ID, results.getCreditorId());
-        Assert.assertEquals(100.00, results.getPurchaseOrderTotal(), 0);
+        Assert.assertEquals(12500.00, results.getPurchaseOrderTotal(), 0);
         Assert.assertEquals("330-0000-0000-0000", results.getRefNo());
     }
 
