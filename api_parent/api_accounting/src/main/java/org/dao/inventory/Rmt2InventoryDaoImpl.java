@@ -234,11 +234,9 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      *             General data access errors
      */
     @Override
-    public List<ItemMasterTypeDto> fetch(ItemMasterTypeDto criteria)
-            throws InventoryDaoException {
+    public List<ItemMasterTypeDto> fetch(ItemMasterTypeDto criteria) throws InventoryDaoException {
         ItemMasterType obj = InventoryDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(ItemMasterType.PROP_DESCRIPTION,
-                ItemMasterType.ORDERBY_ASCENDING);
+        obj.addOrderBy(ItemMasterType.PROP_DESCRIPTION, ItemMasterType.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<ItemMasterType> results = null;
@@ -253,8 +251,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
 
         List<ItemMasterTypeDto> list = new ArrayList<ItemMasterTypeDto>();
         for (ItemMasterType item : results) {
-            ItemMasterTypeDto dto = Rmt2InventoryDtoFactory
-                    .createItemTypeInstance(item);
+            ItemMasterTypeDto dto = Rmt2InventoryDtoFactory.createItemTypeInstance(item);
             list.add(dto);
         }
         return list;
