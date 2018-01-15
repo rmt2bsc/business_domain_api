@@ -737,7 +737,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            Id of the base purchase order.
      * @param items
      *            All related purchase order items
-     * @return The total number of rows effect by transaction.
+     * @return 1 indicating that update was successful
      * @throws VendorPurchasesApiException
      */
     private int insertPurchaseOrderItems(int poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
@@ -752,7 +752,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 poi.setPoItemId(newPoItemId);
                 rc++;
             }
-            return rc;
+            return VendorPurchasesConst.PO_UPDATE_SUCCESSFUL;
         } catch (Exception e) {
             logger.error(e);
             throw new VendorPurchasesApiException(e);
@@ -797,6 +797,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                     // Perform a complete refresh of all purchase order items.
                     this.deleteAllItems(poId);
                     for (PurchaseOrderItemDto deltaPoi : items) {
+                        deltaPoi.setPoItemId(0);
                         this.validatePurchaseOrderItem(deltaPoi);
                         rc = this.dao.maintainPurchaseOrderItem(deltaPoi);
                     }

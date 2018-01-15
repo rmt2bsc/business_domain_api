@@ -73,7 +73,7 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         return;
     }
     
-    private void makePurchaseOrderNew() {
+    private void setupNewPurchaseOrderDto() {
         this.poDto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(this.mockPurchaseOrder.get(0));
         this.poDto.setPoId(0);
         
@@ -85,11 +85,21 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
             this.poItemsDto.add(dto);
         }
     }
+    
+    private void setupExistingPurchaseOrderDto() {
+        this.poDto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderInstance(this.mockPurchaseOrder.get(0));
+        
+        this.poItemsDto = new ArrayList<>();
+        for (PurchaseOrderItems item : this.mockPurchaseOrderItems) {
+            PurchaseOrderItemDto dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(item);
+            this.poItemsDto.add(dto);
+        }
+    }
 
     @Test
     public void testCreate_PurchaseOrder_Success() {
         // Modify mock data to appear as a new purchase order     
-        this.makePurchaseOrderNew();
+        this.setupNewPurchaseOrderDto();
         
         // Mock method call to create vendor purchase order 
         try {
@@ -135,11 +145,11 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         }
         
         Creditor mockCreditorCriteria = new Creditor();
-        mockCriteria.setCreditorId(TEST_CREDITOR_ID);
+        mockCreditorCriteria.setCreditorId(TEST_CREDITOR_ID);
         try {
             this.mockCreditorFetchSingleResponse.get(0).setCreditorId(TEST_CREDITOR_ID);
             this.mockCreditorFetchSingleResponse.get(0).setCreditorTypeId(AccountingConst.CREDITORTYPE_VENDOR);
-            when(this.mockPersistenceClient.retrieveObject(isA(Creditor.class)))
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCreditorCriteria)))
                             .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
         } catch (Exception e) {
             e.printStackTrace();
@@ -193,4 +203,108 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         Assert.assertEquals(TEST_PO_ID_NEW, results);
     }
 
+    
+    @Test
+    public void testModify_PurchaseOrder_Refresh_Success() {
+        this.setupExistingPurchaseOrderDto();
+        
+        // Mock method call to create vendor purchase order 
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(PurchaseOrder.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("UPdate vendor purchase order test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(PurchaseOrderItems.class), eq(true)))
+              .thenReturn(8880, 8881, 8882, 8883, 8884);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Create vendor purchase order test case setup failed");
+        }
+        
+        PurchaseOrder mockCriteria = new PurchaseOrder();
+        mockCriteria.setPoId(TEST_PO_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(PurchaseOrder.class)))
+                    .thenReturn(this.mockPurchaseOrder);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single vendor purchase orders fetch test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ItemMaster.class)))
+                            .thenReturn(this.mockItemMaster);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Inventory Item Master fetch using criteria test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ItemMasterType.class)))
+                    .thenReturn(this.mockItemMasterType);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Inventory Item Master Type fetch using criteria test case setup failed");
+        }
+        
+        Creditor mockCreditorCriteria = new Creditor();
+        mockCreditorCriteria.setCreditorId(TEST_CREDITOR_ID);
+        try {
+            this.mockCreditorFetchSingleResponse.get(0).setCreditorId(TEST_CREDITOR_ID);
+            this.mockCreditorFetchSingleResponse.get(0).setCreditorTypeId(AccountingConst.CREDITORTYPE_VENDOR);
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCreditorCriteria)))
+                            .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single creditor test case setup failed");
+        }
+        
+        CreditorType mockCredTypeCriteria = new CreditorType();
+        mockCredTypeCriteria.setCreditorTypeId(AccountingConst.CREDITORTYPE_VENDOR);
+        try {
+            this.mockCreditorTypeFetchSingleResponse.get(0).setCreditorTypeId(AccountingConst.CREDITORTYPE_VENDOR);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredTypeCriteria))).thenReturn(
+                            this.mockCreditorTypeFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single creditor type fetch test case setup failed");
+        }
+        
+        PurchaseOrderStatusHist mockPoStatusCriteria = new PurchaseOrderStatusHist();
+        Set<String> customSql = new HashSet<>();
+        customSql.add("\"end_date is null\"");
+        mockPoStatusCriteria.setCustomCriteria(customSql);
+        mockPoStatusCriteria.setPoId(TEST_PO_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockPoStatusCriteria)))
+                    .thenReturn(this.mockPurchaseOrderCurrentStatusHistory);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All vendor purchase order current status fetch test case setup failed");
+        }
+        
+//        try {
+//            when(this.mockPersistenceClient.updateRow(isA(PurchaseOrderStatusHist.class))).thenReturn(1);
+//            when(this.mockPersistenceClient.insertRow(isA(PurchaseOrderStatusHist.class), eq(true)))
+//                .thenReturn(TEST_PO_STATUS_HIST_ID_NEW);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("All vendor purchase order status insert/update test case setup failed");
+//        }
+
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        int results = 0;
+        try {
+            results = api.updatePurchaseOrder(this.poDto, this.poItemsDto);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(VendorPurchasesConst.PO_UPDATE_SUCCESSFUL, results);
+    }
 }
