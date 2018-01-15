@@ -316,8 +316,7 @@ public class VendorPurchasesDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link PurchaseOrderStatusHist}
      */
-    public static final PurchaseOrderStatusHist createCriteria(
-            PurchaseOrderStatusHistDto criteria) {
+    public static final PurchaseOrderStatusHist createCriteria(PurchaseOrderStatusHistDto criteria) {
         PurchaseOrderStatusHist obj = new PurchaseOrderStatusHist();
         if (criteria != null) {
             if (criteria.getPoStatusHistId() > 0) {

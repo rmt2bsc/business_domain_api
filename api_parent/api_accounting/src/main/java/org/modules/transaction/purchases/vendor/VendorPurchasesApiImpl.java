@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.AccountingConst;
 import org.apache.log4j.Logger;
-import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.transaction.purchases.vendor.VendorPurchasesConst;
 import org.dao.transaction.purchases.vendor.VendorPurchasesDao;
@@ -555,7 +554,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         List<PurchaseOrderStatusHistDto> poshList = null;
         try {
             poshList = this.dao.fetchPurchaseOrderHistory(criteria, true);
-            if (poshList == null) {
+            if (poshList == null || poshList.isEmpty()) {
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
@@ -586,7 +585,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         try {
             CreditorDto vendor = null;
             // Vendor must exist in the database.
-            vendor = credApi.getByCreditorId(vendorId);
+            vendor = credApi.get(vendorId);
             return vendor;
         } catch (CreditorApiException e) {
             throw new VendorPurchasesApiException(e);
@@ -743,12 +742,15 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     private int insertPurchaseOrderItems(int poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
         int rc = 0;
+        int newPoItemId = 0;
         try {
             // Apply all items belonging to the base purchase order.
             for (PurchaseOrderItemDto poi : items) {
                 poi.setPoId(poId);
                 this.validatePurchaseOrderItem(poi);
-                rc += this.dao.maintainPurchaseOrderItem(poi);
+                newPoItemId = this.dao.maintainPurchaseOrderItem(poi);
+                poi.setPoItemId(newPoItemId);
+                rc++;
             }
             return rc;
         } catch (Exception e) {
@@ -806,8 +808,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                         try {
                             rc = this.updatePurchaseOrderItem(deltaPoi);
                             // Add item's uncollected order quantity
-                            poUncollectCnt += (deltaPoi.getVendorQtyOnHand()
-                                    - deltaPoi.getQtyRcvd());
+                            poUncollectCnt += (deltaPoi.getVendorQtyOnHand() - deltaPoi.getQtyRcvd());
                         } catch (NotFoundException e) {
                             continue;
                         }
@@ -1234,7 +1235,6 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * @throws VendorPurchasesApiException
      */
     protected void validatePurchaseOrderItem(PurchaseOrderItemDto poi) throws VendorPurchasesApiException {
-        PurchaseOrder po = null;
         try {
             if (poi == null) {
                 this.msg = "Purchase order object is invalid";
@@ -1248,7 +1248,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 throw new PurchaseOrderItemValidationException(this.msg);
             }
             // Purchase order id must be exist in the system
-            po = (PurchaseOrder) this.getPurchaseOrder(poi.getPoId());
+            PurchaseOrderDto po = (PurchaseOrderDto) this.getPurchaseOrder(poi.getPoId());
             if (po == null) {
                 this.msg = "Purchase order must be exist in the system";
                 logger.error(this.msg);

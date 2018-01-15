@@ -499,8 +499,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
             po.setUserId(ut.getLoginId());
             poId = this.client.insertRow(po, true);
             po.setPoId(poId);
-            msg = "purchase order, " + poId
-                    + " , was inserted successfully to the database";
+            msg = "purchase order, " + poId + " , was inserted successfully to the database";
             logger.info(msg);
             return poId;
         } catch (Exception e) {
@@ -649,7 +648,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
      *            The id of the target purchase order
      * @param newStatusId
      *            The id of status that is to be assigned to the purchase order.
-     * @return the id of the new purchase order status histroy item
+     * @return the id of the new purchase order status history item
      * @throws VendorPurchasesDaoException
      */
     private int createPurchaseOrderStatusHist(int poId, int newStatusId) throws VendorPurchasesDaoException {

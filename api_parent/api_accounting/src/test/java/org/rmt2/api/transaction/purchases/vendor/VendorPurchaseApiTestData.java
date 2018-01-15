@@ -3,6 +3,8 @@ package org.rmt2.api.transaction.purchases.vendor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.mapping.orm.rmt2.ItemMaster;
+import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
 import org.dao.mapping.orm.rmt2.PurchaseOrderStatus;
@@ -35,6 +37,8 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     protected List<PurchaseOrderStatus> mockPurchaseOrderStatus;
     protected List<PurchaseOrderStatusHist> mockPurchaseOrderStatusHistory;
     protected List<PurchaseOrderStatusHist> mockPurchaseOrderCurrentStatusHistory;
+    protected List<ItemMaster> mockItemMaster;
+    protected List<ItemMasterType> mockItemMasterType;
 
     /**
      * @throws java.lang.Exception
@@ -55,6 +59,8 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         this.mockPurchaseOrderStatus = this.createMockPurchaseOrderStatus();
         this.mockPurchaseOrderStatusHistory = this.createMockPurchaseOrderStatusHistory();
         this.mockPurchaseOrderCurrentStatusHistory = this.createMockPurchaseOrderCurrentStatusHistory();
+        this.mockItemMaster = this.createMockItemMaster();
+        this.mockItemMasterType = this.createMockItemMasterType();
         return;
     }
 
@@ -271,6 +277,21 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
                 null);
         list.add(o);
 
+        return list;
+    }
+    
+    private List<ItemMaster> createMockItemMaster() {
+        List<ItemMaster> list = new ArrayList<ItemMaster>();
+        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 2,
+                "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
+        list.add(p);
+        return list;
+    }
+    
+    private List<ItemMasterType> createMockItemMasterType() {
+        List<ItemMasterType> list = new ArrayList<ItemMasterType>();
+        ItemMasterType p = AccountingMockDataUtility.createMockOrmItemMasterType(2, "Item Type Merchandise");
+        list.add(p);
         return list;
     }
 }
