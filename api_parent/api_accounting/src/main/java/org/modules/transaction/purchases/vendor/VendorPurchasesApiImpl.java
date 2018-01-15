@@ -639,10 +639,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     @Override
     public int updatePurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
             throws VendorPurchasesApiException {
-
         this.validatePurchaseOrder(po);
         this.validatePurchaseOrderItems(items);
-        
         int rc = 0;
         if (po.getPoId() == 0) {
             // Returns new Purchase order id
@@ -675,8 +673,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         this.insertPurchaseOrderItems(poId, items);
 
         // Always assign a status of "Quote" for a new purchase order.
-        this.setPurchaseOrderStatus(poId,
-                VendorPurchasesConst.PURCH_STATUS_QUOTE);
+        this.setPurchaseOrderStatus(poId, VendorPurchasesConst.PURCH_STATUS_QUOTE);
         return poId;
     }
 
@@ -1445,8 +1442,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             xact = this.getXactById(po.getXactId());
             this.reverse(xact, null);
             // Associate transaction with creditor activity
-            this.createSubsidiaryActivity(po.getCreditorId(), xact.getXactId(),
-                    xact.getXactAmount());
+            this.createSubsidiaryActivity(po.getCreditorId(), xact.getXactId(), xact.getXactAmount());
         } catch (XactApiException e) {
             throw new VendorPurchasesApiException(e);
         }
@@ -1456,14 +1452,11 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
 
         // Flagg Purchase Order as either Returned or Partially Returned
         if (rc >= 1) {
-            this.setPurchaseOrderStatus(poId,
-                    VendorPurchasesConst.PURCH_STATUS_PARTRET);
+            this.setPurchaseOrderStatus(poId, VendorPurchasesConst.PURCH_STATUS_PARTRET);
         }
         else {
-            this.setPurchaseOrderStatus(poId,
-                    VendorPurchasesConst.PURCH_STATUS_RETURN);
+            this.setPurchaseOrderStatus(poId, VendorPurchasesConst.PURCH_STATUS_RETURN);
         }
-
     }
 
     /**
