@@ -61,7 +61,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     private List<PurchaseOrder> createMockSinglePurchaseOrder() {
         List<PurchaseOrder> list = new ArrayList<PurchaseOrder>();
         PurchaseOrder o = AccountingMockDataUtility.createPurchaseOrder(330,
-                7000, 1111111, 100.00, "330-0000-0000-0000");
+                7000, 1111111, 12500.00, "330-0000-0000-0000");
         list.add(o);
         return list;
     }
