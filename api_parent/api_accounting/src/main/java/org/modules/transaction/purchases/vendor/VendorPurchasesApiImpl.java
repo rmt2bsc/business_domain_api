@@ -1237,37 +1237,56 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     protected void validatePurchaseOrderItem(PurchaseOrderItemDto poi) throws VendorPurchasesApiException {
         try {
-            if (poi == null) {
+            try {
+                Verifier.verifyNotNull(poi);
+            }
+            catch (VerifyException e) {
                 this.msg = "Purchase order object is invalid";
                 logger.error(this.msg);
                 throw new PurchaseOrderItemValidationException(this.msg);
             }
+
             // Purchase order id must be greater than zero for existing PO items
-            if (poi.getPoId() < 0) {
+            try {
+                Verifier.verifyNotNegative(poi.getPoId());
+            }
+            catch (VerifyException e) {
                 this.msg = "Purchase order id must be greater than zero for existing PO items";
                 logger.error(this.msg);
                 throw new PurchaseOrderItemValidationException(this.msg);
             }
+
             // Purchase order id must be exist in the system
             PurchaseOrderDto po = (PurchaseOrderDto) this.getPurchaseOrder(poi.getPoId());
-            if (po == null) {
+            try {
+                Verifier.verifyNotNull(po);
+            }
+            catch (VerifyException e) {
                 this.msg = "Purchase order must be exist in the system";
                 logger.error(this.msg);
                 throw new PurchaseOrderItemValidationException(this.msg);
             }
+
             // Item master id must be valid and greater than zero.
-            if (poi.getItemId() <= 0) {
+            try {
+                Verifier.verifyPositive(poi.getItemId());
+            }
+            catch (VerifyException e) {
                 this.msg = "Item master id for purchase order must be valid and greater than zero";
                 logger.error(this.msg);
                 throw new PurchaseOrderItemValidationException(this.msg);
             }
+
             // Get Item Master item.
             InventoryApiFactory f = new InventoryApiFactory();
             InventoryApi invApi = f.createApi(getSharedDao());
             ItemMasterDto im = null;
             ItemMasterTypeDto imt = null;
             im = invApi.getItemById(poi.getItemId());
-            if (im == null) {
+            try {
+                Verifier.verifyNotNull(im);
+            }
+            catch (VerifyException e) {
                 this.msg = "Item master record for item, " + poi.getItemId();
                 logger.error(this.msg);
                 throw new PurchaseOrderItemValidationException(this.msg);
@@ -1282,7 +1301,10 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             }
 
             // Qty ordered must be >= to zero.
-            if (poi.getQtyOrdered() < 0) {
+            try {
+                Verifier.verifyPositive(poi.getQtyOrdered());
+            }
+            catch (VerifyException e) {
                 this.msg = "Qty ordered must be greater than or equal to zero";
                 logger.error(this.msg);
                 throw new PurchaseOrderItemValidationException(this.msg);
