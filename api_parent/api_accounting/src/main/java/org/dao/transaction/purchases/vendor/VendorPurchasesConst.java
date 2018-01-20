@@ -17,8 +17,8 @@ public class VendorPurchasesConst {
     /** Quote Purchases Status Code */
     public static final int PURCH_STATUS_QUOTE = 1;
 
-    /** Finalized Purchases Status Code */
-    public static final int PURCH_STATUS_FINALIZE = 2;
+    /** Submitted (Finalized) Purchases Status Code */
+    public static final int PURCH_STATUS_SUBMITTED = 2;
 
     /** Received Purchases Status Code */
     public static final int PURCH_STATUS_RECEIVED = 3;

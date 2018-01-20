@@ -118,7 +118,7 @@ class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
         List<PurchaseOrderItems> results = null;
         try {
             results = this.client.retrieveList(obj);
-            if (results == null) {
+            if (results == null || results.isEmpty()) {
                 return null;
             }
         } catch (Exception e) {

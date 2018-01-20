@@ -76,7 +76,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
     private List<PurchaseOrder> createMockPurchaseOrders() {
         List<PurchaseOrder> list = new ArrayList<PurchaseOrder>();
         PurchaseOrder o = AccountingMockDataUtility.createPurchaseOrder(330,
-                7000, 1111111, 100.00, "330-0000-0000-0000");
+                7000, 1111111, 12500.00, "330-0000-0000-0000");
         list.add(o);
 
         o = AccountingMockDataUtility.createPurchaseOrder(331, 7000, 1111111,
@@ -221,7 +221,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         list.add(o);
 
         o = AccountingMockDataUtility.createPurchaseOrderStatus(
-                VendorPurchasesConst.PURCH_STATUS_FINALIZE, "Finalize");
+                VendorPurchasesConst.PURCH_STATUS_SUBMITTED, "Finalize");
         list.add(o);
 
         o = AccountingMockDataUtility.createPurchaseOrderStatus(
@@ -273,7 +273,7 @@ public class VendorPurchaseApiTestData extends TransactionApiTestData {
         list.add(o);
 
         o = AccountingMockDataUtility.createPurchaseOrderStatusHist(4,
-                VendorPurchasesConst.PURCH_STATUS_FINALIZE, 330, "2017-04-04",
+                VendorPurchasesConst.PURCH_STATUS_SUBMITTED, 330, "2017-04-04",
                 null);
         list.add(o);
 

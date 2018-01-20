@@ -140,7 +140,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
         List<ItemMaster> results = null;
         try {
             results = this.client.retrieveList(obj);
-            if (results == null) {
+            if (results == null || results.isEmpty()) {
                 return null;
             }
         } catch (DatabaseException e) {

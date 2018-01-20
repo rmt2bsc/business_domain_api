@@ -695,7 +695,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         // Submitted.
         PurchaseOrderStatusHistDto posh = this.getCurrentPurchaseOrderHistory(po.getPoId());
         int statusId = posh.getPoStatusId();
-        if (statusId != VendorPurchasesConst.PURCH_STATUS_QUOTE && statusId != VendorPurchasesConst.PURCH_STATUS_FINALIZE) {
+        if (statusId != VendorPurchasesConst.PURCH_STATUS_QUOTE && statusId != VendorPurchasesConst.PURCH_STATUS_SUBMITTED) {
             buf.append("Purchase order #");
             buf.append(po.getPoId());
             buf.append(" was denied updates.   Must be in Quote or Submitted status.");
@@ -724,7 +724,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         // Determine if purchase order is ready to be placed in "Received"
         // status. The purchase order quantity of all items must have been
         // received and the current purchase order status must be "Submitted".
-        if (rc == VendorPurchasesConst.PO_UPDATE_RECEIVED && statusId == VendorPurchasesConst.PURCH_STATUS_FINALIZE) {
+        if (rc == VendorPurchasesConst.PO_UPDATE_RECEIVED && statusId == VendorPurchasesConst.PURCH_STATUS_SUBMITTED) {
             this.setPurchaseOrderStatus(po.getPoId(), VendorPurchasesConst.PURCH_STATUS_RECEIVED);
         }
         return rc;
@@ -746,7 +746,10 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         try {
             // Apply all items belonging to the base purchase order.
             for (PurchaseOrderItemDto poi : items) {
-                poi.setPoId(poId);
+                // if poi is null then validatePurchaseOrderItem() will handle the validation.
+                if (poi != null) {
+                    poi.setPoId(poId);    
+                }
                 this.validatePurchaseOrderItem(poi);
                 newPoItemId = this.dao.maintainPurchaseOrderItem(poi);
                 poi.setPoItemId(newPoItemId);
@@ -804,7 +807,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                     rc = VendorPurchasesConst.PO_UPDATE_SUCCESSFUL;
                     break;
 
-                case VendorPurchasesConst.PURCH_STATUS_FINALIZE:
+                case VendorPurchasesConst.PURCH_STATUS_SUBMITTED:
                     for (PurchaseOrderItemDto deltaPoi : items) {
                         try {
                             rc = this.updatePurchaseOrderItem(deltaPoi);
@@ -1111,7 +1114,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 }
                 break;
 
-            case VendorPurchasesConst.PURCH_STATUS_FINALIZE:
+            case VendorPurchasesConst.PURCH_STATUS_SUBMITTED:
                 if (currentStatusId != VendorPurchasesConst.PURCH_STATUS_QUOTE) {
                     this.msg = "Purchase order must be in Quote status before changing to Submitted";
                     error = true;
@@ -1119,7 +1122,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 break;
 
             case VendorPurchasesConst.PURCH_STATUS_RECEIVED:
-                if (currentStatusId != VendorPurchasesConst.PURCH_STATUS_FINALIZE) {
+                if (currentStatusId != VendorPurchasesConst.PURCH_STATUS_SUBMITTED) {
                     this.msg = "Purchase order must be in Submitted status before changing to Received";
                     error = true;
                 }
@@ -1128,7 +1131,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             case VendorPurchasesConst.PURCH_STATUS_CANCEL:
                 switch (currentStatusId) {
                     case VendorPurchasesConst.PURCH_STATUS_QUOTE:
-                    case VendorPurchasesConst.PURCH_STATUS_FINALIZE:
+                    case VendorPurchasesConst.PURCH_STATUS_SUBMITTED:
                         break;
 
                     default:
@@ -1248,10 +1251,10 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
 
             // Purchase order id must be greater than zero for existing PO items
             try {
-                Verifier.verifyNotNegative(poi.getPoId());
+                Verifier.verifyPositive(poi.getPoId());
             }
             catch (VerifyException e) {
-                this.msg = "Purchase order id must be greater than zero for existing PO items";
+                this.msg = "Item's purchase order id must be greater than zero";
                 logger.error(this.msg);
                 throw new PurchaseOrderItemValidationException(this.msg);
             }
@@ -1578,8 +1581,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * @throws VendorPurchasesApiException
      */
     @Override
-    public int submitPurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items)
-            throws VendorPurchasesApiException {
+    public int submitPurchaseOrder(PurchaseOrderDto po, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
         this.validatePurchaseOrder(po);
         this.validatePurchaseOrderItems(items);
         
@@ -1587,7 +1589,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         int xactId = 0;
         XactDto xact = null;
 
-        this.verifyStatusChange(po.getPoId(), VendorPurchasesConst.PURCH_STATUS_FINALIZE);
+        this.verifyStatusChange(po.getPoId(), VendorPurchasesConst.PURCH_STATUS_SUBMITTED);
         this.updatePurchaseOrder(po, items);
         poTotal = this.calcPurchaseOrderTotal(po.getPoId());
         this.vendorId = po.getCreditorId();
@@ -1609,7 +1611,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             this.dao.maintainPurchaseOrder(po);
 
             // Change purchase order status to finalized
-            this.setPurchaseOrderStatus(po.getPoId(), VendorPurchasesConst.PURCH_STATUS_FINALIZE);
+            this.setPurchaseOrderStatus(po.getPoId(), VendorPurchasesConst.PURCH_STATUS_SUBMITTED);
 
             return xactId;
         } catch (Exception e) {
@@ -1644,7 +1646,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
 
         // Reverse transaction if purchase order has been submitted and a
         // transaction has been assigned.
-        if (currentStatus == VendorPurchasesConst.PURCH_STATUS_FINALIZE && po.getXactId() > 0) {
+        if (currentStatus == VendorPurchasesConst.PURCH_STATUS_SUBMITTED && po.getXactId() > 0) {
             try {
                 xact = this.getXactById(po.getXactId());
                 this.reverse(xact, null);
@@ -1680,7 +1682,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi credApi = f.createCreditorApi(this.getSharedDao());
         try {
-            CreditorDto creditor = credApi.getByCreditorId(this.vendorId);
+            CreditorDto creditor = credApi.get(this.vendorId);
             if (creditor == null) {
                 this.msg = "Unable to create vendor purchase order transction due to vendor's profile is not found in the database using creditor id: "
                         + this.vendorId;
