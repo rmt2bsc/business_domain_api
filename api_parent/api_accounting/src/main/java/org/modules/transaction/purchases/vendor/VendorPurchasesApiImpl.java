@@ -558,8 +558,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 return null;
             }
         } catch (VendorPurchasesDaoException e) {
-            msg = "Unable to retrieve current status for purchase order, "
-                    + poId;
+            msg = "Unable to retrieve current status for purchase order, " + poId;
             logger.error(msg, e);
             throw new VendorPurchasesApiException(msg, e);
         }
@@ -1176,7 +1175,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *             if the vendor value is less than or equal to zero, or vendor
      *             does not exist, or creditor is not a vendor type.
      */
-    protected void validatePurchaseOrder(PurchaseOrderDto po) throws VendorPurchasesApiException {
+    @Override
+    public void validatePurchaseOrder(PurchaseOrderDto po) throws VendorPurchasesApiException {
         try {
             Verifier.verifyNotNull(po);
         }
@@ -1238,7 +1238,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            The purchase order item being evaluated.
      * @throws VendorPurchasesApiException
      */
-    protected void validatePurchaseOrderItem(PurchaseOrderItemDto poi) throws VendorPurchasesApiException {
+    @Override
+    public void validatePurchaseOrderItem(PurchaseOrderItemDto poi) throws VendorPurchasesApiException {
         try {
             try {
                 Verifier.verifyNotNull(poi);

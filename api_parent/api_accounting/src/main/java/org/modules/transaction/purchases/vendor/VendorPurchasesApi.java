@@ -268,4 +268,23 @@ public interface VendorPurchasesApi extends XactApi {
      */
     void returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException;
 
+    /**
+     * Validates base purchase order data.
+     * 
+     * @param po
+     *            Purchase order object containing the base data.
+     * @throws VendorPurchasesApiException
+     *             if the vendor value is less than or equal to zero, or vendor
+     *             does not exist, or creditor is not a vendor type.
+     */
+    void validatePurchaseOrder(PurchaseOrderDto po) throws VendorPurchasesApiException;
+    
+    /**
+     * Validates an item belonging to a purchase order.
+     * 
+     * @param poi
+     *            The purchase order item being evaluated.
+     * @throws VendorPurchasesApiException
+     */
+    void validatePurchaseOrderItem(PurchaseOrderItemDto poi) throws VendorPurchasesApiException;
 }
