@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modules.inventory.InventoryConst;
+import org.modules.transaction.purchases.vendor.CannotChangePurchaseOrderStatusException;
 import org.modules.transaction.purchases.vendor.PurchaseOrderItemValidationException;
 import org.modules.transaction.purchases.vendor.PurchaseOrderValidationException;
 import org.modules.transaction.purchases.vendor.VendorPurchasesApi;
@@ -769,5 +770,31 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
             Assert.fail("Test failed due to unexpected exception thrown");
         }
         Assert.assertEquals(TEST_XACT_ID, results);
+    }
+    
+    @Test
+    public void testError_Submit_PurchaseOrder_InvalidCurrentStatus() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockTransactionActivity();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_RETURN);        
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        
+        VendorPurchasesApi apiSpy = Mockito.spy(api);
+        try {
+            doNothing().when(apiSpy).validatePurchaseOrder(isA(PurchaseOrderDto.class));
+        } catch (VendorPurchasesApiException e1) {
+            e1.printStackTrace();
+        }
+        
+        try {
+            apiSpy.submitPurchaseOrder(this.poDto, this.poItemsDto);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof CannotChangePurchaseOrderStatusException);
+        }
     }
 }
