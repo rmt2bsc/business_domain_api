@@ -1178,50 +1178,39 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Update Item Master test case setup failed");
         }
         
-        ItemMasterStatusHist mockItemStatusHist = this.createMockSingleItemStatusHistFetchResponse(InventoryConst.ITEM_STATUS_INSRVC).get(0);
+        ItemMasterStatusHist mockItemStatusHist = 
+                this.createMockSingleItemStatusHistFetchResponse(InventoryConst.ITEM_STATUS_INSRVC).get(0);
         try {
             when(this.mockPersistenceClient.retrieveObject(any(ItemMasterStatusHist.class))).thenReturn(mockItemStatusHist);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Item status history fetch test case setup failed");
+            Assert.fail("Item status history fetch test case setup failed");
         }
         
         try {
-            ItemMasterStatusDto imsCriteria = Rmt2InventoryDtoFactory
-                    .createItemStatusInstance(null);
+            ItemMasterStatusDto imsCriteria = Rmt2InventoryDtoFactory.createItemStatusInstance(null);
             imsCriteria.setEntityId(InventoryConst.ITEM_STATUS_REPLACE);
-            List<ItemMasterStatus> mockItemStatusResp = this
-                    .createMockSingleItemStatusFetchResponse(InventoryConst.ITEM_STATUS_INSRVC);
-            when(this.mockPersistenceClient.retrieveList(eq(imsCriteria)))
-                    .thenReturn(mockItemStatusResp);
+            List<ItemMasterStatus> mockItemStatusResp = 
+                    this.createMockSingleItemStatusFetchResponse(InventoryConst.ITEM_STATUS_INSRVC);
+            when(this.mockPersistenceClient.retrieveList(eq(imsCriteria))).thenReturn(mockItemStatusResp);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Verify item status fetch for pull inventory test case setup failed");
+            Assert.fail("Verify item status fetch for pull inventory test case setup failed");
         }
         
         try {
             when(this.mockPersistenceClient.updateRow(any(ItemMasterStatusHist.class))).thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Item master status history update test case setup failed");
+            Assert.fail("Item master status history update test case setup failed");
         }
         try {
             when(this.mockPersistenceClient.insertRow(any(ItemMasterStatusHist.class), any(Boolean.class))).thenReturn(5555);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Item master status history insert test case setup failed");
+            Assert.fail("Item master status history insert test case setup failed");
         }
-        try {
-            when(this.mockPersistenceClient.updateRow(any(ItemMaster.class))).thenReturn(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(
-                    "Item master update test case setup failed");
-        }
+
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         double changeValue = 0;
