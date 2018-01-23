@@ -1215,18 +1215,100 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApi apiSpy = Mockito.spy(api);
         
         try {
-            doThrow(DatabaseException.class).when(apiSpy).getPurchaseOrder(isA(Integer.class));
+            doThrow(VendorPurchasesApiException.class).when(apiSpy).getPurchaseOrder(isA(Integer.class));
         } catch (VendorPurchasesApiException e1) {
             e1.printStackTrace();
             Assert.fail("Setting up spy mock to throw DatabaseException");
         }
         try {
-            api.returnPurchaseOrder(TEST_PO_ID, this.poItemsDto);
+            apiSpy.returnPurchaseOrder(TEST_PO_ID, this.poItemsDto);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof VendorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof NetItemQuantityReceivedException);
+        }
+    }
+    
+    @Test
+    public void testError_Reverse_PurchaseOrder_InvalidCurrentStatus() {
+        this.setupExistingPurchaseOrderDto();
+        this.poItemsDto = new ArrayList<>();
+        PurchaseOrderItems o = AccountingMockDataUtility.createPurchaseOrderItem(8880, 330, 100, 10.00, 25, 5, 10);
+        PurchaseOrderItemDto dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(o);
+        this.poItemsDto.add(dto);
+
+        o = AccountingMockDataUtility.createPurchaseOrderItem(8881, 330, 101, 25.00, 10, 10, 10);
+        dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(o);
+        this.poItemsDto.add(dto);
+
+        o = AccountingMockDataUtility.createPurchaseOrderItem(8882, 330, 102, 30.00, 15, 15, 15);
+        dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(o);
+        this.poItemsDto.add(dto);
+
+        o = AccountingMockDataUtility.createPurchaseOrderItem(8883, 330, 103, 40.00, 15, 15, 15);
+        dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(o);
+        this.poItemsDto.add(dto);
+
+        o = AccountingMockDataUtility.createPurchaseOrderItem(8884, 330, 104, 50.00, 15, 15, 15);
+        dto = Rmt2PurchaseOrderDtoFactory.createPurchaseOrderItemInstance(o);
+        this.poItemsDto.add(dto);
+      
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_CANCEL); 
+        
+        // Mock transaction queries
+        double poAmount = 9050.00;
+        try {
+            // Original Transaction
+            this.mockXactFetchSingleResponse.get(0).setId(TEST_XACT_ID);
+            this.mockXactFetchSingleResponse.get(0).setXactAmount(poAmount);
+            
+            // Reverse Transaction
+            List<VwXactList> reverseXact = new ArrayList<VwXactList>();
+            VwXactList o2 = AccountingMockDataUtility.createMockOrmXact(TEST_NEW_XACT_ID,
+                    XactConst.XACT_TYPE_CREDITOR_PURCHASE,
+                    XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                    RMT2Date.stringToDate("2017-01-13"), 
+                    (poAmount * -1), 
+                    200, 
+                    "1111-1111-1111-1111");
+            reverseXact.add(o2);
+            
+            when(this.mockPersistenceClient.retrieveList(isA(VwXactList.class)))
+                    .thenReturn(this.mockXactFetchSingleResponse, reverseXact);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+        
+        // Mock base transaction creation
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true))).thenReturn(TEST_NEW_XACT_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up reverse purchase order transaction insert case failed");
+        }
+        
+        // Mock creditor transaction history post
+        CreditorActivity mockCreditorActivity = new CreditorActivity();
+        mockCreditorActivity.setCreditorId(TEST_CREDITOR_ID);
+        mockCreditorActivity.setXactId(TEST_NEW_XACT_ID);
+        mockCreditorActivity.setAmount(poAmount * -1);
+        try {
+            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(TEST_NEW_CREDITOR_ACTIV_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up creditor activity insert case failed");
+        }
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.returnPurchaseOrder(TEST_PO_ID, this.poItemsDto);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof CannotChangePurchaseOrderStatusException);
         }
     }
     
