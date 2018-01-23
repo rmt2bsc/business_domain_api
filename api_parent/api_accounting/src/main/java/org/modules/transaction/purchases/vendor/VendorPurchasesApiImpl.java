@@ -1408,7 +1408,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 oldPoi.setQtyRtn(oldPoi.getQtyRtn() + qtyRtn);
                 this.dao.maintainPurchaseOrderItem(oldPoi);
 
-                // Keep track of the order quantity for each item after thr
+                // Keep track of the order quantity for each item after the
                 // return quantity is applied.
                 totalOrderQty += this.calculateItemNetOrderQty(oldPoi);
 
@@ -1459,7 +1459,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         XactDto xact = null;
         int rc = 0;
 
-        // Check to see if it is okay to cancel this PO. An exception will be
+        // Check to see if it is okay to return this PO. An exception will be
         // thrown if chech fails!
         this.verifyStatusChange(poId, VendorPurchasesConst.PURCH_STATUS_RETURN);
 
