@@ -892,7 +892,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                 InventoryApiFactory f = new InventoryApiFactory();
                 InventoryApi invApi = f.createApi(getSharedDao());
                 ItemMasterDto im = invApi.getItemById(oldPoi.getItemId());
-                adjQtyOnHand = im.getQtyOnHand() + this.calculateItemNetOrderQty(oldPoi);
+                adjQtyOnHand = im.getQtyOnHand() + this.calculateItemNetOrderQtyReceived(oldPoi);
                 im.setQtyOnHand(adjQtyOnHand);
                 invApi.updateItemMaster(im);
             } catch (InventoryApiException e) {
@@ -1146,7 +1146,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
                         break;
 
                     default:
-                        this.msg = "Purchase order must be in Received status before changing to Returned";
+                        this.msg = "Purchase order must be in either Received status or Partial Return status before changing to Returned";
                         error = true;
                 } // end inner switch
                 break;
@@ -1327,27 +1327,26 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
 
     /**
      * Calculates the net order quantity of a purchase order item. The net order
-     * quantity is basically the order quantity of a purchase order item
-     * that is available to be applied to inventory based on the current state of a
+     * quantity is basically the order quantity of a purchase order item that is
+     * available to be applied to inventory based on the current state of a
      * purchase order item's order quantity, quantity received, and quantity
-     * returned. 
+     * returned.
      * <p>
      * <u><b>Legend</b></u><br>
      * <ol>
      *    <li>order quantity - The initial quantity of merchandise a warehouse has ordered.</li>
      *    <li>quantity received - The quantity of merchandise items the warehouse received.</li>
      *    <li>quantity returned - the quantity amount of merchandise items the warehouse returned.</li>
-     *    <li></li>
-     *    <li></li>
      * </ol>
      * The formula for calculating the net order quantity is:
      * <p>
+     * This was the old calculation obtained from an accounting boodk:
      * Beginning order quantity - (beginning order quantity - quantity received) - quantity returned.
      * 
      * @param poItem
      * @return The net order quantity
      */
-    protected int calculateItemNetOrderQty(PurchaseOrderItemDto poItem) {
+    protected int calculateItemNetOrderQtyReceived(PurchaseOrderItemDto poItem) {
         // TODO: Since I changed begOrdQty to obtain its value from qtyOrdered instead 
         //       of vendorQtyOnHand. verify this against the database view to see what 
         //       column "QtyOrdered" actually points to in regards to DB view, 
@@ -1356,15 +1355,19 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         int begOrdQty = poItem.getQtyOrdered();
         int returnQty = poItem.getQtyRtn();
         int recvQty = poItem.getQtyRcvd();
+        
+        if (recvQty < returnQty) {
+            throw new NetItemQuantityReceivedException(
+                    "The return quantity cannot exceed the received quantity of a purchase order item");
+        }
         int remainOrdQty = 0;
         int adjOrdQty = 0;
-        int netOrdQty = 0;
-
+        int netOrdQtyReceived = 0;
+        
         remainOrdQty = begOrdQty - recvQty;
         adjOrdQty = begOrdQty - remainOrdQty;
-        netOrdQty = adjOrdQty - returnQty;
-
-        return netOrdQty;
+        netOrdQtyReceived = adjOrdQty - returnQty;
+        return netOrdQtyReceived;
     }
 
     /**
@@ -1383,51 +1386,50 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *             error occurrs.
      */
     private int pullPurchaseOrderInventory(List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
-        int availQty = 0;
+        int netItemQtyReceived = 0;
         int qtyRtn = 0;
-        int totalOrderQty = 0;
-        PurchaseOrderItemDto oldPoi = null;
-        StringBuffer buf = new StringBuffer();
+        int totalNetItemQtyReceived = 0;
         try {
             // Apply all items belonging to the base purchase order.
-            for (PurchaseOrderItemDto deltaPoi : items) {
-                oldPoi = this.getPurchaseOrderItem(deltaPoi.getItemId());
-                availQty = this.calculateItemNetOrderQty(oldPoi);
-                qtyRtn = deltaPoi.getQtyRtn();
-                if (availQty < qtyRtn) {
-                    buf.append("Return Quantity (");
-                    buf.append(qtyRtn);
-                    buf.append(") cannot exceed Available Quantity(");
-                    buf.append(availQty);
-                    buf.append(") for purchase order");
-                    this.msg = buf.toString();
-                    logger.error(this.msg);
-                    throw new VendorPurchasesApiException(this.msg);
-                }
-
-                oldPoi.setQtyRtn(oldPoi.getQtyRtn() + qtyRtn);
-                this.dao.maintainPurchaseOrderItem(oldPoi);
+            for (PurchaseOrderItemDto item : items) {
+                netItemQtyReceived = this.calculateItemNetOrderQtyReceived(item);
+                qtyRtn = item.getQtyRtn();
+                this.dao.maintainPurchaseOrderItem(item);
 
                 // Keep track of the order quantity for each item after the
                 // return quantity is applied.
-                totalOrderQty += this.calculateItemNetOrderQty(oldPoi);
+                totalNetItemQtyReceived += netItemQtyReceived;
 
-                // Pull item from inventory based on the amount request
-                // (qtyRtn).
-                try {
-                    InventoryApiFactory f = new InventoryApiFactory();
-                    InventoryApi invApi = f.createApi(getSharedDao());
-                    invApi.pullInventory(oldPoi.getItemId(), qtyRtn);
-                } catch (InventoryApiException e) {
-                    throw new VendorPurchasesApiException(e);
-                }
+                // Pull item from inventory based on the amount request (qtyRtn).
+                this.removeInventoryForPurchaseOrderItem(item.getItemId(), qtyRtn);
             } // end for
-            return totalOrderQty;
+            return totalNetItemQtyReceived;
         } catch (Exception e) {
             throw new VendorPurchasesApiException(e);
         }
     }
 
+    /**
+     * Validates base purchase order data.
+     * 
+     * @param po
+     *            Purchase order object containing the base data.
+     * @throws VendorPurchasesApiException
+     *             if the vendor value is less than or equal to zero, or vendor
+     *             does not exist, or creditor is not a vendor type.
+     */
+    @Override
+    public void removeInventoryForPurchaseOrderItem(Integer itemMasterId, Integer invCount) 
+            throws VendorPurchasesApiException {
+        try {
+            InventoryApiFactory f = new InventoryApiFactory();
+            InventoryApi invApi = f.createApi(getSharedDao());
+            invApi.pullInventory(itemMasterId, invCount);
+        } catch (InventoryApiException e) {
+            throw new VendorPurchasesApiException(e);
+        }
+    }
+    
     /**
      * Creates a purchases, returns, and allowances transaction for a purchase
      * order.
@@ -1446,16 +1448,20 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      *            The id of target purchase order
      * @param items
      *            The items that are to be returned.
+     * @return 0 when all items of the purchase order have been returned; 1 or
+     *         greater when an order quantity exists for one or more items after
+     *         the returns are applied.
      * @throws VendorPurchasesApiException
      *             When the return quantity exceeds the quantity available for
      *             an item, database error occurs, or a system error occurs.
      */
     @Override
-    public void returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
+    public int returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException {
         this.validatePurchaseOrderId(poId);
         this.validatePurchaseOrderItems(items);
         
         PurchaseOrderDto po = this.getPurchaseOrder(poId);
+        this.vendorId = po.getCreditorId();
         XactDto xact = null;
         int rc = 0;
 
@@ -1477,13 +1483,14 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         // Pull applicable items from inventory
         rc = this.pullPurchaseOrderInventory(items);
 
-        // Flagg Purchase Order as either Returned or Partially Returned
+        // Flag Purchase Order as either Returned or Partially Returned
         if (rc >= 1) {
             this.setPurchaseOrderStatus(poId, VendorPurchasesConst.PURCH_STATUS_PARTRET);
         }
         else {
             this.setPurchaseOrderStatus(poId, VendorPurchasesConst.PURCH_STATUS_RETURN);
         }
+        return rc;
     }
 
     /**
@@ -1807,6 +1814,4 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             throw new InvalidDataException("List of purchase order items must contain at least one item");
         }
     }
-
-    
 }

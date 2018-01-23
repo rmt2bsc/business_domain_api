@@ -32,11 +32,9 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements
-        VendorPurchasesDao {
+class Rmt2VendorPurchasesDaoImpl extends Rmt2XactDaoImpl implements  VendorPurchasesDao {
 
-    private static Logger logger = Logger
-            .getLogger(Rmt2VendorPurchasesDaoImpl.class);
+    private static Logger logger = Logger.getLogger(Rmt2VendorPurchasesDaoImpl.class);
 
     /**
      * Creates a Rmt2VendorPurchasesDaoImpl object with its own persistent

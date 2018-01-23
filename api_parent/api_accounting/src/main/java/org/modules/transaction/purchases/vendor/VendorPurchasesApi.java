@@ -264,9 +264,21 @@ public interface VendorPurchasesApi extends XactApi {
      *            The id of target purchase order
      * @param items
      *            The items that are to be returned.
+     * @return int
      * @throws VendorPurchasesApiException
      */
-    void returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException;
+    int returnPurchaseOrder(Integer poId, List<PurchaseOrderItemDto> items) throws VendorPurchasesApiException;
+    
+    /**
+     * Pull item from inventory based on the amount requested.
+     * 
+     * @param itemMasterId
+     *            The corresponding item master id to the purchase order item.
+     * @param invCount
+     *            the count to reduce the inventory item by.
+     * @throws VendorPurchasesApiException
+     */
+    void removeInventoryForPurchaseOrderItem(Integer itemMasterId, Integer invCount) throws VendorPurchasesApiException;
 
     /**
      * Validates base purchase order data.
