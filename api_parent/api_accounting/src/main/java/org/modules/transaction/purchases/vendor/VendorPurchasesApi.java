@@ -254,7 +254,7 @@ public interface VendorPurchasesApi extends XactApi {
      *            The id of target purchase order
      * @throws VendorPurchasesApiException
      */
-    void cancelPurchaseOrder(Integer poId) throws VendorPurchasesApiException;
+    int cancelPurchaseOrder(Integer poId) throws VendorPurchasesApiException;
 
     /**
      * Creates a purchases, returns, and allowances transaction for a purchase

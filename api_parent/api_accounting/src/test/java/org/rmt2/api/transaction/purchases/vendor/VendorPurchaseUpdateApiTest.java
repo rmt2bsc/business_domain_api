@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modules.inventory.InventoryConst;
+import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 import org.modules.transaction.purchases.vendor.CannotChangePurchaseOrderStatusException;
 import org.modules.transaction.purchases.vendor.NetItemQuantityReceivedException;
@@ -1388,6 +1389,205 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         
         try {
             api.returnPurchaseOrder(TEST_PO_ID, this.poItemsDto);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testCancel_PurchaseOrder_Success() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_SUBMITTED); 
+        
+        try {
+            // Original Transaction
+            this.mockXactFetchSingleResponse.get(0).setId(TEST_XACT_ID);
+            this.mockXactFetchSingleResponse.get(0).setXactAmount(TEST_PURCHASE_ORDER_AMT);
+            when(this.mockPersistenceClient.retrieveList(isA(VwXactList.class)))
+                    .thenReturn(this.mockXactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+        
+        // Mock base transaction creation
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true))).thenReturn(TEST_NEW_XACT_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up reverse purchase order transaction insert case failed");
+        }
+        
+        // Mock creditor transaction history post
+        CreditorActivity mockCreditorActivity = new CreditorActivity();
+        mockCreditorActivity.setCreditorId(TEST_CREDITOR_ID);
+        mockCreditorActivity.setXactId(TEST_NEW_XACT_ID);
+        mockCreditorActivity.setAmount(TEST_PURCHASE_ORDER_AMT * -1);
+        try {
+            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(TEST_NEW_CREDITOR_ACTIV_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up creditor activity insert case failed");
+        }
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        VendorPurchasesApi apiSpy = Mockito.spy(api);
+        
+        try {
+            doNothing().when(apiSpy).setPurchaseOrderStatus(eq(TEST_PO_ID), eq(VendorPurchasesConst.PURCH_STATUS_CANCEL));
+        } catch (VendorPurchasesApiException e1) {
+            e1.printStackTrace();
+            Assert.fail("Setting up spy mock to set purchase order status case failed");
+        }
+        
+        int results = 0;
+        try {
+            results = apiSpy.cancelPurchaseOrder(TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(TEST_NEW_XACT_ID, results);
+    }
+    
+    @Test
+    public void testError_Cancel_PurchaseOrder_Null_TransactionObjectReturned() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_SUBMITTED); 
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        VendorPurchasesApi apiSpy = Mockito.spy(api);
+        
+        try {
+            doReturn(null).when(apiSpy).getXactById(isA(Integer.class));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            Assert.fail("Setting up spy mock to set purchase order status case failed");
+        }
+        
+        try {
+            apiSpy.cancelPurchaseOrder(TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof XactApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testError_Cancel_PurchaseOrder_DB_Error_TransactionFetch() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_SUBMITTED); 
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        VendorPurchasesApi apiSpy = Mockito.spy(api);
+        
+        try {
+            doThrow(XactApiException.class).when(apiSpy).getXactById(isA(Integer.class));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            Assert.fail("Setting up spy mock to set purchase order status case failed");
+        }
+        
+        try {
+            apiSpy.cancelPurchaseOrder(TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof XactApiException);
+        }
+    }
+    
+    @Test
+    public void testError_Cancel_PurchaseOrder_InvalidCurrentStatus() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_RECEIVED); 
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.cancelPurchaseOrder(TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof CannotChangePurchaseOrderStatusException);
+        }
+    }
+    
+    @Test
+    public void testError_Cancel_PurchaseOrder_DB_Error_FetchPurchaseOrder() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_RECEIVED); 
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        VendorPurchasesApi apiSpy = Mockito.spy(api);
+        
+        try {
+            doThrow(VendorPurchasesApiException.class).when(apiSpy).getPurchaseOrder(isA(Integer.class));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            Assert.fail("Setting up spy mock to set purchase order status case failed");
+        }
+        
+        try {
+            apiSpy.cancelPurchaseOrder(TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Cancel_PurchaseOrder_Null_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.cancelPurchaseOrder(null);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Cancel_PurchaseOrder_Zero_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.cancelPurchaseOrder(0);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Cancel_PurchaseOrder_Negative_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.cancelPurchaseOrder(-12340);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();

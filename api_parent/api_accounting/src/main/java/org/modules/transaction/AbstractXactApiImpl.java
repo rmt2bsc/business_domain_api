@@ -948,7 +948,11 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         this.preReverse(xact, xactItems);
         this.reverse(xact);
         this.reverse(xactItems);
-        xact.setXactId(0);
+   
+        // It's not uncommon for some transactions to submit a null transaction object here...
+        if (xact != null) {
+            xact.setXactId(0);    
+        }
         rc = this.update(xact, xactItems);
         xact.setXactId(rc);
         this.postReverse(xact, xactItems);

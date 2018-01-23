@@ -1637,35 +1637,36 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * 
      * @param poId
      *            The id of target purchase order
+     * @return the transaction id of cancellation or 0 when purchase order is ineligle for cancellation.
      * @throws VendorPurchasesApiException
      *             If current status cannot be cancelled
      */
     @Override
-    public void cancelPurchaseOrder(Integer poId) throws VendorPurchasesApiException {
+    public int cancelPurchaseOrder(Integer poId) throws VendorPurchasesApiException {
         this.validatePurchaseOrderId(poId);
         
         PurchaseOrderDto po = this.getPurchaseOrder(poId);
+        this.vendorId = po.getCreditorId();
         XactDto xact = null;
-        int currentStatus = 0;
 
         // Check to see if it is okay to cancel this PO. An exception will be
         // thrown if chech fails!
-        currentStatus = this.verifyStatusChange(poId, VendorPurchasesConst.PURCH_STATUS_CANCEL);
+        this.verifyStatusChange(poId, VendorPurchasesConst.PURCH_STATUS_CANCEL);
 
         // Reverse transaction if purchase order has been submitted and a
         // transaction has been assigned.
-        if (currentStatus == VendorPurchasesConst.PURCH_STATUS_SUBMITTED && po.getXactId() > 0) {
-            try {
-                xact = this.getXactById(po.getXactId());
-                this.reverse(xact, null);
-                this.createSubsidiaryActivity(po.getCreditorId(), xact.getXactId(), xact.getXactAmount());
-            } catch (XactApiException e) {
-                throw new VendorPurchasesApiException(e);
-            }
+        int rc = 0;
+        try {
+            xact = this.getXactById(po.getXactId());
+            this.reverse(xact, null);
+            rc = xact.getXactId();
+            this.createSubsidiaryActivity(po.getCreditorId(), xact.getXactId(), xact.getXactAmount());
+        } catch (XactApiException e) {
+            throw new VendorPurchasesApiException(e);
         }
-
         // Cancel Purchase Order by changing the status.
         this.setPurchaseOrderStatus(poId, VendorPurchasesConst.PURCH_STATUS_CANCEL);
+        return rc;
     }
 
     /**
@@ -1678,7 +1679,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     @Override
     public void doVendorPurchaseReturnAllow(Integer purchaseOrderId) throws VendorPurchasesApiException {
-        return;
+        throw new UnsupportedOperationException("");
     }
 
     /**
@@ -1718,9 +1719,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      * java.util.List)
      */
     @Override
-    protected void preReverse(XactDto xact,
-            List<XactTypeItemActivityDto> xactItems) {
-        // TODO Auto-generated method stub
+    protected void preReverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) {
         super.preReverse(xact, xactItems);
     }
 
