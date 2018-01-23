@@ -46,6 +46,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.AccountingMockDataUtility;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -77,6 +78,11 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        this.setupMockCommon();
+        this.setupMockCreditorCheck();
+        this.setupMockItemMasterCheck();
+        this.setupMockModifyPurchaseOrderStatus();
+        this.setupMockTransactionActivity();
     }
 
     /**
@@ -111,7 +117,7 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         }
     }
     
-    private void setupCommonMocks() {
+    private void setupMockCommon() {
         // Mock method call to create vendor purchase order
         try {
             when(this.mockPersistenceClient.insertRow(isA(PurchaseOrder.class),
@@ -290,10 +296,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testCreate_PurchaseOrder_Success() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
-        this.setupMockItemMasterCheck();
-        
         this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID_NEW, VendorPurchasesConst.PURCH_STATUS_NEW);
 
         // Perform test
@@ -357,10 +359,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     
     @Test
     public void testValidation_Create_PurchaseOrder_Creditor_Notfound() {
-        // Perform test
-        this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        
         Creditor mockCreditorCriteria = new Creditor();
         mockCreditorCriteria.setCreditorId(TEST_CREDITOR_ID);
         try {
@@ -387,7 +385,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_CreditorType_Notfound() {
         // Perform test
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
         
         CreditorType mockCredTypeCriteria = new CreditorType();
         mockCredTypeCriteria.setCreditorTypeId(AccountingConst.CREDITORTYPE_VENDOR);
@@ -414,7 +411,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     @Test
     public void testValidation_Create_PurchaseOrder_CreditorType_Incorrect() {
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
         
         CreditorType mockCredTypeCriteria = new CreditorType();
         mockCredTypeCriteria.setCreditorTypeId(AccountingConst.CREDITORTYPE_VENDOR);
@@ -450,7 +446,7 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
             Assert.fail("Test failed due to an exception was expected");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof PurchaseOrderValidationException);
+            Assert.assertTrue(e instanceof InvalidDataException);
         }
     }
     
@@ -466,7 +462,7 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
             Assert.fail("Test failed due to an exception was expected");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof PurchaseOrderValidationException);
+            Assert.assertTrue(e instanceof InvalidDataException);
         }
     }
     
@@ -474,8 +470,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testError_Create_PurchaseOrder_DB_Error() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
         
         // Mock method call to create vendor purchase order 
         try {
@@ -506,8 +500,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Null_PO_Item() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
 
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
@@ -528,8 +520,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Item_POId_Notfound() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
         
         PurchaseOrder mockCriteria = new PurchaseOrder();
         mockCriteria.setPoId(TEST_PO_ID);
@@ -556,8 +546,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Item_ItemMasterId_NotPositive() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
         
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
@@ -579,8 +567,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Item_ItemMaster_Notfound() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
         
         try {
             when(this.mockPersistenceClient.retrieveList(isA(ItemMaster.class))).thenReturn(null);
@@ -606,8 +592,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Item_ItemMasterType_Notfound() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
         
         try {
             when(this.mockPersistenceClient.retrieveList(isA(ItemMasterType.class))).thenReturn(null);
@@ -633,9 +617,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Item_ItemMasterType_NotMatcing() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
-        this.setupMockItemMasterCheck();
         
         try {
             this.mockItemMaster.get(0).setItemTypeId(InventoryConst.ITEM_TYPE_SRVC);
@@ -677,8 +658,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Item_QtyOrdered_Zero() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
 
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
@@ -701,8 +680,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     public void testValidation_Create_PurchaseOrder_Item_QtyOrdered_LessThan_QtyReceived() {
         // Modify mock data to appear as a new purchase order     
         this.setupNewPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
         
         // Perform test
         VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
@@ -724,9 +701,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     @Test
     public void testModify_PurchaseOrder_Refresh_Success() {
         this.setupExistingPurchaseOrderDto();
-        this.setupCommonMocks();
-        this.setupMockCreditorCheck();
-        this.setupMockItemMasterCheck();
         this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_QUOTE);
         
         // Perform test
@@ -746,7 +720,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     @Test
     public void testSubmit_PurchaseOrder_Success() {
         this.setupExistingPurchaseOrderDto();
-        this.setupMockTransactionActivity();
         this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_QUOTE);        
         
         // Perform test
@@ -775,7 +748,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
     @Test
     public void testError_Submit_PurchaseOrder_InvalidCurrentStatus() {
         this.setupExistingPurchaseOrderDto();
-        this.setupMockTransactionActivity();
         this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_RETURN);        
         
         // Perform test
