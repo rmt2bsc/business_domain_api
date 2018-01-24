@@ -28,8 +28,6 @@ public class ProjectApiFactory extends RMT2Base {
      * @return an instance of {@link ProjectApi}
      */
     public ProjectApi createApi() {
-        // ProjectApiImpl api = new ProjectApiImpl();
-        // return api;
         return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
