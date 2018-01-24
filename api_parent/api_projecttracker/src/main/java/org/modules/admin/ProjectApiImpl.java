@@ -121,7 +121,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getClient(int)
      */
     @Override
-    public ClientDto getClient(int clientId) throws ProjectApiException {
+    public ClientDto getClient(Integer clientId) throws ProjectApiException {
         ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
         criteria.setClientId(clientId);
         List<ClientDto> results;
@@ -157,7 +157,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getClientExt(int)
      */
     @Override
-    public ClientDto getClientExt(int clientId) throws ProjectApiException {
+    public ClientDto getClientExt(Integer clientId) throws ProjectApiException {
         ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
         criteria.setClientId(clientId);
         List<ClientDto> results;
@@ -241,9 +241,8 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProject(int)
      */
     @Override
-    public ProjectDto getProject(int projectId) throws ProjectApiException {
-        ProjectDto criteria = ProjectObjectFactory
-                .createProjectDtoInstance(null);
+    public ProjectDto getProject(Integer projectId) throws ProjectApiException {
+        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
         criteria.setProjId(projectId);
         List<ProjectDto> results;
         StringBuilder buf = new StringBuilder();
@@ -278,10 +277,9 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectByClientId(int)
      */
     @Override
-    public List<ProjectDto> getProjectByClientId(int clientId)
+    public List<ProjectDto> getProjectByClientId(Integer clientId)
             throws ProjectApiException {
-        ProjectDto criteria = ProjectObjectFactory
-                .createProjectDtoInstance(null);
+        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
         criteria.setClientId(clientId);
         List<ProjectDto> results;
         StringBuilder buf = new StringBuilder();
@@ -306,7 +304,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getTask(int)
      */
     @Override
-    public TaskDto getTask(int taskId) throws ProjectApiException {
+    public TaskDto getTask(Integer taskId) throws ProjectApiException {
         TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
         criteria.setTaskId(taskId);
         List<TaskDto> results;
@@ -366,7 +364,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getTasks(boolean)
      */
     @Override
-    public List<TaskDto> getTasks(boolean billable) throws ProjectApiException {
+    public List<TaskDto> getTasks(Boolean billable) throws ProjectApiException {
         TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
         criteria.setTaskBillable(billable ? ProjectTrackerApiConst.TASK_BILLABLE_FLAG
                 : ProjectTrackerApiConst.TASK_NONBILLABLE_FLAG);
@@ -393,10 +391,9 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTask(int)
      */
     @Override
-    public ProjectTaskDto getProjectTask(int projectTaskId)
+    public ProjectTaskDto getProjectTask(Integer projectTaskId)
             throws ProjectApiException {
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskExtendedDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
         criteria.setProjectTaskId(projectTaskId);
         List<ProjectTaskDto> results;
         StringBuilder buf = new StringBuilder();
@@ -431,10 +428,9 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTaskByClient(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskByClient(int clientId)
+    public List<ProjectTaskDto> getProjectTaskByClient(Integer clientId)
             throws ProjectApiException {
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskExtendedDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
         criteria.setClientId(clientId);
         List<ProjectTaskDto> results;
         StringBuilder buf = new StringBuilder();
@@ -459,10 +455,9 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTaskByProject(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskByProject(int projectId)
+    public List<ProjectTaskDto> getProjectTaskByProject(Integer projectId)
             throws ProjectApiException {
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskExtendedDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
         criteria.setProjId(projectId);
         List<ProjectTaskDto> results;
         StringBuilder buf = new StringBuilder();
@@ -487,10 +482,9 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTaskByTask(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskByTask(int taskId)
+    public List<ProjectTaskDto> getProjectTaskByTask(Integer taskId)
             throws ProjectApiException {
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskExtendedDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
         criteria.setTaskId(taskId);
         List<ProjectTaskDto> results;
         StringBuilder buf = new StringBuilder();
@@ -515,10 +509,9 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTask(int, int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTask(int projectId, int taskId)
+    public List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId)
             throws ProjectApiException {
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskExtendedDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
         criteria.setTaskId(taskId);
         criteria.setProjId(projectId);
         List<ProjectTaskDto> results;
@@ -546,7 +539,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEvent(int)
      */
     @Override
-    public EventDto getEvent(int eventId) throws ProjectApiException {
+    public EventDto getEvent(Integer eventId) throws ProjectApiException {
         EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
         criteria.setEventId(eventId);
         List<EventDto> results;
@@ -609,8 +602,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * java.util.Date)
      */
     @Override
-    public List<EventDto> getEvent(Date beginDate, Date endDate)
-            throws ProjectApiException {
+    public List<EventDto> getEvent(Date beginDate, Date endDate) throws ProjectApiException {
         EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
 
         // Setup date range predicate
@@ -654,8 +646,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByProjectTask(int)
      */
     @Override
-    public List<EventDto> getEventByProjectTask(int projectTaskId)
-            throws ProjectApiException {
+    public List<EventDto> getEventByProjectTask(Integer projectTaskId) throws ProjectApiException {
         EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
         criteria.setProjectTaskId(projectTaskId);
         List<EventDto> results;
@@ -681,10 +672,8 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByProject(int)
      */
     @Override
-    public List<ProjectEventDto> getEventByProject(int projectId)
-            throws ProjectApiException {
-        ProjectEventDto criteria = ProjectObjectFactory
-                .createProjectEventDtoInstance(null);
+    public List<ProjectEventDto> getEventByProject(Integer projectId) throws ProjectApiException {
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
         criteria.setProjId(projectId);
         List<ProjectEventDto> results;
         StringBuilder buf = new StringBuilder();
@@ -709,10 +698,8 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByTask(int)
      */
     @Override
-    public List<ProjectEventDto> getEventByTask(int taskId)
-            throws ProjectApiException {
-        ProjectEventDto criteria = ProjectObjectFactory
-                .createProjectEventDtoInstance(null);
+    public List<ProjectEventDto> getEventByTask(Integer taskId) throws ProjectApiException {
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
         criteria.setTaskId(taskId);
         List<ProjectEventDto> results;
         StringBuilder buf = new StringBuilder();
@@ -737,10 +724,8 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByClient(int)
      */
     @Override
-    public List<ProjectEventDto> getEventByClient(int clientId)
-            throws ProjectApiException {
-        ProjectEventDto criteria = ProjectObjectFactory
-                .createProjectEventDtoInstance(null);
+    public List<ProjectEventDto> getEventByClient(Integer clientId) throws ProjectApiException {
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
         criteria.setClientId(clientId);
         List<ProjectEventDto> results;
         StringBuilder buf = new StringBuilder();
@@ -769,15 +754,12 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      *             <i>clinet</i> is less than or equal to zero, or <i>clinet</i>
      *             does not exist in the accounting system.
      */
-    protected void validateClient(ClientDto client)
-            throws InvalidClientIdentifierException {
+    protected void validateClient(ClientDto client) throws InvalidClientIdentifierException {
         if (client == null) {
-            throw new InvalidClientIdentifierException(
-                    "The client object cannot be null");
+            throw new InvalidClientIdentifierException("The client object cannot be null");
         }
         if (client.getClientId() <= 0) {
-            throw new InvalidClientIdentifierException(
-                    "The client's id is invalid.  Must be greater than zero.");
+            throw new InvalidClientIdentifierException("The client's id is invalid.  Must be greater than zero.");
         }
 
         // Verify that client exist in the accounting system
@@ -819,8 +801,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @return {@link RSCustomerSearch}
      */
     private RSCustomerSearch getCustomerInfo(List<ClientDto> contactList) {
-        List<BigInteger> custIdList = ProjectAdminDaoFactory
-                .getCustomerId(contactList);
+        List<BigInteger> custIdList = ProjectAdminDaoFactory.getCustomerId(contactList);
 
         // Create Web service request
         String serviceName = "RQ_customer_search";
@@ -914,8 +895,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      *             <i>proj</i> is null or no data values are provided for
      *             <i>proj</i>'s properties, description and/or effective date.
      */
-    protected void validateProject(ProjectDto proj)
-            throws InvalidProjectException {
+    protected void validateProject(ProjectDto proj) throws InvalidProjectException {
         if (proj == null) {
             throw new InvalidProjectException(
                     "Project update operation failed due to an invalid or null ProjectDto object discovered");
@@ -925,8 +905,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
         }
 
         if (proj.getProjectEffectiveDate() == null) {
-            throw new InvalidProjectException(
-                    "Project effective date is required");
+            throw new InvalidProjectException("Project effective date is required");
         }
     }
 

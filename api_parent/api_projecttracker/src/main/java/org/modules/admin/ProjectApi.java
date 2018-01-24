@@ -40,7 +40,7 @@ public interface ProjectApi extends TransactionApi {
      * @return An {@link ClientDto} or null if nothing is found.
      * @throws ProjectApiException
      */
-    ClientDto getClient(int clientId) throws ProjectApiException;
+    ClientDto getClient(Integer clientId) throws ProjectApiException;
 
     /**
      * Find a single client containing customer data from the Accounting System
@@ -55,7 +55,7 @@ public interface ProjectApi extends TransactionApi {
      * @throws NotFoundException
      *             when the client is not found.
      */
-    ClientDto getClientExt(int clientId) throws ProjectApiException;
+    ClientDto getClientExt(Integer clientId) throws ProjectApiException;
 
     /**
      * Find all clients with extended data.
@@ -81,7 +81,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A {@link ProjectDto} object or null if nothing is found.
      * @throws ProjectApiException
      */
-    ProjectDto getProject(int projectId) throws ProjectApiException;
+    ProjectDto getProject(Integer projectId) throws ProjectApiException;
 
     /**
      * Find one or more projects using the clinet's id.
@@ -91,7 +91,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectDto} objects or null if nothing is found.
      * @throws ProjectApiException
      */
-    List<ProjectDto> getProjectByClientId(int clientId) throws ProjectApiException;
+    List<ProjectDto> getProjectByClientId(Integer clientId) throws ProjectApiException;
 
     /**
      * Finds a tasks using task id.
@@ -101,7 +101,7 @@ public interface ProjectApi extends TransactionApi {
      * @return {@link TaskDto} or null if nothing is found.
      * @throws ProjectApiException
      */
-    TaskDto getTask(int taskId) throws ProjectApiException;
+    TaskDto getTask(Integer taskId) throws ProjectApiException;
 
     /**
      * Returns a list of all tasks.
@@ -120,7 +120,7 @@ public interface ProjectApi extends TransactionApi {
      * @return List of {@link ProjectDto} objects or null if nothing is found.
      * @throws ProjectApiException
      */
-    List<TaskDto> getTasks(boolean billable) throws ProjectApiException;
+    List<TaskDto> getTasks(Boolean billable) throws ProjectApiException;
 
     /**
      * Retrieves a project task record
@@ -130,7 +130,7 @@ public interface ProjectApi extends TransactionApi {
      * @return An {@link ProjectTaskDto} object or null if not found.
      * @throws ProjectApiException
      */
-    ProjectTaskDto getProjectTask(int projectTaskId) throws ProjectApiException;
+    ProjectTaskDto getProjectTask(Integer projectTaskId) throws ProjectApiException;
 
     /**
      * Retrieves one or more extended project task records by client
@@ -140,7 +140,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTaskByClient(int clientId) throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTaskByClient(Integer clientId) throws ProjectApiException;
 
     /**
      * Retrieves one or more extended project task records by project
@@ -150,7 +150,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTaskByProject(int projectId) throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTaskByProject(Integer projectId) throws ProjectApiException;
 
     /**
      * Retrieves one or more extended project task records by task
@@ -160,7 +160,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTaskByTask(int taskId) throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTaskByTask(Integer taskId) throws ProjectApiException;
 
     /**
      * Retrieves one or more extended project task records by project and task
@@ -172,7 +172,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTask(int projectId, int taskId) throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId) throws ProjectApiException;
 
     /**
      * Retrieves a timesheet event record
@@ -182,7 +182,7 @@ public interface ProjectApi extends TransactionApi {
      * @return An {@link EventDto} object or null if not found..
      * @throws ProjectApiException
      */
-    EventDto getEvent(int eventId) throws ProjectApiException;
+    EventDto getEvent(Integer eventId) throws ProjectApiException;
 
     /**
      * Retrieves event records by event date
@@ -215,7 +215,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<EventDto> getEventByProjectTask(int projectTaskId) throws ProjectApiException;
+    List<EventDto> getEventByProjectTask(Integer projectTaskId) throws ProjectApiException;
 
     /**
      * Retrieves timesheet extended event records by client
@@ -225,7 +225,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws TimesheetApiException
      */
-    List<ProjectEventDto> getEventByClient(int clientId) throws ProjectApiException;
+    List<ProjectEventDto> getEventByClient(Integer clientId) throws ProjectApiException;
 
     /**
      * Retrieves extended timesheet event records by project
@@ -235,7 +235,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectEventDto> getEventByProject(int projectId) throws ProjectApiException;
+    List<ProjectEventDto> getEventByProject(Integer projectId) throws ProjectApiException;
 
     /**
      * Retrieves extended event records by task
@@ -245,7 +245,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectEventDto> getEventByTask(int taskId) throws ProjectApiException;
+    List<ProjectEventDto> getEventByTask(Integer taskId) throws ProjectApiException;
 
     /**
      * Creates new or updates an existing project.
