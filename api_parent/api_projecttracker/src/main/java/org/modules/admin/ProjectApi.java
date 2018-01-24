@@ -91,8 +91,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectDto} objects or null if nothing is found.
      * @throws ProjectApiException
      */
-    List<ProjectDto> getProjectByClientId(int clientId)
-            throws ProjectApiException;
+    List<ProjectDto> getProjectByClientId(int clientId) throws ProjectApiException;
 
     /**
      * Finds a tasks using task id.
@@ -141,8 +140,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTaskByClient(int clientId)
-            throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTaskByClient(int clientId) throws ProjectApiException;
 
     /**
      * Retrieves one or more extended project task records by project
@@ -152,8 +150,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTaskByProject(int projectId)
-            throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTaskByProject(int projectId) throws ProjectApiException;
 
     /**
      * Retrieves one or more extended project task records by task
@@ -163,8 +160,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTaskByTask(int taskId)
-            throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTaskByTask(int taskId) throws ProjectApiException;
 
     /**
      * Retrieves one or more extended project task records by project and task
@@ -176,8 +172,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link ProjectTaskDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectTaskDto> getProjectTask(int projectId, int taskId)
-            throws ProjectApiException;
+    List<ProjectTaskDto> getProjectTask(int projectId, int taskId) throws ProjectApiException;
 
     /**
      * Retrieves a timesheet event record
@@ -210,8 +205,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<EventDto> getEvent(Date beginDate, Date endDate)
-            throws ProjectApiException;
+    List<EventDto> getEvent(Date beginDate, Date endDate) throws ProjectApiException;
 
     /**
      * Retrieves one or more event records using Project-Task Id
@@ -221,8 +215,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<EventDto> getEventByProjectTask(int projectTaskId)
-            throws ProjectApiException;
+    List<EventDto> getEventByProjectTask(int projectTaskId) throws ProjectApiException;
 
     /**
      * Retrieves timesheet extended event records by client
@@ -232,8 +225,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws TimesheetApiException
      */
-    List<ProjectEventDto> getEventByClient(int clientId)
-            throws ProjectApiException;
+    List<ProjectEventDto> getEventByClient(int clientId) throws ProjectApiException;
 
     /**
      * Retrieves extended timesheet event records by project
@@ -243,8 +235,7 @@ public interface ProjectApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectEventDto> getEventByProject(int projectId)
-            throws ProjectApiException;
+    List<ProjectEventDto> getEventByProject(int projectId) throws ProjectApiException;
 
     /**
      * Retrieves extended event records by task
