@@ -167,6 +167,13 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
             Assert.fail("Create vendor purchase order test case setup failed");
         }
         
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(PurchaseOrderItems.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete vendor purchase order item test case setup failed");
+        }
+        
         PurchaseOrderItems mockPurchaseOrderItemCriteria = new PurchaseOrderItems();
         mockPurchaseOrderItemCriteria.setPoId(TEST_PO_ID);
         try {
@@ -1708,6 +1715,137 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
             api.deletePurchaseOrder(-12340);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    
+    
+    
+    
+    
+    @Test
+    public void testDelete_PurchaseOrderItem_Success() {
+        this.setupExistingPurchaseOrderDto();
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        
+        int results = 0;
+        try {
+            results = api.deleteItem(TEST_PO_ID, TEST_PO_ITEM_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
+    public void testError_Delete_PurchaseOrderItem_DB_Error() {
+        this.setupExistingPurchaseOrderDto();
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(PurchaseOrderItems.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete vendor purchase order item test case setup failed");
+        }
+        try {
+            api.deleteItem(TEST_PO_ID, TEST_PO_ITEM_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof VendorPurchasesDaoException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrderItem_Null_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteItem(null, TEST_PO_ITEM_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrderItem_Zero_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteItem(0, TEST_PO_ITEM_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrderItem_Negative_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteItem(-12340, TEST_PO_ITEM_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrderItem_Null_POItemId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteItem(TEST_PO_ID, null);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrderItem_Zero_POItemId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteItem(TEST_PO_ID, 0);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrderItem_Negative_POItemId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteItem(TEST_PO_ID, -1234);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
