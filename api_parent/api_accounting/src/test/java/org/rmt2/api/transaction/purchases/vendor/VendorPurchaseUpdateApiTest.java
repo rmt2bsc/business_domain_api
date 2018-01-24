@@ -41,6 +41,7 @@ import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 import org.modules.transaction.purchases.vendor.CannotChangePurchaseOrderStatusException;
 import org.modules.transaction.purchases.vendor.NetItemQuantityReceivedException;
+import org.modules.transaction.purchases.vendor.PurchaseOrderBadStatusException;
 import org.modules.transaction.purchases.vendor.PurchaseOrderItemValidationException;
 import org.modules.transaction.purchases.vendor.PurchaseOrderValidationException;
 import org.modules.transaction.purchases.vendor.VendorPurchasesApi;
@@ -139,6 +140,13 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("UPdate vendor purchase order test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(PurchaseOrder.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete vendor purchase order test case setup failed");
         }
         
         PurchaseOrder mockCriteria = new PurchaseOrder();
@@ -1588,6 +1596,118 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
             api.cancelPurchaseOrder(-12340);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testDelete_PurchaseOrder_Success() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_QUOTE); 
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        VendorPurchasesApi apiSpy = Mockito.spy(api);
+        
+        try {
+            doReturn(this.poItemsDto.size()).when(apiSpy).deleteAllItems(eq(TEST_PO_ID));
+        } catch (VendorPurchasesApiException e1) {
+            e1.printStackTrace();
+            Assert.fail("Setting up spy mock to set purchase order status case failed");
+        }
+        
+        int results = 0;
+        try {
+            results = apiSpy.deletePurchaseOrder(TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
+    public void testError_Delete_PurchaseOrder_DB_Error() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_QUOTE); 
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        VendorPurchasesApi apiSpy = Mockito.spy(api);
+        
+        try {
+            doThrow(VendorPurchasesDaoException.class).when(apiSpy).deleteAllItems(eq(TEST_PO_ID));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            Assert.fail("Setting up spy mock to set purchase order status case failed");
+        }
+        try {
+            apiSpy.deletePurchaseOrder(TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof VendorPurchasesDaoException);
+        }
+    }
+    
+    @Test
+    public void testError_Delete_PurchaseOrder_InvalidCurrentStatus() {
+        this.setupExistingPurchaseOrderDto();
+        this.setupMockCurrentPurchaseOrderStatus(TEST_PO_ID, VendorPurchasesConst.PURCH_STATUS_SUBMITTED); 
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deletePurchaseOrder(TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof PurchaseOrderBadStatusException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrder_Null_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deletePurchaseOrder(null);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrder_Zero_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deletePurchaseOrder(0);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_PurchaseOrder_Negative_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deletePurchaseOrder(-12340);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
