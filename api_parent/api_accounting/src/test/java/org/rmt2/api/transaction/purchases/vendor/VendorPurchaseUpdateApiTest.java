@@ -1722,11 +1722,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         }
     }
     
-    
-    
-    
-    
-    
     @Test
     public void testDelete_PurchaseOrderItem_Success() {
         this.setupExistingPurchaseOrderDto();
@@ -1846,6 +1841,97 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
         VendorPurchasesApi api = f.createApi(mockDaoClient);
         try {
             api.deleteItem(TEST_PO_ID, -1234);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testDelete_AllPurchaseOrderItem_Success() {
+        this.setupExistingPurchaseOrderDto();
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(PurchaseOrderItems.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete vendor purchase order item test case setup failed");
+        }
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        
+        int results = 0;
+        try {
+            results = api.deleteAllItems(TEST_PO_ID);
+        } catch (VendorPurchasesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(5, results);
+    }
+    
+    @Test
+    public void testError_Delete_AllPurchaseOrderItem_DB_Error() {
+        this.setupExistingPurchaseOrderDto();
+        
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(PurchaseOrderItems.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete vendor purchase order item test case setup failed");
+        }
+        try {
+            api.deleteAllItems(TEST_PO_ID);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof VendorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof VendorPurchasesDaoException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_AllPurchaseOrderItem_Null_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteAllItems(null);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_AllPurchaseOrderItem_Zero_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteAllItems(0);
+            Assert.fail("Test failed due to exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_AllPurchaseOrderItem_Negative_POId() {
+        // Perform test
+        VendorPurchasesApiFactory f = new VendorPurchasesApiFactory();
+        VendorPurchasesApi api = f.createApi(mockDaoClient);
+        try {
+            api.deleteAllItems(-12340);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
