@@ -2,9 +2,7 @@ package org.dao.admin;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
@@ -30,10 +28,7 @@ import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
-import org.rmt2.jaxb.CustomerType;
-import org.rmt2.jaxb.RSCustomerSearch;
 
-import com.InvalidDataException;
 import com.RMT2Base;
 import com.api.persistence.DaoClient;
 
@@ -906,75 +901,75 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         return list;
     }
 
-    /**
-     * Merges customer information contained in the result set of type,
-     * RSCustomerSearch, to a list of ClientDto objects.
-     * 
-     * @param contacts
-     *            List of {@link ClientDto} objects
-     * @param customerInfo
-     *            An instnace of {@link RSCustomerSearch}
-     * @throws InvalidDataException
-     *             When <i>contacts</i> is null
-     */
-    public static final void mergeExtendedContactInfo(List<ClientDto> contacts,
-            RSCustomerSearch customerInfo) throws InvalidDataException {
-
-        if (contacts == null) {
-            throw new InvalidDataException(
-                    "List of ClientDto is null or invalid for merge extended contact info operation");
-        }
-        Map<Integer, CustomerType> custTypeMap = ProjectAdminDaoFactory
-                .createCustomerTypeMap(customerInfo);
-        if (custTypeMap == null) {
-            // Nothing to merge
-            return;
-        }
-
-        for (ClientDto c : contacts) {
-            CustomerType cust = custTypeMap.get(c.getClientId());
-            if (cust == null) {
-                continue;
-            }
-            c.setAccountNo(cust.getAccountNo());
-            if (cust.getContactDetails() != null) {
-                c.setBusinessId(cust.getContactDetails().getBusinessId()
-                        .intValue());
-                c.setClientName(cust.getContactDetails().getLongName());
-                c.setClientContactEmail(cust.getContactDetails()
-                        .getContactEmail());
-                c.setClientContactExt(cust.getContactDetails().getContactExt());
-                c.setClientContactFirstname(cust.getContactDetails()
-                        .getContactFirstname());
-                c.setClientContactLastname(cust.getContactDetails()
-                        .getContactLastname());
-                c.setClientContactPhone(cust.getContactDetails()
-                        .getContactPhone());
-            }
-        }
-        return;
-    }
-
-    /**
-     * Creates a Map of {@link CustomerType} objects from the web service result
-     * set type, RSCustomerSearch.
-     * <p>
-     * The newly created Map is keyed by customer id.
-     * 
-     * @param customerInfo
-     *            An instance of {@link RSCustomerSearch}
-     * @return Map<Integer, CustomerType>
-     */
-    public static final Map<Integer, CustomerType> createCustomerTypeMap(
-            RSCustomerSearch customerInfo) {
-        if (customerInfo == null) {
-            return null;
-        }
-        List<CustomerType> list = customerInfo.getCustomerList();
-        Map<Integer, CustomerType> map = new HashMap<Integer, CustomerType>();
-        for (CustomerType cust : list) {
-            map.put(cust.getCustomerId().intValue(), cust);
-        }
-        return map;
-    }
+//    /**
+//     * Merges customer information contained in the result set of type,
+//     * RSCustomerSearch, to a list of ClientDto objects.
+//     * 
+//     * @param contacts
+//     *            List of {@link ClientDto} objects
+//     * @param customerInfo
+//     *            An instnace of {@link RSCustomerSearch}
+//     * @throws InvalidDataException
+//     *             When <i>contacts</i> is null
+//     */
+//    public static final void mergeExtendedContactInfo(List<ClientDto> contacts,
+//            RSCustomerSearch customerInfo) throws InvalidDataException {
+//
+//        if (contacts == null) {
+//            throw new InvalidDataException(
+//                    "List of ClientDto is null or invalid for merge extended contact info operation");
+//        }
+//        Map<Integer, CustomerType> custTypeMap = ProjectAdminDaoFactory
+//                .createCustomerTypeMap(customerInfo);
+//        if (custTypeMap == null) {
+//            // Nothing to merge
+//            return;
+//        }
+//
+//        for (ClientDto c : contacts) {
+//            CustomerType cust = custTypeMap.get(c.getClientId());
+//            if (cust == null) {
+//                continue;
+//            }
+//            c.setAccountNo(cust.getAccountNo());
+//            if (cust.getContactDetails() != null) {
+//                c.setBusinessId(cust.getContactDetails().getBusinessId()
+//                        .intValue());
+//                c.setClientName(cust.getContactDetails().getLongName());
+//                c.setClientContactEmail(cust.getContactDetails()
+//                        .getContactEmail());
+//                c.setClientContactExt(cust.getContactDetails().getContactExt());
+//                c.setClientContactFirstname(cust.getContactDetails()
+//                        .getContactFirstname());
+//                c.setClientContactLastname(cust.getContactDetails()
+//                        .getContactLastname());
+//                c.setClientContactPhone(cust.getContactDetails()
+//                        .getContactPhone());
+//            }
+//        }
+//        return;
+//    }
+//
+//    /**
+//     * Creates a Map of {@link CustomerType} objects from the web service result
+//     * set type, RSCustomerSearch.
+//     * <p>
+//     * The newly created Map is keyed by customer id.
+//     * 
+//     * @param customerInfo
+//     *            An instance of {@link RSCustomerSearch}
+//     * @return Map<Integer, CustomerType>
+//     */
+//    public static final Map<Integer, CustomerType> createCustomerTypeMap(
+//            RSCustomerSearch customerInfo) {
+//        if (customerInfo == null) {
+//            return null;
+//        }
+//        List<CustomerType> list = customerInfo.getCustomerList();
+//        Map<Integer, CustomerType> map = new HashMap<Integer, CustomerType>();
+//        for (CustomerType cust : list) {
+//            map.put(cust.getCustomerId().intValue(), cust);
+//        }
+//        return map;
+//    }
 }

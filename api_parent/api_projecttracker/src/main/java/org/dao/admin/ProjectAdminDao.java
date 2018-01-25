@@ -40,26 +40,24 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    List<ClientDto> fetchClient(ClientDto criteria)
-            throws ProjectAdminDaoException;
+    List<ClientDto> fetchClient(ClientDto criteria) throws ProjectAdminDaoException;
 
-    /**
-     * Fetches one or more project clients including contact inforatmion using
-     * selection criteria.
-     * <p>
-     * This method will use property values as parameters for selection criteria
-     * where applicable. To select all clients, pass <i>criteria</i> as a null
-     * value.
-     * 
-     * @param criteria
-     *            an instance of {@link ClientDto} to filter results or null to
-     *            fetch all accounts.
-     * @return A List of {@link ClientDto} or null if no data is found.
-     * @throws ProjectAdminDaoException
-     *             general data access errors
-     */
-    List<ClientDto> fetchClientExt(ClientDto criteria)
-            throws ProjectAdminDaoException;
+//    /**
+//     * Fetches one or more project clients including contact inforatmion using
+//     * selection criteria.
+//     * <p>
+//     * This method will use property values as parameters for selection criteria
+//     * where applicable. To select all clients, pass <i>criteria</i> as a null
+//     * value.
+//     * 
+//     * @param criteria
+//     *            an instance of {@link ClientDto} to filter results or null to
+//     *            fetch all accounts.
+//     * @return A List of {@link ClientDto} or null if no data is found.
+//     * @throws ProjectAdminDaoException
+//     *             general data access errors
+//     */
+//    List<ClientDto> fetchClientExt(ClientDto criteria) throws ProjectAdminDaoException;
 
     /**
      * Fetches one or more projects using selection criteria.
@@ -75,8 +73,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    List<ProjectDto> fetchProject(ProjectDto criteria)
-            throws ProjectAdminDaoException;
+    List<ProjectDto> fetchProject(ProjectDto criteria)  throws ProjectAdminDaoException;
 
     /**
      * Fetches one or more employees using selection criteria.
@@ -92,8 +89,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws EmployeeDaoException
      *             general data access errors
      */
-    List<EmployeeDto> fetchEmployee(EmployeeDto criteria)
-            throws EmployeeDaoException;
+    List<EmployeeDto> fetchEmployee(EmployeeDto criteria) throws EmployeeDaoException;
 
     /**
      * Fetches one or more employee titles using selection criteria.
@@ -109,8 +105,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws EmployeeDaoException
      *             general data access errors
      */
-    List<EmployeeTitleDto> fetchEmployeeTitle(EmployeeTitleDto criteria)
-            throws EmployeeDaoException;
+    List<EmployeeTitleDto> fetchEmployeeTitle(EmployeeTitleDto criteria) throws EmployeeDaoException;
 
     /**
      * Fetches one or more employee types using selection criteria.
@@ -126,8 +121,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws EmployeeDaoException
      *             general data access errors
      */
-    List<EmployeeTypeDto> fetchEmployeeType(EmployeeTypeDto criteria)
-            throws EmployeeDaoException;
+    List<EmployeeTypeDto> fetchEmployeeType(EmployeeTypeDto criteria) throws EmployeeDaoException;
 
     /**
      * Fetches one or more tasks using selection criteria.
@@ -159,8 +153,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    List<EventDto> fetchEvent(EventDto criteria)
-            throws ProjectAdminDaoException;
+    List<EventDto> fetchEvent(EventDto criteria) throws ProjectAdminDaoException;
 
     /**
      * Fetches one or more project/client using selection criteria.
@@ -176,8 +169,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    List<ProjectClientDto> fetchProjectClient(ProjectClientDto criteria)
-            throws ProjectAdminDaoException;
+    List<ProjectClientDto> fetchProjectClient(ProjectClientDto criteria) throws ProjectAdminDaoException;
 
     /**
      * Fetches one or more project/employees using selection criteria.
@@ -193,8 +185,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws EmployeeDaoException
      *             general data access errors
      */
-    List<ProjectEmployeeDto> fetchProjectEmployee(ProjectEmployeeDto criteria)
-            throws EmployeeDaoException;
+    List<ProjectEmployeeDto> fetchProjectEmployee(ProjectEmployeeDto criteria) throws EmployeeDaoException;
 
     /**
      * Fetches one or more project/tasks using selection criteria.
@@ -210,8 +201,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    List<ProjectTaskDto> fetchProjectTask(ProjectTaskDto criteria)
-            throws ProjectAdminDaoException;
+    List<ProjectTaskDto> fetchProjectTask(ProjectTaskDto criteria) throws ProjectAdminDaoException;
 
     /**
      * Fetches one or more project/event using selection criteria.
@@ -227,8 +217,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    List<ProjectEventDto> fetchProjectEvent(ProjectEventDto criteria)
-            throws ProjectAdminDaoException;
+    List<ProjectEventDto> fetchProjectEvent(ProjectEventDto criteria) throws ProjectAdminDaoException;
 
     /**
      * Creates a new client.
@@ -345,8 +334,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws EmployeeDaoException
      *             general data access errors
      */
-    int maintainProjectEmployee(ProjectEmployeeDto obj)
-            throws EmployeeDaoException;
+    int maintainProjectEmployee(ProjectEmployeeDto obj) throws EmployeeDaoException;
 
     /**
      * Creates a new project task.
@@ -425,8 +413,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws EmployeeDaoException
      *             general data access errors
      */
-    int deleteEmployeeTitle(EmployeeTitleDto criteria)
-            throws EmployeeDaoException;
+    int deleteEmployeeTitle(EmployeeTitleDto criteria) throws EmployeeDaoException;
 
     /**
      * Deletes one or more employee types using selection criteria.
@@ -442,8 +429,7 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws EmployeeDaoException
      *             general data access errors
      */
-    int deleteEmployeeType(EmployeeTypeDto criteria)
-            throws EmployeeDaoException;
+    int deleteEmployeeType(EmployeeTypeDto criteria) throws EmployeeDaoException;
 
     /**
      * Deletes one or more tasks using selection criteria.
@@ -475,7 +461,6 @@ public interface ProjectAdminDao extends DaoClient {
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    int deleteProjectTask(ProjectTaskDto criteria)
-            throws ProjectAdminDaoException;
+    int deleteProjectTask(ProjectTaskDto criteria) throws ProjectAdminDaoException;
 
 }

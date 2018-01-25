@@ -155,78 +155,78 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getClientExt(int)
-     */
-    @Override
-    public ClientDto getClientExt(Integer clientId) throws ProjectApiException {
-        try {
-            Verifier.verifyNotNull(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id is required");
-        }
-        try {
-            Verifier.verifyPositive(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id must be greater than zero");
-        }
-        
-        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
-        criteria.setClientId(clientId);
-        List<ClientDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchClientExt(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving all project clients");
-            this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
-        }
+//    /*
+//     * (non-Javadoc)
+//     * 
+//     * @see org.modules.admin.ProjectApi#getClientExt(int)
+//     */
+//    @Override
+//    public ClientDto getClientExt(Integer clientId) throws ProjectApiException {
+//        try {
+//            Verifier.verifyNotNull(clientId);
+//        }
+//        catch (VerifyException e) {
+//            throw new InvalidDataException("Client Id is required");
+//        }
+//        try {
+//            Verifier.verifyPositive(clientId);
+//        }
+//        catch (VerifyException e) {
+//            throw new InvalidDataException("Client Id must be greater than zero");
+//        }
+//        
+//        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+//        criteria.setClientId(clientId);
+//        List<ClientDto> results;
+//        StringBuilder buf = new StringBuilder();
+//        try {
+//            results = dao.fetchClientExt(criteria);
+//            if (results == null) {
+//                return null;
+//            }
+//        } catch (ProjecttrackerDaoException e) {
+//            buf.append("Database error occurred retrieving all project clients");
+//            this.msg = buf.toString();
+//            throw new ProjectApiException(this.msg, e);
+//        }
+//
+//        try {
+//            Verifier.verifyTrue(results.size() == 1);
+//            return results.get(0);
+//        }
+//        catch (VerifyException e) {
+//            buf.append("Error: Query method is expecting a single client extended object to be returned using client id, ");
+//            buf.append(clientId);
+//            buf.append(".  Instead ");
+//            buf.append(results.size());
+//            buf.append("  were returned.");
+//            this.msg = buf.toString();
+//            throw new ProjectApiException(this.msg);
+//        }
+//    }
 
-        try {
-            Verifier.verifyTrue(results.size() == 1);
-            return results.get(0);
-        }
-        catch (VerifyException e) {
-            buf.append("Error: Query method is expecting a single client extended object to be returned using client id, ");
-            buf.append(clientId);
-            buf.append(".  Instead ");
-            buf.append(results.size());
-            buf.append("  were returned.");
-            this.msg = buf.toString();
-            throw new ProjectApiException(this.msg);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getClientExt()
-     */
-    @Override
-    public List<ClientDto> getAllClientExt() throws ProjectApiException {
-        ClientDto criteria = null;
-        List<ClientDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchClientExt(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving all extended clients");
-            this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
-        }
-        return results;
-    }
+//    /*
+//     * (non-Javadoc)
+//     * 
+//     * @see org.modules.admin.ProjectApi#getClientExt()
+//     */
+//    @Override
+//    public List<ClientDto> getAllClientExt() throws ProjectApiException {
+//        ClientDto criteria = null;
+//        List<ClientDto> results;
+//        StringBuilder buf = new StringBuilder();
+//        try {
+//            results = dao.fetchClientExt(criteria);
+//            if (results == null) {
+//                return null;
+//            }
+//        } catch (ProjecttrackerDaoException e) {
+//            buf.append("Database error occurred retrieving all extended clients");
+//            this.msg = buf.toString();
+//            throw new ProjectApiException(this.msg, e);
+//        }
+//        return results;
+//    }
 
     /*
      * (non-Javadoc)
@@ -1005,16 +1005,17 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             throw new ProjectApiException(this.msg, e);
         }
 
-        if (client == null) {
-            // Try to create client row
-            client = this.getClientExt(clientId);
-            if (client == null) {
-                this.msg = "Error updating Project due to client does not exists as a customer in the accounting system.  Client Id is "
-                        + clientId;
-                throw new ProjectApiException(this.msg);
-            }
-            this.addClient(client);
-        }
+        // TODO: Uncomment once getClientExt has been figured out.
+//        if (client == null) {
+//            // Try to create client row
+//            client = this.getClientExt(clientId);
+//            if (client == null) {
+//                this.msg = "Error updating Project due to client does not exists as a customer in the accounting system.  Client Id is "
+//                        + clientId;
+//                throw new ProjectApiException(this.msg);
+//            }
+//            this.addClient(client);
+//        }
 
         // Begin to process project data.
         int rc = this.dao.maintainProject(project);

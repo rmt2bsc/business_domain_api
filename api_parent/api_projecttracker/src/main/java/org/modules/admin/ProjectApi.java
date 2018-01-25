@@ -42,28 +42,28 @@ public interface ProjectApi extends TransactionApi {
      */
     ClientDto getClient(Integer clientId) throws ProjectApiException;
 
-    /**
-     * Find a single client containing customer data from the Accounting System
-     * using client id.
-     * 
-     * @param clientId
-     *            The client's id
-     * @return A {@link ClientDto} object or null if nothing is found.
-     * @throws ProjectApiException
-     *             when two or more clients are returned as a result of
-     *             <i>clientId</i> not being unique.
-     * @throws NotFoundException
-     *             when the client is not found.
-     */
-    ClientDto getClientExt(Integer clientId) throws ProjectApiException;
+//    /**
+//     * Find a single client containing customer data from the Accounting System
+//     * using client id.
+//     * 
+//     * @param clientId
+//     *            The client's id
+//     * @return A {@link ClientDto} object or null if nothing is found.
+//     * @throws ProjectApiException
+//     *             when two or more clients are returned as a result of
+//     *             <i>clientId</i> not being unique.
+//     * @throws NotFoundException
+//     *             when the client is not found.
+//     */
+//    ClientDto getClientExt(Integer clientId) throws ProjectApiException;
 
-    /**
-     * Find all clients with extended data.
-     * 
-     * @return A List of {@link ClientDto} objects or null if nothing is found.
-     * @throws ProjectApiException
-     */
-    List<ClientDto> getAllClientExt() throws ProjectApiException;
+//    /**
+//     * Find all clients with extended data.
+//     * 
+//     * @return A List of {@link ClientDto} objects or null if nothing is found.
+//     * @throws ProjectApiException
+//     */
+//    List<ClientDto> getAllClientExt() throws ProjectApiException;
 
     /**
      * Find all projects.
