@@ -101,28 +101,28 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
     private List<ProjClient> createMockMultipleClient() {
         List<ProjClient> list = new ArrayList<ProjClient>();
         ProjClient o = ProjectTrackerMockDataFactory.createMockOrmProjClient(
-                1000, 1350, "1000 Company", 70.00, 80.00, "000-111", "steve",
-                "gadd", "0000000000", "stevegadd@gte.net");
+                1000, 1350, "1000 Company", 70.00, 80.00, "000-111", "firstname0",
+                "lastname0", "0000000000", "firstname0lastname0@gte.net");
         list.add(o);
 
         o = ProjectTrackerMockDataFactory.createMockOrmProjClient(1001, 1351,
-                "1001 Company", 80.00, 90.00, "111-111", "billy", "cobham",
-                "1111111111", "billycobham@gte.net");
+                "1001 Company", 80.00, 90.00, "111-111", "firstname1", "lastname1",
+                "1111111111", "firstname1lastname1@gte.net");
         list.add(o);
 
         o = ProjectTrackerMockDataFactory.createMockOrmProjClient(1002, 1352,
-                "1002 Company", 90.00, 100.00, "222-111", "dennis", "chambers",
-                "2222222222", "dennischamabers@gte.net");
+                "1002 Company", 90.00, 100.00, "222-111", "firstname2", "lastname2",
+                "2222222222", "firstname2lastname2@gte.net");
         list.add(o);
 
         o = ProjectTrackerMockDataFactory.createMockOrmProjClient(1003, 1353,
-                "1003 Company", 100.00, 110.00, "333-111", "harvey", "mason",
-                "3333333333", "harveymason@gte.net");
+                "1003 Company", 100.00, 110.00, "333-111", "firstname3", "lastname3",
+                "3333333333", "firstname3lastname3@gte.net");
         list.add(o);
 
         o = ProjectTrackerMockDataFactory.createMockOrmProjClient(1004, 1354,
-                "1004 Company", 110.00, 120.00, "444-111", "raford", "griffin",
-                "4444444444", "rayfordgriffin@gte.net");
+                "1004 Company", 110.00, 120.00, "444-111", "firstname4", "lastname4",
+                "4444444444", "firstname4lastname4@gte.net");
         list.add(o);
         return list;
     }

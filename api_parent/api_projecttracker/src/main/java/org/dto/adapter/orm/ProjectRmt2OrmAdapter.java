@@ -955,14 +955,14 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      */
     @Override
     public String getClientName() {
+        if (this.pc != null) {
+            return this.pc.getName();
+        }
         if (this.vep != null) {
             return this.vep.getClientName();
         }
         if (this.vpc != null) {
             return this.vpc.getName();
-        }
-        if (this.vep != null) {
-            return this.vep.getClientName();
         }
         return null;
     }
