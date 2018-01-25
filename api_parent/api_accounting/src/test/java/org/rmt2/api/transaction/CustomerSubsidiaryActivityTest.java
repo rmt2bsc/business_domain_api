@@ -24,7 +24,7 @@ import org.modules.transaction.XactApiFactory;
 import org.modules.transaction.XactConst;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
@@ -122,7 +122,7 @@ public class CustomerSubsidiaryActivityTest extends TransactionApiTestData {
         mockXactCriteria.setId(111111);
         try {
             List<VwXactList> list = new ArrayList<VwXactList>();
-            VwXactList o = AccountingMockDataUtility.createMockOrmXact(111111, XactConst.XACT_TYPE_CASHPAY, 3333,
+            VwXactList o = AccountingMockDataFactory.createMockOrmXact(111111, XactConst.XACT_TYPE_CASHPAY, 3333,
                     RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
             list.add(o);
             when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))

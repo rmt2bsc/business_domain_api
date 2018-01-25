@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.modules.transaction.sales.SalesApiConst;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 import com.util.RMT2Date;
 
@@ -22,7 +22,7 @@ public class SalesOrderStatusHistoryOrmTest {
 
     @Test
     public void testToString() {
-        SalesOrderStatusHist o = AccountingMockDataUtility.createMockOrmSalesOrderStatusHist(70, 1000,
+        SalesOrderStatusHist o = AccountingMockDataFactory.createMockOrmSalesOrderStatusHist(70, 1000,
                 SalesApiConst.STATUS_CODE_NEW, "2017-01-10", "2017-01-31");
         String val = o.toString();
         System.out.println(val);
@@ -38,7 +38,7 @@ public class SalesOrderStatusHistoryOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmSalesOrderStatusHist(70, 1000, SalesApiConst.STATUS_CODE_NEW,
+        o1 = AccountingMockDataFactory.createMockOrmSalesOrderStatusHist(70, 1000, SalesApiConst.STATUS_CODE_NEW,
                 "2017-01-10", "2017-01-31");
         o2 = new SalesOrderStatusHist();
         result = o1.equals(o2);
@@ -71,9 +71,9 @@ public class SalesOrderStatusHistoryOrmTest {
 
     @Test
     public void testHashCode() {
-        SalesOrderStatusHist o1 = AccountingMockDataUtility.createMockOrmSalesOrderStatusHist(70, 1000,
+        SalesOrderStatusHist o1 = AccountingMockDataFactory.createMockOrmSalesOrderStatusHist(70, 1000,
                 SalesApiConst.STATUS_CODE_NEW, "2017-01-10", "2017-01-31");
-        SalesOrderStatusHist o2 = AccountingMockDataUtility.createMockOrmSalesOrderStatusHist(70, 1000,
+        SalesOrderStatusHist o2 = AccountingMockDataFactory.createMockOrmSalesOrderStatusHist(70, 1000,
                 SalesApiConst.STATUS_CODE_NEW, "2017-01-10", "2017-01-31");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());

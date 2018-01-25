@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.modules.inventory.InventoryConst;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 public class VwSalesorderItemsBySalesorderOrmTest {
 
@@ -23,20 +23,20 @@ public class VwSalesorderItemsBySalesorderOrmTest {
     }
 
     private VwSalesorderItemsBySalesorder buildItem() {
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(2000,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(2000,
                 1351, 0, 333, "C1234580", "Customer 1");
-        SalesOrder so = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
+        SalesOrder so = AccountingMockDataFactory.createMockOrmSalesOrder(1000,
                 2000, 0, 300.00, "2017-01-01");
-        ItemMasterType imt = AccountingMockDataUtility
+        ItemMasterType imt = AccountingMockDataFactory
                 .createMockOrmItemMasterType(InventoryConst.ITEM_TYPE_MERCH,
                         "ItemTypeMerchandise");
-        SalesOrderItems soi = AccountingMockDataUtility
+        SalesOrderItems soi = AccountingMockDataFactory
                 .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
-        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(
+        ItemMaster im = AccountingMockDataFactory.createMockOrmItemMaster(
                 123450, InventoryConst.ITEM_TYPE_MERCH, "111-111-110",
                 "11111110", 1351, "Item1", 10, 20.00, true);
 
-        VwSalesorderItemsBySalesorder orm = AccountingMockDataUtility
+        VwSalesorderItemsBySalesorder orm = AccountingMockDataFactory
                 .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
                         imt);
         return orm;

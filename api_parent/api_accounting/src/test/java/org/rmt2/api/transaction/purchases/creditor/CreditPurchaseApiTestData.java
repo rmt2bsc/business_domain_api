@@ -6,7 +6,7 @@ import java.util.List;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.junit.Before;
 import org.modules.transaction.XactConst;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.transaction.TransactionApiTestData;
 
 public class CreditPurchaseApiTestData extends TransactionApiTestData {
@@ -34,7 +34,7 @@ public class CreditPurchaseApiTestData extends TransactionApiTestData {
 
     private List<VwXactCreditChargeList> createMockCreditPurchaseAllsponse() {
         List<VwXactCreditChargeList> list = new ArrayList<VwXactCreditChargeList>();
-        VwXactCreditChargeList o = AccountingMockDataUtility
+        VwXactCreditChargeList o = AccountingMockDataFactory
                 .createMockOrmXVwXactCreditChargeList(7000, 1111111, 1351,
                         XactConst.XACT_TYPE_CREDITOR_PURCHASE, "1111",
                         XactConst.XACT_SUBTYPE_NOT_ASSIGNED, 20.00,
@@ -42,25 +42,25 @@ public class CreditPurchaseApiTestData extends TransactionApiTestData {
                         "1111-0000-0000-0000");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXVwXactCreditChargeList(7001,
+        o = AccountingMockDataFactory.createMockOrmXVwXactCreditChargeList(7001,
                 2222222, 1352, XactConst.XACT_TYPE_CREDITOR_PURCHASE, "2222",
                 XactConst.XACT_SUBTYPE_NOT_ASSIGNED, 21.00, "2017-01-01",
                 XactConst.TENDER_CREDITCARD, "2222-0000-0000-0000");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXVwXactCreditChargeList(7002,
+        o = AccountingMockDataFactory.createMockOrmXVwXactCreditChargeList(7002,
                 3333333, 1353, XactConst.XACT_TYPE_CREDITOR_PURCHASE, "3333",
                 XactConst.XACT_SUBTYPE_NOT_ASSIGNED, 22.00, "2017-01-01",
                 XactConst.TENDER_CREDITCARD, "3333-0000-0000-0000");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXVwXactCreditChargeList(7003,
+        o = AccountingMockDataFactory.createMockOrmXVwXactCreditChargeList(7003,
                 4444444, 1354, XactConst.XACT_TYPE_CREDITOR_PURCHASE, "4444",
                 XactConst.XACT_SUBTYPE_NOT_ASSIGNED, 23.00, "2017-01-01",
                 XactConst.TENDER_CREDITCARD, "4444-0000-0000-0000");
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmXVwXactCreditChargeList(7004,
+        o = AccountingMockDataFactory.createMockOrmXVwXactCreditChargeList(7004,
                 5555555, 1355, XactConst.XACT_TYPE_CREDITOR_PURCHASE, "5555",
                 XactConst.XACT_SUBTYPE_NOT_ASSIGNED, 24.00, "2017-01-01",
                 XactConst.TENDER_CREDITCARD, "5555-0000-0000-0000");
@@ -70,7 +70,7 @@ public class CreditPurchaseApiTestData extends TransactionApiTestData {
 
     private List<VwXactCreditChargeList> createMockCreditPurchaseSingleResponse() {
         List<VwXactCreditChargeList> list = new ArrayList<VwXactCreditChargeList>();
-        VwXactCreditChargeList o = AccountingMockDataUtility
+        VwXactCreditChargeList o = AccountingMockDataFactory
 .createMockOrmXVwXactCreditChargeList(7000, 111111, 1351,
                         XactConst.XACT_TYPE_CREDITOR_PURCHASE, "1111",
                         XactConst.XACT_SUBTYPE_NOT_ASSIGNED, 20.00,

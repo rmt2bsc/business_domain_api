@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 /**
  * Test GL Account related adapters
@@ -33,7 +33,7 @@ public class AccountAdapterTest {
 
     @Test
     public void testAccountAdapter() {
-        GlAccounts o = AccountingMockDataUtility.createMockOrmGlAccounts(100,
+        GlAccounts o = AccountingMockDataFactory.createMockOrmGlAccounts(100,
                 200, 300, 1, "GL_100", "ACCT_RECV", "234",
                 "Accounts Receivable", 1);
         AccountDto dto = Rmt2AccountDtoFactory.createAccountInstance(o);
@@ -65,7 +65,7 @@ public class AccountAdapterTest {
     
     @Test
     public void testAccountTypeAdapter() {
-        GlAccountTypes o1 = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes o1 = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
         AccountTypeDto dto = Rmt2AccountDtoFactory.createAccountTypeInstance(o1);
         
         Assert.assertEquals("Asset", dto.getAcctTypeDescription());
@@ -90,7 +90,7 @@ public class AccountAdapterTest {
     
     @Test
     public void testAccountCategoryAdapter() {
-        GlAccountCategory o = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory o = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         AccountCategoryDto dto= Rmt2AccountDtoFactory.createAccountCategoryInstance(o);
         
         Assert.assertEquals("Category1", dto.getAcctCatgDescription());
@@ -114,7 +114,7 @@ public class AccountAdapterTest {
     
     @Test
     public void testAccountViewAdapter() {
-        VwAccount o = AccountingMockDataUtility.createMockOrmVwAccounts(100,
+        VwAccount o = AccountingMockDataFactory.createMockOrmVwAccounts(100,
                 200, 300, 1, "GL_100", "ACCT_RECV", "234",
                 "Accounts Receivable", 1);
         AccountExtDto dto = Rmt2AccountDtoFactory.createAccountExtInstance(o);

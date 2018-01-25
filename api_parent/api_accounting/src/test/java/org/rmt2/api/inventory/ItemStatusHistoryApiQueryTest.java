@@ -21,7 +21,7 @@ import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.InvalidDataException;
@@ -76,7 +76,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMasterStatusHist> createMockSingleFetchResponse() {
         List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataUtility
+        ItemMasterStatusHist p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
                         "Item Status History Description 1");
@@ -91,13 +91,13 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
      */
     private List<ItemMasterStatusHist> createMockFetchUsingCriteriaResponse() {
         List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataUtility
+        ItemMasterStatusHist p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
                         "Item Status History Description 1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(11,
+        p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(11,
                 100, 1001, 13.50, 3, "2107-01-16", "2017-03-15",
                 "Item Status History Description 2");
         list.add(p);
@@ -107,28 +107,28 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMasterStatusHist> createMockFetchAllResponse() {
         List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataUtility
+        ItemMasterStatusHist p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
                         "Item Status History Description 1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(11,
+        p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(11,
                 101, 1001, 12.50, 3, "2107-02-16", "2017-03-15",
                 "Item Status History Description 2");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(12,
+        p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(12,
                 102, 1000, 3.50, 3, "2107-01-01", "2017-02-15",
                 "Item Status History Description 3");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(13,
+        p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(13,
                 103, 1001, 3.50, 3, "2107-02-15", "2017-03-15",
                 "Item Status History Description 4");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(14,
+        p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(14,
                 104, 1003, 93.50, 3, "2107-02-15", "2017-03-15",
                 "Item Status History Description 5");
         list.add(p);

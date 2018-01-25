@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 public class GLAccountTypesOrmTest {
 
@@ -19,7 +19,7 @@ public class GLAccountTypesOrmTest {
 
     @Test
     public void testToString() {
-        GlAccountTypes o1 = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes o1 = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
         String val = o1.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -34,7 +34,7 @@ public class GLAccountTypesOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        o1 = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
         o2 = new GlAccountTypes();
         result = o1.equals(o2);
         Assert.assertFalse(result);
@@ -54,8 +54,8 @@ public class GLAccountTypesOrmTest {
 
     @Test
     public void testHashCode() {
-        GlAccountTypes o1 = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
-        GlAccountTypes o2 = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes o1 = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes o2 = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

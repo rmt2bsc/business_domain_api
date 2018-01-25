@@ -51,7 +51,7 @@ import org.rmt2.jaxb.ObjectFactory;
 import com.SystemException;
 import com.util.RMT2Date;
 
-public class AccountingMockDataUtility {
+public class AccountingMockDataFactory {
 
     public static final GlAccounts createMockOrmGlAccounts(int acctId,
             int acctTypeId, int acctCatgId, int acctSeq, String acctNo,
@@ -74,7 +74,7 @@ public class AccountingMockDataUtility {
             int acctTypeId, int acctCatgId, int acctSeq, String acctNo,
             String acctName, String acctCode, String acctDescription,
             int acctBalTypeId) {
-        GlAccounts orm = AccountingMockDataUtility.createMockOrmGlAccounts(
+        GlAccounts orm = AccountingMockDataFactory.createMockOrmGlAccounts(
                 acctId, acctTypeId, acctCatgId, acctSeq, acctNo, acctName,
                 acctCode, acctDescription, acctBalTypeId);
         AccountDto dto = Rmt2AccountDtoFactory.createAccountInstance(orm);

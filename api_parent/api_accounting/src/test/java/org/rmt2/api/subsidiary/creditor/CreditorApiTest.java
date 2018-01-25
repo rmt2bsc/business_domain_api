@@ -34,7 +34,7 @@ import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.subsidiary.SubsidiaryException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
 import org.rmt2.jaxb.BusinessType;
 
@@ -936,8 +936,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Creditor cred = AccountingMockDataFactory.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         int newCreditorId = 1350;
@@ -971,8 +971,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             e.printStackTrace();
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Creditor cred = AccountingMockDataFactory.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
@@ -997,8 +997,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             e.printStackTrace();
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Creditor cred = AccountingMockDataFactory.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
@@ -1020,7 +1020,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         
         int invalidAcctTypeId = 5;
         List<GlAccounts> mockGLAccountListResults = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, invalidAcctTypeId, 300, 1, "GL_200", "ACCT_PAY", "234",
+        GlAccounts p = AccountingMockDataFactory.createMockOrmGlAccounts(1234, invalidAcctTypeId, 300, 1, "GL_200", "ACCT_PAY", "234",
                 "Accounts Payable", 1);
         mockGLAccountListResults.add(p);
         
@@ -1032,8 +1032,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Creditor cred = AccountingMockDataFactory.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
@@ -1061,8 +1061,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         }
 
         int invalidBusinessId = 0;
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, invalidBusinessId, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(invalidBusinessId, "ABC Company", "roy", "terrell",
+        Creditor cred = AccountingMockDataFactory.createMockOrmCreditor(0, invalidBusinessId, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(invalidBusinessId, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
@@ -1090,8 +1090,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         }
 
         int invalidCreditorTypeId = 0;
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 0, "GL_200", "932-392-339", invalidCreditorTypeId);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Creditor cred = AccountingMockDataFactory.createMockOrmCreditor(0, 4000, 0, "GL_200", "932-392-339", invalidCreditorTypeId);
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
@@ -1134,7 +1134,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             Assert.fail("Creditor updateRow test case setup failed");
         }
 
-        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+        Creditor updateCreditor = AccountingMockDataFactory.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
                 "932-392-339", 1);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1155,7 +1155,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
         this.setupNotFoundSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
 
-        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+        Creditor updateCreditor = AccountingMockDataFactory.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
                 "932-392-339", 1);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1177,7 +1177,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         this.setupSingleSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCreditorSubsidiaryCriteria);
 
         int invalidCreditorTypeId = 0;
-        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+        Creditor updateCreditor = AccountingMockDataFactory.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
                 "932-392-339", invalidCreditorTypeId);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1284,7 +1284,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             Assert.fail("Creditor updateRow with excetpion test case setup failed");
         }
 
-        Creditor updateCreditor = AccountingMockDataUtility.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
+        Creditor updateCreditor = AccountingMockDataFactory.createMockOrmCreditor(1350, 4000, 1234, "GL_200",
                 "932-392-339", 1);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1311,8 +1311,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Creditor cred = AccountingMockDataUtility.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
+        Creditor cred = AccountingMockDataFactory.createMockOrmCreditor(0, 4000, 1234, "GL_200", "932-392-339", 1);
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         int newCreditorId = 1350;

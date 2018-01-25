@@ -21,7 +21,7 @@ import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.InvalidDataException;
@@ -75,7 +75,7 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMasterType> createMockSingleFetchResponse() {
         List<ItemMasterType> list = new ArrayList<ItemMasterType>();
-        ItemMasterType p = AccountingMockDataUtility
+        ItemMasterType p = AccountingMockDataFactory
                 .createMockOrmItemMasterType(100, "Item Type #1");
         list.add(p);
         return list;
@@ -88,11 +88,11 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
      */
     private List<ItemMasterType> createMockFetchUsingCriteriaResponse() {
         List<ItemMasterType> list = new ArrayList<ItemMasterType>();
-        ItemMasterType p = AccountingMockDataUtility
+        ItemMasterType p = AccountingMockDataFactory
                 .createMockOrmItemMasterType(100, "Item Type #1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMasterType(200,
+        p = AccountingMockDataFactory.createMockOrmItemMasterType(200,
                 "Item Type #2");
         list.add(p);
 
@@ -101,23 +101,23 @@ public class ItemMasterTypeApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMasterType> createMockFetchAllResponse() {
         List<ItemMasterType> list = new ArrayList<ItemMasterType>();
-        ItemMasterType p = AccountingMockDataUtility
+        ItemMasterType p = AccountingMockDataFactory
                 .createMockOrmItemMasterType(100, "Item Type #1");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterType(101, "Item Type #2");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterType(102, "Item Type #3");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterType(103, "Item Type #4");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterType(104, "Item Type #5");
         list.add(p);
         return list;

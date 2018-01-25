@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 public class GLAccountCategoryOrmTest {
 
@@ -19,7 +19,7 @@ public class GLAccountCategoryOrmTest {
 
     @Test
     public void testToString() {
-        GlAccountCategory o1 = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory o1 = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         String val = o1.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -34,7 +34,7 @@ public class GLAccountCategoryOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        o1 = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         o2 = new GlAccountCategory();
         result = o1.equals(o2);
         Assert.assertFalse(result);
@@ -54,8 +54,8 @@ public class GLAccountCategoryOrmTest {
 
     @Test
     public void testHashCode() {
-        GlAccountCategory o1 = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
-        GlAccountCategory o2 = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory o1 = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory o2 = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

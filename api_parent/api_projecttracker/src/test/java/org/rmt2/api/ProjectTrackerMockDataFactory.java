@@ -13,7 +13,7 @@ import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 
 import com.util.RMT2Date;
 
-public class ProjectTrackerMockDataUtility {
+public class ProjectTrackerMockDataFactory {
 
     /**
      * 

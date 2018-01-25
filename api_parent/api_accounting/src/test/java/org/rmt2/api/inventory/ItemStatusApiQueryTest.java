@@ -21,7 +21,7 @@ import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.InvalidDataException;
@@ -75,7 +75,7 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMasterStatus> createMockSingleFetchResponse() {
         List<ItemMasterStatus> list = new ArrayList<ItemMasterStatus>();
-        ItemMasterStatus p = AccountingMockDataUtility
+        ItemMasterStatus p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(100, "Item Status #1");
         list.add(p);
         return list;
@@ -88,11 +88,11 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
      */
     private List<ItemMasterStatus> createMockFetchUsingCriteriaResponse() {
         List<ItemMasterStatus> list = new ArrayList<ItemMasterStatus>();
-        ItemMasterStatus p = AccountingMockDataUtility
+        ItemMasterStatus p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(100, "Item Status #1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMasterStatus(200,
+        p = AccountingMockDataFactory.createMockOrmItemMasterStatus(200,
                 "Item Status #2");
         list.add(p);
 
@@ -101,23 +101,23 @@ public class ItemStatusApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMasterStatus> createMockFetchAllResponse() {
         List<ItemMasterStatus> list = new ArrayList<ItemMasterStatus>();
-        ItemMasterStatus p = AccountingMockDataUtility
+        ItemMasterStatus p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(100, "Item Status #1");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(101, "Item Status #2");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(102, "Item Status #3");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(103, "Item Status #4");
         list.add(p);
 
-        p = AccountingMockDataUtility
+        p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(104, "Item Status #5");
         list.add(p);
         return list;

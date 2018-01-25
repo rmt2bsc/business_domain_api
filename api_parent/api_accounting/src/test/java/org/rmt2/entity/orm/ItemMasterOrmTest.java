@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 public class ItemMasterOrmTest {
 
@@ -19,7 +19,7 @@ public class ItemMasterOrmTest {
 
     @Test
     public void testToString() {
-        ItemMaster o =  AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster o =  AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         String val = o.toString();
         System.out.println(val);
@@ -35,7 +35,7 @@ public class ItemMasterOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        o1 = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         o2 = new ItemMaster();
         result = o1.equals(o2);
@@ -88,10 +88,10 @@ public class ItemMasterOrmTest {
 
     @Test
     public void testHashCode() {
-        ItemMaster o1 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster o1 = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
 
-        ItemMaster o2 = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster o2 = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());

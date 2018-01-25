@@ -26,7 +26,7 @@ import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.InvalidDataException;
@@ -86,7 +86,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
     private List<VwVendorItems> createMockSingleFetchResponse() {
         List<VwVendorItems> list = new ArrayList<VwVendorItems>();
-        VwVendorItems p = AccountingMockDataUtility.createMockOrmVwVendorItems(
+        VwVendorItems p = AccountingMockDataFactory.createMockOrmVwVendorItems(
                 100, "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23);
         list.add(p);
         return list;
@@ -99,11 +99,11 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
      */
     private List<VwVendorItems> createMockFetchUsingCriteriaResponse() {
         List<VwVendorItems> list = new ArrayList<VwVendorItems>();
-        VwVendorItems p = AccountingMockDataUtility.createMockOrmVwVendorItems(
+        VwVendorItems p = AccountingMockDataFactory.createMockOrmVwVendorItems(
                 100, "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmVwVendorItems(200,
+        p = AccountingMockDataFactory.createMockOrmVwVendorItems(200,
                 "222-222-222", "22222222", 1234, "Item # 2", 15, 0.99);
         list.add(p);
 
@@ -112,23 +112,23 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
     private List<VwVendorItems> createMockFetchAllResponse() {
         List<VwVendorItems> list = new ArrayList<VwVendorItems>();
-        VwVendorItems p = AccountingMockDataUtility.createMockOrmVwVendorItems(
+        VwVendorItems p = AccountingMockDataFactory.createMockOrmVwVendorItems(
                 100, "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmVwVendorItems(200,
+        p = AccountingMockDataFactory.createMockOrmVwVendorItems(200,
                 "222-222-222", "22222222", 1234, "Item # 2", 15, 0.99);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmVwVendorItems(300,
+        p = AccountingMockDataFactory.createMockOrmVwVendorItems(300,
                 "333-333-333", "3333333", 1234, "Item # 3", 15, 4.55);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmVwVendorItems(400,
+        p = AccountingMockDataFactory.createMockOrmVwVendorItems(400,
                 "444-444-444", "4444444", 1234, "Item # 4", 100, 10.99);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmVwVendorItems(500,
+        p = AccountingMockDataFactory.createMockOrmVwVendorItems(500,
                 "555-555-555", "5555555", 1234, "Item # 5", 55, 32.99);
         list.add(p);
         return list;
@@ -136,7 +136,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
     private List<Creditor> createMockSingleCreditorFetchResponse() {
         List<Creditor> list = new ArrayList<Creditor>();
-        Creditor o = AccountingMockDataUtility.createMockOrmCreditor(200, 1351,
+        Creditor o = AccountingMockDataFactory.createMockOrmCreditor(200, 1351,
                 333, "C1234589", "123-456-789", 22);
         list.add(o);
         return list;
@@ -144,7 +144,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
     private List<VwBusinessAddress> createMockSingleContactFetchResponse() {
         List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
-        VwBusinessAddress p = AccountingMockDataUtility
+        VwBusinessAddress p = AccountingMockDataFactory
                 .createMockOrmBusinessContact(1351, "ABC Company", 2222,
                         "94393 Hall Ave.", "Building 123", "Suite 300",
                         "Room 45", "Dallas", "TX", 75232);
@@ -299,7 +299,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
     @Test
     public void testUpdateVendorItem() {
-        VwVendorItems updateVendorItem = AccountingMockDataUtility
+        VwVendorItems updateVendorItem = AccountingMockDataFactory
                 .createMockOrmVwVendorItems(100, "111-111-111", "11111111",
                         1351, "Updated Item #1", 50, 1.55);
 
@@ -371,7 +371,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
     @Test
     public void testUpdateVendorItemWithException() {
-        VwVendorItems updateVendorItem = AccountingMockDataUtility
+        VwVendorItems updateVendorItem = AccountingMockDataFactory
                 .createMockOrmVwVendorItems(100, "111-111-111", "11111111",
                         1351, "Updated Item #1", 50, 1.55);
 

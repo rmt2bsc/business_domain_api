@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 import com.util.RMT2Date;
 
@@ -21,7 +21,7 @@ public class ItemMasterStatusHistOrmTest {
 
     @Test
     public void testToString() {
-        ItemMasterStatusHist o = AccountingMockDataUtility
+        ItemMasterStatusHist o = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
                         "Item Status History Description 1");
@@ -39,7 +39,7 @@ public class ItemMasterStatusHistOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmItemMasterStatusHistory(10,
+        o1 = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(10,
                 100, 1000, 12.50, 3, "2107-01-01", "2017-02-15",
                 "Item Status History Description 1");
         o2 = new ItemMasterStatusHist();
@@ -81,12 +81,12 @@ public class ItemMasterStatusHistOrmTest {
 
     @Test
     public void testHashCode() {
-        ItemMasterStatusHist o1 = AccountingMockDataUtility
+        ItemMasterStatusHist o1 = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
                         "Item Status History Description 1");
 
-        ItemMasterStatusHist o2 = AccountingMockDataUtility
+        ItemMasterStatusHist o2 = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
                         "Item Status History Description 1");

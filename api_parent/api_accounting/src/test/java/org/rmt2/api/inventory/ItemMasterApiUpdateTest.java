@@ -31,7 +31,7 @@ import org.modules.inventory.InventoryApiFactory;
 import org.modules.inventory.InventoryConst;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.InvalidDataException;
@@ -78,17 +78,17 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
  
     private List<VwItemAssociations> createMockItemAssoicationsSearchResultsResponse() {
         List<VwItemAssociations> list = new ArrayList<VwItemAssociations>();
-        VwItemAssociations o = AccountingMockDataUtility.createMockOrmVwItemAssociations(22, 22, 100, "so", 10, 2.22);
+        VwItemAssociations o = AccountingMockDataFactory.createMockOrmVwItemAssociations(22, 22, 100, "so", 10, 2.22);
         list.add(o);
 
-        o = AccountingMockDataUtility.createMockOrmVwItemAssociations(23, 23, 100, "so", 5, 2.22);
+        o = AccountingMockDataFactory.createMockOrmVwItemAssociations(23, 23, 100, "so", 5, 2.22);
         list.add(o);
         return list;
     }
 
     private List<ItemMaster> createMockSingleFetchResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster p = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         list.add(p);
         return list;
@@ -101,11 +101,11 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
      */
     private List<ItemMaster> createMockFetchUsingCriteriaResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster p = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "444-111-111", "1234567", 4567, "Item # 10", 5, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(102, 1,
                 "555-111-111", "3232333", 5432, "Item # 12", 15, 5, true);
         list.add(p);
 
@@ -114,23 +114,23 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
 
     private List<ItemMaster> createMockFetchAllResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster p = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(102, 1,
                 "102-111-111", "10211111", 4321, "Item # 2", 15, 5, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(103, 1,
                 "200-111-111", "20011111", 5555, "Item # 3", 115, 35.80, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(104, 1,
                 "300-111-111", "30011111", 1234, "Item # 4", 300, 0.99, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(105, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(105, 1,
                 "400-111-111", "40011111", 6543, "Item # 5", 1000, 21.99, true);
         list.add(p);
         return list;
@@ -139,7 +139,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     private List<ItemMasterStatus> createMockSingleItemStatusFetchResponse(
             int statusId) {
         List<ItemMasterStatus> list = new ArrayList<ItemMasterStatus>();
-        ItemMasterStatus p = AccountingMockDataUtility
+        ItemMasterStatus p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatus(statusId,
                         "Item Status " + statusId);
         list.add(p);
@@ -149,7 +149,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     private List<ItemMasterStatusHist> createMockSingleItemStatusHistFetchResponse(
             int statusId) {
         List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataUtility
+        ItemMasterStatusHist p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, statusId, 12.50,
                         3, "2107-01-01", null,
                         "Item Status History Description " + statusId);
@@ -215,7 +215,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Item master status history update/insert row test case setup failed");
         }
 
-        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(100,
+        ItemMaster im = AccountingMockDataFactory.createMockOrmItemMaster(100,
                 1, "111-111-111", "11111111", 1234, "Modified Item #1", 5, 1.23,
                 true);
         ItemMasterDto dto = Rmt2ItemMasterDtoFactory
@@ -284,7 +284,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Item master insert row test case setup failed");
         }
 
-        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(0, 1,
+        ItemMaster im = AccountingMockDataFactory.createMockOrmItemMaster(0, 1,
                 "111-111-111", "11111111", 1234, "Item #1", 5, 1.23, true);
         ItemMasterDto dto = Rmt2ItemMasterDtoFactory
                 .createItemMasterInstance(im);
@@ -517,11 +517,11 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     
     @Test
     public void testAddInventoryOverrideMultipleItems() {
-        ItemMaster item2 = AccountingMockDataUtility.createMockOrmItemMaster(200, 1,
+        ItemMaster item2 = AccountingMockDataFactory.createMockOrmItemMaster(200, 1,
                 "222-111-111", "2222222", 1234, "Item # 2", 5, 1.23, true);
         List<ItemMaster> mockSingleFetchResponse2 = new ArrayList<ItemMaster>();
         mockSingleFetchResponse2.add(item2);
-        ItemMaster item3 = AccountingMockDataUtility.createMockOrmItemMaster(300, 1,
+        ItemMaster item3 = AccountingMockDataFactory.createMockOrmItemMaster(300, 1,
                 "333-111-111", "3333333", 1234, "Item # 3", 5, 1.23, true);
         List<ItemMaster> mockSingleFetchResponse3 = new ArrayList<ItemMaster>();
         mockSingleFetchResponse3.add(item3);
@@ -708,11 +708,11 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     
     @Test
     public void testAssignVendorItems() {
-        ItemMaster item2 = AccountingMockDataUtility.createMockOrmItemMaster(200, 1,
+        ItemMaster item2 = AccountingMockDataFactory.createMockOrmItemMaster(200, 1,
                 "222-111-111", "2222222", 1234, "Item # 2", 5, 1.23, true);
         List<ItemMaster> mockSingleFetchResponse2 = new ArrayList<ItemMaster>();
         mockSingleFetchResponse2.add(item2);
-        ItemMaster item3 = AccountingMockDataUtility.createMockOrmItemMaster(300, 1,
+        ItemMaster item3 = AccountingMockDataFactory.createMockOrmItemMaster(300, 1,
                 "333-111-111", "3333333", 1234, "Item # 3", 5, 1.23, true);
         List<ItemMaster> mockSingleFetchResponse3 = new ArrayList<ItemMaster>();
         mockSingleFetchResponse3.add(item3);
@@ -1411,22 +1411,22 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         List<ItemMaster> list4 = new ArrayList<ItemMaster>();
         List<ItemMaster> list5 = new ArrayList<ItemMaster>();
         
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster p = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 4321, "Item # 1", 5, 1.23, true);
         p.setOverrideRetail(1);
         list1.add(p);
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(102, 1,
                 "102-111-111", "10211111", 4321, "Item # 2", 15, 5, true);
         list2.add(p);
         p.setOverrideRetail(1);
-        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(103, 1,
                 "200-111-111", "20011111", 4321, "Item # 3", 115, 35.80, true);
         list3.add(p);
-        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(104, 1,
                 "300-111-111", "30011111", 4321, "Item # 4", 300, 0.99, true);
         list4.add(p);
         p.setOverrideRetail(1);
-        p = AccountingMockDataUtility.createMockOrmItemMaster(105, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(105, 1,
                 "400-111-111", "40011111", 4321, "Item # 5", 1000, 21.99, true);
         list5.add(p);
         
@@ -1687,7 +1687,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Item master update row with exception test case setup failed");
         }
 
-        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(100,
+        ItemMaster im = AccountingMockDataFactory.createMockOrmItemMaster(100,
                 1, "111-111-111", "11111111", 1234, "Modified Item #1", 5, 1.23,
                 true);
         ItemMasterDto dto = Rmt2ItemMasterDtoFactory.createItemMasterInstance(im);
@@ -1723,7 +1723,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Item master update row with exception test case setup failed");
         }
 
-        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(0,
+        ItemMaster im = AccountingMockDataFactory.createMockOrmItemMaster(0,
                 1, "111-111-111", "11111111", 1234, "Modified Item #1", 5, 1.23,
                 true);
         ItemMasterDto dto = Rmt2ItemMasterDtoFactory.createItemMasterInstance(im);
