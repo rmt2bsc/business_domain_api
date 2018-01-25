@@ -7,13 +7,17 @@ import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.ProjEmployeeType;
+import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
+import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
+import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
+import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.junit.After;
 import org.junit.Before;
 
 /**
- * Project Tracker Aministration testing facility that is mainly responsible for
+ * Project Tracker Administration testing facility that is mainly responsible for
  * setting up mock data.
  * <p>
  * All derived project tracker related Api unit tests should inherit this class
@@ -35,6 +39,15 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
     protected List<ProjEmployeeTitle> mockEmployeeTitleFetchSingle;
     protected List<VwEmployeeProjects> mockVwEmployeeProjectsFetchMultiple;
     protected List<VwEmployeeProjects> mockVwEmployeeProjectsFetchSingle;
+    protected List<ProjEvent> mockProjEventFetchMultiple;
+    protected List<ProjEvent> mockProjEventFetchSingle;
+    protected List<VwTimesheetEventList> mockVwTimesheetEventListFetchMultiple;
+    protected List<VwTimesheetEventList> mockVwTimesheetEventListFetchSingle;
+    protected List<ProjTask> mockProjTaskFetchMultiple;
+    protected List<ProjTask> mockProjTaskFetchSingle;
+    protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchMultiple;
+    protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchSingle;
+    
     
 
     /**
@@ -55,6 +68,14 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
         this.mockEmployeeTypeFetchSingle = this.createMockSingleEmployeeType();
         this.mockVwEmployeeProjectsFetchMultiple = this.createMockMultipleVwEmployeeProjects();
         this.mockVwEmployeeProjectsFetchSingle = this.createMockSingleVwEmployeeProjects();
+        this.mockProjEventFetchMultiple = this.createMockMultipleProjEvent();
+        this.mockProjEventFetchSingle = this.createMockSingleProjEvent();
+        this.mockVwTimesheetEventListFetchMultiple = this.createMockMultipleVwTimesheetEventList();
+        this.mockVwTimesheetEventListFetchSingle = this.createMockSingleVwTimesheetEventList();
+        this.mockProjTaskFetchMultiple = this.createMockMultipleProjTask();
+        this.mockProjTaskFetchSingle = this.createMockSingleProjTask();
+        this.mockVwTimesheetProjectTaskFetchMultiple = this.createMockMultipleVwTimesheetProjectTask();
+        this.mockVwTimesheetProjectTaskFetchSingle = this.createMockSingleVwTimesheetProjectTask();
         
         return;
     }
@@ -265,6 +286,148 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
                 50.00, 55.00, 0.00, 70.00, 80.00);
         list.add(o);
         
+        return list;
+    }
+    
+    private List<ProjEvent> createMockSingleProjEvent() {
+        List<ProjEvent> list = new ArrayList<ProjEvent>();
+        ProjEvent o = ProjectTrackerMockDataUtility.createMockOrmProjEvent(123401, 444441, "2018-01-01", 8);
+        list.add(o);
+        return list;
+    }
+    
+    private List<ProjEvent> createMockMultipleProjEvent() {
+        List<ProjEvent> list = new ArrayList<ProjEvent>();
+        ProjEvent o = ProjectTrackerMockDataUtility.createMockOrmProjEvent(123401, 444441, "2018-01-01", 8);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjEvent(123402, 444442, "2018-01-02", 8);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjEvent(123403, 444443, "2018-01-03", 8);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjEvent(123404, 444444, "2018-01-04", 8);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjEvent(123405, 444445, "2018-01-05", 8);
+        list.add(o);
+        return list;
+    }
+    
+    private List<ProjTask> createMockSingleProjTask() {
+        List<ProjTask> list = new ArrayList<ProjTask>();
+        ProjTask o = ProjectTrackerMockDataUtility.createMockOrmProjTask(1112220, "Design and Analysis", true);
+        list.add(o);
+        return list;
+    }
+    
+    private List<ProjTask> createMockMultipleProjTask() {
+        List<ProjTask> list = new ArrayList<ProjTask>();
+        ProjTask o = ProjectTrackerMockDataUtility.createMockOrmProjTask(1112220, "Design and Analysis", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjTask(1112221, "Development", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjTask(1112222, "Meetings", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjTask(1112223, "Testing", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility.createMockOrmProjTask(1112224, "Holiday", false);
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwTimesheetProjectTask> createMockSingleVwTimesheetProjectTask() {
+        List<VwTimesheetProjectTask> list = new ArrayList<VwTimesheetProjectTask>();
+        VwTimesheetProjectTask o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetProjectTask(444441, 848484840, 2220,
+                        1112220, 1000, "Project 2220", "2018-01-01",
+                        "2018-01-07", "Design and Analysis", true);
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwTimesheetProjectTask> createMockMultipleVwTimesheetProjectTask() {
+        List<VwTimesheetProjectTask> list = new ArrayList<VwTimesheetProjectTask>();
+        VwTimesheetProjectTask o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetProjectTask(444441, 848484840, 2220,
+                        1112220, 1000, "Project 2220", "2018-01-01",
+                        "2018-01-07", "Design and Analysis", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetProjectTask(444442, 848484840, 2220,
+                        1112221, 1000, "Project 2220", "2018-01-01",
+                        "2018-01-07", "Development", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetProjectTask(444443, 848484840, 2220,
+                        1112222, 1000, "Project 2220", "2018-01-01",
+                        "2018-01-07", "Meetings", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetProjectTask(444444, 848484840, 2220,
+                        1112223, 1000, "Project 2220", "2018-01-01",
+                        "2018-01-07", "Testing", true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetProjectTask(444445, 848484840, 2220,
+                        1112224, 1000, "Project 2220", "2018-01-01",
+                        "2018-01-07", "Holiday", false);
+        list.add(o);
+        
+        return list;
+    }
+    
+    private List<VwTimesheetEventList> createMockSingleVwTimesheetEventList() {
+        List<VwTimesheetEventList> list = new ArrayList<VwTimesheetEventList>();
+        VwTimesheetEventList o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetEventList(123401, "2018-01-01", 8,
+                        444441, 848484840, 2220, "Project 2220", 1112220,
+                        "Development", 1000, "2018-01-01", "2018-01-07", true);
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwTimesheetEventList> createMockMultipleVwTimesheetEventList() {
+        List<VwTimesheetEventList> list = new ArrayList<VwTimesheetEventList>();
+        VwTimesheetEventList o = ProjectTrackerMockDataUtility
+                .createMockOrmVwTimesheetEventList(123401, "2018-01-01", 8,
+                        444441, 848484840, 2220, "Project 2220", 1112220,
+                        "Design and Analysis", 1000, "2018-01-01", "2018-01-07",
+                        true);
+        list.add(o);
+
+        o = ProjectTrackerMockDataUtility.createMockOrmVwTimesheetEventList(
+                123402, "2018-01-02", 8, 444442, 848484840, 2220,
+                "Project 2220", 1112221, "Development", 1000, "2018-01-01",
+                "2018-01-07", true);
+        list.add(o);
+
+        o = ProjectTrackerMockDataUtility.createMockOrmVwTimesheetEventList(
+                123403, "2018-01-03", 8, 444443, 848484840, 2220,
+                "Project 2220", 1112222, "Meetings", 1000, "2018-01-01",
+                "2018-01-07", true);
+        list.add(o);
+
+        o = ProjectTrackerMockDataUtility.createMockOrmVwTimesheetEventList(
+                123404, "2018-01-04", 8, 444444, 848484840, 2220,
+                "Project 2220", 1112223, "Testing", 1000, "2018-01-01",
+                "2018-01-07", true);
+        list.add(o);
+
+        o = ProjectTrackerMockDataUtility.createMockOrmVwTimesheetEventList(
+                123405, "2018-01-05", 8, 444445, 848484840, 2220,
+                "Project 2220", 1112224, "Holiday", 1000, "2018-01-01",
+                "2018-01-07", false);
+        list.add(o);
         return list;
     }
 }

@@ -4,8 +4,12 @@ import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.ProjEmployeeType;
+import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
+import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
+import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
+import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 
 import com.util.RMT2Date;
 
@@ -175,6 +179,110 @@ public class ProjectTrackerMockDataUtility {
         o.setClientBillRate(clientBillRate);
         o.setClientOtBillRate(clientOtBillRate);
         o.setComments("Comments for Employee Project Id: " + empProjId);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param eventId
+     * @param projectTaskId
+     * @param eventDate
+     * @param hours
+     * @return
+     */
+    public static final ProjEvent createMockOrmProjEvent(int eventId, int projectTaskId, String eventDate, double hours) {
+        ProjEvent o = new ProjEvent();
+        o.setEventId(eventId);
+        o.setProjectTaskId(projectTaskId);
+        o.setEventDate(RMT2Date.stringToDate(eventDate));
+        o.setHours(hours);
+        return o;
+    }
+    
+   /**
+    * 
+    * @param eventId
+    * @param eventDate
+    * @param hours
+    * @param projectTaskId
+    * @param timesheetId
+    * @param projectId
+    * @param projectName
+    * @param taskId
+    * @param taskName
+    * @param clientId
+    * @param effectiveDate
+    * @param endDate
+    * @param billable
+    * @return
+    */
+    public static final VwTimesheetEventList createMockOrmVwTimesheetEventList(
+            int eventId, String eventDate, double hours, int projectTaskId,
+            int timesheetId, int projectId, String projectName, int taskId,
+            String taskName, int clientId, String effectiveDate, String endDate,
+            boolean billable) {
+        VwTimesheetEventList o = new VwTimesheetEventList();
+        o.setEventId(eventId);
+        o.setProjectTaskId(projectTaskId);
+        o.setEventDate(RMT2Date.stringToDate(eventDate));
+        o.setEventDateCreated(RMT2Date.stringToDate(eventDate));
+        o.setHours(hours);
+        o.setTimesheetId(timesheetId);
+        o.setProjectId(projectId);
+        o.setProjectName(projectName);
+        o.setTaskId(taskId);
+        o.setTaskName(taskName);
+        o.setClientId(clientId);
+        o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
+        o.setEndDate(RMT2Date.stringToDate(endDate));
+        o.setBillable(billable ? 1 : 0);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param taskId
+     * @param description
+     * @param billable
+     * @return
+     */
+    public static final ProjTask createMockOrmProjTask(int taskId, String description, boolean billable) {
+        ProjTask o = new ProjTask();
+       o.setTaskId(taskId);
+       o.setDescription(description);
+       o.setBillable(billable ? 1 : 0);
+        return o;
+    }
+    
+    /**
+     * 
+     * @param projectTaskId
+     * @param timesheetId
+     * @param projectId
+     * @param taskId
+     * @param clientId
+     * @param projectName
+     * @param effectiveDate
+     * @param endDate
+     * @param taskName
+     * @param billable
+     * @return
+     */
+    public static final VwTimesheetProjectTask createMockOrmVwTimesheetProjectTask(
+            int projectTaskId, int timesheetId, int projectId, int taskId,
+            int clientId, String projectName, String effectiveDate,
+            String endDate, String taskName, boolean billable) {
+        VwTimesheetProjectTask o = new VwTimesheetProjectTask();
+        o.setProjectTaskId(projectTaskId);
+        o.setTimesheetId(timesheetId);
+        o.setProjectId(projectId);
+        o.setProjectName(projectName);
+        o.setTaskId(taskId);
+        o.setTaskName(taskName);
+        o.setClientId(clientId);
+        o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
+        o.setEndDate(RMT2Date.stringToDate(endDate));
+        o.setBillable(billable ? 1 : 0);
         return o;
     }
     
