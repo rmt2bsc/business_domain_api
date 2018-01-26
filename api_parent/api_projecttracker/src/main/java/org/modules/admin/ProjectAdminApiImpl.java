@@ -44,6 +44,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         super();
         this.dao = this.daoFact.createRmt2OrmDao();
         this.setSharedDao(this.dao);
+        logger.info("ProjectAdminApiImpl created with DAO, " + this.dao.getClass().getSimpleName());
         return;
     }
 
@@ -55,6 +56,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        logger.info("ProjectAdminApiImpl created with DAO, " + this.dao.getClass().getSimpleName() + ", for application, " + appName);
         return;
     }
 
@@ -67,6 +69,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
     protected ProjectAdminApiImpl(DaoClient dao) {
         super(dao);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        logger.info("ProjectAdminApiImpl created with outside Api DAO, " + this.dao.getClass().getSimpleName());
     }
 
     /*
@@ -400,4 +403,65 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             throw new InvalidTaskException("Task Description is required");
         }
     }
+
+    @Override
+    public int deleteClient(ClientDto criteria) throws ProjectAdminApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Client criteria is required");
+        }
+        int rc = 0;
+        StringBuilder buf = new StringBuilder();
+        try {
+            rc = dao.deleteClient(criteria);
+            return rc;
+        } catch (ProjecttrackerDaoException e) {
+            buf.append("Database error occurred deleting client(s) by selection criteria: ");
+            buf.append(criteria.toString());
+            this.msg = buf.toString();
+            throw new ProjectAdminApiException(this.msg, e);
+        }
+    }
+
+    @Override
+    public int deleteProject(ProjectDto criteria) throws ProjectAdminApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Project criteria is required");
+        }
+        int rc = 0;
+        StringBuilder buf = new StringBuilder();
+        try {
+            rc = dao.deleteProject(criteria);
+            return rc;
+        } catch (ProjecttrackerDaoException e) {
+            buf.append("Database error occurred deleting project(s) by selection criteria: ");
+            buf.append(criteria.toString());
+            this.msg = buf.toString();
+            throw new ProjectAdminApiException(this.msg, e);
+        }
+    }
+
+    @Override
+    public int deleteTask(TaskDto criteria) throws ProjectAdminApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Task criteria is required");
+        }
+        int rc = 0;
+        StringBuilder buf = new StringBuilder();
+        try {
+            rc = dao.deleteTask(criteria);
+            return rc;
+        } catch (ProjecttrackerDaoException e) {
+            buf.append("Database error occurred deleting task(s) by selection criteria: ");
+            buf.append(criteria.toString());
+            this.msg = buf.toString();
+            throw new ProjectAdminApiException(this.msg, e);
+        }
+    }
+
 }
