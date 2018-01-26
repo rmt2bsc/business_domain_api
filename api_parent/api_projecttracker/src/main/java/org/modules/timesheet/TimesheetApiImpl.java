@@ -932,11 +932,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
             // get client profile
             ProjectAdminApiFactory projFact = new ProjectAdminApiFactory();
             ProjectAdminApi projApi = projFact.createApi(this.getSharedDao());
-            ClientDto client = projApi.getClient(this.ts.getClientId());
+            ClientDto clientCriteria = ProjectObjectFactory.createClientDtoInstance(null);
+            clientCriteria.setClientId(this.ts.getClientId());
+            List<ClientDto> clients = projApi.getClient(clientCriteria);
 
             // send timesheet via email
             EmailMessageBean msg = api.createConfirmationMessage(this.ts,
-                    employee, manager, client, this.tsHours);
+                    employee, manager, clients.get(0), this.tsHours);
             api.send(msg);
         } catch (TimesheetTransmissionException e) {
             this.msg = "SMTP error occurred attempting to send timesheet: "
@@ -1096,8 +1098,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         try {
             for (ProjectTaskDto pt : ptList) {
                 try {
-                    List<EventDto> evts = api.getEventByProjectTask(pt
-                            .getProjectTaskId());
+                    EventDto eventCriteria = ProjectObjectFactory.createEventDtoInstance(null);
+                    eventCriteria.setProjectTaskId(pt.getProjectTaskId());
+                    List<EventDto> evts = api.getEvent(eventCriteria);
                     if (evts == null || evts.size() <= 0) {
                         this.ts = null;
                         this.tsHours = null;
