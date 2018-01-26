@@ -14,9 +14,9 @@ import org.dto.ProjectEmployeeDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
-import org.modules.admin.ProjectApi;
-import org.modules.admin.ProjectApiException;
-import org.modules.admin.ProjectApiFactory;
+import org.modules.admin.ProjectAdminApi;
+import org.modules.admin.ProjectAdminApiException;
+import org.modules.admin.ProjectAdminApiFactory;
 import org.modules.employee.EmployeeApi;
 import org.modules.employee.EmployeeApiException;
 import org.modules.employee.EmployeeApiFactory;
@@ -52,7 +52,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
 
     private TimesheetApi tsBaseApi;
 
-    private ProjectApi projApi;
+    private ProjectAdminApi projApi;
 
     private EmployeeApi empApi;
 
@@ -117,7 +117,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
     private void createOtherResources(TimesheetDao connection) {
         TimesheetApiFactory tf = new TimesheetApiFactory();
         this.tsBaseApi = tf.createApi(connection);
-        ProjectApiFactory pf = new ProjectApiFactory();
+        ProjectAdminApiFactory pf = new ProjectAdminApiFactory();
         this.projApi = pf.createApi(connection);
         EmployeeApiFactory ef = new EmployeeApiFactory();
         this.empApi = ef.createApi(connection);
@@ -185,7 +185,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
                         + ts.getClientId();
                 throw new InvoiceTimesheetApiException(this.msg);
             }
-        } catch (ProjectApiException e) {
+        } catch (ProjectAdminApiException e) {
             this.msg = "Timesheet Invoice Error:  Unable to fetch timesheet's client by client id, "
                     + ts.getClientId();
             throw new InvoiceTimesheetApiException(this.msg);

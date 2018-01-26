@@ -13,9 +13,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modules.admin.ProjectApi;
-import org.modules.admin.ProjectApiException;
-import org.modules.admin.ProjectApiFactory;
+import org.modules.admin.ProjectAdminApi;
+import org.modules.admin.ProjectAdminApiException;
+import org.modules.admin.ProjectAdminApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectAdminApiTestData;
@@ -65,12 +65,12 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
             Assert.fail("Fetch all project clients case setup failed");
         }
         
-        ProjectApiFactory f = new ProjectApiFactory();
-        ProjectApi api = f.createApi(this.mockDaoClient);
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
         List<ClientDto> results = null;
         try {
             results = api.getAllClients();
-        } catch (ProjectApiException e) {
+        } catch (ProjectAdminApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
@@ -101,12 +101,12 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
             Assert.fail("Fetch all project clients case setup failed");
         }
         
-        ProjectApiFactory f = new ProjectApiFactory();
-        ProjectApi api = f.createApi(this.mockDaoClient);
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
         ClientDto results = null;
         try {
             results = api.getClient(TEST_CLIENT_ID);
-        } catch (ProjectApiException e) {
+        } catch (ProjectAdminApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);

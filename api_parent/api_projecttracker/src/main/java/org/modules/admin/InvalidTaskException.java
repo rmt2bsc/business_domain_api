@@ -6,7 +6,7 @@ package org.modules.admin;
  * @author Roy Terrell
  * 
  */
-public class InvalidTaskException extends ProjectApiException {
+public class InvalidTaskException extends ProjectAdminApiException {
 
     private static final long serialVersionUID = -5399306021195061423L;
 

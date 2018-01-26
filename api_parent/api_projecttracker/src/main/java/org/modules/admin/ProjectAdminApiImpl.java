@@ -30,9 +30,9 @@ import com.util.assistants.VerifyException;
  * @author Roy Terrell
  * 
  */
-class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
+class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectAdminApi {
 
-    private static final Logger logger = Logger.getLogger(ProjectApiImpl.class);
+    private static final Logger logger = Logger.getLogger(ProjectAdminApiImpl.class);
 
     private ProjectAdminDaoFactory daoFact;
 
@@ -41,7 +41,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
     /**
      * Creates an ProjectApiImpl which creates a stand alone connection.
      */
-    protected ProjectApiImpl() {
+    protected ProjectAdminApiImpl() {
         super();
         this.dao = this.daoFact.createRmt2OrmDao();
         this.setSharedDao(this.dao);
@@ -52,7 +52,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * Creates an ProjectApiImpl which creates based on the identified
      * application.
      */
-    protected ProjectApiImpl(String appName) {
+    protected ProjectAdminApiImpl(String appName) {
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
@@ -65,7 +65,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * 
      * @param dao
      */
-    protected ProjectApiImpl(DaoClient dao) {
+    protected ProjectAdminApiImpl(DaoClient dao) {
         super(dao);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
     }
@@ -88,7 +88,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getAllClients()
      */
     @Override
-    public List<ClientDto> getAllClients() throws ProjectApiException {
+    public List<ClientDto> getAllClients() throws ProjectAdminApiException {
         ClientDto criteria = null;
         List<ClientDto> results;
         StringBuilder buf = new StringBuilder();
@@ -100,7 +100,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred retrieving all project clients");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -111,7 +111,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getClient(int)
      */
     @Override
-    public ClientDto getClient(Integer clientId) throws ProjectApiException {
+    public ClientDto getClient(Integer clientId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(clientId);
         }
@@ -137,7 +137,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred retrieving all project clients");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
 
         try {
@@ -151,7 +151,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append(results.size());
             buf.append("  were returned.");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
     }
 
@@ -234,7 +234,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getAllProjects()
      */
     @Override
-    public List<ProjectDto> getAllProjects() throws ProjectApiException {
+    public List<ProjectDto> getAllProjects() throws ProjectAdminApiException {
         ProjectDto criteria = null;
         List<ProjectDto> results;
         StringBuilder buf = new StringBuilder();
@@ -246,7 +246,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred retrieving all projects");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -257,7 +257,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProject(int)
      */
     @Override
-    public ProjectDto getProject(Integer projectId) throws ProjectApiException {
+    public ProjectDto getProject(Integer projectId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(projectId);
         }
@@ -284,7 +284,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving a single project by project id, ");
             buf.append(projectId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         
         try {
@@ -298,7 +298,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append(results.size());
             buf.append("  were returned.");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg);
+            throw new ProjectAdminApiException(this.msg);
         }
     }
 
@@ -308,7 +308,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectByClientId(int)
      */
     @Override
-    public List<ProjectDto> getProjectByClientId(Integer clientId) throws ProjectApiException {
+    public List<ProjectDto> getProjectByClientId(Integer clientId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(clientId);
         }
@@ -335,7 +335,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving projecta by client id, ");
             buf.append(clientId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -346,7 +346,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getTask(int)
      */
     @Override
-    public TaskDto getTask(Integer taskId) throws ProjectApiException {
+    public TaskDto getTask(Integer taskId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(taskId);
         }
@@ -373,7 +373,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving a single task by task id, ");
             buf.append(taskId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         try {
             Verifier.verifyTrue(results.size() == 1);
@@ -386,7 +386,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append(results.size());
             buf.append("  were returned.");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg);
+            throw new ProjectAdminApiException(this.msg);
         }
     }
 
@@ -396,7 +396,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getAllTasks()
      */
     @Override
-    public List<TaskDto> getAllTasks() throws ProjectApiException {
+    public List<TaskDto> getAllTasks() throws ProjectAdminApiException {
         TaskDto criteria = null;
         List<TaskDto> results;
         StringBuilder buf = new StringBuilder();
@@ -408,7 +408,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred retrieving all tasks");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -419,7 +419,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getTasks(boolean)
      */
     @Override
-    public List<TaskDto> getTasks(Boolean billable) throws ProjectApiException {
+    public List<TaskDto> getTasks(Boolean billable) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(billable);
         }
@@ -440,7 +440,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving all tasks based on billable flag, ");
             buf.append(billable);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -451,7 +451,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTask(int)
      */
     @Override
-    public ProjectTaskDto getProjectTask(Integer projectTaskId) throws ProjectApiException {
+    public ProjectTaskDto getProjectTask(Integer projectTaskId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(projectTaskId);
         }
@@ -479,7 +479,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append(projectTaskId);
             this.msg = buf.toString();
             logger.error(this.msg);
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         try {
             Verifier.verifyTrue(results.size() == 1);
@@ -492,7 +492,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append(results.size());
             buf.append("  were returned.");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg);
+            throw new ProjectAdminApiException(this.msg);
         }
     }
 
@@ -502,7 +502,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTaskByClient(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskByClient(Integer clientId) throws ProjectApiException {
+    public List<ProjectTaskDto> getProjectTaskByClient(Integer clientId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(clientId);
         }
@@ -529,7 +529,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving project/task objects by client id, ");
             buf.append(clientId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -540,7 +540,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTaskByProject(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskByProject(Integer projectId) throws ProjectApiException {
+    public List<ProjectTaskDto> getProjectTaskByProject(Integer projectId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(projectId);
         }
@@ -567,7 +567,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving project/task objects by project id, ");
             buf.append(projectId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -578,7 +578,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTaskByTask(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskByTask(Integer taskId) throws ProjectApiException {
+    public List<ProjectTaskDto> getProjectTaskByTask(Integer taskId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(taskId);
         }
@@ -605,7 +605,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving project/task objects by task id, ");
             buf.append(taskId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -616,7 +616,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getProjectTask(int, int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId) throws ProjectApiException {
+    public List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(projectId);
         }
@@ -658,7 +658,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append(", and project id, ");
             buf.append(projectId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -669,7 +669,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEvent(int)
      */
     @Override
-    public EventDto getEvent(Integer eventId) throws ProjectApiException {
+    public EventDto getEvent(Integer eventId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(eventId);
         }
@@ -696,7 +696,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving a single event by event id, ");
             buf.append(eventId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         try {
             Verifier.verifyTrue(results.size() == 1);
@@ -709,7 +709,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append(results.size());
             buf.append("  were returned.");
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg);
+            throw new ProjectAdminApiException(this.msg);
         }
     }
 
@@ -719,7 +719,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEvent(java.util.Date)
      */
     @Override
-    public List<EventDto> getEvent(Date eventDate) throws ProjectApiException {
+    public List<EventDto> getEvent(Date eventDate) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(eventDate);
         }
@@ -739,7 +739,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving events by event date, ");
             buf.append(RMT2Date.formatDate(eventDate, "MM-dd-yyyy"));
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -751,7 +751,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * java.util.Date)
      */
     @Override
-    public List<EventDto> getEvent(Date beginDate, Date endDate) throws ProjectApiException {
+    public List<EventDto> getEvent(Date beginDate, Date endDate) throws ProjectAdminApiException {
         try {
             Verifier.verifyTrue(beginDate != null && endDate != null);
         }
@@ -789,7 +789,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving events by event date filter, ");
             buf.append(sql.toString());
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -800,7 +800,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByProjectTask(int)
      */
     @Override
-    public List<EventDto> getEventByProjectTask(Integer projectTaskId) throws ProjectApiException {
+    public List<EventDto> getEventByProjectTask(Integer projectTaskId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(projectTaskId);
         }
@@ -827,7 +827,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving events by project task id, ");
             buf.append(projectTaskId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -838,7 +838,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByProject(int)
      */
     @Override
-    public List<ProjectEventDto> getEventByProject(Integer projectId) throws ProjectApiException {
+    public List<ProjectEventDto> getEventByProject(Integer projectId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(projectId);
         }
@@ -865,7 +865,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving events by project/event project id, ");
             buf.append(projectId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -876,7 +876,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByTask(int)
      */
     @Override
-    public List<ProjectEventDto> getEventByTask(Integer taskId) throws ProjectApiException {
+    public List<ProjectEventDto> getEventByTask(Integer taskId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(taskId);
         }
@@ -903,7 +903,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving events by project/event task id, ");
             buf.append(taskId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -914,7 +914,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#getEventByClient(int)
      */
     @Override
-    public List<ProjectEventDto> getEventByClient(Integer clientId) throws ProjectApiException {
+    public List<ProjectEventDto> getEventByClient(Integer clientId) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(clientId);
         }
@@ -941,7 +941,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
             buf.append("Database error occurred retrieving events by project/event client id, ");
             buf.append(clientId);
             this.msg = buf.toString();
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
@@ -977,7 +977,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * 
      * @see org.modules.admin.ProjectApi#updateClient(org.dto.ClientDto)
      */
-    private int addClient(ClientDto client) throws ProjectApiException {
+    private int addClient(ClientDto client) throws ProjectAdminApiException {
         this.validateClient(client);
         this.dao.insertClient(client);
         return client.getClientId();
@@ -989,7 +989,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#updateProject(org.dto.ProjectDto)
      */
     @Override
-    public int updateProject(ProjectDto project) throws ProjectApiException {
+    public int updateProject(ProjectDto project) throws ProjectAdminApiException {
         // Validate project object
         this.validateProject(project);
 
@@ -1000,9 +1000,9 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
         try {
             // Check if client exists locally
             client = this.getClient(clientId);
-        } catch (ProjectApiException e) {
+        } catch (ProjectAdminApiException e) {
             this.msg = "Error fetching client: " + clientId;
-            throw new ProjectApiException(this.msg, e);
+            throw new ProjectAdminApiException(this.msg, e);
         }
 
         // TODO: Uncomment once getClientExt has been figured out.
@@ -1058,7 +1058,7 @@ class ProjectApiImpl extends AbstractTransactionApiImpl implements ProjectApi {
      * @see org.modules.admin.ProjectApi#updateTask(org.dto.TaskDto)
      */
     @Override
-    public int updateTask(TaskDto task) throws ProjectApiException {
+    public int updateTask(TaskDto task) throws ProjectAdminApiException {
         this.validateTask(task);
         int rc = this.dao.maintainTask(task);
         return rc;

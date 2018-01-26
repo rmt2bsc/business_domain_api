@@ -12,12 +12,12 @@ import com.api.persistence.DaoClient;
  * @author Roy Terrell
  * 
  */
-public class ProjectApiFactory extends RMT2Base {
+public class ProjectAdminApiFactory extends RMT2Base {
 
     /**
      * Default method.
      */
-    public ProjectApiFactory() {
+    public ProjectAdminApiFactory() {
         return;
     }
 
@@ -27,7 +27,7 @@ public class ProjectApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link ProjectApi}
      */
-    public ProjectApi createApi() {
+    public ProjectAdminApi createApi() {
         return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
@@ -39,8 +39,8 @@ public class ProjectApiFactory extends RMT2Base {
      *            name of the application.
      * @return an instance of {@link ProjectApi}
      */
-    public ProjectApi createApi(String appName) {
-        ProjectApiImpl api = new ProjectApiImpl(appName);
+    public ProjectAdminApi createApi(String appName) {
+        ProjectAdminApiImpl api = new ProjectAdminApiImpl(appName);
         return api;
     }
 
@@ -54,11 +54,11 @@ public class ProjectApiFactory extends RMT2Base {
      * 
      *            ProjectApi * null.
      */
-    public ProjectApi createApi(DaoClient connection) {
+    public ProjectAdminApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }
-        ProjectApiImpl api = new ProjectApiImpl(connection);
+        ProjectAdminApiImpl api = new ProjectAdminApiImpl(connection);
         api.setApiUser(connection.getDaoUser());
         return api;
     }

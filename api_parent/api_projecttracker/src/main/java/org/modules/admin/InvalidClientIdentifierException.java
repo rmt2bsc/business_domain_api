@@ -6,7 +6,7 @@ package org.modules.admin;
  * @author Roy Terrell
  * 
  */
-public class InvalidClientIdentifierException extends ProjectApiException {
+public class InvalidClientIdentifierException extends ProjectAdminApiException {
 
     private static final long serialVersionUID = 8412120949582512772L;
 
