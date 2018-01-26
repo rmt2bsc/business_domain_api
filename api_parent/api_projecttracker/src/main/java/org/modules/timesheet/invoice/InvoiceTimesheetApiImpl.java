@@ -14,6 +14,7 @@ import org.dto.ProjectEmployeeDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
+import org.dto.adapter.orm.ProjectObjectFactory;
 import org.modules.admin.ProjectAdminApi;
 import org.modules.admin.ProjectAdminApiException;
 import org.modules.admin.ProjectAdminApiFactory;
@@ -177,9 +178,11 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
             throw new InvoiceTimesheetApiException(this.msg);
         }
         // Verify client
-        ClientDto client;
+        List<ClientDto> client;
         try {
-            client = this.projApi.getClient(ts.getClientId());
+            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+            criteria.setClientId(ts.getClientId());
+            client = this.projApi.getClient(criteria);
             if (client == null) {
                 this.msg = "Timesheet Invoice Error:  Timesheet's client does not exist by client id, "
                         + ts.getClientId();
@@ -194,12 +197,11 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
         // Invoice the timesheet
         List<TimesheetDto> tsList = new ArrayList<TimesheetDto>();
         tsList.add(ts);
-        int xactId = this.startClientBilling(client, tsList);
+        int xactId = this.startClientBilling(client.get(0), tsList);
 
         // Package results
         InvoiceResultsBean results = new InvoiceResultsBean();
-        results.setProcessedClientTimesheets(client.getClientId(),
-                this.timesheetIdList);
+        results.setProcessedClientTimesheets(client.get(0).getClientId(), this.timesheetIdList);
         List<Integer> xactList = new ArrayList<Integer>();
         xactList.add(xactId);
         results.setClientTransactions(xactList);
@@ -221,17 +223,19 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
      */
     private int startClientBilling(int clientId)
             throws InvoiceTimesheetApiException {
-        ClientDto client = null;
+        List<ClientDto> client = null;
         try {
             // Get client object
-            client = this.projApi.getClient(clientId);
+            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+            criteria.setClientId(clientId);
+            client = this.projApi.getClient(criteria);
             // Get client approved timesheets
             List<TimesheetDto> ts = this.tsBaseApi.getClientApproved(clientId);
             if (ts == null) {
                 return 0;
             }
             // Begin to bill the client's timesheets
-            int xactId = this.startClientBilling(client, ts);
+            int xactId = this.startClientBilling(client.get(0), ts);
             return xactId;
         } catch (Exception e) {
             throw new InvoiceTimesheetApiException(e);
