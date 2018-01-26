@@ -97,7 +97,8 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving client(s)");
+            buf.append("Database error occurred retrieving client(s) by selection criteria: ");
+            buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
@@ -125,7 +126,8 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving project(s)");
+            buf.append("Database error occurred retrieving project(s) by selection criteria: ");
+            buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
@@ -153,7 +155,8 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving task(s)");
+            buf.append("Database error occurred retrieving task(s) by selection criteria: ");
+            buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
@@ -199,35 +202,22 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             }
         } catch (ProjecttrackerDaoException e) {
             StringBuilder buf = new StringBuilder();
-            buf.append("Database error occurred retrieving event(s)");
+            buf.append("Database error occurred retrieving event(s) by selection criteria: ");
+            buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getProjectTask(int)
-     */
     @Override
-    public ProjectTaskDto getProjectTask(Integer projectTaskId) throws ProjectAdminApiException {
+    public List<ProjectTaskDto> getProjectTask(ProjectTaskDto criteria) throws ProjectAdminApiException {
         try {
-            Verifier.verifyNotNull(projectTaskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project task Id is required");
-        }
-        try {
-            Verifier.verifyPositive(projectTaskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Task Id must be greater than zero");
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Project-Task criteria is required");
         }
         
-        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
-        criteria.setProjectTaskId(projectTaskId);
         List<ProjectTaskDto> results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -236,194 +226,14 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving a single project/task by project task id, ");
-            buf.append(projectTaskId);
-            this.msg = buf.toString();
-            logger.error(this.msg);
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        try {
-            Verifier.verifyTrue(results.size() == 1);
-            return results.get(0);
-        }
-        catch (VerifyException e) {
-            buf.append("Error: Query method is expecting a single task object to be returned using project task id, ");
-            buf.append(projectTaskId);
-            buf.append(".  Instead ");
-            buf.append(results.size());
-            buf.append("  were returned.");
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getProjectTaskByClient(int)
-     */
-    @Override
-    public List<ProjectTaskDto> getProjectTaskByClient(Integer clientId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id is required");
-        }
-        try {
-            Verifier.verifyPositive(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id must be greater than zero");
-        }
-        
-        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
-        criteria.setClientId(clientId);
-        List<ProjectTaskDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchProjectTask(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving project/task objects by client id, ");
-            buf.append(clientId);
+            buf.append("Database error occurred retrieving project/task objects by selection criteria, ");
+            buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
         return results;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getProjectTaskByProject(int)
-     */
-    @Override
-    public List<ProjectTaskDto> getProjectTaskByProject(Integer projectId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(projectId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Id is required");
-        }
-        try {
-            Verifier.verifyPositive(projectId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Id must be greater than zero");
-        }
-        
-        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
-        criteria.setProjId(projectId);
-        List<ProjectTaskDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchProjectTask(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving project/task objects by project id, ");
-            buf.append(projectId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        return results;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getProjectTaskByTask(int)
-     */
-    @Override
-    public List<ProjectTaskDto> getProjectTaskByTask(Integer taskId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(taskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Id is required");
-        }
-        try {
-            Verifier.verifyPositive(taskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Task Id must be greater than zero");
-        }
-        
-        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
-        criteria.setTaskId(taskId);
-        List<ProjectTaskDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchProjectTask(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving project/task objects by task id, ");
-            buf.append(taskId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        return results;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getProjectTask(int, int)
-     */
-    @Override
-    public List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(projectId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Id is required");
-        }
-        try {
-            Verifier.verifyPositive(projectId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Id must be greater than zero");
-        }
-        try {
-            Verifier.verifyNotNull(taskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Task Id is required");
-        }
-        try {
-            Verifier.verifyPositive(taskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Task Id must be greater than zero");
-        }
-        
-        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
-        criteria.setTaskId(taskId);
-        criteria.setProjId(projectId);
-        List<ProjectTaskDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchProjectTask(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving project/task objects by task id, ");
-            buf.append(taskId);
-            buf.append(", and project id, ");
-            buf.append(projectId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        return results;
-    }
-
+ 
     /*
      * (non-Javadoc)
      * 
@@ -681,5 +491,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             throw new InvalidTaskException("Task Description is required");
         }
     }
+
+   
 
 }

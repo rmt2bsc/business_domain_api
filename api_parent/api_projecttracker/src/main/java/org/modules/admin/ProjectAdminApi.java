@@ -71,60 +71,18 @@ public interface ProjectAdminApi extends TransactionApi {
      * @throws ProjectAdminApiException
      */
     List<EventDto> getEvent(EventDto criteria, Date beginDate, Date endDate) throws ProjectAdminApiException;
-
+    
     /**
-     * Retrieves a project task record
+     * Find list of project related tasks based on selection criteria provided.
      * 
-     * @param projectTaskId
-     *            The id of the project-task record
-     * @return An {@link ProjectTaskDto} object or null if not found.
-     * @throws ProjectApiException
+     * @param criteria
+     *            an instance of {@link ProjectTaskDto} representing selection
+     *            criteria.
+     * @return A List of {@link ProjectTaskDto} objects or null if nothing is found.
+     * @throws ProjectAdminApiException
      */
-    ProjectTaskDto getProjectTask(Integer projectTaskId) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves one or more extended project task records by client
-     * 
-     * @param clientId
-     *            The id of the client
-     * @return A List of {@link ProjectTaskDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<ProjectTaskDto> getProjectTaskByClient(Integer clientId) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves one or more extended project task records by project
-     * 
-     * @param projectId
-     *            The id of the timesheet
-     * @return A List of {@link ProjectTaskDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<ProjectTaskDto> getProjectTaskByProject(Integer projectId) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves one or more extended project task records by task
-     * 
-     * @param taskId
-     *            The id of the task
-     * @return A List of {@link ProjectTaskDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<ProjectTaskDto> getProjectTaskByTask(Integer taskId) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves one or more extended project task records by project and task
-     * 
-     * @param projectId
-     *            The id of the project
-     * @param taskId
-     *            taskId The id of the task
-     * @return A List of {@link ProjectTaskDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId) throws ProjectAdminApiException;
-
-
+    List<ProjectTaskDto> getProjectTask(ProjectTaskDto criteria) throws ProjectAdminApiException;
+    
     /**
      * Retrieves timesheet extended event records by client
      * 

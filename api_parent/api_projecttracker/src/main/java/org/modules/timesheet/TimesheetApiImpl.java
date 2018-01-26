@@ -690,7 +690,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi projApi = f.createApi(this.getSharedDao());
         try {
-            ProjectTaskDto projTaskDto = projApi.getProjectTask(projectTaskId);
+            ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
+            criteria.setProjectTaskId(projectTaskId);
+            List<ProjectTaskDto> projTaskDto = projApi.getProjectTask(criteria);
             if (projTaskDto == null) {
                 this.msg = "project/task id, "
                         + projectTaskId

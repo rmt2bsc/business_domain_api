@@ -581,41 +581,32 @@ public class ProjectAdminDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link VwTimesheetProjectTask}
      */
-    public static final VwTimesheetProjectTask createCriteriaExt(
-            ProjectTaskDto criteria) {
+    public static final VwTimesheetProjectTask createCriteriaExt(ProjectTaskDto criteria) {
         VwTimesheetProjectTask obj = new VwTimesheetProjectTask();
         if (criteria != null) {
             if (criteria.getProjectTaskId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTTASKID,
-                        criteria.getProjectTaskId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTTASKID, criteria.getProjectTaskId());
             }
             if (criteria.getProjId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTID,
-                        criteria.getProjId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTID, criteria.getProjId());
             }
             if (criteria.getTaskId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_TASKID,
-                        criteria.getTaskId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_TASKID, criteria.getTaskId());
             }
             if (criteria.getClientId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_CLIENTID,
-                        criteria.getClientId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_CLIENTID, criteria.getClientId());
             }
             if (criteria.getProjectDescription() != null) {
-                obj.addLikeClause(VwTimesheetProjectTask.PROP_PROJECTNAME,
-                        criteria.getProjectDescription());
+                obj.addLikeClause(VwTimesheetProjectTask.PROP_PROJECTNAME, criteria.getProjectDescription());
             }
             if (criteria.getTaskDescription() != null) {
-                obj.addLikeClause(VwTimesheetProjectTask.PROP_TASKNAME,
-                        criteria.getTaskDescription());
+                obj.addLikeClause(VwTimesheetProjectTask.PROP_TASKNAME, criteria.getTaskDescription());
             }
             if (criteria.getProjectEffectiveDate() != null) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_EFFECTIVEDATE,
-                        criteria.getProjectEffectiveDate());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_EFFECTIVEDATE, criteria.getProjectEffectiveDate());
             }
             if (criteria.getProjectEndDate() != null) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_ENDDATE,
-                        criteria.getProjectEndDate());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_ENDDATE, criteria.getProjectEndDate());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
