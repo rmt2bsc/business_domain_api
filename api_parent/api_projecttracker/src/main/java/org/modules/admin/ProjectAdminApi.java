@@ -58,6 +58,30 @@ public interface ProjectAdminApi extends TransactionApi {
     List<TaskDto> getTask(TaskDto criteria) throws ProjectAdminApiException;
 
     /**
+     * Find list of events based on selection criteria provided.
+     * 
+     * @param criteria
+     *            an instance of {@link EventDto} representing selection
+     *            criteria.
+     * @return A List of {@link EventDto} objects or null if nothing is found.
+     * @throws ProjectAdminApiException
+     */
+    List<EventDto> getEvent(EventDto criteria) throws ProjectAdminApiException;
+
+    /**
+     * Retrieves event records based on a date range using the beginning and
+     * ending event dates
+     * 
+     * @param beginDate
+     *            The beginning of the date range.
+     * @param endDate
+     *            The ending of the date range.
+     * @return A List of {@link EventDto} objects or null if not found.
+     * @throws ProjectApiException
+     */
+    List<EventDto> getEvent(Date beginDate, Date endDate) throws ProjectAdminApiException;
+
+    /**
      * Retrieves a project task record
      * 
      * @param projectTaskId
@@ -109,55 +133,44 @@ public interface ProjectAdminApi extends TransactionApi {
      */
     List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId) throws ProjectAdminApiException;
 
-    /**
-     * Retrieves a timesheet event record
-     * 
-     * @param eventId
-     *            The id of the event.
-     * @return An {@link EventDto} object or null if not found..
-     * @throws ProjectApiException
-     */
-    EventDto getEvent(Integer eventId) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves event records by event date
-     * 
-     * @param eventDate
-     *            The event date to filter data
-     * @return A List of {@link EventDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<EventDto> getEvent(Date eventDate) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves event records based on a date range using the beginning and
-     * ending event dates
-     * 
-     * @param beginDate
-     *            The beginning of the date range.
-     * @param endDate
-     *            The ending of the date range.
-     * @return A List of {@link EventDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<EventDto> getEvent(Date beginDate, Date endDate) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves one or more event records using Project-Task Id
-     * 
-     * @param projectTaskId
-     *            The id of the project-task
-     * @return A List of {@link EventDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<EventDto> getEventByProjectTask(Integer projectTaskId) throws ProjectAdminApiException;
+    // /**
+    // * Retrieves a timesheet event record
+    // *
+    // * @param eventId
+    // * The id of the event.
+    // * @return An {@link EventDto} object or null if not found..
+    // * @throws ProjectApiException
+    // */
+    // EventDto getEvent(Integer eventId) throws ProjectAdminApiException;
+    //
+    // /**
+    // * Retrieves event records by event date
+    // *
+    // * @param eventDate
+    // * The event date to filter data
+    // * @return A List of {@link EventDto} objects or null if not found.
+    // * @throws ProjectApiException
+    // */
+    // List<EventDto> getEvent(Date eventDate) throws ProjectAdminApiException;
+    //
+    //
+    // /**
+    // * Retrieves one or more event records using Project-Task Id
+    // *
+    // * @param projectTaskId
+    // * The id of the project-task
+    // * @return A List of {@link EventDto} objects or null if not found.
+    // * @throws ProjectApiException
+    // */
+    // List<EventDto> getEventByProjectTask(Integer projectTaskId) throws
+    // ProjectAdminApiException;
 
     /**
      * Retrieves timesheet extended event records by client
      * 
      * @param clientId
      *            The id of the client
-     * @return A List of {@link EventDto} objects or null if not found.
+     * @return A List of {@link ProjectEventDto} objects or null if not found.
      * @throws TimesheetApiException
      */
     List<ProjectEventDto> getEventByClient(Integer clientId) throws ProjectAdminApiException;

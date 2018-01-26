@@ -371,12 +371,10 @@ public class ProjectAdminDaoFactory extends RMT2Base {
                 obj.addCriteria(ProjEvent.PROP_EVENTID, criteria.getEventId());
             }
             if (criteria.getProjectTaskId() > 0) {
-                obj.addCriteria(ProjEvent.PROP_PROJECTTASKID,
-                        criteria.getProjectTaskId());
+                obj.addCriteria(ProjEvent.PROP_PROJECTTASKID, criteria.getProjectTaskId());
             }
             if (criteria.getEventDate() != null) {
-                obj.addCriteria(ProjEvent.PROP_EVENTDATE,
-                        criteria.getEventDate());
+                obj.addCriteria(ProjEvent.PROP_EVENTDATE, criteria.getEventDate());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());

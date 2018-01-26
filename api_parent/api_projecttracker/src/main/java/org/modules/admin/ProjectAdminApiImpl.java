@@ -97,7 +97,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving all project clients");
+            buf.append("Database error occurred retrieving client(s)");
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
@@ -125,7 +125,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving all projects");
+            buf.append("Database error occurred retrieving project(s)");
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
@@ -153,7 +153,35 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving all tasks");
+            buf.append("Database error occurred retrieving task(s)");
+            this.msg = buf.toString();
+            throw new ProjectAdminApiException(this.msg, e);
+        }
+        return results;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.admin.ProjectAdminApi#getEvent(org.dto.EventDto)
+     */
+    @Override
+    public List<EventDto> getEvent(EventDto criteria) throws ProjectAdminApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Event criteria is required");
+        }
+
+        List<EventDto> results;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = dao.fetchEvent(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (ProjecttrackerDaoException e) {
+            buf.append("Database error occurred retrieving event(s)");
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
@@ -378,86 +406,88 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         return results;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getEvent(int)
-     */
-    @Override
-    public EventDto getEvent(Integer eventId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(eventId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Event Id is required");
-        }
-        try {
-            Verifier.verifyPositive(eventId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Event Id must be greater than zero");
-        }
-        
-        EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
-        criteria.setEventId(eventId);
-        List<EventDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchEvent(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving a single event by event id, ");
-            buf.append(eventId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        try {
-            Verifier.verifyTrue(results.size() == 1);
-            return results.get(0);
-        }
-        catch (VerifyException e) {
-            buf.append("Error: Query method is expecting a single event object to be returned using event id, ");
-            buf.append(eventId);
-            buf.append(".  Instead ");
-            buf.append(results.size());
-            buf.append("  were returned.");
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg);
-        }
-    }
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see org.modules.admin.ProjectApi#getEvent(int)
+    // */
+    // @Override
+    // public EventDto getEvent(Integer eventId) throws ProjectAdminApiException
+    // {
+    // try {
+    // Verifier.verifyNotNull(eventId);
+    // }
+    // catch (VerifyException e) {
+    // throw new InvalidDataException("Event Id is required");
+    // }
+    // try {
+    // Verifier.verifyPositive(eventId);
+    // }
+    // catch (VerifyException e) {
+    // throw new InvalidDataException("Event Id must be greater than zero");
+    // }
+    //
+    // EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
+    // criteria.setEventId(eventId);
+    // List<EventDto> results;
+    // StringBuilder buf = new StringBuilder();
+    // try {
+    // results = dao.fetchEvent(criteria);
+    // if (results == null) {
+    // return null;
+    // }
+    // } catch (ProjecttrackerDaoException e) {
+    // buf.append("Database error occurred retrieving a single event by event id, ");
+    // buf.append(eventId);
+    // this.msg = buf.toString();
+    // throw new ProjectAdminApiException(this.msg, e);
+    // }
+    // try {
+    // Verifier.verifyTrue(results.size() == 1);
+    // return results.get(0);
+    // }
+    // catch (VerifyException e) {
+    // buf.append("Error: Query method is expecting a single event object to be returned using event id, ");
+    // buf.append(eventId);
+    // buf.append(".  Instead ");
+    // buf.append(results.size());
+    // buf.append("  were returned.");
+    // this.msg = buf.toString();
+    // throw new ProjectAdminApiException(this.msg);
+    // }
+    // }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getEvent(java.util.Date)
-     */
-    @Override
-    public List<EventDto> getEvent(Date eventDate) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(eventDate);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Event Date is required");
-        }
-        EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
-        criteria.setEventDate(eventDate);
-        List<EventDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchEvent(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving events by event date, ");
-            buf.append(RMT2Date.formatDate(eventDate, "MM-dd-yyyy"));
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        return results;
-    }
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see org.modules.admin.ProjectApi#getEvent(java.util.Date)
+    // */
+    // @Override
+    // public List<EventDto> getEvent(Date eventDate) throws
+    // ProjectAdminApiException {
+    // try {
+    // Verifier.verifyNotNull(eventDate);
+    // }
+    // catch (VerifyException e) {
+    // throw new InvalidDataException("Event Date is required");
+    // }
+    // EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
+    // criteria.setEventDate(eventDate);
+    // List<EventDto> results;
+    // StringBuilder buf = new StringBuilder();
+    // try {
+    // results = dao.fetchEvent(criteria);
+    // if (results == null) {
+    // return null;
+    // }
+    // } catch (ProjecttrackerDaoException e) {
+    // buf.append("Database error occurred retrieving events by event date, ");
+    // buf.append(RMT2Date.formatDate(eventDate, "MM-dd-yyyy"));
+    // this.msg = buf.toString();
+    // throw new ProjectAdminApiException(this.msg, e);
+    // }
+    // return results;
+    // }
 
     /*
      * (non-Javadoc)
@@ -509,43 +539,45 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         return results;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getEventByProjectTask(int)
-     */
-    @Override
-    public List<EventDto> getEventByProjectTask(Integer projectTaskId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(projectTaskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Task Id is required");
-        }
-        try {
-            Verifier.verifyPositive(projectTaskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Task Id must be greater than zero");
-        }
-        
-        EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
-        criteria.setProjectTaskId(projectTaskId);
-        List<EventDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchEvent(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving events by project task id, ");
-            buf.append(projectTaskId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        return results;
-    }
+    // /*
+    // * (non-Javadoc)
+    // *
+    // * @see org.modules.admin.ProjectApi#getEventByProjectTask(int)
+    // */
+    // @Override
+    // public List<EventDto> getEventByProjectTask(Integer projectTaskId) throws
+    // ProjectAdminApiException {
+    // try {
+    // Verifier.verifyNotNull(projectTaskId);
+    // }
+    // catch (VerifyException e) {
+    // throw new InvalidDataException("Project Task Id is required");
+    // }
+    // try {
+    // Verifier.verifyPositive(projectTaskId);
+    // }
+    // catch (VerifyException e) {
+    // throw new
+    // InvalidDataException("Project Task Id must be greater than zero");
+    // }
+    //
+    // EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
+    // criteria.setProjectTaskId(projectTaskId);
+    // List<EventDto> results;
+    // StringBuilder buf = new StringBuilder();
+    // try {
+    // results = dao.fetchEvent(criteria);
+    // if (results == null) {
+    // return null;
+    // }
+    // } catch (ProjecttrackerDaoException e) {
+    // buf.append("Database error occurred retrieving events by project task id, ");
+    // buf.append(projectTaskId);
+    // this.msg = buf.toString();
+    // throw new ProjectAdminApiException(this.msg, e);
+    // }
+    // return results;
+    // }
 
     /*
      * (non-Javadoc)
@@ -804,4 +836,5 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             throw new InvalidTaskException("Task Description is required");
         }
     }
+
 }
