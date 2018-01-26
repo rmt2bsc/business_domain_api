@@ -318,13 +318,17 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.TaskDto#setTaskBillable(int)
+    /**
+     * Sets the billable indicator.
+     * <p>
+     * Defaults to 1, which is billable, if <i>value</i> is null.
      */
     @Override
-    public void setTaskBillable(int value) {
+    public void setTaskBillable(Integer value) {
+        // if true, default to billable equal true
+        if (value == null) {
+            value = 1;
+        }
         if (this.pt != null) {
             this.pt.setBillable(value);
         }

@@ -7,7 +7,12 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
+import org.dao.mapping.orm.rmt2.ProjProject;
+import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dto.ClientDto;
+import org.dto.ProjectDto;
+import org.dto.TaskDto;
+import org.dto.adapter.orm.ProjectObjectFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,11 +27,11 @@ import org.rmt2.api.ProjectAdminApiTestData;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2Date;
 import com.util.RMT2String;
 
 /**
- * Tests the Account entity belonging to the GlAccountApi within the 
- * general ledger API library.
+ * Tests the Administration module of the Project Tracker Api.
  * 
  * @author rterrell
  * 
@@ -36,6 +41,8 @@ import com.util.RMT2String;
 public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     
     private static final int TEST_CLIENT_ID = 1000;
+    private static final int TEST_PROJ_ID = 2220;
+    private static final int TEST_TASK_ID = 1112220;
 
     /**
      * @throws java.lang.Exception
@@ -62,14 +69,15 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchMultiple);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch all project clients case setup failed");
+            Assert.fail("Fetch all clients case setup failed");
         }
         
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
         List<ClientDto> results = null;
         try {
-            results = api.getAllClients();
+            results = api.getClient(criteria);
         } catch (ProjectAdminApiException e) {
             e.printStackTrace();
         }
@@ -98,27 +106,153 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch all project clients case setup failed");
+            Assert.fail("Fetch single client case setup failed");
         }
         
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ClientDto results = null;
+        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+        criteria.setClientId(TEST_CLIENT_ID);
+        List<ClientDto> results = null;
         try {
-            results = api.getClient(TEST_CLIENT_ID);
+            results = api.getClient(criteria);
         } catch (ProjectAdminApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(results.getClientId(), TEST_CLIENT_ID);
-        Assert.assertEquals(results.getBusinessId(), 1350);
-        Assert.assertEquals(results.getClientName(), "1000 Company");
-        Assert.assertEquals(results.getClientBillRate(), 70.00, 0);
-        Assert.assertEquals(results.getClientOtBillRate(), 80.00, 0);
-        Assert.assertEquals(results.getClientContactFirstname(), "steve");
-        Assert.assertEquals(results.getClientContactLastname(), "gadd");
-        Assert.assertEquals(results.getClientContactPhone(), "0000000000");
-        Assert.assertEquals(results.getClientContactEmail(), "stevegadd@gte.net");
+        Assert.assertEquals(1, results.size());
+        ClientDto obj = results.get(0);
+        Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+        Assert.assertEquals(obj.getBusinessId(), 1350);
+        Assert.assertEquals(obj.getClientName(), "1000 Company");
+        Assert.assertEquals(obj.getClientBillRate(), 70.00, 0);
+        Assert.assertEquals(obj.getClientOtBillRate(), 80.00, 0);
+        Assert.assertEquals(obj.getClientContactFirstname(), "steve");
+        Assert.assertEquals(obj.getClientContactLastname(), "gadd");
+        Assert.assertEquals(obj.getClientContactPhone(), "0000000000");
+        Assert.assertEquals(obj.getClientContactEmail(), "stevegadd@gte.net");
     }
     
+    @Test
+    public void testFetch_AllProjects_Success() {
+        // Stub all clients fetch.
+        ProjProject mockCriteria = new ProjProject();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjectFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all projects case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        List<ProjectDto> results = null;
+        try {
+            results = api.getProject(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ProjectDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getProjId(), (2220 + ndx));
+            Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), ("Project 222" + ndx));
+            Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-0" + (ndx + 1) + "-01"));
+            Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-0" + (ndx + 2) + "-01"));
+        }
+    }
+
+    @Test
+    public void testFetch_SingleProject_Success() {
+        // Stub all clients fetch.
+        ProjProject mockCriteria = new ProjProject();
+        mockCriteria.setProjId(TEST_PROJ_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjectFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all projects case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        criteria.setProjId(TEST_PROJ_ID);
+        List<ProjectDto> results = null;
+        try {
+            results = api.getProject(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ProjectDto obj = results.get(0);
+        Assert.assertEquals(obj.getProjId(), 2220);
+        Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+        Assert.assertEquals(obj.getProjectDescription(), "Project 2220");
+        Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+        Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-02-01"));
+    }
+
+    @Test
+    public void testFetch_AllTasks_Success() {
+        // Stub all clients fetch.
+        ProjTask mockCriteria = new ProjTask();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjTaskFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all tasks case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
+        List<TaskDto> results = null;
+        try {
+            results = api.getTask(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            TaskDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getTaskId(), (TEST_TASK_ID + ndx));
+            Assert.assertNotNull(obj.getTaskDescription());
+        }
+    }
+
+    @Test
+    public void testFetch_SingleTask_Success() {
+        // Stub all clients fetch.
+        ProjTask mockCriteria = new ProjTask();
+        mockCriteria.setTaskId(TEST_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjTaskFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single task case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
+        criteria.setTaskId(TEST_TASK_ID);
+        List<TaskDto> results = null;
+        try {
+            results = api.getTask(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        TaskDto obj = results.get(0);
+        Assert.assertEquals(obj.getTaskId(), TEST_TASK_ID);
+        Assert.assertEquals(obj.getTaskBillable(), 1);
+        Assert.assertEquals(obj.getTaskDescription(), "Design and Analysis");
+    }
 }

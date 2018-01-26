@@ -23,104 +23,39 @@ import com.api.foundation.TransactionApi;
  * 
  */
 public interface ProjectAdminApi extends TransactionApi {
-
+    
     /**
-     * Obtains a list of all clients
+     * Obtains a list of all clients based on criteria selected.
      * 
+     * @param criteria
+     *            an instance of {@link ClientDto} representing selection
+     *            criteria.
      * @return A List of {@link ClientDto} objects or null if nothing is found.
      * @throws ProjectApiException
      */
-    List<ClientDto> getAllClients() throws ProjectAdminApiException;
+    List<ClientDto> getClient(ClientDto criteria) throws ProjectAdminApiException;
 
     /**
-     * Finds a single client using client id.
+     * Find list of projects based on selection criteria provided.
      * 
-     * @param clientId
-     *            The client's id
-     * @return An {@link ClientDto} or null if nothing is found.
-     * @throws ProjectApiException
-     */
-    ClientDto getClient(Integer clientId) throws ProjectAdminApiException;
-
-//    /**
-//     * Find a single client containing customer data from the Accounting System
-//     * using client id.
-//     * 
-//     * @param clientId
-//     *            The client's id
-//     * @return A {@link ClientDto} object or null if nothing is found.
-//     * @throws ProjectApiException
-//     *             when two or more clients are returned as a result of
-//     *             <i>clientId</i> not being unique.
-//     * @throws NotFoundException
-//     *             when the client is not found.
-//     */
-//    ClientDto getClientExt(Integer clientId) throws ProjectApiException;
-
-//    /**
-//     * Find all clients with extended data.
-//     * 
-//     * @return A List of {@link ClientDto} objects or null if nothing is found.
-//     * @throws ProjectApiException
-//     */
-//    List<ClientDto> getAllClientExt() throws ProjectApiException;
-
-    /**
-     * Find all projects.
-     * 
+     * @param criteria
+     *            an instance of {@link ProjectDto} representing selection
+     *            criteria.
      * @return A List of {@link ProjectDto} objects or null if nothing is found.
-     * @throws ProjectApiException
+     * @throws ProjectAdminApiException
      */
-    List<ProjectDto> getAllProjects() throws ProjectAdminApiException;
+    List<ProjectDto> getProject(ProjectDto criteria) throws ProjectAdminApiException;
 
     /**
-     * Finds a project using projectId.
+     * Find list of tasks based on selection criteria provided.
      * 
-     * @param projectId
-     *            The id of a project.
-     * @return A {@link ProjectDto} object or null if nothing is found.
-     * @throws ProjectApiException
+     * @param criteria
+     *            an instance of {@link TaskDto} representing selection
+     *            criteria.
+     * @return A List of {@link TaskDto} objects or null if nothing is found.
+     * @throws ProjectAdminApiException
      */
-    ProjectDto getProject(Integer projectId) throws ProjectAdminApiException;
-
-    /**
-     * Find one or more projects using the clinet's id.
-     * 
-     * @param clientId
-     *            The id of the client.
-     * @return A List of {@link ProjectDto} objects or null if nothing is found.
-     * @throws ProjectApiException
-     */
-    List<ProjectDto> getProjectByClientId(Integer clientId) throws ProjectAdminApiException;
-
-    /**
-     * Finds a tasks using task id.
-     * 
-     * @param taskId
-     *            The Id of the task to locate.
-     * @return {@link TaskDto} or null if nothing is found.
-     * @throws ProjectApiException
-     */
-    TaskDto getTask(Integer taskId) throws ProjectAdminApiException;
-
-    /**
-     * Returns a list of all tasks.
-     * 
-     * @return A List of {@link ProjectDto} objects or null if nothing is found.
-     * @throws ProjectApiException
-     */
-    List<TaskDto> getAllTasks() throws ProjectAdminApiException;
-
-    /**
-     * Find tasks based on the billable flag.
-     * 
-     * @param billable
-     *            A boolean value which indicates to target billable or
-     *            non-billable tasks.
-     * @return List of {@link ProjectDto} objects or null if nothing is found.
-     * @throws ProjectApiException
-     */
-    List<TaskDto> getTasks(Boolean billable) throws ProjectAdminApiException;
+    List<TaskDto> getTask(TaskDto criteria) throws ProjectAdminApiException;
 
     /**
      * Retrieves a project task record
@@ -268,5 +203,4 @@ public interface ProjectAdminApi extends TransactionApi {
      * @throws ProjectApiException
      */
     int updateTask(TaskDto task) throws ProjectAdminApiException;
-
 }

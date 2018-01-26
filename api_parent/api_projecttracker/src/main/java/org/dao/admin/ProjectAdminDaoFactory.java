@@ -107,20 +107,16 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         ProjClient obj = new ProjClient();
         if (criteria != null) {
             if (criteria.getClientId() > 0) {
-                obj.addCriteria(ProjClient.PROP_CLIENTID,
-                        criteria.getClientId());
+                obj.addCriteria(ProjClient.PROP_CLIENTID, criteria.getClientId());
             }
             if (criteria.getBusinessId() > 0) {
-                obj.addCriteria(ProjClient.PROP_BUSINESSID,
-                        criteria.getBusinessId());
+                obj.addCriteria(ProjClient.PROP_BUSINESSID, criteria.getBusinessId());
             }
             if (criteria.getAccountNo() != null) {
-                obj.addLikeClause(ProjClient.PROP_ACCOUNTNO,
-                        criteria.getAccountNo());
+                obj.addLikeClause(ProjClient.PROP_ACCOUNTNO, criteria.getAccountNo());
             }
             if (criteria.getClientName() != null) {
-                obj.addLikeClause(ProjClient.PROP_NAME,
-                        criteria.getClientName());
+                obj.addLikeClause(ProjClient.PROP_NAME, criteria.getClientName());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
@@ -149,19 +145,16 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         ProjProject obj = new ProjProject();
         if (criteria != null) {
             if (criteria.getClientId() > 0) {
-                obj.addCriteria(ProjProject.PROP_CLIENTID,
-                        criteria.getClientId());
+                obj.addCriteria(ProjProject.PROP_CLIENTID, criteria.getClientId());
             }
             if (criteria.getProjId() > 0) {
                 obj.addCriteria(ProjProject.PROP_PROJID, criteria.getProjId());
             }
             if (criteria.getProjectDescription() != null) {
-                obj.addLikeClause(ProjProject.PROP_DESCRIPTION,
-                        criteria.getProjectDescription());
+                obj.addLikeClause(ProjProject.PROP_DESCRIPTION, criteria.getProjectDescription());
             }
             if (criteria.getProjectEffectiveDate() != null) {
-                obj.addCriteria(ProjProject.PROP_EFFECTIVEDATE,
-                        criteria.getProjectEffectiveDate());
+                obj.addCriteria(ProjProject.PROP_EFFECTIVEDATE, criteria.getProjectEffectiveDate());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
@@ -342,9 +335,13 @@ public class ProjectAdminDaoFactory extends RMT2Base {
                 obj.addCriteria(ProjTask.PROP_TASKID, criteria.getTaskId());
             }
             if (criteria.getTaskDescription() != null) {
-                obj.addLikeClause(ProjTask.PROP_DESCRIPTION,
-                        criteria.getTaskDescription());
+                obj.addLikeClause(ProjTask.PROP_DESCRIPTION, criteria.getTaskDescription());
             }
+            // TODO: Make preparations to handle billable as selection criteria.
+            // if (criteria.getTaskBillable() != null) {
+            // obj.addLikeClause(ProjTask.PROP_DESCRIPTION,
+            // criteria.getTaskDescription());
+            // }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
             }

@@ -14,7 +14,6 @@ import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
-import org.modules.ProjectTrackerApiConst;
 
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
@@ -82,14 +81,14 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         return;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getAllClients()
-     */
     @Override
-    public List<ClientDto> getAllClients() throws ProjectAdminApiException {
-        ClientDto criteria = null;
+    public List<ClientDto> getClient(ClientDto criteria) throws ProjectAdminApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Client criteria is required");
+        }
+
         List<ClientDto> results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -108,134 +107,16 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.admin.ProjectApi#getClient(int)
+     * @see org.modules.admin.ProjectAdminApi#getProject(org.dto.ProjectDto)
      */
     @Override
-    public ClientDto getClient(Integer clientId) throws ProjectAdminApiException {
+    public List<ProjectDto> getProject(ProjectDto criteria) throws ProjectAdminApiException {
         try {
-            Verifier.verifyNotNull(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id is required");
-        }
-        try {
-            Verifier.verifyPositive(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id must be greater than zero");
-        }
-        
-        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
-        criteria.setClientId(clientId);
-        List<ClientDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchClient(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving all project clients");
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Project criteria is required");
         }
 
-        try {
-            Verifier.verifyTrue(results.size() == 1);
-            return results.get(0);
-        }
-        catch (VerifyException e) {
-            buf.append("Error: Query method is expecting a single client object to be returned using client id, ");
-            buf.append(clientId);
-            buf.append(".  Instead ");
-            buf.append(results.size());
-            buf.append("  were returned.");
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-    }
-
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.modules.admin.ProjectApi#getClientExt(int)
-//     */
-//    @Override
-//    public ClientDto getClientExt(Integer clientId) throws ProjectApiException {
-//        try {
-//            Verifier.verifyNotNull(clientId);
-//        }
-//        catch (VerifyException e) {
-//            throw new InvalidDataException("Client Id is required");
-//        }
-//        try {
-//            Verifier.verifyPositive(clientId);
-//        }
-//        catch (VerifyException e) {
-//            throw new InvalidDataException("Client Id must be greater than zero");
-//        }
-//        
-//        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
-//        criteria.setClientId(clientId);
-//        List<ClientDto> results;
-//        StringBuilder buf = new StringBuilder();
-//        try {
-//            results = dao.fetchClientExt(criteria);
-//            if (results == null) {
-//                return null;
-//            }
-//        } catch (ProjecttrackerDaoException e) {
-//            buf.append("Database error occurred retrieving all project clients");
-//            this.msg = buf.toString();
-//            throw new ProjectApiException(this.msg, e);
-//        }
-//
-//        try {
-//            Verifier.verifyTrue(results.size() == 1);
-//            return results.get(0);
-//        }
-//        catch (VerifyException e) {
-//            buf.append("Error: Query method is expecting a single client extended object to be returned using client id, ");
-//            buf.append(clientId);
-//            buf.append(".  Instead ");
-//            buf.append(results.size());
-//            buf.append("  were returned.");
-//            this.msg = buf.toString();
-//            throw new ProjectApiException(this.msg);
-//        }
-//    }
-
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.modules.admin.ProjectApi#getClientExt()
-//     */
-//    @Override
-//    public List<ClientDto> getAllClientExt() throws ProjectApiException {
-//        ClientDto criteria = null;
-//        List<ClientDto> results;
-//        StringBuilder buf = new StringBuilder();
-//        try {
-//            results = dao.fetchClientExt(criteria);
-//            if (results == null) {
-//                return null;
-//            }
-//        } catch (ProjecttrackerDaoException e) {
-//            buf.append("Database error occurred retrieving all extended clients");
-//            this.msg = buf.toString();
-//            throw new ProjectApiException(this.msg, e);
-//        }
-//        return results;
-//    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getAllProjects()
-     */
-    @Override
-    public List<ProjectDto> getAllProjects() throws ProjectAdminApiException {
-        ProjectDto criteria = null;
         List<ProjectDto> results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -254,150 +135,16 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.admin.ProjectApi#getProject(int)
+     * @see org.modules.admin.ProjectAdminApi#getTask(org.dto.TaskDto)
      */
     @Override
-    public ProjectDto getProject(Integer projectId) throws ProjectAdminApiException {
+    public List<TaskDto> getTask(TaskDto criteria) throws ProjectAdminApiException {
         try {
-            Verifier.verifyNotNull(projectId);
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Task criteria is required");
         }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Id is required");
-        }
-        try {
-            Verifier.verifyPositive(projectId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Project Id must be greater than zero");
-        }
-        
-        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
-        criteria.setProjId(projectId);
-        List<ProjectDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchProject(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving a single project by project id, ");
-            buf.append(projectId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        
-        try {
-            Verifier.verifyTrue(results.size() == 1);
-            return results.get(0);
-        }
-        catch (VerifyException e) {
-            buf.append("Error: Query method is expecting a single project object to be returned using project id, ");
-            buf.append(projectId);
-            buf.append(".  Instead ");
-            buf.append(results.size());
-            buf.append("  were returned.");
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg);
-        }
-    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getProjectByClientId(int)
-     */
-    @Override
-    public List<ProjectDto> getProjectByClientId(Integer clientId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id is required");
-        }
-        try {
-            Verifier.verifyPositive(clientId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Client Id must be greater than zero");
-        }
-        
-        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
-        criteria.setClientId(clientId);
-        List<ProjectDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchProject(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving projecta by client id, ");
-            buf.append(clientId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        return results;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getTask(int)
-     */
-    @Override
-    public TaskDto getTask(Integer taskId) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(taskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Task Id is required");
-        }
-        try {
-            Verifier.verifyPositive(taskId);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Task Id must be greater than zero");
-        }
-        
-        TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
-        criteria.setTaskId(taskId);
-        List<TaskDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchTask(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving a single task by task id, ");
-            buf.append(taskId);
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        try {
-            Verifier.verifyTrue(results.size() == 1);
-            return results.get(0);
-        }
-        catch (VerifyException e) {
-            buf.append("Error: Query method is expecting a single task object to be returned using task id, ");
-            buf.append(taskId);
-            buf.append(".  Instead ");
-            buf.append(results.size());
-            buf.append("  were returned.");
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getAllTasks()
-     */
-    @Override
-    public List<TaskDto> getAllTasks() throws ProjectAdminApiException {
-        TaskDto criteria = null;
         List<TaskDto> results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -407,38 +154,6 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             }
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred retrieving all tasks");
-            this.msg = buf.toString();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        return results;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.admin.ProjectApi#getTasks(boolean)
-     */
-    @Override
-    public List<TaskDto> getTasks(Boolean billable) throws ProjectAdminApiException {
-        try {
-            Verifier.verifyNotNull(billable);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Billable indicator is required");
-        }
-        TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
-        criteria.setTaskBillable(billable ? ProjectTrackerApiConst.TASK_BILLABLE_FLAG
-                : ProjectTrackerApiConst.TASK_NONBILLABLE_FLAG);
-        List<TaskDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchTask(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving all tasks based on billable flag, ");
-            buf.append(billable);
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
@@ -996,10 +711,12 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         // Make API call to determine client's existence. When new, add to the
         // database. If client does not exist in the Proj_Client table then add.
         int clientId = project.getClientId();
-        ClientDto client;
+        List<ClientDto> client;
         try {
             // Check if client exists locally
-            client = this.getClient(clientId);
+            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+            criteria.setClientId(clientId);
+            client = this.getClient(criteria);
         } catch (ProjectAdminApiException e) {
             this.msg = "Error fetching client: " + clientId;
             throw new ProjectAdminApiException(this.msg, e);
@@ -1087,5 +804,4 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             throw new InvalidTaskException("Task Description is required");
         }
     }
-
 }
