@@ -10,10 +10,12 @@ import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
+import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
 import org.dto.ProjectDto;
+import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
@@ -109,7 +111,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
 
     @Test
     public void testFetch_Client_Single_Success() {
-        // Stub all clients fetch.
+        // Stub single client fetch.
         ProjClient mockCriteria = new ProjClient();
         mockCriteria.setClientId(TEST_CLIENT_ID);
         try {
@@ -145,7 +147,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     
     @Test
     public void testFetch_Project_All_Success() {
-        // Stub all clients fetch.
+        // Stub all projects fetch.
         ProjProject mockCriteria = new ProjProject();
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjectFetchSingle);
@@ -177,7 +179,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
 
     @Test
     public void testFetch_Project_Single_Success() {
-        // Stub all clients fetch.
+        // Stub single project fetch.
         ProjProject mockCriteria = new ProjProject();
         mockCriteria.setProjId(TEST_PROJ_ID);
         try {
@@ -209,7 +211,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
 
     @Test
     public void testFetch_Task_All_Success() {
-        // Stub all clients fetch.
+        // Stub all tasks fetch.
         ProjTask mockCriteria = new ProjTask();
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjTaskFetchMultiple);
@@ -238,7 +240,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
 
     @Test
     public void testFetch_Task_Single_Success() {
-        // Stub all clients fetch.
+        // Stub single task fetch.
         ProjTask mockCriteria = new ProjTask();
         mockCriteria.setTaskId(TEST_TASK_ID);
         try {
@@ -269,7 +271,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     
     @Test
     public void testFetch_Event_All_Success() {
-        // Stub all clients fetch.
+        // Stub all events fetch.
         ProjEvent mockCriteria = new ProjEvent();
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjEventFetchMultiple);
@@ -300,7 +302,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     
     @Test
     public void testFetch_Event_Single_Success() {
-        // Stub all clients fetch.
+        // Stub single event fetch.
         ProjEvent mockCriteria = new ProjEvent();
         mockCriteria.setEventId(TEST_EVENT_ID);
         try {
@@ -332,7 +334,7 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     
     @Test
     public void testFetch_ProjectTask_All_Success() {
-        // Stub all clients fetch.
+        // Stub all project-task fetch.
         VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchMultiple);
@@ -369,14 +371,14 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     
     @Test
     public void testFetch_ProjectTask_Single_Success() {
-        // Stub all clients fetch.
+        // Stub single project-task fetch.
         VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
         mockCriteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch all project-task case setup failed");
+            Assert.fail("Fetch single project-task case setup failed");
         }
 
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
@@ -392,6 +394,80 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
         ProjectTaskDto obj = results.get(0);
+        Assert.assertEquals(obj.getProjectTaskId(), TEST_PROJECT_TASK_ID);
+        Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
+        Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
+        Assert.assertEquals(obj.getTaskId(), TEST_TASK_ID);
+        Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+        Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+        Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+        Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
+        Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[0]);
+        Assert.assertEquals(obj.getTaskBillable(), 1);
+    }
+    
+    @Test
+    public void testFetch_ProjectEvent_All_Success() {
+        // Stub all  project-event fetch.
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetEventListFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
+        List<ProjectEventDto> results = null;
+        try {
+            results = api.getProjectEvent(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ProjectEventDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getProjectTaskId(), (TEST_PROJECT_TASK_ID + ndx));
+            Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
+            Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
+            Assert.assertEquals(obj.getTaskId(), (TEST_TASK_ID + ndx));
+            Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+            Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+            Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
+            Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[ndx]);
+            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+        }
+    }
+    
+    @Test
+    public void testFetch_ProjectEvent_Single_Success() {
+        // Stub single project-event fetch.
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        mockCriteria.setEventId(TEST_EVENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetEventListFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
+        criteria.setEventId(TEST_EVENT_ID);
+        List<ProjectEventDto> results = null;
+        try {
+            results = api.getProjectEvent(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ProjectEventDto obj = results.get(0);
         Assert.assertEquals(obj.getProjectTaskId(), TEST_PROJECT_TASK_ID);
         Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
         Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);

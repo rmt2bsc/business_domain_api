@@ -84,34 +84,15 @@ public interface ProjectAdminApi extends TransactionApi {
     List<ProjectTaskDto> getProjectTask(ProjectTaskDto criteria) throws ProjectAdminApiException;
     
     /**
-     * Retrieves timesheet extended event records by client
+     * Find list of project-event related tasks based on selection criteria provided.
      * 
-     * @param clientId
-     *            The id of the client
-     * @return A List of {@link ProjectEventDto} objects or null if not found.
-     * @throws TimesheetApiException
+     * @param criteria
+     *            an instance of {@link ProjectEventDto} representing selection
+     *            criteria.
+     * @return A List of {@link ProjectEventDto} objects or null if nothing is found.
+     * @throws ProjectAdminApiException
      */
-    List<ProjectEventDto> getProjectEventByClient(Integer clientId) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves extended timesheet event records by project
-     * 
-     * @param projectId
-     *            The id of the project
-     * @return A List of {@link EventDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<ProjectEventDto> getProjectEventByProject(Integer projectId) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves extended event records by task
-     * 
-     * @param taskId
-     *            The id of the task
-     * @return A List of {@link EventDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<ProjectEventDto> getProjectEventByTask(Integer taskId) throws ProjectAdminApiException;
+    List<ProjectEventDto> getProjectEvent(ProjectEventDto criteria) throws ProjectAdminApiException;
 
     /**
      * Creates new or updates an existing project.

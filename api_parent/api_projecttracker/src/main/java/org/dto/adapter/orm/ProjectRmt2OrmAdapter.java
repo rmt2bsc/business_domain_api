@@ -527,7 +527,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
         if (this.vtpt != null) {
             return this.vtpt.getProjectName();
         }
-        if (this.vtpt != null) {
+        if (this.vtel != null) {
             return this.vtel.getProjectName();
         }
         return null;

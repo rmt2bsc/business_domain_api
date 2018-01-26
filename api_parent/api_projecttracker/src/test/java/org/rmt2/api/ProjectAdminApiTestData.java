@@ -391,7 +391,7 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
         VwTimesheetEventList o = ProjectTrackerMockDataFactory
                 .createMockOrmVwTimesheetEventList(123401, "2018-01-01", 8,
                         444441, 848484840, 2220, "Project 2220", 1112220,
-                        "Development", 1000, "2018-01-01", "2018-01-07", true);
+                        "Design and Analysis", 1000, "2018-01-01", "2018-01-07", true);
         list.add(o);
         return list;
     }
