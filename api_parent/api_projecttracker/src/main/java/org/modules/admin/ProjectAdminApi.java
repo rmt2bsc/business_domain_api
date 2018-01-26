@@ -63,23 +63,14 @@ public interface ProjectAdminApi extends TransactionApi {
      * @param criteria
      *            an instance of {@link EventDto} representing selection
      *            criteria.
+     * @param beginDate
+     *            The beginning of the date range. Optional.
+     * @param endDate
+     *            The ending of the date range. Optional.
      * @return A List of {@link EventDto} objects or null if nothing is found.
      * @throws ProjectAdminApiException
      */
-    List<EventDto> getEvent(EventDto criteria) throws ProjectAdminApiException;
-
-    /**
-     * Retrieves event records based on a date range using the beginning and
-     * ending event dates
-     * 
-     * @param beginDate
-     *            The beginning of the date range.
-     * @param endDate
-     *            The ending of the date range.
-     * @return A List of {@link EventDto} objects or null if not found.
-     * @throws ProjectApiException
-     */
-    List<EventDto> getEvent(Date beginDate, Date endDate) throws ProjectAdminApiException;
+    List<EventDto> getEvent(EventDto criteria, Date beginDate, Date endDate) throws ProjectAdminApiException;
 
     /**
      * Retrieves a project task record
@@ -133,37 +124,6 @@ public interface ProjectAdminApi extends TransactionApi {
      */
     List<ProjectTaskDto> getProjectTask(Integer projectId, Integer taskId) throws ProjectAdminApiException;
 
-    // /**
-    // * Retrieves a timesheet event record
-    // *
-    // * @param eventId
-    // * The id of the event.
-    // * @return An {@link EventDto} object or null if not found..
-    // * @throws ProjectApiException
-    // */
-    // EventDto getEvent(Integer eventId) throws ProjectAdminApiException;
-    //
-    // /**
-    // * Retrieves event records by event date
-    // *
-    // * @param eventDate
-    // * The event date to filter data
-    // * @return A List of {@link EventDto} objects or null if not found.
-    // * @throws ProjectApiException
-    // */
-    // List<EventDto> getEvent(Date eventDate) throws ProjectAdminApiException;
-    //
-    //
-    // /**
-    // * Retrieves one or more event records using Project-Task Id
-    // *
-    // * @param projectTaskId
-    // * The id of the project-task
-    // * @return A List of {@link EventDto} objects or null if not found.
-    // * @throws ProjectApiException
-    // */
-    // List<EventDto> getEventByProjectTask(Integer projectTaskId) throws
-    // ProjectAdminApiException;
 
     /**
      * Retrieves timesheet extended event records by client
@@ -173,7 +133,7 @@ public interface ProjectAdminApi extends TransactionApi {
      * @return A List of {@link ProjectEventDto} objects or null if not found.
      * @throws TimesheetApiException
      */
-    List<ProjectEventDto> getEventByClient(Integer clientId) throws ProjectAdminApiException;
+    List<ProjectEventDto> getProjectEventByClient(Integer clientId) throws ProjectAdminApiException;
 
     /**
      * Retrieves extended timesheet event records by project
@@ -183,7 +143,7 @@ public interface ProjectAdminApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectEventDto> getEventByProject(Integer projectId) throws ProjectAdminApiException;
+    List<ProjectEventDto> getProjectEventByProject(Integer projectId) throws ProjectAdminApiException;
 
     /**
      * Retrieves extended event records by task
@@ -193,7 +153,7 @@ public interface ProjectAdminApi extends TransactionApi {
      * @return A List of {@link EventDto} objects or null if not found.
      * @throws ProjectApiException
      */
-    List<ProjectEventDto> getEventByTask(Integer taskId) throws ProjectAdminApiException;
+    List<ProjectEventDto> getProjectEventByTask(Integer taskId) throws ProjectAdminApiException;
 
     /**
      * Creates new or updates an existing project.

@@ -1100,7 +1100,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                 try {
                     EventDto eventCriteria = ProjectObjectFactory.createEventDtoInstance(null);
                     eventCriteria.setProjectTaskId(pt.getProjectTaskId());
-                    List<EventDto> evts = api.getEvent(eventCriteria);
+                    List<EventDto> evts = api.getEvent(eventCriteria, null, null);
                     if (evts == null || evts.size() <= 0) {
                         this.ts = null;
                         this.tsHours = null;

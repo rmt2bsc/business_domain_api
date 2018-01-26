@@ -68,12 +68,12 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
         this.mockEmployeeTypeFetchSingle = this.createMockSingleEmployeeType();
         this.mockVwEmployeeProjectsFetchMultiple = this.createMockMultipleVwEmployeeProjects();
         this.mockVwEmployeeProjectsFetchSingle = this.createMockSingleVwEmployeeProjects();
-        this.mockProjEventFetchMultiple = this.createMockMultipleProjEvent();
-        this.mockProjEventFetchSingle = this.createMockSingleProjEvent();
+        this.mockProjEventFetchMultiple = this.createMockMultipleEvent();
+        this.mockProjEventFetchSingle = this.createMockSingleEvent();
         this.mockVwTimesheetEventListFetchMultiple = this.createMockMultipleVwTimesheetEventList();
         this.mockVwTimesheetEventListFetchSingle = this.createMockSingleVwTimesheetEventList();
-        this.mockProjTaskFetchMultiple = this.createMockMultipleProjTask();
-        this.mockProjTaskFetchSingle = this.createMockSingleProjTask();
+        this.mockProjTaskFetchMultiple = this.createMockMultipleTask();
+        this.mockProjTaskFetchSingle = this.createMockSingleTask();
         this.mockVwTimesheetProjectTaskFetchMultiple = this.createMockMultipleVwTimesheetProjectTask();
         this.mockVwTimesheetProjectTaskFetchSingle = this.createMockSingleVwTimesheetProjectTask();
         
@@ -289,14 +289,14 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
         return list;
     }
     
-    private List<ProjEvent> createMockSingleProjEvent() {
+    private List<ProjEvent> createMockSingleEvent() {
         List<ProjEvent> list = new ArrayList<ProjEvent>();
         ProjEvent o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(123401, 444441, "2018-01-01", 8);
         list.add(o);
         return list;
     }
     
-    private List<ProjEvent> createMockMultipleProjEvent() {
+    private List<ProjEvent> createMockMultipleEvent() {
         List<ProjEvent> list = new ArrayList<ProjEvent>();
         ProjEvent o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(123401, 444441, "2018-01-01", 8);
         list.add(o);
@@ -315,14 +315,14 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
         return list;
     }
     
-    private List<ProjTask> createMockSingleProjTask() {
+    private List<ProjTask> createMockSingleTask() {
         List<ProjTask> list = new ArrayList<ProjTask>();
         ProjTask o = ProjectTrackerMockDataFactory.createMockOrmProjTask(1112220, "Design and Analysis", true);
         list.add(o);
         return list;
     }
     
-    private List<ProjTask> createMockMultipleProjTask() {
+    private List<ProjTask> createMockMultipleTask() {
         List<ProjTask> list = new ArrayList<ProjTask>();
         ProjTask o = ProjectTrackerMockDataFactory.createMockOrmProjTask(1112220, "Design and Analysis", true);
         list.add(o);
