@@ -35,6 +35,7 @@ import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.OrmBean;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
+import com.util.assistants.Verifier;
 
 /**
  * An implementation of {@link ProjectAdminDao}. It provides functionality that
@@ -46,8 +47,7 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements
-        ProjectAdminDao {
+class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements ProjectAdminDao {
 
     /**
      * Creates a Rmt2ProjectAdminDaoImpl object with its own persistent client.
@@ -395,47 +395,44 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements
         return list;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.ProjectAdminDao#maintainClient(org.dto.ClientDto)
-     */
     @Override
-    public void insertClient(ClientDto obj) throws ProjectAdminDaoException {
+    public int maintainClient(ClientDto obj) throws ProjectAdminDaoException {
         if (obj == null) {
-            throw new ProjectAdminDaoException("Client DTO cannot be null during add operation");
+            throw new EmployeeDaoException("Client DTO cannot be null during add/update operation");
         }
         ProjClient client = ProjectAdminDaoFactory.createOrm(obj);
+        int rc = 0;
+        try {
+            Verifier.verifyPositive(client.getClientId());
+            rc = this.updateClient(client);
+        }
+        catch (Exception e) {
+            rc = this.insertClient(client);
+        }
+        return rc;
+    }
+    
+    private int insertClient(ProjClient client) throws ProjectAdminDaoException {
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             client.setDateCreated(ut.getDateCreated());
             client.setDateUpdated(ut.getDateCreated());
             client.setUserId(ut.getLoginId());
-            this.client.insertRow(client, false);
-            return;
+            int rc = this.client.insertRow(client, false);
+            return rc;
         } catch (Exception e) {
             throw new ProjectAdminDaoException("Client database add operation failed", e);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.admin.ProjectAdminDao#changeClient(org.dto.ClientDto)
-     */
-    @Override
-    public void updateClient(ClientDto obj) throws ProjectAdminDaoException {
-        if (obj == null) {
-            throw new ProjectAdminDaoException("Client DTO cannot be null during change operation");
-        }
-        ProjClient client = ProjectAdminDaoFactory.createOrm(obj);
+    private int updateClient(ProjClient client) throws ProjectAdminDaoException {
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             client.setDateUpdated(ut.getDateCreated());
             client.setUserId(ut.getLoginId());
             client.addCriteria(ProjClient.PROP_CLIENTID, client.getClientId());
-            this.client.updateRow(client);
-            return;
+            int rc = this.client.updateRow(client);
+            return rc;
         } catch (Exception e) {
             throw new ProjectAdminDaoException("Client database change operation failed", e);
         }
@@ -981,6 +978,8 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements
         ProjProjectTask obj = ProjectAdminDaoFactory.createCriteria(criteria);
         return this.deleteObject(obj);
     }
+
+    
 
     // /*
     // * (non-Javadoc)

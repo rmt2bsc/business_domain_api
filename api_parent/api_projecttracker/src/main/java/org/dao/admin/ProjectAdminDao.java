@@ -220,27 +220,18 @@ public interface ProjectAdminDao extends DaoClient {
     List<ProjectEventDto> fetchProjectEvent(ProjectEventDto criteria) throws ProjectAdminDaoException;
 
     /**
-     * Creates a new client.
-     * 
-     * @param obj
-     *            an instance of {@link ClientDto} representing the client to be
-     *            created.
-     * @throws ProjectAdminDaoException
-     *             general data access errors
-     */
-    void insertClient(ClientDto obj) throws ProjectAdminDaoException;
-
-    /**
-     * Modifies an existing client.
+     * Creates a new or updates an existing client.
      * 
      * @param obj
      *            an instance of {@link ClientDto} representing the client to be
      *            updated.
+     * @return total number of clients updated or the id of the new client
+     *         created.
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    void updateClient(ClientDto obj) throws ProjectAdminDaoException;
-
+    int maintainClient(ClientDto obj) throws ProjectAdminDaoException;
+    
     /**
      * Creates a new or updates an existing project.
      * <p>

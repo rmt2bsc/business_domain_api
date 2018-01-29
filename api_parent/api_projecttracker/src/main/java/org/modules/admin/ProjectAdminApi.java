@@ -95,6 +95,17 @@ public interface ProjectAdminApi extends TransactionApi {
     List<ProjectEventDto> getProjectEvent(ProjectEventDto criteria) throws ProjectAdminApiException;
 
     /**
+     * Creates new or updates an existing client.
+     * 
+     * @param client
+     *            An instance of {@link ClientDto}
+     * @return The id of the new client created or the total number of existing
+     *         clients modified.
+     * @throws ProjectApiException
+     */
+    int updateClient(ClientDto client) throws ProjectAdminApiException;
+    
+    /**
      * Creates new or updates an existing project.
      * 
      * @param project
