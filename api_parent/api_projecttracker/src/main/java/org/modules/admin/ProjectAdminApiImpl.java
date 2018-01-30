@@ -281,16 +281,28 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             throw new InvalidDataException("Client data is required");
         }
         try {
-            Verifier.verifyPositive(client.getClientId());
+            Verifier.verifyNotNegative(client.getClientId());
         }
         catch (VerifyException e) {
-            throw new InvalidDataException("The client's id must be greater than zero");
+            throw new InvalidDataException("The client id must be greater than or equal to zero");
+        }
+
+        try {
+            Verifier.verifyNotNull(client.getClientName());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("The client's name is required");
         }
         
-        // Make API call to determine client's existence. In order to setup a
-        // project, the client must already exists in the project tracker
-        // system. Otherwise, produce an error indicating tha project/client
-        // association is incorrect.
+        // For nex clients, exit.
+        if (client.getClientId() == 0) {
+            return;
+        }
+
+        // When updating and existing client, make API call to determine
+        // client's existence. In order to setup a project, the client must
+        // already exists in the project tracker system. Otherwise, produce an
+        // error indicating tha project/client association is incorrect.
         List<ClientDto> results;
         try {
             // Check if client exists locally
@@ -301,7 +313,6 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             this.msg = "Error fetching client: " + client.getClientId();
             throw new ProjectAdminApiException(this.msg, e);
         }
-
         if (results == null) {
             this.msg = "Project is assoicated with a client id that does not have a profile in the Project Tracker system.  Client Id is "
                     + client.getClientId();
@@ -377,6 +388,12 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             throw new InvalidDataException("Project data is required");
         }
         try {
+            Verifier.verifyNotNegative(proj.getProjId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("The project id must be greater than or equal zero");
+        }
+        try {
             Verifier.verifyNotNull(proj.getProjectDescription());
         }
         catch (VerifyException e) {
@@ -429,6 +446,12 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             throw new InvalidTaskException("Task data is required");
         }
         try {
+            Verifier.verifyNotNegative(task.getTaskId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("The task id must be greater than or equal zero");
+        }
+        try {
             Verifier.verifyNotNull(task.getTaskDescription());
         }
         catch (VerifyException e) {
@@ -437,60 +460,60 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
     }
 
     @Override
-    public int deleteClient(ClientDto criteria) throws ProjectAdminApiException {
+    public int deleteClient(ClientDto client) throws ProjectAdminApiException {
         try {
-            Verifier.verifyNotNull(criteria);
+            Verifier.verifyNotNull(client);
         } catch (VerifyException e) {
             throw new InvalidDataException("Client criteria is required");
         }
         int rc = 0;
         StringBuilder buf = new StringBuilder();
         try {
-            rc = dao.deleteClient(criteria);
+            rc = dao.deleteClient(client);
             return rc;
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred deleting client(s) by selection criteria: ");
-            buf.append(criteria.toString());
+            buf.append(client.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
     }
 
     @Override
-    public int deleteProject(ProjectDto criteria) throws ProjectAdminApiException {
+    public int deleteProject(ProjectDto project) throws ProjectAdminApiException {
         try {
-            Verifier.verifyNotNull(criteria);
+            Verifier.verifyNotNull(project);
         } catch (VerifyException e) {
             throw new InvalidDataException("Project criteria is required");
         }
         int rc = 0;
         StringBuilder buf = new StringBuilder();
         try {
-            rc = dao.deleteProject(criteria);
+            rc = dao.deleteProject(project);
             return rc;
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred deleting project(s) by selection criteria: ");
-            buf.append(criteria.toString());
+            buf.append(project.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
     }
 
     @Override
-    public int deleteTask(TaskDto criteria) throws ProjectAdminApiException {
+    public int deleteTask(TaskDto task) throws ProjectAdminApiException {
         try {
-            Verifier.verifyNotNull(criteria);
+            Verifier.verifyNotNull(task);
         } catch (VerifyException e) {
             throw new InvalidDataException("Task criteria is required");
         }
         int rc = 0;
         StringBuilder buf = new StringBuilder();
         try {
-            rc = dao.deleteTask(criteria);
+            rc = dao.deleteTask(task);
             return rc;
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred deleting task(s) by selection criteria: ");
-            buf.append(criteria.toString());
+            buf.append(task.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }

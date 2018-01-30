@@ -130,34 +130,34 @@ public interface ProjectAdminApi extends TransactionApi {
     /**
      * Deletes one or more clients from a persistent data source based on criteria selected.
      * 
-     * @param criteria
+     * @param client
      *            an instance of {@link ClientDto} representing selection
      *            criteria.
      * @return the number of instances deleted
      * @throws ProjectApiException
      */
-    int  deleteClient(ClientDto criteria) throws ProjectAdminApiException;
+    int  deleteClient(ClientDto client) throws ProjectAdminApiException;
     
     /**
      * Deletes one or more projects from a persistent data source based on criteria selected.
      * 
-     * @param criteria
+     * @param project
      *            an instance of {@link ProjectDto} representing selection
      *            criteria.
      * @return the number of instances deleted
      * @throws ProjectApiException
      */
-    int deleteProject(ProjectDto criteria) throws ProjectAdminApiException;
+    int deleteProject(ProjectDto project) throws ProjectAdminApiException;
     
     /**
      * Deletes one or more tasks from a persistent data source based on criteria
      * selected.
      * 
-     * @param criteria
+     * @param task
      *            an instance of {@link TaskDto} representing selection
      *            criteria.
      * @return the number of instances deleted
      * @throws ProjectApiException
      */
-    int deleteTask(TaskDto criteria) throws ProjectAdminApiException;
+    int deleteTask(TaskDto task) throws ProjectAdminApiException;
 }

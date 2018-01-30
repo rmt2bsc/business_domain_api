@@ -418,7 +418,7 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
             client.setDateCreated(ut.getDateCreated());
             client.setDateUpdated(ut.getDateCreated());
             client.setUserId(ut.getLoginId());
-            int rc = this.client.insertRow(client, false);
+            int rc = this.client.insertRow(client, true);
             return rc;
         } catch (Exception e) {
             throw new ProjectAdminDaoException("Client database add operation failed", e);
