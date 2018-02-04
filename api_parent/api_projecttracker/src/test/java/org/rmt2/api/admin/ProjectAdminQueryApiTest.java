@@ -31,7 +31,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectAdminApiTestData;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 import com.util.RMT2String;
@@ -144,6 +146,69 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
         Assert.assertEquals(obj.getClientContactPhone(), "0000000000");
         Assert.assertEquals(obj.getClientContactEmail(), "stevegadd@gte.net");
     }
+
+    @Test
+    public void testFetch_Client_Not_Found() {
+        // Stub single client fetch.
+        ProjClient mockCriteria = new ProjClient();
+        mockCriteria.setClientId(TEST_CLIENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single client case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+        criteria.setClientId(TEST_CLIENT_ID);
+        List<ClientDto> results = null;
+        try {
+            results = api.getClient(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetch_Client_DB_Error() {
+        // Stub single client fetch.
+        ProjClient mockCriteria = new ProjClient();
+        mockCriteria.setClientId(TEST_CLIENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single client case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+        criteria.setClientId(TEST_CLIENT_ID);
+        try {
+            api.getClient(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetch_Client_Validation_Null_Criteria() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getClient(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
     
     @Test
     public void testFetch_Project_All_Success() {
@@ -210,6 +275,69 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     }
 
     @Test
+    public void testFetch_Project_Not_Found() {
+        // Stub single project fetch.
+        ProjProject mockCriteria = new ProjProject();
+        mockCriteria.setProjId(TEST_PROJ_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all projects case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        criteria.setProjId(TEST_PROJ_ID);
+        List<ProjectDto> results = null;
+        try {
+            results = api.getProject(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetch_Project_DB_Error() {
+        // Stub single project fetch.
+        ProjProject mockCriteria = new ProjProject();
+        mockCriteria.setProjId(TEST_PROJ_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all projects case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        criteria.setProjId(TEST_PROJ_ID);
+        try {
+            api.getProject(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetch_Project_Validation_Criteria_Null() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getProject(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testFetch_Task_All_Success() {
         // Stub all tasks fetch.
         ProjTask mockCriteria = new ProjTask();
@@ -268,6 +396,68 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
         Assert.assertEquals(obj.getTaskDescription(), "Design and Analysis");
     }
     
+    @Test
+    public void testFetch_Task_Not_Found() {
+        // Stub single task fetch.
+        ProjTask mockCriteria = new ProjTask();
+        mockCriteria.setTaskId(TEST_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single task case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
+        criteria.setTaskId(TEST_TASK_ID);
+        List<TaskDto> results = null;
+        try {
+            results = api.getTask(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetch_Task_DB_Error() {
+        // Stub single task fetch.
+        ProjTask mockCriteria = new ProjTask();
+        mockCriteria.setTaskId(TEST_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single task case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
+        criteria.setTaskId(TEST_TASK_ID);
+        try {
+            api.getTask(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetch_Task_Validation_Criteria_Null() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getTask(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
     
     @Test
     public void testFetch_Event_All_Success() {
@@ -331,6 +521,70 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
         Assert.assertEquals(obj.getEventHours(), 8, 0);
     }
     
+    @Test
+    public void testFetch_Event_Not_Found() {
+        // Stub single event fetch.
+        ProjEvent mockCriteria = new ProjEvent();
+        mockCriteria.setEventId(TEST_EVENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
+        criteria.setEventId(TEST_EVENT_ID);
+        List<EventDto> results = null;
+        try {
+            results = api.getEvent(criteria, null, null);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetch_Event_DB_Error() {
+        // Stub single event fetch.
+        ProjEvent mockCriteria = new ProjEvent();
+        mockCriteria.setEventId(TEST_EVENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
+        criteria.setEventId(TEST_EVENT_ID);
+        try {
+            api.getEvent(criteria, null, null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetch_Event_Validation_Criteria_Null() {
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        EventDto criteria = null;
+        try {
+            api.getEvent(criteria, null, null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
     
     @Test
     public void testFetch_ProjectTask_All_Success() {
@@ -407,6 +661,70 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
     }
     
     @Test
+    public void testFetch_ProjectTask_Not_Found() {
+        // Stub single project-task fetch.
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
+        criteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        List<ProjectTaskDto> results = null;
+        try {
+            results = api.getProjectTask(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetch_ProjectTask_DB_Error() {
+        // Stub single project-task fetch.
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
+        criteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        try {
+            api.getProjectTask(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetch_ProjectTask_Validation_Criteria_Null() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto criteria = null;
+        try {
+            api.getProjectTask(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testFetch_ProjectEvent_All_Success() {
         // Stub all  project-event fetch.
         VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
@@ -478,5 +796,69 @@ public class ProjectAdminQueryApiTest extends ProjectAdminApiTestData {
         Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
         Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[0]);
         Assert.assertEquals(obj.getTaskBillable(), 1);
+    }
+
+    @Test
+    public void testFetch_ProjectEvent_Not_Found() {
+        // Stub single project-event fetch.
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        mockCriteria.setEventId(TEST_EVENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
+        criteria.setEventId(TEST_EVENT_ID);
+        List<ProjectEventDto> results = null;
+        try {
+            results = api.getProjectEvent(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetch_ProjectEvent_DB_Error() {
+        // Stub single project-event fetch.
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        mockCriteria.setEventId(TEST_EVENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
+        criteria.setEventId(TEST_EVENT_ID);
+        try {
+            api.getProjectEvent(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetch_ProjectEvent_Validation_Criteria_Null() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectEventDto criteria = null;
+        try {
+            api.getProjectEvent(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
     }
 }
