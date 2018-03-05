@@ -9,7 +9,15 @@ package org.modules;
 public class ProjectTrackerApiConst {
     public static final String DEFAULT_CONTEXT_NAME = "ProjectTracker";
     
-    public static final String APP_NAME = "projecttracker";
+    public static final String APP_NAME = "ProjectTracker";
+    
+    public static final String APP_MODULE_ADMIN = "admin";
+    
+    public static final String APP_MODULE_EMPLOYEE = "employee";
+    
+    public static final String APP_MODULE_TIMESHEET = "timesheet";
+    
+    public static final String APP_MODULE_TIMESHEET_INVOICE = "timesheet_invoicing";
 
     /** Flag indicating a billable task */
     public static final int TASK_BILLABLE_FLAG = 1;

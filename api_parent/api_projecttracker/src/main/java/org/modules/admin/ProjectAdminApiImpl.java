@@ -1,5 +1,6 @@
 package org.modules.admin;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -15,10 +16,22 @@ import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
+import org.rmt2.constants.ApiHeaderNames;
+import org.rmt2.constants.ApiTransactionCodes;
+import org.rmt2.jaxb.AddressBookRequest;
+import org.rmt2.jaxb.BusinessType;
+import org.rmt2.jaxb.ContactDetailGroup;
+import org.rmt2.jaxb.HeaderType;
+import org.rmt2.jaxb.ObjectFactory;
+import org.rmt2.util.HeaderTypeBuilder;
 
 import com.InvalidDataException;
 import com.NotFoundException;
+import com.api.config.ConfigConstants;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.api.foundation.TransactionApiException;
+import com.api.messaging.webservice.router.MessageRouterHelper;
+import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
 import com.util.RMT2Date;
 import com.util.assistants.Verifier;
@@ -55,7 +68,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
      * application.
      */
     protected ProjectAdminApiImpl(String appName) {
-        super();
+        super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
         logger.info("ProjectAdminApiImpl created with DAO, " + this.dao.getClass().getSimpleName() + ", for application, " + appName);
@@ -331,19 +344,47 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         }
         try {
             int rc = this.dao.maintainClient(client);
+            
+            // Logic to call web service that will send client updates to
+            // the AddressBook application. This is in case that changes occurred
+            // for client name, contact firstname, contact lastname, contact email,
+            // et cetera. Most likely, this will be a call to some mechanism that
+            // will put the intended message payload on a JMS queue / topic just as
+            // the public server does when contacting one of the internal API's to
+            // delagate the user's request.
+            
+            // Build request object with client data
+            ObjectFactory f = new ObjectFactory();
+            AddressBookRequest req = f.createAddressBookRequest();
+            req.setHeader(this.createRequestHeader());
+
+            // TODO: We may need to fetch the the client's BusinessType record
+            // from the AddressBook app and assign the changes from the "clinet"
+            // object so that other BusinessType properties that are not visible
+            // to application will not get over written.
+            BusinessType profile = f.createBusinessType();
+            profile.setLongName(client.getClientName());
+            profile.setContactFirstname(client.getClientContactFirstname());
+            profile.setContactLastname(client.getClientContactLastname());
+            profile.setContactPhone(client.getClientContactPhone());
+            profile.setContactExt(client.getClientContactExt());
+            profile.setContactEmail(client.getClientContactEmail());
+            ContactDetailGroup contactGrp = f.createContactDetailGroup();
+            contactGrp.getBusinessContacts().add(profile);
+            req.setProfile(contactGrp);
+
+            
+            this.sendMessage(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE, profile);
             return rc;
         }
         catch (ProjectAdminDaoException e) {
             throw new ProjectAdminApiException("Unable to update Client data", e);
         }
+        catch (TransactionApiException e) {
+            throw new ProjectAdminApiException("Unable to client updates to AddressBook application", e);
+        }
         
-        // TODO: Add logic to call web service that will send client updates to
-        // the AddressBook application. This is in case that changes occurred
-        // for client name, contact firstname, contact lastname, contact email,
-        // et cetera. Most likely, this will be a call to some mechanism that
-        // will put the intended message payload on a JMS queue / topic just as
-        // the public server does when contacting one of the internal API's to
-        // delagate the user's request.
+        
     }
     
     /*
@@ -517,5 +558,32 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }
+    }
+
+    @Override
+    public Object sendMessage(String messageId, Serializable payload) throws TransactionApiException {
+        String msg = null;
+        MessageRouterHelper helper = new MessageRouterHelper();
+        try {
+            return helper.routeXmlMessage(messageId, payload);
+        } catch (MessageRoutingException e) {
+            msg = "Error occurred routing SOAP message to its designated handler";
+            throw new TransactionApiException(msg, e);
+        }
+    }
+    
+    
+    
+    private HeaderType createRequestHeader() {
+        return HeaderTypeBuilder.Builder.create()
+                .withApplication(this.getConfig().getProperty(ConfigConstants.API_APP_CODE_KEY))
+                .withModule(ConfigConstants.API_APP_MODULE_VALUE)
+                .withMessageMode(ApiHeaderNames.MESSAGE_MODE_REQUEST)
+                .withDeliveryDate(new Date())
+                
+                // Set these header elements with dummy values in order to be properly assigned later.
+                .withTransaction(ApiHeaderNames.DUMMY_HEADER_VALUE)
+                .withRouting(ApiHeaderNames.DUMMY_HEADER_VALUE)
+                .withDeliveryMode(ApiHeaderNames.DUMMY_HEADER_VALUE).build();
     }
 }
