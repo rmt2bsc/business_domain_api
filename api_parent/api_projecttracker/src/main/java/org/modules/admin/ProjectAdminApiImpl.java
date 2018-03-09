@@ -472,7 +472,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
             throw new InvalidDataException("The project id must be greater than or equal zero");
         }
         try {
-            Verifier.verifyNotNull(proj.getProjectDescription());
+            Verifier.verifyNotEmpty(proj.getProjectDescription());
         }
         catch (VerifyException e) {
             throw new InvalidProjectException("Project description is required");
@@ -530,7 +530,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
             throw new InvalidDataException("The task id must be greater than or equal zero");
         }
         try {
-            Verifier.verifyNotNull(task.getTaskDescription());
+            Verifier.verifyNotEmpty(task.getTaskDescription());
         }
         catch (VerifyException e) {
             throw new InvalidTaskException("Task Description is required");

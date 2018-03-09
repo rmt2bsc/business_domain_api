@@ -394,6 +394,112 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
    }
     
     @Test
+    public void testError_Modify_Project_Database_Access_Failure() {
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjProject.class)))
+                    .thenThrow(new DatabaseException("Database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Modify single project case setup failed");
+        }
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        try {
+            api.updateProject(project);
+            Assert.fail("Expected exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof ProjectAdminDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+   }
+    
+    @Test
+    public void testValidation_Modify_Project_Null_Project_Object() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.updateProject(null);
+            Assert.fail("Expected exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("Project data is required", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+   }
+    
+    @Test
+    public void testValidation_Modify_Project_Negative_ProjectId() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        project.setProjId(-12345);
+        try {
+            api.updateProject(project);
+            Assert.fail("Expected exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("The project id must be greater than or equal zero", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+   }
+    
+    @Test
+    public void testValidation_Modify_Project_Null_Description() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        project.setProjectDescription(null);
+        try {
+            api.updateProject(project);
+            Assert.fail("Expected exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("Project description is required", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Modify_Project_Empty_Description() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        project.setProjectDescription("");
+        try {
+            api.updateProject(project);
+            Assert.fail("Expected exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("Project description is required", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Modify_Project_Null_EffectiveDate() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        project.setProjectEffectiveDate(null);
+        try {
+            api.updateProject(project);
+            Assert.fail("Expected exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("Project effective date is required", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testDelete_Project_Success() {
         try {
             when(this.mockPersistenceClient.deleteRow(isA(ProjProject.class))).thenReturn(1);
@@ -432,6 +538,95 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
             e.printStackTrace();
         }
         Assert.assertEquals(1, results);
+   }
+    
+    @Test
+    public void testError_Modify_Task_Database_Access_Failure() {
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTask.class)))
+                    .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Modify single task case setup failed");
+        }
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto task = ProjectObjectFactory.createTaskDtoInstance(this.mockProjTaskFetchSingle.get(0));
+        try {
+            api.updateTask(task);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof ProjectAdminDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+   }
+    
+    @Test
+    public void testValidation_Modify_Task_Null_Task() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.updateTask(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("Task data is required", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+   }
+    
+    @Test
+    public void testValidation_Modify_Task_Negative_TaskId() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto task = ProjectObjectFactory.createTaskDtoInstance(this.mockProjTaskFetchSingle.get(0));
+        task.setTaskId(-1234);
+        try {
+            api.updateTask(task);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("The task id must be greater than or equal zero", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+   }
+    
+    @Test
+    public void testValidation_Modify_Task_Null_Description() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto task = ProjectObjectFactory.createTaskDtoInstance(this.mockProjTaskFetchSingle.get(0));
+        task.setTaskDescription(null);
+        try {
+            api.updateTask(task);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("Task Description is required", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+   }
+    
+    @Test
+    public void testValidation_Modify_Task_Empty_Description() {
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        TaskDto task = ProjectObjectFactory.createTaskDtoInstance(this.mockProjTaskFetchSingle.get(0));
+        task.setTaskDescription("");
+        try {
+            api.updateTask(task);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.assertEquals("Task Description is required", e.getCause().getMessage());
+            e.printStackTrace();
+        }
    }
     
     @Test

@@ -455,11 +455,12 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
         }
         // Begin to process project data.
         int rc = 0;
-        if (proj.getProjId() == 0) {
-            rc = this.insertProject(proj);
-        }
-        else if (proj.getProjId() > 0) {
+        try {
+            Verifier.verifyPositive(proj.getProjId());
             rc = this.updateProject(proj);
+        }
+        catch (VerifyException e) {
+            rc = this.insertProject(proj);
         }
         return rc;
     }
@@ -736,11 +737,12 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
         }
         ProjTask task = ProjectAdminDaoFactory.createOrm(obj);
         int rc = 0;
-        if (task.getTaskId() == 0) {
-            rc = this.insertTask(task);
-        }
-        else {
+        try {
+            Verifier.verifyPositive(task.getTaskId());
             rc = this.updateTask(task);
+        }
+        catch (VerifyException e) {
+            rc = this.insertTask(task);
         }
         return rc;
     }
