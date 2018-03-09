@@ -58,7 +58,7 @@ public class ProjectAdminApiFactory extends RMT2Base {
         if (connection == null) {
             return null;
         }
-        ProjectAdminApiImpl api = new ProjectAdminApiImpl(connection);
+        ProjectAdminApiImpl api = new ProjectAdminApiImpl(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME, connection);
         api.setApiUser(connection.getDaoUser());
         return api;
     }

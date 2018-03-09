@@ -4,6 +4,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
+import java.math.BigInteger;
 import java.sql.ResultSet;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
@@ -18,13 +19,26 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.admin.ProjectAdminApi;
 import org.modules.admin.ProjectAdminApiException;
 import org.modules.admin.ProjectAdminApiFactory;
+import org.modules.admin.ProjectAdminApiImpl;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectAdminApiTestData;
+import org.rmt2.constants.ApiTransactionCodes;
+import org.rmt2.jaxb.AddressBookRequest;
+import org.rmt2.jaxb.AddressBookResponse;
+import org.rmt2.jaxb.AddressType;
+import org.rmt2.jaxb.BusinessType;
+import org.rmt2.jaxb.ObjectFactory;
+import org.rmt2.jaxb.ReplyStatusType;
+import org.rmt2.jaxb.ZipcodeType;
+import org.rmt2.util.ReplyStatusTypeBuilder;
 
+import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
@@ -35,7 +49,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class, ProjectAdminApiImpl.class })
 public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
     
     private static final int TEST_CLIENT_ID = 1000;
@@ -51,12 +65,16 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
     private static final String TEST_TASK_NAMES[] = new String[]{"Design and Analysis", 
             "Development", "Meetings", "Testing", "Holiday"};
 
+    private MessageRouterHelper mockMessageRouterHelper;
+    
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        this.mockMessageRouterHelper = Mockito.mock(MessageRouterHelper.class);
+        PowerMockito.whenNew(MessageRouterHelper.class).withNoArguments().thenReturn(this.mockMessageRouterHelper);
     }
 
     /**
@@ -86,6 +104,53 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
             e.printStackTrace();
             Assert.fail("Fetch single client case setup failed");
         }
+        
+        ObjectFactory jaxbObjFactory = new ObjectFactory();
+        
+        // Mock business type web service update response data
+        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder
+                .create().withStatus(true).withReturnCode(1)
+                .withMessage("SUCCESS")
+                .withDetailMessage("Business Type update complete").build();
+        
+        // Mock business type fetch response data
+        ZipcodeType zip = jaxbObjFactory.createZipcodeType();
+        AddressType address = jaxbObjFactory.createAddressType();
+        address.setZip(zip);
+        BusinessType profile = jaxbObjFactory.createBusinessType();
+        profile.setAddress(address);
+        AddressBookResponse mockAddressBookResponse = jaxbObjFactory
+                .createAddressBookResponse();
+        mockAddressBookResponse
+                .setProfile(jaxbObjFactory.createContactDetailGroup());
+        mockAddressBookResponse.getProfile().getBusinessContacts().add(profile);
+        profile.setBusinessId(BigInteger.valueOf(123456789));
+        profile.setContactEmail("john.smith@gte.net");
+        profile.setContactExt("4444");
+        profile.setContactFirstname("john");
+        profile.setContactLastname("smith");
+        profile.setContactPhone("9999999999");
+        profile.setLongName("ABC Company");
+        profile.setTaxId("77-7777777");
+        profile.getAddress().setAddr1("AddressLine1");
+        profile.getAddress().setAddr2("AddressLine2");
+        profile.getAddress().setAddr3("AddressLine3");
+        profile.getAddress().setAddr4("AddressLine4");
+        profile.getAddress().setAddrId(BigInteger.valueOf(22222));
+        profile.getAddress().setBusinessId(BigInteger.valueOf(123456789));
+        profile.getAddress().setPhoneMain("8888888888");
+        profile.getAddress().getZip().setZipId(BigInteger.valueOf(75232));
+        profile.getAddress().getZip().setCity("Dallas");
+        profile.getAddress().getZip().setState("TX");
+        profile.getAddress().getZip().setZipcode(BigInteger.valueOf(75232));
+        profile.getAddress().getZip().setAreaCode("214");
+        profile.getAddress().getZip().setCountyName("Dallas");
+        when(this.mockMessageRouterHelper.routeXmlMessage(
+                isA(String.class), isA(AddressBookRequest.class))).thenReturn(mockAddressBookResponse, mockReplyStatusType);
+        
+        when(this.mockMessageRouterHelper.routeXmlMessage(
+                eq(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE),
+                isA(AddressBookRequest.class))).thenReturn(mockReplyStatusType);
         
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);

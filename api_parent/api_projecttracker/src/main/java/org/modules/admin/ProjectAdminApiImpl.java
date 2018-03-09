@@ -1,6 +1,7 @@
 package org.modules.admin;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -19,10 +20,14 @@ import org.dto.adapter.orm.ProjectObjectFactory;
 import org.rmt2.constants.ApiHeaderNames;
 import org.rmt2.constants.ApiTransactionCodes;
 import org.rmt2.jaxb.AddressBookRequest;
+import org.rmt2.jaxb.AddressBookResponse;
+import org.rmt2.jaxb.BusinessContactCriteria;
 import org.rmt2.jaxb.BusinessType;
+import org.rmt2.jaxb.ContactCriteriaGroup;
 import org.rmt2.jaxb.ContactDetailGroup;
 import org.rmt2.jaxb.HeaderType;
 import org.rmt2.jaxb.ObjectFactory;
+import org.rmt2.jaxb.ReplyStatusType;
 import org.rmt2.util.HeaderTypeBuilder;
 
 import com.InvalidDataException;
@@ -44,7 +49,7 @@ import com.util.assistants.VerifyException;
  * @author Roy Terrell
  * 
  */
-class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectAdminApi {
+public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectAdminApi {
 
     private static final Logger logger = Logger.getLogger(ProjectAdminApiImpl.class);
 
@@ -87,6 +92,18 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         logger.info("ProjectAdminApiImpl created with outside Api DAO, " + this.dao.getClass().getSimpleName());
     }
 
+    /**
+     * 
+     * @param appName
+     * @param dao
+     */
+    public ProjectAdminApiImpl(String appName, DaoClient dao) {
+        super(appName, dao);
+        this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        logger.info("ProjectAdminApiImpl created with outside Api DAO, " + this.dao.getClass().getSimpleName() + " identified by application name, " + appName);
+    }
+
+    
     /*
      * (non-Javadoc)
      * 
@@ -358,11 +375,29 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             AddressBookRequest req = f.createAddressBookRequest();
             req.setHeader(this.createRequestHeader());
 
-            // TODO: We may need to fetch the the client's BusinessType record
-            // from the AddressBook app and assign the changes from the "clinet"
-            // object so that other BusinessType properties that are not visible
-            // to application will not get over written.
-            BusinessType profile = f.createBusinessType();
+            // Fetch the the client's BusinessType record from the AddressBook
+            // app and assign the changes from the "clinet" object so that other
+            // BusinessType properties that are not visible to application will
+            // not get over written. Setup business contact criteria
+            BusinessContactCriteria criteria = f.createBusinessContactCriteria();
+            criteria.setContactId(BigInteger.valueOf(client.getBusinessId()));
+            ContactCriteriaGroup criteriaGrp = f.createContactCriteriaGroup();
+            criteriaGrp.setBusinessCriteria(criteria);
+            req.setCriteria(criteriaGrp);
+
+            // Route message to business server
+            AddressBookResponse r = f.createAddressBookResponse();
+            Object response = this.sendMessage(ApiTransactionCodes.CONTACTS_BUSINESS_GET, req);
+            if (response != null && response instanceof AddressBookResponse) {
+                r = (AddressBookResponse) response;
+            }
+            else {
+                throw new NotFoundException("Client does not have a matching AddressBook profile: " + client.toString());
+            }
+            
+            // Update existing BusinessType object, which was fetched from the
+            // AddressBook application, with client changes
+            BusinessType profile = r.getProfile().getBusinessContacts().get(0);
             profile.setLongName(client.getClientName());
             profile.setContactFirstname(client.getClientContactFirstname());
             profile.setContactLastname(client.getClientContactLastname());
@@ -373,18 +408,19 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
             contactGrp.getBusinessContacts().add(profile);
             req.setProfile(contactGrp);
 
-            
-            this.sendMessage(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE, profile);
+            // Send the modified BusinessType to the AddressBook application to be updated.
+            ReplyStatusType reply = (ReplyStatusType) this.sendMessage(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE, req);
             return rc;
         }
         catch (ProjectAdminDaoException e) {
             throw new ProjectAdminApiException("Unable to update Client data", e);
         }
         catch (TransactionApiException e) {
-            throw new ProjectAdminApiException("Unable to client updates to AddressBook application", e);
+            throw new ProjectAdminApiException("Unable to perform client updates to AddressBook application", e);
         }
-        
-        
+        catch (NotFoundException e) {
+            throw new ProjectAdminApiException("Client not found in AddressBook application", e);
+        }
     }
     
     /*
@@ -567,7 +603,7 @@ class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements ProjectA
         try {
             return helper.routeXmlMessage(messageId, payload);
         } catch (MessageRoutingException e) {
-            msg = "Error occurred routing SOAP message to its designated handler";
+            msg = "Error occurred routing XML message to its designated API handler";
             throw new TransactionApiException(msg, e);
         }
     }
