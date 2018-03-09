@@ -318,13 +318,13 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
         }
 
         try {
-            Verifier.verifyNotNull(client.getClientName());
+            Verifier.verifyNotEmpty(client.getClientName());
         }
         catch (VerifyException e) {
             throw new InvalidDataException("The client's name is required");
         }
         
-        // For nex clients, exit.
+        // For new clients, exit.
         if (client.getClientId() == 0) {
             return;
         }

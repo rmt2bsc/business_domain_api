@@ -943,6 +943,9 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      */
     @Override
     public void setClientName(String value) {
+        if (this.pc != null) {
+            this.pc.setName(value);
+        }
         if (this.vep != null) {
             this.vep.setClientName(value);
         }

@@ -36,6 +36,7 @@ import com.api.persistence.db.orm.OrmBean;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
 import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link ProjectAdminDao}. It provides functionality that
@@ -406,7 +407,7 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
             Verifier.verifyPositive(client.getClientId());
             rc = this.updateClient(client);
         }
-        catch (Exception e) {
+        catch (VerifyException e) {
             rc = this.insertClient(client);
         }
         return rc;
