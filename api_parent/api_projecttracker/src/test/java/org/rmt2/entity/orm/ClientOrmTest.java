@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
-public class ProjectClientOrmTest {
+public class ClientOrmTest {
 
     @Before
     public void setUp() throws Exception {
