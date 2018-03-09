@@ -9,6 +9,12 @@ import org.rmt2.api.ProjectTrackerMockDataFactory;
 
 import com.util.RMT2Date;
 
+/**
+ * Test of Project ORM class
+ * 
+ * @author roy.terrell
+ *
+ */
 public class ProjectOrmTest {
 
     @Before

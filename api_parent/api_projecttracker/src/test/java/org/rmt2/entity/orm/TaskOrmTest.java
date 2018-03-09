@@ -7,6 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
+/**
+ * Test of Task ORM class
+ * 
+ * @author roy.terrell
+ *
+ */
 public class TaskOrmTest {
 
     @Before
