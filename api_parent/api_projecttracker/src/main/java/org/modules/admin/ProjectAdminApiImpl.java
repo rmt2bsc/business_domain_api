@@ -392,7 +392,8 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
                 r = (AddressBookResponse) response;
             }
             else {
-                throw new NotFoundException("Client does not have a matching AddressBook profile: " + client.toString());
+                throw new NotFoundException("Client does not have a matching AddressBook profile: client id="
+                        + client.getClientId() + ", business id=" + client.getBusinessId());
             }
             
             // Update existing BusinessType object, which was fetched from the

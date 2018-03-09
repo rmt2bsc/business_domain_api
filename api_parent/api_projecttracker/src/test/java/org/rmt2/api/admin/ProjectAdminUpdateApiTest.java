@@ -4,7 +4,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
 import java.sql.ResultSet;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
@@ -37,6 +36,9 @@ import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.jaxb.ReplyStatusType;
 import org.rmt2.jaxb.ZipcodeType;
 import org.rmt2.util.ReplyStatusTypeBuilder;
+import org.rmt2.util.addressbook.AddressTypeBuilder;
+import org.rmt2.util.addressbook.BusinessTypeBuilder;
+import org.rmt2.util.addressbook.ZipcodeTypeBuilder;
 
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.persistence.AbstractDaoClientImpl;
@@ -105,53 +107,9 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
             Assert.fail("Fetch single client case setup failed");
         }
         
-        ObjectFactory jaxbObjFactory = new ObjectFactory();
-        
-        // Mock business type web service update response data
-        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder
-                .create().withStatus(true).withReturnCode(1)
-                .withMessage("SUCCESS")
-                .withDetailMessage("Business Type update complete").build();
-        
-        // Mock business type fetch response data
-        ZipcodeType zip = jaxbObjFactory.createZipcodeType();
-        AddressType address = jaxbObjFactory.createAddressType();
-        address.setZip(zip);
-        BusinessType profile = jaxbObjFactory.createBusinessType();
-        profile.setAddress(address);
-        AddressBookResponse mockAddressBookResponse = jaxbObjFactory
-                .createAddressBookResponse();
-        mockAddressBookResponse
-                .setProfile(jaxbObjFactory.createContactDetailGroup());
-        mockAddressBookResponse.getProfile().getBusinessContacts().add(profile);
-        profile.setBusinessId(BigInteger.valueOf(123456789));
-        profile.setContactEmail("john.smith@gte.net");
-        profile.setContactExt("4444");
-        profile.setContactFirstname("john");
-        profile.setContactLastname("smith");
-        profile.setContactPhone("9999999999");
-        profile.setLongName("ABC Company");
-        profile.setTaxId("77-7777777");
-        profile.getAddress().setAddr1("AddressLine1");
-        profile.getAddress().setAddr2("AddressLine2");
-        profile.getAddress().setAddr3("AddressLine3");
-        profile.getAddress().setAddr4("AddressLine4");
-        profile.getAddress().setAddrId(BigInteger.valueOf(22222));
-        profile.getAddress().setBusinessId(BigInteger.valueOf(123456789));
-        profile.getAddress().setPhoneMain("8888888888");
-        profile.getAddress().getZip().setZipId(BigInteger.valueOf(75232));
-        profile.getAddress().getZip().setCity("Dallas");
-        profile.getAddress().getZip().setState("TX");
-        profile.getAddress().getZip().setZipcode(BigInteger.valueOf(75232));
-        profile.getAddress().getZip().setAreaCode("214");
-        profile.getAddress().getZip().setCountyName("Dallas");
-        when(this.mockMessageRouterHelper.routeXmlMessage(
-                isA(String.class), isA(AddressBookRequest.class))).thenReturn(mockAddressBookResponse, mockReplyStatusType);
-        
-        when(this.mockMessageRouterHelper.routeXmlMessage(
-                eq(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE),
-                isA(AddressBookRequest.class))).thenReturn(mockReplyStatusType);
-        
+        // Setup stubs for mocking client update web service calls
+        this.setupClientWebServiceUpdateStub();
+
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
         ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
@@ -162,8 +120,8 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
             e.printStackTrace();
         }
         Assert.assertEquals(1, results);
-   }
-    
+    }
+
     @Test
     public void testInsert_Client_Success() {
         try {
@@ -172,7 +130,10 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
             e.printStackTrace();
             Assert.fail("Insert single client case setup failed");
         }
-        
+
+        // Setup stubs for mocking client update web service calls
+        this.setupClientWebServiceUpdateStub();
+
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
         ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
@@ -184,7 +145,39 @@ public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
             e.printStackTrace();
         }
         Assert.assertEquals(TEST_NEW_CLIENT_ID, results);
-   }
+    }
+
+    private void setupClientWebServiceUpdateStub() {
+        ObjectFactory jaxbObjFactory = new ObjectFactory();
+        
+        // Mock business type fetch response data
+        ZipcodeType zip = ZipcodeTypeBuilder.Builder.create().withAreaCode("214").withZipcode(75232).withZipId(75232)
+                .withCity("Dallas").withState("TX").withCountyName("Dallas").build();
+
+        AddressType address = AddressTypeBuilder.Builder.create().withAddressLine1("AddressLine1")
+                .withAddressLine2("AddressLine2").withAddressLine3("AddressLine3").withAddressLine4("AddressLine4")
+                .withBusinessId(123456789).withAddrId(22222).withPhoneMain("8888888888").withZipcode(zip).build();
+
+        BusinessType profile = BusinessTypeBuilder.Builder.create().withBusinessId(123456789)
+                .withContactEmail("john.smith@gte.net").withContactPhoneExt("4444").withContactFirstname("john")
+                .withContactLastname("terrell").withContactPhone("9999999999").withLongname("ABC Company")
+                .withTaxId("77-7777777").withAddress(address).build();
+
+        AddressBookResponse mockAddressBookResponse = jaxbObjFactory.createAddressBookResponse();
+        mockAddressBookResponse.setProfile(jaxbObjFactory.createContactDetailGroup());
+        mockAddressBookResponse.getProfile().getBusinessContacts().add(profile);
+
+        // Mock business type web service update response data
+        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder.create().withStatus(true)
+                .withReturnCode(1).withMessage("SUCCESS").withDetailMessage("Business Type update complete").build();
+
+        when(this.mockMessageRouterHelper.routeXmlMessage(
+                isA(String.class), isA(AddressBookRequest.class))).thenReturn(mockAddressBookResponse, mockReplyStatusType);
+        
+        when(this.mockMessageRouterHelper.routeXmlMessage(
+                eq(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE),
+                isA(AddressBookRequest.class))).thenReturn(mockReplyStatusType);
+    }
     
     @Test
     public void testDelete_Client_Success() {
