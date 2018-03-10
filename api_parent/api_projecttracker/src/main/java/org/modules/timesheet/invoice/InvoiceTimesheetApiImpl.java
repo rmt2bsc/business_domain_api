@@ -14,9 +14,10 @@ import org.dto.ProjectEmployeeDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
-import org.modules.admin.ProjectApi;
-import org.modules.admin.ProjectApiException;
-import org.modules.admin.ProjectApiFactory;
+import org.dto.adapter.orm.ProjectObjectFactory;
+import org.modules.admin.ProjectAdminApi;
+import org.modules.admin.ProjectAdminApiException;
+import org.modules.admin.ProjectAdminApiFactory;
 import org.modules.employee.EmployeeApi;
 import org.modules.employee.EmployeeApiException;
 import org.modules.employee.EmployeeApiFactory;
@@ -52,7 +53,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
 
     private TimesheetApi tsBaseApi;
 
-    private ProjectApi projApi;
+    private ProjectAdminApi projApi;
 
     private EmployeeApi empApi;
 
@@ -117,7 +118,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
     private void createOtherResources(TimesheetDao connection) {
         TimesheetApiFactory tf = new TimesheetApiFactory();
         this.tsBaseApi = tf.createApi(connection);
-        ProjectApiFactory pf = new ProjectApiFactory();
+        ProjectAdminApiFactory pf = new ProjectAdminApiFactory();
         this.projApi = pf.createApi(connection);
         EmployeeApiFactory ef = new EmployeeApiFactory();
         this.empApi = ef.createApi(connection);
@@ -177,15 +178,17 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
             throw new InvoiceTimesheetApiException(this.msg);
         }
         // Verify client
-        ClientDto client;
+        List<ClientDto> client;
         try {
-            client = this.projApi.getClient(ts.getClientId());
+            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+            criteria.setClientId(ts.getClientId());
+            client = this.projApi.getClient(criteria);
             if (client == null) {
                 this.msg = "Timesheet Invoice Error:  Timesheet's client does not exist by client id, "
                         + ts.getClientId();
                 throw new InvoiceTimesheetApiException(this.msg);
             }
-        } catch (ProjectApiException e) {
+        } catch (ProjectAdminApiException e) {
             this.msg = "Timesheet Invoice Error:  Unable to fetch timesheet's client by client id, "
                     + ts.getClientId();
             throw new InvoiceTimesheetApiException(this.msg);
@@ -194,12 +197,11 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
         // Invoice the timesheet
         List<TimesheetDto> tsList = new ArrayList<TimesheetDto>();
         tsList.add(ts);
-        int xactId = this.startClientBilling(client, tsList);
+        int xactId = this.startClientBilling(client.get(0), tsList);
 
         // Package results
         InvoiceResultsBean results = new InvoiceResultsBean();
-        results.setProcessedClientTimesheets(client.getClientId(),
-                this.timesheetIdList);
+        results.setProcessedClientTimesheets(client.get(0).getClientId(), this.timesheetIdList);
         List<Integer> xactList = new ArrayList<Integer>();
         xactList.add(xactId);
         results.setClientTransactions(xactList);
@@ -221,17 +223,19 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements
      */
     private int startClientBilling(int clientId)
             throws InvoiceTimesheetApiException {
-        ClientDto client = null;
+        List<ClientDto> client = null;
         try {
             // Get client object
-            client = this.projApi.getClient(clientId);
+            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+            criteria.setClientId(clientId);
+            client = this.projApi.getClient(criteria);
             // Get client approved timesheets
             List<TimesheetDto> ts = this.tsBaseApi.getClientApproved(clientId);
             if (ts == null) {
                 return 0;
             }
             // Begin to bill the client's timesheets
-            int xactId = this.startClientBilling(client, ts);
+            int xactId = this.startClientBilling(client.get(0), ts);
             return xactId;
         } catch (Exception e) {
             throw new InvoiceTimesheetApiException(e);

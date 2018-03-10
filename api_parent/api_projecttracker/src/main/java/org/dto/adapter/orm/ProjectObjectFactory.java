@@ -138,8 +138,7 @@ public class ProjectObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link ProjectEventDto}.
      */
-    public static final ProjectEventDto createProjectEventDtoInstance(
-            VwTimesheetEventList ormBean) {
+    public static final ProjectEventDto createProjectEventDtoInstance(VwTimesheetEventList ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 

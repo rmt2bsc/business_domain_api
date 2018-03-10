@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 public class SalesOrderItemsOrmTest {
 
@@ -19,7 +19,7 @@ public class SalesOrderItemsOrmTest {
 
     @Test
     public void testToString() {
-        SalesOrderItems o = AccountingMockDataUtility.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        SalesOrderItems o = AccountingMockDataFactory.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
         String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -34,7 +34,7 @@ public class SalesOrderItemsOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = AccountingMockDataUtility.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        o1 = AccountingMockDataFactory.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
         o2 = new SalesOrderItems();
         result = o1.equals(o2);
         Assert.assertFalse(result);
@@ -74,8 +74,8 @@ public class SalesOrderItemsOrmTest {
 
     @Test
     public void testHashCode() {
-        SalesOrderItems o1 = AccountingMockDataUtility.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
-        SalesOrderItems o2 = AccountingMockDataUtility.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        SalesOrderItems o1 = AccountingMockDataFactory.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
+        SalesOrderItems o2 = AccountingMockDataFactory.createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

@@ -21,7 +21,7 @@ import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.InvalidDataException;
@@ -75,7 +75,7 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMaster> createMockSingleFetchResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster p = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "111-111-111", "11111111", 1234, "Item # 1", 5, 1.23, true);
         list.add(p);
         return list;
@@ -88,11 +88,11 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
      */
     private List<ItemMaster> createMockFetchUsingCriteriaResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster p = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "444-111-111", "1234567", 4567, "Item # 10", 5, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(102, 1,
                 "555-111-111", "3232333", 5432, "Item # 12", 15, 5, true);
         list.add(p);
 
@@ -101,23 +101,23 @@ public class ItemMasterApiQueryTest extends BaseAccountingDaoTest {
 
     private List<ItemMaster> createMockFetchAllResponse() {
         List<ItemMaster> list = new ArrayList<ItemMaster>();
-        ItemMaster p = AccountingMockDataUtility.createMockOrmItemMaster(100, 1,
+        ItemMaster p = AccountingMockDataFactory.createMockOrmItemMaster(100, 1,
                 "100-111-111", "11111110", 1351, "Item # 1", 1, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(101, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(101, 1,
                 "101-111-111", "11111111", 1352, "Item # 2", 2, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(102, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(102, 1,
                 "102-111-111", "11111112", 1353, "Item # 3", 3, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(103, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(103, 1,
                 "103-111-111", "11111113", 1354, "Item # 4", 4, 1.23, true);
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmItemMaster(104, 1,
+        p = AccountingMockDataFactory.createMockOrmItemMaster(104, 1,
                 "104-111-111", "11111114", 1355, "Item # 5", 5, 1.23, true);
         list.add(p);
         return list;

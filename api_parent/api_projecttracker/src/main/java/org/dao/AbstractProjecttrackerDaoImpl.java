@@ -7,8 +7,7 @@ import com.api.persistence.PersistenceClient;
  * @author Roy Terrell
  * 
  */
-public abstract class AbstractProjecttrackerDaoImpl extends
-        AbstractDaoClientImpl {
+public abstract class AbstractProjecttrackerDaoImpl extends AbstractDaoClientImpl {
 
     protected String apiName = ProjectTrackerDaoConstants.API_NAME;
 

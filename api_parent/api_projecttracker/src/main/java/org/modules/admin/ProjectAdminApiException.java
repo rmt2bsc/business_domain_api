@@ -1,6 +1,6 @@
 package org.modules.admin;
 
-import org.modules.ProjectTrackerModuleException;
+import com.InvalidDataException;
 
 /**
  * Handles administrative related Project Tracker errors
@@ -8,28 +8,28 @@ import org.modules.ProjectTrackerModuleException;
  * @author Roy Terrell
  * 
  */
-public class ProjectApiException extends ProjectTrackerModuleException {
+public class ProjectAdminApiException extends InvalidDataException {
 
     private static final long serialVersionUID = 2653509661759927388L;
 
     /**
      * 
      */
-    public ProjectApiException() {
+    public ProjectAdminApiException() {
         super();
     }
 
     /**
      * @param msg
      */
-    public ProjectApiException(String msg) {
+    public ProjectAdminApiException(String msg) {
         super(msg);
     }
 
     /**
      * @param e
      */
-    public ProjectApiException(Exception e) {
+    public ProjectAdminApiException(Exception e) {
         super(e);
     }
 
@@ -37,7 +37,7 @@ public class ProjectApiException extends ProjectTrackerModuleException {
      * @param msg
      * @param e
      */
-    public ProjectApiException(String msg, Throwable e) {
+    public ProjectAdminApiException(String msg, Throwable e) {
         super(msg, e);
     }
 

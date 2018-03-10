@@ -6,7 +6,7 @@ package org.modules.admin;
  * @author Roy Terrell
  * 
  */
-public class InvalidProjectException extends ProjectApiException {
+public class InvalidProjectException extends ProjectAdminApiException {
 
     private static final long serialVersionUID = -5399306021195061423L;
 

@@ -2,9 +2,7 @@ package org.dao.admin;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
@@ -30,10 +28,7 @@ import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
-import org.rmt2.jaxb.CustomerType;
-import org.rmt2.jaxb.RSCustomerSearch;
 
-import com.InvalidDataException;
 import com.RMT2Base;
 import com.api.persistence.DaoClient;
 
@@ -112,20 +107,16 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         ProjClient obj = new ProjClient();
         if (criteria != null) {
             if (criteria.getClientId() > 0) {
-                obj.addCriteria(ProjClient.PROP_CLIENTID,
-                        criteria.getClientId());
+                obj.addCriteria(ProjClient.PROP_CLIENTID, criteria.getClientId());
             }
             if (criteria.getBusinessId() > 0) {
-                obj.addCriteria(ProjClient.PROP_BUSINESSID,
-                        criteria.getBusinessId());
+                obj.addCriteria(ProjClient.PROP_BUSINESSID, criteria.getBusinessId());
             }
             if (criteria.getAccountNo() != null) {
-                obj.addLikeClause(ProjClient.PROP_ACCOUNTNO,
-                        criteria.getAccountNo());
+                obj.addLikeClause(ProjClient.PROP_ACCOUNTNO, criteria.getAccountNo());
             }
             if (criteria.getClientName() != null) {
-                obj.addLikeClause(ProjClient.PROP_NAME,
-                        criteria.getClientName());
+                obj.addLikeClause(ProjClient.PROP_NAME, criteria.getClientName());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
@@ -154,19 +145,16 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         ProjProject obj = new ProjProject();
         if (criteria != null) {
             if (criteria.getClientId() > 0) {
-                obj.addCriteria(ProjProject.PROP_CLIENTID,
-                        criteria.getClientId());
+                obj.addCriteria(ProjProject.PROP_CLIENTID, criteria.getClientId());
             }
             if (criteria.getProjId() > 0) {
                 obj.addCriteria(ProjProject.PROP_PROJID, criteria.getProjId());
             }
             if (criteria.getProjectDescription() != null) {
-                obj.addLikeClause(ProjProject.PROP_DESCRIPTION,
-                        criteria.getProjectDescription());
+                obj.addLikeClause(ProjProject.PROP_DESCRIPTION, criteria.getProjectDescription());
             }
             if (criteria.getProjectEffectiveDate() != null) {
-                obj.addCriteria(ProjProject.PROP_EFFECTIVEDATE,
-                        criteria.getProjectEffectiveDate());
+                obj.addCriteria(ProjProject.PROP_EFFECTIVEDATE, criteria.getProjectEffectiveDate());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
@@ -347,9 +335,13 @@ public class ProjectAdminDaoFactory extends RMT2Base {
                 obj.addCriteria(ProjTask.PROP_TASKID, criteria.getTaskId());
             }
             if (criteria.getTaskDescription() != null) {
-                obj.addLikeClause(ProjTask.PROP_DESCRIPTION,
-                        criteria.getTaskDescription());
+                obj.addLikeClause(ProjTask.PROP_DESCRIPTION, criteria.getTaskDescription());
             }
+            // TODO: Make preparations to handle billable as selection criteria.
+            // if (criteria.getTaskBillable() != null) {
+            // obj.addLikeClause(ProjTask.PROP_DESCRIPTION,
+            // criteria.getTaskDescription());
+            // }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
             }
@@ -379,12 +371,10 @@ public class ProjectAdminDaoFactory extends RMT2Base {
                 obj.addCriteria(ProjEvent.PROP_EVENTID, criteria.getEventId());
             }
             if (criteria.getProjectTaskId() > 0) {
-                obj.addCriteria(ProjEvent.PROP_PROJECTTASKID,
-                        criteria.getProjectTaskId());
+                obj.addCriteria(ProjEvent.PROP_PROJECTTASKID, criteria.getProjectTaskId());
             }
             if (criteria.getEventDate() != null) {
-                obj.addCriteria(ProjEvent.PROP_EVENTDATE,
-                        criteria.getEventDate());
+                obj.addCriteria(ProjEvent.PROP_EVENTDATE, criteria.getEventDate());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
@@ -591,41 +581,32 @@ public class ProjectAdminDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link VwTimesheetProjectTask}
      */
-    public static final VwTimesheetProjectTask createCriteriaExt(
-            ProjectTaskDto criteria) {
+    public static final VwTimesheetProjectTask createCriteriaExt(ProjectTaskDto criteria) {
         VwTimesheetProjectTask obj = new VwTimesheetProjectTask();
         if (criteria != null) {
             if (criteria.getProjectTaskId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTTASKID,
-                        criteria.getProjectTaskId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTTASKID, criteria.getProjectTaskId());
             }
             if (criteria.getProjId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTID,
-                        criteria.getProjId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTID, criteria.getProjId());
             }
             if (criteria.getTaskId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_TASKID,
-                        criteria.getTaskId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_TASKID, criteria.getTaskId());
             }
             if (criteria.getClientId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_CLIENTID,
-                        criteria.getClientId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_CLIENTID, criteria.getClientId());
             }
             if (criteria.getProjectDescription() != null) {
-                obj.addLikeClause(VwTimesheetProjectTask.PROP_PROJECTNAME,
-                        criteria.getProjectDescription());
+                obj.addLikeClause(VwTimesheetProjectTask.PROP_PROJECTNAME, criteria.getProjectDescription());
             }
             if (criteria.getTaskDescription() != null) {
-                obj.addLikeClause(VwTimesheetProjectTask.PROP_TASKNAME,
-                        criteria.getTaskDescription());
+                obj.addLikeClause(VwTimesheetProjectTask.PROP_TASKNAME, criteria.getTaskDescription());
             }
             if (criteria.getProjectEffectiveDate() != null) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_EFFECTIVEDATE,
-                        criteria.getProjectEffectiveDate());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_EFFECTIVEDATE, criteria.getProjectEffectiveDate());
             }
             if (criteria.getProjectEndDate() != null) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_ENDDATE,
-                        criteria.getProjectEndDate());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_ENDDATE, criteria.getProjectEndDate());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
@@ -906,75 +887,75 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         return list;
     }
 
-    /**
-     * Merges customer information contained in the result set of type,
-     * RSCustomerSearch, to a list of ClientDto objects.
-     * 
-     * @param contacts
-     *            List of {@link ClientDto} objects
-     * @param customerInfo
-     *            An instnace of {@link RSCustomerSearch}
-     * @throws InvalidDataException
-     *             When <i>contacts</i> is null
-     */
-    public static final void mergeExtendedContactInfo(List<ClientDto> contacts,
-            RSCustomerSearch customerInfo) throws InvalidDataException {
-
-        if (contacts == null) {
-            throw new InvalidDataException(
-                    "List of ClientDto is null or invalid for merge extended contact info operation");
-        }
-        Map<Integer, CustomerType> custTypeMap = ProjectAdminDaoFactory
-                .createCustomerTypeMap(customerInfo);
-        if (custTypeMap == null) {
-            // Nothing to merge
-            return;
-        }
-
-        for (ClientDto c : contacts) {
-            CustomerType cust = custTypeMap.get(c.getClientId());
-            if (cust == null) {
-                continue;
-            }
-            c.setAccountNo(cust.getAccountNo());
-            if (cust.getContactDetails() != null) {
-                c.setBusinessId(cust.getContactDetails().getBusinessId()
-                        .intValue());
-                c.setClientName(cust.getContactDetails().getLongName());
-                c.setClientContactEmail(cust.getContactDetails()
-                        .getContactEmail());
-                c.setClientContactExt(cust.getContactDetails().getContactExt());
-                c.setClientContactFirstname(cust.getContactDetails()
-                        .getContactFirstname());
-                c.setClientContactLastname(cust.getContactDetails()
-                        .getContactLastname());
-                c.setClientContactPhone(cust.getContactDetails()
-                        .getContactPhone());
-            }
-        }
-        return;
-    }
-
-    /**
-     * Creates a Map of {@link CustomerType} objects from the web service result
-     * set type, RSCustomerSearch.
-     * <p>
-     * The newly created Map is keyed by customer id.
-     * 
-     * @param customerInfo
-     *            An instance of {@link RSCustomerSearch}
-     * @return Map<Integer, CustomerType>
-     */
-    public static final Map<Integer, CustomerType> createCustomerTypeMap(
-            RSCustomerSearch customerInfo) {
-        if (customerInfo == null) {
-            return null;
-        }
-        List<CustomerType> list = customerInfo.getCustomerList();
-        Map<Integer, CustomerType> map = new HashMap<Integer, CustomerType>();
-        for (CustomerType cust : list) {
-            map.put(cust.getCustomerId().intValue(), cust);
-        }
-        return map;
-    }
+//    /**
+//     * Merges customer information contained in the result set of type,
+//     * RSCustomerSearch, to a list of ClientDto objects.
+//     * 
+//     * @param contacts
+//     *            List of {@link ClientDto} objects
+//     * @param customerInfo
+//     *            An instnace of {@link RSCustomerSearch}
+//     * @throws InvalidDataException
+//     *             When <i>contacts</i> is null
+//     */
+//    public static final void mergeExtendedContactInfo(List<ClientDto> contacts,
+//            RSCustomerSearch customerInfo) throws InvalidDataException {
+//
+//        if (contacts == null) {
+//            throw new InvalidDataException(
+//                    "List of ClientDto is null or invalid for merge extended contact info operation");
+//        }
+//        Map<Integer, CustomerType> custTypeMap = ProjectAdminDaoFactory
+//                .createCustomerTypeMap(customerInfo);
+//        if (custTypeMap == null) {
+//            // Nothing to merge
+//            return;
+//        }
+//
+//        for (ClientDto c : contacts) {
+//            CustomerType cust = custTypeMap.get(c.getClientId());
+//            if (cust == null) {
+//                continue;
+//            }
+//            c.setAccountNo(cust.getAccountNo());
+//            if (cust.getContactDetails() != null) {
+//                c.setBusinessId(cust.getContactDetails().getBusinessId()
+//                        .intValue());
+//                c.setClientName(cust.getContactDetails().getLongName());
+//                c.setClientContactEmail(cust.getContactDetails()
+//                        .getContactEmail());
+//                c.setClientContactExt(cust.getContactDetails().getContactExt());
+//                c.setClientContactFirstname(cust.getContactDetails()
+//                        .getContactFirstname());
+//                c.setClientContactLastname(cust.getContactDetails()
+//                        .getContactLastname());
+//                c.setClientContactPhone(cust.getContactDetails()
+//                        .getContactPhone());
+//            }
+//        }
+//        return;
+//    }
+//
+//    /**
+//     * Creates a Map of {@link CustomerType} objects from the web service result
+//     * set type, RSCustomerSearch.
+//     * <p>
+//     * The newly created Map is keyed by customer id.
+//     * 
+//     * @param customerInfo
+//     *            An instance of {@link RSCustomerSearch}
+//     * @return Map<Integer, CustomerType>
+//     */
+//    public static final Map<Integer, CustomerType> createCustomerTypeMap(
+//            RSCustomerSearch customerInfo) {
+//        if (customerInfo == null) {
+//            return null;
+//        }
+//        List<CustomerType> list = customerInfo.getCustomerList();
+//        Map<Integer, CustomerType> map = new HashMap<Integer, CustomerType>();
+//        for (CustomerType cust : list) {
+//            map.put(cust.getCustomerId().intValue(), cust);
+//        }
+//        return map;
+//    }
 }

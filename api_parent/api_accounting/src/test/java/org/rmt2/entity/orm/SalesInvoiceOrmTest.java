@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 public class SalesInvoiceOrmTest {
     
@@ -13,7 +13,7 @@ public class SalesInvoiceOrmTest {
 
     @Before
     public void setUp() throws Exception {
-        this.obj = AccountingMockDataUtility.createMockOrmSalesInvoice(7000, 1000, 5000, "80000");
+        this.obj = AccountingMockDataFactory.createMockOrmSalesInvoice(7000, 1000, 5000, "80000");
     }
 
     @After

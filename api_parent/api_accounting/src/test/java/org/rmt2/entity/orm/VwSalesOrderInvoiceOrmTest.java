@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.modules.transaction.sales.SalesApiConst;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 import com.util.RMT2Date;
 
@@ -16,7 +16,7 @@ public class VwSalesOrderInvoiceOrmTest {
 
     @Before
     public void setUp() throws Exception {
-        this.obj = AccountingMockDataUtility.createMockOrmVwSalesOrderInvoice(
+        this.obj = AccountingMockDataFactory.createMockOrmVwSalesOrderInvoice(
                 7000, 1000, "2017-01-01", 300.00,
                 SalesApiConst.STATUS_CODE_INVOICED, "80000", 1, "2017-01-10",
                 444440, 2000, 1234, "111-111");

@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.modules.inventory.InventoryConst;
 import org.modules.transaction.sales.SalesApiConst;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 import com.util.RMT2Date;
 
@@ -44,7 +44,7 @@ public class SalesOrderAdapterTest {
 
     @Test
     public void testSalesOrderAdapter() {
-        SalesOrder o = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
+        SalesOrder o = AccountingMockDataFactory.createMockOrmSalesOrder(1000,
                 2000, 0, 300.00, "2017-01-01");
         SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(o);
         
@@ -71,7 +71,7 @@ public class SalesOrderAdapterTest {
  
     @Test
     public void testSalesLineItemAdapter() {
-        SalesOrderItems o = AccountingMockDataUtility
+        SalesOrderItems o = AccountingMockDataFactory
                 .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
         SalesOrderItemDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderItemInstance(o);
 
@@ -99,20 +99,20 @@ public class SalesOrderAdapterTest {
     
     @Test
     public void testSalesLineItemExtAdapter() {
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(2000,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(2000,
                 1351, 0, 333, "C1234580", "Customer 1");
-        SalesOrder so = AccountingMockDataUtility.createMockOrmSalesOrder(1000,
+        SalesOrder so = AccountingMockDataFactory.createMockOrmSalesOrder(1000,
                 2000, 0, 300.00, "2017-01-01");
-        ItemMasterType imt = AccountingMockDataUtility
+        ItemMasterType imt = AccountingMockDataFactory
                 .createMockOrmItemMasterType(InventoryConst.ITEM_TYPE_MERCH,
                         "ItemTypeMerchandise");
-        SalesOrderItems soi = AccountingMockDataUtility
+        SalesOrderItems soi = AccountingMockDataFactory
                 .createMockOrmSalesOrderItem(88880, 33330, 1000, 1, 20.00);
-        ItemMaster im = AccountingMockDataUtility.createMockOrmItemMaster(
+        ItemMaster im = AccountingMockDataFactory.createMockOrmItemMaster(
                 123450, InventoryConst.ITEM_TYPE_MERCH, "1111-111-110",
                 "11111110", 1351, "Item1", 10, 20.00, true);
 
-        VwSalesorderItemsBySalesorder o = AccountingMockDataUtility
+        VwSalesorderItemsBySalesorder o = AccountingMockDataFactory
                 .createMockOrmVwSalesorderItemsBySalesorder(soi, so, cust, im,
                         imt);
 
@@ -171,7 +171,7 @@ public class SalesOrderAdapterTest {
     
     @Test
     public void testVwSalesOrderInvoiceAdapter() {
-        VwSalesOrderInvoice o =  AccountingMockDataUtility
+        VwSalesOrderInvoice o =  AccountingMockDataFactory
                 .createMockOrmVwSalesOrderInvoice(7000, 1000, "2017-01-01",
                         300.00, SalesApiConst.STATUS_CODE_INVOICED, "80000", 1,
                         "2017-01-10", 444440, 2000, 1234, "111-111");
@@ -208,7 +208,7 @@ public class SalesOrderAdapterTest {
     
     @Test
     public void testSalesInvoiceAdapter() {
-        SalesInvoice o = AccountingMockDataUtility
+        SalesInvoice o = AccountingMockDataFactory
                 .createMockOrmSalesInvoice(7000, 1000, 5000, "80000");
         SalesInvoiceDto dto = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance(o);
         
@@ -234,7 +234,7 @@ public class SalesOrderAdapterTest {
 
     @Test
     public void testSalesOrderStatusHistoryAdapter() {
-        SalesOrderStatusHist o = AccountingMockDataUtility.createMockOrmSalesOrderStatusHist(70, 1000,
+        SalesOrderStatusHist o = AccountingMockDataFactory.createMockOrmSalesOrderStatusHist(70, 1000,
                 SalesApiConst.STATUS_CODE_NEW, "2017-01-10", "2017-01-31");
         SalesOrderStatusHistDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderStatusHistoryInstance(o);
 
@@ -264,7 +264,7 @@ public class SalesOrderAdapterTest {
     
     @Test
     public void testSalesOrderStatusAdapter() {
-        SalesOrderStatus o = AccountingMockDataUtility.createMockOrmSalesOrderStatus(
+        SalesOrderStatus o = AccountingMockDataFactory.createMockOrmSalesOrderStatus(
                 SalesApiConst.STATUS_CODE_QUOTE, "Quote");
         SalesOrderStatusDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderStatusInstance(o);
         

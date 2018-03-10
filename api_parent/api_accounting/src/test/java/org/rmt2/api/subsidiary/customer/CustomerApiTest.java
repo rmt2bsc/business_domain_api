@@ -34,7 +34,7 @@ import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.subsidiary.SubsidiaryException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
 import org.rmt2.jaxb.BusinessType;
 
@@ -731,9 +731,9 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(0, 1351, 0,
                 333, "C1234589", "Customer 1");
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         int newCustomerId = 1350;
@@ -767,9 +767,9 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             e.printStackTrace();
         }
 
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(0, 1351, 0,
                 333, "C1234589", "Customer 1");
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
@@ -794,9 +794,9 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             e.printStackTrace();
         }
 
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(0, 1351, 0,
                 333, "C1234589", "Customer 1");
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
@@ -818,7 +818,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         
         int invalidAcctTypeId = 5;
         List<GlAccounts> mockGLAccountListResults = new ArrayList<GlAccounts>();
-        GlAccounts p = AccountingMockDataUtility.createMockOrmGlAccounts(1234, invalidAcctTypeId, 300, 1, "GL_200", "ACCT_PAY", "234",
+        GlAccounts p = AccountingMockDataFactory.createMockOrmGlAccounts(1234, invalidAcctTypeId, 300, 1, "GL_200", "ACCT_PAY", "234",
                 "Accounts Receivable", 2);
         mockGLAccountListResults.add(p);
         
@@ -830,9 +830,9 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("GL Account fetch test case setup failed");
         }
 
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(0, 1351, 0,
                 333, "C1234589", "Customer 1");
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
@@ -860,9 +860,9 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         }
 
         int invalidBusinessId = 0;
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, invalidBusinessId, 0,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(0, invalidBusinessId, 0,
                 333, "C1234589", "Customer 1");
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(invalidBusinessId, "ABC Company", "roy", "terrell",
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(invalidBusinessId, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
@@ -905,7 +905,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Customer updateRow test case setup failed");
         }
 
-        Customer updateCustomer = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+        Customer updateCustomer = AccountingMockDataFactory.createMockOrmCustomer(200, 1351, 0,
                 333, "C1234589", "Customer 1");
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -926,7 +926,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockBusAddrSubsidiaryCriteria = new VwBusinessAddress();
         this.setupNotFoundSubsidiaryContactInfoFetch(mockBusAddrSubsidiaryCriteria, mockCustomerSubsidiaryCriteria);
 
-        Customer updateCustomer = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+        Customer updateCustomer = AccountingMockDataFactory.createMockOrmCustomer(200, 1351, 0,
                 333, "C1234589", "Customer 1");
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1052,7 +1052,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Customer updateRow with exception test case setup failed");
         }
 
-        Customer updateCustomer = AccountingMockDataUtility.createMockOrmCustomer(200, 1351, 0,
+        Customer updateCustomer = AccountingMockDataFactory.createMockOrmCustomer(200, 1351, 0,
                 333, "C1234589", "Customer 1");
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
@@ -1079,9 +1079,9 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("GL Account fetch with exception test case setup failed");
         }
 
-        Customer cust = AccountingMockDataUtility.createMockOrmCustomer(0, 1351, 0,
+        Customer cust = AccountingMockDataFactory.createMockOrmCustomer(0, 1351, 0,
                 333, "C1234589", "Customer 1");
-        BusinessType bus = AccountingMockDataUtility.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
+        BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(1351, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         int newCustomerId = 1350;

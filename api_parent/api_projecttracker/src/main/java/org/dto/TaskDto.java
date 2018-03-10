@@ -32,7 +32,7 @@ public interface TaskDto extends TransactionDto {
     /**
      * Sets the value of member variable billable
      */
-    void setTaskBillable(int value);
+    void setTaskBillable(Integer value);
 
     /**
      * Gets the value of member variable billable

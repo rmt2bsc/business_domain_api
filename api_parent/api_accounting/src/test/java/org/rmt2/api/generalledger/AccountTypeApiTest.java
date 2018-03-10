@@ -22,7 +22,7 @@ import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.api.persistence.AbstractDaoClientImpl;
@@ -75,7 +75,7 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccountTypes> createMockSingleFetchResponse() {
         List<GlAccountTypes> list = new ArrayList<GlAccountTypes>();
-        GlAccountTypes p = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes p = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
         list.add(p);
         return list;
     }
@@ -87,10 +87,10 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
      */
     private List<GlAccountTypes> createMockFetchUsingCriteriaResponse() {
         List<GlAccountTypes> list = new ArrayList<GlAccountTypes>();
-        GlAccountTypes p = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes p = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(104, 1, "Expense");
+        p = AccountingMockDataFactory.createMockOrmGlAccountTypes(104, 1, "Expense");
         list.add(p);
 
         return list;
@@ -98,29 +98,29 @@ public class AccountTypeApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccountTypes> createMockFetchAllResponse() {
         List<GlAccountTypes> list = new ArrayList<GlAccountTypes>();
-        GlAccountTypes p = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "AccountType1");
+        GlAccountTypes p = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "AccountType1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(101, 1, "AccountType2");
+        p = AccountingMockDataFactory.createMockOrmGlAccountTypes(101, 1, "AccountType2");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(102, 2, "AccountType3");
+        p = AccountingMockDataFactory.createMockOrmGlAccountTypes(102, 2, "AccountType3");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(103, 2, "AccountType4");
+        p = AccountingMockDataFactory.createMockOrmGlAccountTypes(103, 2, "AccountType4");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(104, 2, "AccountType5");
+        p = AccountingMockDataFactory.createMockOrmGlAccountTypes(104, 2, "AccountType5");
         list.add(p);
         return list;
     }
 
     private List<GlAccountTypes> createMockFetchUidMultiResultsReturnedResponse() {
         List<GlAccountTypes> list = new ArrayList<GlAccountTypes>();
-        GlAccountTypes p = AccountingMockDataUtility.createMockOrmGlAccountTypes(100, 1, "Asset");
+        GlAccountTypes p = AccountingMockDataFactory.createMockOrmGlAccountTypes(100, 1, "Asset");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountTypes(400, 1, "Expense");
+        p = AccountingMockDataFactory.createMockOrmGlAccountTypes(400, 1, "Expense");
         list.add(p);
         return list;
     }

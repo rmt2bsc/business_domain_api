@@ -47,7 +47,7 @@ import org.modules.transaction.sales.SalesOrderStatusInvalidException;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 
 import com.InvalidDataException;
 import com.NotFoundException;
@@ -144,7 +144,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     
     private List<VwXactList> createMockSingleXactData() {
         List<VwXactList> list = new ArrayList<VwXactList>();
-        VwXactList o = AccountingMockDataUtility.createMockOrmXact(TEST_EXISTING_XACT_ID,
+        VwXactList o = AccountingMockDataFactory.createMockOrmXact(TEST_EXISTING_XACT_ID,
                 XactConst.XACT_TYPE_SALESONACCTOUNT,
                 XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
                 RMT2Date.stringToDate("2017-01-13"), 300.00, 200, "1111-1111-1111-1111");

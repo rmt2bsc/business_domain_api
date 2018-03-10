@@ -318,13 +318,17 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dto.TaskDto#setTaskBillable(int)
+    /**
+     * Sets the billable indicator.
+     * <p>
+     * Defaults to 1, which is billable, if <i>value</i> is null.
      */
     @Override
-    public void setTaskBillable(int value) {
+    public void setTaskBillable(Integer value) {
+        // if true, default to billable equal true
+        if (value == null) {
+            value = 1;
+        }
         if (this.pt != null) {
             this.pt.setBillable(value);
         }
@@ -382,6 +386,9 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      */
     @Override
     public int getProjectTaskId() {
+        if (this.pe != null) {
+            return this.pe.getProjectTaskId();
+        }
         if (this.vtpt != null) {
             return this.vtpt.getProjectTaskId();
         }
@@ -520,7 +527,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
         if (this.vtpt != null) {
             return this.vtpt.getProjectName();
         }
-        if (this.vtpt != null) {
+        if (this.vtel != null) {
             return this.vtel.getProjectName();
         }
         return null;
@@ -936,6 +943,9 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      */
     @Override
     public void setClientName(String value) {
+        if (this.pc != null) {
+            this.pc.setName(value);
+        }
         if (this.vep != null) {
             this.vep.setClientName(value);
         }
@@ -955,14 +965,14 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      */
     @Override
     public String getClientName() {
+        if (this.pc != null) {
+            return this.pc.getName();
+        }
         if (this.vep != null) {
             return this.vep.getClientName();
         }
         if (this.vpc != null) {
             return this.vpc.getName();
-        }
-        if (this.vep != null) {
-            return this.vep.getClientName();
         }
         return null;
     }

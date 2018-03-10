@@ -23,7 +23,7 @@ import org.modules.generalledger.GeneralLedgerApiFactory;
 import org.modules.generalledger.GlAccountApi;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.AccountingMockDataUtility;
+import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.BaseAccountingDaoTest;
 
 import com.InvalidDataException;
@@ -80,7 +80,7 @@ public class AccountCategoryApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccountCategory> createMockSingleFetchResponse() {
         List<GlAccountCategory> list = new ArrayList<GlAccountCategory>();
-        GlAccountCategory p = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory p = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         list.add(p);
         return list;
     }
@@ -92,10 +92,10 @@ public class AccountCategoryApiTest extends BaseAccountingDaoTest {
      */
     private List<GlAccountCategory> createMockFetchUsingCriteriaResponse() {
         List<GlAccountCategory> list = new ArrayList<GlAccountCategory>();
-        GlAccountCategory p = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory p = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(104, 1, "Category2");
+        p = AccountingMockDataFactory.createMockOrmGlAccountCategory(104, 1, "Category2");
         list.add(p);
 
         return list;
@@ -103,29 +103,29 @@ public class AccountCategoryApiTest extends BaseAccountingDaoTest {
 
     private List<GlAccountCategory> createMockFetchAllResponse() {
         List<GlAccountCategory> list = new ArrayList<GlAccountCategory>();
-        GlAccountCategory p = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory p = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(101, 2, "Category2");
+        p = AccountingMockDataFactory.createMockOrmGlAccountCategory(101, 2, "Category2");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(102, 3, "Category3");
+        p = AccountingMockDataFactory.createMockOrmGlAccountCategory(102, 3, "Category3");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(103, 4, "Category4");
+        p = AccountingMockDataFactory.createMockOrmGlAccountCategory(103, 4, "Category4");
         list.add(p);
         
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(104, 5, "Category5");
+        p = AccountingMockDataFactory.createMockOrmGlAccountCategory(104, 5, "Category5");
         list.add(p);
         return list;
     }
 
     private List<GlAccountCategory> createMockFetchUidMultiResultsReturnedResponse() {
         List<GlAccountCategory> list = new ArrayList<GlAccountCategory>();
-        GlAccountCategory p = AccountingMockDataUtility.createMockOrmGlAccountCategory(100, 1, "Category1");
+        GlAccountCategory p = AccountingMockDataFactory.createMockOrmGlAccountCategory(100, 1, "Category1");
         list.add(p);
 
-        p = AccountingMockDataUtility.createMockOrmGlAccountCategory(400, 1, "Category2");
+        p = AccountingMockDataFactory.createMockOrmGlAccountCategory(400, 1, "Category2");
         list.add(p);
         return list;
     }

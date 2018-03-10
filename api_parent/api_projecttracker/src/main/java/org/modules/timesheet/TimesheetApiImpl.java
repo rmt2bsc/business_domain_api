@@ -21,9 +21,9 @@ import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
-import org.modules.admin.ProjectApi;
-import org.modules.admin.ProjectApiException;
-import org.modules.admin.ProjectApiFactory;
+import org.modules.admin.ProjectAdminApi;
+import org.modules.admin.ProjectAdminApiException;
+import org.modules.admin.ProjectAdminApiFactory;
 import org.modules.employee.EmployeeApi;
 import org.modules.employee.EmployeeApiException;
 import org.modules.employee.EmployeeApiFactory;
@@ -687,17 +687,19 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         }
 
         // Verify that project task exists
-        ProjectApiFactory f = new ProjectApiFactory();
-        ProjectApi projApi = f.createApi(this.getSharedDao());
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi projApi = f.createApi(this.getSharedDao());
         try {
-            ProjectTaskDto projTaskDto = projApi.getProjectTask(projectTaskId);
+            ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
+            criteria.setProjectTaskId(projectTaskId);
+            List<ProjectTaskDto> projTaskDto = projApi.getProjectTask(criteria);
             if (projTaskDto == null) {
                 this.msg = "project/task id, "
                         + projectTaskId
                         + ", must exist in the system in order to assoicate multiple events with a project task";
                 throw new InvalidEventException(this.msg);
             }
-        } catch (ProjectApiException e) {
+        } catch (ProjectAdminApiException e) {
             throw new InvalidEventException(
                     "Error validating project task entity existence", e);
         } finally {
@@ -930,13 +932,15 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
             EmployeeDto manager = empApi.getEmployee(employee.getManagerId());
 
             // get client profile
-            ProjectApiFactory projFact = new ProjectApiFactory();
-            ProjectApi projApi = projFact.createApi(this.getSharedDao());
-            ClientDto client = projApi.getClient(this.ts.getClientId());
+            ProjectAdminApiFactory projFact = new ProjectAdminApiFactory();
+            ProjectAdminApi projApi = projFact.createApi(this.getSharedDao());
+            ClientDto clientCriteria = ProjectObjectFactory.createClientDtoInstance(null);
+            clientCriteria.setClientId(this.ts.getClientId());
+            List<ClientDto> clients = projApi.getClient(clientCriteria);
 
             // send timesheet via email
             EmailMessageBean msg = api.createConfirmationMessage(this.ts,
-                    employee, manager, client, this.tsHours);
+                    employee, manager, clients.get(0), this.tsHours);
             api.send(msg);
         } catch (TimesheetTransmissionException e) {
             this.msg = "SMTP error occurred attempting to send timesheet: "
@@ -946,7 +950,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Data access error fetching timesheet's employee profile: "
                     + this.ts.getEmpId();
             throw new TimesheetApiException(this.msg, e);
-        } catch (ProjectApiException e) {
+        } catch (ProjectAdminApiException e) {
             this.msg = "Data access error fetching timesheet's client profile: "
                     + this.ts.getClientId();
             throw new TimesheetApiException(this.msg, e);
@@ -1091,13 +1095,14 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         // allow us to build the object graph.
         Map<ProjectTaskDto, List<EventDto>> hrs = new LinkedHashMap<ProjectTaskDto, List<EventDto>>();
 
-        ProjectApiFactory projApiFact = new ProjectApiFactory();
-        ProjectApi api = projApiFact.createApi(this.getSharedDao());
+        ProjectAdminApiFactory projApiFact = new ProjectAdminApiFactory();
+        ProjectAdminApi api = projApiFact.createApi(this.getSharedDao());
         try {
             for (ProjectTaskDto pt : ptList) {
                 try {
-                    List<EventDto> evts = api.getEventByProjectTask(pt
-                            .getProjectTaskId());
+                    EventDto eventCriteria = ProjectObjectFactory.createEventDtoInstance(null);
+                    eventCriteria.setProjectTaskId(pt.getProjectTaskId());
+                    List<EventDto> evts = api.getEvent(eventCriteria, null, null);
                     if (evts == null || evts.size() <= 0) {
                         this.ts = null;
                         this.tsHours = null;
@@ -1105,7 +1110,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                     }
                     // Add project details to collection
                     hrs.put(pt, evts);
-                } catch (ProjectApiException e) {
+                } catch (ProjectAdminApiException e) {
                     this.msg = "Timesheet API load operation failed.  Error occurred fetching events for project/task id, "
                             + pt.getProjectTaskId();
                     throw new TimesheetApiException(this.msg, e);
