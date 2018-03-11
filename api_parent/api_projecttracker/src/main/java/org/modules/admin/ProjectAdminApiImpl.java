@@ -97,7 +97,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
      * @param appName
      * @param dao
      */
-    public ProjectAdminApiImpl(String appName, DaoClient dao) {
+    protected ProjectAdminApiImpl(String appName, DaoClient dao) {
         super(appName, dao);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
         logger.info("ProjectAdminApiImpl created with outside Api DAO, " + this.dao.getClass().getSimpleName() + " identified by application name, " + appName);

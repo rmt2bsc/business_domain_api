@@ -27,30 +27,18 @@ public interface EmployeeApi extends TransactionApi {
      *         found. Otherwise, null is returned.
      * @throws EmployeeApiException
      */
-    EmployeeDto getEmployee(int empId) throws EmployeeApiException;
+    EmployeeDto getEmployee(Integer empId) throws EmployeeApiException;
 
     /**
-     * Finds an extended employee data object using custom selection criteria.
+     * Find Employees using selection criteria.
      * 
      * @param criteria
-     *            The selection criteria
+     *            The employee id.
      * @return a List of {@link EmployeeDto} objects when found. Otherwise, null
      *         is returned.
      * @throws EmployeeApiException
      */
-    List<EmployeeDto> getEmployee(String criteria) throws EmployeeApiException;
-
-    /**
-     * Finds one or more employees by a title.
-     * 
-     * @param empTitleId
-     *            The employee's title id
-     * @return a List of {@link EmployeeDto} objects when found. Otherwise, null
-     *         is returned.
-     * @throws EmployeeApiException
-     */
-    List<EmployeeDto> getEmployeeByTitle(int empTitleId)
-            throws EmployeeApiException;
+    List<EmployeeDto> getEmployee(EmployeeDto criteria) throws EmployeeApiException;
 
     /**
      * Retrieves the master list of employee titles.
@@ -87,7 +75,7 @@ public interface EmployeeApi extends TransactionApi {
      * @return A List of {@link ClientDto} objects or null if nothing is found.
      * @throws EmployeeApiException
      */
-    List<ClientDto> getClients(int empId) throws EmployeeApiException;
+    List<ClientDto> getClients(Integer empId) throws EmployeeApiException;
 
     /**
      * Retrieves all projects relative to a given employee
@@ -98,7 +86,7 @@ public interface EmployeeApi extends TransactionApi {
      *         returned.
      * @throws EmployeeApiException
      */
-    List<ProjectEmployeeDto> getProjects(int empId) throws EmployeeApiException;
+    List<ProjectEmployeeDto> getProjects(Integer empId) throws EmployeeApiException;
 
     /**
      * Retrieves a single employee project profile.
@@ -109,7 +97,7 @@ public interface EmployeeApi extends TransactionApi {
      *         project. Otherwise, null is returned.
      * @throws EmployeeApiException
      */
-    ProjectEmployeeDto getProject(int empProjId) throws EmployeeApiException;
+    ProjectEmployeeDto getProject(Integer empProjId) throws EmployeeApiException;
 
     /**
      * Retrieves a single employee/project related to a given employee and
@@ -123,8 +111,7 @@ public interface EmployeeApi extends TransactionApi {
      *         employee/project when found. Otherwise, null is returned.
      * @throws EmployeeApiException
      */
-    ProjectEmployeeDto getProject(int empId, int projId)
-            throws EmployeeApiException;
+    ProjectEmployeeDto getProject(Integer empId, Integer projId) throws EmployeeApiException;
 
     /**
      * Creates a new or updates an existing employee by applying any changes

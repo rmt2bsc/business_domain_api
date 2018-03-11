@@ -18,8 +18,11 @@ import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.modules.ProjectTrackerApiConst;
 
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * Manages the creation, modifification, and querying of employee information.
@@ -29,8 +32,7 @@ import com.api.persistence.DaoClient;
  */
 class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi {
 
-    private static final Logger logger = Logger
-            .getLogger(EmployeeApiImpl.class);
+    private static final Logger logger = Logger.getLogger(EmployeeApiImpl.class);
 
     private ProjectAdminDaoFactory daoFact;
 
@@ -70,6 +72,20 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
     }
 
+    /**
+     * Creates an EmployeeApiImpl initialized with the name of the target
+     * application and a shared DAO connection.
+     * 
+     * @param appName
+     * @param dao
+     */
+    protected EmployeeApiImpl(String appName, DaoClient dao) {
+        super(appName, dao);
+        this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        logger.info("ProjectAdminApiImpl created with outside Api DAO, " + this.dao.getClass().getSimpleName()
+                + " identified by application name, " + appName);
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -88,14 +104,15 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getEmployee(int)
      */
     @Override
-    public EmployeeDto getEmployee(int empId) throws EmployeeApiException {
-        EmployeeDto criteria = EmployeeObjectFactory
-                .createEmployeeDtoInstance(null);
+    public EmployeeDto getEmployee(Integer empId) throws EmployeeApiException {
+        this.validateEmployeeId(empId);
+
+        EmployeeDto criteria = EmployeeObjectFactory.createEmployeeDtoInstance(null);
         criteria.setEmployeeId(empId);
         List<EmployeeDto> results;
         StringBuilder buf = new StringBuilder();
         try {
-            results = dao.fetchEmployee(criteria);
+            results = this.getEmployee(criteria);
             if (results == null) {
                 return null;
             }
@@ -107,7 +124,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         }
 
         if (results.size() > 1) {
-            buf.append("Error: Query method is expecting a single employee object to be returned using employee id, ");
+            buf.append("Employee query is expected to return a single employee object using employee id, ");
             buf.append(empId);
             buf.append(".  Instead ");
             buf.append(results.size());
@@ -122,42 +139,10 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.employee.EmployeeApi#getEmployee(java.lang.String)
-     */
-    @Override
-    public List<EmployeeDto> getEmployee(String customCriteria)
-            throws EmployeeApiException {
-        EmployeeDto criteria = EmployeeObjectFactory
-                .createEmployeeDtoInstance(null);
-        criteria.setCriteria(customCriteria);
-        List<EmployeeDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchEmployee(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving employees using custom criteria: ");
-            buf.append(customCriteria);
-            this.msg = buf.toString();
-            logger.error(this.msg);
-            throw new EmployeeApiException(this.msg, e);
-        }
-        return results;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.modules.employee.EmployeeApi#getEmployeeByTitle(int)
      */
     @Override
-    public List<EmployeeDto> getEmployeeByTitle(int empTitleId)
-            throws EmployeeApiException {
-        EmployeeDto criteria = EmployeeObjectFactory
-                .createEmployeeDtoInstance(null);
-        criteria.setEmployeeTitleId(empTitleId);
+    public List<EmployeeDto> getEmployee(EmployeeDto criteria) throws EmployeeApiException {
         List<EmployeeDto> results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -166,10 +151,8 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
                 return null;
             }
         } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving employees by employee title, ");
-            buf.append(empTitleId);
+            buf.append("Database error occurred retrieving employees using selection criteria");
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new EmployeeApiException(this.msg, e);
         }
         return results;
@@ -182,8 +165,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      */
     @Override
     public List<EmployeeDto> getManagers() throws EmployeeApiException {
-        EmployeeDto criteria = EmployeeObjectFactory
-                .createEmployeeDtoInstance(null);
+        EmployeeDto criteria = EmployeeObjectFactory.createEmployeeDtoInstance(null);
         criteria.setIsManager(ProjectTrackerApiConst.EMPLOYEE_MANAGER_FLAG);
         List<EmployeeDto> results;
         StringBuilder buf = new StringBuilder();
@@ -207,8 +189,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getEmployeeTitles()
      */
     @Override
-    public List<EmployeeTitleDto> getEmployeeTitles()
-            throws EmployeeApiException {
+    public List<EmployeeTitleDto> getEmployeeTitles() throws EmployeeApiException {
         EmployeeTitleDto criteria = null;
         List<EmployeeTitleDto> results;
         StringBuilder buf = new StringBuilder();
@@ -256,7 +237,9 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getClients(int)
      */
     @Override
-    public List<ClientDto> getClients(int empId) throws EmployeeApiException {
+    public List<ClientDto> getClients(Integer empId) throws EmployeeApiException {
+        this.validateEmployeeId(empId);
+
         List<ProjectEmployeeDto> peList = this.getProjects(empId);
         if (peList == null) {
             return null;
@@ -293,10 +276,18 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getEmployeeProject(int)
      */
     @Override
-    public ProjectEmployeeDto getProject(int empProjId)
-            throws EmployeeApiException {
-        ProjectEmployeeDto criteria = ProjectObjectFactory
-                .createEmployeeProjectDtoInstance(null);
+    public ProjectEmployeeDto getProject(Integer empProjId) throws EmployeeApiException {
+        try {
+            Verifier.verifyNotNull(empProjId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Empoyee-Project Id is required");
+        }
+        try {
+            Verifier.verifyPositive(empProjId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Empoyee-Project Id must greater than zero");
+        }
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
         criteria.setEmpProjId(empProjId);
         List<ProjectEmployeeDto> results;
         StringBuilder buf = new StringBuilder();
@@ -331,10 +322,20 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getEmployeeProject(int, int)
      */
     @Override
-    public ProjectEmployeeDto getProject(int empId, int projId)
-            throws EmployeeApiException {
-        ProjectEmployeeDto criteria = ProjectObjectFactory
-                .createEmployeeProjectDtoInstance(null);
+    public ProjectEmployeeDto getProject(Integer empId, Integer projId) throws EmployeeApiException {
+        this.validateEmployeeId(empId);
+        try {
+            Verifier.verifyNotNull(projId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Project Id is required");
+        }
+        try {
+            Verifier.verifyPositive(projId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Project Id must greater than zero");
+        }
+
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
         criteria.setEmpId(empId);
         criteria.setProjId(projId);
         List<ProjectEmployeeDto> results;
@@ -376,10 +377,10 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getEmployeeProjectByEmployee(int)
      */
     @Override
-    public List<ProjectEmployeeDto> getProjects(int empId)
-            throws EmployeeApiException {
-        ProjectEmployeeDto criteria = ProjectObjectFactory
-                .createEmployeeProjectDtoInstance(null);
+    public List<ProjectEmployeeDto> getProjects(Integer empId) throws EmployeeApiException {
+        this.validateEmployeeId(empId);
+
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
         criteria.setEmpId(empId);
         List<ProjectEmployeeDto> results;
         StringBuilder buf = new StringBuilder();
@@ -423,8 +424,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#update(org.dto.ProjectEmployeeDto)
      */
     @Override
-    public int update(ProjectEmployeeDto projEmployee)
-            throws EmployeeApiException {
+    public int update(ProjectEmployeeDto projEmployee) throws EmployeeApiException {
         this.validate(projEmployee);
         int rc = 0;
         if (projEmployee.getEmpProjId() > 0) {
@@ -435,6 +435,19 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             rc = this.dao.maintainProjectEmployee(projEmployee);
         }
         return rc;
+    }
+
+    private void validateEmployeeId(Integer empId) {
+        try {
+            Verifier.verifyNotNull(empId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Empoyee Id is required");
+        }
+        try {
+            Verifier.verifyPositive(empId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Empoyee Id must greater than zero");
+        }
     }
 
     /**
@@ -466,8 +479,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      *             If <i>projEmployee</i> is null or the employee id/project id
      *             combination already exists in the system.
      */
-    protected void validate(ProjectEmployeeDto projEmployee)
-            throws InvalidProjectEmployeeException {
+    protected void validate(ProjectEmployeeDto projEmployee) throws InvalidProjectEmployeeException {
         if (projEmployee == null) {
             this.msg = "Project/Employee cannot be null";
             throw new InvalidProjectEmployeeException(this.msg);
@@ -492,8 +504,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         return;
     }
 
-    private EmployeeDto createDelta(EmployeeDto employee)
-            throws EmployeeApiException {
+    private EmployeeDto createDelta(EmployeeDto employee) throws EmployeeApiException {
         EmployeeDto delta = this.getEmployee(employee.getEmployeeId());
         if (delta == null) {
             this.msg = "Employee API update failed for employee.  The employee does not exist by employee id: "
@@ -511,8 +522,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         return delta;
     }
 
-    private ProjectEmployeeDto createDelta(ProjectEmployeeDto projEmployee)
-            throws EmployeeApiException {
+    private ProjectEmployeeDto createDelta(ProjectEmployeeDto projEmployee) throws EmployeeApiException {
         ProjectEmployeeDto delta = this.getProject(projEmployee.getEmpProjId());
         if (delta == null) {
             this.msg = "Employee API update failed for project/employee.  The project/employee does not exist by employee project id: "

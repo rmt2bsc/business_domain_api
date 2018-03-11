@@ -60,9 +60,8 @@ public class EmployeeApiFactory extends RMT2Base {
         if (connection == null) {
             return null;
         }
-        EmployeeApiImpl api = new EmployeeApiImpl(connection);
+        EmployeeApiImpl api = new EmployeeApiImpl(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME, connection);
         api.setApiUser(connection.getDaoUser());
         return api;
     }
-
 }
