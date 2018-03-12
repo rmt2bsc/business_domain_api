@@ -255,8 +255,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
                 // A non-null value means a duplicate was found and replaced. No
                 // need to add client to List.
                 if (result == null) {
-                    ClientDto client = ProjectObjectFactory
-                            .createClientDtoInstance(null);
+                    ClientDto client = ProjectObjectFactory.createClientDtoInstance(null);
                     client.setClientId(proj.getClientId());
                     client.setClientName(proj.getClientName());
                     clientList.add(client);
