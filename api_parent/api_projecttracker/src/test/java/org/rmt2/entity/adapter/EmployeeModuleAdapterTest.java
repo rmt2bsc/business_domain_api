@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
+import com.util.RMT2Date;
+
 /**
  * Test adapters pertaining to the Employee module.
  * 
@@ -46,7 +48,10 @@ public class EmployeeModuleAdapterTest {
         Assert.assertEquals(50.00, dto.getHourlyRate(), 0);
         Assert.assertEquals(55.00, dto.getHourlyOverRate(), 0);
         Assert.assertEquals(0.00, dto.getFlatRate(), 0);
-        // TODO:  Test the dates
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getProjectEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), dto.getProjectEndDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getProjEmpEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), dto.getProjEmpEndDate());
     }
     
  
