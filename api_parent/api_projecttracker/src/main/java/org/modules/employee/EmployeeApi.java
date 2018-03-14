@@ -78,18 +78,18 @@ public interface EmployeeApi extends TransactionApi {
     List<ClientDto> getClients(Integer empId) throws EmployeeApiException;
 
     /**
-     * Retrieves all projects relative to a given employee
+     * Retrieves a list of project employee object based on selection criteria.
      * 
-     * @param empId
-     *            The employee id
+     * @param criteria
+     *            the selection criteria
      * @return a List of {@link ProjectEmployeeDto} objects. Otherwise, null is
      *         returned.
      * @throws EmployeeApiException
      */
-    List<ProjectEmployeeDto> getProjects(Integer empId) throws EmployeeApiException;
+    List<ProjectEmployeeDto> getProjectEmployee(ProjectEmployeeDto criteria) throws EmployeeApiException;
 
     /**
-     * Retrieves a single employee project profile.
+     * Retrieves a single project employee profile.
      * 
      * @param empProjId
      *            The employee project id
@@ -97,21 +97,7 @@ public interface EmployeeApi extends TransactionApi {
      *         project. Otherwise, null is returned.
      * @throws EmployeeApiException
      */
-    ProjectEmployeeDto getProject(Integer empProjId) throws EmployeeApiException;
-
-    /**
-     * Retrieves a single employee/project related to a given employee and
-     * project
-     * 
-     * @param empId
-     *            The employee id
-     * @param projId
-     *            The project id
-     * @return a {@link ProjectEmployeeDto} object representing the
-     *         employee/project when found. Otherwise, null is returned.
-     * @throws EmployeeApiException
-     */
-    ProjectEmployeeDto getProject(Integer empId, Integer projId) throws EmployeeApiException;
+    ProjectEmployeeDto getProjectEmployee(Integer empProjId) throws EmployeeApiException;
 
     /**
      * Creates a new or updates an existing employee by applying any changes

@@ -240,7 +240,10 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
     public List<ClientDto> getClients(Integer empId) throws EmployeeApiException {
         this.validateEmployeeId(empId);
 
-        List<ProjectEmployeeDto> peList = this.getProjects(empId);
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        criteria.setEmpId(empId);
+
+        List<ProjectEmployeeDto> peList = this.getProjectEmployee(criteria);
         if (peList == null) {
             return null;
         }
@@ -275,7 +278,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getEmployeeProject(int)
      */
     @Override
-    public ProjectEmployeeDto getProject(Integer empProjId) throws EmployeeApiException {
+    public ProjectEmployeeDto getProjectEmployee(Integer empProjId) throws EmployeeApiException {
         try {
             Verifier.verifyNotNull(empProjId);
         } catch (VerifyException e) {
@@ -315,60 +318,6 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         return results.get(0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.employee.EmployeeApi#getEmployeeProject(int, int)
-     */
-    @Override
-    public ProjectEmployeeDto getProject(Integer empId, Integer projId) throws EmployeeApiException {
-        this.validateEmployeeId(empId);
-        try {
-            Verifier.verifyNotNull(projId);
-        } catch (VerifyException e) {
-            throw new InvalidDataException("Project Id is required");
-        }
-        try {
-            Verifier.verifyPositive(projId);
-        } catch (VerifyException e) {
-            throw new InvalidDataException("Project Id must greater than zero");
-        }
-
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
-        criteria.setEmpId(empId);
-        criteria.setProjId(projId);
-        List<ProjectEmployeeDto> results;
-        StringBuilder buf = new StringBuilder();
-        try {
-            results = dao.fetchProjectEmployee(criteria);
-            if (results == null) {
-                return null;
-            }
-        } catch (ProjecttrackerDaoException e) {
-            buf.append("Database error occurred retrieving project/employee objects by employee id, [");
-            buf.append(empId);
-            buf.append("] and project id [ ");
-            buf.append(projId);
-            buf.append("]");
-            this.msg = buf.toString();
-            logger.error(this.msg);
-            throw new EmployeeApiException(this.msg, e);
-        }
-        if (results.size() > 1) {
-            buf.append("Error: Query method is expecting a single project/employee object to be returned using employee id [");
-            buf.append(empId);
-            buf.append("] and project id [ ");
-            buf.append(projId);
-            buf.append("]");
-            buf.append(".  Instead ");
-            buf.append(results.size());
-            buf.append("  were returned.");
-            this.msg = buf.toString();
-            logger.error(this.msg);
-            throw new EmployeeApiException(this.msg);
-        }
-        return results.get(0);
-    }
 
     /*
      * (non-Javadoc)
@@ -376,11 +325,13 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @see org.modules.employee.EmployeeApi#getEmployeeProjectByEmployee(int)
      */
     @Override
-    public List<ProjectEmployeeDto> getProjects(Integer empId) throws EmployeeApiException {
-        this.validateEmployeeId(empId);
-
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
-        criteria.setEmpId(empId);
+    public List<ProjectEmployeeDto> getProjectEmployee(ProjectEmployeeDto criteria) throws EmployeeApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch(VerifyException e) {
+            throw new InvalidDataException("Project/Employee selection criteria object is required");
+        }
         List<ProjectEmployeeDto> results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -390,7 +341,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             }
         } catch (ProjecttrackerDaoException e) {
             buf.append("Database error occurred retrieving project/employee objects by employee id, ");
-            buf.append(empId);
+            buf.append(criteria);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new EmployeeApiException(this.msg, e);
@@ -483,11 +434,12 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             this.msg = "Project/Employee cannot be null";
             throw new InvalidProjectEmployeeException(this.msg);
         }
-        ProjectEmployeeDto projEmpDto;
         try {
-            projEmpDto = this.getProject(projEmployee.getEmpId(),
-                    projEmployee.getProjId());
-            if (projEmpDto != null) {
+            ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+            criteria.setEmpId(projEmployee.getEmpId());
+            criteria.setProjId(projEmployee.getProjId());
+            List<ProjectEmployeeDto> results = this.getProjectEmployee(criteria);
+            if (results != null) {
                 StringBuffer buf = new StringBuffer();
                 buf.append("The employee is already assigned to the specified project.  Employee Id [");
                 buf.append(projEmployee.getEmpId());
@@ -522,7 +474,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
     }
 
     private ProjectEmployeeDto createDelta(ProjectEmployeeDto projEmployee) throws EmployeeApiException {
-        ProjectEmployeeDto delta = this.getProject(projEmployee.getEmpProjId());
+        ProjectEmployeeDto delta = this.getProjectEmployee(projEmployee.getEmpProjId());
         if (delta == null) {
             this.msg = "Employee API update failed for project/employee.  The project/employee does not exist by employee project id: "
                     + projEmployee.getEmpProjId();
