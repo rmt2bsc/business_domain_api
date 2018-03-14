@@ -263,8 +263,7 @@ public class ProjectAdminDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link ProjEmployeeTitle}
      */
-    public static final ProjEmployeeTitle createCriteria(
-            EmployeeTitleDto criteria) {
+    public static final ProjEmployeeTitle createCriteria(EmployeeTitleDto criteria) {
         ProjEmployeeTitle obj = new ProjEmployeeTitle();
         if (criteria != null) {
             if (criteria.getEmployeeTitleId() > 0) {
@@ -465,8 +464,7 @@ public class ProjectAdminDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link VwEmployeeProjects}
      */
-    public static final VwEmployeeProjects createCriteria(
-            ProjectEmployeeDto criteria) {
+    public static final VwEmployeeProjects createCriteria(ProjectEmployeeDto criteria) {
         VwEmployeeProjects obj = new VwEmployeeProjects();
         if (criteria != null) {
             if (criteria.getEmpId() > 0) {
@@ -638,8 +636,7 @@ public class ProjectAdminDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link VwTimesheetEventList}
      */
-    public static final VwTimesheetEventList createCriteria(
-            ProjectEventDto criteria) {
+    public static final VwTimesheetEventList createCriteria(ProjectEventDto criteria) {
         VwTimesheetEventList obj = new VwTimesheetEventList();
         if (criteria != null) {
             if (criteria.getEventId() > 0) {
