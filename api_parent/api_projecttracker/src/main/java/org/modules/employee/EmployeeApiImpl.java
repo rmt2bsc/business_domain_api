@@ -143,6 +143,12 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      */
     @Override
     public List<EmployeeDto> getEmployee(EmployeeDto criteria) throws EmployeeApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidEmployeeException("Employee criteria is required");
+        }
         List<EmployeeDto> results;
         StringBuilder buf = new StringBuilder();
         try {
@@ -409,13 +415,25 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      *             employee title.
      */
     protected void validate(EmployeeDto emp) throws InvalidEmployeeException {
-        if (emp.getEmployeeTitleId() == 0) {
-            this.msg = "Employee profile must contain an employee title";
+        try {
+            Verifier.verifyNotNull(emp);
+        }
+        catch (VerifyException e) {
+            throw new InvalidEmployeeException("Employee criteria object is required");
+        }
+        try {
+            Verifier.verifyPositive(emp.getEmployeeTitleId());
+        }
+        catch (VerifyException e) {
+            this.msg = "Employee criteria object must contain an employee title";
             throw new InvalidEmployeeException(this.msg);
         }
-        if (emp.getEmployeeTypeId() == 0) {
-            this.msg = "Employee profile must contain an employee type";
-            throw new InvalidEmployeeException(this.msg);
+        try {
+            Verifier.verifyPositive(emp.getEmployeeTypeId());
+        }
+        catch (VerifyException e) {
+            this.msg = "Employee criteria object must contain an employee type";
+            throw new InvalidEmployeeException(this.msg);   
         }
     }
 
@@ -430,7 +448,10 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      *             combination already exists in the system.
      */
     protected void validate(ProjectEmployeeDto projEmployee) throws InvalidProjectEmployeeException {
-        if (projEmployee == null) {
+        try {
+            Verifier.verifyNotNull(projEmployee);
+        }
+        catch (VerifyException e) {
             this.msg = "Project/Employee cannot be null";
             throw new InvalidProjectEmployeeException(this.msg);
         }
