@@ -49,7 +49,9 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
     private static final int TEST_EMPLOYEE_TITLE_ID = 101;
     private static final int TEST_MANAGER_ID = 3333;
     private static final int TEST_EMPLOYEE_ID = 5000;
-    private static final int TEST_TIMESHEET_ID = 848484840;
+    private static final int TEST_BUSINESS_ID = 1350;
+    private static final int TEST_PROJ_ID = 2220;
+    private static final int TEST_EMP_PROJ_ID = 55551;
     private static final String TEST_COMPANY_NAME = "ABC Company";
     private static final String TEST_TASK_NAMES[] = new String[]{"Design and Analysis", 
             "Development", "Meetings", "Testing", "Holiday"};
@@ -291,6 +293,45 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
             Assert.assertEquals(obj.getEmployeeLastname(), "last_name_" + nameSeed);
             Assert.assertEquals(("111-11-500" + ndx), obj.getSsn());
             Assert.assertEquals(TEST_COMPANY_NAME, obj.getEmployeeCompanyName());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Fetch_Project_Employees() {
+        VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
+        mockCriteria.setBusinessId(TEST_BUSINESS_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwEmployeeProjectsFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee projects case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        criteria.setBusinessId(TEST_BUSINESS_ID);
+        List<ProjectEmployeeDto> results = null;
+        try {
+            results = api.getProjectEmployee(criteria);
+        } catch (EmployeeApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ProjectEmployeeDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getClientId(), (TEST_CLIENT_ID + ndx));
+            Assert.assertEquals(obj.getClientName(), (TEST_CLIENT_ID + ndx) + " Company");
+            Assert.assertEquals(obj.getProjId(), (TEST_PROJ_ID + ndx));
+            Assert.assertEquals(TEST_EMP_PROJ_ID + ndx, obj.getEmpProjId());
+            Assert.assertEquals(TEST_EMPLOYEE_ID, obj.getEmpId());
+            Assert.assertEquals(TEST_BUSINESS_ID, obj.getBusinessId());
+            Assert.assertEquals(obj.getProjectDescription(), "Project 222" + ndx);
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), obj.getProjectEffectiveDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), obj.getProjectEndDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), obj.getProjEmpEffectiveDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), obj.getProjEmpEndDate());
         }
     }
    }
