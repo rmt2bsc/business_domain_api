@@ -1,7 +1,10 @@
 package org.rmt2.entity.adapter;
 
+import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
+import org.dto.EmployeeDto;
 import org.dto.ProjectEmployeeDto;
+import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -27,6 +30,27 @@ public class EmployeeModuleAdapterTest {
     public void tearDown() throws Exception {
     }
 
+    @Test
+    public void testOrmProjEmployee() {
+        ProjEmployee o1 = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5000, 201, 1, 3333, 101, 999991,
+                "2010-01-01", "2018-01-01", "login_name_1", "first_name_1", "last_name_1",
+                "111-11-5000", "ABC Company");
+        EmployeeDto dto = EmployeeObjectFactory.createEmployeeDtoInstance(o1);
+        
+        Assert.assertEquals(dto.getEmployeeId(), 5000);
+        Assert.assertEquals(dto.getManagerId(), 3333);
+        Assert.assertEquals(dto.getEmployeeTitleId(), 101);
+        Assert.assertEquals(dto.getLoginId(), 999991);
+        Assert.assertEquals(RMT2Date.stringToDate("2010-01-01"), dto.getStartDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getTerminationDate());
+        Assert.assertEquals(dto.getEmployeeTypeId(), 201);
+        Assert.assertEquals(dto.getIsManager(), 1);
+        Assert.assertEquals(dto.getEmployeeFirstname(), "first_name_1");
+        Assert.assertEquals(dto.getEmployeeLastname(), "last_name_1");
+        Assert.assertEquals("111-11-5000", dto.getSsn());
+        Assert.assertEquals("ABC Company", dto.getEmployeeCompanyName());
+    }
+    
     @Test
     public void testOrmVwEmployeeProjects() {
         VwEmployeeProjects o1 = ProjectTrackerMockDataFactory.createMockOrmVwEmployeeProjects(55551, 2220, "Project 2220",
