@@ -424,7 +424,7 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
             return this.emp.getEmpTypeId();
         }
         if (this.empType != null) {
-            this.empType.getEmpTypeId();
+            return this.empType.getEmpTypeId();
         }
         return 0;
     }
@@ -476,7 +476,12 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
      */
     @Override
     public void setEmployeeTypeDescription(String value) {
-        this.empExt.setEmployeeType(value);
+        if (this.empExt != null) {
+            this.empExt.setEmployeeType(value);    
+        }
+        if (this.empType != null) {
+            this.empType.setDescription(value);
+        }
     }
 
     /*
@@ -486,7 +491,13 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
      */
     @Override
     public String getEmployeeTypeDescription() {
-        return this.empExt.getEmployeeType();
+        if (this.empExt != null) {
+            return this.empExt.getEmployeeType();    
+        }
+        if (this.empType != null) {
+            return this.empType.getDescription();
+        }
+        return null;
     }
 
     /*

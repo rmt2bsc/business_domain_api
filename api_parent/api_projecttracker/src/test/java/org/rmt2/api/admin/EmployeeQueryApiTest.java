@@ -8,10 +8,12 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
+import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dto.ClientDto;
 import org.dto.EmployeeDto;
 import org.dto.EmployeeTitleDto;
+import org.dto.EmployeeTypeDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
@@ -20,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.ProjectTrackerApiConst;
 import org.modules.employee.EmployeeApi;
 import org.modules.employee.EmployeeApiException;
 import org.modules.employee.EmployeeApiFactory;
@@ -209,6 +212,85 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
             EmployeeTitleDto dto = results.get(ndx);
             Assert.assertEquals((101 + ndx), dto.getEmployeeTitleId());
             Assert.assertEquals(("Employee Title " + (1 + ndx)), dto.getEmployeeTitleDescription());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Fetch_Employee_Types() {
+        ProjEmployeeType mockCriteria = new ProjEmployeeType();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockEmployeeTypeFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee types case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        List<EmployeeTypeDto> results = null;
+        try {
+            results = api.getEmployeeTypes();
+        } catch (EmployeeApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(3, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            EmployeeTypeDto dto = results.get(ndx);
+            Assert.assertEquals((201 + ndx), dto.getEmployeeTypeId());
+            Assert.assertEquals(("Employee Type " + (1 + ndx)), dto.getEmployeeTypeDescription());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Fetch_Managers() {
+        // Set all mock employe data objects to be managers
+        for (ProjEmployee emp : this.mockEmployeeFetchMultiple) {
+            emp.setIsManager(ProjectTrackerApiConst.EMPLOYEE_MANAGER_FLAG);
+        }
+        // Stub all employee fetch.
+        ProjEmployee mockCriteria = new ProjEmployee();
+        mockCriteria.setIsManager(ProjectTrackerApiConst.EMPLOYEE_MANAGER_FLAG);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockEmployeeFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeDto criteria = EmployeeObjectFactory.createEmployeeDtoInstance(null);
+        criteria.setManagerId(TEST_MANAGER_ID);
+        List<EmployeeDto> results = null;
+        try {
+            results = api.getManagers();
+        } catch (EmployeeApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            EmployeeDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEmployeeId(), (TEST_EMPLOYEE_ID + ndx));
+            Assert.assertEquals(obj.getManagerId(), TEST_MANAGER_ID);
+            Assert.assertEquals(obj.getEmployeeTitleId(), (TEST_EMPLOYEE_TITLE_ID + ndx));
+            Assert.assertEquals(obj.getLoginId(), (TEST_LOGIN_ID + ndx));
+            Assert.assertEquals(obj.getIsManager(), 1);
+            int startYear = 2010 + ndx;
+            Assert.assertEquals(RMT2Date.stringToDate(startYear + "-01-01"), obj.getStartDate());
+            if (obj.getTerminationDate() != null) {
+                Assert.assertEquals(obj.getEmployeeTypeId(), 202);
+                Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), obj.getTerminationDate());
+            }
+            else {
+                Assert.assertEquals(obj.getEmployeeTypeId(), 201);
+            }
+            int nameSeed = 1 + ndx;
+            Assert.assertEquals(obj.getEmployeeFirstname(), "first_name_" + nameSeed);
+            Assert.assertEquals(obj.getEmployeeLastname(), "last_name_" + nameSeed);
+            Assert.assertEquals(("111-11-500" + ndx), obj.getSsn());
+            Assert.assertEquals(TEST_COMPANY_NAME, obj.getEmployeeCompanyName());
         }
     }
    }

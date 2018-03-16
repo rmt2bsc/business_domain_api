@@ -187,7 +187,7 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
     
     private List<ProjEmployeeType> createMockSingleEmployeeType() {
         List<ProjEmployeeType> list = new ArrayList<ProjEmployeeType>();
-        ProjEmployeeType o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(201, "Full Time");
+        ProjEmployeeType o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(201, "Employee Type 1");
         list.add(o);
         return list;
     }
@@ -197,10 +197,10 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
         ProjEmployeeType o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(201, "Employee Type 1");
         list.add(o);
         
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(202, "Part Time");
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(202, "Employee Type 2");
         list.add(o);
         
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(203, "Contractor");
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(203, "Employee Type 3");
         list.add(o);
         
         return list;

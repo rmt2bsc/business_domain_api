@@ -2,9 +2,11 @@ package org.rmt2.entity.adapter;
 
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
+import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dto.EmployeeDto;
 import org.dto.EmployeeTitleDto;
+import org.dto.EmployeeTypeDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
@@ -32,6 +34,14 @@ public class EmployeeModuleAdapterTest {
     public void tearDown() throws Exception {
     }
 
+    @Test
+    public void testOrmProjEmployeeTypes() {
+        ProjEmployeeType o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeType(201, "Employee Type 1");
+        EmployeeTypeDto dto = EmployeeObjectFactory.createEmployeeTypeDtoInstance(o);
+        
+        Assert.assertEquals(201, dto.getEmployeeTypeId());
+        Assert.assertEquals("Employee Type 1", dto.getEmployeeTypeDescription());
+    }
     
     @Test
     public void testOrmProjEmployeeTitle() {
