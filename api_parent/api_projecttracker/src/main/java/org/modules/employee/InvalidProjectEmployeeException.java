@@ -1,12 +1,14 @@
 package org.modules.employee;
 
+import com.InvalidDataException;
+
 /**
  * Handles an invalid project/employee.
  * 
  * @author Roy Terrell
  * 
  */
-public class InvalidProjectEmployeeException extends EmployeeApiException {
+public class InvalidProjectEmployeeException extends InvalidDataException {
 
     private static final long serialVersionUID = -4636310379147625769L;
 
