@@ -297,7 +297,7 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
     }
     
     @Test
-    public void testSuccess_Fetch_Project_Employees() {
+    public void testSuccess_Fetch_Project_Employee_List() {
         VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
         mockCriteria.setBusinessId(TEST_BUSINESS_ID);
         try {
@@ -333,5 +333,43 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
             Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), obj.getProjEmpEffectiveDate());
             Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), obj.getProjEmpEndDate());
         }
+    }
+    
+    @Test
+    public void testSuccess_Fetch_Project_Employee_Single() {
+        VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
+        mockCriteria.setEmpProjId(TEST_EMP_PROJ_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwEmployeeProjectsFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single employee projects case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        criteria.setEmpProjId(TEST_EMP_PROJ_ID);
+        ProjectEmployeeDto results = null;
+        try {
+            results = api.getProjectEmployee(TEST_EMP_PROJ_ID);
+        } catch (EmployeeApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(results.getClientId(), TEST_CLIENT_ID);
+        Assert.assertEquals(results.getClientName(), TEST_CLIENT_ID + " Company");
+        Assert.assertEquals(results.getProjId(), TEST_PROJ_ID);
+        Assert.assertEquals(TEST_EMP_PROJ_ID, results.getEmpProjId());
+        Assert.assertEquals(TEST_EMPLOYEE_ID, results.getEmpId());
+        Assert.assertEquals(TEST_BUSINESS_ID, results.getBusinessId());
+        Assert.assertEquals(results.getProjectDescription(), "Project 2220");
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"),
+                results.getProjectEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"),
+                results.getProjectEndDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"),
+                results.getProjEmpEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), results.getProjEmpEndDate());
     }
    }
