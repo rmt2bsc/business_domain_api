@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.sql.ResultSet;
 import java.util.List;
 
+import org.dao.admin.EmployeeDaoException;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.ProjEmployeeType;
@@ -30,7 +31,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectAdminApiTestData;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
@@ -53,8 +56,6 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
     private static final int TEST_PROJ_ID = 2220;
     private static final int TEST_EMP_PROJ_ID = 55551;
     private static final String TEST_COMPANY_NAME = "ABC Company";
-    private static final String TEST_TASK_NAMES[] = new String[]{"Design and Analysis", 
-            "Development", "Meetings", "Testing", "Holiday"};
 
     /**
      * @throws java.lang.Exception
@@ -87,8 +88,6 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
         
         EmployeeApiFactory f = new EmployeeApiFactory();
         EmployeeApi api = f.createApi(this.mockDaoClient);
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
-        criteria.setEmpId(TEST_EMPLOYEE_ID);
         List<ClientDto> results = null;
         try {
             results = api.getClients(TEST_EMPLOYEE_ID);
@@ -103,7 +102,77 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
             Assert.assertEquals(obj.getClientName(), (TEST_CLIENT_ID + ndx) + " Company");
         }
     }
+    
+    @Test
+    public void testValidation_Fetch_All_Clients_Null_Input_EmployeeId() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        criteria.setEmpId(TEST_EMPLOYEE_ID);
+        try {
+            api.getClients(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_All_Clients_Negative_Input_EmployeeId() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        criteria.setEmpId(-1000);
+        try {
+            api.getClients(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
 
+    @Test
+    public void testValidation_Fetch_All_Clients_Zero_Input_EmployeeId() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        criteria.setEmpId(0);
+        try {
+            api.getClients(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_All_Clients_DB_Access_Fault() {
+        VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
+        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee projects case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getClients(TEST_EMPLOYEE_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
     @Test
     public void testSuccess_Fetch_Employee_List_Using_Criteria() {
         // Stub all employee fetch.
@@ -191,6 +260,115 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
     }
     
     @Test
+    public void testValidation_Fetch_Employee_List_Using_Null_Criteria() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeDto criteria = null;
+        try {
+            api.getEmployee(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Employee_Single_Using_Null_EmployeeId() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        Integer empId = null;
+        try {
+            api.getEmployee(empId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Employee_Single_Using_Negative_EmployeeId() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        Integer empId = -1000;
+        try {
+            api.getEmployee(empId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Employee_Single_Using_Zero_EmployeeId() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        Integer empId = 0;
+        try {
+            api.getEmployee(empId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_Employee_List_DB_Access_Fault() {
+        ProjEmployee mockCriteria = new ProjEmployee();
+        mockCriteria.setManagerId(TEST_MANAGER_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeDto criteria = EmployeeObjectFactory.createEmployeeDtoInstance(null);
+        criteria.setManagerId(TEST_MANAGER_ID);
+        try {
+            api.getEmployee(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_Employee_Single_DB_Access_Fault() {
+        ProjEmployee mockCriteria = new ProjEmployee();
+        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getEmployee(TEST_EMPLOYEE_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testSuccess_Fetch_Employee_Titles() {
         ProjEmployeeTitle mockCriteria = new ProjEmployeeTitle();
         try {
@@ -214,6 +392,30 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
             EmployeeTitleDto dto = results.get(ndx);
             Assert.assertEquals((101 + ndx), dto.getEmployeeTitleId());
             Assert.assertEquals(("Employee Title " + (1 + ndx)), dto.getEmployeeTitleDescription());
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_Employee_Titles_DB_Access_Fault() {
+        ProjEmployeeTitle mockCriteria = new ProjEmployeeTitle();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee titles case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getEmployeeTitles();
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
         }
     }
     
@@ -245,6 +447,30 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
     }
     
     @Test
+    public void testError_Fetch_Employee_Types_DB_Access_Fault() {
+        ProjEmployeeType mockCriteria = new ProjEmployeeType();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee types case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getEmployeeTypes();
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testSuccess_Fetch_Managers() {
         // Set all mock employe data objects to be managers
         for (ProjEmployee emp : this.mockEmployeeFetchMultiple) {
@@ -262,8 +488,6 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
         
         EmployeeApiFactory f = new EmployeeApiFactory();
         EmployeeApi api = f.createApi(this.mockDaoClient);
-        EmployeeDto criteria = EmployeeObjectFactory.createEmployeeDtoInstance(null);
-        criteria.setManagerId(TEST_MANAGER_ID);
         List<EmployeeDto> results = null;
         try {
             results = api.getManagers();
@@ -293,6 +517,31 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
             Assert.assertEquals(obj.getEmployeeLastname(), "last_name_" + nameSeed);
             Assert.assertEquals(("111-11-500" + ndx), obj.getSsn());
             Assert.assertEquals(TEST_COMPANY_NAME, obj.getEmployeeCompanyName());
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_Managers_DB_Access_Fault() {
+        ProjEmployee mockCriteria = new ProjEmployee();
+        mockCriteria.setIsManager(ProjectTrackerApiConst.EMPLOYEE_MANAGER_FLAG);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                   .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getManagers();
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
         }
     }
     
@@ -336,6 +585,47 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
     }
     
     @Test
+    public void testError_Fetch_Project_Employee_List_DB_Access_Fault() {
+        VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
+        mockCriteria.setBusinessId(TEST_BUSINESS_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                   .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee projects case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        criteria.setBusinessId(TEST_BUSINESS_ID);
+        try {
+            api.getProjectEmployee(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Project_Employee_List_Null_Criteria() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        ProjectEmployeeDto criteria = null;
+        try {
+            api.getProjectEmployee(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testSuccess_Fetch_Project_Employee_Single() {
         VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
         mockCriteria.setEmpProjId(TEST_EMP_PROJ_ID);
@@ -348,8 +638,6 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
         
         EmployeeApiFactory f = new EmployeeApiFactory();
         EmployeeApi api = f.createApi(this.mockDaoClient);
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
-        criteria.setEmpProjId(TEST_EMP_PROJ_ID);
         ProjectEmployeeDto results = null;
         try {
             results = api.getProjectEmployee(TEST_EMP_PROJ_ID);
@@ -371,5 +659,72 @@ public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"),
                 results.getProjEmpEffectiveDate());
         Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), results.getProjEmpEndDate());
+    }
+    
+    @Test
+    public void testError_Fetch_Project_Employee_Single_DB_Access_Fault() {
+        VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
+        mockCriteria.setEmpProjId(TEST_EMP_PROJ_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                  .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single employee projects case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getProjectEmployee(TEST_EMP_PROJ_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Project_Employee_Single_Null_Key() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        Integer empProjId = null;
+        try {
+            api.getProjectEmployee(empProjId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Project_Employee_Single_Zero_Key() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        Integer empProjId = 0;
+        try {
+            api.getProjectEmployee(empProjId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Project_Employee_Single_Negative_Key() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        Integer empProjId = -1000;
+        try {
+            api.getProjectEmployee(empProjId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
     }
    }

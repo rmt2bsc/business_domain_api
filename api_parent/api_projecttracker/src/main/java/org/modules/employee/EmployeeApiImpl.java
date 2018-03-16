@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.dao.ProjecttrackerDaoException;
+import org.dao.admin.EmployeeDaoException;
 import org.dao.admin.ProjectAdminDao;
 import org.dao.admin.ProjectAdminDaoFactory;
 import org.dto.ClientDto;
@@ -116,7 +117,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             if (results == null) {
                 return null;
             }
-        } catch (ProjecttrackerDaoException e) {
+        } catch (EmployeeApiException e) {
             buf.append("Database error occurred retrieving all employees");
             this.msg = buf.toString();
             logger.error(this.msg);
@@ -156,7 +157,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             if (results == null) {
                 return null;
             }
-        } catch (ProjecttrackerDaoException e) {
+        } catch (EmployeeDaoException e) {
             buf.append("Database error occurred retrieving employees using selection criteria");
             this.msg = buf.toString();
             throw new EmployeeApiException(this.msg, e);
@@ -345,7 +346,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             if (results == null) {
                 return null;
             }
-        } catch (ProjecttrackerDaoException e) {
+        } catch (EmployeeDaoException e) {
             buf.append("Database error occurred retrieving project/employee objects by employee id, ");
             buf.append(criteria);
             this.msg = buf.toString();
