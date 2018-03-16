@@ -1,8 +1,10 @@
 package org.rmt2.entity.adapter;
 
 import org.dao.mapping.orm.rmt2.ProjEmployee;
+import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dto.EmployeeDto;
+import org.dto.EmployeeTitleDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
@@ -30,6 +32,16 @@ public class EmployeeModuleAdapterTest {
     public void tearDown() throws Exception {
     }
 
+    
+    @Test
+    public void testOrmProjEmployeeTitle() {
+        ProjEmployeeTitle o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeTitle(101, "Employee Title 1");
+        EmployeeTitleDto dto = EmployeeObjectFactory.createEmployeeTitleDtoInstance(o);
+        
+        Assert.assertEquals(101, dto.getEmployeeTitleId());
+        Assert.assertEquals("Employee Title 1", dto.getEmployeeTitleDescription());
+    }
+    
     @Test
     public void testOrmProjEmployee() {
         ProjEmployee o1 = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5000, 201, 1, 3333, 101, 999991,
