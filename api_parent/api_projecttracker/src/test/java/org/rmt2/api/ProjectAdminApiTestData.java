@@ -208,8 +208,8 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
     
     private List<ProjEmployee> createMockSingleEmployee() {
         List<ProjEmployee> list = new ArrayList<ProjEmployee>();
-        ProjEmployee o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5000, 201, 0, 3333, 101, 999991,
-                "2010-01-01", null, "login_name_1", "first_name_1", "last_name_1",
+        ProjEmployee o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5000, 201, 1, 3333, 101, 999991,
+                "2010-01-01", "2018-01-01", "login_name_1", "first_name_1", "last_name_1",
                 "111-11-5000", "ABC Company");
         list.add(o);
         return list;
