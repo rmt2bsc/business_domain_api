@@ -497,7 +497,12 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
      */
     @Override
     public void setEmployeeTitleDescription(String value) {
-        this.empExt.setEmployeeTitle(value);
+        if (this.empExt != null) {
+            this.empExt.setEmployeeTitle(value);
+        }
+        if (this.empTitle != null) {
+            this.empTitle.setDescription(value);
+        }
     }
 
     /*
@@ -507,7 +512,13 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
      */
     @Override
     public String getEmployeeTitleDescription() {
-        return this.empExt.getEmployeeTitle();
+        if (this.empExt != null) {
+            return this.empExt.getEmployeeTitle();    
+        }
+        if (this.empTitle != null) {
+            return this.empTitle.getDescription();
+        }
+        return null;
     }
 
 }
