@@ -209,7 +209,7 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
     private List<ProjEmployee> createMockSingleEmployee() {
         List<ProjEmployee> list = new ArrayList<ProjEmployee>();
         ProjEmployee o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5000, 201, 0, 3333, 101, 999991,
-                "2010-01-01", null, "ffirst", "fulltime", "first",
+                "2010-01-01", null, "login_name_1", "first_name_1", "last_name_1",
                 "111-11-5000", "ABC Company");
         list.add(o);
         return list;
@@ -218,27 +218,27 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
     private List<ProjEmployee> createMockMultipleEmployee() {
         List<ProjEmployee> list = new ArrayList<ProjEmployee>();
         ProjEmployee o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5000, 201, 0, 3333, 101, 999991,
-                "2010-01-01", null, "ffirst", "fulltime", "first",
+                "2010-01-01", null, "login_name_1", "first_name_1", "last_name_1",
                 "111-11-5000", "ABC Company");
         list.add(o);
 
         o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5001, 201, 0, 3333, 102, 999992,
-                "2011-01-01", null, "fsecond", "fulltime", "second",
+                "2011-01-01", null, "login_name_2", "first_name_2", "last_name_2",
                 "111-11-5001", "ABC Company");
         list.add(o);
 
         o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5002, 201, 0, 3333, 103, 999993,
-                "2012-01-01", null, "fthird", "fulltime", "third",
+                "2012-01-01", null, "login_name_3", "first_name_3", "last_name_3",
                 "111-11-5002", "ABC Company");
         list.add(o);
 
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5003, 202, 0, 3333, 104, 999994,
-                "2013-01-01", "2017-01-01", "pfirst", "parttime", "first",
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5003, 202, 1, 3333, 104, 999994,
+                "2013-01-01", "2018-01-01", "login_name_4", "first_name_4", "last_name_4",
                 "111-11-5003", "ABC Company");
         list.add(o);
 
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5004, 203, 1, 3334, 105, 999995,
-                "2014-01-01", "2018-01-01", "cfirst", "contractor", "first",
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5004, 202, 1, 3333, 105, 999995,
+                "2014-01-01", "2018-01-01", "login_name_5", "first_name_5", "last_name_5",
                 "111-11-5004", "ABC Company");
         list.add(o);
         return list;
