@@ -314,7 +314,7 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
      */
     @Override
     public void setSsn(String value) {
-        this.setSsn(value);
+        this.emp.setSsn(value);
     }
 
     /*

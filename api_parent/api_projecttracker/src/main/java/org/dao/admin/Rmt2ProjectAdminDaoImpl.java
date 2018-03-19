@@ -517,13 +517,11 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
      */
     @Override
     public int maintainEmployee(EmployeeDto obj) throws EmployeeDaoException {
-        if (obj == null) {
-            throw new EmployeeDaoException("Employee DTO cannot be null during add/update operation");
-        }
         ProjEmployee emp = ProjectAdminDaoFactory.createOrm(obj);
         int rc = 0;
         if (emp.getEmpId() == 0) {
             rc = this.insertEmployee(emp);
+            obj.setEmployeeId(rc);
         }
         else {
             rc = this.updateEmployee(emp);
@@ -556,8 +554,7 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
             emp.setEmpId(empId);
             return empId;
         } catch (Exception e) {
-            throw new EmployeeDaoException(
-                    "Employee database add operation failed", e);
+            throw new EmployeeDaoException("Employee database add operation failed", e);
         }
     }
 
@@ -805,13 +802,11 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
      */
     @Override
     public int maintainProjectEmployee(ProjectEmployeeDto obj) throws EmployeeDaoException {
-        if (obj == null) {
-            throw new EmployeeDaoException("Project/Employee DTO cannot be null during add/update operation");
-        }
         ProjEmployeeProject projEmp = ProjectAdminDaoFactory.createOrm(obj);
         int rc = 0;
         if (projEmp.getEmpProjId() == 0) {
             rc = this.insertProjectEmployee(projEmp);
+            obj.setEmpProjId(rc);
         }
         else {
             rc = this.updateProjectEmployee(projEmp);

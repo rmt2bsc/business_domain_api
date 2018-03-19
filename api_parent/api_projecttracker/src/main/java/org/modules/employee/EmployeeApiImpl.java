@@ -365,14 +365,20 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
     public int update(EmployeeDto employee) throws EmployeeApiException {
         this.validate(employee);
         int rc = 0;
-        if (employee.getEmployeeId() > 0) {
-            EmployeeDto delta = this.createDelta(employee);
-            rc = this.dao.maintainEmployee(delta);
+        try {
+            try {
+                Verifier.verifyPositive(employee.getEmployeeId());
+                EmployeeDto delta = this.applyDelta(employee);
+                rc = this.dao.maintainEmployee(delta);
+            }
+            catch (VerifyException e) {
+                rc = this.dao.maintainEmployee(employee);
+            }
+            return rc;
         }
-        else {
-            rc = this.dao.maintainEmployee(employee);
+        catch (EmployeeDaoException e) {
+            throw new EmployeeApiException("A DAO error occurred updating/inserting employee record", e);
         }
-        return rc;
     }
 
     /*
@@ -384,14 +390,20 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
     public int update(ProjectEmployeeDto projEmployee) throws EmployeeApiException {
         this.validate(projEmployee);
         int rc = 0;
-        if (projEmployee.getEmpProjId() > 0) {
-            ProjectEmployeeDto delta = this.createDelta(projEmployee);
-            rc = this.dao.maintainProjectEmployee(delta);
+        try {
+            try {
+                Verifier.verifyPositive(projEmployee.getEmpProjId());
+                ProjectEmployeeDto delta = this.applyDelta(projEmployee);
+                rc = this.dao.maintainProjectEmployee(delta);
+            }
+            catch (VerifyException e) {
+                rc = this.dao.maintainProjectEmployee(projEmployee);
+            }
+            return rc;
         }
-        else {
-            rc = this.dao.maintainProjectEmployee(projEmployee);
+        catch (EmployeeDaoException e) {
+            throw new EmployeeApiException("A DAO error occurred updating/inserting project employee record", e);
         }
-        return rc;
     }
 
     private void validateEmployeeId(Integer empId) {
@@ -415,7 +427,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      *             If <i>emp</i> does not contain an employee type or an
      *             employee title.
      */
-    protected void validate(EmployeeDto emp) throws InvalidEmployeeException {
+    protected void validate(EmployeeDto emp) {
         try {
             Verifier.verifyNotNull(emp);
         }
@@ -445,10 +457,11 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @param projEmployee
      *            an instance of {@link ProjectEmployeeDto}
      * @throws InvalidProjectEmployeeException
-     *             If <i>projEmployee</i> is null or the employee id/project id
+     *             If <i>projEmployee</i> is null, employee id and/or project id
+     *             is not greater than zero, or the employee id/project id
      *             combination already exists in the system.
      */
-    protected void validate(ProjectEmployeeDto projEmployee) throws InvalidProjectEmployeeException {
+    protected void validate(ProjectEmployeeDto projEmployee) {
         try {
             Verifier.verifyNotNull(projEmployee);
         }
@@ -456,28 +469,48 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             this.msg = "Project/Employee cannot be null";
             throw new InvalidProjectEmployeeException(this.msg);
         }
+        
         try {
-            ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
-            criteria.setEmpId(projEmployee.getEmpId());
-            criteria.setProjId(projEmployee.getProjId());
-            List<ProjectEmployeeDto> results = this.getProjectEmployee(criteria);
-            if (results != null) {
-                StringBuffer buf = new StringBuffer();
-                buf.append("The employee is already assigned to the specified project.  Employee Id [");
-                buf.append(projEmployee.getEmpId());
-                buf.append("] and Project Id [");
-                buf.append(projEmployee.getProjId() + "]");
-                this.msg = buf.toString();
-                throw new InvalidProjectEmployeeException(this.msg);
-            }
-        } catch (EmployeeApiException e) {
-            this.msg = "API error occurred obtaining project data by employee id and project id";
-            throw new InvalidProjectEmployeeException(this.msg, e);
+            Verifier.verifyPositive(projEmployee.getEmpId());
+        }
+        catch (VerifyException e) {
+            this.msg = "Employee ID is required";
+            throw new InvalidProjectEmployeeException(this.msg);
+        }
+        
+        try {
+            Verifier.verifyPositive(projEmployee.getProjId());
+        }
+        catch (VerifyException e) {
+            this.msg = "Project ID is required";
+            throw new InvalidProjectEmployeeException(this.msg);
+        }
+        
+        // If new, make sure that we are not trying to duplicate the employee/project combination
+        if (projEmployee.getEmpProjId() == 0) {
+            try {
+                ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+                criteria.setEmpId(projEmployee.getEmpId());
+                criteria.setProjId(projEmployee.getProjId());
+                List<ProjectEmployeeDto> results = this.getProjectEmployee(criteria);
+                if (results != null) {
+                    StringBuffer buf = new StringBuffer();
+                    buf.append("The employee is already assigned to the specified project.  Employee Id [");
+                    buf.append(projEmployee.getEmpId());
+                    buf.append("] and Project Id [");
+                    buf.append(projEmployee.getProjId() + "]");
+                    this.msg = buf.toString();
+                    throw new InvalidProjectEmployeeException(this.msg);
+                }
+            } catch (EmployeeApiException e) {
+                this.msg = "API error occurred obtaining project data by employee id and project id";
+                throw new InvalidProjectEmployeeException(this.msg, e);
+            }            
         }
         return;
     }
 
-    private EmployeeDto createDelta(EmployeeDto employee) throws EmployeeApiException {
+    private EmployeeDto applyDelta(EmployeeDto employee) throws EmployeeApiException {
         EmployeeDto delta = this.getEmployee(employee.getEmployeeId());
         if (delta == null) {
             this.msg = "Employee API update failed for employee.  The employee does not exist by employee id: "
@@ -495,7 +528,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         return delta;
     }
 
-    private ProjectEmployeeDto createDelta(ProjectEmployeeDto projEmployee) throws EmployeeApiException {
+    private ProjectEmployeeDto applyDelta(ProjectEmployeeDto projEmployee) throws EmployeeApiException {
         ProjectEmployeeDto delta = this.getProjectEmployee(projEmployee.getEmpProjId());
         if (delta == null) {
             this.msg = "Employee API update failed for project/employee.  The project/employee does not exist by employee project id: "

@@ -38,7 +38,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
 /**
- * Tests the Administration module of the Project Tracker Api.
+ * Test the query functionality of the Employee module of the Project Tracker Api.
  * 
  * @author rterrell
  * 
