@@ -41,6 +41,19 @@ public class EmployeeModuleAdapterTest {
         
         Assert.assertEquals(201, dto.getEmployeeTypeId());
         Assert.assertEquals("Employee Type 1", dto.getEmployeeTypeDescription());
+        
+        try {
+            dto = EmployeeObjectFactory.createEmployeeTypeDtoInstance(null);
+            dto.setEmployeeTypeId(201);
+            dto.setEmployeeTypeDescription("Employee Type 1");
+            
+            Assert.assertEquals(201, dto.getEmployeeTypeId());
+            Assert.assertEquals("Employee Type 1", dto.getEmployeeTypeDescription());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception occurred setting properties for ProjEmployeeTypes Adapater");
+        }
     }
     
     @Test
@@ -50,6 +63,19 @@ public class EmployeeModuleAdapterTest {
         
         Assert.assertEquals(101, dto.getEmployeeTitleId());
         Assert.assertEquals("Employee Title 1", dto.getEmployeeTitleDescription());
+        
+        try {
+            dto = EmployeeObjectFactory.createEmployeeTitleDtoInstance(null);
+            dto.setEmployeeTitleId(101);
+            dto.setEmployeeTitleDescription("Employee Title 1");
+            
+            Assert.assertEquals(101, dto.getEmployeeTitleId());
+            Assert.assertEquals("Employee Title 1", dto.getEmployeeTitleDescription());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception occurred setting properties for ProjEmployeeTitle Adapater");
+        }
     }
     
     @Test
@@ -71,6 +97,39 @@ public class EmployeeModuleAdapterTest {
         Assert.assertEquals(dto.getEmployeeLastname(), "last_name_1");
         Assert.assertEquals("111-11-5000", dto.getSsn());
         Assert.assertEquals("ABC Company", dto.getEmployeeCompanyName());
+        
+        try {
+            dto = EmployeeObjectFactory.createEmployeeDtoInstance(null);
+            dto.setEmployeeId(5000);
+            dto.setManagerId(3333);
+            dto.setEmployeeTitleId(101);
+            dto.setLoginId(999991);
+            dto.setStartDate(RMT2Date.stringToDate("2010-01-01"));
+            dto.setTerminationDate(RMT2Date.stringToDate("2018-01-01"));
+            dto.setEmployeeTypeId(201);
+            dto.setIsManager(1);
+            dto.setEmployeeFirstname("first_name_1");
+            dto.setEmployeeLastname("last_name_1");
+            dto.setSsn("111-11-5000");
+            dto.setEmployeeCompanyName("ABC Company");
+            
+            Assert.assertEquals(dto.getEmployeeId(), 5000);
+            Assert.assertEquals(dto.getManagerId(), 3333);
+            Assert.assertEquals(dto.getEmployeeTitleId(), 101);
+            Assert.assertEquals(dto.getLoginId(), 999991);
+            Assert.assertEquals(RMT2Date.stringToDate("2010-01-01"), dto.getStartDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getTerminationDate());
+            Assert.assertEquals(dto.getEmployeeTypeId(), 201);
+            Assert.assertEquals(dto.getIsManager(), 1);
+            Assert.assertEquals(dto.getEmployeeFirstname(), "first_name_1");
+            Assert.assertEquals(dto.getEmployeeLastname(), "last_name_1");
+            Assert.assertEquals("111-11-5000", dto.getSsn());
+            Assert.assertEquals("ABC Company", dto.getEmployeeCompanyName());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception occurred setting properties for ProjEmployee Adapater");
+        }
     }
     
     @Test
@@ -98,6 +157,49 @@ public class EmployeeModuleAdapterTest {
         Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), dto.getProjectEndDate());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getProjEmpEffectiveDate());
         Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), dto.getProjEmpEndDate());
+        
+        try {
+            dto = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+            dto.setEmpProjId(55551);
+            dto.setEmpId(5000);
+            dto.setProjId(2220);
+            dto.setClientId(1000);
+            dto.setBusinessId(1350);
+            dto.setAccountNo("000-111");
+            dto.setClientName("1000 Company");
+            dto.setProjectDescription("Project 2220");
+            dto.setClientBillRate(70.00);
+            dto.setClientOtBillRate(80.00);
+            dto.setHourlyRate(50.00);
+            dto.setHourlyOverRate(55.00);
+            dto.setFlatRate(0.00);
+            dto.setProjectEffectiveDate(RMT2Date.stringToDate("2018-01-01"));
+            dto.setProjectEndDate(RMT2Date.stringToDate("2018-02-01"));
+            dto.setProjEmpEffectiveDate(RMT2Date.stringToDate("2018-01-01"));
+            dto.setProjEmpEndDate(RMT2Date.stringToDate("2018-02-01"));
+            
+            Assert.assertEquals(55551, dto.getEmpProjId());
+            Assert.assertEquals(5000, dto.getEmpId());
+            Assert.assertEquals(2220, dto.getProjId());
+            Assert.assertEquals(1000, dto.getClientId());
+            Assert.assertEquals(1350, dto.getBusinessId());
+            Assert.assertEquals("000-111", dto.getAccountNo());
+            Assert.assertEquals("1000 Company", dto.getClientName());
+            Assert.assertEquals("Project 2220", dto.getProjectDescription());
+            Assert.assertEquals(70.00, dto.getClientBillRate(), 0);
+            Assert.assertEquals(80.00, dto.getClientOtBillRate(), 0);
+            Assert.assertEquals(50.00, dto.getHourlyRate(), 0);
+            Assert.assertEquals(55.00, dto.getHourlyOverRate(), 0);
+            Assert.assertEquals(0.00, dto.getFlatRate(), 0);
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getProjectEffectiveDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), dto.getProjectEndDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getProjEmpEffectiveDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), dto.getProjEmpEndDate());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception occurred setting properties for ProjectEmployee Adapater");
+        }
     }
     
  
