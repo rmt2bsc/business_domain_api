@@ -27,8 +27,7 @@ public class EmployeeObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link EmployeeDto}.
      */
-    public static final EmployeeDto createEmployeeDtoInstance(
-            ProjEmployee ormBean) {
+    public static final EmployeeDto createEmployeeDtoInstance(ProjEmployee ormBean) {
         return new EmployeeRmt2OrmAdapter(ormBean);
     }
 
@@ -40,8 +39,7 @@ public class EmployeeObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link EmployeeDto}.
      */
-    public static final EmployeeDto createEmployeeExtendedDtoInstance(
-            VwEmployeeExt ormBean) {
+    public static final EmployeeDto createEmployeeExtendedDtoInstance(VwEmployeeExt ormBean) {
         return new EmployeeRmt2OrmAdapter(ormBean);
     }
 
@@ -53,8 +51,7 @@ public class EmployeeObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link EmployeeTitleDto}.
      */
-    public static final EmployeeTitleDto createEmployeeTitleDtoInstance(
-            ProjEmployeeTitle ormBean) {
+    public static final EmployeeTitleDto createEmployeeTitleDtoInstance(ProjEmployeeTitle ormBean) {
         return new EmployeeRmt2OrmAdapter(ormBean);
     }
 
@@ -66,8 +63,7 @@ public class EmployeeObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link EmployeeTypeDto}.
      */
-    public static final EmployeeTypeDto createEmployeeTypeDtoInstance(
-            ProjEmployeeType ormBean) {
+    public static final EmployeeTypeDto createEmployeeTypeDtoInstance(ProjEmployeeType ormBean) {
         return new EmployeeRmt2OrmAdapter(ormBean);
     }
 

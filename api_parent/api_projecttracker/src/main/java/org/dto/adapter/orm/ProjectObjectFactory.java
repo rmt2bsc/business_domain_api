@@ -74,8 +74,7 @@ public class ProjectObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link ProjectClientDto}.
      */
-    public static final ProjectClientDto createProjectClientDtoInstance(
-            VwProjectClient ormBean) {
+    public static final ProjectClientDto createProjectClientDtoInstance(VwProjectClient ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 
@@ -87,8 +86,7 @@ public class ProjectObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link ProjectTaskDto}.
      */
-    public static final ProjectTaskDto createProjectTaskDtoInstance(
-            ProjProjectTask ormBean) {
+    public static final ProjectTaskDto createProjectTaskDtoInstance(ProjProjectTask ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 
@@ -100,8 +98,7 @@ public class ProjectObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link ProjectTaskDto}.
      */
-    public static final ProjectTaskDto createProjectTaskExtendedDtoInstance(
-            VwTimesheetProjectTask ormBean) {
+    public static final ProjectTaskDto createProjectTaskExtendedDtoInstance(VwTimesheetProjectTask ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 
@@ -113,8 +110,7 @@ public class ProjectObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link ProjectEmployeeDto}.
      */
-    public static final ProjectEmployeeDto createEmployeeProjectDtoInstance(
-            VwEmployeeProjects ormBean) {
+    public static final ProjectEmployeeDto createEmployeeProjectDtoInstance(VwEmployeeProjects ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 
@@ -150,8 +146,7 @@ public class ProjectObjectFactory extends RMT2Base {
      *            an instnace of {@link ProjProjectTask}
      * @return an instance of {@link VwTimesheetProjectTask}
      */
-    public static VwTimesheetProjectTask createOrmExtendedProjectTask(
-            ProjProjectTask src) {
+    public static VwTimesheetProjectTask createOrmExtendedProjectTask(ProjProjectTask src) {
         VwTimesheetProjectTask pt = new VwTimesheetProjectTask();
         pt.setProjectTaskId(src.getProjectTaskId());
         pt.setTimesheetId(src.getTimesheetId());
@@ -168,8 +163,7 @@ public class ProjectObjectFactory extends RMT2Base {
      *            an instnace of {@link ProjEmployeeProject}
      * @return an instance of {@link VwEmployeeProjects}
      */
-    public static VwEmployeeProjects createOrmExtendedEmployeeProject(
-            ProjEmployeeProject src) {
+    public static VwEmployeeProjects createOrmExtendedEmployeeProject(ProjEmployeeProject src) {
         VwEmployeeProjects ep = new VwEmployeeProjects();
         ep.setEmpProjId(src.getEmpProjId());
         ep.setEmpId(src.getEmpId());
