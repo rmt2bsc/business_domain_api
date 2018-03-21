@@ -127,7 +127,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      * @return an instance of {@link PersonalContactDto}
      */
     public static final PersonalContactDto getPersonInstance(VwPersonAddress per) {
-        PersonalContactDto dto = new PersonalRmt2OrmAdapter(per);
+        PersonalContactDto dto = new PersonalContactRmt2OrmAdapter(per);
         return dto;
     }
 
@@ -142,7 +142,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      * @return an instance of {@link PersonalContactDto}
      */
     public static final PersonalContactDto getPersonInstance(Person per, Address addr) {
-        PersonalContactDto dto = new PersonalRmt2OrmAdapter(per, addr);
+        PersonalContactDto dto = new PersonalContactRmt2OrmAdapter(per, addr);
         return dto;
     }
 

@@ -17,7 +17,7 @@ import org.dto.PersonalContactDto;
  * @author Roy Terrell
  * 
  */
-class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalContactDto {
+class PersonalContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalContactDto {
     private Person per;
     private List<Integer> personIdList;
 
@@ -30,7 +30,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalCo
      *            an instance of {@link VwPersonAddress} or null for the purpose
      *            of creating a new Person object
      */
-    protected PersonalRmt2OrmAdapter(VwPersonAddress per) {
+    protected PersonalContactRmt2OrmAdapter(VwPersonAddress per) {
         super(per);
         this.per = new Person();
         if (per != null) {
@@ -70,7 +70,7 @@ class PersonalRmt2OrmAdapter extends AddressRmt2OrmAdapter implements PersonalCo
      *            an instance of {@link Address} or null for the purpose of
      *            creating a new Address object
      */
-    protected PersonalRmt2OrmAdapter(Person per, Address addr) {
+    protected PersonalContactRmt2OrmAdapter(Person per, Address addr) {
         super(addr);
         if (per == null) {
             per = new Person();
