@@ -1,4 +1,4 @@
-package org.rmt2.dao;
+package org.rmt2.orm;
 
 import org.dao.mapping.orm.rmt2.State;
 import org.junit.After;

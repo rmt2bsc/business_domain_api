@@ -1,12 +1,14 @@
-package org.rmt2.dao;
+package org.rmt2.orm;
 
-import org.dao.mapping.orm.rmt2.Country;
+import java.util.Date;
+
+import org.dao.mapping.orm.rmt2.GeneralCodesGroup;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CountryOrmTest {
+public class LookupGroupOrmTest {
 
     @Before
     public void setUp() throws Exception {
@@ -18,10 +20,9 @@ public class CountryOrmTest {
 
     @Test
     public void testToString() {
-        Country o = new Country();
-        o.setCode("USA");
-        o.setCountryId(100);
-        o.setName("United States");
+        GeneralCodesGroup o = new GeneralCodesGroup();
+        o.setCodeGrpId(500);
+        o.setDescription("Test General Code Group");
         String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -30,41 +31,36 @@ public class CountryOrmTest {
     @Test
     public void testEquality() {
         boolean result = false;
-        Country o1 = new Country();
-        Country o2 = null;
+        GeneralCodesGroup o1 = new GeneralCodesGroup();
+        GeneralCodesGroup o2 = null;
 
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1.setCode("USA");
-        o1.setCountryId(100);
-        o1.setName("United States");
-        o2 = new Country();
+        Date dt = new Date();
+        o1.setCodeGrpId(500);
+        o1.setDescription("Test General Code Group");
+        o2 = new GeneralCodesGroup();
 
         result = o1.equals(o2);
         Assert.assertFalse(result);
-        o2.setCode("USA");
+        o2.setCodeGrpId(500);
         result = o1.equals(o2);
         Assert.assertFalse(result);
-        o2.setCountryId(100);
-        result = o1.equals(o2);
-        Assert.assertFalse(result);
-        o2.setName("United States");
+        o2.setDescription("Test General Code Group");
         result = o1.equals(o2);
         Assert.assertTrue(result);
     }
 
     @Test
     public void testHashCode() {
-        Country o1 = new Country();
-        o1.setCode("USA");
-        o1.setCountryId(100);
-        o1.setName("United States");
+        GeneralCodesGroup o1 = new GeneralCodesGroup();
+        o1.setCodeGrpId(500);
+        o1.setDescription("Test General Code Group");
 
-        Country o2 = new Country();
-        o2.setCode("USA");
-        o2.setCountryId(100);
-        o2.setName("United States");
+        GeneralCodesGroup o2 = new GeneralCodesGroup();
+        o2.setCodeGrpId(500);
+        o2.setDescription("Test General Code Group");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

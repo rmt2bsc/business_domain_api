@@ -1,4 +1,4 @@
-package org.rmt2.dao;
+package org.rmt2.orm;
 
 import java.util.Date;
 
