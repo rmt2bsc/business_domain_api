@@ -45,6 +45,13 @@ public class AddressAdapterTest {
         Assert.assertEquals("P.O. Box 84763", dto.getAddr4());
         Assert.assertEquals(75028, dto.getZip());
         Assert.assertEquals(1234, dto.getZipext());
+        Assert.assertEquals("1111111111", dto.getPhoneCell());
+        Assert.assertEquals("2222222222", dto.getPhoneExt());
+        Assert.assertEquals("3333333333", dto.getPhoneFax());
+        Assert.assertEquals("4444444444", dto.getPhoneHome());
+        Assert.assertEquals("5555555555", dto.getPhoneCompany());
+        Assert.assertEquals("6666666666", dto.getPhonePager());
+        Assert.assertEquals("7777777777", dto.getPhoneWork());
 
         try {
             dto = Rmt2AddressBookDtoFactory.getAddressDtoInstance(null);
@@ -55,6 +62,14 @@ public class AddressAdapterTest {
             dto.setAddr4("P.O. Box 84763");
             dto.setZip(75028);
             dto.setZipext(1234);
+            dto.getPhoneCell();
+            dto.setPhoneCell("1111111111");
+            dto.setPhoneExt("2222222222");
+            dto.setPhoneFax("3333333333");
+            dto.setPhoneHome("4444444444");
+            dto.setPhoneCompany("5555555555");
+            dto.setPhonePager("6666666666");
+            dto.setPhoneWork("7777777777");
 
             Assert.assertEquals(2222, dto.getAddrId());
             Assert.assertEquals("94393 Hall Ave.", dto.getAddr1());
@@ -63,6 +78,13 @@ public class AddressAdapterTest {
             Assert.assertEquals("P.O. Box 84763", dto.getAddr4());
             Assert.assertEquals(75028, dto.getZip());
             Assert.assertEquals(1234, dto.getZipext());
+            Assert.assertEquals("1111111111", dto.getPhoneCell());
+            Assert.assertEquals("2222222222", dto.getPhoneExt());
+            Assert.assertEquals("3333333333", dto.getPhoneFax());
+            Assert.assertEquals("4444444444", dto.getPhoneHome());
+            Assert.assertEquals("5555555555", dto.getPhoneCompany());
+            Assert.assertEquals("6666666666", dto.getPhonePager());
+            Assert.assertEquals("7777777777", dto.getPhoneWork());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("An exception occurred setting properties for AddressDto Adapater");
@@ -84,6 +106,13 @@ public class AddressAdapterTest {
         Assert.assertEquals(1234, dto.getZipext());
         Assert.assertEquals("dallas", dto.getCity());
         Assert.assertEquals("TX", dto.getState());
+        Assert.assertEquals("1111111111", dto.getPhoneCell());
+        Assert.assertEquals("2222222222", dto.getPhoneExt());
+        Assert.assertEquals("3333333333", dto.getPhoneFax());
+        Assert.assertEquals("4444444444", dto.getPhoneHome());
+        Assert.assertEquals("5555555555", dto.getPhoneCompany());
+        Assert.assertEquals("6666666666", dto.getPhonePager());
+        Assert.assertEquals("7777777777", dto.getPhoneWork());
         
         try {
             dto = Rmt2AddressBookDtoFactory.getContactInstance(null);
@@ -96,6 +125,13 @@ public class AddressAdapterTest {
             dto.setZipext(1234);
             dto.setCity("dallas");
             dto.setState("TX");
+            dto.setPhoneCell("1111111111");
+            dto.setPhoneExt("2222222222");
+            dto.setPhoneFax("3333333333");
+            dto.setPhoneHome("4444444444");
+            dto.setPhoneCompany("5555555555");
+            dto.setPhonePager("6666666666");
+            dto.setPhoneWork("7777777777");
 
             Assert.assertEquals(2222, dto.getAddrId());
             Assert.assertEquals("94393 Hall Ave.", dto.getAddr1());
@@ -106,6 +142,13 @@ public class AddressAdapterTest {
             Assert.assertEquals(1234, dto.getZipext());
             Assert.assertEquals("dallas", dto.getCity());
             Assert.assertEquals("TX", dto.getState());
+            Assert.assertEquals("1111111111", dto.getPhoneCell());
+            Assert.assertEquals("2222222222", dto.getPhoneExt());
+            Assert.assertEquals("3333333333", dto.getPhoneFax());
+            Assert.assertEquals("4444444444", dto.getPhoneHome());
+            Assert.assertEquals("5555555555", dto.getPhoneCompany());
+            Assert.assertEquals("6666666666", dto.getPhonePager());
+            Assert.assertEquals("7777777777", dto.getPhoneWork());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("An exception occurred setting properties for ContactDto Adapater");
@@ -127,6 +170,13 @@ public class AddressAdapterTest {
         Assert.assertEquals(1234, dto.getZipext());
         Assert.assertEquals("dallas", dto.getCity());
         Assert.assertEquals("TX", dto.getState());
+        Assert.assertEquals("1111111111", dto.getPhoneCell());
+        Assert.assertEquals("2222222222", dto.getPhoneExt());
+        Assert.assertEquals("3333333333", dto.getPhoneFax());
+        Assert.assertEquals("4444444444", dto.getPhoneHome());
+        Assert.assertEquals("5555555555", dto.getPhoneCompany());
+        Assert.assertEquals("6666666666", dto.getPhonePager());
+        Assert.assertEquals("7777777777", dto.getPhoneWork());
         
         try {
             dto = Rmt2AddressBookDtoFactory.getBusinessInstance(null);
@@ -139,6 +189,13 @@ public class AddressAdapterTest {
             dto.setZipext(1234);
             dto.setCity("dallas");
             dto.setState("TX");
+            dto.setPhoneCell("1111111111");
+            dto.setPhoneExt("2222222222");
+            dto.setPhoneFax("3333333333");
+            dto.setPhoneHome("4444444444");
+            dto.setPhoneCompany("5555555555");
+            dto.setPhonePager("6666666666");
+            dto.setPhoneWork("7777777777");
 
             Assert.assertEquals(2222, dto.getAddrId());
             Assert.assertEquals("94393 Hall Ave.", dto.getAddr1());
@@ -149,6 +206,13 @@ public class AddressAdapterTest {
             Assert.assertEquals(1234, dto.getZipext());
             Assert.assertEquals("dallas", dto.getCity());
             Assert.assertEquals("TX", dto.getState());
+            Assert.assertEquals("1111111111", dto.getPhoneCell());
+            Assert.assertEquals("2222222222", dto.getPhoneExt());
+            Assert.assertEquals("3333333333", dto.getPhoneFax());
+            Assert.assertEquals("4444444444", dto.getPhoneHome());
+            Assert.assertEquals("5555555555", dto.getPhoneCompany());
+            Assert.assertEquals("6666666666", dto.getPhonePager());
+            Assert.assertEquals("7777777777", dto.getPhoneWork());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("An exception occurred setting properties for BusinessContactDto Adapater");
@@ -169,6 +233,13 @@ public class AddressAdapterTest {
         Assert.assertEquals(1234, dto.getZipext());
         Assert.assertEquals("dallas", dto.getCity());
         Assert.assertEquals("TX", dto.getState());
+        Assert.assertEquals("1111111111", dto.getPhoneCell());
+        Assert.assertEquals("2222222222", dto.getPhoneExt());
+        Assert.assertEquals("3333333333", dto.getPhoneFax());
+        Assert.assertEquals("4444444444", dto.getPhoneHome());
+        Assert.assertEquals("5555555555", dto.getPhoneCompany());
+        Assert.assertEquals("6666666666", dto.getPhonePager());
+        Assert.assertEquals("7777777777", dto.getPhoneWork());
         
         try {
             dto = Rmt2AddressBookDtoFactory.getPersonInstance(null);
@@ -181,6 +252,13 @@ public class AddressAdapterTest {
             dto.setZipext(1234);
             dto.setCity("dallas");
             dto.setState("TX");
+            dto.setPhoneCell("1111111111");
+            dto.setPhoneExt("2222222222");
+            dto.setPhoneFax("3333333333");
+            dto.setPhoneHome("4444444444");
+            dto.setPhoneCompany("5555555555");
+            dto.setPhonePager("6666666666");
+            dto.setPhoneWork("7777777777");
 
             Assert.assertEquals(2222, dto.getAddrId());
             Assert.assertEquals("94393 Hall Ave.", dto.getAddr1());
@@ -191,6 +269,13 @@ public class AddressAdapterTest {
             Assert.assertEquals(1234, dto.getZipext());
             Assert.assertEquals("dallas", dto.getCity());
             Assert.assertEquals("TX", dto.getState());
+            Assert.assertEquals("1111111111", dto.getPhoneCell());
+            Assert.assertEquals("2222222222", dto.getPhoneExt());
+            Assert.assertEquals("3333333333", dto.getPhoneFax());
+            Assert.assertEquals("4444444444", dto.getPhoneHome());
+            Assert.assertEquals("5555555555", dto.getPhoneCompany());
+            Assert.assertEquals("6666666666", dto.getPhonePager());
+            Assert.assertEquals("7777777777", dto.getPhoneWork());
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("An exception occurred setting properties for PersonalContactDto Adapater");
