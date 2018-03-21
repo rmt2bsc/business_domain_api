@@ -1,12 +1,12 @@
-package org.rmt2.orm;
+package org.rmt2.entity.orm;
 
-import org.dao.mapping.orm.rmt2.State;
+import org.dao.mapping.orm.rmt2.Country;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RegionOrmTest {
+public class CountryOrmTest {
 
     @Before
     public void setUp() throws Exception {
@@ -18,12 +18,11 @@ public class RegionOrmTest {
 
     @Test
     public void testToString() {
-        State o1 = new State();
-        o1.setAbbrCode("LA");
-        o1.setCountryId(100);
-        o1.setStateName("Louisiana");
-        o1.setStateId(10);
-        String val = o1.toString();
+        Country o = new Country();
+        o.setCode("USA");
+        o.setCountryId(100);
+        o.setName("United States");
+        String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
     }
@@ -31,47 +30,41 @@ public class RegionOrmTest {
     @Test
     public void testEquality() {
         boolean result = false;
-        State o1 = new State();
-        State o2 = null;
+        Country o1 = new Country();
+        Country o2 = null;
 
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1.setAbbrCode("LA");
+        o1.setCode("USA");
         o1.setCountryId(100);
-        o1.setStateName("Louisiana");
-        o1.setStateId(10);
+        o1.setName("United States");
+        o2 = new Country();
 
-        o2 = new State();
         result = o1.equals(o2);
         Assert.assertFalse(result);
-        o2.setAbbrCode("LA");
+        o2.setCode("USA");
         result = o1.equals(o2);
         Assert.assertFalse(result);
         o2.setCountryId(100);
         result = o1.equals(o2);
         Assert.assertFalse(result);
-        o2.setStateName("Louisiana");
-        result = o1.equals(o2);
-        Assert.assertFalse(result);
-        o2.setStateId(10);
+        o2.setName("United States");
         result = o1.equals(o2);
         Assert.assertTrue(result);
     }
 
     @Test
     public void testHashCode() {
-        State o1 = new State();
-        o1.setAbbrCode("LA");
+        Country o1 = new Country();
+        o1.setCode("USA");
         o1.setCountryId(100);
-        o1.setStateName("Louisiana");
-        o1.setStateId(10);
+        o1.setName("United States");
 
-        State o2 = new State();
-        o2.setAbbrCode("LA");
+        Country o2 = new Country();
+        o2.setCode("USA");
         o2.setCountryId(100);
-        o2.setStateName("Louisiana");
-        o2.setStateId(10);
+        o2.setName("United States");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

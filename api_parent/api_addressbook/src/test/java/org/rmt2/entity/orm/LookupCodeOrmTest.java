@@ -1,4 +1,4 @@
-package org.rmt2.orm;
+package org.rmt2.entity.orm;
 
 import java.util.Date;
 
