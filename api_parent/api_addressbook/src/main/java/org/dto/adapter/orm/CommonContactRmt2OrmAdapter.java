@@ -13,7 +13,7 @@ import org.dto.ContactDto;
  * @author rterrell
  * 
  */
-public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements ContactDto {
+public class CommonContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements ContactDto {
 
     private VwCommonContact src; 
     private List<Integer> businessIdList;
@@ -26,7 +26,7 @@ public class CombinedContactRmt2OrmAdapter extends AddressRmt2OrmAdapter impleme
      *            an instance of {@link VwCommonContact} or null for the purpose
      *            of creating a new VwCommonContact object
      */
-    protected CombinedContactRmt2OrmAdapter(VwCommonContact contact) {
+    protected CommonContactRmt2OrmAdapter(VwCommonContact contact) {
         super(contact);
         if (contact == null) {
             contact = new VwCommonContact();

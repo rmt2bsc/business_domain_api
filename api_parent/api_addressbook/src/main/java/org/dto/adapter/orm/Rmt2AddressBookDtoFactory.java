@@ -164,7 +164,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      * @return an instance of {@link ContactDto}
      */
     public static final ContactDto getContactInstance(VwCommonContact contact) {
-        ContactDto dto = new CombinedContactRmt2OrmAdapter(contact);
+        ContactDto dto = new CommonContactRmt2OrmAdapter(contact);
         return dto;
     }
 
