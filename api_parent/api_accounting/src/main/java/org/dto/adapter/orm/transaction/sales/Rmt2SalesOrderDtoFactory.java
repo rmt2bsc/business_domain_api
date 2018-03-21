@@ -35,8 +35,7 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
      *            an instance of {@link SalesOrderStatus}
      * @return an instance of {@link SalesOrderStatusDto}.
      */
-    public static final SalesOrderStatusDto createSalesOrderStatusInstance(
-            SalesOrderStatus ormBean) {
+    public static final SalesOrderStatusDto createSalesOrderStatusInstance(SalesOrderStatus ormBean) {
         return new SalesOrderStatusRmt2OrmAdapter(ormBean);
     }
 
@@ -51,8 +50,7 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
      *            an instance of {@link SalesOrderStatus}
      * @return an instance of {@link SalesOrderStatusHistDto}.
      */
-    public static final SalesOrderStatusHistDto createSalesOrderStatusHistoryInstance(
-            SalesOrderStatusHist ormBean) {
+    public static final SalesOrderStatusHistDto createSalesOrderStatusHistoryInstance(SalesOrderStatusHist ormBean) {
         return new SalesOrderStatusHistoryRmt2OrmAdapter(ormBean);
     }
 
@@ -67,8 +65,7 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
      *            an instance of {@link SalesOrder}
      * @return an instance of {@link SalesOrderDto}.
      */
-    public static final SalesOrderDto createSalesOrderInstance(
-            SalesOrder ormBean) {
+    public static final SalesOrderDto createSalesOrderInstance(SalesOrder ormBean) {
         return new SalesOrderRmt2OrmAdapter(ormBean);
     }
 
@@ -83,8 +80,7 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
      *            an instance of {@link SalesOrderItems}
      * @return an instance of {@link SalesOrderItemDto}.
      */
-    public static final SalesOrderItemDto createSalesOrderItemInstance(
-            SalesOrderItems ormBean) {
+    public static final SalesOrderItemDto createSalesOrderItemInstance(SalesOrderItems ormBean) {
         return new SalesOrderItemRmt2OrmAdapter(ormBean);
     }
 
@@ -99,8 +95,7 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
      *            an instance of {@link VwSalesorderItemsBySalesorder}
      * @return an instance of {@link SalesOrderItemDto}.
      */
-    public static final SalesOrderItemDto createSalesOrderItemInstance(
-            VwSalesorderItemsBySalesorder ormBean) {
+    public static final SalesOrderItemDto createSalesOrderItemInstance(VwSalesorderItemsBySalesorder ormBean) {
         return new SalesOrderItemRmt2OrmAdapter(ormBean);
     }
 
@@ -115,8 +110,7 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
      *            an instance of {@link SalesInvoice}
      * @return an instance of {@link SalesInvoiceDto}.
      */
-    public static final SalesInvoiceDto createSalesIvoiceInstance(
-            SalesInvoice ormBean) {
+    public static final SalesInvoiceDto createSalesIvoiceInstance(SalesInvoice ormBean) {
         return new SalesInvoiceRmt2OrmAdapter(ormBean);
     }
 
