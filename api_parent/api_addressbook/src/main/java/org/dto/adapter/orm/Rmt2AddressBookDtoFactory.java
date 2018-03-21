@@ -90,7 +90,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      * @return an instance of {@link BusinessContactDto}
      */
     public static final BusinessContactDto getBusinessInstance(VwBusinessAddress bus) {
-        BusinessContactDto dto = new BusinessRmt2OrmAdapter(bus);
+        BusinessContactDto dto = new BusinessContactRmt2OrmAdapter(bus);
         return dto;
     }
 
@@ -105,7 +105,7 @@ public class Rmt2AddressBookDtoFactory extends RMT2Base {
      * @return an instance of {@link BusinessContactDto}
      */
     public static final BusinessContactDto getBusinessInstance(Business bus, Address addr) {
-        BusinessContactDto dto = new BusinessRmt2OrmAdapter(bus, addr);
+        BusinessContactDto dto = new BusinessContactRmt2OrmAdapter(bus, addr);
         return dto;
     }
 

@@ -19,7 +19,7 @@ import com.util.assistants.HashCodeAssistant;
  * @author rterrell
  * 
  */
-class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessContactDto {
+class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessContactDto {
 
     private Business bus;
     private List<Integer> businessIdList;
@@ -33,7 +33,7 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessCo
      *            an instance of {@link VwBusinessAddress} or null for the
      *            purpose of creating a new Business object
      */
-    protected BusinessRmt2OrmAdapter(VwBusinessAddress bus) {
+    protected BusinessContactRmt2OrmAdapter(VwBusinessAddress bus) {
         super(bus);
         this.bus = new Business();
         if (bus != null) {
@@ -71,7 +71,7 @@ class BusinessRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessCo
      *            an instance of {@link Address} or null for the purpose of
      *            creating a new Address object
      */
-    protected BusinessRmt2OrmAdapter(Business bus, Address addr) {
+    protected BusinessContactRmt2OrmAdapter(Business bus, Address addr) {
         super(addr);
         if (bus == null) {
             bus = new Business();
