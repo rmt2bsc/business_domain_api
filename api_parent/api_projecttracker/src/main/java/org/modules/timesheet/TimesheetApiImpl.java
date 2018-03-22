@@ -105,7 +105,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#get(int)
      */
     @Override
-    public TimesheetDto get(int timesheetId) throws TimesheetApiException {
+    public TimesheetDto get(Integer timesheetId) throws TimesheetApiException {
         TimesheetDto criteria = TimesheetObjectFactory
                 .createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -172,7 +172,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getExt(int)
      */
     @Override
-    public TimesheetDto getExt(int timesheetId) throws TimesheetApiException {
+    public TimesheetDto getExt(Integer timesheetId) throws TimesheetApiException {
         TimesheetDto criteria = TimesheetObjectFactory
                 .createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -211,7 +211,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getByClient(int)
      */
     @Override
-    public List<TimesheetDto> getByClient(int clientId)
+    public List<TimesheetDto> getByClient(Integer clientId)
             throws TimesheetApiException {
         TimesheetDto criteria = TimesheetObjectFactory
                 .createTimesheetDtoInstance(null);
@@ -239,7 +239,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getClientApproved(int)
      */
     @Override
-    public List<TimesheetDto> getClientApproved(int clientId)
+    public List<TimesheetDto> getClientApproved(Integer clientId)
             throws TimesheetApiException {
         TimesheetDto criteria = TimesheetObjectFactory
                 .createTimesheetDtoInstance(null);
@@ -268,7 +268,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getByEmployee(int)
      */
     @Override
-    public List<TimesheetDto> getByEmployee(int employeeId)
+    public List<TimesheetDto> getByEmployee(Integer employeeId)
             throws TimesheetApiException {
         TimesheetDto criteria = TimesheetObjectFactory
                 .createTimesheetDtoInstance(null);
@@ -298,7 +298,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * int)
      */
     @Override
-    public List<TimesheetDto> getByStatus(Integer[] timesheetId, int statusId)
+    public List<TimesheetDto> getByStatus(Integer[] timesheetId, Integer statusId)
             throws TimesheetApiException {
         TimesheetDto criteria = TimesheetObjectFactory
                 .createTimesheetDtoInstance(null);
@@ -328,7 +328,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getProjectTaskByTimesheet(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskByTimesheet(int timesheetId)
+    public List<ProjectTaskDto> getProjectTaskByTimesheet(Integer timesheetId)
             throws TimesheetApiException {
         ProjectTaskDto criteria = ProjectObjectFactory
                 .createProjectTaskDtoInstance(null);
@@ -356,7 +356,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getProjectTaskExtByTimesheet(int)
      */
     @Override
-    public List<ProjectTaskDto> getProjectTaskExtByTimesheet(int timesheetId)
+    public List<ProjectTaskDto> getProjectTaskExtByTimesheet(Integer timesheetId)
             throws TimesheetApiException {
         ProjectTaskDto criteria = ProjectObjectFactory
                 .createProjectTaskExtendedDtoInstance(null);
@@ -384,7 +384,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getEventByTimesheet(int)
      */
     @Override
-    public List<ProjectEventDto> getEventByTimesheet(int timesheetId)
+    public List<ProjectEventDto> getEventByTimesheet(Integer timesheetId)
             throws TimesheetApiException {
         ProjectEventDto criteria = ProjectObjectFactory
                 .createProjectEventDtoInstance(null);
@@ -412,7 +412,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#getCurrentStatus(int)
      */
     @Override
-    public TimesheetHistDto getCurrentStatus(int timesheetId)
+    public TimesheetHistDto getCurrentStatus(Integer timesheetId)
             throws TimesheetApiException {
         TimesheetHistDto obj = TimesheetObjectFactory
                 .createTimesheetHistoryDtoInstance(null);
@@ -431,7 +431,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#fetchHours(int)
      */
     @Override
-    public List<TimesheetHoursDto> getHours(int timesheetId)
+    public List<TimesheetHoursDto> getHours(Integer timesheetId)
             throws TimesheetApiException {
         TimesheetHoursDto criteria = TimesheetObjectFactory
                 .createTimesheetHoursDtoInstance(null);
@@ -609,7 +609,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#updateEvent(int, java.util.List)
      */
     @Override
-    public int updateEvent(int projectTaskId, List<EventDto> events)
+    public int updateEvent(Integer projectTaskId, List<EventDto> events)
             throws TimesheetApiException {
         this.validateEvent(projectTaskId, events);
         // Begin processing each item in the List of events
@@ -845,7 +845,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#changeTimesheetStatus(int, int)
      */
     @Override
-    public void changeTimesheetStatus(int timesheetId, int newStatusId)
+    public void changeTimesheetStatus(Integer timesheetId, Integer newStatusId)
             throws TimesheetApiException {
         // See if it is legal to transition to newStatusId
         this.verifyStatusChange(timesheetId, newStatusId);
@@ -869,7 +869,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#setCurrentProjectId(int)
      */
     @Override
-    public void setCurrentProjectId(int projectId) {
+    public void setCurrentProjectId(Integer projectId) {
         this.currentProjectId = projectId;
     }
 
@@ -889,7 +889,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#approve(int)
      */
     @Override
-    public void approve(int timesheetId) throws TimesheetApiException {
+    public void approve(Integer timesheetId) throws TimesheetApiException {
         // Set timesheet status to Approved.
         this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
         return;
@@ -901,7 +901,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#decline(int)
      */
     @Override
-    public void decline(int timesheetId) throws TimesheetApiException {
+    public void decline(Integer timesheetId) throws TimesheetApiException {
         // Set timesheet status to Declined
         this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
         return;
@@ -915,7 +915,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @throws TimesheetApiException
      */
     @Override
-    public void submit(int timesheetId) throws TimesheetApiException {
+    public void submit(Integer timesheetId) throws TimesheetApiException {
 
         this.load(timesheetId);
         // Set timesheet status to Draft.
@@ -966,7 +966,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#deleteTimesheet(int)
      */
     @Override
-    public int deleteTimesheet(int timesheetId) throws TimesheetApiException {
+    public int deleteTimesheet(Integer timesheetId) throws TimesheetApiException {
         // Delete all project/tasks belonging to the timesheet
         this.deleteProjectTasks(timesheetId);
         // Now delete the timesheet
@@ -983,7 +983,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#deleteProjectTask(int)
      */
     @Override
-    public int deleteProjectTask(int projectTaskId)
+    public int deleteProjectTask(Integer projectTaskId)
             throws TimesheetApiException {
         // delete events first...
         this.deleteEvents(projectTaskId);
@@ -1001,7 +1001,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#deleteProjectTasks(int)
      */
     @Override
-    public int deleteProjectTasks(int timesheetId) throws TimesheetApiException {
+    public int deleteProjectTasks(Integer timesheetId) throws TimesheetApiException {
         List<ProjectTaskDto> ptList = this
                 .getProjectTaskByTimesheet(timesheetId);
         int count = 0;
@@ -1018,7 +1018,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#deleteEvents(int)
      */
     @Override
-    public int deleteEvents(int projectTaskId) throws TimesheetApiException {
+    public int deleteEvents(Integer projectTaskId) throws TimesheetApiException {
         EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
         criteria.setProjectTaskId(projectTaskId);
         int rc = this.dao.deleteEvent(criteria);
@@ -1031,7 +1031,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#deleteEvent(int)
      */
     @Override
-    public int deleteEvent(int enventId) throws TimesheetApiException {
+    public int deleteEvent(Integer enventId) throws TimesheetApiException {
         EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
         criteria.setEventId(enventId);
         int rc = this.dao.deleteEvent(criteria);
@@ -1073,7 +1073,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#load(int)
      */
     @Override
-    public void load(int timesheetId) throws TimesheetApiException {
+    public void load(Integer timesheetId) throws TimesheetApiException {
         // Fetch Timesheet
         TimesheetDto ts = this.getExt(timesheetId);
         if (ts == null) {

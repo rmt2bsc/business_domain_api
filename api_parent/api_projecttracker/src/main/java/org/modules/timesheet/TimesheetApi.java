@@ -43,14 +43,14 @@ public interface TimesheetApi extends TransactionApi {
      *            The id of timesheet to load
      * @throws TimesheetApiException
      */
-    void load(int timesheetId) throws TimesheetApiException;
+    void load(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Assignss the project id which this timesheet will be governed by
      * 
      * @param projectId
      */
-    void setCurrentProjectId(int projectId);
+    void setCurrentProjectId(Integer projectId);
 
     /**
      * Returns the project id that governs this timesheet.
@@ -65,7 +65,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    TimesheetDto get(int timesheetId) throws TimesheetApiException;
+    TimesheetDto get(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * 
@@ -81,7 +81,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    TimesheetDto getExt(int timesheetId) throws TimesheetApiException;
+    TimesheetDto getExt(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * 
@@ -89,7 +89,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    List<TimesheetDto> getByClient(int clientId) throws TimesheetApiException;
+    List<TimesheetDto> getByClient(Integer clientId) throws TimesheetApiException;
 
     /**
      * Get all client approved timesheets.
@@ -98,8 +98,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    List<TimesheetDto> getClientApproved(int clientId)
-            throws TimesheetApiException;
+    List<TimesheetDto> getClientApproved(Integer clientId) throws TimesheetApiException;
 
     /**
      * 
@@ -107,8 +106,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    List<TimesheetDto> getByEmployee(int employeeId)
-            throws TimesheetApiException;
+    List<TimesheetDto> getByEmployee(Integer employeeId) throws TimesheetApiException;
 
     /**
      * 
@@ -117,8 +115,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    List<TimesheetDto> getByStatus(Integer timesheetId[], int statusId)
-            throws TimesheetApiException;
+    List<TimesheetDto> getByStatus(Integer timesheetId[], Integer statusId) throws TimesheetApiException;
 
     /**
      * 
@@ -126,8 +123,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    List<ProjectTaskDto> getProjectTaskByTimesheet(int timesheetId)
-            throws TimesheetApiException;
+    List<ProjectTaskDto> getProjectTaskByTimesheet(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * 
@@ -135,8 +131,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    List<ProjectTaskDto> getProjectTaskExtByTimesheet(int timesheetId)
-            throws TimesheetApiException;
+    List<ProjectTaskDto> getProjectTaskExtByTimesheet(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * 
@@ -144,8 +139,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    List<ProjectEventDto> getEventByTimesheet(int timesheetId)
-            throws TimesheetApiException;
+    List<ProjectEventDto> getEventByTimesheet(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Retreives the current status of a timesheet.
@@ -155,8 +149,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return {@link TimesheetHistDto}
      * @throws TimesheetApiException
      */
-    TimesheetHistDto getCurrentStatus(int timesheetId)
-            throws TimesheetApiException;
+    TimesheetHistDto getCurrentStatus(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Retrieves timesheet hours of a timesheet using timesheetId.
@@ -165,8 +158,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return List of {@link TimesheetHoursDto} objects
      * @throws TimesheetApiException
      */
-    List<TimesheetHoursDto> getHours(int timesheetId)
-            throws TimesheetApiException;
+    List<TimesheetHoursDto> getHours(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Creates a new or modifies an existing timesheet including all hours for
@@ -182,9 +174,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return
      * @throws TimesheetApiException
      */
-    int updateTimesheet(TimesheetDto timesheet,
-            Map<ProjectTaskDto, List<EventDto>> hours)
-            throws TimesheetApiException;
+    int updateTimesheet(TimesheetDto timesheet, Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException;
 
     /**
      * Assigns a new status to a timesheet and applies the changes to timesheet
@@ -204,8 +194,7 @@ public interface TimesheetApi extends TransactionApi {
      *            timesheet.
      * @throws TimesheetApiException
      */
-    void changeTimesheetStatus(int timesheetId, int newStatusId)
-            throws TimesheetApiException;
+    void changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException;
 
     /**
      * Deletes a single timesheet from the system using its primary key.
@@ -219,7 +208,7 @@ public interface TimesheetApi extends TransactionApi {
      * @throws TimesheetApiException
      *             if a database access error occurs.
      */
-    int deleteTimesheet(int timesheetId) throws TimesheetApiException;
+    int deleteTimesheet(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Deletes a single project-task by its primary key.
@@ -233,7 +222,7 @@ public interface TimesheetApi extends TransactionApi {
      * @throws TimesheetApiException
      *             if a database access error occurs.
      */
-    int deleteProjectTask(int projectTaskId) throws TimesheetApiException;
+    int deleteProjectTask(Integer projectTaskId) throws TimesheetApiException;
 
     /**
      * Deletes all project/tasks that are related to a particular timesheet.
@@ -247,7 +236,7 @@ public interface TimesheetApi extends TransactionApi {
      * @throws TimesheetApiException
      *             if a database access error occurs.
      */
-    int deleteProjectTasks(int timesheetId) throws TimesheetApiException;
+    int deleteProjectTasks(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Deletes all events that are related to a project/task.
@@ -258,7 +247,7 @@ public interface TimesheetApi extends TransactionApi {
      * @throws TimesheetApiException
      *             if a database access error occurs.
      */
-    int deleteEvents(int projectTaskId) throws TimesheetApiException;
+    int deleteEvents(Integer projectTaskId) throws TimesheetApiException;
 
     /**
      * Delete a single event using its primary key.
@@ -269,7 +258,7 @@ public interface TimesheetApi extends TransactionApi {
      * @throws TimesheetApiException
      *             if a database access error occurs.
      */
-    int deleteEvent(int enventId) throws TimesheetApiException;
+    int deleteEvent(Integer enventId) throws TimesheetApiException;
 
     /**
      * Approves an employee's timesheet.
@@ -277,7 +266,7 @@ public interface TimesheetApi extends TransactionApi {
      * @param timesheetId
      * @throws TimesheetApiException
      */
-    void approve(int timesheetId) throws TimesheetApiException;
+    void approve(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Declines an employee's timesheet.
@@ -285,7 +274,7 @@ public interface TimesheetApi extends TransactionApi {
      * @param timesheetId
      * @throws TimesheetApiException
      */
-    void decline(int timesheetId) throws TimesheetApiException;
+    void decline(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Submits an employee's timesheet for approval/declination.
@@ -294,7 +283,7 @@ public interface TimesheetApi extends TransactionApi {
      * @param hours
      * @throws TimesheetApiException
      */
-    void submit(int timesheetId) throws TimesheetApiException;
+    void submit(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Creates a new or updates an existing project/task.
@@ -305,8 +294,7 @@ public interface TimesheetApi extends TransactionApi {
      *         number of existing project/task modified.
      * @throws TimesheetApiException
      */
-    int updateProjectTask(ProjectTaskDto projectTask)
-            throws TimesheetApiException;
+    int updateProjectTask(ProjectTaskDto projectTask) throws TimesheetApiException;
 
     /**
      * Creates new or updates an existing project event.
@@ -329,8 +317,7 @@ public interface TimesheetApi extends TransactionApi {
      * @return Total number of events processed.
      * @throws TimesheetApiException
      */
-    int updateEvent(int projectTaskId, List<EventDto> events)
-            throws TimesheetApiException;
+    int updateEvent(Integer projectTaskId, List<EventDto> events) throws TimesheetApiException;
 
     /**
      * Sends a copy of a given timesheet to a designated recipient.
@@ -355,7 +342,6 @@ public interface TimesheetApi extends TransactionApi {
      *             recipient.
      */
     int send(TimesheetDto timesheet, EmployeeDto employee, ClientDto client,
-            Map<ProjectTaskDto, List<EventDto>> hours)
-            throws TimesheetApiException, TimesheetTransmissionException;
+            Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException, TimesheetTransmissionException;
 
 }
