@@ -45,8 +45,7 @@ import com.util.RMT2String;
 class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         TimesheetApi {
 
-    private static final Logger logger = Logger
-            .getLogger(TimesheetApiImpl.class);
+    private static final Logger logger = Logger.getLogger(TimesheetApiImpl.class);
 
     private TimesheetDaoFactory daoFact;
 
@@ -106,8 +105,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      */
     @Override
     public TimesheetDto get(Integer timesheetId) throws TimesheetApiException {
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         List<TimesheetDto> results = null;
 
@@ -146,8 +144,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<TimesheetDto> get(String customCriteria)
             throws TimesheetApiException {
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setCriteria(customCriteria);
         List<TimesheetDto> results = null;
         StringBuilder buf = new StringBuilder();
@@ -173,8 +170,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      */
     @Override
     public TimesheetDto getExt(Integer timesheetId) throws TimesheetApiException {
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         List<TimesheetDto> results = null;
 
@@ -213,8 +209,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<TimesheetDto> getByClient(Integer clientId)
             throws TimesheetApiException {
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setClientId(clientId);
         List<TimesheetDto> results = null;
         StringBuilder buf = new StringBuilder();
@@ -224,8 +219,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving timesheet(s) by client id: "
-                    + clientId);
+            buf.append("Database error occurred retrieving timesheet(s) by client id: " + clientId);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new TimesheetApiException(this.msg, e);
@@ -241,8 +235,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<TimesheetDto> getClientApproved(Integer clientId)
             throws TimesheetApiException {
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setClientId(clientId);
         criteria.setStatusId(TimesheetConst.STATUS_APPROVED);
         List<TimesheetDto> results = null;
@@ -270,8 +263,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<TimesheetDto> getByEmployee(Integer employeeId)
             throws TimesheetApiException {
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setEmpId(employeeId);
         List<TimesheetDto> results = null;
         StringBuilder buf = new StringBuilder();
@@ -281,8 +273,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving timesheet(s) by employee id: "
-                    + employeeId);
+            buf.append("Database error occurred retrieving timesheet(s) by employee id: " + employeeId);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new TimesheetApiException(this.msg, e);
@@ -300,8 +291,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<TimesheetDto> getByStatus(Integer[] timesheetId, Integer statusId)
             throws TimesheetApiException {
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         List<Integer> timesheetIdList = Arrays.asList(timesheetId);
         criteria.setTimesheetIdList(timesheetIdList);
         criteria.setStatusId(statusId);
@@ -313,8 +303,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving timesheet(s) by status id: "
-                    + statusId);
+            buf.append("Database error occurred retrieving timesheet(s) by status id: " + statusId);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new TimesheetApiException(this.msg, e);
@@ -330,8 +319,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<ProjectTaskDto> getProjectTaskByTimesheet(Integer timesheetId)
             throws TimesheetApiException {
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         List<ProjectTaskDto> results = null;
         StringBuilder buf = new StringBuilder();
@@ -358,8 +346,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<ProjectTaskDto> getProjectTaskExtByTimesheet(Integer timesheetId)
             throws TimesheetApiException {
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskExtendedDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         List<ProjectTaskDto> results = null;
         StringBuilder buf = new StringBuilder();
@@ -386,8 +373,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<ProjectEventDto> getEventByTimesheet(Integer timesheetId)
             throws TimesheetApiException {
-        ProjectEventDto criteria = ProjectObjectFactory
-                .createProjectEventDtoInstance(null);
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         List<ProjectEventDto> results = null;
         StringBuilder buf = new StringBuilder();
@@ -414,8 +400,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public TimesheetHistDto getCurrentStatus(Integer timesheetId)
             throws TimesheetApiException {
-        TimesheetHistDto obj = TimesheetObjectFactory
-                .createTimesheetHistoryDtoInstance(null);
+        TimesheetHistDto obj = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
         obj.setTimesheetId(timesheetId);
         obj.setCurrentStatusFlag(true);
         List<TimesheetHistDto> list = this.dao.fetchStatusHistory(obj);
@@ -433,8 +418,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public List<TimesheetHoursDto> getHours(Integer timesheetId)
             throws TimesheetApiException {
-        TimesheetHoursDto criteria = TimesheetObjectFactory
-                .createTimesheetHoursDtoInstance(null);
+        TimesheetHoursDto criteria = TimesheetObjectFactory.createTimesheetHoursDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         List<TimesheetHoursDto> results = null;
         StringBuilder buf = new StringBuilder();
@@ -444,8 +428,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving timesheet hours by timesheet id: "
-                    + timesheetId);
+            buf.append("Database error occurred retrieving timesheet hours by timesheet id: " + timesheetId);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new TimesheetApiException(this.msg, e);
@@ -471,8 +454,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @throws TimesheetApiException
      */
     @Override
-    public int updateTimesheet(TimesheetDto timesheet,
-            Map<ProjectTaskDto, List<EventDto>> hours)
+    public int updateTimesheet(TimesheetDto timesheet, Map<ProjectTaskDto, List<EventDto>> hours)
             throws TimesheetApiException {
 
         this.validateTimesheet(timesheet);
@@ -510,8 +492,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         return timesheetId;
     }
 
-    private int saveTimesheetHours(int timesheetId,
-            Map<ProjectTaskDto, List<EventDto>> hours)
+    private int saveTimesheetHours(int timesheetId, Map<ProjectTaskDto, List<EventDto>> hours)
             throws TimesheetApiException {
 
         ProjectTaskDto pt = null;
@@ -534,8 +515,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                     projId = pt.getProjId();
                 }
                 // Apply changes to project task and its events
-                ProjectTaskDto obj = ProjectObjectFactory
-                        .createProjectTaskDtoInstance(null);
+                ProjectTaskDto obj = ProjectObjectFactory.createProjectTaskDtoInstance(null);
                 obj.setProjectTaskId(pt.getProjectTaskId());
                 obj.setTaskId(pt.getTaskId());
                 obj.setProjId(pt.getProjId());
@@ -586,8 +566,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * )
      */
     @Override
-    public int updateProjectTask(ProjectTaskDto projectTask)
-            throws TimesheetApiException {
+    public int updateProjectTask(ProjectTaskDto projectTask) throws TimesheetApiException {
         this.validateProjectTask(projectTask);
         return this.dao.maintainProjectTask(projectTask);
     }
@@ -609,8 +588,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#updateEvent(int, java.util.List)
      */
     @Override
-    public int updateEvent(Integer projectTaskId, List<EventDto> events)
-            throws TimesheetApiException {
+    public int updateEvent(Integer projectTaskId, List<EventDto> events) throws TimesheetApiException {
         this.validateEvent(projectTaskId, events);
         // Begin processing each item in the List of events
         int count = 0;
@@ -631,8 +609,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      *             If the client id and/or the employee id is found not to be
      *             associated with the timesheet.
      */
-    private void validateTimesheet(TimesheetDto ts)
-            throws InvalidTimesheetException {
+    private void validateTimesheet(TimesheetDto ts) throws InvalidTimesheetException {
         if (ts == null) {
             this.msg = "The base timesheet instance cannot be null.";
             throw new InvalidTimesheetException(this.msg);
@@ -679,8 +656,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @param events
      * @throws InvalidEventException
      */
-    private void validateEvent(int projectTaskId, List<EventDto> events)
-            throws InvalidEventException {
+    private void validateEvent(int projectTaskId, List<EventDto> events) throws InvalidEventException {
         if (projectTaskId <= 0) {
             this.msg = "A project/task id must be valid in order to assoicate multiple events with a project task";
             throw new InvalidEventException(this.msg);
@@ -700,8 +676,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                 throw new InvalidEventException(this.msg);
             }
         } catch (ProjectAdminApiException e) {
-            throw new InvalidEventException(
-                    "Error validating project task entity existence", e);
+            throw new InvalidEventException("Error validating project task entity existence", e);
         } finally {
             f = null;
             projApi = null;
@@ -725,8 +700,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      *             if the values for timesheet, project, and/or task are not
      *             set.
      */
-    private void validateProjectTask(ProjectTaskDto pt)
-            throws InvalidProjectTaskException {
+    private void validateProjectTask(ProjectTaskDto pt) throws InvalidProjectTaskException {
         if (pt.getProjId() <= 0) {
             this.msg = "Proejct Id is required when creating Project-Task";
             throw new InvalidProjectTaskException(this.msg);
@@ -804,8 +778,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      *             timesheet. The exception should give a detail explanation as
      *             to the reason why the status cannot be changed.
      */
-    protected int verifyStatusChange(int timesheetId, int newStatusId)
-            throws InvalidStatusChangeException, TimesheetApiException {
+    protected int verifyStatusChange(int timesheetId, int newStatusId) throws InvalidStatusChangeException, 
+                TimesheetApiException {
         TimesheetHistDto tsh = null;
         int currentStatusId = 0;
 
@@ -845,8 +819,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.timesheet.TimesheetApi#changeTimesheetStatus(int, int)
      */
     @Override
-    public void changeTimesheetStatus(Integer timesheetId, Integer newStatusId)
-            throws TimesheetApiException {
+    public void changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException {
         // See if it is legal to transition to newStatusId
         this.verifyStatusChange(timesheetId, newStatusId);
 
@@ -919,8 +892,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
 
         this.load(timesheetId);
         // Set timesheet status to Draft.
-        this.changeTimesheetStatus(this.ts.getTimesheetId(),
-                TimesheetConst.STATUS_SUBMITTED);
+        this.changeTimesheetStatus(this.ts.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
 
         // Email timesheet
         TimesheetTransmissionApi api = new SmtpTimesheetTransmissionApiImpl();
@@ -943,16 +915,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
                     employee, manager, clients.get(0), this.tsHours);
             api.send(msg);
         } catch (TimesheetTransmissionException e) {
-            this.msg = "SMTP error occurred attempting to send timesheet: "
-                    + this.ts.getDisplayValue();
+            this.msg = "SMTP error occurred attempting to send timesheet: " + this.ts.getDisplayValue();
             throw new TimesheetApiException(this.msg, e);
         } catch (EmployeeApiException e) {
-            this.msg = "Data access error fetching timesheet's employee profile: "
-                    + this.ts.getEmpId();
+            this.msg = "Data access error fetching timesheet's employee profile: " + this.ts.getEmpId();
             throw new TimesheetApiException(this.msg, e);
         } catch (ProjectAdminApiException e) {
-            this.msg = "Data access error fetching timesheet's client profile: "
-                    + this.ts.getClientId();
+            this.msg = "Data access error fetching timesheet's client profile: " + this.ts.getClientId();
             throw new TimesheetApiException(this.msg, e);
         } finally {
             api = null;
@@ -970,8 +939,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         // Delete all project/tasks belonging to the timesheet
         this.deleteProjectTasks(timesheetId);
         // Now delete the timesheet
-        TimesheetDto criteria = TimesheetObjectFactory
-                .createTimesheetDtoInstance(null);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         int rc = this.dao.deleteTimesheet(criteria);
         return rc;
@@ -988,8 +956,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         // delete events first...
         this.deleteEvents(projectTaskId);
         // Now delete the project/task
-        ProjectTaskDto criteria = ProjectObjectFactory
-                .createProjectTaskDtoInstance(null);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskDtoInstance(null);
         criteria.setProjectTaskId(projectTaskId);
         int rc = this.dao.deleteProjectTask(criteria);
         return rc;
@@ -1002,8 +969,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      */
     @Override
     public int deleteProjectTasks(Integer timesheetId) throws TimesheetApiException {
-        List<ProjectTaskDto> ptList = this
-                .getProjectTaskByTimesheet(timesheetId);
+        List<ProjectTaskDto> ptList = this.getProjectTaskByTimesheet(timesheetId);
         int count = 0;
         for (ProjectTaskDto item : ptList) {
             this.deleteProjectTask(item.getProjectTaskId());
@@ -1061,9 +1027,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
      *             recipient via the SMTP protocol.
      */
     @Override
-    public int send(TimesheetDto timesheet, EmployeeDto employee,
-            ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours)
-            throws TimesheetApiException, TimesheetTransmissionException {
+    public int send(TimesheetDto timesheet, EmployeeDto employee, ClientDto client, 
+            Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException, 
+              TimesheetTransmissionException {
         return 0;
     }
 
@@ -1083,8 +1049,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements
         }
 
         // Fetch project/tasks
-        List<ProjectTaskDto> ptList = this
-                .getProjectTaskExtByTimesheet(timesheetId);
+        List<ProjectTaskDto> ptList = this.getProjectTaskExtByTimesheet(timesheetId);
         if (ptList == null || ptList.size() <= 0) {
             this.ts = null;
             this.tsHours = null;
