@@ -7,11 +7,14 @@ import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
+import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
+import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 
 import com.util.RMT2Date;
+import com.util.RMT2String;
 
 public class ProjectTrackerMockDataFactory {
 
@@ -181,6 +184,103 @@ public class ProjectTrackerMockDataFactory {
         o.setComments("Comments for Employee Project Id: " + empProjId);
         return o;
     }
+    
+    /**
+     * 
+     * @param timesheetId
+     * @param clientId
+     * @param projId
+     * @param empId
+     * @param invRefNo
+     * @param begPeriod
+     * @param endPeriod
+     * @param extRefNo
+     * @return
+     */
+    public static final ProjTimesheet createMockOrmProjTimesheet(
+            int timesheetId, int clientId, int projId, int empId,
+            String invRefNo, String begPeriod, String endPeriod,
+            String extRefNo) {
+        ProjTimesheet o = new ProjTimesheet();
+
+        o.setTimesheetId(timesheetId);
+        o.setClientId(clientId);
+        o.setProjId(projId);
+        o.setEmpId(empId);
+        o.setInvoiceRefNo(invRefNo);
+        o.setBeginPeriod(RMT2Date.stringToDate(begPeriod));
+        o.setEndPeriod(RMT2Date.stringToDate(endPeriod));
+        o.setExtRef(extRefNo);
+        o.setComments("Comments" + timesheetId);
+        o.setDocumentId(timesheetId);
+        String displayValue = RMT2String.padInt(timesheetId, 10, RMT2String.PAD_LEADING);
+        o.setDisplayValue(displayValue);
+        o.setDateCreated(RMT2Date.stringToDate(begPeriod));
+        o.setDateUpdated(RMT2Date.stringToDate(endPeriod));
+        o.setUserId("testuser");
+        o.setIpCreated("1.2.3.4");
+        o.setIpUpdated("1.2.3.4");
+        return o;
+    }
+    
+   /**
+    * 
+    * @param timesheetId
+    * @param clientId
+    * @param projId
+    * @param empId
+    * @param invRefNo
+    * @param begPeriod
+    * @param endPeriod
+    * @param extRefNo
+    * @param managerId
+    * @param statusName
+    * @param acctNo
+    * @param billableHours
+    * @param nonBillableHours
+    * @param hourlyRate
+    * @param overtimeRate
+    * @return
+    */
+    public static final VwTimesheetList createMockOrmVwTimesheetList(
+            int timesheetId, int clientId, int projId, int empId,
+            String invRefNo, String begPeriod, String endPeriod,
+            String extRefNo, int managerId, String statusName, String acctNo,
+            double billableHours, double nonBillableHours, double hourlyRate,
+            double overtimeRate) {
+        VwTimesheetList o = new VwTimesheetList();
+        o.setTimesheetId(timesheetId);
+        o.setClientId(clientId);
+        o.setProjId(projId);
+        o.setEmpId(empId);
+        o.setManagerId(managerId);
+        o.setInvoiceRefNo(invRefNo);
+        o.setBeginPeriod(RMT2Date.stringToDate(begPeriod));
+        o.setEndPeriod(RMT2Date.stringToDate(endPeriod));
+        o.setExtRef(extRefNo);
+        o.setComments("Comments" + timesheetId);
+        o.setDocumentId(timesheetId);
+        String displayValue = RMT2String.padInt(timesheetId, 10, RMT2String.PAD_LEADING);
+        o.setDisplayValue(displayValue);
+        o.setClientName("ClientName" + clientId);
+        o.setAccountNo(acctNo);
+        o.setFirstname("FirstName" + timesheetId);
+        o.setLastname("LastName" + timesheetId);
+        o.setHourlyRate(hourlyRate);
+        o.setHourlyOverRate(overtimeRate);
+        o.setBillHrs(billableHours);
+        o.setNonBillHrs(nonBillableHours);
+        o.setStatusName(statusName);
+        o.setTimesheetStatusId(100);
+        o.setStatusDescription(statusName + "Description");
+        o.setStatusEffectiveDate(RMT2Date.stringToDate(begPeriod));
+        o.setStatusEndDate(RMT2Date.stringToDate(endPeriod));
+        o.setTypeId(222);
+        o.setProjTimesheetHistId(5555);
+        o.setLastFirstName(o.getLastname() + ", " + o.getFirstname());
+        return o;
+    }
+    
     
     /**
      * 

@@ -87,8 +87,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<TimesheetDto> list = new ArrayList<TimesheetDto>();
         for (ProjTimesheet item : results) {
-            TimesheetDto dto = TimesheetObjectFactory
-                    .createTimesheetDtoInstance(item);
+            TimesheetDto dto = TimesheetObjectFactory.createTimesheetDtoInstance(item);
             list.add(dto);
         }
         return list;
