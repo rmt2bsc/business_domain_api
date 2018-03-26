@@ -74,8 +74,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * @see org.dao.TimesheetDao#fetchTimesheet(org.dto.TimesheetDto)
      */
     @Override
-    public List<TimesheetDto> fetch(TimesheetDto criteria)
-            throws TimesheetDaoException {
+    public List<TimesheetDto> fetch(TimesheetDto criteria) throws TimesheetDaoException {
         ProjTimesheet obj = TimesheetDaoFactory.createCriteria(criteria);
         List<ProjTimesheet> results = null;
         try {
@@ -102,17 +101,12 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * org.dao.timesheet.TimesheetDao#fetchTimesheetExt(org.dto.TimesheetDto)
      */
     @Override
-    public List<TimesheetDto> fetchExt(TimesheetDto criteria)
-            throws TimesheetDaoException {
+    public List<TimesheetDto> fetchExt(TimesheetDto criteria) throws TimesheetDaoException {
         VwTimesheetList obj = TimesheetDaoFactory.createCriteriaExt(criteria);
-        obj.addOrderBy(VwTimesheetList.PROP_CLIENTNAME,
-                VwTimesheetList.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwTimesheetList.PROP_LASTNAME,
-                VwTimesheetList.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwTimesheetList.PROP_FIRSTNAME,
-                VwTimesheetList.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwTimesheetList.PROP_TIMESHEETID,
-                VwTimesheetList.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetList.PROP_CLIENTNAME, VwTimesheetList.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetList.PROP_LASTNAME, VwTimesheetList.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetList.PROP_FIRSTNAME, VwTimesheetList.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetList.PROP_TIMESHEETID, VwTimesheetList.ORDERBY_ASCENDING);
         List<VwTimesheetList> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -124,8 +118,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<TimesheetDto> list = new ArrayList<TimesheetDto>();
         for (VwTimesheetList item : results) {
-            TimesheetDto dto = TimesheetObjectFactory
-                    .createTimesheetExtendedDtoInstance(item);
+            TimesheetDto dto = TimesheetObjectFactory.createTimesheetExtendedDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -138,15 +131,11 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * org.dao.timesheet.TimesheetDao#fetchProjectTask(org.dto.ProjectTaskDto)
      */
     @Override
-    public List<ProjectTaskDto> fetchProjectTask(ProjectTaskDto criteria)
-            throws TimesheetDaoException {
+    public List<ProjectTaskDto> fetchProjectTask(ProjectTaskDto criteria) throws TimesheetDaoException {
         ProjProjectTask obj = TimesheetDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(ProjProjectTask.PROP_PROJID,
-                ProjProjectTask.ORDERBY_ASCENDING);
-        obj.addOrderBy(ProjProjectTask.PROP_TIMESHEETID,
-                ProjProjectTask.ORDERBY_ASCENDING);
-        obj.addOrderBy(ProjProjectTask.PROP_PROJECTTASKID,
-                ProjProjectTask.ORDERBY_ASCENDING);
+        obj.addOrderBy(ProjProjectTask.PROP_PROJID, ProjProjectTask.ORDERBY_ASCENDING);
+        obj.addOrderBy(ProjProjectTask.PROP_TIMESHEETID, ProjProjectTask.ORDERBY_ASCENDING);
+        obj.addOrderBy(ProjProjectTask.PROP_PROJECTTASKID, ProjProjectTask.ORDERBY_ASCENDING);
         List<ProjProjectTask> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -158,8 +147,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<ProjectTaskDto> list = new ArrayList<ProjectTaskDto>();
         for (ProjProjectTask item : results) {
-            ProjectTaskDto dto = ProjectObjectFactory
-                    .createProjectTaskDtoInstance(item);
+            ProjectTaskDto dto = ProjectObjectFactory.createProjectTaskDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -173,16 +161,11 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * )
      */
     @Override
-    public List<ProjectTaskDto> fetchProjectTaskExt(ProjectTaskDto criteria)
-            throws TimesheetDaoException {
-        VwTimesheetProjectTask obj = TimesheetDaoFactory
-                .createCriteriaExt(criteria);
-        obj.addOrderBy(VwTimesheetProjectTask.PROP_PROJECTNAME,
-                VwTimesheetProjectTask.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwTimesheetProjectTask.PROP_TASKNAME,
-                VwTimesheetProjectTask.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwTimesheetProjectTask.PROP_TIMESHEETID,
-                VwTimesheetProjectTask.ORDERBY_ASCENDING);
+    public List<ProjectTaskDto> fetchProjectTaskExt(ProjectTaskDto criteria) throws TimesheetDaoException {
+        VwTimesheetProjectTask obj = TimesheetDaoFactory.createCriteriaExt(criteria);
+        obj.addOrderBy(VwTimesheetProjectTask.PROP_PROJECTNAME, VwTimesheetProjectTask.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetProjectTask.PROP_TASKNAME, VwTimesheetProjectTask.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetProjectTask.PROP_TIMESHEETID, VwTimesheetProjectTask.ORDERBY_ASCENDING);
         List<VwTimesheetProjectTask> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -194,8 +177,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<ProjectTaskDto> list = new ArrayList<ProjectTaskDto>();
         for (VwTimesheetProjectTask item : results) {
-            ProjectTaskDto dto = ProjectObjectFactory
-                    .createProjectTaskExtendedDtoInstance(item);
+            ProjectTaskDto dto = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -208,8 +190,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * org.dao.TimesheetDao#fetchTimesheetStatus(org.dto.TimesheetStatusDto)
      */
     @Override
-    public List<TimesheetStatusDto> fetchStatus(TimesheetStatusDto criteria)
-            throws TimesheetDaoException {
+    public List<TimesheetStatusDto> fetchStatus(TimesheetStatusDto criteria) throws TimesheetDaoException {
         ProjTimesheetStatus obj = TimesheetDaoFactory.createCriteria(criteria);
         List<ProjTimesheetStatus> results = null;
         try {
@@ -222,8 +203,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<TimesheetStatusDto> list = new ArrayList<TimesheetStatusDto>();
         for (ProjTimesheetStatus item : results) {
-            TimesheetStatusDto dto = TimesheetObjectFactory
-                    .createTimesheetStatusDtoInstance(item);
+            TimesheetStatusDto dto = TimesheetObjectFactory.createTimesheetStatusDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -237,8 +217,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * )
      */
     @Override
-    public List<TimesheetHistDto> fetchStatusHistory(TimesheetHistDto criteria)
-            throws TimesheetDaoException {
+    public List<TimesheetHistDto> fetchStatusHistory(TimesheetHistDto criteria) throws TimesheetDaoException {
         ProjTimesheetHist obj = TimesheetDaoFactory.createCriteria(criteria);
         List<ProjTimesheetHist> results = null;
         try {
@@ -251,8 +230,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<TimesheetHistDto> list = new ArrayList<TimesheetHistDto>();
         for (ProjTimesheetHist item : results) {
-            TimesheetHistDto dto = TimesheetObjectFactory
-                    .createTimesheetHistoryDtoInstance(item);
+            TimesheetHistDto dto = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -265,10 +243,8 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * org.dao.TimesheetDao#fetchTimesheetClient(org.dto.TimesheetClientDto)
      */
     @Override
-    public List<TimesheetClientDto> fetchClient(TimesheetClientDto criteria)
-            throws TimesheetDaoException {
-        VwClientTimesheetSummary obj = TimesheetDaoFactory
-                .createCriteria(criteria);
+    public List<TimesheetClientDto> fetchClient(TimesheetClientDto criteria) throws TimesheetDaoException {
+        VwClientTimesheetSummary obj = TimesheetDaoFactory.createCriteria(criteria);
         List<VwClientTimesheetSummary> results = null;
         try {
             results = this.client.retrieveList(obj);
@@ -280,8 +256,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<TimesheetClientDto> list = new ArrayList<TimesheetClientDto>();
         for (VwClientTimesheetSummary item : results) {
-            TimesheetClientDto dto = TimesheetObjectFactory
-                    .createTimesheetClientDtoInstance(item);
+            TimesheetClientDto dto = TimesheetObjectFactory.createTimesheetClientDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -293,8 +268,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * @see org.dao.TimesheetDao#fetchTimesheetHours(org.dto.TimesheetHoursDto)
      */
     @Override
-    public List<TimesheetHoursDto> fetchHours(TimesheetHoursDto criteria)
-            throws TimesheetDaoException {
+    public List<TimesheetHoursDto> fetchHours(TimesheetHoursDto criteria) throws TimesheetDaoException {
         VwTimesheetHours obj = TimesheetDaoFactory.createCriteria(criteria);
         List<VwTimesheetHours> results = null;
         try {
@@ -307,8 +281,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<TimesheetHoursDto> list = new ArrayList<TimesheetHoursDto>();
         for (VwTimesheetHours item : results) {
-            TimesheetHoursDto dto = TimesheetObjectFactory
-                    .createTimesheetHoursDtoInstance(item);
+            TimesheetHoursDto dto = TimesheetObjectFactory.createTimesheetHoursDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -321,8 +294,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * TimesheetHoursSummaryDto)
      */
     @Override
-    public List<TimesheetHoursSummaryDto> fetchHourSummary(
-            TimesheetHoursSummaryDto criteria) throws TimesheetDaoException {
+    public List<TimesheetHoursSummaryDto> fetchHourSummary(TimesheetHoursSummaryDto criteria) throws TimesheetDaoException {
         VwTimesheetSummary obj = TimesheetDaoFactory.createCriteria(criteria);
         List<VwTimesheetSummary> results = null;
         try {
@@ -335,8 +307,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
         List<TimesheetHoursSummaryDto> list = new ArrayList<TimesheetHoursSummaryDto>();
         for (VwTimesheetSummary item : results) {
-            TimesheetHoursSummaryDto dto = TimesheetObjectFactory
-                    .createTimesheetSummaryDtoInstance(item);
+            TimesheetHoursSummaryDto dto = TimesheetObjectFactory.createTimesheetSummaryDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -348,16 +319,11 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * @see org.dao.TimesheetDao#fetchProjectEvent(org.dto.ProjectEventDto)
      */
     @Override
-    public List<ProjectEventDto> fetchEvent(ProjectEventDto criteria)
-            throws TimesheetDaoException {
-        VwTimesheetEventList obj = ProjectAdminDaoFactory
-                .createCriteria(criteria);
-        obj.addOrderBy(VwTimesheetEventList.PROP_PROJECTNAME,
-                VwProjectClient.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwTimesheetEventList.PROP_TASKNAME,
-                VwProjectClient.ORDERBY_ASCENDING);
-        obj.addOrderBy(VwTimesheetEventList.PROP_EFFECTIVEDATE,
-                VwProjectClient.ORDERBY_DESCENDING);
+    public List<ProjectEventDto> fetchEvent(ProjectEventDto criteria) throws TimesheetDaoException {
+        VwTimesheetEventList obj = ProjectAdminDaoFactory.createCriteria(criteria);
+        obj.addOrderBy(VwTimesheetEventList.PROP_PROJECTNAME, VwProjectClient.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetEventList.PROP_TASKNAME, VwProjectClient.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwTimesheetEventList.PROP_EFFECTIVEDATE, VwProjectClient.ORDERBY_DESCENDING);
 
         List<VwTimesheetEventList> results = null;
         try {
@@ -371,8 +337,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
 
         List<ProjectEventDto> list = new ArrayList<ProjectEventDto>();
         for (VwTimesheetEventList item : results) {
-            ProjectEventDto dto = ProjectObjectFactory
-                    .createProjectEventDtoInstance(item);
+            ProjectEventDto dto = ProjectObjectFactory.createProjectEventDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -386,7 +351,6 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
     @Override
     public int maintainTimesheet(TimesheetDto obj) throws TimesheetDaoException {
         int rc = 0;
-
         if (obj == null) {
             this.msg = "Timesheet object is invalid and could not be processed";
             throw new TimesheetDaoException(this.msg);
@@ -485,8 +449,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * )
      */
     @Override
-    public int maintainStatusHistory(TimesheetHistDto obj)
-            throws TimesheetDaoException {
+    public int maintainStatusHistory(TimesheetHistDto obj) throws TimesheetDaoException {
         if (obj == null) {
             this.msg = "Timesheet status history cannot be null";
             throw new TimesheetDaoException(this.msg);
@@ -508,8 +471,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * @return
      * @throws TimesheetDaoException
      */
-    private int createStatusHistory(ProjTimesheetHist hist)
-            throws TimesheetDaoException {
+    private int createStatusHistory(ProjTimesheetHist hist) throws TimesheetDaoException {
         UserTimestamp ut = null;
         int rc = 0;
         try {
@@ -534,8 +496,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * @return
      * @throws TimesheetDaoException
      */
-    private int updateStatusHistory(ProjTimesheetHist hist)
-            throws TimesheetDaoException {
+    private int updateStatusHistory(ProjTimesheetHist hist) throws TimesheetDaoException {
         UserTimestamp ut = null;
         int rc = 0;
         try {
@@ -562,8 +523,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * )
      */
     @Override
-    public int maintainProjectTask(ProjectTaskDto obj)
-            throws TimesheetDaoException {
+    public int maintainProjectTask(ProjectTaskDto obj) throws TimesheetDaoException {
         int rc = 0;
 
         if (obj == null) {
@@ -589,8 +549,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * @throws TimesheetDaoException
      *             if a validation error occurs.
      */
-    private int createProjectTask(ProjProjectTask pt)
-            throws TimesheetDaoException {
+    private int createProjectTask(ProjProjectTask pt) throws TimesheetDaoException {
         try {
             int rc = this.client.insertRow(pt, true);
             pt.setProjectTaskId(rc);
@@ -714,8 +673,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * TimesheetStatusDto)
      */
     @Override
-    public int deleteTimesheetStatus(TimesheetStatusDto criteria)
-            throws TimesheetDaoException {
+    public int deleteTimesheetStatus(TimesheetStatusDto criteria) throws TimesheetDaoException {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -727,8 +685,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * org.dao.timesheet.TimesheetDao#deleteProjectTask(org.dto.ProjectTaskDto)
      */
     @Override
-    public int deleteProjectTask(ProjectTaskDto criteria)
-            throws TimesheetDaoException {
+    public int deleteProjectTask(ProjectTaskDto criteria) throws TimesheetDaoException {
         // TODO Auto-generated method stub
         return 0;
     }

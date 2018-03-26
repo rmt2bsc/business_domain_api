@@ -60,20 +60,13 @@ public interface TimesheetApi extends TransactionApi {
     int getCurrentProjectId();
 
     /**
+     * Retrieve single TimesheetDto object by timesheet id.
      * 
      * @param timesheetId
-     * @return
+     * @return an instance of {@link TimesheetDto}
      * @throws TimesheetApiException
      */
     TimesheetDto get(Integer timesheetId) throws TimesheetApiException;
-
-    /**
-     * 
-     * @param criteria
-     * @return
-     * @throws TimesheetApiException
-     */
-    List<TimesheetDto> get(String criteria) throws TimesheetApiException;
 
     /**
      * 
@@ -82,14 +75,25 @@ public interface TimesheetApi extends TransactionApi {
      * @throws TimesheetApiException
      */
     TimesheetDto getExt(Integer timesheetId) throws TimesheetApiException;
-
+    
     /**
      * 
-     * @param clientId
+     * @param criteria
      * @return
      * @throws TimesheetApiException
      */
-    List<TimesheetDto> getByClient(Integer clientId) throws TimesheetApiException;
+    List<TimesheetDto> get(TimesheetDto criteria) throws TimesheetApiException;
+
+    
+
+//    /**
+//     * Get all timesheets assoicated with a client
+//     * 
+//     * @param clientId
+//     * @return
+//     * @throws TimesheetApiException
+//     */
+//    List<TimesheetDto> getByClient(Integer clientId) throws TimesheetApiException;
 
     /**
      * Get all client approved timesheets.
@@ -100,24 +104,25 @@ public interface TimesheetApi extends TransactionApi {
      */
     List<TimesheetDto> getClientApproved(Integer clientId) throws TimesheetApiException;
 
-    /**
-     * 
-     * @param employeeId
-     * @return
-     * @throws TimesheetApiException
-     */
-    List<TimesheetDto> getByEmployee(Integer employeeId) throws TimesheetApiException;
+//    /**
+//     * 
+//     * @param employeeId
+//     * @return
+//     * @throws TimesheetApiException
+//     */
+//    List<TimesheetDto> getByEmployee(Integer employeeId) throws TimesheetApiException;
+
+//    /**
+//     * 
+//     * @param timesheetId
+//     * @param statusId
+//     * @return
+//     * @throws TimesheetApiException
+//     */
+//    List<TimesheetDto> getByStatus(Integer timesheetId[], Integer statusId) throws TimesheetApiException;
 
     /**
-     * 
-     * @param timesheetId
-     * @param statusId
-     * @return
-     * @throws TimesheetApiException
-     */
-    List<TimesheetDto> getByStatus(Integer timesheetId[], Integer statusId) throws TimesheetApiException;
-
-    /**
+     * Retrieve all project tasks assoicated with a timesheet
      * 
      * @param timesheetId
      * @return
@@ -126,6 +131,7 @@ public interface TimesheetApi extends TransactionApi {
     List<ProjectTaskDto> getProjectTaskByTimesheet(Integer timesheetId) throws TimesheetApiException;
 
     /**
+     * Retrieve project tasks (in extedned format) assoicated with a timesheet.
      * 
      * @param timesheetId
      * @return
@@ -134,6 +140,7 @@ public interface TimesheetApi extends TransactionApi {
     List<ProjectTaskDto> getProjectTaskExtByTimesheet(Integer timesheetId) throws TimesheetApiException;
 
     /**
+     * Retrieve events assoicated with a timesheet.
      * 
      * @param timesheetId
      * @return
