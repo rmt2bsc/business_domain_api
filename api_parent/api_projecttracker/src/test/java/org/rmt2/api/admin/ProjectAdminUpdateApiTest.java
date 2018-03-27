@@ -27,7 +27,7 @@ import org.modules.admin.ProjectAdminApiImpl;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.ProjectAdminApiTestData;
+import org.rmt2.api.ProjectTrackerMockData;
 import org.rmt2.constants.ApiTransactionCodes;
 import org.rmt2.jaxb.AddressBookRequest;
 import org.rmt2.jaxb.AddressBookResponse;
@@ -58,7 +58,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class, ProjectAdminApiImpl.class })
-public class ProjectAdminUpdateApiTest extends ProjectAdminApiTestData {
+public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
     
     private static final int TEST_CLIENT_ID = 1000;
     private static final int TEST_NEW_CLIENT_ID = 11223344;

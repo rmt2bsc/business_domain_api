@@ -25,7 +25,7 @@ import org.modules.employee.InvalidEmployeeException;
 import org.modules.employee.InvalidProjectEmployeeException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.ProjectAdminApiTestData;
+import org.rmt2.api.ProjectTrackerMockData;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
@@ -39,7 +39,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class EmployeeUpdateApiTest extends ProjectAdminApiTestData {
+public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     private static final int TEST_EMPLOYEE_ID = 5000;
     private static final int TEST_PROJ_ID = 2220;

@@ -29,7 +29,7 @@ import org.modules.employee.EmployeeApiException;
 import org.modules.employee.EmployeeApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.ProjectAdminApiTestData;
+import org.rmt2.api.ProjectTrackerMockData;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
@@ -45,7 +45,7 @@ import com.util.RMT2Date;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class EmployeeQueryApiTest extends ProjectAdminApiTestData {
+public class EmployeeQueryApiTest extends ProjectTrackerMockData {
     
     private static final int TEST_CLIENT_ID = 1000;
     private static final int TEST_LOGIN_ID = 999991;

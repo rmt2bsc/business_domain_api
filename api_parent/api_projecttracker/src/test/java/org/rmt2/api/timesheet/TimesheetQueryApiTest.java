@@ -19,7 +19,7 @@ import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.ProjectAdminApiTestData;
+import org.rmt2.api.ProjectTrackerMockData;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -33,7 +33,7 @@ import com.util.RMT2Date;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class TimesheetQueryApiTest extends ProjectAdminApiTestData {
+public class TimesheetQueryApiTest extends ProjectTrackerMockData {
     
     private static final int TEST_TIMESHEET_ID = 111;
     private static final int TEST_CLIENT_ID = 1110;

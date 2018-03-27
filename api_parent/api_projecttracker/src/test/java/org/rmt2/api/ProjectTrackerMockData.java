@@ -28,7 +28,7 @@ import org.junit.Before;
  * @author rterrell
  * 
  */
-public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
+public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
     protected List<ProjClient> mockClientFetchMultiple;
     protected List<ProjClient> mockClientFetchSingle;
     protected List<ProjProject> mockProjectFetchSingle;
