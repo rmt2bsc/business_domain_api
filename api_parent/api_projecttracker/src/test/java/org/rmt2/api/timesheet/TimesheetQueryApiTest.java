@@ -137,7 +137,6 @@ public class TimesheetQueryApiTest extends ProjectTrackerMockData {
             Assert.assertEquals(("000000011" + (ndx + 1)), item.getDisplayValue());
             Assert.assertEquals(item.getTimesheetId(), item.getDocumentId());
             
-            
             switch (ndx) {
                 case 0:
                     Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), item.getBeginPeriod());
