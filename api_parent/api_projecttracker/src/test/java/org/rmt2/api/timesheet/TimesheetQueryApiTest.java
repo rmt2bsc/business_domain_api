@@ -29,6 +29,7 @@ import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.ProjectTrackerMockDataFactory;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -44,24 +45,6 @@ import com.util.RMT2Date;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class TimesheetQueryApiTest extends TimesheetMockData {
     
-    private static final int TEST_TIMESHEET_ID = 111;
-    private static final int TEST_EMPLOYEE_ID = 2220;
-    private static final int TEST_MANAGER_ID = 3330;
-    private static final int TEST_BUSINESS_ID = 1350;
-    private static final int TEST_CLIENT_ID = 1110;
-    private static final int TEST_EMPLOYEE_TITLE_ID = 101;
-    private static final int TEST_PROJ_ID = 4440;
-    private static final int TEST_EMP_PROJ_ID = 55551;
-    private static final String TEST_COMPANY_NAME = "ABC Company";
-    
-    
-    private static final int TEST_TASK_ID = 1112220;
-    private static final int TEST_EVENT_ID = 123401;
-    private static final int TEST_PROJECT_TASK_ID = 444441;
-    private static final String TEST_PROJECT_NAME = "Project 2220";
-    private static final String TEST_TASK_NAMES[] = new String[]{"Design and Analysis", 
-            "Development", "Meetings", "Testing", "Holiday"};
-
     /**
      * @throws java.lang.Exception
      */
@@ -82,7 +65,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     @Test
     public void testSuccess_Fetch_Single_Timesheet() {
         ProjTimesheet mockCriteria = new ProjTimesheet();
-        mockCriteria.setTimesheetId(TEST_TIMESHEET_ID);
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjTimesheetSingle);
         } catch (Exception e) {
@@ -94,12 +77,12 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         TimesheetApi api = f.createApi(this.mockDaoClient);
         TimesheetDto results = null;
         try {
-            results = api.get(TEST_TIMESHEET_ID);
+            results = api.get(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (TimesheetApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(results.getTimesheetId(), TEST_TIMESHEET_ID);
+        Assert.assertEquals(results.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         Assert.assertEquals(1110, results.getClientId());
         Assert.assertEquals(1234, results.getProjId());
         Assert.assertEquals(2220, results.getEmpId());
@@ -120,7 +103,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     @Test
     public void testSuccess_Fetch_Multiple_Timesheet() {
         ProjTimesheet mockCriteria = new ProjTimesheet();
-        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
+        mockCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjTimesheetMultiple);
         } catch (Exception e) {
@@ -133,7 +116,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         List<TimesheetDto> results = null;
         try {
-            criteria.setEmpId(TEST_EMPLOYEE_ID);
+            criteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
             results = api.get(criteria);
         } catch (TimesheetApiException e) {
             e.printStackTrace();
@@ -142,7 +125,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             TimesheetDto item = results.get(ndx);
-            Assert.assertEquals((TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
+            Assert.assertEquals((ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
             Assert.assertEquals(1110, item.getClientId());
             Assert.assertEquals(1234, item.getProjId());
             Assert.assertEquals(2220, item.getEmpId());
@@ -195,7 +178,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     @Test
     public void testSuccess_Fetch_Single_Extended_Timesheet() {
         VwTimesheetList mockCriteria = new VwTimesheetList();
-        mockCriteria.setTimesheetId(TEST_TIMESHEET_ID);
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetSingle);
         } catch (Exception e) {
@@ -207,12 +190,12 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         TimesheetApi api = f.createApi(this.mockDaoClient);
         TimesheetDto results = null;
         try {
-            results = api.getExt(TEST_TIMESHEET_ID);
+            results = api.getExt(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (TimesheetApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(results.getTimesheetId(), TEST_TIMESHEET_ID);
+        Assert.assertEquals(results.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         Assert.assertEquals(1110, results.getClientId());
         Assert.assertEquals(1234, results.getProjId());
         Assert.assertEquals(2220, results.getEmpId());
@@ -248,7 +231,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     @Test
     public void testSuccess_Fetch_Multiple_Extended_Timesheet() {
         VwTimesheetList mockCriteria = new VwTimesheetList();
-        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
+        mockCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetMultiple);
         } catch (Exception e) {
@@ -261,7 +244,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         List<TimesheetDto> results = null;
         try {
-            criteria.setEmpId(TEST_EMPLOYEE_ID);
+            criteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
             results = api.getExt(criteria);
         } catch (TimesheetApiException e) {
             e.printStackTrace();
@@ -270,7 +253,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             TimesheetDto item = results.get(ndx);
-            Assert.assertEquals((TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
+            Assert.assertEquals((ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
             Assert.assertEquals(1110, item.getClientId());
             Assert.assertEquals(1234, item.getProjId());
             Assert.assertEquals(2220, item.getEmpId());
@@ -314,7 +297,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
                     break;
             }
             // Test extended data
-            Assert.assertEquals(TEST_MANAGER_ID, item.getEmployeeManagerId());
+            Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_MANAGER_ID, item.getEmployeeManagerId());
             Assert.assertEquals("DRAFT", item.getStatusName());
             Assert.assertEquals("ACCT-111", item.getClientAccountNo());
             Assert.assertEquals(40, item.getBillHrs(), 0);
@@ -333,7 +316,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     @Test
     public void testSuccess_Fetch_Client_Approved() {
         VwTimesheetList mockCriteria = new VwTimesheetList();
-        mockCriteria.setClientId(TEST_CLIENT_ID);
+        mockCriteria.setClientId(ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
         mockCriteria.setTimesheetStatusId(TimesheetConst.STATUS_APPROVED);
         try {
             // Changed mock data to represent an approved timesheet
@@ -350,7 +333,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         TimesheetApi api = f.createApi(this.mockDaoClient);
         List<TimesheetDto> results = null;
         try {
-            results = api.getClientApproved(TEST_CLIENT_ID);
+            results = api.getClientApproved(ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
         } catch (TimesheetApiException e) {
             e.printStackTrace();
         }
@@ -358,7 +341,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(1, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             TimesheetDto item = results.get(ndx);
-            Assert.assertEquals((TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
+            Assert.assertEquals((ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
             Assert.assertEquals(1110, item.getClientId());
             Assert.assertEquals(1234, item.getProjId());
             Assert.assertEquals(2220, item.getEmpId());
@@ -372,7 +355,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), item.getStatusEffectiveDate());
             Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), item.getStatusEndDate());
             // Test extended data
-            Assert.assertEquals(TEST_MANAGER_ID, item.getEmployeeManagerId());
+            Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_MANAGER_ID, item.getEmployeeManagerId());
             Assert.assertEquals("APPROVED", item.getStatusName());
             Assert.assertEquals("ACCT-111", item.getClientAccountNo());
             Assert.assertEquals(40, item.getBillHrs(), 0);
@@ -412,15 +395,15 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             ProjectTaskDto obj = results.get(ndx);
-            Assert.assertEquals(obj.getProjectTaskId(), (TEST_PROJECT_TASK_ID + ndx));
-            Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
-            Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
-            Assert.assertEquals(obj.getTaskId(), (TEST_TASK_ID + ndx));
-            Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
-            Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+            Assert.assertEquals(obj.getProjectTaskId(), (ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + ndx));
+            Assert.assertEquals(obj.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.assertEquals(obj.getProjId(), ProjectTrackerMockDataFactory.TEST_PROJ_ID);
+            Assert.assertEquals(obj.getTaskId(), (ProjectTrackerMockDataFactory.TEST_TASK_ID + ndx));
+            Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), ProjectTrackerMockDataFactory.TEST_PROJECT_NAME);
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
-            Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[ndx]);
+            Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
             Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
         }
     }
@@ -429,7 +412,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     public void testFetch_ProjectTask_Single_Success() {
         // Stub single project-task fetch.
         VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
-        mockCriteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        mockCriteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchSingle);
         } catch (Exception e) {
@@ -440,7 +423,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
         ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
-        criteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        criteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
         List<ProjectTaskDto> results = null;
         try {
             results = api.getProjectTask(criteria);
@@ -450,15 +433,15 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
         ProjectTaskDto obj = results.get(0);
-        Assert.assertEquals(obj.getProjectTaskId(), TEST_PROJECT_TASK_ID);
-        Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
-        Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
-        Assert.assertEquals(obj.getTaskId(), TEST_TASK_ID);
-        Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
-        Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+        Assert.assertEquals(obj.getProjectTaskId(), ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        Assert.assertEquals(obj.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        Assert.assertEquals(obj.getProjId(), ProjectTrackerMockDataFactory.TEST_PROJ_ID);
+        Assert.assertEquals(obj.getTaskId(), ProjectTrackerMockDataFactory.TEST_TASK_ID);
+        Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+        Assert.assertEquals(obj.getProjectDescription(), ProjectTrackerMockDataFactory.TEST_PROJECT_NAME);
         Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
         Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
-        Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[0]);
+        Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[0]);
         Assert.assertEquals(obj.getTaskBillable(), 1);
     }
     
@@ -486,15 +469,15 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             ProjectEventDto obj = results.get(ndx);
-            Assert.assertEquals(obj.getProjectTaskId(), (TEST_PROJECT_TASK_ID + ndx));
-            Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
-            Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
-            Assert.assertEquals(obj.getTaskId(), (TEST_TASK_ID + ndx));
-            Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
-            Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+            Assert.assertEquals(obj.getProjectTaskId(), (ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + ndx));
+            Assert.assertEquals(obj.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.assertEquals(obj.getProjId(), ProjectTrackerMockDataFactory.TEST_PROJ_ID);
+            Assert.assertEquals(obj.getTaskId(), (ProjectTrackerMockDataFactory.TEST_TASK_ID + ndx));
+            Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), ProjectTrackerMockDataFactory.TEST_PROJECT_NAME);
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
-            Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[ndx]);
+            Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
             Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
         }
     }
@@ -503,7 +486,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     public void testFetch_ProjectEvent_Single_Success() {
         // Stub single project-event fetch.
         VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
-        mockCriteria.setEventId(TEST_EVENT_ID);
+        mockCriteria.setEventId(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetEventListFetchSingle);
         } catch (Exception e) {
@@ -514,7 +497,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
         ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
-        criteria.setEventId(TEST_EVENT_ID);
+        criteria.setEventId(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
         List<ProjectEventDto> results = null;
         try {
             results = api.getProjectEvent(criteria);
@@ -524,15 +507,15 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
         ProjectEventDto obj = results.get(0);
-        Assert.assertEquals(obj.getProjectTaskId(), TEST_PROJECT_TASK_ID);
-        Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
-        Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
-        Assert.assertEquals(obj.getTaskId(), TEST_TASK_ID);
-        Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
-        Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+        Assert.assertEquals(obj.getProjectTaskId(), ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        Assert.assertEquals(obj.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        Assert.assertEquals(obj.getProjId(), ProjectTrackerMockDataFactory.TEST_PROJ_ID);
+        Assert.assertEquals(obj.getTaskId(), ProjectTrackerMockDataFactory.TEST_TASK_ID);
+        Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+        Assert.assertEquals(obj.getProjectDescription(), ProjectTrackerMockDataFactory.TEST_PROJECT_NAME);
         Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
         Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
-        Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[0]);
+        Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[0]);
         Assert.assertEquals(obj.getTaskBillable(), 1);
     }
  }

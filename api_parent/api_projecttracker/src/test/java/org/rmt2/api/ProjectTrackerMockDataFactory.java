@@ -24,6 +24,22 @@ import com.util.RMT2String;
 
 public class ProjectTrackerMockDataFactory {
 
+    public static final int TEST_TIMESHEET_ID = 111;
+    public static final int TEST_EMPLOYEE_ID = 2220;
+    public static final int TEST_MANAGER_ID = 3330;
+    public static final int TEST_CLIENT_ID = 1110;
+    public static final int TEST_PROJ_ID = 4440;
+    public static final int TEST_TASK_ID = 1112220;
+    public static final int TEST_EVENT_ID = 123401;
+    public static final int TEST_PROJECT_TASK_ID = 444441;
+    public static final String TEST_PROJECT_NAME = "Project 2220";
+    public static final int TEST_BUSINESS_ID = 1350;
+    public static final int TEST_EMPLOYEE_TITLE_ID = 101;
+    public static final int TEST_EMP_PROJ_ID = 55551;
+    public static final String TEST_COMPANY_NAME = "ABC Company";
+    public static final String TEST_TASK_NAMES[] = new String[]{"Design and Analysis", 
+    "Development", "Meetings", "Testing", "Holiday"};
+    
     /**
      * 
      * @param clientId
