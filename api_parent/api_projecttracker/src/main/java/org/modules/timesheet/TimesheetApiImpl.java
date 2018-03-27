@@ -221,34 +221,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         return results;
     }
     
-
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.modules.timesheet.TimesheetApi#getByClient(int)
-//     */
-//    @Override
-//    public List<TimesheetDto> getByClient(Integer clientId) throws TimesheetApiException {
-//        this.validateNumericParam(clientId, PARM_NAME_CLIENT_ID);
-//        
-//        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
-//        criteria.setClientId(clientId);
-//        List<TimesheetDto> results = null;
-//        StringBuilder buf = new StringBuilder();
-//        try {
-//            results = this.dao.fetch(criteria);
-//            if (results == null) {
-//                return null;
-//            }
-//        } catch (TimesheetDaoException e) {
-//            buf.append("Database error occurred retrieving timesheet(s) by client id: " + clientId);
-//            this.msg = buf.toString();
-//            logger.error(this.msg);
-//            throw new TimesheetApiException(this.msg, e);
-//        }
-//        return results;
-//    }
-
     /*
      * (non-Javadoc)
      * 
@@ -277,64 +249,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
         return results;
     }
-
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.modules.timesheet.TimesheetApi#getByEmployee(int)
-//     */
-//    @Override
-//    public List<TimesheetDto> getByEmployee(Integer employeeId)  throws TimesheetApiException {
-//        this.validateNumericParam(employeeId, PARM_NAME_EMPLOYEE_ID);
-//        
-//        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
-//        criteria.setEmpId(employeeId);
-//        List<TimesheetDto> results = null;
-//        StringBuilder buf = new StringBuilder();
-//        try {
-//            results = this.dao.fetch(criteria);
-//            if (results == null) {
-//                return null;
-//            }
-//        } catch (TimesheetDaoException e) {
-//            buf.append("Database error occurred retrieving timesheet(s) by employee id: " + employeeId);
-//            this.msg = buf.toString();
-//            logger.error(this.msg);
-//            throw new TimesheetApiException(this.msg, e);
-//        }
-//        return results;
-//    }
-
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see
-//     * org.modules.timesheet.TimesheetApi#getByEmployee(java.lang.Integer[],
-//     * int)
-//     */
-//    @Override
-//    public List<TimesheetDto> getByStatus(Integer[] timesheetId, Integer statusId) throws TimesheetApiException {
-//        this.validateNumericParam(statusId, "Status Id");
-//        
-//        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
-//        List<Integer> timesheetIdList = Arrays.asList(timesheetId);
-//        criteria.setTimesheetIdList(timesheetIdList);
-//        criteria.setStatusId(statusId);
-//        List<TimesheetDto> results = null;
-//        StringBuilder buf = new StringBuilder();
-//        try {
-//            results = this.dao.fetch(criteria);
-//            if (results == null) {
-//                return null;
-//            }
-//        } catch (TimesheetDaoException e) {
-//            buf.append("Database error occurred retrieving timesheet(s) by status id: " + statusId);
-//            this.msg = buf.toString();
-//            logger.error(this.msg);
-//            throw new TimesheetApiException(this.msg, e);
-//        }
-//        return results;
-//    }
 
     /*
      * (non-Javadoc)
