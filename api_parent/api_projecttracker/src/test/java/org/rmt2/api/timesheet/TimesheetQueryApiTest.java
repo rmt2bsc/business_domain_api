@@ -7,21 +7,28 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
+import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
+import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
+import org.dto.ProjectEventDto;
+import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.admin.ProjectAdminApi;
+import org.modules.admin.ProjectAdminApiException;
+import org.modules.admin.ProjectAdminApiFactory;
 import org.modules.timesheet.TimesheetApi;
 import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.ProjectTrackerMockData;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -35,7 +42,7 @@ import com.util.RMT2Date;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class TimesheetQueryApiTest extends ProjectTrackerMockData {
+public class TimesheetQueryApiTest extends TimesheetMockData {
     
     private static final int TEST_TIMESHEET_ID = 111;
     private static final int TEST_EMPLOYEE_ID = 2220;
@@ -46,6 +53,14 @@ public class TimesheetQueryApiTest extends ProjectTrackerMockData {
     private static final int TEST_PROJ_ID = 2220;
     private static final int TEST_EMP_PROJ_ID = 55551;
     private static final String TEST_COMPANY_NAME = "ABC Company";
+    
+    
+    private static final int TEST_TASK_ID = 1112220;
+    private static final int TEST_EVENT_ID = 123401;
+    private static final int TEST_PROJECT_TASK_ID = 444441;
+    private static final String TEST_PROJECT_NAME = "Project 2220";
+    private static final String TEST_TASK_NAMES[] = new String[]{"Design and Analysis", 
+            "Development", "Meetings", "Testing", "Holiday"};
 
     /**
      * @throws java.lang.Exception
@@ -372,4 +387,152 @@ public class TimesheetQueryApiTest extends ProjectTrackerMockData {
             Assert.assertEquals(item.getEmployeeLastname() + ", " + item.getEmployeeFirstname(), item.getEmployeeFullName());
         }
     }
-   }
+    
+    @Test
+    public void testFetch_ProjectTask_All_Success() {
+        // Stub all project-task fetch.
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-task case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
+        List<ProjectTaskDto> results = null;
+        try {
+            results = api.getProjectTask(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ProjectTaskDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getProjectTaskId(), (TEST_PROJECT_TASK_ID + ndx));
+            Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
+            Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
+            Assert.assertEquals(obj.getTaskId(), (TEST_TASK_ID + ndx));
+            Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+            Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+            Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
+            Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[ndx]);
+            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+        }
+    }
+    
+    @Test
+    public void testFetch_ProjectTask_Single_Success() {
+        // Stub single project-task fetch.
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
+        criteria.setProjectTaskId(TEST_PROJECT_TASK_ID);
+        List<ProjectTaskDto> results = null;
+        try {
+            results = api.getProjectTask(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ProjectTaskDto obj = results.get(0);
+        Assert.assertEquals(obj.getProjectTaskId(), TEST_PROJECT_TASK_ID);
+        Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
+        Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
+        Assert.assertEquals(obj.getTaskId(), TEST_TASK_ID);
+        Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+        Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+        Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+        Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
+        Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[0]);
+        Assert.assertEquals(obj.getTaskBillable(), 1);
+    }
+    
+    @Test
+    public void testFetch_ProjectEvent_All_Success() {
+        // Stub all  project-event fetch.
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetEventListFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
+        List<ProjectEventDto> results = null;
+        try {
+            results = api.getProjectEvent(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ProjectEventDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getProjectTaskId(), (TEST_PROJECT_TASK_ID + ndx));
+            Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
+            Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
+            Assert.assertEquals(obj.getTaskId(), (TEST_TASK_ID + ndx));
+            Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+            Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+            Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
+            Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[ndx]);
+            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+        }
+    }
+    
+    @Test
+    public void testFetch_ProjectEvent_Single_Success() {
+        // Stub single project-event fetch.
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        mockCriteria.setEventId(TEST_EVENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetEventListFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-event case setup failed");
+        }
+
+        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
+        criteria.setEventId(TEST_EVENT_ID);
+        List<ProjectEventDto> results = null;
+        try {
+            results = api.getProjectEvent(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ProjectEventDto obj = results.get(0);
+        Assert.assertEquals(obj.getProjectTaskId(), TEST_PROJECT_TASK_ID);
+        Assert.assertEquals(obj.getTimesheetId(), TEST_TIMESHEET_ID);
+        Assert.assertEquals(obj.getProjId(), TEST_PROJ_ID);
+        Assert.assertEquals(obj.getTaskId(), TEST_TASK_ID);
+        Assert.assertEquals(obj.getClientId(), TEST_CLIENT_ID);
+        Assert.assertEquals(obj.getProjectDescription(), TEST_PROJECT_NAME);
+        Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+        Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
+        Assert.assertEquals(obj.getTaskDescription(), TEST_TASK_NAMES[0]);
+        Assert.assertEquals(obj.getTaskBillable(), 1);
+    }
+ }

@@ -2,6 +2,7 @@ package org.rmt2.entity.adapter;
 
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
+import org.dao.timesheet.TimesheetConst;
 import org.dto.TimesheetDto;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
@@ -57,7 +58,7 @@ public class TimesheetModuleAdapterTest {
         VwTimesheetList o = ProjectTrackerMockDataFactory
                 .createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
                         "INVREF1230", "2018-01-01", "2018-01-07", "ExtReNo1000",
-                        3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+                        3330, "DRAFT", "ACCT-111", 40, 0, 70.00, 80.00);
         TimesheetDto dto = TimesheetObjectFactory.createTimesheetExtendedDtoInstance(o);
         
         Assert.assertEquals(111, dto.getTimesheetId());
@@ -77,13 +78,13 @@ public class TimesheetModuleAdapterTest {
         Assert.assertNull(dto.getIpCreated());
         Assert.assertNull(dto.getIpUpdated());
         Assert.assertEquals(3330, dto.getEmployeeManagerId());
-        Assert.assertEquals("QUOTE", dto.getStatusName());
+        Assert.assertEquals("DRAFT", dto.getStatusName());
         Assert.assertEquals("ACCT-111", dto.getClientAccountNo());
         Assert.assertEquals(40, dto.getBillHrs(), 0);
         Assert.assertEquals(0, dto.getNonBillHrs(), 0);
         Assert.assertEquals(70.00, dto.getEmployeeHourlyRate(), 0);
         Assert.assertEquals(80.00, dto.getEmployeeHourlyOverRate(), 0);
-        Assert.assertEquals(100, dto.getStatusId());
+        Assert.assertEquals(TimesheetConst.STATUS_DRAFT, dto.getStatusId());
         Assert.assertEquals(dto.getStatusName() + "Description", dto.getStatusDescription());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getStatusEffectiveDate());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getStatusEndDate());

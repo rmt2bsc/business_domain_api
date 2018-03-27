@@ -1,6 +1,7 @@
 package org.rmt2.entity.orm;
 
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
+import org.dao.timesheet.TimesheetConst;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,7 +47,7 @@ public class VmTimesheetListOrmTest {
 
         o1 = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
                 "INVREF1230", "2018-01-01", "2018-01-07", "ExtReNo1000",
-                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+                3330, "DRAFT", "ACCT-111", 40, 0, 70.00, 80.00);
         o2 = new VwTimesheetList();
         result = o1.equals(o2);
         Assert.assertFalse(result);
@@ -95,7 +96,7 @@ public class VmTimesheetListOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setStatusName("QUOTE");
+        o2.setStatusName("DRAFT");
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
@@ -119,7 +120,7 @@ public class VmTimesheetListOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setTimesheetStatusId(100);
+        o2.setTimesheetStatusId(TimesheetConst.STATUS_DRAFT);
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
@@ -168,10 +169,10 @@ public class VmTimesheetListOrmTest {
     public void testHashCode() {
         VwTimesheetList o1 = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
                 "INVREF1230", "2018-01-01", "2018-01-07", "ExtReNo1000",
-                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+                3330, "DRAFT", "ACCT-111", 40, 0, 70.00, 80.00);
         VwTimesheetList o2 = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
                 "INVREF1230", "2018-01-01", "2018-01-07", "ExtReNo1000",
-                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+                3330, "DRAFT", "ACCT-111", 40, 0, 70.00, 80.00);
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }
