@@ -33,8 +33,7 @@ public class TimesheetObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetDto}.
      */
-    public static final TimesheetDto createTimesheetDtoInstance(
-            ProjTimesheet ormBean) {
+    public static final TimesheetDto createTimesheetDtoInstance(ProjTimesheet ormBean) {
         return new TimesheetRmt2OrmAdapter(ormBean);
     }
 
@@ -46,8 +45,7 @@ public class TimesheetObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetDto}.
      */
-    public static final TimesheetDto createTimesheetExtendedDtoInstance(
-            VwTimesheetList ormBean) {
+    public static final TimesheetDto createTimesheetExtendedDtoInstance(VwTimesheetList ormBean) {
         return new TimesheetRmt2OrmAdapter(ormBean);
     }
 
@@ -59,8 +57,7 @@ public class TimesheetObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetStatusDto}.
      */
-    public static final TimesheetStatusDto createTimesheetStatusDtoInstance(
-            ProjTimesheetStatus ormBean) {
+    public static final TimesheetStatusDto createTimesheetStatusDtoInstance(ProjTimesheetStatus ormBean) {
         return new TimesheetRmt2OrmAdapter(ormBean);
     }
 
@@ -72,8 +69,7 @@ public class TimesheetObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetHistDto}.
      */
-    public static final TimesheetHistDto createTimesheetHistoryDtoInstance(
-            ProjTimesheetHist ormBean) {
+    public static final TimesheetHistDto createTimesheetHistoryDtoInstance(ProjTimesheetHist ormBean) {
         return new TimesheetRmt2OrmAdapter(ormBean);
     }
 
@@ -85,8 +81,7 @@ public class TimesheetObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetHoursDto}.
      */
-    public static final TimesheetHoursDto createTimesheetHoursDtoInstance(
-            VwTimesheetHours ormBean) {
+    public static final TimesheetHoursDto createTimesheetHoursDtoInstance(VwTimesheetHours ormBean) {
         return new TimesheetRmt2OrmAdapter(ormBean);
     }
 
@@ -98,8 +93,7 @@ public class TimesheetObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetHoursSummaryDto}.
      */
-    public static final TimesheetHoursSummaryDto createTimesheetSummaryDtoInstance(
-            VwTimesheetSummary ormBean) {
+    public static final TimesheetHoursSummaryDto createTimesheetSummaryDtoInstance(VwTimesheetSummary ormBean) {
         return new TimesheetRmt2OrmAdapter(ormBean);
     }
 
@@ -111,8 +105,7 @@ public class TimesheetObjectFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetClientDto}.
      */
-    public static final TimesheetClientDto createTimesheetClientDtoInstance(
-            VwClientTimesheetSummary ormBean) {
+    public static final TimesheetClientDto createTimesheetClientDtoInstance(VwClientTimesheetSummary ormBean) {
         return new TimesheetRmt2OrmAdapter(ormBean);
     }
 

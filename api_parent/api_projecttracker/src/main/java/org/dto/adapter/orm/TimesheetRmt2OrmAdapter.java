@@ -115,6 +115,9 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
         }
         this.tsh = obj;
         this.currentHistory = false;
+        this.setUpdateUserId(obj.getUserId());
+        this.setIpCreated(obj.getIpCreated());
+        this.setIpUpdated(obj.getIpUpdated());
     }
 
     /**
@@ -129,6 +132,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
             obj = new VwTimesheetHours();
         }
         this.vtsh = obj;
+        this.setDateCreated(obj.getDateCreated());
     }
 
     /**

@@ -50,7 +50,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     private static final int TEST_BUSINESS_ID = 1350;
     private static final int TEST_CLIENT_ID = 1110;
     private static final int TEST_EMPLOYEE_TITLE_ID = 101;
-    private static final int TEST_PROJ_ID = 2220;
+    private static final int TEST_PROJ_ID = 4440;
     private static final int TEST_EMP_PROJ_ID = 55551;
     private static final String TEST_COMPANY_NAME = "ABC Company";
     

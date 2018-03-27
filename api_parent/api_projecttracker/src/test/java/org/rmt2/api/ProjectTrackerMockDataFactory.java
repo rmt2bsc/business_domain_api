@@ -1,15 +1,20 @@
 package org.rmt2.api;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
+import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
+import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
@@ -243,12 +248,10 @@ public class ProjectTrackerMockDataFactory {
     * @param overtimeRate
     * @return
     */
-    public static final VwTimesheetList createMockOrmVwTimesheetList(
-            int timesheetId, int clientId, int projId, int empId,
-            String invRefNo, String begPeriod, String endPeriod,
+    public static final VwTimesheetList createMockOrmVwTimesheetList(int timesheetId, int clientId, 
+            int projId, int empId, String invRefNo, String begPeriod, String endPeriod,
             String extRefNo, int managerId, String statusName, String acctNo,
-            double billableHours, double nonBillableHours, double hourlyRate,
-            double overtimeRate) {
+            double billableHours, double nonBillableHours, double hourlyRate, double overtimeRate) {
         VwTimesheetList o = new VwTimesheetList();
         o.setTimesheetId(timesheetId);
         o.setClientId(clientId);
@@ -317,11 +320,10 @@ public class ProjectTrackerMockDataFactory {
     * @param billable
     * @return
     */
-    public static final VwTimesheetEventList createMockOrmVwTimesheetEventList(
-            int eventId, String eventDate, double hours, int projectTaskId,
-            int timesheetId, int projectId, String projectName, int taskId,
-            String taskName, int clientId, String effectiveDate, String endDate,
-            boolean billable) {
+    public static final VwTimesheetEventList createMockOrmVwTimesheetEventList(int eventId, String eventDate, 
+            double hours, int projectTaskId, int timesheetId, int projectId, 
+            String projectName, int taskId, String taskName, int clientId, 
+            String effectiveDate, String endDate, boolean billable) {
         VwTimesheetEventList o = new VwTimesheetEventList();
         o.setEventId(eventId);
         o.setProjectTaskId(projectTaskId);
@@ -386,5 +388,72 @@ public class ProjectTrackerMockDataFactory {
         o.setBillable(billable ? 1 : 0);
         return o;
     }
+   
+    /**
+     * 
+     * @param projectTaskId
+     * @param taskId
+     * @param timesheetId
+     * @param projId
+     * @return
+     */
+    public static final ProjProjectTask createMockOrmProjProjectTask(int projectTaskId, int taskId, 
+            int timesheetId, int projId) {
+        ProjProjectTask o = new ProjProjectTask();
+        o.setProjectTaskId(projectTaskId);
+        o.setTaskId(taskId);
+        o.setTimesheetId(timesheetId);
+        o.setProjId(projId);
+        return o;
+    }
     
+    /**
+     * 
+     * @param timesheetId
+     * @param clientId
+     * @param projId
+     * @param empId
+     * @param taskId
+     * @param eventId
+     * @param projTaskId
+     * @param eventDate
+     * @param hours
+     * @param billable
+     * @return
+     */
+    public static final VwTimesheetHours createMockOrmVwTimesheetHours(int timesheetId, int clientId, 
+            int projId, int empId, int taskId, int eventId, int projTaskId, 
+            String eventDate, double hours, boolean billable) {
+        
+        VwTimesheetHours o = new VwTimesheetHours();
+        o.setTimesheetId(timesheetId);
+        o.setClientId(clientId);
+        o.setProjectId(projId);
+        o.setEmployeeId(empId);
+        o.setTaskId(taskId);
+        o.setEventId(eventId);
+        o.setProjTaskId(projTaskId);
+        o.setHours(hours);
+        
+        // Set derived fields
+        o.setEventDate(RMT2Date.stringToDate(eventDate));
+        long newDateInMillSecs = RMT2Date.incrementDate(o.getEventDate(), Calendar.DATE, 5);
+        Date newEndDate = RMT2Date.toDate(newDateInMillSecs);
+        o.setEffectiveDate(o.getEventDate());
+        o.setTimesheetBeginPeriod(o.getEventDate());
+        o.setEndDate(newEndDate);
+        o.setTimesheetEndPeriod(newEndDate);
+        o.setDateCreated(o.getEventDate());
+        
+        o.setBillable(billable ? 1 : 0);
+        
+        String displayValue = RMT2String.padInt(timesheetId, 10, RMT2String.PAD_LEADING);
+        o.setDisplayValue(displayValue);
+        o.setInvoiceRefNo("InvoiceRefNo" + o.getTimesheetId());
+        o.setExtRef("ExtRefNo" + o.getTimesheetId());
+        o.setDocumentId(o.getTimesheetId());
+        o.setProjectName("ProjectName" + o.getProjectId());
+        o.setTaskName("TaskName" + o.getTaskId());
+        return o;
+    }
 }

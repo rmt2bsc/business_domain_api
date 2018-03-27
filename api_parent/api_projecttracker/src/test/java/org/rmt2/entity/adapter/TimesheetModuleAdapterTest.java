@@ -1,9 +1,14 @@
 package org.rmt2.entity.adapter;
 
+import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
+import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.timesheet.TimesheetConst;
+import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.TimesheetHoursDto;
+import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -55,8 +60,7 @@ public class TimesheetModuleAdapterTest {
     
     @Test
     public void testOrmVwTimesheetList() {
-        VwTimesheetList o = ProjectTrackerMockDataFactory
-                .createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
+        VwTimesheetList o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
                         "INVREF1230", "2018-01-01", "2018-01-07", "ExtReNo1000",
                         3330, "DRAFT", "ACCT-111", 40, 0, 70.00, 80.00);
         TimesheetDto dto = TimesheetObjectFactory.createTimesheetExtendedDtoInstance(o);
@@ -92,4 +96,47 @@ public class TimesheetModuleAdapterTest {
         Assert.assertEquals(5555, dto.getStatusHistId());
         Assert.assertEquals(dto.getEmployeeLastname() + ", " + dto.getEmployeeFirstname(), dto.getEmployeeFullName());
     }
+    
+    @Test
+    public void testOrmProjProjectTask() {
+        ProjProjectTask o = ProjectTrackerMockDataFactory.createMockOrmProjProjectTask(1000, 2000, 3000, 4000);
+        ProjectTaskDto dto = ProjectObjectFactory.createProjectTaskDtoInstance(o);
+        
+        Assert.assertEquals(1000, dto.getProjectTaskId());
+        Assert.assertEquals(2000, dto.getTaskId());
+        Assert.assertEquals(3000, dto.getTimesheetId());
+        Assert.assertEquals(4000, dto.getProjId());
+    }
+    
+    @Test
+    public void testOrmVwTimesheetHours() {
+        VwTimesheetHours o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetHours(111, 1110, 4440, 2220,
+                1112220, 123401, 444441, "2018-01-07", 8, true);
+        TimesheetHoursDto dto = TimesheetObjectFactory.createTimesheetHoursDtoInstance(o);
+        
+        Assert.assertEquals(111, dto.getTimesheetId());
+        Assert.assertEquals(1110, dto.getClientId());
+        Assert.assertEquals(4440, dto.getProjId());
+        Assert.assertEquals(2220, dto.getEmpId());
+        Assert.assertEquals(1112220, dto.getTaskId());
+        Assert.assertEquals(123401, dto.getEventId());
+        Assert.assertEquals(444441, dto.getProjectTaskId());
+        Assert.assertEquals(8, dto.getEventHours(), 0);
+        Assert.assertEquals(1, dto.getTaskBillable());
+        
+        // Verify derived properties
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getEventDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getBeginPeriod());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getProjectEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getDateCreated());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-12"), dto.getEndPeriod());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-12"), dto.getProjectEndDate());
+        Assert.assertEquals("InvoiceRefNo" + o.getTimesheetId(), dto.getInvoiceRefNo());
+        Assert.assertEquals("ExtRefNo" + o.getTimesheetId(), dto.getExtRef());
+        Assert.assertEquals(dto.getTimesheetId(), dto.getDocumentId());
+        Assert.assertEquals("0000000111", dto.getDisplayValue());
+        Assert.assertEquals("ProjectName" + o.getProjectId(), dto.getProjectDescription());
+        Assert.assertEquals("TaskName" + o.getTaskId(), dto.getTaskDescription());
+    }
+    
 }
