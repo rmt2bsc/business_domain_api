@@ -60,7 +60,7 @@ public interface TimesheetApi extends TransactionApi {
     int getCurrentProjectId();
 
     /**
-     * Retrieve single TimesheetDto object by timesheet id.
+     * Retrieve a single TimesheetDto object by timesheet id.
      * 
      * @param timesheetId
      * @return an instance of {@link TimesheetDto}
@@ -69,20 +69,33 @@ public interface TimesheetApi extends TransactionApi {
     TimesheetDto get(Integer timesheetId) throws TimesheetApiException;
 
     /**
+     * Retrieve a single TimesheetDto, which will contain extended timesheet
+     * data, object by timesheet id.
      * 
      * @param timesheetId
-     * @return
+     * @return an instance of {@link TimesheetDto} containing extended timesheet
+     *         data
      * @throws TimesheetApiException
      */
     TimesheetDto getExt(Integer timesheetId) throws TimesheetApiException;
     
     /**
+     * Retrieve TimesheetDto objects based on selection criteria.
      * 
      * @param criteria
-     * @return
+     * @return a List of {@link TimesheetDto}
      * @throws TimesheetApiException
      */
     List<TimesheetDto> get(TimesheetDto criteria) throws TimesheetApiException;
+    
+    /**
+     * Retrieve TimesheetDto objects, which will contain extended timesheet data, based on selection criteria.
+     * 
+     * @param criteria
+     * @return a List of {@link TimesheetDto} containing extended timesheet data
+     * @throws TimesheetApiException
+     */
+    List<TimesheetDto> getExt(TimesheetDto criteria) throws TimesheetApiException;
 
     
 

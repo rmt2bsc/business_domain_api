@@ -184,8 +184,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving single extended timesheet by id, "
-                    + timesheetId);
+            buf.append("Database error occurred retrieving single extended timesheet by id, " + timesheetId);
             this.msg = buf.toString();
             logger.error(this.msg);
             throw new TimesheetApiException(this.msg, e);
@@ -203,6 +202,25 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
         return results.get(0);
     }
+    
+    
+    @Override
+    public List<TimesheetDto> getExt(TimesheetDto criteria) throws TimesheetApiException {
+        List<TimesheetDto> results = null;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = this.dao.fetchExt(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (TimesheetDaoException e) {
+            buf.append("Database error occurred retrieving extended timesheet(s) using customer criteria: " + criteria);
+            this.msg = buf.toString();
+            throw new TimesheetApiException(this.msg, e);
+        }
+        return results;
+    }
+    
 
 //    /*
 //     * (non-Javadoc)
@@ -1170,4 +1188,5 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             throw new InvalidDataException((parmName == null ? "Unknown parameter " : parmName) + " cannot be negative", e);
         }
     }
+    
 }
