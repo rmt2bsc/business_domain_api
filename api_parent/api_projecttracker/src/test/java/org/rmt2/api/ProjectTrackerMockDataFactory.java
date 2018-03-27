@@ -12,6 +12,7 @@ import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
+import org.dao.timesheet.TimesheetConst;
 
 import com.util.RMT2Date;
 import com.util.RMT2String;
@@ -271,7 +272,7 @@ public class ProjectTrackerMockDataFactory {
         o.setBillHrs(billableHours);
         o.setNonBillHrs(nonBillableHours);
         o.setStatusName(statusName);
-        o.setTimesheetStatusId(100);
+        o.setTimesheetStatusId(TimesheetConst.STATUS_DRAFT);
         o.setStatusDescription(statusName + "Description");
         o.setStatusEffectiveDate(RMT2Date.stringToDate(begPeriod));
         o.setStatusEndDate(RMT2Date.stringToDate(endPeriod));
