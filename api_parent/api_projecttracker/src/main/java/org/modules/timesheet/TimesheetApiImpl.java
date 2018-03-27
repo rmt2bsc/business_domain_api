@@ -125,10 +125,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving single timesheet by id, "
-                    + timesheetId);
+            buf.append("Database error occurred retrieving single timesheet by id, " + timesheetId);
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new TimesheetApiException(this.msg, e);
         }
 
@@ -139,7 +137,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             buf.append(results.size());
             buf.append("  were returned.");
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new TimesheetApiException(this.msg);
         }
         return results.get(0);
