@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
+import org.dao.timesheet.TimesheetConst;
 import org.dto.TimesheetDto;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
@@ -37,13 +38,11 @@ import com.util.RMT2Date;
 public class TimesheetQueryApiTest extends ProjectTrackerMockData {
     
     private static final int TEST_TIMESHEET_ID = 111;
-    private static final int TEST_CLIENT_ID = 1110;
     private static final int TEST_EMPLOYEE_ID = 2220;
-    private static final int TEST_BUSINESS_ID = 1350;
-    
-    private static final int TEST_EMPLOYEE_TITLE_ID = 101;
     private static final int TEST_MANAGER_ID = 3330;
-    
+    private static final int TEST_BUSINESS_ID = 1350;
+    private static final int TEST_CLIENT_ID = 1110;
+    private static final int TEST_EMPLOYEE_TITLE_ID = 101;
     private static final int TEST_PROJ_ID = 2220;
     private static final int TEST_EMP_PROJ_ID = 55551;
     private static final String TEST_COMPANY_NAME = "ABC Company";
@@ -215,13 +214,13 @@ public class TimesheetQueryApiTest extends ProjectTrackerMockData {
         Assert.assertNull(results.getIpCreated());
         Assert.assertNull(results.getIpUpdated());
         Assert.assertEquals(3330, results.getEmployeeManagerId());
-        Assert.assertEquals("QUOTE", results.getStatusName());
+        Assert.assertEquals("DRAFT", results.getStatusName());
         Assert.assertEquals("ACCT-111", results.getClientAccountNo());
         Assert.assertEquals(40, results.getBillHrs(), 0);
         Assert.assertEquals(0, results.getNonBillHrs(), 0);
         Assert.assertEquals(70.00, results.getEmployeeHourlyRate(), 0);
         Assert.assertEquals(80.00, results.getEmployeeHourlyOverRate(), 0);
-        Assert.assertEquals(100, results.getStatusId());
+        Assert.assertEquals(TimesheetConst.STATUS_DRAFT, results.getStatusId());
         Assert.assertEquals(results.getStatusName() + "Description", results.getStatusDescription());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), results.getStatusEffectiveDate());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), results.getStatusEndDate());
@@ -301,13 +300,71 @@ public class TimesheetQueryApiTest extends ProjectTrackerMockData {
             }
             // Test extended data
             Assert.assertEquals(TEST_MANAGER_ID, item.getEmployeeManagerId());
-            Assert.assertEquals("QUOTE", item.getStatusName());
+            Assert.assertEquals("DRAFT", item.getStatusName());
             Assert.assertEquals("ACCT-111", item.getClientAccountNo());
             Assert.assertEquals(40, item.getBillHrs(), 0);
             Assert.assertEquals(0, item.getNonBillHrs(), 0);
             Assert.assertEquals(70.00, item.getEmployeeHourlyRate(), 0);
             Assert.assertEquals(80.00, item.getEmployeeHourlyOverRate(), 0);
-            Assert.assertEquals(100, item.getStatusId());
+            Assert.assertEquals(TimesheetConst.STATUS_DRAFT, item.getStatusId());
+            Assert.assertEquals(item.getStatusName() + "Description", item.getStatusDescription());
+            
+            Assert.assertEquals(222, item.getEmployeeTypeId());
+            Assert.assertEquals(5555, item.getStatusHistId());
+            Assert.assertEquals(item.getEmployeeLastname() + ", " + item.getEmployeeFirstname(), item.getEmployeeFullName());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Fetch_Client_Approved() {
+        VwTimesheetList mockCriteria = new VwTimesheetList();
+        mockCriteria.setClientId(TEST_CLIENT_ID);
+        mockCriteria.setTimesheetStatusId(TimesheetConst.STATUS_APPROVED);
+        try {
+            // Changed mock data to represent an approved timesheet
+            this.mockVwTimesheetSingle.get(0).setStatusName("APPROVED");
+            this.mockVwTimesheetSingle.get(0).setStatusDescription("APPROVEDDescription");
+            this.mockVwTimesheetSingle.get(0).setTimesheetStatusId(TimesheetConst.STATUS_APPROVED);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single extended timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<TimesheetDto> results = null;
+        try {
+            results = api.getClientApproved(TEST_CLIENT_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            TimesheetDto item = results.get(ndx);
+            Assert.assertEquals((TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
+            Assert.assertEquals(1110, item.getClientId());
+            Assert.assertEquals(1234, item.getProjId());
+            Assert.assertEquals(2220, item.getEmpId());
+            Assert.assertEquals(("INVREF123" + ndx), item.getInvoiceRefNo());
+            Assert.assertEquals(("ExtReNo100" + ndx), item.getExtRef());
+            Assert.assertEquals(("Comments" + item.getTimesheetId()), item.getComments());
+            Assert.assertEquals(("000000011" + (ndx + 1)), item.getDisplayValue());
+            Assert.assertEquals(item.getTimesheetId(), item.getDocumentId());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), item.getBeginPeriod());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), item.getEndPeriod());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), item.getStatusEffectiveDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), item.getStatusEndDate());
+            // Test extended data
+            Assert.assertEquals(TEST_MANAGER_ID, item.getEmployeeManagerId());
+            Assert.assertEquals("APPROVED", item.getStatusName());
+            Assert.assertEquals("ACCT-111", item.getClientAccountNo());
+            Assert.assertEquals(40, item.getBillHrs(), 0);
+            Assert.assertEquals(0, item.getNonBillHrs(), 0);
+            Assert.assertEquals(70.00, item.getEmployeeHourlyRate(), 0);
+            Assert.assertEquals(80.00, item.getEmployeeHourlyOverRate(), 0);
+            Assert.assertEquals(TimesheetConst.STATUS_APPROVED, item.getStatusId());
             Assert.assertEquals(item.getStatusName() + "Description", item.getStatusDescription());
             
             Assert.assertEquals(222, item.getEmployeeTypeId());
