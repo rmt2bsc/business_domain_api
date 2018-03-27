@@ -10,8 +10,10 @@ import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
+import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
+import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +49,10 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
     protected List<ProjTask> mockProjTaskFetchSingle;
     protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchMultiple;
     protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchSingle;
-    
+    protected List<ProjTimesheet> mockProjTimesheetSingle;
+    protected List<ProjTimesheet> mockProjTimesheetMultiple;
+    protected List<VwTimesheetList> mockVwTimesheetSingle;
+    protected List<VwTimesheetList> mockVwTimesheetMultiple;    
     
 
     /**
@@ -76,6 +81,10 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
         this.mockProjTaskFetchSingle = this.createMockSingleTask();
         this.mockVwTimesheetProjectTaskFetchMultiple = this.createMockMultipleVwTimesheetProjectTask();
         this.mockVwTimesheetProjectTaskFetchSingle = this.createMockSingleVwTimesheetProjectTask();
+        this.mockProjTimesheetSingle = this.createMockSingleTimesheetList();
+        this.mockProjTimesheetMultiple = this.createMockMultipleTimesheetList();
+        this.mockVwTimesheetSingle = this.createMockSingleExtTimesheetList();
+        this.mockVwTimesheetMultiple = this.createMockMultipleExtTimesheetList();
         
         return;
     }
@@ -427,6 +436,76 @@ public class ProjectAdminApiTestData extends BaseProjectTrackerDaoTest {
                 123405, "2018-01-05", 8, 444445, 848484840, 2220,
                 "Project 2220", 1112224, "Holiday", 1000, "2018-01-01",
                 "2018-01-07", false);
+        list.add(o);
+        return list;
+    }
+    
+    private List<ProjTimesheet> createMockSingleTimesheetList() {
+        List<ProjTimesheet> list = new ArrayList<ProjTimesheet>();
+        ProjTimesheet o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheet(111, 1110, 1234, 2220, "INVREF1230",
+                "2018-01-01", "2018-01-07", "ExtReNo1000");
+        list.add(o);
+        return list;
+    }
+    
+    private List<ProjTimesheet> createMockMultipleTimesheetList() {
+        List<ProjTimesheet> list = new ArrayList<ProjTimesheet>();
+        ProjTimesheet o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheet(111, 1110, 1234, 2220, "INVREF1230",
+                "2018-01-01", "2018-01-07", "ExtReNo1000");
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheet(112, 1110, 1234, 2220, "INVREF1231",
+                "2018-01-08", "2018-01-14", "ExtReNo1001");
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheet(113, 1110, 1234, 2220, "INVREF1232",
+                "2018-01-15", "2018-01-21", "ExtReNo1002");
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheet(114, 1110, 1234, 2220, "INVREF1233",
+                "2018-01-22", "2018-01-28", "ExtReNo1003");
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheet(115, 1110, 1234, 2220, "INVREF1234",
+                "2018-01-29", "2018-02-04", "ExtReNo1004");
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwTimesheetList> createMockSingleExtTimesheetList() {
+        List<VwTimesheetList> list = new ArrayList<VwTimesheetList>();
+        VwTimesheetList o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
+                        "INVREF1230", "2018-01-01", "2018-01-07", "ExtReNo1000",
+                        3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwTimesheetList> createMockMultipleExtTimesheetList() {
+        List<VwTimesheetList> list = new ArrayList<VwTimesheetList>();
+        VwTimesheetList o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(111, 1110, 1234, 2220,
+                "INVREF1230", "2018-01-01", "2018-01-07", "ExtReNo1000",
+                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(112, 1110, 1234, 2220,
+                "INVREF1231", "2018-01-08", "2018-01-14", "ExtReNo1001",
+                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(113, 1110, 1234, 2220,
+                "INVREF1232", "2018-01-15", "2018-01-21", "ExtReNo1002",
+                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(114, 1110, 1234, 2220,
+                "INVREF1233", "2018-01-22", "2018-01-28", "ExtReNo1003",
+                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(115, 1110, 1234, 2220,
+                "INVREF1234", "2018-01-29", "2018-02-04", "ExtReNo1004",
+                3330, "QUOTE", "ACCT-111", 40, 0, 70.00, 80.00);
         list.add(o);
         return list;
     }
