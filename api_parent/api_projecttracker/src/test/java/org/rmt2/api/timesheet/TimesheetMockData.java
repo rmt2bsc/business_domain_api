@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
+import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
+import org.dao.timesheet.TimesheetConst;
 import org.junit.After;
 import org.junit.Before;
 import org.rmt2.api.ProjectTrackerMockData;
@@ -29,7 +31,9 @@ public class TimesheetMockData extends ProjectTrackerMockData {
     protected List<ProjTimesheet> mockProjTimesheetSingle;
     protected List<ProjTimesheet> mockProjTimesheetMultiple;
     protected List<VwTimesheetList> mockVwTimesheetSingle;
-    protected List<VwTimesheetList> mockVwTimesheetMultiple;    
+    protected List<VwTimesheetList> mockVwTimesheetMultiple;   
+    protected List<ProjTimesheetHist> mockProjTimesheetHistMultiple;
+    protected List<ProjTimesheetHist> mockCurrentProjTimesheetHist;
     protected List<VwTimesheetEventList> mockVwTimesheetEventListFetchMultiple;
     protected List<VwTimesheetEventList> mockVwTimesheetEventListFetchSingle;
     protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchMultiple;
@@ -52,6 +56,8 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         this.mockProjTimesheetMultiple = this.createMockMultipleTimesheetList();
         this.mockVwTimesheetSingle = this.createMockSingleExtTimesheetList();
         this.mockVwTimesheetMultiple = this.createMockMultipleExtTimesheetList();
+        this.mockProjTimesheetHistMultiple = this.createMockTimesheetStatusHistory();
+        this.mockCurrentProjTimesheetHist = this.createMockTimesheetCurrentStatus();
         
         return;
     }
@@ -63,6 +69,52 @@ public class TimesheetMockData extends ProjectTrackerMockData {
     public void tearDown() throws Exception {
         super.tearDown();
         return;
+    }
+    
+    private List<ProjTimesheetHist> createMockTimesheetCurrentStatus() {
+        List<ProjTimesheetHist> list = new ArrayList<ProjTimesheetHist>();
+        ProjTimesheetHist o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheetHist(
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID,
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
+                TimesheetConst.STATUS_APPROVED, "2018-01-09", null);
+        list.add(o);
+        
+        return list;
+    }
+    
+    private List<ProjTimesheetHist> createMockTimesheetStatusHistory() {
+        List<ProjTimesheetHist> list = new ArrayList<ProjTimesheetHist>();
+        ProjTimesheetHist o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheetHist(
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID,
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
+                TimesheetConst.STATUS_NEW, "2018-01-01", "2018-01-02");    
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheetHist(
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID,
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
+                TimesheetConst.STATUS_DRAFT, "2018-01-03", "2018-01-04");
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheetHist(
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID,
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
+                TimesheetConst.STATUS_SUBMITTED, "2018-01-05", "2018-01-06");
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheetHist(
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID,
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
+                TimesheetConst.STATUS_RECVD, "2018-01-07", "2018-01-08");
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheetHist(
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID,
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
+                TimesheetConst.STATUS_APPROVED, "2018-01-09", null);
+        list.add(o);
+        
+        return list;
     }
     
     private List<ProjProjectTask> createMockSingleProjProjectTask() {

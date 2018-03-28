@@ -422,21 +422,20 @@ public class TimesheetDaoFactory extends RMT2Base {
             TimesheetHistDto criteria) {
         ProjTimesheetHist obj = new ProjTimesheetHist();
         if (criteria != null) {
+            if (criteria.getTimesheetId() > 0) {
+                obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETID, criteria.getTimesheetId());
+            }
             if (criteria.getStatusHistId() > 0) {
-                obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETHISTID,
-                        criteria.getStatusId());
+                obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETHISTID, criteria.getStatusId());
             }
             if (criteria.getStatusId() > 0) {
-                obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETSTATUSID,
-                        criteria.getStatusId());
+                obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETSTATUSID, criteria.getStatusId());
             }
             if (criteria.getStatusEffectiveDate() != null) {
-                obj.addCriteria(ProjTimesheetHist.PROP_EFFECTIVEDATE,
-                        criteria.getStatusEffectiveDate());
+                obj.addCriteria(ProjTimesheetHist.PROP_EFFECTIVEDATE, criteria.getStatusEffectiveDate());
             }
             if (criteria.getStatusEndDate() != null) {
-                obj.addCriteria(ProjTimesheetHist.PROP_ENDDATE,
-                        criteria.getStatusEndDate());
+                obj.addCriteria(ProjTimesheetHist.PROP_ENDDATE, criteria.getStatusEndDate());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());

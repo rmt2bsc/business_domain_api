@@ -2,11 +2,13 @@ package org.rmt2.entity.adapter;
 
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
+import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.timesheet.TimesheetConst;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
@@ -139,4 +141,21 @@ public class TimesheetModuleAdapterTest {
         Assert.assertEquals("TaskName" + o.getTaskId(), dto.getTaskDescription());
     }
     
+    @Test
+    public void testOrmProjTimesheetHist() {
+        ProjTimesheetHist o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheetHist(
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID,
+                ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
+                TimesheetConst.STATUS_DRAFT, "2018-01-01", "2018-01-10");
+        TimesheetHistDto dto = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(o);
+        
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID, dto.getStatusHistId());
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, dto.getTimesheetId());
+        Assert.assertEquals(TimesheetConst.STATUS_DRAFT, dto.getStatusId());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getStatusEffectiveDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-10"), dto.getStatusEndDate());
+        Assert.assertEquals("testuser", dto.getUpdateUserId());
+        Assert.assertEquals("1.2.3.4", dto.getIpCreated());
+        Assert.assertEquals("1.2.3.4", dto.getIpUpdated());
+    }
 }

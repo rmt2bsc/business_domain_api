@@ -12,6 +12,7 @@ import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
+import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
@@ -25,6 +26,7 @@ import com.util.RMT2String;
 public class ProjectTrackerMockDataFactory {
 
     public static final int TEST_TIMESHEET_ID = 111;
+    public static final int TEST_TIMESHEET_HIST_ID = 5550;
     public static final int TEST_EMPLOYEE_ID = 2220;
     public static final int TEST_MANAGER_ID = 3330;
     public static final int TEST_CLIENT_ID = 1110;
@@ -470,6 +472,31 @@ public class ProjectTrackerMockDataFactory {
         o.setDocumentId(o.getTimesheetId());
         o.setProjectName("ProjectName" + o.getProjectId());
         o.setTaskName("TaskName" + o.getTaskId());
+        return o;
+    }
+    
+    /**
+     * 
+     * @param timesheetHistId
+     * @param timesheetId
+     * @param timesheetStatusId
+     * @param effectiveDate
+     * @param endDate
+     * @return
+     */
+    public static final ProjTimesheetHist createMockOrmProjTimesheetHist(int timesheetHistId, int timesheetId, 
+            int timesheetStatusId, String effectiveDate, String endDate) {
+        ProjTimesheetHist o = new ProjTimesheetHist();
+        o.setTimesheetHistId(timesheetHistId);
+        o.setTimesheetId(timesheetId);
+        o.setTimesheetStatusId(timesheetStatusId);
+        o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
+        if (endDate != null) {
+            o.setEndDate(RMT2Date.stringToDate(endDate));
+        }
+        o.setIpCreated("1.2.3.4");
+        o.setIpUpdated("1.2.3.4");
+        o.setUserId("testuser");
         return o;
     }
 }

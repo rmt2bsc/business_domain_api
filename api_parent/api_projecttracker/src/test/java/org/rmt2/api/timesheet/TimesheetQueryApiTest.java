@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
+import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
@@ -15,6 +16,7 @@ import org.dao.timesheet.TimesheetConst;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.TimesheetHistDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
@@ -442,7 +444,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
   
     
     @Test
-    public void testFetch_ProjectEvent_All_Success() {
+    public void testSuccess_Fetch_ProjectEvent_All() {
         // Stub all  project-event fetch.
         VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
         try {
@@ -479,7 +481,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testFetch_ProjectEvent_Single_Success() {
+    public void testSuccess_Fetch_ProjectEvent_Single() {
         // Stub single project-event fetch.
         VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
         mockCriteria.setEventId(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
@@ -513,5 +515,35 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
         Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[0]);
         Assert.assertEquals(obj.getTaskBillable(), 1);
+    }
+    
+    @Test
+    public void testSuccess_Fetch_Current_Status() {
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetHistDto results = null;
+        try {
+            results = api.getCurrentStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_TIMESHEET_HIST_ID, results.getStatusHistId());
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, results.getTimesheetId());
+        Assert.assertEquals(TimesheetConst.STATUS_APPROVED, results.getStatusId());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-09"), results.getStatusEffectiveDate());
+        Assert.assertNull(results.getStatusEndDate());
+        Assert.assertEquals("testuser", results.getUpdateUserId());
+        Assert.assertEquals("1.2.3.4", results.getIpCreated());
+        Assert.assertEquals("1.2.3.4", results.getIpUpdated());
     }
  }

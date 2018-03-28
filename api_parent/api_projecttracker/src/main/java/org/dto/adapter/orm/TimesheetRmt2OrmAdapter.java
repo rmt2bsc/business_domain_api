@@ -825,6 +825,9 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
         if (this.ts != null) {
             this.ts.setTimesheetStatusId(value);
         }
+        if (this.tsh != null) {
+            this.tsh.setTimesheetStatusId(value);
+        }
         if (this.tss != null) {
             this.tss.setTimesheetStatusId(value);
         }
@@ -842,6 +845,9 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     public int getStatusId() {
         if (this.ts != null) {
             return this.ts.getTimesheetStatusId();
+        }
+        if (this.tsh != null) {
+            return this.tsh.getTimesheetStatusId();
         }
         if (this.tss != null) {
             return this.tss.getTimesheetStatusId();
