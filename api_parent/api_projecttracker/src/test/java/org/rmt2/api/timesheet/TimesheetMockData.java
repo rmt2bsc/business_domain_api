@@ -3,6 +3,7 @@ package org.rmt2.api.timesheet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
@@ -23,6 +24,8 @@ import org.rmt2.api.ProjectTrackerMockDataFactory;
  * 
  */
 public class TimesheetMockData extends ProjectTrackerMockData {
+    protected List<ProjProjectTask> mockProjProjectTaskSingle;
+    protected List<ProjProjectTask> mockProjProjectTaskMultiple;
     protected List<ProjTimesheet> mockProjTimesheetSingle;
     protected List<ProjTimesheet> mockProjTimesheetMultiple;
     protected List<VwTimesheetList> mockVwTimesheetSingle;
@@ -39,6 +42,8 @@ public class TimesheetMockData extends ProjectTrackerMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        this.mockProjProjectTaskSingle = this.createMockSingleProjProjectTask();
+        this.mockProjProjectTaskMultiple = this.createMockMultipleProjProjectTask();
         this.mockVwTimesheetEventListFetchMultiple = this.createMockMultipleVwTimesheetEventList();
         this.mockVwTimesheetEventListFetchSingle = this.createMockSingleVwTimesheetEventList();
         this.mockVwTimesheetProjectTaskFetchMultiple = this.createMockMultipleVwTimesheetProjectTask();
@@ -60,10 +65,30 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         return;
     }
     
+    private List<ProjProjectTask> createMockSingleProjProjectTask() {
+        List<ProjProjectTask> list = new ArrayList<ProjProjectTask>();
+        ProjProjectTask o = ProjectTrackerMockDataFactory.createMockOrmProjProjectTask(444441, 1112220, 111, 4440);
+        list.add(o);
+        return list;
+    }
+    
+    private List<ProjProjectTask> createMockMultipleProjProjectTask() {
+        List<ProjProjectTask> list = new ArrayList<ProjProjectTask>();
+        ProjProjectTask o = ProjectTrackerMockDataFactory.createMockOrmProjProjectTask(444441, 1112220, 111, 4440);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmProjProjectTask(444442, 1112221, 111, 4440);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmProjProjectTask(444443, 1112222, 111, 4440);
+        list.add(o);
+        
+        return list;
+    }
+    
     private List<VwTimesheetProjectTask> createMockSingleVwTimesheetProjectTask() {
         List<VwTimesheetProjectTask> list = new ArrayList<VwTimesheetProjectTask>();
-        VwTimesheetProjectTask o = ProjectTrackerMockDataFactory
-                .createMockOrmVwTimesheetProjectTask(444441, 111, 4440,
+        VwTimesheetProjectTask o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetProjectTask(444441, 111, 4440,
                         1112220, 1110, "Project 2220", "2018-01-01",
                         "2018-01-07", "Design and Analysis", true);
         list.add(o);
