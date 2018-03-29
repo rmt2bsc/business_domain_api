@@ -131,8 +131,8 @@ public class TimesheetModuleAdapterTest {
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getBeginPeriod());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getProjectEffectiveDate());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-07"), dto.getDateCreated());
-        Assert.assertEquals(RMT2Date.stringToDate("2018-01-12"), dto.getEndPeriod());
-        Assert.assertEquals(RMT2Date.stringToDate("2018-01-12"), dto.getProjectEndDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-08"), dto.getEndPeriod());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-08"), dto.getProjectEndDate());
         Assert.assertEquals("InvoiceRefNo" + o.getTimesheetId(), dto.getInvoiceRefNo());
         Assert.assertEquals("ExtRefNo" + o.getTimesheetId(), dto.getExtRef());
         Assert.assertEquals(dto.getTimesheetId(), dto.getDocumentId());
