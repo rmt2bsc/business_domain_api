@@ -7,6 +7,7 @@ import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
+import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
@@ -38,7 +39,7 @@ public class TimesheetMockData extends ProjectTrackerMockData {
     protected List<VwTimesheetEventList> mockVwTimesheetEventListFetchSingle;
     protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchMultiple;
     protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchSingle;
-    
+    protected List<VwTimesheetHours> mockTimesheetHours;
 
     /**
      * @throws java.lang.Exception
@@ -58,6 +59,7 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         this.mockVwTimesheetMultiple = this.createMockMultipleExtTimesheetList();
         this.mockProjTimesheetHistMultiple = this.createMockTimesheetStatusHistory();
         this.mockCurrentProjTimesheetHist = this.createMockTimesheetCurrentStatus();
+        this.mockTimesheetHours = this.createMockTimesheetHours();
         
         return;
     }
@@ -282,6 +284,30 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetList(115, 1110, 1234, 2220,
                 "INVREF1234", "2018-01-29", "2018-02-04", "ExtReNo1004",
                 3330, "DRAFT", "ACCT-111", 40, 0, 70.00, 80.00);
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwTimesheetHours> createMockTimesheetHours() {
+        List<VwTimesheetHours> list = new ArrayList<VwTimesheetHours>();
+        VwTimesheetHours o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetHours(111, 1110, 4440, 2220,
+                1112220, 123401, 444441, "2018-01-01", 8, true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetHours(111, 1110, 4440, 2220,
+                1112220, 123401, 444441, "2018-01-02", 8, true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetHours(111, 1110, 4440, 2220,
+                1112220, 123401, 444441, "2018-01-03", 8, true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetHours(111, 1110, 4440, 2220,
+                1112220, 123401, 444441, "2018-01-04", 8, true);
+        list.add(o);
+        
+        o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetHours(111, 1110, 4440, 2220,
+                1112220, 123401, 444441, "2018-01-05", 8, true);
         list.add(o);
         return list;
     }
