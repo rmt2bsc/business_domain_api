@@ -518,6 +518,43 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     }
     
     @Test
+    public void testSuccess_Fetch_ProjectEvent_By_TimesheetId() {
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                      .thenReturn(this.mockVwTimesheetEventListFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet events case setup failed");
+        }
+
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<ProjectEventDto> results = null;
+        try {
+            results = api.getEventByTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ProjectEventDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getProjectTaskId(), (ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + ndx));
+            Assert.assertEquals(obj.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.assertEquals(obj.getProjId(), ProjectTrackerMockDataFactory.TEST_PROJ_ID);
+            Assert.assertEquals(obj.getTaskId(), (ProjectTrackerMockDataFactory.TEST_TASK_ID + ndx));
+            Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), ProjectTrackerMockDataFactory.TEST_PROJECT_NAME);
+            Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
+            Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
+            Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
+            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+        }
+    }
+    
+    @Test
     public void testSuccess_Fetch_Current_Status() {
         ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
         mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);

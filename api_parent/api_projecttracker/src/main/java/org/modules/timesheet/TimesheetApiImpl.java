@@ -318,17 +318,15 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
         List<ProjectEventDto> results = null;
-        StringBuilder buf = new StringBuilder();
         try {
             results = this.dao.fetchEvent(criteria);
             if (results == null) {
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving timesheet event(s) by timesheet id: "
-                    + timesheetId);
+            StringBuilder buf = new StringBuilder();
+            buf.append("Database error occurred retrieving timesheet event(s) by timesheet id: " + timesheetId);
             this.msg = buf.toString();
-            logger.error(this.msg);
             throw new TimesheetApiException(this.msg, e);
         }
         return results;
