@@ -10,6 +10,7 @@ import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
+import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
@@ -17,6 +18,7 @@ import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
+import org.dto.TimesheetHoursDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
@@ -582,5 +584,60 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals("testuser", results.getUpdateUserId());
         Assert.assertEquals("1.2.3.4", results.getIpCreated());
         Assert.assertEquals("1.2.3.4", results.getIpUpdated());
+    }
+    
+    @Test
+    public void testSuccess_Fetch_Timesheet_Total_Hours() {
+        VwTimesheetHours mockCriteria = new VwTimesheetHours();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockTimesheetHours);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet total hours case setup failed");
+        }
+
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<TimesheetHoursDto> results = null;
+        try {
+            results = api.getHours(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        double totalHours = 0;
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            TimesheetHoursDto dto = results.get(ndx);
+            Assert.assertEquals(111, dto.getTimesheetId());
+            Assert.assertEquals(1110, dto.getClientId());
+            Assert.assertEquals(4440, dto.getProjId());
+            Assert.assertEquals(2220, dto.getEmpId());
+            Assert.assertEquals(1112220, dto.getTaskId());
+            Assert.assertEquals(123401, dto.getEventId());
+            Assert.assertEquals(444441, dto.getProjectTaskId());
+            Assert.assertEquals(8, dto.getEventHours(), 0);
+            Assert.assertEquals(1, dto.getTaskBillable());
+            
+            // Accumulate hours worked
+            totalHours += dto.getEventHours();
+            
+            // Verify derived properties
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-0" + (ndx + 1)), dto.getEventDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-0" + (ndx + 1)), dto.getBeginPeriod());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-0" + (ndx + 1)), dto.getProjectEffectiveDate());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-0" + (ndx + 1)), dto.getDateCreated());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-0" + (ndx + 2)), dto.getEndPeriod());
+            Assert.assertEquals(RMT2Date.stringToDate("2018-01-0" + (ndx + 2)), dto.getProjectEndDate());
+            Assert.assertEquals("InvoiceRefNo" + dto.getTimesheetId(), dto.getInvoiceRefNo());
+            Assert.assertEquals("ExtRefNo" + dto.getTimesheetId(), dto.getExtRef());
+            Assert.assertEquals(dto.getTimesheetId(), dto.getDocumentId());
+            Assert.assertEquals("0000000111", dto.getDisplayValue());
+            Assert.assertEquals("ProjectName" + dto.getProjId(), dto.getProjectDescription());
+            Assert.assertEquals("TaskName" + dto.getTaskId(), dto.getTaskDescription());
+        }
+
+        Assert.assertEquals(40, totalHours, 0);
     }
  }
