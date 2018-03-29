@@ -144,7 +144,7 @@ public interface TimesheetApi extends TransactionApi {
     TimesheetHistDto getCurrentStatus(Integer timesheetId) throws TimesheetApiException;
 
     /**
-     * Retrieves timesheet hours of a timesheet using timesheetId.
+     * Retrieves the hours of a timesheet using timesheetId.
      * 
      * @param timesheetId
      * @return List of {@link TimesheetHoursDto} objects
