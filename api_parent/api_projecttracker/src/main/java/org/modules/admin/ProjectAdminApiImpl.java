@@ -237,8 +237,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
             }
         } catch (ProjecttrackerDaoException e) {
             StringBuilder buf = new StringBuilder();
-            buf.append("Database error occurred retrieving event(s) by selection criteria: ");
-            buf.append(criteria.toString());
+            buf.append("Database error occurred retrieving event(s) by selection criteria");
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
         }

@@ -20,6 +20,7 @@ import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
+import org.modules.ProjectTrackerApiConst;
 import org.modules.admin.ProjectAdminApi;
 import org.modules.admin.ProjectAdminApiException;
 import org.modules.admin.ProjectAdminApiFactory;
@@ -46,12 +47,6 @@ import com.util.assistants.VerifyException;
  */
 class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetApi {
 
-    private static final String PARM_NAME_TIMESHEET_ID = "Timesheet Id";
-    
-    private static final String PARM_NAME_CLIENT_ID = "Client Id";
-    
-    private static final String PARM_NAME_EMPLOYEE_ID = "Employee Id";
-    
     private static final Logger logger = Logger.getLogger(TimesheetApiImpl.class);
 
     private TimesheetDaoFactory daoFact;
@@ -112,7 +107,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public TimesheetDto get(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
+        try {
+            Verifier.verifyPositive(timesheetId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e);
+        }
         
         TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -131,7 +132,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
 
         if (results.size() > 1) {
-            buf.append("Error: Query method is expecting a single timesheet object to be returned using timesheet id, ");
+            buf.append("Method returned too many rows using timesheet id, ");
             buf.append(timesheetId);
             buf.append(".  Instead ");
             buf.append(results.size());
@@ -149,16 +150,22 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public List<TimesheetDto> get(TimesheetDto criteria) throws TimesheetApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            this.msg = "Timesheet selection criteria is required";
+            throw new InvalidTimesheetException(this.msg, e);
+        }
+        
         List<TimesheetDto> results = null;
-        StringBuilder buf = new StringBuilder();
         try {
             results = this.dao.fetch(criteria);
             if (results == null) {
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving timesheet(s) using customer criteria: " + criteria);
-            this.msg = buf.toString();
+            this.msg = "Database error occurred retrieving timesheet(s) using customer criteria: " + criteria;
             throw new TimesheetApiException(this.msg, e);
         }
         return results;
@@ -171,7 +178,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public TimesheetDto getExt(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
+        try {
+            Verifier.verifyPositive(timesheetId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e);
+        }
         
         TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -191,7 +204,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
 
         if (results.size() > 1) {
-            buf.append("Error: Query method is expecting a single extended timesheet object to be returned using timesheet id, ");
+            buf.append("Method returned too many rows using timesheet id, ");
             buf.append(timesheetId);
             buf.append(".  Instead ");
             buf.append(results.size());
@@ -206,6 +219,14 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     
     @Override
     public List<TimesheetDto> getExt(TimesheetDto criteria) throws TimesheetApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            this.msg = "Timesheet selection criteria is required";
+            throw new InvalidTimesheetException(this.msg, e);
+        }
+        
         List<TimesheetDto> results = null;
         StringBuilder buf = new StringBuilder();
         try {
@@ -214,7 +235,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                 return null;
             }
         } catch (TimesheetDaoException e) {
-            buf.append("Database error occurred retrieving extended timesheet(s) using customer criteria: " + criteria);
+            buf.append("Database error occurred retrieving extended timesheet(s) using selection criteria object");
             this.msg = buf.toString();
             throw new TimesheetApiException(this.msg, e);
         }
@@ -228,7 +249,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public List<TimesheetDto> getClientApproved(Integer clientId) throws TimesheetApiException {
-        this.validateNumericParam(clientId, PARM_NAME_CLIENT_ID);
+        this.validateNumericParam(clientId, ProjectTrackerApiConst.PARM_NAME_CLIENT_ID);
+        try {
+            Verifier.verifyPositive(clientId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException(ProjectTrackerApiConst.PARM_NAME_CLIENT_ID + " must be greater than zero", e);
+        }
         
         TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setClientId(clientId);
@@ -257,7 +284,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public List<ProjectTaskDto> getProjectTaskByTimesheet(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -285,7 +312,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public List<ProjectTaskDto> getProjectTaskExtByTimesheet(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -313,7 +340,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public List<ProjectEventDto> getEventByTimesheet(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
+        try {
+            Verifier.verifyPositive(timesheetId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e);
+        }
         
         ProjectEventDto criteria = ProjectObjectFactory.createProjectEventDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -339,16 +372,42 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public TimesheetHistDto getCurrentStatus(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
+        try {
+            Verifier.verifyPositive(timesheetId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e);
+        }
         
         TimesheetHistDto obj = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
         obj.setTimesheetId(timesheetId);
         obj.setCurrentStatusFlag(true);
-        List<TimesheetHistDto> list = this.dao.fetchStatusHistory(obj);
-        if (list == null) {
-            return null;
+        List<TimesheetHistDto> results = null;
+        try {
+            results = this.dao.fetchStatusHistory(obj);
+            if (results == null) {
+                return null;
+            }    
         }
-        return list.get(0);
+        catch (TimesheetDaoException e) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("Database error occurred retrieving timesheet event(s) by timesheet id: " + timesheetId);
+            this.msg = buf.toString();
+            throw new TimesheetApiException(this.msg, e);
+        }
+        
+        if (results.size() > 1) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("Method returned too many rows using timesheet id, ");
+            buf.append(timesheetId);
+            buf.append(".  Instead ");
+            buf.append(results.size());
+            buf.append("  were returned.");
+            this.msg = buf.toString();
+            throw new TimesheetApiException(this.msg);
+        }
+        return results.get(0);
     }
 
     /*
@@ -358,7 +417,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public List<TimesheetHoursDto> getHours(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
+        try {
+            Verifier.verifyPositive(timesheetId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e);
+        }
         
         TimesheetHoursDto criteria = TimesheetObjectFactory.createTimesheetHoursDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
@@ -399,7 +464,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     public int updateTimesheet(TimesheetDto timesheet, Map<ProjectTaskDto, List<EventDto>> hours)
             throws TimesheetApiException {
 
-        this.validateTimesheet(timesheet);
+        this.validateTimesheetForUpdate(timesheet);
         int timesheetId = 0;
         if (timesheet.getTimesheetId() == 0) {
             // Insert timesheet row.
@@ -509,7 +574,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public int updateProjectTask(ProjectTaskDto projectTask) throws TimesheetApiException {
-        this.validateProjectTask(projectTask);
+        this.validateProjectTaskForUpdate(projectTask);
         return this.dao.maintainProjectTask(projectTask);
     }
 
@@ -520,7 +585,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public int updateEvent(EventDto event) throws TimesheetApiException {
-        this.validateEvent(event);
+        this.validateEventForUpdate(event);
         return this.dao.maintainEvent(event);
     }
 
@@ -531,7 +596,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public int updateEvent(Integer projectTaskId, List<EventDto> events) throws TimesheetApiException {
-        this.validateEvent(projectTaskId, events);
+        this.validateEventForUpdate(projectTaskId, events);
         // Begin processing each item in the List of events
         int count = 0;
         for (EventDto event : events) {
@@ -551,7 +616,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      *             If the client id and/or the employee id is found not to be
      *             associated with the timesheet.
      */
-    private void validateTimesheet(TimesheetDto ts) throws InvalidTimesheetException {
+    private void validateTimesheetForUpdate(TimesheetDto ts) throws InvalidTimesheetException {
         try {
             Verifier.verifyNotNull(ts);
         }
@@ -587,7 +652,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      *             <i>event</i> is null, project task id or the event date does
      *             not have values within <i>event</i>.
      */
-    private void validateEvent(EventDto event) throws InvalidEventException {
+    private void validateEventForUpdate(EventDto event) throws InvalidEventException {
         try {
             Verifier.verifyNotNull(event);
         }
@@ -619,7 +684,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @param events
      * @throws InvalidEventException
      */
-    private void validateEvent(Integer projectTaskId, List<EventDto> events) throws InvalidEventException {
+    private void validateEventForUpdate(Integer projectTaskId, List<EventDto> events) throws InvalidEventException {
         try {
           Verifier.verifyNotNull(projectTaskId);
         }
@@ -672,7 +737,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      *             if the values for timesheet, project, and/or task are not
      *             set.
      */
-    private void validateProjectTask(ProjectTaskDto pt) throws InvalidProjectTaskException {
+    private void validateProjectTaskForUpdate(ProjectTaskDto pt) throws InvalidProjectTaskException {
         try {
             Verifier.verifyPositive(pt.getProjId());
         }
@@ -698,7 +763,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      *            an instance of {@link ProjectTaskDto}
      * @throws InvalidTaskException
      */
-    private void validateTask(ProjectTaskDto task) throws InvalidTaskException {
+    private void validateTaskForUpdate(ProjectTaskDto task) throws InvalidTaskException {
         try {
             Verifier.verifyNotNull(task);
         } catch (VerifyException e) {
@@ -842,7 +907,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public void approve(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         // Set timesheet status to Approved.
         this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
@@ -856,7 +921,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public void decline(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         // Set timesheet status to Declined
         this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
@@ -872,7 +937,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public void submit(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         this.load(timesheetId);
         // Set timesheet status to Draft.
@@ -920,7 +985,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public int deleteTimesheet(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         // Delete all project/tasks belonging to the timesheet
         this.deleteProjectTasks(timesheetId);
@@ -956,7 +1021,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public int deleteProjectTasks(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         List<ProjectTaskDto> ptList = this.getProjectTaskByTimesheet(timesheetId);
         int count = 0;
@@ -1033,7 +1098,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public Map<ProjectTaskDto, List<EventDto>> load(Integer timesheetId) throws TimesheetApiException {
-        this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
+        this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
+        try {
+            Verifier.verifyPositive(timesheetId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e);
+        }
         
         // Fetch Timesheet
         TimesheetDto ts = this.getExt(timesheetId);

@@ -31,9 +31,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.ProjectTrackerApiConst;
 import org.modules.admin.ProjectAdminApi;
 import org.modules.admin.ProjectAdminApiException;
 import org.modules.admin.ProjectAdminApiFactory;
+import org.modules.timesheet.InvalidTimesheetException;
 import org.modules.timesheet.TimesheetApi;
 import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
@@ -41,7 +43,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
 
@@ -108,6 +112,95 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals("testuser", results.getUpdateUserId());
         Assert.assertEquals("1.2.3.4", results.getIpCreated());
         Assert.assertEquals("1.2.3.4", results.getIpUpdated());
+    }
+    
+    @Test
+    public void testError_Fetch_Single_Timesheet_Too_Many_Returned() {
+        ProjTimesheet mockCriteria = new ProjTimesheet();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjTimesheetMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.get(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Method returned too many rows using timesheet id, "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_Single_Timesheet_DB_Access_Fault() {
+        ProjTimesheet mockCriteria = new ProjTimesheet();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.get(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Database error occurred retrieving single timesheet by id, "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Single_Timesheet_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer nullParm = null;
+        try {
+            api.get(nullParm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Single_Timesheet_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.get(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Fetch_Single_Timesheet_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.get(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero"));
+            e.printStackTrace();
+        }
     }
     
     @Test
@@ -237,6 +330,94 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(results.getEmployeeLastname() + ", " + results.getEmployeeFirstname(), results.getEmployeeFullName());
     }
     
+    @Test
+    public void testError_Fetch_Single_Extended_Timesheet_Too_Many_Returned() {
+        VwTimesheetList mockCriteria = new VwTimesheetList();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single extended timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getExt(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Method returned too many rows using timesheet id, "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_Single_Extended_Timesheet_DB_Access_Fault() {
+        VwTimesheetList mockCriteria = new VwTimesheetList();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getExt(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Database error occurred retrieving single extended timesheet by id, "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Single_Extended_Timesheet_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer nullParm = null;
+        try {
+            api.getExt(nullParm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Single_Extended_Timesheet_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.getExt(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Fetch_Single_Extended_Timesheet_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.getExt(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero"));
+            e.printStackTrace();
+        }
+    }
     
     @Test
     public void testSuccess_Fetch_Multiple_Extended_Timesheet() {
@@ -324,6 +505,45 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     }
     
     @Test
+    public void testError_Fetch_Multiple_Extended_Timesheet_DB_Access_Fault() {
+        VwTimesheetList mockCriteria = new VwTimesheetList();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
+        try {
+            api.getExt(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains(
+                    "Database error occurred retrieving extended timesheet(s) using selection criteria object"));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Multiple_Extended_Timesheet_Null_Selection_Criteria() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetDto criteria = null;
+        try {
+            api.getExt(criteria);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("Timesheet selection criteria is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testSuccess_Fetch_Client_Approved() {
         VwTimesheetList mockCriteria = new VwTimesheetList();
         mockCriteria.setClientId(ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
@@ -382,6 +602,73 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     }
     
     @Test
+    public void testError_Fetch_Client_Approved_DB_Access_Fault() {
+        VwTimesheetList mockCriteria = new VwTimesheetList();
+        mockCriteria.setClientId(ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+        mockCriteria.setTimesheetStatusId(TimesheetConst.STATUS_APPROVED);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(new DatabaseException("DB error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single extended timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getClientApproved(ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains(
+                    "Database error occurred retrieving approved extended timesheet(s) by client id: "
+                            + ProjectTrackerMockDataFactory.TEST_CLIENT_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Client_Approved_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getClientApproved(null);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(e.getMessage(), ProjectTrackerApiConst.PARM_NAME_CLIENT_ID + " is required");
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Client_Approved_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getClientApproved(-1234);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(e.getMessage(), ProjectTrackerApiConst.PARM_NAME_CLIENT_ID + " cannot be negative");
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Client_Approved_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getClientApproved(0);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(e.getMessage(), ProjectTrackerApiConst.PARM_NAME_CLIENT_ID + " must be greater than zero");
+            e.printStackTrace();
+        }
+    }
+    
+    
+    @Test
     public void testSuccess_Fetch_Simple_ProjectTask_By_TimesheetId() {
         ProjProjectTask mockCriteria = new ProjProjectTask();
         mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -411,6 +698,76 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(obj.getTaskId(), (ProjectTrackerMockDataFactory.TEST_TASK_ID + ndx));
         }
     }
+    
+    @Test
+    public void testError_Fetch_Simple_ProjectTask_By_TimesheetId_DB_Access_Fault() {
+        ProjProjectTask mockCriteria = new ProjProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getProjectTaskByTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Database error occurred retrieving timesheet project/task(s) by timesheet id: "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Simple_ProjectTask_By_TimesheetId_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer nullParm = null;
+        try {
+            api.getProjectTaskByTimesheet(nullParm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Simple_ProjectTask_By_TimesheetId_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.getProjectTaskByTimesheet(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Fetch_Simple_ProjectTask_By_TimesheetId_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.getProjectTaskByTimesheet(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID
+                            + " must be greater than zero"));
+            e.printStackTrace();
+        }
+    }
+    
  
     @Test
     public void testSuccess_Fetch_Extended_ProjectTask_By_TimesheetId() {
@@ -449,6 +806,75 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         }
     }
   
+    @Test
+    public void testError_Fetch_Extended_ProjectTask_By_TimesheetId_DB_Access_Fault() {
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getProjectTaskExtByTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains(
+                    "Database error occurred retrieving extended timesheet project/task(s) by timesheet id: "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Extended_ProjectTask_By_TimesheetId_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer nullParm = null;
+        try {
+            api.getProjectTaskExtByTimesheet(nullParm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Extended_ProjectTask_By_TimesheetId_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.getProjectTaskExtByTimesheet(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Fetch_Extended_ProjectTask_By_TimesheetId_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.getProjectTaskExtByTimesheet(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID
+                            + " must be greater than zero"));
+            e.printStackTrace();
+        }
+    }
     
     @Test
     public void testSuccess_Fetch_ProjectEvent_All() {
@@ -562,6 +988,73 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     }
     
     @Test
+    public void testError_Fetch_ProjectEvent_By_TimesheetId_DB_Access_Fault() {
+        VwTimesheetEventList mockCriteria = new VwTimesheetEventList();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                      .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet events case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getEventByTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Database error occurred retrieving timesheet event(s) by timesheet id: "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_ProjectEvent_By_TimesheetId_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = null;
+        try {
+            api.getEventByTimesheet(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_FetchProjectEvent_By_TimesheetId_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.getEventByTimesheet(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Fetch_ProjectEvent_By_TimesheetId_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.getEventByTimesheet(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testSuccess_Fetch_Current_Status() {
         ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
         mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -589,6 +1082,95 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals("testuser", results.getUpdateUserId());
         Assert.assertEquals("1.2.3.4", results.getIpCreated());
         Assert.assertEquals("1.2.3.4", results.getIpUpdated());
+    }
+   
+    @Test
+    public void testError_Fetch_Current_Status_Too_Many_Returned() {
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjTimesheetHistMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getCurrentStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Method returned too many rows using timesheet id, "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_Current_Status_DB_Access_Fault() {
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getCurrentStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Database error occurred retrieving single timesheet by id, "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Current_Status_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer nullParm = null;
+        try {
+            api.getCurrentStatus(nullParm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Current_Status_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.getCurrentStatus(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Fetch_Current_Status_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.getCurrentStatus(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero"));
+            e.printStackTrace();
+        }
     }
     
     @Test
@@ -644,6 +1226,75 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         }
 
         Assert.assertEquals(40, totalHours, 0);
+    }
+    
+    @Test
+    public void testError_Fetch_Timesheet_Total_Hours_DB_Access_Fault() {
+        VwTimesheetHours mockCriteria = new VwTimesheetHours();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet total hours case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getHours(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Database error occurred retrieving timesheet hours by timesheet id: "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Timesheet_Total_Hours_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer nullParm = null;
+        try {
+            api.getHours(nullParm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Timesheet_Total_Hours_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.getHours(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Fetch_Timesheet_Total_Hours_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.getHours(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID
+                            + " must be greater than zero"));
+            e.printStackTrace();
+        }
     }
     
     @Test
@@ -720,4 +1371,269 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(40, timesheetHourTotal, 0);
     }
     
+    @Test
+    public void testError_Load_Timesheet_Graph_DB_Access_Fault_1() {
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria)))
+                  .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Database error occurred retrieving single extended timesheet by id, "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Load_Timesheet_Graph_DB_Access_Fault_2() {
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria)))
+                   .thenReturn(this.mockVwTimesheetSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet case setup failed");
+        }
+        
+        // Setup project/task stub
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+               .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains(
+                    "Database error occurred retrieving extended timesheet project/task(s) by timesheet id: "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Load_Timesheet_Graph_DB_Access_Fault_3() {
+        // Setup timesheet stub
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria)))
+                   .thenReturn(this.mockVwTimesheetSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet case setup failed");
+        }
+        
+        // Setup project/task stub
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockVwTimesheetProjectTaskFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet project-task case setup failed");
+        }
+        
+        // Setup event stub
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEvent.class)))
+                .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all events case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals(e.getMessage(),
+                    "Timesheet API load operation failed.  Error occurred fetching events for project/task id, "
+                            + ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+
+            Assert.assertEquals(e.getCause().getMessage(),
+                    "Database error occurred retrieving event(s) by selection criteria");
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Load_Timesheet_Graph_Timesheet_Not_Found() {
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Failed to build timesheet object graph due to Timesheet ["
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID + "] could not be found"));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Load_Timesheet_Graph_ProjectTask_Not_Found() {
+        // Setup timesheet stub
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria)))
+                   .thenReturn(this.mockVwTimesheetSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet case setup failed");
+        }
+        
+        // Setup project/task stub
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Failed to build timesheet object graph due to Timesheet ["
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID
+                            + "] is not assoicated with any project/task items"));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Load_Timesheet_Graph_Event_Not_Found() {
+        // Setup timesheet stub
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria)))
+                   .thenReturn(this.mockVwTimesheetSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet case setup failed");
+        }
+        
+        // Setup project/task stub
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockVwTimesheetProjectTaskFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet project-task case setup failed");
+        }
+        
+        // Setup event stub
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEvent.class))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all events case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getMessage().contains("Failed to build timesheet object graph due to Timesheet ["
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID
+                            + "] and Project/Task ["
+                            + ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID
+                            + "] is not assoicated with any event items"));
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Load_Timesheet_Graph_Null_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer nullParm = null;
+        try {
+            api.load(nullParm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " is required"));
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Load_Timesheet_Graph_Negative_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = -1000;
+        try {
+            api.load(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID 
+                    + " cannot be negative"));
+            e.printStackTrace();
+        }
+    }
+        
+    @Test
+    public void testValidation_Load_Timesheet_Graph_Zero_Parameter() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Integer parm = 0;
+        try {
+            api.load(parm);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e.getMessage().contains(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID
+                            + " must be greater than zero"));
+            e.printStackTrace();
+        }
+    }
  }

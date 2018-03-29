@@ -30,4 +30,19 @@ public class ProjectTrackerApiConst {
 
     /** Flag indicating an employee is not a manager */
     public static final int EMPLOYEE_NON_MANAGER_FLAG = 0;
+
+    /**
+     * Parameter name for timesheet id.
+     */
+    public static final String PARM_NAME_TIMESHEET_ID = "Timesheet Id";
+
+    /**
+     * Parameter name for client id.
+     */
+    public static final String PARM_NAME_CLIENT_ID = "Client Id";
+
+    /**
+     * Parameter name for employee id.
+     */
+    public static final String PARM_NAME_EMPLOYEE_ID = "Employee Id";
 }
