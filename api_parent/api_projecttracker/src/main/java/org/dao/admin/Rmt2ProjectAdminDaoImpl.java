@@ -255,6 +255,7 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
     @Override
     public List<EventDto> fetchEvent(EventDto criteria) throws ProjectAdminDaoException {
         ProjEvent obj = ProjectAdminDaoFactory.createCriteria(criteria);
+        obj.addOrderBy(ProjEvent.PROP_EVENTDATE, ProjEvent.ORDERBY_ASCENDING);
         obj.addOrderBy(ProjEvent.PROP_PROJECTTASKID, ProjEvent.ORDERBY_ASCENDING);
         obj.addOrderBy(ProjEvent.PROP_EVENTID, ProjEvent.ORDERBY_ASCENDING);
 
