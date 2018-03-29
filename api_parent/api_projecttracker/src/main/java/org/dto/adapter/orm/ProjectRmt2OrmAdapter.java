@@ -367,11 +367,17 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      */
     @Override
     public void setProjectTaskId(int value) {
+        if (this.pe != null) {
+            this.pe.setProjectTaskId(value);
+            return;
+        }
         if (this.vtpt != null) {
             this.vtpt.setProjectTaskId(value);
+            return;
         }
         if (this.vtel != null) {
             this.vtel.setProjectTaskId(value);
+            return;
         }
         if (this.ppt != null) {
             this.ppt.setProjectTaskId(value);
