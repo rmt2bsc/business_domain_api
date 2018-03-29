@@ -1,11 +1,13 @@
 package org.rmt2.entity.adapter;
 
+import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.timesheet.TimesheetConst;
+import org.dto.EventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
@@ -157,5 +159,27 @@ public class TimesheetModuleAdapterTest {
         Assert.assertEquals("testuser", dto.getUpdateUserId());
         Assert.assertEquals("1.2.3.4", dto.getIpCreated());
         Assert.assertEquals("1.2.3.4", dto.getIpUpdated());
+    }
+    
+    @Test
+    public void testOrmProjEvent() {
+        ProjEvent o =  ProjectTrackerMockDataFactory.createMockOrmProjEvent(123401, 444441, "2018-01-01", 8);
+        EventDto dto = ProjectObjectFactory.createEventDtoInstance(o);
+        
+        Assert.assertEquals(123401, dto.getEventId());
+        Assert.assertEquals(444441, dto.getProjectTaskId());
+        Assert.assertEquals(8, dto.getEventHours(), 0);
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getEventDate());
+        
+        // Test Setters
+        dto = ProjectObjectFactory.createEventDtoInstance(null);
+        dto.setProjectTaskId(444441);
+        dto.setEventId(123401);
+        dto.setEventDate(RMT2Date.stringToDate("2018-01-01"));
+        dto.setEventHours(8);
+        Assert.assertEquals(123401, dto.getEventId());
+        Assert.assertEquals(444441, dto.getProjectTaskId());
+        Assert.assertEquals(8, dto.getEventHours(), 0);
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getEventDate());
     }
 }

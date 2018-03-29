@@ -1,11 +1,15 @@
 package org.rmt2.api.timesheet;
 
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
@@ -14,6 +18,7 @@ import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
+import org.dto.EventDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
@@ -397,7 +402,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(3, results.size());
+        Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             ProjectTaskDto obj = results.get(ndx);
             Assert.assertEquals(obj.getProjectTaskId(), (ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + ndx));
@@ -640,4 +645,79 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
 
         Assert.assertEquals(40, totalHours, 0);
     }
+    
+    @Test
+    public void testSuccess_Load_Timesheet_Graph() {
+        // Setup timesheet stub
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria)))
+                   .thenReturn(this.mockVwTimesheetSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet case setup failed");
+        }
+        
+        // Setup project/task stub
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockVwTimesheetProjectTaskFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet project-task case setup failed");
+        }
+        
+        // Setup event stub
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEvent.class)))
+                    .thenReturn(createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 1),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 2),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 3),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 4));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all events case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        Map<ProjectTaskDto, List<EventDto>> results = null;
+        try {
+            results = api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        
+        List<ProjectTaskDto> ptList = new ArrayList<ProjectTaskDto>(results.keySet());
+        int projectTaskNdx = 0;
+        double timesheetHourTotal = 0;
+        
+        for (ProjectTaskDto ptDto : ptList) {
+            List<EventDto> eventList = results.get(ptDto);
+            Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + projectTaskNdx, ptDto.getProjectTaskId());
+            Assert.assertNotNull(eventList);
+            
+            double eventHourTotal = 0;
+            int daySeed = 1;
+            for (int eventNdx = 0; eventNdx < eventList.size(); eventNdx++) {
+                EventDto event = eventList.get(eventNdx);
+                Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + projectTaskNdx, event.getProjectTaskId());
+                Assert.assertTrue(event.getEventId() > 1000);
+                Assert.assertEquals(RMT2Date.stringToDate("2018-01-0" + daySeed), event.getEventDate());
+                eventHourTotal += event.getEventHours();
+                daySeed++;
+            }
+            Assert.assertEquals(8, eventHourTotal, 0);
+            timesheetHourTotal += eventHourTotal;
+            projectTaskNdx++;
+        }
+        
+        Assert.assertEquals(40, timesheetHourTotal, 0);
+    }
+    
  }
