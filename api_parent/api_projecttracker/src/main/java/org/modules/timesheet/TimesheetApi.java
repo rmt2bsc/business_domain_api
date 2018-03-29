@@ -41,9 +41,12 @@ public interface TimesheetApi extends TransactionApi {
      * 
      * @param timesheetId
      *            The id of timesheet to load
+     * @return A map containing a list of {@link EventDto} objects keyed by
+     *         {@link ProjectTaskDto} instance or null when any component of the
+     *         object grapgh fails to load.
      * @throws TimesheetApiException
      */
-    void load(Integer timesheetId) throws TimesheetApiException;
+    Map<ProjectTaskDto, List<EventDto>> load(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Assignss the project id which this timesheet will be governed by

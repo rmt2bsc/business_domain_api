@@ -413,7 +413,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                     this.getMaxDisplayValueDigits(), RMT2String.PAD_LEADING);
             timesheet.setDisplayValue(displayValue);
         }
-        // Perform database update of timesheet so to capture the display value.
+        // Perform database update of timesheet so to capture the display value
+        // or to persist any changes of an existing timesheet.
         int rc = 0;
         rc = this.dao.maintainTimesheet(timesheet);
         timesheetId = timesheet.getTimesheetId();
@@ -1031,7 +1032,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @see org.modules.timesheet.TimesheetApi#load(int)
      */
     @Override
-    public void load(Integer timesheetId) throws TimesheetApiException {
+    public Map<ProjectTaskDto, List<EventDto>> load(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, PARM_NAME_TIMESHEET_ID);
         
         // Fetch Timesheet
@@ -1039,20 +1040,25 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         if (ts == null) {
             this.ts = null;
             this.tsHours = null;
-            return;
+            logger.warn("Failed to build timesheet object graph due to Timesheet ["
+                            + timesheetId + "] could not be found");
+            return null;
         }
 
-        // Fetch project/tasks
+        // Fetch project/tasks which should be ordered by project name, task
+        // name, and timesheet id.
         List<ProjectTaskDto> ptList = this.getProjectTaskExtByTimesheet(timesheetId);
         if (ptList == null || ptList.size() <= 0) {
             this.ts = null;
             this.tsHours = null;
-            return;
+            logger.warn("Failed to build timesheet object graph due to Timesheet ["
+                            + timesheetId + "] is not assoicated with any project/task items");
+            return null;
         }
 
         // We have a valid timesheet and one or more project/task which will
         // allow us to build the object graph.
-        Map<ProjectTaskDto, List<EventDto>> hrs = new LinkedHashMap<ProjectTaskDto, List<EventDto>>();
+        Map<ProjectTaskDto, List<EventDto>> timesheetGraph = new LinkedHashMap<ProjectTaskDto, List<EventDto>>();
 
         ProjectAdminApiFactory projApiFact = new ProjectAdminApiFactory();
         ProjectAdminApi api = projApiFact.createApi(this.getSharedDao());
@@ -1061,14 +1067,20 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                 try {
                     EventDto eventCriteria = ProjectObjectFactory.createEventDtoInstance(null);
                     eventCriteria.setProjectTaskId(pt.getProjectTaskId());
+                    // Fetch all project/task's events which should be ordered
+                    // by project/task id, event date, and event id.
                     List<EventDto> evts = api.getEvent(eventCriteria, null, null);
                     if (evts == null || evts.size() <= 0) {
                         this.ts = null;
                         this.tsHours = null;
-                        return;
+                        logger.warn("Failed to be timesheet object graph due to Timesheet ["
+                                        + timesheetId + "] and Project/Task ["
+                                        + pt.getProjectTaskId()
+                                        + "] is not assoicated with any event items");
+                        return null;
                     }
                     // Add project details to collection
-                    hrs.put(pt, evts);
+                    timesheetGraph.put(pt, evts);
                 } catch (ProjectAdminApiException e) {
                     this.msg = "Timesheet API load operation failed.  Error occurred fetching events for project/task id, "
                             + pt.getProjectTaskId();
@@ -1082,8 +1094,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
 
         // Set member variables
         this.ts = ts;
-        this.tsHours = hrs;
-        return;
+        this.tsHours = timesheetGraph;
+        return timesheetGraph;
     }
 
     private void validateNumericParam(Integer parmValue, String parmName) {
