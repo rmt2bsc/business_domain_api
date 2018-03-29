@@ -455,7 +455,7 @@ public class ProjectTrackerMockDataFactory {
         
         // Set derived fields
         o.setEventDate(RMT2Date.stringToDate(eventDate));
-        long newDateInMillSecs = RMT2Date.incrementDate(o.getEventDate(), Calendar.DATE, 5);
+        long newDateInMillSecs = RMT2Date.incrementDate(o.getEventDate(), Calendar.DATE, 1);
         Date newEndDate = RMT2Date.toDate(newDateInMillSecs);
         o.setEffectiveDate(o.getEventDate());
         o.setTimesheetBeginPeriod(o.getEventDate());
