@@ -503,8 +503,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
             hist.setEndDate(ut.getDateCreated());
             hist.setUserId(ut.getLoginId());
             hist.setIpUpdated(ut.getIpAddr());
-            hist.addCriteria(ProjTimesheetHist.PROP_TIMESHEETHISTID,
-                    hist.getTimesheetHistId());
+            hist.addCriteria(ProjTimesheetHist.PROP_TIMESHEETHISTID, hist.getTimesheetHistId());
             rc = this.client.updateRow(hist);
             return rc;
         } catch (Exception e) {
