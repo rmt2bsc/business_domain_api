@@ -93,11 +93,11 @@ public class VmTimesheetHoursOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setEndDate(RMT2Date.stringToDate("2018-01-12"));
+        o2.setEndDate(RMT2Date.stringToDate("2018-01-08"));
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setTimesheetEndPeriod(RMT2Date.stringToDate("2018-01-12"));
+        o2.setTimesheetEndPeriod(RMT2Date.stringToDate("2018-01-08"));
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
