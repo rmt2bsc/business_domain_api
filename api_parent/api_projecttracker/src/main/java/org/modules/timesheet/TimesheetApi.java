@@ -336,7 +336,7 @@ public interface TimesheetApi extends TransactionApi {
      *             Error occurs sending timesheet data to its designated
      *             recipient.
      */
-    int send(TimesheetDto timesheet, EmployeeDto employee, ClientDto client,
-            Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException, TimesheetTransmissionException;
+    int send(TimesheetDto timesheet, EmployeeDto employee, ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours) 
+            throws TimesheetApiException, TimesheetTransmissionException;
 
 }
