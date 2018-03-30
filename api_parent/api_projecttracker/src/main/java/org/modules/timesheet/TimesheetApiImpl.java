@@ -809,11 +809,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * "Approved" or "Declined".</li>
      * </ul>
      * 
-     * @param timesheetId
-     *            Target timesheet id
+     * @param currentStatusId
+     *            The current status of target timesheet
      * @param newStatusId
      *            The id of the status that is to be assigned to the timesheet
-     * @return The id of the old status.
      * @throws TimesheetApiException
      *             Inability to obtain current status
      * @throws InvalidStatusChangeException
@@ -822,14 +821,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      *             timesheet. The exception should give a detail explanation as
      *             to the reason why the status cannot be changed.
      */
-    protected int verifyStatusChange(int timesheetId, int newStatusId) throws InvalidStatusChangeException, 
-                TimesheetApiException {
-        TimesheetHistDto tsh = null;
-        int currentStatusId = 0;
-
-        tsh = this.getCurrentStatus(timesheetId);
-        currentStatusId = (tsh == null ? TimesheetConst.STATUS_NEW : tsh
-                .getStatusId());
+    protected void verifyStatusChange(int currentStatusId, int newStatusId) throws TimesheetApiException {
         switch (newStatusId) {
             case TimesheetConst.STATUS_DRAFT:
                 if (currentStatusId != TimesheetConst.STATUS_NEW) {
@@ -852,9 +844,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                     throw new InvalidStatusChangeException(this.msg);
                 }
                 break;
-        } // end outer switch
-
-        return currentStatusId;
+        }
     }
 
     /*
@@ -864,20 +854,23 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public void changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException {
+        // Obtain timesheet's current status
+        TimesheetHistDto currentStatus = this.getCurrentStatus(timesheetId);
+        int currentStatusId = 0;
+        currentStatusId = (currentStatus == null ? TimesheetConst.STATUS_NEW : currentStatus.getStatusId());
+        
         // See if it is legal to transition to newStatusId
-        this.verifyStatusChange(timesheetId, newStatusId);
-
+        this.verifyStatusChange(currentStatusId, newStatusId);
+        
         // terminate current status
-        TimesheetHistDto oldHist = this.getCurrentStatus(timesheetId);
-        if (oldHist != null) {
-            this.dao.maintainStatusHistory(oldHist);
+        if (currentStatus != null) {
+            this.dao.maintainStatusHistory(currentStatus);
         }
         // Add new current status
-        TimesheetHistDto newHist = TimesheetObjectFactory
-                .createTimesheetHistoryDtoInstance(null);
-        newHist.setTimesheetId(timesheetId);
-        newHist.setStatusId(newStatusId);
-        this.dao.maintainStatusHistory(newHist);
+        TimesheetHistDto newStatus = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
+        newStatus.setTimesheetId(timesheetId);
+        newStatus.setStatusId(newStatusId);
+        this.dao.maintainStatusHistory(newStatus);
     }
 
     /*
