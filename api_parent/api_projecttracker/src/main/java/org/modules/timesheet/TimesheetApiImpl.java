@@ -844,6 +844,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                     throw new InvalidStatusChangeException(this.msg);
                 }
                 break;
+            default:
+                this.msg = "An invalid timesheet status code was provided [" + newStatusId + "]";
+                throw new InvalidStatusChangeException(this.msg);
         }
     }
 
@@ -853,7 +856,14 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @see org.modules.timesheet.TimesheetApi#changeTimesheetStatus(int, int)
      */
     @Override
-    public void changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException {
+    public int changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException {
+        try {
+            Verifier.verifyNotNull(newStatusId);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("New timesheet status id is required", e);
+        }
+        
         // Obtain timesheet's current status
         TimesheetHistDto currentStatus = this.getCurrentStatus(timesheetId);
         int currentStatusId = 0;
@@ -871,6 +881,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         newStatus.setTimesheetId(timesheetId);
         newStatus.setStatusId(newStatusId);
         this.dao.maintainStatusHistory(newStatus);
+        return currentStatusId;
     }
 
     /*
