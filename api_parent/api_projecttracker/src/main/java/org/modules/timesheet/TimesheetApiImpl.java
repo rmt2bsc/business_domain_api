@@ -55,9 +55,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
 
     private int currentProjectId;
 
-    private TimesheetDto ts;
+    private TimesheetDto timeSheet;
 
-    private Map<ProjectTaskDto, List<EventDto>> tsHours;
+    private Map<ProjectTaskDto, List<EventDto>> timeSheetHours;
 
     /**
      * 
@@ -944,7 +944,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         this.load(timesheetId);
         // Set timesheet status to SUBMITTED.
-        this.changeTimesheetStatus(this.ts.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
+        this.changeTimesheetStatus(this.timeSheet.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
 
         // Email timesheet
         TimesheetTransmissionApi api = new SmtpTimesheetTransmissionApiImpl();
@@ -952,29 +952,29 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             // Get employee profile
             EmployeeApiFactory empFact = new EmployeeApiFactory();
             EmployeeApi empApi = empFact.createApi(this.getSharedDao());
-            EmployeeDto employee = empApi.getEmployee(this.ts.getEmpId());
+            EmployeeDto employee = empApi.getEmployee(this.timeSheet.getEmpId());
             EmployeeDto manager = empApi.getEmployee(employee.getManagerId());
 
             // get client profile
             ProjectAdminApiFactory projFact = new ProjectAdminApiFactory();
             ProjectAdminApi projApi = projFact.createApi(this.getSharedDao());
             ClientDto clientCriteria = ProjectObjectFactory.createClientDtoInstance(null);
-            clientCriteria.setClientId(this.ts.getClientId());
+            clientCriteria.setClientId(this.timeSheet.getClientId());
             List<ClientDto> clients = projApi.getClient(clientCriteria);
 
             // send timesheet via email
-            EmailMessageBean msg = api.createConfirmationMessage(this.ts, employee, manager, 
-                    clients.get(0), this.tsHours);
+            EmailMessageBean msg = api.createConfirmationMessage(this.timeSheet, employee, manager, 
+                    clients.get(0), this.timeSheetHours);
             Integer rc = (Integer) api.send(msg);
             return rc;
         } catch (TimesheetTransmissionException e) {
-            this.msg = "SMTP error occurred attempting to send timesheet: " + this.ts.getDisplayValue();
+            this.msg = "SMTP error occurred attempting to send timesheet: " + this.timeSheet.getDisplayValue();
             throw new TimesheetApiException(this.msg, e);
         } catch (EmployeeApiException e) {
-            this.msg = "Data access error fetching timesheet's employee profile: " + this.ts.getEmpId();
+            this.msg = "Data access error fetching timesheet's employee profile: " + this.timeSheet.getEmpId();
             throw new TimesheetApiException(this.msg, e);
         } catch (ProjectAdminApiException e) {
-            this.msg = "Data access error fetching timesheet's client profile: " + this.ts.getClientId();
+            this.msg = "Data access error fetching timesheet's client profile: " + this.timeSheet.getClientId();
             throw new TimesheetApiException(this.msg, e);
         } finally {
             api = null;
@@ -1113,8 +1113,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         // Fetch Timesheet
         TimesheetDto ts = this.getExt(timesheetId);
         if (ts == null) {
-            this.ts = null;
-            this.tsHours = null;
+            this.timeSheet = null;
+            this.timeSheetHours = null;
             logger.warn("Failed to build timesheet object graph due to Timesheet ["
                             + timesheetId + "] could not be found");
             return null;
@@ -1124,8 +1124,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         // name, and timesheet id.
         List<ProjectTaskDto> ptList = this.getProjectTaskExtByTimesheet(timesheetId);
         if (ptList == null || ptList.size() <= 0) {
-            this.ts = null;
-            this.tsHours = null;
+            this.timeSheet = null;
+            this.timeSheetHours = null;
             logger.warn("Failed to build timesheet object graph due to Timesheet ["
                             + timesheetId + "] is not assoicated with any project/task items");
             return null;
@@ -1146,8 +1146,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                     // by project/task id, event date, and event id.
                     List<EventDto> evts = api.getEvent(eventCriteria, null, null);
                     if (evts == null || evts.size() <= 0) {
-                        this.ts = null;
-                        this.tsHours = null;
+                        this.timeSheet = null;
+                        this.timeSheetHours = null;
                         logger.warn("Failed to be timesheet object graph due to Timesheet ["
                                         + timesheetId + "] and Project/Task ["
                                         + pt.getProjectTaskId()
@@ -1168,8 +1168,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
 
         // Set member variables
-        this.ts = ts;
-        this.tsHours = timesheetGraph;
+        this.timeSheet = ts;
+        this.timeSheetHours = timesheetGraph;
         return timesheetGraph;
     }
 
