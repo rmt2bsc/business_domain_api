@@ -24,7 +24,7 @@ import com.util.RMT2Date;
 import com.util.RMT2String;
 
 public class ProjectTrackerMockDataFactory {
-
+    public static final int TEST_LOGIN_ID = 999991;
     public static final int TEST_TIMESHEET_ID = 111;
     public static final int TEST_TIMESHEET_HIST_ID = 5550;
     public static final int TEST_EMPLOYEE_ID = 2220;
