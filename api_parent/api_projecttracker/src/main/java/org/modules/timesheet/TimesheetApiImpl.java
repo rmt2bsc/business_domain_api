@@ -910,12 +910,11 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @see org.modules.timesheet.TimesheetApi#approve(int)
      */
     @Override
-    public void approve(Integer timesheetId) throws TimesheetApiException {
+    public int approve(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         // Set timesheet status to Approved.
-        this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
-        return;
+        return this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
     }
 
     /*
@@ -924,12 +923,11 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @see org.modules.timesheet.TimesheetApi#decline(int)
      */
     @Override
-    public void decline(Integer timesheetId) throws TimesheetApiException {
+    public int decline(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         // Set timesheet status to Declined
-        this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
-        return;
+        return this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
     }
 
     /**
@@ -937,14 +935,15 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * approval..
      * 
      * @param timesheetId
+     * @return 1 for success; 0 for failure
      * @throws TimesheetApiException
      */
     @Override
-    public void submit(Integer timesheetId) throws TimesheetApiException {
+    public int submit(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         this.load(timesheetId);
-        // Set timesheet status to Draft.
+        // Set timesheet status to SUBMITTED.
         this.changeTimesheetStatus(this.ts.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
 
         // Email timesheet
@@ -964,9 +963,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             List<ClientDto> clients = projApi.getClient(clientCriteria);
 
             // send timesheet via email
-            EmailMessageBean msg = api.createConfirmationMessage(this.ts,
-                    employee, manager, clients.get(0), this.tsHours);
-            api.send(msg);
+            EmailMessageBean msg = api.createConfirmationMessage(this.ts, employee, manager, 
+                    clients.get(0), this.tsHours);
+            Integer rc = (Integer) api.send(msg);
+            return rc;
         } catch (TimesheetTransmissionException e) {
             this.msg = "SMTP error occurred attempting to send timesheet: " + this.ts.getDisplayValue();
             throw new TimesheetApiException(this.msg, e);

@@ -260,26 +260,29 @@ public interface TimesheetApi extends TransactionApi {
      * Approves an employee's timesheet.
      * 
      * @param timesheetId
+     * @return the id of the previous timesheet status.
      * @throws TimesheetApiException
      */
-    void approve(Integer timesheetId) throws TimesheetApiException;
+    int approve(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Declines an employee's timesheet.
      * 
      * @param timesheetId
+     * @return the id of the previous timesheet status.
      * @throws TimesheetApiException
      */
-    void decline(Integer timesheetId) throws TimesheetApiException;
+    int decline(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Submits an employee's timesheet for approval/declination.
      * 
      * @param timesheet
      * @param hours
+     * @return 1 for success; 0 for failure
      * @throws TimesheetApiException
      */
-    void submit(Integer timesheetId) throws TimesheetApiException;
+    int submit(Integer timesheetId) throws TimesheetApiException;
 
     /**
      * Creates a new or updates an existing project/task.
