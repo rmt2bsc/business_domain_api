@@ -658,6 +658,26 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     }
     
     @Test
+    public void testSuccess_Update_Timesheet() {
+        Assert.fail("Implement test case");
+    }
+    
+    @Test
+    public void testSuccess_Update_Project_Task() {
+        Assert.fail("Implement test case");
+    }
+    
+    @Test
+    public void testSuccess_Update_Single_Event() {
+        Assert.fail("Implement test case");
+    }
+
+    @Test
+    public void testSuccess_Update_Multiple_Events() {
+        Assert.fail("Implement test case");
+    }
+    
+    @Test
     public void testSuccess_Delete_Event_By_Event_id() {
         Assert.fail("Implement test case");
     }
@@ -684,26 +704,6 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     @Test
     public void testSuccess_Send_Timesheet() {
-        Assert.fail("Implement test case");
-    }
-
-    @Test
-    public void testSuccess_Update_Single_Event() {
-        Assert.fail("Implement test case");
-    }
-
-    @Test
-    public void testSuccess_Update_Multiple_Events() {
-        Assert.fail("Implement test case");
-    }
-
-    @Test
-    public void testSuccess_Update_Project_Task() {
-        Assert.fail("Implement test case");
-    }
-
-    @Test
-    public void testSuccess_Update_Timesheet() {
         Assert.fail("Implement test case");
     }
 
