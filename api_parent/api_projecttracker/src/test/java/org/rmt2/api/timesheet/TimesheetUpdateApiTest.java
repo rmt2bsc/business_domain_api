@@ -274,14 +274,270 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testSuccess_Approve() {
-        Assert.fail("Implement test case");
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            // Change status id of mock data to SUBMITTED.
+            this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_SUBMITTED);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheetHist.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet current history case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheetHist.class), eq(true))).thenReturn(
+                            ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.approve(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        
+        Assert.assertEquals(TimesheetConst.STATUS_SUBMITTED, results);
+    }
+    
+    @Test
+    public void testError_Approve_DB_Error_Fault() {
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.approve(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals("Database error occurred retrieving timesheet event(s) by timesheet id: "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Approve_Invalid_Status_Movement() {
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            // Change status id of mock data to DRAFT.
+            this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_DRAFT);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.approve(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals(
+                    "Timesheet status can only change to Approved or Declined when the current status is Submitted",
+                    e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+
+    @Test
+    public void testValidation_Approve_Null_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.approve(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Approve_Negative_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.approve(-1234);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Approve_Zero_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.approve(0);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @Test
     public void testSuccess_Decline() {
-        Assert.fail("Implement test case");
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            // Change status id of mock data to SUBMITTED.
+            this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_SUBMITTED);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheetHist.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet current history case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheetHist.class), eq(true))).thenReturn(
+                            ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.decline(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        
+        Assert.assertEquals(TimesheetConst.STATUS_SUBMITTED, results);
     }
 
+    @Test
+    public void testError_Decline_DB_Error_Fault() {
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.decline(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals("Database error occurred retrieving timesheet event(s) by timesheet id: "
+                            + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Decline_Invalid_Status_Movement() {
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            // Change status id of mock data to DRAFT.
+            this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_DRAFT);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.decline(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals("Timesheet status can only change to Approved or Declined when the current status is Submitted",
+                    e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Decline_Null_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.decline(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Decline_Negative_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.decline(-1234);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Decline_Zero_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.decline(0);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " must be greater than zero", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
     @Test
     public void testSuccess_Delete_Event_By_Event_id() {
         Assert.fail("Implement test case");
