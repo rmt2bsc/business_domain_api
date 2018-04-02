@@ -28,11 +28,9 @@ import com.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
-        TimesheetTransmissionApi {
+class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTransmissionApi {
 
-    private static final Logger logger = Logger
-            .getLogger(SmtpTimesheetTransmissionApiImpl.class);
+    private static final Logger logger = Logger.getLogger(SmtpTimesheetTransmissionApiImpl.class);
 
     private double totalHours;
 

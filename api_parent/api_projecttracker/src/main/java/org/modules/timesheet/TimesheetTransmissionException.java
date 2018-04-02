@@ -9,8 +9,7 @@ import org.modules.ProjectTrackerModuleException;
  * @author Roy Terrell
  * 
  */
-public class TimesheetTransmissionException extends
-        ProjectTrackerModuleException {
+public class TimesheetTransmissionException extends ProjectTrackerModuleException {
     private static final long serialVersionUID = -8851874846044566159L;
 
     public TimesheetTransmissionException() {
