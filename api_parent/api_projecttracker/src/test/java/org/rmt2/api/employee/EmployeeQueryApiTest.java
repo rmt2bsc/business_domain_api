@@ -243,7 +243,7 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
         Assert.assertEquals(RMT2Date.stringToDate("2010-01-01"), results.getStartDate());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), results.getTerminationDate());
         Assert.assertEquals(results.getEmployeeTypeId(), 201);
-        Assert.assertEquals(results.getIsManager(), 1);
+        Assert.assertEquals(results.getIsManager(), 0);
         Assert.assertEquals(results.getEmployeeFirstname(), "first_name_1");
         Assert.assertEquals(results.getEmployeeLastname(), "last_name_1");
         Assert.assertEquals("111-11-5000", results.getSsn());

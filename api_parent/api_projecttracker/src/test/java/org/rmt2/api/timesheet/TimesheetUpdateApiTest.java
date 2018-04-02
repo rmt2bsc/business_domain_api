@@ -5,23 +5,36 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.Map;
 
+import org.dao.mapping.orm.rmt2.ProjClient;
+import org.dao.mapping.orm.rmt2.ProjEmployee;
+import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
+import org.dao.mapping.orm.rmt2.VwTimesheetList;
+import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
+import org.dto.ClientDto;
+import org.dto.EmployeeDto;
+import org.dto.TimesheetDto;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.ProjectTrackerApiConst;
 import org.modules.timesheet.TimesheetApi;
 import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
+import org.modules.timesheet.TimesheetTransmissionApi;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
 import com.InvalidDataException;
+import com.api.messaging.email.EmailMessageBean;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -35,7 +48,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
-        ResultSet.class })
+        ResultSet.class, TimesheetApiFactory.class })
 public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     /**
@@ -539,6 +552,112 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     }
     
     @Test
+    public void testSuccess_Submit_Timesheet() {
+        // Setup timesheet load stub
+        VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
+        mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockTimesheetCriteria)))
+                   .thenReturn(this.mockVwTimesheetSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple extended timesheet data for timesheet load process case setup failed");
+        }
+        VwTimesheetProjectTask mockProjTaskCriteria = new VwTimesheetProjectTask();
+        mockProjTaskCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockProjTaskCriteria)))
+                    .thenReturn(this.mockVwTimesheetProjectTaskFetchMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all timesheet project-task data for timesheet load process case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEvent.class)))
+                    .thenReturn(createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 1),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 2),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 3),
+                            createMockMultiple_Day_Task_Events(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 4));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all events data for timesheet load process case setup failed");
+        }
+        
+        // Setup stubs for change timesheet status
+        ProjTimesheetHist mockCurrentStatusCriteria = new ProjTimesheetHist();
+        mockCurrentStatusCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_DRAFT);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCurrentStatusCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheetHist.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet current history case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheetHist.class), eq(true))).thenReturn(
+                            ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet current history case setup failed");
+        }
+        
+        // Stub employee and manager fetch.
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockEmployeeFetchSingle, this.mockManagerFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch employee and manager case setup failed");
+        }
+        
+        // Stub single client fetch.
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(ProjClient.class))).thenReturn(this.mockClientFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single client case setup failed");
+        }
+        
+        // Mock and stub TimesheetTransmissionApi...no need to test its internals here.
+        TimesheetTransmissionApi mockTimesheetTransmissionApi = Mockito.mock(TimesheetTransmissionApi.class);
+        PowerMockito.mockStatic(TimesheetApiFactory.class);
+        when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
+        EmailMessageBean mockEmailMsgBean = new EmailMessageBean();
+        try {
+            when(mockTimesheetTransmissionApi.createConfirmationMessage(
+                    isA(TimesheetDto.class), isA(EmployeeDto.class),
+                    isA(EmployeeDto.class), isA(ClientDto.class),
+                    isA(Map.class))).thenReturn(mockEmailMsgBean);    
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("The mocking of TimesheetTransmissionApi's createConfirmationMessage method failed");
+        }
+        try {
+            when(mockTimesheetTransmissionApi.send(eq(mockEmailMsgBean))).thenReturn(1);    
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+        
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
     public void testSuccess_Delete_Event_By_Event_id() {
         Assert.fail("Implement test case");
     }
@@ -565,11 +684,6 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     @Test
     public void testSuccess_Send_Timesheet() {
-        Assert.fail("Implement test case");
-    }
-
-    @Test
-    public void testSuccess_Submit_Timesheet() {
         Assert.fail("Implement test case");
     }
 
