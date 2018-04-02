@@ -500,8 +500,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         return timesheetId;
     }
 
-    private int saveTimesheetHours(int timesheetId, Map<ProjectTaskDto, List<EventDto>> hours)
-            throws TimesheetApiException {
+    private int saveTimesheetHours(int timesheetId, Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException {
         ProjectTaskDto pt = null;
         Iterator<ProjectTaskDto> keys = hours.keySet().iterator();
         int projId = 0;

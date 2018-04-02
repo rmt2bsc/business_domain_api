@@ -79,7 +79,8 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTran
             emailApi.close();
             return rc;
         } catch (Exception e) {
-            throw new TimesheetTransmissionException(e);
+            this.msg = "Error occurred sending email message to " + email.getRecipients();
+            throw new TimesheetTransmissionException(this.msg, e);
         }
     }
 
@@ -160,7 +161,8 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTran
             htmlContent = RMT2File.getStreamStringData(is);
             formattedDate = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM/dd/yyyy");
         } catch (SystemException e) {
-            throw new TimesheetTransmissionException(e);
+            throw new TimesheetTransmissionException("Unalbe to get HTML content pertaining to timesheet: "
+                            + timesheet.getDisplayValue(), e);
         }
 
         String deltaContent = null;
