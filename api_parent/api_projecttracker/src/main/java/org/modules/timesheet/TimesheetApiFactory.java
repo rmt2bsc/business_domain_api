@@ -72,7 +72,7 @@ public class TimesheetApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetTransmissionApi}
      */
-    public TimesheetTransmissionApi createTransmissionApi() {
+    public static final TimesheetTransmissionApi createTransmissionApi() {
         SmtpTimesheetTransmissionApiImpl api = new SmtpTimesheetTransmissionApiImpl();
         return api;
     }
