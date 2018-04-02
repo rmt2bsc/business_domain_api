@@ -947,7 +947,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         this.changeTimesheetStatus(this.timeSheet.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
 
         // Email timesheet
-        TimesheetTransmissionApi api = new SmtpTimesheetTransmissionApiImpl();
+        TimesheetTransmissionApi xmitApi = null;
         try {
             // Get employee profile
             EmployeeApiFactory empFact = new EmployeeApiFactory();
@@ -963,9 +963,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             List<ClientDto> clients = projApi.getClient(clientCriteria);
 
             // send timesheet via email
-            EmailMessageBean msg = api.createConfirmationMessage(this.timeSheet, employee, manager, 
+            xmitApi = TimesheetApiFactory.createTransmissionApi();
+            EmailMessageBean msg = xmitApi.createConfirmationMessage(this.timeSheet, employee, manager, 
                     clients.get(0), this.timeSheetHours);
-            Integer rc = (Integer) api.send(msg);
+            Integer rc = (Integer) xmitApi.send(msg);
             return rc;
         } catch (TimesheetTransmissionException e) {
             this.msg = "SMTP error occurred attempting to send timesheet: " + this.timeSheet.getDisplayValue();
@@ -977,7 +978,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             this.msg = "Data access error fetching timesheet's client profile: " + this.timeSheet.getClientId();
             throw new TimesheetApiException(this.msg, e);
         } finally {
-            api = null;
+            xmitApi = null;
         }
 
     }
