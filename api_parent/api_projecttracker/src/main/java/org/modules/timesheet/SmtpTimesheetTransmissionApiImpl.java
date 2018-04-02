@@ -68,8 +68,7 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
      *             recipient via the SMTP protocol.
      */
     @Override
-    public Object send(EmailMessageBean email) throws TimesheetApiException,
-            TimesheetTransmissionException {
+    public Object send(EmailMessageBean email) throws TimesheetApiException, TimesheetTransmissionException {
 
         if (email == null) {
             return null;
@@ -111,15 +110,14 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
      *             timesheet's project-task entries.
      */
     @Override
-    public EmailMessageBean createConfirmationMessage(TimesheetDto timesheet,
-            EmployeeDto employee, EmployeeDto manager, ClientDto client,
-            Map<ProjectTaskDto, List<EventDto>> hours)
+    public EmailMessageBean createConfirmationMessage(TimesheetDto timesheet, EmployeeDto employee, 
+            EmployeeDto manager, ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours)
             throws TimesheetTransmissionException {
 
         try {
             this.validate(timesheet, employee, manager, client, hours);
         } catch (TimesheetTransmissionValidationException e) {
-            this.msg = "Timeshe SMTP transmission validation error occurred";
+            this.msg = "Timesheet SMTP transmission validation error occurred";
             throw new TimesheetTransmissionException(this.msg, e);
         } catch (ZeroTimesheetHoursException e) {
             logger.warn(e.getMessage());
@@ -129,8 +127,7 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
         // Begin to build email content
         String periodEnd = null;
         try {
-            periodEnd = RMT2Date.formatDate(timesheet.getEndPeriod(),
-                    "MM/dd/yyyy");
+            periodEnd = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM/dd/yyyy");
         } catch (SystemException e) {
             periodEnd = "N/A";
         }
@@ -153,55 +150,39 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
         String root = RMT2File.getAppParmProperty("webapp_root");
         String uri = RMT2File.getAppParmProperty("email_submit_uri");
         String uriParms = RMT2File.getAppParmProperty("email_submit_uri_parms");
-        String submitUri = root
-                + uri
-                + RMT2String.replace(uriParms,
-                        String.valueOf(timesheet.getTimesheetId()),
+        String submitUri = root + uri + RMT2String.replace(uriParms, String.valueOf(timesheet.getTimesheetId()),
                         "$timesheet_id02$");
 
         // Get HTML Content
         String htmlContent = null;
         String formattedDate = null;
-        String emailTemplateFile = RMT2File
-                .getAppParmProperty("email_template");
+        String emailTemplateFile = RMT2File.getAppParmProperty("email_template");
         try {
             InputStream is = RMT2File.getFileInputStream(emailTemplateFile);
             htmlContent = RMT2File.getStreamStringData(is);
-            formattedDate = RMT2Date.formatDate(timesheet.getEndPeriod(),
-                    "MM/dd/yyyy");
+            formattedDate = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM/dd/yyyy");
         } catch (SystemException e) {
             throw new TimesheetTransmissionException(e);
         }
 
         String deltaContent = null;
         deltaContent = RMT2String.replaceAll(htmlContent, root, "$root$");
-        deltaContent = RMT2String.replace(
-                deltaContent,
-                employee.getEmployeeFirstname() + " "
+        deltaContent = RMT2String.replace(deltaContent, employee.getEmployeeFirstname() + " "
                         + employee.getEmployeeLastname(), "$employeename$");
-        deltaContent = RMT2String.replace(deltaContent,
-                employee.getEmployeeTitle(), "$employeetitle$");
-        deltaContent = RMT2String.replace(deltaContent, client.getClientName(),
-                "$clientname$");
-        deltaContent = RMT2String.replace(deltaContent,
-                timesheet.getDisplayValue(), "$timesheetid$");
-        deltaContent = RMT2String.replace(deltaContent, formattedDate,
-                "$periodending$");
+        deltaContent = RMT2String.replace(deltaContent, employee.getEmployeeTitle(), "$employeetitle$");
+        deltaContent = RMT2String.replace(deltaContent, client.getClientName(), "$clientname$");
+        deltaContent = RMT2String.replace(deltaContent, timesheet.getDisplayValue(), "$timesheetid$");
+        deltaContent = RMT2String.replace(deltaContent, formattedDate, "$periodending$");
 
         // Get project/task hours
         String details = this.setupTimesheetEmailHours(hours);
 
-        deltaContent = RMT2String.replace(deltaContent, details,
-                "$timesheetdetails$");
-        deltaContent = RMT2String.replace(deltaContent,
-                String.valueOf(this.totalHours), "$totalhours$");
-        deltaContent = RMT2String.replace(deltaContent,
-                String.valueOf(timesheet.getTimesheetId()), "$timesheetid$");
+        deltaContent = RMT2String.replace(deltaContent, details, "$timesheetdetails$");
+        deltaContent = RMT2String.replace(deltaContent, String.valueOf(this.totalHours), "$totalhours$");
+        deltaContent = RMT2String.replace(deltaContent, String.valueOf(timesheet.getTimesheetId()), "$timesheetid$");
 
-        deltaContent = RMT2String.replace(deltaContent, submitUri + "approve",
-                "$approveURI$");
-        deltaContent = RMT2String.replace(deltaContent, submitUri + "decline",
-                "$declineURI$");
+        deltaContent = RMT2String.replace(deltaContent, submitUri + "approve", "$approveURI$");
+        deltaContent = RMT2String.replace(deltaContent, submitUri + "decline", "$declineURI$");
 
         email.setBody(deltaContent, EmailMessageBean.HTML_CONTENT);
         return email;
@@ -224,17 +205,14 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
      *             Unable to get the contents of the HTML template file used to
      *             build project/task details.
      */
-    private String setupTimesheetEmailHours(
-            Map<ProjectTaskDto, List<EventDto>> hours)
-            throws TimesheetTransmissionException {
+    private String setupTimesheetEmailHours(Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetTransmissionException {
         String origHtmlContents = null;
         String htmlContents = null;
         String deltaContents = "";
         ProjectTaskDto vtpt = null;
         EventDto pe = null;
 
-        String emailTemplateFile = RMT2File
-                .getAppParmProperty("email_details_template");
+        String emailTemplateFile = RMT2File.getAppParmProperty("email_details_template");
         try {
             InputStream is = RMT2File.getFileInputStream(emailTemplateFile);
             origHtmlContents = RMT2File.getStreamStringData(is);
@@ -246,19 +224,15 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
         while (keys.hasNext()) {
             htmlContents = origHtmlContents;
             vtpt = keys.next();
-            htmlContents = RMT2String.replace(htmlContents,
-                    vtpt.getProjectDescription(), "$projectname$");
-            htmlContents = RMT2String.replace(htmlContents,
-                    vtpt.getTaskDescription(), "$taskname$");
+            htmlContents = RMT2String.replace(htmlContents, vtpt.getProjectDescription(), "$projectname$");
+            htmlContents = RMT2String.replace(htmlContents, vtpt.getTaskDescription(), "$taskname$");
 
             List<EventDto> list = hours.get(vtpt);
             for (int ndx = 0; ndx < list.size(); ndx++) {
                 pe = list.get(ndx);
                 totalHours += pe.getEventHours();
-                htmlContents = RMT2String.replace(htmlContents,
-                        String.valueOf(pe.getEventHours()), "$" + ndx + "hrs$");
+                htmlContents = RMT2String.replace(htmlContents, String.valueOf(pe.getEventHours()), "$" + ndx + "hrs$");
             }
-
             deltaContents += htmlContents;
         }
         return deltaContents;
@@ -286,11 +260,9 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements
      *             or <i>hours</i> are invalid. If <i>hours</i> does not contain
      *             any entries.
      */
-    private void validate(TimesheetDto timesheet, EmployeeDto employee,
-            EmployeeDto manager, ClientDto client,
+    private void validate(TimesheetDto timesheet, EmployeeDto employee,  EmployeeDto manager, ClientDto client,
             Map<ProjectTaskDto, List<EventDto>> hours)
-            throws TimesheetTransmissionValidationException,
-            ZeroTimesheetHoursException {
+            throws TimesheetTransmissionValidationException, ZeroTimesheetHoursException {
         // Validate timesheet
         if (timesheet == null) {
             this.msg = "Timesheet instance is invalid when attempting to send timesheet to manager over SMTP protocol";
