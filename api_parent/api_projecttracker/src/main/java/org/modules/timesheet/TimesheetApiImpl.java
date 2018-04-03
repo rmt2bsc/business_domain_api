@@ -466,6 +466,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             throws TimesheetApiException {
 
         this.validateTimesheetForUpdate(timesheet);
+        this.validateTimesheetHoursForUpdate(hours);
+        
         if (timesheet.getTimesheetId() == 0) {
             // Insert timesheet row.
             this.dao.maintainTimesheet(timesheet);
@@ -641,6 +643,17 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         return;
     }
 
+    private void validateTimesheetHoursForUpdate(Map<ProjectTaskDto, List<EventDto>> hours) throws InvalidTimesheetException {
+        try {
+            Verifier.verifyNotEmpty(hours);
+        }
+        catch (VerifyException e) {
+            this.msg = "Timesheet hours are required";
+            throw new InvalidTimesheetException(this.msg, e);
+        }
+    }
+
+    
     /**
      * Verifies that the event object contains proper data.
      * 
