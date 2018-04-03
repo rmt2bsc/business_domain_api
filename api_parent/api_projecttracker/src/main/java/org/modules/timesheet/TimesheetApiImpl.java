@@ -468,43 +468,48 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         this.validateTimesheetForUpdate(timesheet);
         this.validateTimesheetHoursForUpdate(hours);
         
-        if (timesheet.getTimesheetId() == 0) {
-            // Insert timesheet row.
-            this.dao.maintainTimesheet(timesheet);
-            // Set timesheet status to Draft.
-            this.changeTimesheetStatus(timesheet.getTimesheetId(), TimesheetConst.STATUS_DRAFT);
-        }
+        try {
+            if (timesheet.getTimesheetId() == 0) {
+                // Insert timesheet row.
+                this.dao.maintainTimesheet(timesheet);
+                // Set timesheet status to Draft.
+                this.changeTimesheetStatus(timesheet.getTimesheetId(), TimesheetConst.STATUS_DRAFT);
+            }
 
-        // An update will be performed regardless. Since the timesheet display
-        // value is based on the primary key and the primary key is created at
-        // the time of insert, create time sheet's display value.
-        if (timesheet.getDisplayValue() == null) {
-            String displayValue = RMT2String.padInt(timesheet.getTimesheetId(),
-                    this.getMaxDisplayValueDigits(), RMT2String.PAD_LEADING);
-            timesheet.setDisplayValue(displayValue);
-        }
-        // Perform database update of timesheet so to capture the display value
-        // or to persist any changes of an existing timesheet.
-        int rc = 0;
-        rc = this.dao.maintainTimesheet(timesheet);
-
-        // Save timesheet hours
-        int projId = this.saveTimesheetHours(timesheet.getTimesheetId(), hours);
-
-        // if needed, update timesheet header with project id
-        if ((timesheet.getProjId() == 0 && timesheet.getTimesheetId() > 0 && projId > 0)
-                || (timesheet.getProjId() != projId)) {
-            timesheet.setProjId(projId);
+            // An update will be performed regardless. Since the timesheet display
+            // value is based on the primary key and the primary key is created at
+            // the time of insert, create time sheet's display value.
+            if (timesheet.getDisplayValue() == null) {
+                String displayValue = RMT2String.padInt(timesheet.getTimesheetId(),
+                        this.getMaxDisplayValueDigits(), RMT2String.PAD_LEADING);
+                timesheet.setDisplayValue(displayValue);
+            }
+            // Perform database update of timesheet so to capture the display value
+            // or to persist any changes of an existing timesheet.
+            int rc = 0;
             rc = this.dao.maintainTimesheet(timesheet);
-            logger.info("Return code of last timesheet update operation: " + rc);
+
+            // Save timesheet hours
+            int projId = this.saveTimesheetHours(timesheet.getTimesheetId(), hours);
+
+            // if needed, update timesheet header with project id
+            if ((timesheet.getProjId() == 0 && timesheet.getTimesheetId() > 0 && projId > 0)
+                    || (timesheet.getProjId() != projId)) {
+                timesheet.setProjId(projId);
+                rc = this.dao.maintainTimesheet(timesheet);
+                logger.info("Return code of last timesheet update operation: " + rc);
+            }
+            return timesheet.getTimesheetId();    
         }
-        return timesheet.getTimesheetId();
+        catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("Unable to save timesheet due to a DAO error", e);
+        }
+        
     }
 
     private int saveTimesheetHours(int timesheetId, Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException {
         ProjectTaskDto pt = null;
         Iterator<ProjectTaskDto> keys = hours.keySet().iterator();
-        int projId = 0;
         while (keys.hasNext()) {
             pt = keys.next();
             if (pt.isDeleteFlag()) {
@@ -519,7 +524,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                     // Since this is the first time, all remaining projects
                     // must equal that of the first occurrence.
                     this.currentProjectId = pt.getProjId();
-                    projId = pt.getProjId();
                 }
                 // Apply changes to project task and its events
                 ProjectTaskDto obj = ProjectObjectFactory.createProjectTaskDtoInstance(null);
@@ -533,7 +537,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             } // end else
 
         } // end while
-        return projId;
+        return pt.getProjId();
     }
 
     /**
@@ -621,7 +625,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             Verifier.verifyNotNull(ts);
         }
         catch (VerifyException e) {
-            this.msg = "The base timesheet instance cannot be null.";
+            this.msg = "The timesheet instance is required";
             throw new InvalidTimesheetException(this.msg, e);
         }
 
