@@ -98,7 +98,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertNotNull(results);
         Assert.assertEquals(results.getTimesheetId(), ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         Assert.assertEquals(1110, results.getClientId());
-        Assert.assertEquals(1234, results.getProjId());
+        Assert.assertEquals(4440, results.getProjId());
         Assert.assertEquals(2220, results.getEmpId());
         Assert.assertEquals("INVREF1230", results.getInvoiceRefNo());
         Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), results.getBeginPeriod());
@@ -230,7 +230,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             TimesheetDto item = results.get(ndx);
             Assert.assertEquals((ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID + ndx), item.getTimesheetId());
             Assert.assertEquals(1110, item.getClientId());
-            Assert.assertEquals(1234, item.getProjId());
+            Assert.assertEquals(4440, item.getProjId());
             Assert.assertEquals(2220, item.getEmpId());
             Assert.assertEquals(("INVREF123" + ndx), item.getInvoiceRefNo());
             Assert.assertEquals(("ExtReNo100" + ndx), item.getExtRef());
