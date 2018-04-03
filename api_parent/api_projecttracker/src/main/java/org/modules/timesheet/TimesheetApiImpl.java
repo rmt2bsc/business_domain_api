@@ -448,7 +448,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * <p>
      * First the base timesheet data is processed followed by the processing of
      * each task's time. This method is also responsible for procesing those
-     * tasks that are selected for deletion.
+     * tasks that are selected for deletion. Timesheet can only be updated when
+     * the current status is NEW or DRAFT.   
      * <p>
      * Creates a new client record in the event the client does not exist for
      * the tiemsheet's client id.
@@ -465,14 +466,16 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             throws TimesheetApiException {
 
         this.validateTimesheetForUpdate(timesheet);
-        int timesheetId = 0;
         if (timesheet.getTimesheetId() == 0) {
             // Insert timesheet row.
             this.dao.maintainTimesheet(timesheet);
+            // Set timesheet status to Draft.
+            this.changeTimesheetStatus(timesheet.getTimesheetId(), TimesheetConst.STATUS_DRAFT);
         }
 
         // An update will be performed regardless. Since the timesheet display
-        // value is based on the primary key, create time sheet's display value.
+        // value is based on the primary key and the primary key is created at
+        // the time of insert, create time sheet's display value.
         if (timesheet.getDisplayValue() == null) {
             String displayValue = RMT2String.padInt(timesheet.getTimesheetId(),
                     this.getMaxDisplayValueDigits(), RMT2String.PAD_LEADING);
@@ -482,13 +485,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         // or to persist any changes of an existing timesheet.
         int rc = 0;
         rc = this.dao.maintainTimesheet(timesheet);
-        timesheetId = timesheet.getTimesheetId();
 
         // Save timesheet hours
-        int projId = this.saveTimesheetHours(timesheetId, hours);
-
-        // Set timesheet status to Draft.
-        this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DRAFT);
+        int projId = this.saveTimesheetHours(timesheet.getTimesheetId(), hours);
 
         // if needed, update timesheet header with project id
         if ((timesheet.getProjId() == 0 && timesheet.getTimesheetId() > 0 && projId > 0)
@@ -497,7 +496,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             rc = this.dao.maintainTimesheet(timesheet);
             logger.info("Return code of last timesheet update operation: " + rc);
         }
-        return timesheetId;
+        return timesheet.getTimesheetId();
     }
 
     private int saveTimesheetHours(int timesheetId, Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException {
@@ -557,7 +556,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             buf.append(temp);
             buf.append(" to a number.  Defaulting to 5");
             logger.info(buf);
-            return 5;
+            return 10;
         } catch (Exception e) {
             this.msg = "Unable to obtain value representing the maximum display digits for time sheet id";
             throw new InvoiceTimesheetApiException(this.msg, e);
