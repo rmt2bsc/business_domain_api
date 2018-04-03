@@ -36,6 +36,7 @@ import org.mockito.Mockito;
 import org.modules.ProjectTrackerApiConst;
 import org.modules.admin.ProjectAdminApiException;
 import org.modules.employee.EmployeeApiException;
+import org.modules.timesheet.InvalidTimesheetException;
 import org.modules.timesheet.TimesheetApi;
 import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
@@ -1330,6 +1331,146 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Update of timesheet case setup failed");
         }
         Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, results);
+    }
+    
+    @Test
+    public void testError_Update_Timesheet_DB_Access_Fault() {
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheet.class), eq(true)))
+                .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
+            api.updateTimesheet(ts, hours);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals("Unable to save timesheet due to a DAO error", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Timesheet_Null_Timesheet_Object() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
+            api.updateTimesheet(null, hours);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("The timesheet instance is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Timesheet_ClientId_Negative() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            ts.setClientId(-1234);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
+            api.updateTimesheet(ts, hours);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("Timesheet must be associated with a client", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Timesheet_ClientId_Zero() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            ts.setClientId(0);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
+            api.updateTimesheet(ts, hours);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("Timesheet must be associated with a client", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Timesheet_EmployeeId_Negative() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            ts.setEmpId(-1234);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
+            api.updateTimesheet(ts, hours);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("Timesheet must be associated with an employee", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Timesheet_EmployeeId_Zero() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            ts.setEmpId(0);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
+            api.updateTimesheet(ts, hours);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("Timesheet must be associated with an employee", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Timesheet_Hours_Map_Null() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            api.updateTimesheet(ts, null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("Timesheet hours are required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Timesheet_Hours_Map_Empty() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            Map<ProjectTaskDto, List<EventDto>> hours = new HashMap<>(); 
+            api.updateTimesheet(ts, hours);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            Assert.assertTrue(e instanceof InvalidTimesheetException);
+            Assert.assertEquals("Timesheet hours are required", e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @Test
