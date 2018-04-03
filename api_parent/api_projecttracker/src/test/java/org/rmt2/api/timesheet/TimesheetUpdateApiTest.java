@@ -5,11 +5,16 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEvent;
+import org.dao.mapping.orm.rmt2.ProjProjectTask;
+import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
@@ -17,7 +22,11 @@ import org.dao.timesheet.TimesheetConst;
 import org.dao.timesheet.TimesheetDaoException;
 import org.dto.ClientDto;
 import org.dto.EmployeeDto;
+import org.dto.EventDto;
+import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.adapter.orm.ProjectObjectFactory;
+import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -72,6 +81,40 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         return;
     }
 
+    private TimesheetDto buildTimesheetDto(boolean newTimesheet) {
+        ProjTimesheet ormTs = this.mockProjTimesheetSingle.get(0);
+        if (newTimesheet) {
+            ormTs.setTimesheetId(0);
+            ormTs.setProjId(0);
+            ormTs.setDisplayValue(null);
+        }
+        TimesheetDto ts = TimesheetObjectFactory.createTimesheetDtoInstance(ormTs);
+        return ts;
+    }
+    
+    private Map<ProjectTaskDto, List<EventDto>> buildTimesheetHoursDtoMap(boolean newTimesheet) {
+        Map<ProjectTaskDto, List<EventDto>> hours = new HashMap<>(); 
+        for (ProjProjectTask pt : this.mockProjProjectTaskMultiple) {
+            if (newTimesheet) {
+                pt.setTimesheetId(0);
+                pt.setProjectTaskId(0);
+            }
+            ProjectTaskDto ptDto = ProjectObjectFactory.createProjectTaskDtoInstance(pt);
+            List<ProjEvent> projEvents = createMockMultiple_Day_Task_Events(pt.getProjectTaskId());
+            List<EventDto> eventsDto = new ArrayList<>();
+            for (ProjEvent evt : projEvents) {
+                if (newTimesheet) {
+                    evt.setEventId(0);
+                }
+                EventDto evtDto = ProjectObjectFactory.createEventDtoInstance(evt);
+                eventsDto.add(evtDto);
+            }
+            hours.put(ptDto, eventsDto);
+        }
+        return hours;
+    }
+    
+    
     @Test
     public void testSuccess_Change_Status_Existing() {
         ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
@@ -1096,8 +1139,197 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testSuccess_Update_Timesheet() {
-        Assert.fail("Implement test case");
+    public void testSuccess_Update_New_Timesheet() {
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheet.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheet.class), eq(true)))
+                 .thenReturn(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjProjectTask.class), eq(true)))
+                            .thenReturn(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 1,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 2,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 3,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 4);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert project-task case setup failed");
+        }
+        
+        try {
+            int ndx = 0;
+            when(this.mockPersistenceClient.insertRow(isA(ProjEvent.class), eq(true)))
+                            .thenReturn(ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert project-task case setup failed");
+        }
+        
+        // Stub timesheet current status
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheetHist.class), eq(true))).thenReturn(
+                            ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(true);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
+            results = api.updateTimesheet(ts, hours);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Update of timesheet case setup failed");
+        }
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, results);
+    }
+    
+    @Test
+    public void testSuccess_Update_Existing_Timesheet() {
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheet.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheet.class), eq(true)))
+                 .thenReturn(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjProjectTask.class), eq(true)))
+                            .thenReturn(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 1,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 2,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 3,
+                                    ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID + 4);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert project-task case setup failed");
+        }
+        
+        try {
+            int ndx = 0;
+            when(this.mockPersistenceClient.insertRow(isA(ProjEvent.class), eq(true)))
+                            .thenReturn(ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert project-task case setup failed");
+        }
+        
+        // Stub timesheet current status
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheetHist.class), eq(true))).thenReturn(
+                            ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet current history case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            TimesheetDto ts = this.buildTimesheetDto(false);
+            Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(false); 
+            results = api.updateTimesheet(ts, hours);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Update of timesheet case setup failed");
+        }
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, results);
     }
     
     @Test
