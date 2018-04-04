@@ -541,16 +541,13 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         ProjProjectTask obj = new ProjProjectTask();
         if (criteria != null) {
             if (criteria.getProjectTaskId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTTASKID,
-                        criteria.getProjectTaskId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTTASKID, criteria.getProjectTaskId());
             }
             if (criteria.getProjId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTID,
-                        criteria.getProjId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_PROJECTID, criteria.getProjId());
             }
             if (criteria.getTaskId() > 0) {
-                obj.addCriteria(VwTimesheetProjectTask.PROP_TASKID,
-                        criteria.getTaskId());
+                obj.addCriteria(VwTimesheetProjectTask.PROP_TASKID, criteria.getTaskId());
             }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
