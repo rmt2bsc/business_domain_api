@@ -32,7 +32,6 @@ import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
 
 import com.api.persistence.PersistenceClient;
-import com.api.persistence.db.orm.OrmBean;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
 import com.util.assistants.Verifier;
@@ -885,22 +884,7 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
         }
     }
 
-    /**
-     * 
-     * @param obj
-     * @return
-     */
-    private int deleteObject(OrmBean obj) {
-        int rows = 0;
-        try {
-            rows = this.client.deleteRow(obj);
-            return rows;
-        } catch (Exception e) {
-            throw new ProjectAdminDaoException(e);
-        }
-    }
-
-    /*
+        /*
      * (non-Javadoc)
      * 
      * @see org.dao.ProjectAdminDao#deleteClient(org.dto.ClientDto)
