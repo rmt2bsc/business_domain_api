@@ -26,6 +26,7 @@ import org.modules.employee.InvalidProjectEmployeeException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockData;
+import org.rmt2.api.ProjectTrackerMockDataFactory;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
@@ -41,18 +42,6 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
-    private static final int TEST_EMPLOYEE_ID = 5000;
-    private static final int TEST_PROJ_ID = 2220;
-    private static final int TEST_EMP_PROJ_ID = 55551;
-    
-    private static final int TEST_CLIENT_ID = 1000;
-    private static final int TEST_LOGIN_ID = 999991;
-    private static final int TEST_EMPLOYEE_TITLE_ID = 101;
-    private static final int TEST_MANAGER_ID = 3333;
-    private static final int TEST_BUSINESS_ID = 1350;
-    
-    private static final String TEST_COMPANY_NAME = "ABC Company";
-
     /**
      * @throws java.lang.Exception
      */
@@ -73,7 +62,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     @Test
     public void testSuccess_Create_Employee() {
         try {
-            when(this.mockPersistenceClient.insertRow(isA(ProjEmployee.class), eq(true))).thenReturn(TEST_EMPLOYEE_ID);
+            when(this.mockPersistenceClient.insertRow(isA(ProjEmployee.class), eq(true))).thenReturn(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Insert employee case setup failed");
@@ -90,9 +79,9 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
         } catch (EmployeeApiException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(TEST_EMPLOYEE_ID, results);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID, results);
         // Verify that the DAO assinged the new employee id to the said employee object
-        Assert.assertEquals(TEST_EMPLOYEE_ID, emp.getEmployeeId());
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID, emp.getEmployeeId());
     }
     
     @Test
@@ -197,7 +186,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     public void testSuccess_Modify_Employee() {
         // Stub all employee fetch.
         ProjEmployee mockCriteria = new ProjEmployee();
-        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
+        mockCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockEmployeeFetchSingle);
         } catch (Exception e) {
@@ -227,8 +216,8 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     @Test
     public void testSuccess_Create_Project_Employee() {
         VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
-        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
-        mockCriteria.setProjId(TEST_PROJ_ID);
+        mockCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        mockCriteria.setProjId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
         } catch (Exception e) {
@@ -238,7 +227,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
         
         try {
             when(this.mockPersistenceClient.insertRow(isA(ProjEmployeeProject.class), eq(true)))
-                            .thenReturn(TEST_EMP_PROJ_ID);
+                            .thenReturn(ProjectTrackerMockDataFactory.TEST_EMP_PROJ_ID);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Insert employee project case setup failed");
@@ -255,16 +244,16 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
         } catch (EmployeeApiException e) {
             e.printStackTrace();
         }
-        Assert.assertEquals(TEST_EMP_PROJ_ID, results);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EMP_PROJ_ID, results);
         // Verify that the DAO assinged the new employee id to the said employee object
-        Assert.assertEquals(TEST_EMP_PROJ_ID, projEmp.getEmpProjId());
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EMP_PROJ_ID, projEmp.getEmpProjId());
     }
 
     @Test
     public void testError_Create_Project_Employee_DB_Access_Fault() {
         VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
-        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
-        mockCriteria.setProjId(TEST_PROJ_ID);
+        mockCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        mockCriteria.setProjId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
         } catch (Exception e) {
@@ -371,7 +360,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     @Test
     public void testSuccess_Modify_Project_Employee() {
         VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
-        mockCriteria.setEmpProjId(TEST_EMP_PROJ_ID);
+        mockCriteria.setEmpProjId(ProjectTrackerMockDataFactory.TEST_EMP_PROJ_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwEmployeeProjectsFetchSingle);
         } catch (Exception e) {
@@ -397,14 +386,14 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
         }
         Assert.assertEquals(1, results);
         // Verify that the DAO assinged the new employee id to the said employee object
-        Assert.assertEquals(TEST_EMP_PROJ_ID, projEmp.getEmpProjId());
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EMP_PROJ_ID, projEmp.getEmpProjId());
     }
     
     @Test
     public void testValidation_Create_Project_Employee_ProjEmployee_Combination_Exists() {
         VwEmployeeProjects mockCriteria = new VwEmployeeProjects();
-        mockCriteria.setEmpId(TEST_EMPLOYEE_ID);
-        mockCriteria.setProjId(TEST_PROJ_ID);
+        mockCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        mockCriteria.setProjId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
                     .thenReturn(this.mockVwEmployeeProjectsFetchSingle);
