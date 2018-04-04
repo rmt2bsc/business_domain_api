@@ -30,6 +30,8 @@ import org.modules.employee.EmployeeApiFactory;
 import org.modules.timesheet.invoice.InvoiceTimesheetApiException;
 
 import com.InvalidDataException;
+import com.NotFoundException;
+import com.SystemException;
 import com.api.config.AppPropertyPool;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.messaging.email.EmailMessageBean;
@@ -579,7 +581,12 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     @Override
     public int updateProjectTask(ProjectTaskDto projectTask) throws TimesheetApiException {
         this.validateProjectTaskForUpdate(projectTask);
-        return this.dao.maintainProjectTask(projectTask);
+        try {
+            return this.dao.maintainProjectTask(projectTask);    
+        }
+        catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("A DAO error occurred updating a timesheet's Project/Task", e);
+        }
     }
 
     /*
@@ -590,7 +597,12 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     @Override
     public int updateEvent(EventDto event) throws TimesheetApiException {
         this.validateEventForUpdate(event);
-        return this.dao.maintainEvent(event);
+        try {
+            return this.dao.maintainEvent(event);
+        }
+        catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("A DAO error occurred updating a timesheet's Event", e);
+        }
     }
 
     /*
@@ -672,15 +684,23 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             Verifier.verifyNotNull(event);
         }
         catch (VerifyException e) {
-            this.msg = "Project event object cannot be null";
+            this.msg = "Event object is required";
             throw new InvalidEventException(this.msg, e);
         }
 
         try {
+            Verifier.verifyNotNegative(event.getEventId());
+        }
+        catch (VerifyException e) {
+            this.msg = "Event id cannot be negative";
+            throw new InvalidEventException(this.msg, e);
+        }
+        
+        try {
             Verifier.verifyPositive(event.getProjectTaskId());
         }
         catch (VerifyException e) {
-            this.msg = "A project/task id is required";
+            this.msg = "Event project/task id is required";
             throw new InvalidEventException(this.msg, e);
         }
         
@@ -725,10 +745,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                 this.msg = "project/task id, "
                         + projectTaskId
                         + ", must exist in the system in order to assoicate multiple events with a project task";
-                throw new InvalidEventException(this.msg);
+                throw new NotFoundException(this.msg);
             }
         } catch (ProjectAdminApiException e) {
-            throw new InvalidEventException("Error validating project task entity existence", e);
+            throw new SystemException("A DAO error occurred validating project task entity existence", e);
         } finally {
             f = null;
             projApi = null;
@@ -754,55 +774,69 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     private void validateProjectTaskForUpdate(ProjectTaskDto pt) throws InvalidProjectTaskException {
         try {
+            Verifier.verifyNotNull(pt);
+        }
+        catch (VerifyException e) {
+            this.msg = "ProejctTask data object is required";
+            throw new InvalidProjectTaskException(this.msg, e);
+        }
+        try {
+            Verifier.verifyNotNegative(pt.getProjectTaskId());
+        }
+        catch (VerifyException e) {
+            this.msg = "ProejctTask Id canot be negative";
+            throw new InvalidProjectTaskException(this.msg, e);
+        }
+        try {
             Verifier.verifyPositive(pt.getProjId());
         }
         catch (VerifyException e) {
-            this.msg = "Proejct Id is required when creating Project-Task";
+            this.msg = "Proejct Id is required and must be greater than zero when creating Project-Task";
             throw new InvalidProjectTaskException(this.msg, e);
         }
         try {
             Verifier.verifyPositive(pt.getTaskId());
         }
         catch (VerifyException e) {
-            this.msg = "Task Id is required when creating Project-Task";
+            this.msg = "Task Id is required and must be greater than zero when creating Project-Task";
             throw new InvalidProjectTaskException(this.msg, e);
         }
     }
 
-    /**
-     * Verifies that the task has a project id assigned and ensures that the
-     * project id is congruent with the current project id assoicated with this
-     * API.
-     * 
-     * @param task
-     *            an instance of {@link ProjectTaskDto}
-     * @throws InvalidTaskException
-     */
-    private void validateTaskForUpdate(ProjectTaskDto task) throws InvalidTaskException {
-        try {
-            Verifier.verifyNotNull(task);
-        } catch (VerifyException e) {
-            this.msg = "Thimesheet task is invalid or null.";
-            throw new InvalidTaskException(this.msg, e);
-        }
-
-        if (task.getProjId() == 0) {
-            this.msg = "Timesheet is required to have an assigned project";
-            throw new InvalidTaskException(this.msg);
-        }
-
-        if (this.currentProjectId == 0) {
-            this.msg = "Timesheet API is required to have a master project id assigned so that each task's project id can be compared";
-            throw new InvalidTaskException(this.msg);
-        }
-        if (task.getProjId() != this.currentProjectId) {
-            this.msg = "Found a conflicting project assinged to timesheet task named, "
-                    + task.getTaskDescription()
-                    + ".  Be sure that all tasks are associated with the same project for the timesheet";
-            throw new InvalidTaskException(this.msg);
-        }
-
-    }
+//    /**
+//     * Verifies that the task has a project id assigned and ensures that the
+//     * project id is congruent with the current project id assoicated with this
+//     * API.
+//     * 
+//     * @param task
+//     *            an instance of {@link ProjectTaskDto}
+//     * @throws InvalidTaskException
+//     */
+//    private void validateTaskForUpdate(ProjectTaskDto task) throws InvalidTaskException {
+//        try {
+//            Verifier.verifyNotNull(task);
+//        } catch (VerifyException e) {
+//            this.msg = "Thimesheet task is invalid or null.";
+//            throw new InvalidTaskException(this.msg, e);
+//        }
+//
+//        if (task.getProjId() == 0) {
+//            this.msg = "Timesheet is required to have an assigned project";
+//            throw new InvalidTaskException(this.msg);
+//        }
+//
+//        if (this.currentProjectId == 0) {
+//            this.msg = "Timesheet API is required to have a master project id assigned so that each task's project id can be compared";
+//            throw new InvalidTaskException(this.msg);
+//        }
+//        if (task.getProjId() != this.currentProjectId) {
+//            this.msg = "Found a conflicting project assinged to timesheet task named, "
+//                    + task.getTaskDescription()
+//                    + ".  Be sure that all tasks are associated with the same project for the timesheet";
+//            throw new InvalidTaskException(this.msg);
+//        }
+//
+//    }
 
     /**
      * Verifies that changing the status of the timesheet identified as
