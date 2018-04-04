@@ -288,8 +288,7 @@ public interface TimesheetDao extends DaoClient {
      * @throws TimesheetDaoException
      *             general data access errors
      */
-    int deleteTimesheetStatus(TimesheetStatusDto criteria)
-            throws TimesheetDaoException;
+    int deleteTimesheetStatus(TimesheetStatusDto criteria) throws TimesheetDaoException;
 
     /**
      * Deletes one or more timesheet roject/tasks using selection criteria.
