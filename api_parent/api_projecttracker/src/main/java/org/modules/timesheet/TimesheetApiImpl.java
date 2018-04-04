@@ -1046,8 +1046,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         // Now delete the timesheet
         TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
         criteria.setTimesheetId(timesheetId);
-        int rc = this.dao.deleteTimesheet(criteria);
-        return rc;
+        try {
+            int rc = this.dao.deleteTimesheet(criteria);
+            return rc;
+        } catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("DAO error occurred deleting timesheet by timesheet id: "
+                            + timesheetId, e);
+        }
     }
 
     /*
@@ -1064,8 +1069,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         // Now delete the project/task
         ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskDtoInstance(null);
         criteria.setProjectTaskId(projectTaskId);
-        int rc = this.dao.deleteProjectTask(criteria);
-        return rc;
+        try {
+            int rc = this.dao.deleteProjectTask(criteria);
+            return rc;
+        } catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("DAO error occurred deleting timesheet project task by project task id: "
+                            + projectTaskId, e);
+        }
     }
 
     /*
@@ -1097,8 +1107,14 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
         criteria.setProjectTaskId(projectTaskId);
-        int rc = this.dao.deleteEvent(criteria);
-        return rc;
+        try {
+            int rc = this.dao.deleteEvent(criteria);
+            return rc;    
+        }
+        catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("DAO error occurred deleting timesheet events by project task id: "
+                            + projectTaskId, e);
+        }
     }
 
     /*
@@ -1112,8 +1128,13 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         EventDto criteria = ProjectObjectFactory.createEventDtoInstance(null);
         criteria.setEventId(eventId);
-        int rc = this.dao.deleteEvent(criteria);
-        return rc;
+        try {
+            int rc = this.dao.deleteEvent(criteria);
+            return rc;    
+        }
+        catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("DAO error occurred deleting timesheet event by event id: " + eventId, e);
+        }
     }
 
     /**
@@ -1140,8 +1161,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public int send(TimesheetDto timesheet, EmployeeDto employee, ClientDto client, 
-            Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException, 
-              TimesheetTransmissionException {
+            Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetApiException, TimesheetTransmissionException {
         return 0;
     }
 
