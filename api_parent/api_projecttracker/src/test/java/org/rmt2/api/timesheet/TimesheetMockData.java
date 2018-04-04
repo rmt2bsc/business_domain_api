@@ -2,7 +2,6 @@ package org.rmt2.api.timesheet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
@@ -330,21 +329,17 @@ public class TimesheetMockData extends ProjectTrackerMockData {
      */
     public static final List<ProjEvent> createMockMultiple_Day_Task_Events(int projectTaskId) {
         List<ProjEvent> list = new ArrayList<ProjEvent>();
-        int eventId = ThreadLocalRandom.current().nextInt(1000, 1000000 + 1);
+        int eventId = ProjectTrackerMockDataFactory.TEST_EVENT_ID;
         // Day 1
         ProjEvent o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(eventId, projectTaskId, "2018-01-01", 1);
         list.add(o);
-        eventId = ThreadLocalRandom.current().nextInt(1000, 1000000 + 1);
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(eventId, projectTaskId, "2018-01-02", 2);
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-02", 2);
         list.add(o);
-        eventId = ThreadLocalRandom.current().nextInt(1000, 1000000 + 1);
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(eventId, projectTaskId, "2018-01-03", 2);
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-03", 2);
         list.add(o);
-        eventId = ThreadLocalRandom.current().nextInt(1000, 1000000 + 1);
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(eventId, projectTaskId, "2018-01-04", 2);
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-04", 2);
         list.add(o);
-        eventId = ThreadLocalRandom.current().nextInt(1000, 1000000 + 1);
-        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(eventId, projectTaskId, "2018-01-05", 1);
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-05", 1);
         list.add(o);
        
         return list;
