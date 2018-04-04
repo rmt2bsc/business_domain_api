@@ -29,8 +29,8 @@ import org.dto.TimesheetStatusDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 
+import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.api.persistence.db.orm.OrmBean;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
 
@@ -637,31 +637,20 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         }
     }
 
-    /**
-     * 
-     * @param obj
-     * @return
-     */
-    private int deleteObject(OrmBean obj) {
-        int rows = 0;
-        try {
-            rows = this.client.deleteRow(obj);
-            return rows;
-        } catch (Exception e) {
-            throw new TimesheetDaoException(e);
-        }
-    }
-
     /*
      * (non-Javadoc)
      * 
      * @see org.dao.TimesheetDao#deleteTimesheet(org.dto.TimesheetDto)
      */
     @Override
-    public int deleteTimesheet(TimesheetDto criteria)
-            throws TimesheetDaoException {
-        // TODO Auto-generated method stub
-        return 0;
+    public int deleteTimesheet(TimesheetDto criteria) throws TimesheetDaoException {
+        ProjTimesheet obj = TimesheetDaoFactory.createCriteria(criteria);
+        try {
+            return this.deleteObject(obj);    
+        }
+        catch (DatabaseException e) {
+            throw new TimesheetDaoException("Unable to delete timesheet", e);
+        }
     }
 
     /*
@@ -672,7 +661,6 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      */
     @Override
     public int deleteTimesheetStatus(TimesheetStatusDto criteria) throws TimesheetDaoException {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -684,8 +672,13 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      */
     @Override
     public int deleteProjectTask(ProjectTaskDto criteria) throws TimesheetDaoException {
-        // TODO Auto-generated method stub
-        return 0;
+        ProjProjectTask obj = ProjectAdminDaoFactory.createCriteria(criteria);
+        try {
+            return this.deleteObject(obj);    
+        }
+        catch (DatabaseException e) {
+            throw new TimesheetDaoException("Unable to delete timesheet project task", e);
+        }
     }
 
     /*
@@ -696,7 +689,12 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
     @Override
     public int deleteEvent(EventDto criteria) throws TimesheetDaoException {
         ProjEvent obj = ProjectAdminDaoFactory.createCriteria(criteria);
-        return this.deleteObject(obj);
+        try {
+            return this.deleteObject(obj);    
+        }
+        catch (DatabaseException e) {
+            throw new TimesheetDaoException("Unable to delete timesheet event", e);
+        }
     }
 
 }
