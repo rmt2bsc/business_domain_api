@@ -553,8 +553,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
             pt.setProjectTaskId(rc);
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to create timesheet project/task due to database errors";
-            throw new TimesheetDaoException(this.msg, e);
+            throw new TimesheetDaoException("Unable to create timesheet project/task due to database errors", e);
         }
     }
 
@@ -573,6 +572,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         int rc = 0;
         if (evt.getEventId() == 0) {
             rc = this.createEvent(evt);
+            obj.setEventId(rc);
         }
         else {
             rc = this.updateEvent(evt);
