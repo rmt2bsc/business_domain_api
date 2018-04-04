@@ -2008,31 +2008,453 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         }
     }   
     
-//    @Test
-//    public void testSuccess_Delete_Event_By_Event_id() {
-//        Assert.fail("Implement test case");
-//    }
-//
-//    @Test
-//    public void testSuccess_Delete_Events_By_ProjectTaskId() {
-//        Assert.fail("Implement test case");
-//    }
-//
-//    @Test
-//    public void testSuccess_Delete_ProjectTask_By_ProjectTaskId() {
-//        Assert.fail("Implement test case");
-//    }
-//
-//    @Test
-//    public void testSuccess_Delete_ProjectTasks_By_Timesheet_Id() {
-//        Assert.fail("Implement test case");
-//    }
-//
-//    @Test
-//    public void testSuccess_Delete_Timesheet() {
-//        Assert.fail("Implement test case");
-//    }
-//
+    @Test
+    public void testSuccess_Delete_Event_By_Event_id() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete single event case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.deleteEvent(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Delete of single timesheet event failed");
+        }
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
+    public void testError_Delete_Event_By_Event_id_DB_Access_Fault() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete single event case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteEvent(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+
+    @Test
+    public void testValidation_Delete_Event_By_Event_id_Null_EventId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteEvent(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Event Id is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_Event_By_Event_id_Negative_EventId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteEvent(-1234);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Event Id cannot be negative", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Delete_Events_By_ProjectTaskId() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete multiple events case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.deleteEvents(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Delete of multiple timesheet event failed");
+        }
+        Assert.assertEquals(5, results);
+    }
+    
+    @Test
+    public void testValidation_Delete_Event_By_Event_id_Null_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteEvents(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Project Task Id is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_Event_By_Event_id_Negative_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteEvents(-1234);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Project Task Id cannot be negative", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testError_Delete_Events_By_ProjectTaskId_DB_Access_Fault() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete single event case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteEvents(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+
+    @Test
+    public void testSuccess_Delete_ProjectTask_By_ProjectTaskId() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete multiple events case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjProjectTask.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete project task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.deleteProjectTask(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Delete of timesheet project task failed");
+        }
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
+    public void testError_Delete_ProjectTask_By_ProjectTaskId_DB_Access_Fault() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete multiple events case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjProjectTask.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete project task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteProjectTask(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_ProjectTask_By_ProjectTaskId_Null_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteProjectTask(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Project Task Id is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_ProjectTask_By_ProjectTaskId_Negative_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteProjectTask(-1234);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Project Task Id cannot be negative", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSuccess_Delete_ProjectTasks_By_Timesheet_Id() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete multiple events case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjProjectTask.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete project task case setup failed");
+        }
+        
+        ProjProjectTask mockCriteria = new ProjProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjProjectTaskMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.deleteProjectTasks(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Delete of project tasks by timesheet failed");
+        }
+        Assert.assertEquals(5, results);
+    }
+
+    @Test
+    public void testError_Delete_ProjectTasks_By_Timesheet_Id_DB_Access_Fault() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete multiple events case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjProjectTask.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete project task case setup failed");
+        }
+        
+        ProjProjectTask mockCriteria = new ProjProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjProjectTaskMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteProjectTasks(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+
+    @Test
+    public void testValidation_Delete_ProjectTask_By_TimesheetId_Null_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteProjectTasks(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_ProjectTask_By_TimesheetId_Negative_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteProjectTasks(-1234);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Delete_Timesheet() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete multiple events case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjProjectTask.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete project task case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjTimesheet.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete timesheet case setup failed");
+        }
+        
+        ProjProjectTask mockCriteria = new ProjProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjProjectTaskMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.deleteTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Delete of timesheet failed");
+        }
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
+    public void testError_Delete_Timesheet_DB_Access_Fault() {
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete multiple events case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjProjectTask.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete project task case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.deleteRow(isA(ProjTimesheet.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Delete timesheet case setup failed");
+        }
+        
+        ProjProjectTask mockCriteria = new ProjProjectTask();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockProjProjectTaskMultiple);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_Timesheet_Null_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteTimesheet(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_Timesheet_Negative_TimesheetId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.deleteTimesheet(-1234);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID + " cannot be negative", e.getMessage());
+        }
+    }
+
 //    @Test
 //    public void testSuccess_Send_Timesheet() {
 //        Assert.fail("Implement test case");
