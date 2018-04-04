@@ -2455,14 +2455,26 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         }
     }
 
-//    @Test
-//    public void testSuccess_Send_Timesheet() {
-//        Assert.fail("Implement test case");
-//    }
-//
-//    @Test
-//    public void testSuccess_Set_Current_Project_Id() {
-//        Assert.fail("Implement test case");
-//    }
+    @Test
+    public void testSuccess_Send_Timesheet() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        int results = 0;
+        try {
+            results = api.send(null, null, null, null);
+        } catch (TimesheetTransmissionException | TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Timesheet transmission test failed");
+        }
+        Assert.assertEquals(0, results);
+    }
+
+    @Test
+    public void testSuccess_Set_Current_Project_Id() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        api.setCurrentProjectId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_PROJ_ID, api.getCurrentProjectId());
+    }
 
 }
