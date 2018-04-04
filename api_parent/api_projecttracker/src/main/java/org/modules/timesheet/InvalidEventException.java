@@ -1,12 +1,14 @@
 package org.modules.timesheet;
 
+import com.InvalidDataException;
+
 /**
  * Handles events that fail validations.
  * 
  * @author Roy Terrell
  * 
  */
-public class InvalidEventException extends TimesheetApiException {
+public class InvalidEventException extends InvalidDataException {
 
     private static final long serialVersionUID = -5399306021195061423L;
 
