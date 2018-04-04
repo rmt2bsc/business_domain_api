@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.dao.admin.ProjectAdminDaoException;
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEvent;
@@ -36,6 +37,8 @@ import org.mockito.Mockito;
 import org.modules.ProjectTrackerApiConst;
 import org.modules.admin.ProjectAdminApiException;
 import org.modules.employee.EmployeeApiException;
+import org.modules.timesheet.InvalidEventException;
+import org.modules.timesheet.InvalidProjectTaskException;
 import org.modules.timesheet.InvalidTimesheetException;
 import org.modules.timesheet.TimesheetApi;
 import org.modules.timesheet.TimesheetApiException;
@@ -48,6 +51,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
 import com.InvalidDataException;
+import com.NotFoundException;
+import com.SystemException;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
@@ -101,20 +106,24 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
                 pt.setProjectTaskId(0);
             }
             ProjectTaskDto ptDto = ProjectObjectFactory.createProjectTaskDtoInstance(pt);
-            List<ProjEvent> projEvents = createMockMultiple_Day_Task_Events(pt.getProjectTaskId());
-            List<EventDto> eventsDto = new ArrayList<>();
-            for (ProjEvent evt : projEvents) {
-                if (newTimesheet) {
-                    evt.setEventId(0);
-                }
-                EventDto evtDto = ProjectObjectFactory.createEventDtoInstance(evt);
-                eventsDto.add(evtDto);
-            }
+            List<EventDto> eventsDto = this.buildTimesheetEventDtoList(pt.getProjectTaskId(), newTimesheet);
             hours.put(ptDto, eventsDto);
         }
         return hours;
     }
     
+    private List<EventDto> buildTimesheetEventDtoList(int projectTaskId, boolean newTimesheet) {
+        List<ProjEvent> projEvents = createMockMultiple_Day_Task_Events(projectTaskId);
+        List<EventDto> eventsDto = new ArrayList<>();
+        for (ProjEvent evt : projEvents) {
+            if (newTimesheet) {
+                evt.setEventId(0);
+            }
+            EventDto evtDto = ProjectObjectFactory.createEventDtoInstance(evt);
+            eventsDto.add(evtDto);
+        }
+        return eventsDto;
+    }
     
     @Test
     public void testSuccess_Change_Status_Existing() {
@@ -1363,7 +1372,6 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         TimesheetApiFactory f = new TimesheetApiFactory();
         TimesheetApi api = f.createApi(this.mockDaoClient);
         try {
-            TimesheetDto ts = this.buildTimesheetDto(true);
             Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
             api.updateTimesheet(null, hours);
             Assert.fail("Expected an exception to be thrown");
@@ -1474,53 +1482,565 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testSuccess_Update_Project_Task() {
-        Assert.fail("Implement test case");
+    public void testSuccess_Create_Project_Task() {
+        try {
+            this.mockProjProjectTaskSingle.get(0).setProjectTaskId(0);
+            when(this.mockPersistenceClient.insertRow(isA(ProjProjectTask.class), eq(true)))
+                            .thenReturn(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
+        int results = 0;
+        try {
+            results = api.updateProjectTask(projTask);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Update of timesheet case setup failed");
+        }
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, results);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, projTask.getProjectTaskId());
+    }
+    
+    @Test
+    public void testError_Update_Project_Task_DB_Access_Fault() {
+        try {
+            this.mockProjProjectTaskSingle.get(0).setProjectTaskId(0);
+            when(this.mockPersistenceClient.insertRow(isA(ProjProjectTask.class), eq(true)))
+                   .thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
+        try {
+            api.updateProjectTask(projTask);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals("A DAO error occurred updating a timesheet's Project/Task", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertEquals("Unable to create timesheet project/task due to database errors", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Project_Task_Null_ProjectTask_Object() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.updateProjectTask(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidProjectTaskException);
+            Assert.assertEquals("ProejctTask data object is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Project_Task_Negative_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
+        try {
+            projTask.setProjectTaskId(-1234);
+            api.updateProjectTask(projTask);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidProjectTaskException);
+            Assert.assertEquals("ProejctTask Id canot be negative", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Project_Task_Negative_ProjectId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
+        try {
+            projTask.setProjId(-1234);
+            api.updateProjectTask(projTask);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidProjectTaskException);
+            Assert.assertEquals("Proejct Id is required and must be greater than zero when creating Project-Task", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Project_Task_Zero_ProjectId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
+        try {
+            projTask.setProjId(0);
+            api.updateProjectTask(projTask);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidProjectTaskException);
+            Assert.assertEquals("Proejct Id is required and must be greater than zero when creating Project-Task", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Project_Task_Negative_TaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
+        try {
+            projTask.setTaskId(-1234);
+            api.updateProjectTask(projTask);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidProjectTaskException);
+            Assert.assertEquals("Task Id is required and must be greater than zero when creating Project-Task", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Project_Task_Zero_TaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
+        try {
+            projTask.setTaskId(0);
+            api.updateProjectTask(projTask);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidProjectTaskException);
+            Assert.assertEquals("Task Id is required and must be greater than zero when creating Project-Task", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testSuccess_Create_Single_Event() {
+        when(this.mockPersistenceClient.insertRow(isA(ProjEvent.class), eq(true)))
+            .thenReturn(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
+        int results = 0;
+        try {
+            event.setEventId(0);
+            results = api.updateEvent(event);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Insert of timesheet event failed");
+        }
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EVENT_ID, results);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EVENT_ID, event.getEventId());
     }
     
     @Test
     public void testSuccess_Update_Single_Event() {
-        Assert.fail("Implement test case");
-    }
-
-    @Test
-    public void testSuccess_Update_Multiple_Events() {
-        Assert.fail("Implement test case");
+        when(this.mockPersistenceClient.updateRow(isA(ProjEvent.class))).thenReturn(1);
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
+        int results = 0;
+        try {
+            results = api.updateEvent(event);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Insert of timesheet event failed");
+        }
+        Assert.assertEquals(1, results);
     }
     
     @Test
-    public void testSuccess_Delete_Event_By_Event_id() {
-        Assert.fail("Implement test case");
+    public void testError_Update_Event_DB_Access_Fault() {
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjEvent.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update event case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
+        try {
+            api.updateEvent(event);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals("A DAO error occurred updating a timesheet's Event", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertEquals("Unable to update project event due to database errors", e.getCause().getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Event_Null_Event_Object() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.updateEvent(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidEventException);
+            Assert.assertEquals("Event object is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Event_Negative_EventId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
+        try {
+            event.setEventId(-1234);
+            api.updateEvent(event);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidEventException);
+            Assert.assertEquals("Event id cannot be negative", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Event_Negative_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
+        try {
+            event.setProjectTaskId(-1234);
+            api.updateEvent(event);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidEventException);
+            Assert.assertEquals("Event project/task id is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Event_Zero_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
+        try {
+            event.setProjectTaskId(0);
+            api.updateEvent(event);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidEventException);
+            Assert.assertEquals("Event project/task id is required", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Event_Null_EventDate() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
+        try {
+            event.setEventDate(null);
+            api.updateEvent(event);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof InvalidEventException);
+            Assert.assertEquals("Event date is required", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testSuccess_Delete_Events_By_ProjectTaskId() {
-        Assert.fail("Implement test case");
+    public void testSuccess_Create_Multiple_Events() {
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+        try {
+            int ndx = 0;
+            when(this.mockPersistenceClient.insertRow(isA(ProjEvent.class), eq(true)))
+                            .thenReturn(ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert event case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, true);
+        int results = 0;
+        try {
+            results = api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Insert of timesheet event failed");
+        }
+        Assert.assertEquals(5, results);
+        for (int ndx = 0; ndx < events.size(); ndx++) {
+            EventDto dto = events.get(ndx);
+            Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx, dto.getEventId());
+        }
     }
-
+    
     @Test
-    public void testSuccess_Delete_ProjectTask_By_ProjectTaskId() {
-        Assert.fail("Implement test case");
+    public void testSuccess_Update_Multiple_Events() {
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjEvent.class))).thenReturn(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update event case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
+        int results = 0;
+        try {
+            results = api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+            Assert.fail("Insert of timesheet event failed");
+        }
+        Assert.assertEquals(5, results);
+        for (int ndx = 0; ndx < events.size(); ndx++) {
+            EventDto dto = events.get(ndx);
+            Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx, dto.getEventId());
+        }
     }
-
+    
     @Test
-    public void testSuccess_Delete_ProjectTasks_By_Timesheet_Id() {
-        Assert.fail("Implement test case");
-    }
+    public void testError_Update_Multiple_Events_DB_Access_Fault_During_Validation() {
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
+        try {
+            api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SystemException);
+            Assert.assertTrue(e.getCause() instanceof ProjectAdminApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof ProjectAdminDaoException);
+            Assert.assertEquals("A DAO error occurred validating project task entity existence", e.getMessage());
 
-    @Test
-    public void testSuccess_Delete_Timesheet() {
-        Assert.fail("Implement test case");
+        }
     }
+    
+    @Test
+    public void testError_Update_Multiple_Events_DB_Access_Fault_After_Validation() {
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjEvent.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update event case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
+        try {
+            api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals("A DAO error occurred updating a timesheet's Event", e.getMessage());
 
-    @Test
-    public void testSuccess_Send_Timesheet() {
-        Assert.fail("Implement test case");
+        }
     }
-
+    
     @Test
-    public void testSuccess_Set_Current_Project_Id() {
-        Assert.fail("Implement test case");
+    public void testValidation_Update_Multiple_Events_Null_Event_List() {
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwTimesheetProjectTaskFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "The collection containing the lists of project events must be valid in order to assoicate multiple events with a project task",
+                    e.getMessage());
+        }
     }
+        
+    @Test
+    public void testValidation_Update_Multiple_Events_ProjectTask_Not_Found() {
+        VwTimesheetProjectTask mockCriteria = new VwTimesheetProjectTask();
+        mockCriteria.setProjectTaskId(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single project-task case setup failed");
+        }
+        
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
+        try {
+            api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof NotFoundException);
+            Assert.assertEquals("project/task id, " + ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID
+                    + ", must exist in the system in order to assoicate multiple events with a project task",
+                    e.getMessage());
+        }
+    }   
+    
+    @Test
+    public void testValidation_Update_Multiple_Events_Null_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
+        try {
+            api.updateEvent(null, events);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Project Task Id is required", e.getMessage());
+        }
+    }   
+    
+    @Test
+    public void testValidation_Update_Multiple_Events_Negative_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
+        try {
+            api.updateEvent(-1234, events);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("A project/task id must be valid in order to assoicate multiple events with a project task",
+                    e.getMessage());
+        }
+    }   
+    
+    @Test
+    public void testValidation_Update_Multiple_Events_Zero_ProjectTaskId() {
+        TimesheetApiFactory f = new TimesheetApiFactory();
+        TimesheetApi api = f.createApi(this.mockDaoClient);
+        List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
+        try {
+            api.updateEvent(0, events);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("A project/task id must be valid in order to assoicate multiple events with a project task",
+                    e.getMessage());
+        }
+    }   
+    
+//    @Test
+//    public void testSuccess_Delete_Event_By_Event_id() {
+//        Assert.fail("Implement test case");
+//    }
+//
+//    @Test
+//    public void testSuccess_Delete_Events_By_ProjectTaskId() {
+//        Assert.fail("Implement test case");
+//    }
+//
+//    @Test
+//    public void testSuccess_Delete_ProjectTask_By_ProjectTaskId() {
+//        Assert.fail("Implement test case");
+//    }
+//
+//    @Test
+//    public void testSuccess_Delete_ProjectTasks_By_Timesheet_Id() {
+//        Assert.fail("Implement test case");
+//    }
+//
+//    @Test
+//    public void testSuccess_Delete_Timesheet() {
+//        Assert.fail("Implement test case");
+//    }
+//
+//    @Test
+//    public void testSuccess_Send_Timesheet() {
+//        Assert.fail("Implement test case");
+//    }
+//
+//    @Test
+//    public void testSuccess_Set_Current_Project_Id() {
+//        Assert.fail("Implement test case");
+//    }
 
 }
