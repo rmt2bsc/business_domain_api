@@ -1793,6 +1793,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
                                     ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
                                     ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
                                     ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
+                                    ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++,
                                     ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx++);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1809,7 +1811,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             e.printStackTrace();
             Assert.fail("Insert of timesheet event failed");
         }
-        Assert.assertEquals(5, results);
+        Assert.assertEquals(7, results);
         for (int ndx = 0; ndx < events.size(); ndx++) {
             EventDto dto = events.get(ndx);
             Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx, dto.getEventId());
@@ -1843,7 +1845,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             e.printStackTrace();
             Assert.fail("Insert of timesheet event failed");
         }
-        Assert.assertEquals(5, results);
+        Assert.assertEquals(7, results);
         for (int ndx = 0; ndx < events.size(); ndx++) {
             EventDto dto = events.get(ndx);
             Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_EVENT_ID + ndx, dto.getEventId());
