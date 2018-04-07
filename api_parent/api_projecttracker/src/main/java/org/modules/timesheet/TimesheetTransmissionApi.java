@@ -12,8 +12,7 @@ import org.dto.TimesheetDto;
 import com.api.messaging.email.EmailMessageBean;
 
 /**
- * Interface for transmitting a timesheet from one party to another as
- * confirmation that the timesheet was submitted for approval.
+ * Interface for transmitting a timesheet from one party to another via some transport.
  * 
  * @author Roy Terrell
  * 
