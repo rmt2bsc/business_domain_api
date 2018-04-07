@@ -132,6 +132,7 @@ public class ProjectTrackerMockDataFactory {
         o.setLastname(lastName);
         o.setSsn(ssn);
         o.setCompanyName(companyName);
+        o.setEmail(firstName + "." + lastName + "@gte.net");
         return o;
     }
     
