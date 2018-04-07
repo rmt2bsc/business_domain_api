@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.dao.mapping.orm.rmt2.ProjEvent;
-import org.dao.mapping.orm.rmt2.ProjProjectTask;
+import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EmployeeDto;
 import org.dto.EventDto;
@@ -27,6 +27,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.api.messaging.email.smtp.SmtpFactory;
+import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
  * Test the timesheet transmission functionality of the Timesheet module of the
@@ -36,7 +37,7 @@ import com.api.messaging.email.smtp.SmtpFactory;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ SmtpFactory.class })
+@PrepareForTest({ Rmt2OrmClientFactory.class, SmtpFactory.class })
 public class TimesheetTransmissionApiTest extends TimesheetMockData {
 
     /**
@@ -59,8 +60,8 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     
     private Map<ProjectTaskDto, List<EventDto>> buildTimesheetHoursDtoMap() {
         Map<ProjectTaskDto, List<EventDto>> hours = new HashMap<>(); 
-        for (ProjProjectTask pt : this.mockProjProjectTaskMultiple) {
-            ProjectTaskDto ptDto = ProjectObjectFactory.createProjectTaskDtoInstance(pt);
+        for (VwTimesheetProjectTask pt : this.mockVwTimesheetProjectTaskFetchMultiple) {
+            ProjectTaskDto ptDto = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(pt);
             List<EventDto> eventsDto = this.buildTimesheetEventDtoList(pt.getProjectTaskId());
             hours.put(ptDto, eventsDto);
         }
