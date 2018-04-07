@@ -11,9 +11,10 @@ import org.dto.EmployeeDto;
 import org.dto.EventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.modules.ProjectTrackerApiConst;
 
-import com.RMT2Base;
 import com.SystemException;
+import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
@@ -28,7 +29,7 @@ import com.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTransmissionApi {
+class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implements TimesheetTransmissionApi {
 
     private static final Logger logger = Logger.getLogger(SmtpTimesheetTransmissionApiImpl.class);
 
@@ -38,9 +39,17 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTran
      * 
      */
     protected SmtpTimesheetTransmissionApiImpl() {
-        super();
+        super(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
+    /**
+     * 
+     * @param appName
+     */
+    protected SmtpTimesheetTransmissionApiImpl(String appName) {
+        super(appName);
+    }
+    
     /**
      * Emails a copy of an employee's timesheet to the employee's manager using
      * <i>timesheet</i>, <i>employee</i>, <i>client</i>, and <i>hours</i>.
@@ -146,16 +155,16 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTran
         email.setSubject(buf.toString());
 
         // Build email body
-        String root = RMT2File.getAppParmProperty("webapp_root");
-        String uri = RMT2File.getAppParmProperty("email_submit_uri");
-        String uriParms = RMT2File.getAppParmProperty("email_submit_uri_parms");
+        String root = this.getConfig().getProperty("webapp_root");
+        String uri = this.getConfig().getProperty("email_submit_uri");
+        String uriParms = this.getConfig().getProperty("email_submit_uri_parms");
         String submitUri = root + uri + RMT2String.replace(uriParms, String.valueOf(timesheet.getTimesheetId()),
-                        "$timesheet_id02$");
+                        "{$timesheet_id02$}");
 
         // Get HTML Content
         String htmlContent = null;
         String formattedDate = null;
-        String emailTemplateFile = RMT2File.getAppParmProperty("email_template");
+        String emailTemplateFile = this.getConfig().getProperty("email_template");
         try {
             InputStream is = RMT2File.getFileInputStream(emailTemplateFile);
             htmlContent = RMT2File.getStreamStringData(is);
@@ -181,8 +190,11 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTran
         deltaContent = RMT2String.replace(deltaContent, String.valueOf(this.totalHours), "$totalhours$");
         deltaContent = RMT2String.replace(deltaContent, String.valueOf(timesheet.getTimesheetId()), "$timesheetid$");
 
+        // Setup Approve and Decline comand buttons for manager actions
         deltaContent = RMT2String.replace(deltaContent, submitUri + "approve", "$approveURI$");
         deltaContent = RMT2String.replace(deltaContent, submitUri + "decline", "$declineURI$");
+        
+        RMT2File.createFile(deltaContent, "/tmp/timesheet_email.html");
 
         email.setBody(deltaContent, EmailMessageBean.HTML_CONTENT);
         return email;
@@ -212,7 +224,7 @@ class SmtpTimesheetTransmissionApiImpl extends RMT2Base implements TimesheetTran
         ProjectTaskDto vtpt = null;
         EventDto pe = null;
 
-        String emailTemplateFile = RMT2File.getAppParmProperty("email_details_template");
+        String emailTemplateFile = this.getConfig().getProperty("email_details_template");
         try {
             InputStream is = RMT2File.getFileInputStream(emailTemplateFile);
             origHtmlContents = RMT2File.getStreamStringData(is);
