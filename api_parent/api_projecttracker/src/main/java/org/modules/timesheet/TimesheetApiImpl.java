@@ -76,7 +76,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @param appName
      */
     protected TimesheetApiImpl(String appName) {
-        super();
+        super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
         return;
