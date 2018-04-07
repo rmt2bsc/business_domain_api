@@ -331,7 +331,7 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         List<ProjEvent> list = new ArrayList<ProjEvent>();
         int eventId = ProjectTrackerMockDataFactory.TEST_EVENT_ID;
         // Day 1
-        ProjEvent o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(eventId, projectTaskId, "2018-01-01", 1);
+        ProjEvent o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(eventId, projectTaskId, "2018-01-01", 0);
         list.add(o);
         o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-02", 2);
         list.add(o);
@@ -341,6 +341,11 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         list.add(o);
         o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-05", 1);
         list.add(o);
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-06", 1);
+        list.add(o);
+        o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(++eventId, projectTaskId, "2018-01-07", 0);
+        list.add(o);
+        
        
         return list;
     }
