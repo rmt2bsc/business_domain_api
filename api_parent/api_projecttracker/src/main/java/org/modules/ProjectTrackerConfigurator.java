@@ -14,8 +14,7 @@ import com.util.RMT2File;
  * @author appdev
  *
  */
-public class ProjectTrackerConfigurator extends
-        AbstractApiConfiguratorPropertiesImpl {
+public class ProjectTrackerConfigurator extends AbstractApiConfiguratorPropertiesImpl {
 
     private static Logger logger;
 
