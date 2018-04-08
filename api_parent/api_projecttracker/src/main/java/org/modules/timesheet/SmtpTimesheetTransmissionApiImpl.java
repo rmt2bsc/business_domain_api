@@ -116,28 +116,27 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      * @throws TimesheetTransmissionException
      *             User's session bean is unobtainable. Problem obtaining
      *             timesheet's project-task entries.
+     * @throws TimesheetTransmissionValidationException
+     *             <i>timesheet</i>, <i>employee</i>, <i>manager</i>,
+     *             <i>client</i>, <i>hours</i>, or <i>timesheet end period</i>
+     *             is null.
+     * @throws ZeroTimesheetHoursException
+     *             <i>timesheet hours</i> structure is exists but is empty.
      */
     @Override
     public EmailMessageBean createConfirmationMessage(TimesheetDto timesheet, EmployeeDto employee, 
             EmployeeDto manager, ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours)
             throws TimesheetTransmissionException {
 
-        try {
-            this.validate(timesheet, employee, manager, client, hours);
-        } catch (TimesheetTransmissionValidationException e) {
-            this.msg = "Timesheet SMTP transmission validation error occurred";
-            throw new TimesheetTransmissionException(this.msg, e);
-        } catch (ZeroTimesheetHoursException e) {
-            logger.warn(e.getMessage());
-            return null;
-        }
+        this.validate(timesheet, employee, manager, client, hours);
 
         // Begin to build email content
         String periodEnd = null;
         try {
-            periodEnd = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM/dd/yyyy");
+            periodEnd = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM-dd-yyyy");
         } catch (SystemException e) {
-            periodEnd = "N/A";
+            this.msg = "Unable to convert timesheet end period date string to Date object";
+            throw new TimesheetTransmissionException(this.msg, e);
         }
 
         EmailMessageBean email = new EmailMessageBean();
@@ -168,7 +167,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
         try {
             InputStream is = RMT2File.getFileInputStream(emailTemplateFile);
             htmlContent = RMT2File.getStreamStringData(is);
-            formattedDate = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM/dd/yyyy");
+            formattedDate = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM-dd-yyyy");
         } catch (SystemException e) {
             throw new TimesheetTransmissionException("Unalbe to get HTML content pertaining to timesheet: "
                             + timesheet.getDisplayValue(), e);
@@ -273,42 +272,42 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      *             any entries.
      */
     private void validate(TimesheetDto timesheet, EmployeeDto employee,  EmployeeDto manager, ClientDto client,
-            Map<ProjectTaskDto, List<EventDto>> hours)
-            throws TimesheetTransmissionValidationException, ZeroTimesheetHoursException {
+            Map<ProjectTaskDto, List<EventDto>> hours) {
         // Validate timesheet
         if (timesheet == null) {
-            this.msg = "Timesheet instance is invalid when attempting to send timesheet to manager over SMTP protocol";
+            this.msg = "Timesheet data object is required";
+            throw new TimesheetTransmissionValidationException(this.msg);
+        }
+        
+        if (timesheet.getEndPeriod() == null) {
+            this.msg = "Timesheet end period is required";
             throw new TimesheetTransmissionValidationException(this.msg);
         }
 
         // Validate employee
         if (employee == null) {
-            this.msg = "Employee instance is invalid when attempting to send timesheet to manager over SMTP protocol";
+            this.msg = "Employee data object is required";
             throw new TimesheetTransmissionValidationException(this.msg);
         }
 
         // validate employee's client
         if (client == null) {
-            this.msg = "Client instance is invalid when attempting to send timesheet to manager over SMTP protocol";
+            this.msg = "Client data object is required";
             throw new TimesheetTransmissionValidationException(this.msg);
         }
 
         if (hours == null) {
-            this.msg = "Timesheet hours instance is invalid when attempting to send timesheet to manager over SMTP protocol";
+            this.msg = "Timesheet project-task hours data object is required";
             throw new TimesheetTransmissionValidationException(this.msg);
         }
 
         if (manager == null) {
-            this.msg = "Employee, "
-                    + employee.getEmployeeId()
-                    + ", does have a manager to send timesheet over SMTP protocol";
+            this.msg = "Employee, " + employee.getEmployeeId() + ", does not have a manager";
             logger.warn(this.msg);
         }
 
         if (hours.isEmpty()) {
-            this.msg = "There are no project-task hours to process for timesheet, "
-                    + timesheet.getTimesheetId()
-                    + ", when attempting to send timesheet to manager over SMTP protocol";
+            this.msg = "There are no project-task hours to process for timesheet, " + timesheet.getDisplayValue();
             throw new ZeroTimesheetHoursException(this.msg);
         }
     }
