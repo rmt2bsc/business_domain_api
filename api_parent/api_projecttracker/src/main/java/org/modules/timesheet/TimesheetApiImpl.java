@@ -1013,7 +1013,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
 
             // send timesheet via email
             xmitApi = TimesheetApiFactory.createTransmissionApi();
-            EmailMessageBean msg = xmitApi.createConfirmationMessage(this.timeSheet, employee, manager, 
+            EmailMessageBean msg = xmitApi.createSubmitMessage(this.timeSheet, employee, manager, 
                     clients.get(0), this.timeSheetHours);
             Integer rc = (Integer) xmitApi.send(msg);
             return rc;

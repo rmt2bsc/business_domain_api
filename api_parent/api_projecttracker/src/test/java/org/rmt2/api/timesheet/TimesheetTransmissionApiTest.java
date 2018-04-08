@@ -109,7 +109,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         EmailMessageBean results = null;
         try {
-            results = api.createConfirmationMessage(timesheet, employee, manager, client, hours);
+            results = api.createSubmitMessage(timesheet, employee, manager, client, hours);
         }
         catch (TimesheetTransmissionException e) {
             e.printStackTrace();
@@ -142,7 +142,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
-            api.createConfirmationMessage(timesheet, employee, manager, client, hours);
+            api.createSubmitMessage(timesheet, employee, manager, client, hours);
             Assert.fail("Test failed due to unexcpected exception thrown");
         }
         catch (Exception e) {
@@ -156,7 +156,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     public void testValidation_CreateConfirmation_Null_Timesheet_Object() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
-            api.createConfirmationMessage(null, employee, manager, client, hours);
+            api.createSubmitMessage(null, employee, manager, client, hours);
             Assert.fail("Test failed due to unexcpected exception thrown");
         }
         catch (Exception e) {
@@ -172,7 +172,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
             this.timesheet.setEndPeriod(null);
-            api.createConfirmationMessage(timesheet, employee, manager, client, hours);
+            api.createSubmitMessage(timesheet, employee, manager, client, hours);
             Assert.fail("Test failed due to unexcpected exception thrown");
         }
         catch (Exception e) {
@@ -187,7 +187,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     public void testValidation_CreateConfirmation_Null_Hours_Object() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
-            api.createConfirmationMessage(timesheet, employee, manager, client, null);
+            api.createSubmitMessage(timesheet, employee, manager, client, null);
             Assert.fail("Test failed due to unexcpected exception thrown");
         }
         catch (Exception e) {
@@ -203,7 +203,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
             hours = new HashMap<>();
-            api.createConfirmationMessage(timesheet, employee, manager, client, hours);
+            api.createSubmitMessage(timesheet, employee, manager, client, hours);
             Assert.fail("Test failed due to unexcpected exception thrown");
         }
         catch (Exception e) {

@@ -687,7 +687,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
         EmailMessageBean mockEmailMsgBean = new EmailMessageBean();
         try {
-            when(mockTimesheetTransmissionApi.createConfirmationMessage(
+            when(mockTimesheetTransmissionApi.createSubmitMessage(
                     isA(TimesheetDto.class), isA(EmployeeDto.class),
                     isA(EmployeeDto.class), isA(ClientDto.class),
                     isA(Map.class))).thenReturn(mockEmailMsgBean);    
@@ -793,7 +793,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
         EmailMessageBean mockEmailMsgBean = new EmailMessageBean();
         try {
-            when(mockTimesheetTransmissionApi.createConfirmationMessage(
+            when(mockTimesheetTransmissionApi.createSubmitMessage(
                     isA(TimesheetDto.class), isA(EmployeeDto.class),
                     isA(EmployeeDto.class), isA(ClientDto.class),
                     isA(Map.class))).thenReturn(mockEmailMsgBean);    
@@ -898,7 +898,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         PowerMockito.mockStatic(TimesheetApiFactory.class);
         when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
         try {
-            when(mockTimesheetTransmissionApi.createConfirmationMessage(
+            when(mockTimesheetTransmissionApi.createSubmitMessage(
                     isA(TimesheetDto.class), isA(EmployeeDto.class),
                     isA(EmployeeDto.class), isA(ClientDto.class),
                     isA(Map.class))).thenThrow(new TimesheetTransmissionException("Timesheet SMTP transmission validation error occurred"));
