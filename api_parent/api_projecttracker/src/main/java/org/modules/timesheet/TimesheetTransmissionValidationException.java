@@ -1,6 +1,6 @@
 package org.modules.timesheet;
 
-import org.modules.ProjectTrackerModuleException;
+import com.InvalidDataException;
 
 /**
  * Handles exceptions regarding timesheet transmission data validation errors
@@ -8,8 +8,7 @@ import org.modules.ProjectTrackerModuleException;
  * @author Roy Terrell
  * 
  */
-public class TimesheetTransmissionValidationException extends
-        ProjectTrackerModuleException {
+public class TimesheetTransmissionValidationException extends InvalidDataException {
     private static final long serialVersionUID = -8851874846044566159L;
 
     public TimesheetTransmissionValidationException() {
@@ -24,7 +23,7 @@ public class TimesheetTransmissionValidationException extends
         super(e);
     }
 
-    public TimesheetTransmissionValidationException(String msg, Exception e) {
+    public TimesheetTransmissionValidationException(String msg, Throwable e) {
         super(msg, e);
     }
 }

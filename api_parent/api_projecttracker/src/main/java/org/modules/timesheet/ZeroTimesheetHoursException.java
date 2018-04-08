@@ -1,12 +1,12 @@
 package org.modules.timesheet;
 
 /**
- * Handles events that fail validations.
+ * Handles scenario when the timesheet's hours structrue exists but the structure is empty.
  * 
  * @author Roy Terrell
  * 
  */
-public class ZeroTimesheetHoursException extends TimesheetApiException {
+public class ZeroTimesheetHoursException extends TimesheetTransmissionValidationException {
 
     private static final long serialVersionUID = -5399306021195061423L;
 
