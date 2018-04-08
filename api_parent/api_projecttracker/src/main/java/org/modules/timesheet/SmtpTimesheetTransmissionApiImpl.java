@@ -85,11 +85,13 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
             // Send the timesheet over the SMTP protocol.
             emailApi = SmtpFactory.getSmtpInstance();
             Object rc = emailApi.sendMessage(email);
-            emailApi.close();
             return rc;
         } catch (Exception e) {
             this.msg = "Error occurred sending email message to " + email.getRecipients();
             throw new TimesheetTransmissionException(this.msg, e);
+        }
+        finally {
+            emailApi.close();
         }
     }
 

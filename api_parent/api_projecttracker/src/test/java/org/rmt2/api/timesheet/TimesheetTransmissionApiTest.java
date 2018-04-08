@@ -1,6 +1,7 @@
 package org.rmt2.api.timesheet;
 
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.timesheet.TimesheetApiFactory;
 import org.modules.timesheet.TimesheetTransmissionApi;
 import org.modules.timesheet.TimesheetTransmissionException;
@@ -34,7 +36,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.InvalidDataException;
 import com.SystemException;
+import com.api.messaging.MessageException;
 import com.api.messaging.email.EmailMessageBean;
+import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2Date;
@@ -213,9 +217,70 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
             Assert.assertEquals("There are no project-task hours to process for timesheet, 0000000111", e.getMessage());
         }
     }
+    
     @Test
     public void testSuccess_Send() {
-        Assert.fail("Implement test case");
+        SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
+        PowerMockito.mockStatic(SmtpFactory.class);
+        try {
+            when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
+        }
+        catch (Exception e) {
+            Assert.fail("Failed to stub SmtpFactory.getSmtpInstance method");
+        }
+        try {
+            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenReturn(1);  
+            doNothing().when(mockSmtpApi).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
+        }
+        
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        Object results = null;
+        try {
+            EmailMessageBean mockEmailMessageBean = Mockito.mock(EmailMessageBean.class);
+            results = api.send(mockEmailMessageBean);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Test case failed due to unexpected error");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertTrue(results instanceof Integer);
+        Assert.assertEquals(1, results);
     }
 
+    @Test
+    public void testError_Send_General_Error() {
+        SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
+        PowerMockito.mockStatic(SmtpFactory.class);
+        try {
+            when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
+        }
+        catch (Exception e) {
+            Assert.fail("Failed to stub SmtpFactory.getSmtpInstance method");
+        }
+        try {
+            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenThrow(MessageException.class); 
+            doNothing().when(mockSmtpApi).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
+        }
+        
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        try {
+            EmailMessageBean emailBean = api.createSubmitMessage(timesheet, employee, manager, client, hours);;
+            api.send(emailBean);
+            Assert.fail("Expected an exception to be thrownr");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetTransmissionException);
+            Assert.assertEquals("Error occurred sending email message to mgr_first_name_1.mgr_last_name_1@gte.net",
+                    e.getMessage());
+        }
+    }
+    
 }
