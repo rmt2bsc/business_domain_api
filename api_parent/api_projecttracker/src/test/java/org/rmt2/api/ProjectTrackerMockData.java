@@ -199,7 +199,7 @@ public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
     private List<ProjEmployee> createMockSingleManager() {
         List<ProjEmployee> list = new ArrayList<ProjEmployee>();
         ProjEmployee o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(5550, 201, 1, 9999, 202, 222221,
-                "2010-01-01", "2018-01-01", "login_name_1", "first_name_1", "last_name_1",
+                "2010-01-01", "2018-01-01", "login_name_1", "mgr_first_name_1", "mgr_last_name_1",
                 "111-11-5000", "ABC Company");
         list.add(o);
         return list;
