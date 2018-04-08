@@ -99,6 +99,10 @@ public class ProjEmployeeOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
+        o2.setEmail("first_name_1.last_name_1@gte.net");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+        
         o2.setCompanyName("ABC Company");
         result = o1.equals(o2);
         Assert.assertTrue(result);
