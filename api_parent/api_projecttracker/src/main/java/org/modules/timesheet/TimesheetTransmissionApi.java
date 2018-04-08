@@ -39,7 +39,7 @@ public interface TimesheetTransmissionApi {
     Object send(EmailMessageBean message) throws TimesheetApiException, TimesheetTransmissionException;
 
     /**
-     * Constructs the timesheet confirmation message.
+     * Constructs the Timesheet Submital for Manager Approval message.
      * 
      * @param timesheet
      *            An instance of {@link TimesheetDto}
@@ -60,7 +60,7 @@ public interface TimesheetTransmissionApi {
      *             Error occurs sending timesheet data to its designated
      *             recipient.
      */
-    EmailMessageBean createConfirmationMessage(TimesheetDto timesheet, EmployeeDto employee, EmployeeDto manager, 
+    EmailMessageBean createSubmitMessage(TimesheetDto timesheet, EmployeeDto employee, EmployeeDto manager, 
             ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetTransmissionException;
 
 }

@@ -94,8 +94,8 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
     }
 
     /**
-     * Builds HTML containing content that represents the details of a given
-     * timesheet.
+     * Builds HTML containing content that represents the Timesheet Submital for
+     * Manager Approval message.
      * <p>
      * Uses <i>timesheet</i>, <i>employee</i>, <i>client</i>, and <i>hours</i>
      * to devise the timesheet header, weekly hours for each project-task, and
@@ -124,7 +124,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      *             <i>timesheet hours</i> structure is exists but is empty.
      */
     @Override
-    public EmailMessageBean createConfirmationMessage(TimesheetDto timesheet, EmployeeDto employee, 
+    public EmailMessageBean createSubmitMessage(TimesheetDto timesheet, EmployeeDto employee, 
             EmployeeDto manager, ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours)
             throws TimesheetTransmissionException {
 
