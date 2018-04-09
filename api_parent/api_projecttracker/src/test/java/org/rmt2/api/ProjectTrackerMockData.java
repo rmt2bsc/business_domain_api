@@ -10,6 +10,7 @@ import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
+import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +33,7 @@ public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
     protected List<ProjEmployee> mockEmployeeFetchMultiple;
     protected List<ProjEmployee> mockEmployeeFetchSingle;
     protected List<ProjEmployee> mockManagerFetchSingle;
+    protected List<VwEmployeeExt> mockExtEmployeeFetchSingle;
     protected List<ProjEmployeeType> mockEmployeeTypeFetchMultiple;
     protected List<ProjEmployeeType> mockEmployeeTypeFetchSingle;
     protected List<ProjEmployeeTitle> mockEmployeeTitleFetchMultiple;
@@ -57,6 +59,7 @@ public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
         this.mockEmployeeFetchMultiple = this.createMockMultipleEmployee();
         this.mockEmployeeFetchSingle = this.createMockSingleEmployee();
         this.mockManagerFetchSingle = this.createMockSingleManager();
+        this.mockExtEmployeeFetchSingle = this.createMockSingleExtEmployee();
         this.mockEmployeeTitleFetchMultiple = this.createMockMultipleEmployeeTitle();
         this.mockEmployeeTitleFetchSingle = this.createMockSingleEmployeeTitle();
         this.mockEmployeeTypeFetchMultiple = this.createMockMultipleEmployeeType();
@@ -239,6 +242,15 @@ public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
         o = ProjectTrackerMockDataFactory.createMockOrmProjEmployee(2224, 202, 1, 3330, 105, 999995,
                 "2014-01-01", "2018-01-01", "login_name_5", "first_name_5", "last_name_5",
                 "111-11-5004", "ABC Company");
+        list.add(o);
+        return list;
+    }
+    
+    private List<VwEmployeeExt> createMockSingleExtEmployee() {
+        List<VwEmployeeExt> list = new ArrayList<VwEmployeeExt>();
+        VwEmployeeExt o = ProjectTrackerMockDataFactory.createMockOrmExtEmployee(2220, "EmployeeType", 0, 3330, "EmployeeTitle", 999991,
+                "2010-01-01", "2018-01-01", "login_name_1", "first_name_1", "last_name_1",
+                "111-11-5000", "ABC Company");
         list.add(o);
         return list;
     }

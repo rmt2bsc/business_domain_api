@@ -10,6 +10,7 @@ import org.dao.admin.EmployeeDaoException;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.ProjEmployeeType;
+import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dto.ClientDto;
 import org.dto.EmployeeDto;
@@ -251,6 +252,44 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
     }
     
     @Test
+    public void testSuccess_Fetch_Single_EmployeeExt() {
+        VwEmployeeExt mockCriteria = new VwEmployeeExt();
+        mockCriteria.setEmployeeId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockExtEmployeeFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single extended employee case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeDto criteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
+        criteria.setEmployeeId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        List<EmployeeDto> results = null;
+        try {
+            results = api.getEmployeeExt(criteria);
+        } catch (EmployeeApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        EmployeeDto dto = results.get(0);
+        Assert.assertEquals(dto.getEmployeeId(), 2220);
+        Assert.assertEquals(dto.getManagerId(), 3330);
+        Assert.assertEquals(dto.getEmployeeTitle(), "EmployeeTitle");
+        Assert.assertEquals(dto.getLoginId(), 999991);
+        Assert.assertEquals(RMT2Date.stringToDate("2010-01-01"), dto.getStartDate());
+        Assert.assertEquals(RMT2Date.stringToDate("2018-01-01"), dto.getTerminationDate());
+        Assert.assertEquals(dto.getEmployeeType(), "EmployeeType");
+        Assert.assertEquals(dto.getIsManager(), 0);
+        Assert.assertEquals(dto.getEmployeeFirstname(), "first_name_1");
+        Assert.assertEquals(dto.getEmployeeLastname(), "last_name_1");
+        Assert.assertEquals("111-11-5000", dto.getSsn());
+        Assert.assertEquals("ABC Company", dto.getEmployeeCompanyName());
+    }
+    
+    @Test
     public void testValidation_Fetch_Employee_List_Using_Null_Criteria() {
         EmployeeApiFactory f = new EmployeeApiFactory();
         EmployeeApi api = f.createApi(this.mockDaoClient);
@@ -271,6 +310,19 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
         Integer empId = null;
         try {
             api.getEmployee(empId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_EmployeeExt_Single_Using_Null_EmployeeId() {
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        try {
+            api.getEmployeeExt(null);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -355,6 +407,33 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
             Assert.assertTrue(e.getCause() instanceof EmployeeApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof EmployeeDaoException);
             Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testError_Fetch_EmployeeExt_Single_DB_Access_Fault() {
+        VwEmployeeExt mockCriteria = new VwEmployeeExt();
+        mockCriteria.setEmployeeId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(new DatabaseException("A database error occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single extended employee case setup failed");
+        }
+        
+        EmployeeApiFactory f = new EmployeeApiFactory();
+        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeDto criteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
+        criteria.setEmployeeId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        try {
+            api.getEmployeeExt(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof EmployeeApiException);
+            Assert.assertTrue(e.getCause() instanceof EmployeeDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }

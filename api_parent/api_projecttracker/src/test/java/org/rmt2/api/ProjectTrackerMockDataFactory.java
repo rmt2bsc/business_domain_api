@@ -13,6 +13,7 @@ import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
+import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
@@ -136,6 +137,45 @@ public class ProjectTrackerMockDataFactory {
         return o;
     }
     
+    /**
+     * 
+     * @param empId
+     * @param empTypeDesc
+     * @param isManager
+     * @param managerId
+     * @param empTitleDesc
+     * @param loginId
+     * @param startDate
+     * @param termDate
+     * @param loginName
+     * @param firstName
+     * @param lastName
+     * @param ssn
+     * @param companyName
+     * @return
+     */
+    public static final VwEmployeeExt createMockOrmExtEmployee(int empId,
+            String empTypeDesc, int isManager, int managerId,
+            String empTitleDesc, int loginId, String startDate, String termDate,
+            String loginName, String firstName, String lastName, String ssn,
+            String companyName) {
+        VwEmployeeExt o = new VwEmployeeExt();
+        o.setEmployeeId(empId);
+        o.setEmployeeType(empTypeDesc);
+        o.setIsManager(isManager);
+        o.setManagerId(managerId);
+        o.setEmployeeTitle(empTitleDesc);
+        o.setLoginId(loginId);
+        o.setStartDate(RMT2Date.stringToDate(startDate));
+        o.setTerminationDate(termDate == null ? null : RMT2Date.stringToDate(termDate));
+        o.setLoginName(loginName);
+        o.setFirstname(firstName);
+        o.setLastname(lastName);
+        o.setSsn(ssn);
+        o.setCompanyName(companyName);
+        o.setEmail(firstName + "." + lastName + "@gte.net");
+        return o;
+    }
     
     /**
      * 
