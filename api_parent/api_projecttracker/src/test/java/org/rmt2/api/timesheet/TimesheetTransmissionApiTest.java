@@ -80,8 +80,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
 
     private void createInputData() {
         this.client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchMultiple.get(0));
-        // TODO:  Consider adapting extending employee data to represent the employee.
-        this.employee = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
+        this.employee = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(this.mockExtEmployeeFetchSingle.get(0));
         this.manager = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockManagerFetchSingle.get(0));
         this.timesheet = TimesheetObjectFactory.createTimesheetDtoInstance(this.mockProjTimesheetSingle.get(0));
         this.hours = this.buildTimesheetHoursDtoMap();
@@ -109,7 +108,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     
 
     @Test
-    public void testSuccess_CreateConfirmation() {
+    public void testSuccess_CreateApprovalDeclineEmailMessage() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         EmailMessageBean results = null;
         try {

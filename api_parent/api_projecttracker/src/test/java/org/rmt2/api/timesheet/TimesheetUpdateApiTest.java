@@ -17,6 +17,7 @@ import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
+import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
@@ -667,7 +668,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         
         // Stub employee and manager fetch.
         try {
-            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockEmployeeFetchSingle, this.mockManagerFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(VwEmployeeExt.class))).thenReturn(this.mockExtEmployeeFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockManagerFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch employee and manager case setup failed");
@@ -773,7 +775,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         
         // Stub employee and manager fetch.
         try {
-            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockEmployeeFetchSingle, this.mockManagerFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(VwEmployeeExt.class))).thenReturn(this.mockExtEmployeeFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockManagerFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch employee and manager case setup failed");
@@ -821,7 +824,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testError_Submit_Timesheet_Create_Confirmation_Email() {
+    public void testError_Submit_Timesheet_Create_Approval_Decline_Email() {
         // Setup timesheet load stub
         VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
         mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -879,7 +882,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         
         // Stub employee and manager fetch.
         try {
-            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockEmployeeFetchSingle, this.mockManagerFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(VwEmployeeExt.class))).thenReturn(this.mockExtEmployeeFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockManagerFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch employee and manager case setup failed");
@@ -978,7 +982,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         
         // Stub employee and manager fetch.
         try {
-            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockEmployeeFetchSingle, this.mockManagerFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(VwEmployeeExt.class))).thenReturn(this.mockExtEmployeeFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenReturn(this.mockManagerFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch employee and manager case setup failed");
@@ -1063,7 +1068,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         
         // Stub employee and manager fetch.
         try {
-            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class))).thenThrow(DatabaseException.class);
+            when(this.mockPersistenceClient.retrieveList(isA(VwEmployeeExt.class))).thenThrow(DatabaseException.class);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch employee and manager case setup failed");
