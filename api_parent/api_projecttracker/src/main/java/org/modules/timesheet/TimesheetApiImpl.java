@@ -18,6 +18,7 @@ import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
+import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.modules.ProjectTrackerApiConst;
@@ -1001,7 +1002,15 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             // Get employee profile
             EmployeeApiFactory empFact = new EmployeeApiFactory();
             EmployeeApi empApi = empFact.createApi(this.getSharedDao());
-            EmployeeDto employee = empApi.getEmployee(this.timeSheet.getEmpId());
+            
+            EmployeeDto empCriteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
+            empCriteria.setEmployeeId(this.timeSheet.getEmpId());
+            
+            // TODO: Might need to eliminate the assumption that the employee
+            // exists and handle for the "Not Found" possibility
+            List<EmployeeDto> employees = empApi.getEmployeeExt(empCriteria);
+            EmployeeDto employee = employees.get(0);
+            
             EmployeeDto manager = empApi.getEmployee(employee.getManagerId());
 
             // get client profile
