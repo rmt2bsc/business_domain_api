@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.dao.timesheet.TimesheetConst;
 import org.dto.ClientDto;
 import org.dto.EmployeeDto;
 import org.dto.EventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.TimesheetHistDto;
 import org.modules.ProjectTrackerApiConst;
 
 import com.SystemException;
@@ -146,7 +148,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
         // Setup basic email components
         email.setToAddress(manager.getEmployeeEmail());
         email.setFromAddress(employee.getEmployeeEmail());
-        buf.append(TimesheetTransmissionApi.SUBJECT_PREFIX);
+        buf.append(TimesheetTransmissionApi.SUBJECT_TRANSMISSION_PREFIX);
         buf.append(" ");
         buf.append(employee.getEmployeeFirstname());
         buf.append(" ");
@@ -171,7 +173,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
             htmlContent = RMT2File.getStreamStringData(is);
             formattedDate = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM-dd-yyyy");
         } catch (SystemException e) {
-            throw new TimesheetTransmissionException("Unalbe to get HTML content pertaining to timesheet: "
+            throw new TimesheetTransmissionException("Unalbe to get Submittal HTML content pertaining to timesheet: "
                             + timesheet.getDisplayValue(), e);
         }
 
@@ -195,7 +197,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
         deltaContent = RMT2String.replace(deltaContent, submitUri + "approve", "$approveURI$");
         deltaContent = RMT2String.replace(deltaContent, submitUri + "decline", "$declineURI$");
         
-        RMT2File.createFile(deltaContent, "/tmp/timesheet_email.html");
+        RMT2File.createFile(deltaContent, "/tmp/timesheet_submit_email.html");
 
         email.setBody(deltaContent, EmailMessageBean.HTML_CONTENT);
         return email;
@@ -252,6 +254,68 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
 
     }
 
+    @Override
+    public EmailMessageBean createConfirmationMessage(TimesheetDto timesheet, EmployeeDto employee, 
+            TimesheetHistDto currentStatus) throws TimesheetTransmissionException {
+        
+        this.validate(timesheet, employee, currentStatus);
+        
+        // Begin to build email content
+        String confirmDate = null;
+        String confirmStatus = (currentStatus.getStatusId()== TimesheetConst.STATUS_APPROVED ? "Approved" : "Declined");
+        String periodEnd = null;
+        try {
+            periodEnd = RMT2Date.formatDate(timesheet.getEndPeriod(), "MM-dd-yyyy");
+        } catch (SystemException e) {
+            this.msg = "Unable to convert timesheet end period date to String";
+            throw new TimesheetTransmissionException(this.msg, e);
+        }
+        try {
+            confirmDate = RMT2Date.formatDate(currentStatus.getStatusEffectiveDate(), "MM-dd-yyyy");
+        } catch (SystemException e) {
+            this.msg = "Unable to convert timesheet current status' effective date date to String";
+            throw new TimesheetTransmissionException(this.msg, e);
+        }
+
+        EmailMessageBean email = new EmailMessageBean();
+
+        // Setup basic email components
+        email.setToAddress(employee.getEmployeeEmail());
+        
+        // TODO: get from the system property
+        email.setFromAddress("rmt2bsc@gmail.com");
+        
+        String subject = RMT2String.replace(TimesheetTransmissionApi.SUBJECT_CONFIRM_PREFIX, confirmStatus, "$confirmStatus$");
+        subject = RMT2String.replace(subject, periodEnd, "$endingPeriod$");
+        email.setSubject(subject);
+
+        // Get HTML Content
+        String htmlContent = null;
+        String emailTemplateFile = this.getConfig().getProperty("email_confirm_template");
+        try {
+            InputStream is = RMT2File.getFileInputStream(emailTemplateFile);
+            htmlContent = RMT2File.getStreamStringData(is);
+        } catch (SystemException e) {
+            throw new TimesheetTransmissionException("Unalbe to get Confirmation HTML content pertaining to timesheet: "
+                            + timesheet.getDisplayValue(), e);
+        }
+
+        String deltaContent = null;
+        deltaContent = RMT2String.replace(htmlContent, employee.getEmployeeFirstname(), "$firstName$");
+        deltaContent = RMT2String.replace(deltaContent, employee.getEmployeeLastname(), "$lastName$");
+        deltaContent = RMT2String.replace(deltaContent, timesheet.getClientName(), "$clientName$");
+        deltaContent = RMT2String.replace(deltaContent, periodEnd, "$endingPeriod$");
+        deltaContent = RMT2String.replace(deltaContent, confirmStatus, "$confirmStatus$");
+        deltaContent = RMT2String.replace(deltaContent, timesheet.getDisplayValue(), "$timesheetId$");
+        deltaContent = RMT2String.replace(deltaContent, confirmDate, "$confirmDate$");
+        deltaContent = RMT2String.replace(deltaContent, String.valueOf(timesheet.getBillHrs()), "$totalHours$");
+        
+        RMT2File.createFile(deltaContent, "/tmp/timesheet_confirm_email.html");
+        
+        email.setBody(deltaContent, EmailMessageBean.HTML_CONTENT);
+        return email;
+    }
+    
     /**
      * Verifies that <i>timesheet</i>, <i>employee</i>, <i>client</i>, and
      * <i>hours</i> are valid instances.
@@ -314,4 +378,28 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
         }
     }
 
+    private void validate(TimesheetDto timesheet, EmployeeDto employee, TimesheetHistDto currentStatus) {
+        // Validate timesheet
+        if (timesheet == null) {
+            this.msg = "Timesheet data object is required";
+            throw new TimesheetTransmissionValidationException(this.msg);
+        }
+        
+        if (timesheet.getEndPeriod() == null) {
+            this.msg = "Timesheet end period is required";
+            throw new TimesheetTransmissionValidationException(this.msg);
+        }
+
+        // Validate employee
+        if (employee == null) {
+            this.msg = "Employee data object is required";
+            throw new TimesheetTransmissionValidationException(this.msg);
+        }
+
+        // validate current status
+        if (currentStatus == null) {
+            this.msg = "Timesheet current status object is required";
+            throw new TimesheetTransmissionValidationException(this.msg);
+        }
+    }
 }

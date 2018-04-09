@@ -8,6 +8,7 @@ import org.dto.EmployeeDto;
 import org.dto.EventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.TimesheetHistDto;
 
 import com.api.messaging.email.EmailMessageBean;
 
@@ -19,7 +20,8 @@ import com.api.messaging.email.EmailMessageBean;
  */
 public interface TimesheetTransmissionApi {
 
-    final String SUBJECT_PREFIX = "Timesheet Submission for ";
+    final String SUBJECT_TRANSMISSION_PREFIX = "Time Sheet Submission for ";
+    final String SUBJECT_CONFIRM_PREFIX = "Time Sheet $confirmStatus$ (Period ending $endingPeriod$)";
 
     /**
      * Sends a copy of a given timesheet to a designated recipient.
@@ -63,4 +65,20 @@ public interface TimesheetTransmissionApi {
     EmailMessageBean createSubmitMessage(TimesheetDto timesheet, EmployeeDto employee, EmployeeDto manager, 
             ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetTransmissionException;
 
+    /**
+     * Constructs a confirmation message which indicates whether the timesheet
+     * was approved or delcined by the employee's manager.
+     * 
+     * @param timesheet
+     *            An instance of {@link TimesheetDto}
+     * @param employee
+     *            An instance of {@link EmployeeDto}
+     * @param currentStatus
+     *            An instance of {@link TimesheetHistDto}
+     * @return an instance of {@link EmailMessageBean} or null if total billable
+     *         hours equal zero.
+     * @throws TimesheetTransmissionException
+     */
+    EmailMessageBean createConfirmationMessage(TimesheetDto timesheet, EmployeeDto employee, 
+            TimesheetHistDto currentStatus) throws TimesheetTransmissionException;
 }
