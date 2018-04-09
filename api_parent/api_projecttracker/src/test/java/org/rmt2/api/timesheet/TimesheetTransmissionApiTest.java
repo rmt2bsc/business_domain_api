@@ -17,6 +17,7 @@ import org.dto.EmployeeDto;
 import org.dto.EventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
+import org.dto.TimesheetHistDto;
 import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
@@ -58,6 +59,8 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     private  EmployeeDto employee;
     private  EmployeeDto manager;
     private TimesheetDto timesheet;
+    private TimesheetDto timesheetExt;
+    private TimesheetHistDto currentStatus;
     private Map<ProjectTaskDto, List<EventDto>> hours;
     
     /**
@@ -83,6 +86,8 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         this.employee = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(this.mockExtEmployeeFetchSingle.get(0));
         this.manager = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockManagerFetchSingle.get(0));
         this.timesheet = TimesheetObjectFactory.createTimesheetDtoInstance(this.mockProjTimesheetSingle.get(0));
+        this.timesheetExt = TimesheetObjectFactory.createTimesheetExtendedDtoInstance(this.mockVwTimesheetSingle.get(0));
+        this.currentStatus = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(this.mockCurrentProjTimesheetHist.get(0));
         this.hours = this.buildTimesheetHoursDtoMap();
     }
     
@@ -121,7 +126,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         Assert.assertNotNull(results);
         Assert.assertEquals("first_name_1.last_name_1@gte.net", results.getFromAddress().getAddress());
         Assert.assertEquals("mgr_first_name_1.mgr_last_name_1@gte.net", results.getRecipients());
-        String subject = "Timesheet Submission for " + " " + "first_name_1" + " " + "last_name_1" + " for period ending  " + "01-07-2018";
+        String subject = "Time Sheet Submission for " + " " + "first_name_1" + " " + "last_name_1" + " for period ending  " + "01-07-2018";
         Assert.assertEquals(subject, results.getSubject());
         try {
             Object content = results.getBody().getContent();
@@ -134,7 +139,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     }
 
     @Test
-    public void testError_CreateConfirmation_InputStream_Failure() {
+    public void testError_CreateApprovalDecline_InputStream_Failure() {
         PowerMockito.mockStatic(RMT2Date.class);
         try {
             when(RMT2Date.formatDate(isA(Date.class), isA(String.class))).thenThrow(SystemException.class);
@@ -156,7 +161,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testValidation_CreateConfirmation_Null_Timesheet_Object() {
+    public void testValidation_CreateApprovalDecline_Null_Timesheet_Object() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
             api.createSubmitMessage(null, employee, manager, client, hours);
@@ -171,7 +176,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testValidation_CreateConfirmation_Null_Timesheet_EndPeriod() {
+    public void testValidation_CreateApprovalDecline_Null_Timesheet_EndPeriod() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
             this.timesheet.setEndPeriod(null);
@@ -187,7 +192,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testValidation_CreateConfirmation_Null_Hours_Object() {
+    public void testValidation_CreateApprovalDecline_Null_Hours_Object() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
             api.createSubmitMessage(timesheet, employee, manager, client, null);
@@ -202,7 +207,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     }
     
     @Test
-    public void testValidation_CreateConfirmation_Empty_Hours() {
+    public void testValidation_CreateApprovalDecline_Empty_Hours() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
             hours = new HashMap<>();
@@ -216,6 +221,117 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
             Assert.assertEquals("There are no project-task hours to process for timesheet, 0000000111", e.getMessage());
         }
     }
+
+    @Test
+    public void testSuccess_CreateConfirmationEmailMessage() {
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        EmailMessageBean results = null;
+        try {
+            results = api.createConfirmationMessage(timesheetExt, employee, currentStatus);
+        }
+        catch (TimesheetTransmissionException e) {
+            e.printStackTrace();
+            Assert.fail("Test case failed due to unexpected error");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals("rmt2bsc@gmail.com", results.getFromAddress().getAddress());
+        Assert.assertEquals("first_name_1.last_name_1@gte.net", results.getRecipients());
+        String subject = "Time Sheet Approved (Period ending 01-07-2018)";
+        Assert.assertEquals(subject, results.getSubject());
+        try {
+            Object content = results.getBody().getContent();
+            Assert.assertTrue(content.toString().contains("Your time sheet, 0000000111, for the period ending on 01-07-2018<br>has been Approved at"));
+            Assert.assertTrue(content.toString().contains("for ClientName1110 - 40.0 hours"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to error obtaining email body content");
+        }
+    }
+    
+    @Test
+    public void testError_CreateConfirmation_InputStream_Failure() {
+        PowerMockito.mockStatic(RMT2Date.class);
+        try {
+            when(RMT2Date.formatDate(isA(Date.class), isA(String.class))).thenThrow(SystemException.class);
+        }
+        catch (Exception e) {
+            Assert.fail("Failed to setup stub for RMT2Date.formatDate method");
+        }
+        
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        try {
+            api.createConfirmationMessage(timesheetExt, employee, currentStatus);
+            Assert.fail("Test failed due to unexcpected exception thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetTransmissionException);
+            Assert.assertEquals("Unable to convert timesheet end period date to String", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_CreateConfirmation_Null_Timesheet_Object() {
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        try {
+            api.createConfirmationMessage(null, employee, currentStatus);
+            Assert.fail("Test failed due to unexcpected exception thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof TimesheetTransmissionValidationException);
+            Assert.assertEquals("Timesheet data object is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_CreateConfirmation_Null_Timesheet_EndPeriod() {
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        try {
+            this.timesheetExt.setEndPeriod(null);
+            api.createConfirmationMessage(timesheetExt, employee, currentStatus);
+            Assert.fail("Test failed due to unexcpected exception thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof TimesheetTransmissionValidationException);
+            Assert.assertEquals("Timesheet end period is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_CreateConfirmation_Null_Employee_Object() {
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        try {
+            api.createConfirmationMessage(timesheetExt, null, currentStatus);
+            Assert.fail("Test failed due to unexcpected exception thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof TimesheetTransmissionValidationException);
+            Assert.assertEquals("Employee data object is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_CreateConfirmation_Null_CurrentStatus_Object() {
+        TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+        try {
+            api.createConfirmationMessage(timesheetExt, employee, null);
+            Assert.fail("Test failed due to unexcpected exception thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertTrue(e instanceof TimesheetTransmissionValidationException);
+            Assert.assertEquals("Timesheet current status object is required", e.getMessage());
+        }
+    }
+    
     
     @Test
     public void testSuccess_Send() {
