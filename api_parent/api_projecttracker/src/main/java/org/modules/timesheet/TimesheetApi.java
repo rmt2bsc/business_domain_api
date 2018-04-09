@@ -187,10 +187,10 @@ public interface TimesheetApi extends TransactionApi {
      * @param newStatusId
      *            The id of the new status that is to be assigned to the
      *            timesheet.
-     * @return the id of the previous timesheet status.
+     * @return an instance of {@link TimesheetHistDto} as the current status.
      * @throws TimesheetApiException
      */
-    int changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException;
+    TimesheetHistDto changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException;
 
     /**
      * Deletes a single timesheet from the system using its primary key.

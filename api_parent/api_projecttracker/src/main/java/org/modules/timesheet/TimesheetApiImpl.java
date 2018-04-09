@@ -906,7 +906,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @see org.modules.timesheet.TimesheetApi#changeTimesheetStatus(int, int)
      */
     @Override
-    public int changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException {
+    public TimesheetHistDto changeTimesheetStatus(Integer timesheetId, Integer newStatusId) throws TimesheetApiException {
         try {
             Verifier.verifyNotNull(newStatusId);    
         }
@@ -930,8 +930,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         TimesheetHistDto newStatus = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
         newStatus.setTimesheetId(timesheetId);
         newStatus.setStatusId(newStatusId);
-        this.dao.maintainStatusHistory(newStatus);
-        return currentStatusId;
+        int newStatusHistId = this.dao.maintainStatusHistory(newStatus);
+        newStatus.setStatusHistId(newStatusHistId);
+        return newStatus;
     }
 
     /*
@@ -964,7 +965,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         // Set timesheet status to Approved.
-        return this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
+        TimesheetHistDto currentStatus = this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
+        
+        // Send confirmation
+        return this.transmitConfirmation(timesheetId, currentStatus);
     }
 
     /*
@@ -977,7 +981,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
         // Set timesheet status to Declined
-        return this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
+        TimesheetHistDto currentStatus =  this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
+        
+        // Send confirmation
+        return this.transmitConfirmation(timesheetId, currentStatus);
     }
 
     /**
@@ -1267,4 +1274,38 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
     }
     
+    
+    private int transmitConfirmation(int timesheetId, TimesheetHistDto currentStatus) throws TimesheetApiException {
+        // Obtain timesheet's current status
+        TimesheetDto ts = this.getExt(timesheetId);;
+        EmployeeDto employee = null;
+        
+        try {
+            // Get employee profile
+            EmployeeApiFactory empFact = new EmployeeApiFactory();
+            EmployeeApi empApi = empFact.createApi(this.getSharedDao());
+            
+            EmployeeDto empCriteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
+            empCriteria.setEmployeeId(ts.getEmpId());
+            
+            // TODO: Might need to eliminate the assumption that the employee
+            // exists and handle for the "Not Found" possibility
+            List<EmployeeDto> employees = empApi.getEmployeeExt(empCriteria);
+            employee = employees.get(0);
+        }
+        catch (EmployeeApiException e) {
+            throw new TimesheetApiException("Failed to obtain employee with extended attributes", e);
+        }
+        
+        try {
+            TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
+            EmailMessageBean msg = null;
+            msg = api.createConfirmationMessage(ts, employee, currentStatus);
+            api.send(msg);
+            return 1;
+        }
+        catch (TimesheetTransmissionException e) {
+            throw new TimesheetApiException("Error occurred sending time sheet email confirmation", e);
+        }
+    }
 }
