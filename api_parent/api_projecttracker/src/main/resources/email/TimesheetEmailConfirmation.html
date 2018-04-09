@@ -10,7 +10,6 @@
    
   <body bgcolor="#FFFFFF" text="#000000">
      <h3><strong>RMT2 Timesheet Processing Confirmation</strong></h3>
-     <form name="DataForm" method="POST" action="$root$/common/reqeustProcessor/Project.TimesheetProcessing">
         <div style="border-style:groove; border-color:#999999; background-color:buttonface; width:55%; height:120px">     
 		      <h3><strong>Timesheet Email Delivery Confirmation</strong></h3>
 		      <table>
@@ -20,12 +19,11 @@
 			     <tr>
 				    <td>
 						 <font face="Verdana, Arial, Helvetica, sans-serif" size="2">
-							  Your time sheet, $timesheetId$, for the period ending on $endingPeriod$ has been $confirmStatus$ at $confirmDate$. 
+							  Your time sheet, $timesheetId$, for the period ending on $endingPeriod$<br>has been $confirmStatus$ at $confirmDate$ for $clientName$ - $totalHours$ hours. 
 						 </font>					
 					  </td>
 					</tr>
 			  </table>
 		  </div>       
-   </form>
  </body>
 </html>
