@@ -13,6 +13,7 @@ import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTask;
+import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwProjectClient;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
@@ -249,6 +250,80 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         return obj;
     }
 
+    /**
+     * Creates and returns an <i>VwEmployeeExt</i> object containing selection
+     * criteria obtained from an instance of <i>EmployeeDto</i>.
+     * 
+     * @param criteria
+     *            an instance of {@link EmployeeDto} which the following
+     *            properties are recognized:
+     *            <ul>
+     *            <li>employeeId</li>
+     *            <li>empType</li>
+     *            <li>empTitle</li>
+     *            <li>managerId</li>
+     *            <li>startDate</li>
+     *            <li>terminationDate</li>
+     *            <li>firstName</li>
+     *            <li>lastName</li>
+     *            <li>ssn</li>
+     *            <li>email</li>
+     *            <li>loginName</li>
+     *            <li>companyName</li>
+     *            <li>isManager</li>
+     *            <li>criteria - include custom selection criteria if available</li>
+     *            </ul>
+     * @return an instance of {@link VwEmployeeExt}
+     */
+    public static final VwEmployeeExt createCriteriaExt(EmployeeDto criteria) {
+        VwEmployeeExt obj = new VwEmployeeExt();
+        if (criteria != null) {
+            if (criteria.getEmployeeId() > 0) {
+                obj.addCriteria(VwEmployeeExt.PROP_EMPLOYEEID, criteria.getEmployeeId());
+            }
+            if (criteria.getEmployeeType() != null) {
+                obj.addCriteria(VwEmployeeExt.PROP_EMPLOYEETYPE, criteria.getEmployeeType());
+            }
+            if (criteria.getEmployeeTitle() != null) {
+                obj.addCriteria(VwEmployeeExt.PROP_EMPLOYEETITLE, criteria.getEmployeeTitle());
+            }
+            if (criteria.getManagerId() > 0) {
+                obj.addCriteria(VwEmployeeExt.PROP_MANAGERID, criteria.getManagerId());
+            }
+            if (criteria.getStartDate() != null) {
+                obj.addCriteria(VwEmployeeExt.PROP_STARTDATE, criteria.getStartDate());
+            }
+            if (criteria.getTerminationDate() != null) {
+                obj.addCriteria(VwEmployeeExt.PROP_TERMINATIONDATE, criteria.getTerminationDate());
+            }
+            if (criteria.getEmployeeFirstname() != null) {
+                obj.addLikeClause(VwEmployeeExt.PROP_FIRSTNAME, criteria.getEmployeeFirstname());
+            }
+            if (criteria.getEmployeeLastname() != null) {
+                obj.addLikeClause(VwEmployeeExt.PROP_LASTNAME, criteria.getEmployeeLastname());
+            }
+            if (criteria.getSsn() != null) {
+                obj.addLikeClause(VwEmployeeExt.PROP_SSN, criteria.getSsn());
+            }
+            if (criteria.getEmployeeEmail() != null) {
+                obj.addLikeClause(VwEmployeeExt.PROP_EMAIL, criteria.getEmployeeEmail());
+            }
+            if (criteria.getLoginName() != null) {
+                obj.addLikeClause(VwEmployeeExt.PROP_LOGINNAME, criteria.getLoginName());
+            }
+            if (criteria.getEmployeeCompanyName() != null) {
+                obj.addLikeClause(VwEmployeeExt.PROP_COMPANYNAME, criteria.getEmployeeCompanyName());
+            }
+            if (criteria.getIsManager() == 1) {
+                obj.addCriteria(VwEmployeeExt.PROP_ISMANAGER, criteria.getIsManager());
+            }
+            if (criteria.getCriteria() != null) {
+                obj.addCustomCriteria(criteria.getCriteria());
+            }
+        }
+        return obj;
+    }
+    
     /**
      * Creates and returns an <i>ProjEmployeeTitle</i> object containing
      * selection criteria obtained from an instance of <i>EmployeeTitleDto</i>.

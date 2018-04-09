@@ -90,6 +90,22 @@ public interface ProjectAdminDao extends DaoClient {
      *             general data access errors
      */
     List<EmployeeDto> fetchEmployee(EmployeeDto criteria) throws EmployeeDaoException;
+    
+    /**
+     * Fetches one or more employees using selection criteria.
+     * <p>
+     * This method will use property values as parameters for selection criteria
+     * where applicable. To select all employees, pass <i>criteria</i> as a null
+     * value.
+     * 
+     * @param criteria
+     *            an instance of {@link EmployeeDto} to filter results or null
+     *            to fetch all employees.
+     * @return A List of {@link EmployeeDto} or null if no data is found.
+     * @throws EmployeeDaoException
+     *             general data access errors
+     */
+    List<EmployeeDto> fetchEmployeeExt(EmployeeDto criteria) throws EmployeeDaoException;
 
     /**
      * Fetches one or more employee titles using selection criteria.

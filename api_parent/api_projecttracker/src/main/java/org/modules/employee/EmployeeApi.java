@@ -39,6 +39,17 @@ public interface EmployeeApi extends TransactionApi {
      * @throws EmployeeApiException
      */
     List<EmployeeDto> getEmployee(EmployeeDto criteria) throws EmployeeApiException;
+    
+    /**
+     * Find Employees with extended attributes using selection criteria.
+     * 
+     * @param criteria
+     *            The employee id.
+     * @return a List of {@link EmployeeDto} objects when found. Otherwise, null
+     *         is returned.
+     * @throws EmployeeApiException
+     */
+    List<EmployeeDto> getEmployeeExt(EmployeeDto criteria) throws EmployeeApiException;
 
     /**
      * Retrieves the master list of employee titles.

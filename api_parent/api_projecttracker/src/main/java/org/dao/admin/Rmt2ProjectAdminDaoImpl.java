@@ -13,6 +13,7 @@ import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTask;
+import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwProjectClient;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
@@ -157,6 +158,36 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
         List<EmployeeDto> list = new ArrayList<EmployeeDto>();
         for (ProjEmployee item : results) {
             EmployeeDto dto = EmployeeObjectFactory.createEmployeeDtoInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dao.ProjectAdminDao#fetchEmployee(org.dto.EmployeeDto)
+     */
+    @Override
+    public List<EmployeeDto> fetchEmployeeExt(EmployeeDto criteria) throws EmployeeDaoException {
+        VwEmployeeExt obj = ProjectAdminDaoFactory.createCriteriaExt(criteria);
+        obj.addOrderBy(ProjEmployee.PROP_LASTNAME, ProjEmployee.ORDERBY_ASCENDING);
+        obj.addOrderBy(ProjEmployee.PROP_FIRSTNAME, ProjEmployee.ORDERBY_ASCENDING);
+        obj.addOrderBy(ProjEmployee.PROP_EMPID, ProjEmployee.ORDERBY_ASCENDING);
+
+        List<VwEmployeeExt> results = null;
+        try {
+            results = this.client.retrieveList(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new EmployeeDaoException(e);
+        }
+
+        List<EmployeeDto> list = new ArrayList<EmployeeDto>();
+        for (VwEmployeeExt item : results) {
+            EmployeeDto dto = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(item);
             list.add(dto);
         }
         return list;

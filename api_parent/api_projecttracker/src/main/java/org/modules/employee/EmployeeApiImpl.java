@@ -164,6 +164,34 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         }
         return results;
     }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.employee.EmployeeApi#getEmployeeByTitle(int)
+     */
+    @Override
+    public List<EmployeeDto> getEmployeeExt(EmployeeDto criteria) throws EmployeeApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidEmployeeException("Employee criteria is required");
+        }
+        List<EmployeeDto> results;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = dao.fetchEmployeeExt(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (EmployeeDaoException e) {
+            buf.append("Database error occurred retrieving employees using selection criteria");
+            this.msg = buf.toString();
+            throw new EmployeeApiException(this.msg, e);
+        }
+        return results;
+    }
 
     /*
      * (non-Javadoc)
