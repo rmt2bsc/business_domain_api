@@ -83,6 +83,8 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
 
     private void createInputData() {
         this.client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchMultiple.get(0));
+        this.mockExtEmployeeFetchSingle.get(0).setFirstname("John");
+        this.mockExtEmployeeFetchSingle.get(0).setLastname("Smith");
         this.employee = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(this.mockExtEmployeeFetchSingle.get(0));
         this.manager = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockManagerFetchSingle.get(0));
         this.timesheet = TimesheetObjectFactory.createTimesheetDtoInstance(this.mockProjTimesheetSingle.get(0));
@@ -126,7 +128,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         Assert.assertNotNull(results);
         Assert.assertEquals("first_name_1.last_name_1@gte.net", results.getFromAddress().getAddress());
         Assert.assertEquals("mgr_first_name_1.mgr_last_name_1@gte.net", results.getRecipients());
-        String subject = "Time Sheet Submission for " + " " + "first_name_1" + " " + "last_name_1" + " for period ending  " + "01-07-2018";
+        String subject = "Time Sheet Submission for " + " " + "John" + " " + "Smith" + " for period ending  " + "01-07-2018";
         Assert.assertEquals(subject, results.getSubject());
         try {
             Object content = results.getBody().getContent();
