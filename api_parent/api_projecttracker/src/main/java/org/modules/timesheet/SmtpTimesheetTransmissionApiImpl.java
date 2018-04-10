@@ -37,12 +37,15 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
     private static final Logger logger = Logger.getLogger(SmtpTimesheetTransmissionApiImpl.class);
 
     private double totalHours;
+    
+    private final String outpuEmailDir;
 
     /**
      * 
      */
     protected SmtpTimesheetTransmissionApiImpl() {
         super(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
+        outpuEmailDir = this.getConfig().getProperty("email_output_directory");
     }
 
     /**
@@ -51,6 +54,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      */
     protected SmtpTimesheetTransmissionApiImpl(String appName) {
         super(appName);
+        outpuEmailDir = this.getConfig().getProperty("email_output_directory");
     }
     
     /**
@@ -198,7 +202,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
         deltaContent = RMT2String.replace(deltaContent, submitUri + "approve", "$approveURI$");
         deltaContent = RMT2String.replace(deltaContent, submitUri + "decline", "$declineURI$");
         
-        RMT2File.createFile(deltaContent, "/tmp/timesheet_submit_email.html");
+        RMT2File.createFile(deltaContent, this.outpuEmailDir + "/timesheet_submit_email.html");
 
         email.setBody(deltaContent, EmailMessageBean.HTML_CONTENT);
         return email;
@@ -314,7 +318,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
         deltaContent = RMT2String.replace(deltaContent, confirmDate, "$confirmDate$");
         deltaContent = RMT2String.replace(deltaContent, String.valueOf(timesheet.getBillHrs()), "$totalHours$");
         
-        RMT2File.createFile(deltaContent, "/tmp/timesheet_confirm_email.html");
+        RMT2File.createFile(deltaContent, this.outpuEmailDir + "/timesheet_confirm_email.html");
         
         email.setBody(deltaContent, EmailMessageBean.HTML_CONTENT);
         return email;
