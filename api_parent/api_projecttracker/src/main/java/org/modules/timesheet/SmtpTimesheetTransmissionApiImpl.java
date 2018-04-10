@@ -44,8 +44,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      * 
      */
     protected SmtpTimesheetTransmissionApiImpl() {
-        super(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
-        outpuEmailDir = this.getConfig().getProperty("email_output_directory");
+        this(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
