@@ -33,12 +33,12 @@ import org.rmt2.jaxb.SalesOrderType;
 import org.rmt2.util.JaxbPayloadFactory;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.messaging.webservice.ServiceReturnCode;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
-import com.util.RMT2File;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
 
@@ -92,7 +92,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      * @param dao
      */
     protected InvoiceTimesheetApiImpl(DaoClient dao) {
-        super(dao);
+        super(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME, dao);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
         this.createOtherResources(this.dao);
     }
@@ -156,10 +156,14 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
         return count;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Invoices a single timesheet.
      * 
-     * @see org.modules.timesheet.invoice.InvoiceTimesheetApi#invoice(int)
+     * @param timesheetId
+     *            The unique identifier of the timesheet to invoice.
+     * @return int
+     * @throws InvoiceTimesheetApiException
+     * @throws NotFoundException Time sheet or Client cannot be found
      */
     @Override
     public int invoice(Integer timesheetId) throws InvoiceTimesheetApiException {
@@ -170,11 +174,11 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
         try {
             ts = this.tsApi.get(timesheetId);
             if (ts == null) {
-                this.msg = "Timesheet Invoice Error:  Timesheet, " + timesheetId + ", does not exist";
-                throw new InvoiceTimesheetApiException(this.msg);
+                this.msg = "Timesheet, " + timesheetId + ", cannot be found";
+                throw new NotFoundException(this.msg);
             }
         } catch (TimesheetApiException e) {
-            this.msg = "Timesheet Invoice Error:  Unable to fetch timesheet by timesheet id, " + timesheetId;
+            this.msg = "Problem fetching timesheet by timesheet id, " + timesheetId;
             throw new InvoiceTimesheetApiException(this.msg);
         }
         // Verify client
@@ -184,11 +188,11 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
             criteria.setClientId(ts.getClientId());
             client = this.projApi.getClient(criteria);
             if (client == null) {
-                this.msg = "Timesheet Invoice Error:  Timesheet's client does not exist by client id, " + ts.getClientId();
-                throw new InvoiceTimesheetApiException(this.msg);
+                this.msg = "Timesheet's client cannot be found [client id=" + ts.getClientId() + "]";
+                throw new NotFoundException(this.msg);
             }
         } catch (ProjectAdminApiException e) {
-            this.msg = "Timesheet Invoice Error:  Unable to fetch timesheet's client by client id, " + ts.getClientId();
+            this.msg = "Problem fetching timesheet's client [client id=" + ts.getClientId() + "]";
             throw new InvoiceTimesheetApiException(this.msg);
         }
 
@@ -246,7 +250,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      *            a {@link ClientDto} object
      * @param timesheets
      *            a List of {@link TimesheetDto} objects
-     * @return the invoice id
+     * @return the invoice id which is equivalent to transaction id.
      * @throws InvoiceTimesheetApiException
      */
     private int startClientBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
@@ -367,15 +371,11 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
 
         int timesheetId = ts.getTimesheetId();
         try {
-            // Get employee
-            EmployeeDto employee = this.empApi.getEmployee(ts.getEmpId());
-
             // Calculate timesheet invoice amount
             double timesheetAmt = this.calculateInvoice(timesheetId);
             double hours = this.calculateBillableHours(timesheetId);
 
-            TimesheetHistDto status = this.tsApi
-                    .getCurrentStatus(timesheetId);
+            TimesheetHistDto status = this.tsApi.getCurrentStatus(timesheetId);
             if (status == null) {
                 return null;
             }
@@ -385,12 +385,15 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
 
             // Create Sales Order Item
             InvoiceDetailsBean invDetailBean = new InvoiceDetailsBean();
-            String temp = RMT2File.getAppParmProperty("invoice_item_id");
+            String temp = this.getConfig().getProperty("invoice_item_id");
             int invoiceMasterItemId = Integer.parseInt(temp);
             invDetailBean.setItemId(invoiceMasterItemId);
 
+            // Get employee
+            EmployeeDto employee = this.empApi.getEmployee(ts.getEmpId());
+            
             // Build complex description line item.
-            String descr = employee.getEmployeeFullname() + " for " + hours + " hours";
+            String descr = employee.getEmployeeFirstname() + " " + employee.getEmployeeLastname() + " for " + hours + " hours";
             if (ts.getExtRef() != null && !ts.getExtRef().equals("")) {
                 descr += ", " + ts.getExtRef();
             }
@@ -456,9 +459,11 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
         int ndx = 0;
 
         for (TimesheetHoursDto hoursEvent : hours) {
-            // Get employee bill rates for target project
+            // TODO: may want to execute getting the ProjectEmployee object in
+            // the event the employee is billing for multiple projects.
             if (ndx == 0) {
                 try {
+                    // Get employee bill rates for target project
                     ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
                     criteria.setEmpId(hoursEvent.getEmpId());
                     criteria.setProjId(hoursEvent.getProjId());
@@ -472,7 +477,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
             }
 
             totHrs += hoursEvent.getEventHours();
-            // Calcuate only billable hours
+            // Calculate only billable hours
             if (hoursEvent.getTaskBillable() == TimesheetConst.HOUR_TYPE_NONBILLABLE) {
                 continue;
             }
