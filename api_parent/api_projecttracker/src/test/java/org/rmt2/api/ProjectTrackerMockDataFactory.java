@@ -41,6 +41,7 @@ public class ProjectTrackerMockDataFactory {
     public static final int TEST_EMP_PROJ_ID = 55551;
     public static final int TEST_NEW_TIMESHEET_STATUS_HIST_ID = 987654;
     public static final int TEST_INVALID_TIMESHEET_STATUS_ID = 999999;
+    public static final int TEST_XACT_ID = 7654321;
     public static final String TEST_COMPANY_NAME = "ABC Company";
     public static final String TEST_TASK_NAMES[] = new String[]{"Design and Analysis", 
     "Development", "Meetings", "Testing", "Holiday"};
