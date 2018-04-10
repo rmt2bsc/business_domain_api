@@ -1,6 +1,7 @@
 package org.modules.timesheet;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -271,7 +272,10 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
             throw new TimesheetTransmissionException(this.msg, e);
         }
         try {
-            confirmDate = RMT2Date.formatDate(currentStatus.getStatusEffectiveDate(), "MM-dd-yyyy");
+            // Use the current date instead of the current status' effective
+            // date since the effective date does not capture the full timestamp
+            // of the date.
+            confirmDate = RMT2Date.formatDate(new Date(), "MM-dd-yyyy HH:mm:ss");
         } catch (SystemException e) {
             this.msg = "Unable to convert timesheet current status' effective date date to String";
             throw new TimesheetTransmissionException(this.msg, e);
