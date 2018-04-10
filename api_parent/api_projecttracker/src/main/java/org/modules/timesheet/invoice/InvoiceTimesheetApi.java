@@ -34,7 +34,7 @@ public interface InvoiceTimesheetApi extends TransactionApi {
      * @return int
      * @throws InvoiceTimesheetApiException
      */
-    int invoice(int timesheetId) throws InvoiceTimesheetApiException;
+    int invoice(Integer timesheetId) throws InvoiceTimesheetApiException;
 
     /**
      * Invoices all timesheets related to one or more clients as a single
@@ -57,8 +57,7 @@ public interface InvoiceTimesheetApi extends TransactionApi {
      * @throws InvoiceTimesheetApiException
      *             Problem occurred gathering the timesheet data.
      */
-    double calculateInvoice(int timesheetId)
-            throws InvoiceTimesheetApiException;
+    double calculateInvoice(Integer timesheetId) throws InvoiceTimesheetApiException;
 
     /**
      * Calculates a timesheet's billable hours.
@@ -69,8 +68,7 @@ public interface InvoiceTimesheetApi extends TransactionApi {
      * @throws InvoiceTimesheetApiException
      *             Problem occurred gathering the timesheet data.
      */
-    double calculateBillableHours(int timesheetId)
-            throws InvoiceTimesheetApiException;
+    double calculateBillableHours(Integer timesheetId) throws InvoiceTimesheetApiException;
 
     /**
      * Calculates a timesheet's non-billable hours.
@@ -81,6 +79,5 @@ public interface InvoiceTimesheetApi extends TransactionApi {
      * @throws InvoiceTimesheetApiException
      *             Problem occurred gathering the timesheet data.
      */
-    double calculateNonBillableHours(int timesheetId)
-            throws InvoiceTimesheetApiException;
+    double calculateNonBillableHours(Integer timesheetId) throws InvoiceTimesheetApiException;
 }
