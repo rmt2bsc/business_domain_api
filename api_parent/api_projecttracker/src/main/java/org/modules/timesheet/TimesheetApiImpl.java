@@ -84,7 +84,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      * @param dao
      */
     protected TimesheetApiImpl(DaoClient dao) {
-        super(dao);
+        super(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME, dao);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
     }
 

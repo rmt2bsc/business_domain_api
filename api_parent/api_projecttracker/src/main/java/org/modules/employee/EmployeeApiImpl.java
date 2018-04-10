@@ -43,10 +43,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * Creates an EmployeeApiImpl which creates a stand alone connection.
      */
     protected EmployeeApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
+        this(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -69,7 +66,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @param dao
      */
     protected EmployeeApiImpl(DaoClient dao) {
-        super(dao);
+        super(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME, dao);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
     }
 

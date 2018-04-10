@@ -17,6 +17,7 @@ import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
+import org.modules.ProjectTrackerApiConst;
 import org.rmt2.constants.ApiHeaderNames;
 import org.rmt2.constants.ApiTransactionCodes;
 import org.rmt2.jaxb.AddressBookRequest;
@@ -61,11 +62,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
      * Creates an ProjectApiImpl which creates a stand alone connection.
      */
     protected ProjectAdminApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        logger.info("ProjectAdminApiImpl created with DAO, " + this.dao.getClass().getSimpleName());
-        return;
+        this(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -87,7 +84,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
      * @param dao
      */
     protected ProjectAdminApiImpl(DaoClient dao) {
-        super(dao);
+        super(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME, dao);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
         logger.info("ProjectAdminApiImpl created with outside Api DAO, " + this.dao.getClass().getSimpleName());
     }
