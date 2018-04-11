@@ -55,7 +55,7 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         this.mockVwTimesheetProjectTaskFetchMultiple = this.createMockMultipleVwTimesheetProjectTask();
         this.mockVwTimesheetProjectTaskFetchSingle = this.createMockSingleVwTimesheetProjectTask();
         this.mockProjTimesheetSingle = this.createMockSingleTimesheetList();
-        this.mockProjTimesheetMultiple = this.createMockMultipleTimesheetList();
+        this.mockProjTimesheetMultiple = this.createMockMultipleTimesheetSameClientList();
         this.mockVwTimesheetSingle = this.createMockSingleExtTimesheetList();
         this.mockVwTimesheetMultiple = this.createMockMultipleExtTimesheetList();
         this.mockProjTimesheetHistMultiple = this.createMockTimesheetStatusHistory();
@@ -236,7 +236,7 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         return list;
     }
     
-    private List<ProjTimesheet> createMockMultipleTimesheetList() {
+    private List<ProjTimesheet> createMockMultipleTimesheetSameClientList() {
         List<ProjTimesheet> list = new ArrayList<ProjTimesheet>();
         ProjTimesheet o = ProjectTrackerMockDataFactory.createMockOrmProjTimesheet(111, 1110, 4440, 2220, "INVREF1230",
                 "2018-01-01", "2018-01-07", "ExtReNo1000");

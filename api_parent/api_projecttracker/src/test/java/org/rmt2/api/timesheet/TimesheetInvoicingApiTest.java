@@ -5,6 +5,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
@@ -12,6 +13,7 @@ import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
+import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.timesheet.TimesheetConst;
 import org.junit.After;
 import org.junit.Assert;
@@ -28,6 +30,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
+import org.rmt2.api.invoicing.InvoicingMockData;
 import org.rmt2.jaxb.AccountingTransactionRequest;
 import org.rmt2.jaxb.AccountingTransactionResponse;
 import org.rmt2.jaxb.ObjectFactory;
@@ -48,7 +51,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
         ResultSet.class, InvoiceTimesheetApiImpl.class, TimesheetApiFactory.class })
-public class TimesheetInvoicingApiTest extends TimesheetMockData {
+public class TimesheetInvoicingApiTest extends InvoicingMockData {
 
     private MessageRouterHelper mockMessageRouterHelper;
     
@@ -165,8 +168,6 @@ public class TimesheetInvoicingApiTest extends TimesheetMockData {
         }
         
         // Stub Project/Employee Fetch
-//        VwEmployeeProjects mockProjEmpCriteria = new VwEmployeeProjects();
-//        mockCriteria.setEmpProjId(ProjectTrackerMockDataFactory.TEST_EMP_PROJ_ID);
         try {
             when(this.mockPersistenceClient.retrieveList(isA(VwEmployeeProjects.class))).thenReturn(this.mockVwEmployeeProjectsFetchSingle);
         } catch (Exception e) {
@@ -227,4 +228,116 @@ public class TimesheetInvoicingApiTest extends TimesheetMockData {
     }
     
 
+    @Test
+    public void testSuccess_Invoice_Multiple_Clients_Timesheet() {
+        // Stub Timesheet Fetch
+//        VwTimesheetList mockTsFetchCriteria = new VwTimesheetList();
+//        mockTsFetchCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient
+                    .retrieveList(isA(VwTimesheetList.class))).thenReturn(
+                            this.mockClientTimesheetMap
+                                    .get(InvoicingMockData.TEST_CLIENT_ID[0]),
+                            this.mockClientTimesheetMap
+                                    .get(InvoicingMockData.TEST_CLIENT_ID[1]),
+                            this.mockClientTimesheetMap
+                                    .get(InvoicingMockData.TEST_CLIENT_ID[2]),
+                            this.mockClientTimesheetMap
+                                    .get(InvoicingMockData.TEST_CLIENT_ID[3]));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
+        
+        // Stub Client Fetch
+        ProjClient mockClientCriteria = new ProjClient();
+        mockClientCriteria.setClientId(ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockClientCriteria))).thenReturn(this.mockClientFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single client case setup failed");
+        }
+        
+        // Stub Employee Fetch
+        ProjEmployee mockEmpCriteria = new ProjEmployee();
+        mockEmpCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockEmpCriteria))).thenReturn(this.mockEmployeeFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all employee case setup failed");
+        }
+        
+        // Stub Timesheet Hours Fetch
+        VwTimesheetHours mockHoursCriteria = new VwTimesheetHours();
+        mockHoursCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockHoursCriteria))).thenReturn(this.mockTimesheetHours);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet total hours case setup failed");
+        }
+        
+        // Stub Project/Employee Fetch
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwEmployeeProjects.class))).thenReturn(this.mockVwEmployeeProjectsFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single employee projects case setup failed");
+        }
+        
+        // Stub Approved Timehseet Current Status Fetch
+        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            // Change status id of mock data to APPROVED.
+            this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_APPROVED);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet approved current history case setup failed");
+        }
+        
+        // Stub timesheet update
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheet.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet case setup failed");
+        }
+        
+        // Stub timesheet changing of status to INVOICE
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheetHist.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet current history case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheetHist.class), eq(true))).thenReturn(
+                            ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet current history case setup failed");
+        }
+        
+        // Setup web service stup
+        this.setupClientWebServiceInvoiceStub();
+        
+        // Perform test
+        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
+        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        List<Integer> results = null;
+        try {
+//            List clientList =  Arrays.asList(InvoicingMockData.TEST_CLIENT_ID); //Arrays.stream(InvoicingMockData.TEST_CLIENT_ID).boxed().collect(Collectors.toList());
+            results = api.invoice(InvoicingMockData.TEST_CLIENT_ID_LIST);
+        } catch (TimesheetApiException e) {
+            e.printStackTrace();
+        }
+//        Assert.assertNotNull(results);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_INVOICE_ID, results);
+    }
+    
 }
