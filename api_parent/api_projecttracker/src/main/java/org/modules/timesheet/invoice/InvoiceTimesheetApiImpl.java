@@ -52,7 +52,7 @@ import com.util.assistants.VerifyException;
  * @author Roy Terrell
  * 
  */
-class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements InvoiceTimesheetApi {
+public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements InvoiceTimesheetApi {
 
     private static final Logger logger = Logger.getLogger(InvoiceTimesheetApiImpl.class);
 
@@ -133,7 +133,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      * [])
      */
     @Override
-    public int invoice(List<Integer> clientIdList) throws InvoiceTimesheetApiException {
+    public List<Integer> invoice(List<Integer> clientIdList) throws InvoiceTimesheetApiException {
         try {
             Verifier.verifyNotEmpty(clientIdList);
         }
@@ -143,20 +143,20 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
         
         int count = 0;
         InvoiceResultsBean results = new InvoiceResultsBean();
-        List<Integer> xactList = new ArrayList<Integer>();
+        List<Integer> invoiceIdList = new ArrayList<Integer>();
         for (Integer clientId : clientIdList) {
             try {
-                int xactId = this.startClientBilling(clientId);
+                int invoiceId = this.startClientBilling(clientId);
                 results.setProcessedClientTimesheets(clientId, this.timesheetIdList);
-                xactList.add(xactId);
+                invoiceIdList.add(invoiceId);
                 count++;
             } catch (Exception e) {
                 throw new InvoiceTimesheetApiException(e);
             }
         }
         // Complete packaging the results with transaction id's
-        results.setClientTransactions(xactList);
-        return count;
+        results.setClientTransactions(invoiceIdList);
+        return invoiceIdList;
     }
 
     /**
@@ -164,7 +164,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      * 
      * @param timesheetId
      *            The unique identifier of the timesheet to invoice.
-     * @return int
+     * @return int the sales order invoice id
      * @throws InvoiceTimesheetApiException
      * @throws NotFoundException Time sheet or Client cannot be found
      */
@@ -202,26 +202,24 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
         // Invoice the timesheet
         List<TimesheetDto> tsList = new ArrayList<TimesheetDto>();
         tsList.add(ts);
-        int xactId = this.startClientBilling(client.get(0), tsList);
-
-        // Package results
-        InvoiceResultsBean results = new InvoiceResultsBean();
-        results.setProcessedClientTimesheets(client.get(0).getClientId(), this.timesheetIdList);
-        List<Integer> xactList = new ArrayList<Integer>();
-        xactList.add(xactId);
-        results.setClientTransactions(xactList);
-        return xactId;
+        int invoiceId = this.startClientBilling(client.get(0), tsList);
+        return invoiceId;
     }
 
     /**
-     * Invoices all timesheets pertaining to a single client identified by
-     * <i>clientId</i> when engaged from the bulk invoice feature. The invoices
-     * are sent to the sales order subsystems for processing. This request is
-     * submitted by an employee of manager status.
+     * Bulk Invoices all apporoved time sheets pertaining to a single client
+     * identified as <i>clientId</i>.
+     * <p>
+     * All of the client's invoices are bundled together as a single sales order
+     * invoice transaction. In terms of the sales order, a sales order item is
+     * created for each approved time sheet available.
+     * <p>
+     * The invoices are sent to the sales order subsystems for processing. This
+     * request is submitted by an employee of manager status.
      * 
      * @param clientId
      *            The id of the client.
-     * @return int as the new sales order id.
+     * @return the sales order invoice id.
      * @throws InvoiceTimesheetApiException
      *             client validation errors, problem gathering timesheets, or
      *             sales order processing errors or database access errors.
@@ -239,8 +237,8 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
                 return 0;
             }
             // Begin to bill the client's timesheets
-            int xactId = this.startClientBilling(client.get(0), ts);
-            return xactId;
+            int invoiceId = this.startClientBilling(client.get(0), ts);
+            return invoiceId;
         } catch (Exception e) {
             throw new InvoiceTimesheetApiException(e);
         }
@@ -253,7 +251,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      *            a {@link ClientDto} object
      * @param timesheets
      *            a List of {@link TimesheetDto} objects
-     * @return the invoice id which is equivalent to transaction id.
+     * @return the sales order invoice id
      * @throws InvoiceTimesheetApiException
      */
     private int startClientBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
@@ -262,26 +260,10 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
         invoiceId = this.sendClientBilling(invBean);
         if (invoiceId <= 0) {
             throw new InvoiceTimesheetApiException(
-                    "An invalid invoice id/transaction code was returned from Accounting Sales Order service");
+                    "An invalid sales order invoice id was returned from Accounting Sales Order service");
         }
         this.postInvoice(timesheets, invoiceId);
         return invoiceId;
-        
-//        try {
-//            InvoiceBean invBean = this.setupBilling(client, timesheets);
-//            ServiceReturnCode rc = this.sendClientBilling(invBean);
-//            if (rc.getCode() <= 0) {
-//                throw new InvoiceTimesheetApiException(rc.getMessage());
-//            }
-//            invoiceId = rc.getCode();
-//            this.postInvoice(timesheets, invoiceId);
-//            return invoiceId;
-//        } catch (Exception e) {
-//            throw new InvoiceTimesheetApiException(e);
-//        }
-        
-        
-        
     }
 
     /**
@@ -298,14 +280,9 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      */
     private int sendClientBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
         ObjectFactory f = new ObjectFactory();
-        String serviceId = "RQ_accounting_invoice_sales_order";
-//        RQAccountingInvoiceSalesOrder ws = f
-//                .createRQAccountingInvoiceSalesOrder();
-        
         AccountingTransactionRequest request = f.createAccountingTransactionRequest();
         HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
-                "module", serviceId, "SYNC", "REQUEST", this.getApiUser());
-        request.setHeader(header);
+                "module", ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, "SYNC", "REQUEST", this.getApiUser());
         request.setHeader(header);
 
         // Setup customer's sales order that will be invoiced
@@ -314,38 +291,22 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
         details.getSalesOrder().add(sot);
         request.setProfile(details);
 
-        // Send message directly via JMS
-//        MessageRouterHelper helper = new MessageRouterHelper();
-        AccountingTransactionResponse r = null;
-        Object response;
+        // Send time sheet deatils to Accounting systsem to create and invoice sales order
         try {
-            response = this.sendMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, request);
+            Object response = this.sendMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, request);
+            if (response != null && response instanceof AccountingTransactionResponse) {
+                AccountingTransactionResponse r = (AccountingTransactionResponse) response;
+                return r.getReplyStatus().getReturnCode().intValue();
+            }
+            else {
+                throw new InvoiceTimesheetApiException(
+                        "An invalid response was returned from the Timesheet-to-sales order web service operation");
+            }
         } catch (TransactionApiException e) {
             this.msg = "A web service problem occurred sending time sheet(s) to accounting for the purpose of creating a sales order: timesheet id's["
                     + this.timesheetIdList + "]";
             throw new InvoiceTimesheetApiException(this.msg, e);
         }
-        if (response != null && response instanceof AccountingTransactionResponse) {
-            r = (AccountingTransactionResponse) response;
-        }
-        else {
-            throw new InvoiceTimesheetApiException(
-                    "An invalid response was returned from the Timesheet-to-sales order web service operation");
-        }
-        return r.getReplyStatus().getReturnCode().intValue();
-//        try {
-//            results = helper.routeXmlMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, request);
-//            RSAccountingInvoiceSalesOrder response = null;
-//            if (results instanceof RSAccountingInvoiceSalesOrder) {
-//                response = (RSAccountingInvoiceSalesOrder) results;
-//            }
-//            ServiceReturnCode rc = new ServiceReturnCode();
-//            rc.setCode(response.getInvoiceResult().getReturnCode().intValue());
-//            rc.setMessage(response.getInvoiceResult().getReturnMessage());
-//            return rc;
-//        } catch (MessageRoutingException e) {
-//            throw new InvoiceTimesheetApiException(e);
-//        }
     }
     
     @Override
@@ -461,7 +422,7 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      * @param timesheets
      *            A List of {@link TimesheetDto} objects
      * @param invoiceId
-     *            The invoice id that was created for the sales order.
+     *            The sales order invoice id that was created for the sales order.
      * @throws InvoiceTimesheetApiException
      */
     private void postInvoice(List<TimesheetDto> timesheets, int invoiceId) throws InvoiceTimesheetApiException {
