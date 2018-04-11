@@ -74,55 +74,26 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         return;
     }
 
-//    private TimesheetDto buildTimesheetDto(boolean newTimesheet) {
-//        ProjTimesheet ormTs = this.mockProjTimesheetSingle.get(0);
-//        if (newTimesheet) {
-//            ormTs.setTimesheetId(0);
-//            ormTs.setProjId(0);
-//            ormTs.setDisplayValue(null);
-//        }
-//        TimesheetDto ts = TimesheetObjectFactory.createTimesheetDtoInstance(ormTs);
-//        return ts;
-//    }
-//    
-//    private Map<ProjectTaskDto, List<EventDto>> buildTimesheetHoursDtoMap(boolean newTimesheet) {
-//        Map<ProjectTaskDto, List<EventDto>> hours = new HashMap<>(); 
-//        for (ProjProjectTask pt : this.mockProjProjectTaskMultiple) {
-//            if (newTimesheet) {
-//                pt.setTimesheetId(0);
-//                pt.setProjectTaskId(0);
-//            }
-//            ProjectTaskDto ptDto = ProjectObjectFactory.createProjectTaskDtoInstance(pt);
-//            List<EventDto> eventsDto = this.buildTimesheetEventDtoList(pt.getProjectTaskId(), newTimesheet);
-//            hours.put(ptDto, eventsDto);
-//        }
-//        return hours;
-//    }
-//    
-//    private List<EventDto> buildTimesheetEventDtoList(int projectTaskId, boolean newTimesheet) {
-//        List<ProjEvent> projEvents = createMockMultiple_Day_Task_Events(projectTaskId);
-//        List<EventDto> eventsDto = new ArrayList<>();
-//        for (ProjEvent evt : projEvents) {
-//            if (newTimesheet) {
-//                evt.setEventId(0);
-//            }
-//            EventDto evtDto = ProjectObjectFactory.createEventDtoInstance(evt);
-//            eventsDto.add(evtDto);
-//        }
-//        return eventsDto;
-//    }
-    
     private void setupClientWebServiceInvoiceStub() {
+        // Mock sequence of responses based on the number of clients that we are processing
+        when(this.mockMessageRouterHelper.routeXmlMessage(isA(String.class),
+                isA(AccountingTransactionRequest.class)))
+                        .thenReturn(this.createResponse(ProjectTrackerMockDataFactory.TEST_INVOICE_ID),
+                                this.createResponse(ProjectTrackerMockDataFactory.TEST_INVOICE_ID + 1),
+                                this.createResponse(ProjectTrackerMockDataFactory.TEST_INVOICE_ID + 2),
+                                this.createResponse(ProjectTrackerMockDataFactory.TEST_INVOICE_ID + 3));
+    }
+    
+    private AccountingTransactionResponse createResponse(int invoiceId) {
         ObjectFactory jaxbObjFactory = new ObjectFactory();
         AccountingTransactionResponse mockResponse = jaxbObjFactory.createAccountingTransactionResponse();
-
-        // Mock reply status type so to receive the sales order invoice id
         ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder.create().withStatus(true)
-                .withReturnCode(ProjectTrackerMockDataFactory.TEST_INVOICE_ID).withMessage("SUCCESS").withDetailMessage("Timesheet Invoice operation completed successfully").build();
-
+                .withReturnCode(invoiceId)
+                .withMessage("SUCCESS")
+                .withDetailMessage("Timesheet Invoice operation completed successfully " + invoiceId)
+                .build();
         mockResponse.setReplyStatus(mockReplyStatusType);
-        when(this.mockMessageRouterHelper.routeXmlMessage(isA(String.class), 
-                isA(AccountingTransactionRequest.class))).thenReturn(mockResponse);
+        return mockResponse;
     }
     
     @Test
@@ -231,19 +202,13 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
     @Test
     public void testSuccess_Invoice_Multiple_Clients_Timesheet() {
         // Stub Timesheet Fetch
-//        VwTimesheetList mockTsFetchCriteria = new VwTimesheetList();
-//        mockTsFetchCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         try {
             when(this.mockPersistenceClient
                     .retrieveList(isA(VwTimesheetList.class))).thenReturn(
-                            this.mockClientTimesheetMap
-                                    .get(InvoicingMockData.TEST_CLIENT_ID[0]),
-                            this.mockClientTimesheetMap
-                                    .get(InvoicingMockData.TEST_CLIENT_ID[1]),
-                            this.mockClientTimesheetMap
-                                    .get(InvoicingMockData.TEST_CLIENT_ID[2]),
-                            this.mockClientTimesheetMap
-                                    .get(InvoicingMockData.TEST_CLIENT_ID[3]));
+                            this.mockClientTimesheetMap.get(InvoicingMockData.TEST_CLIENT_ID[0]),
+                            this.mockClientTimesheetMap.get(InvoicingMockData.TEST_CLIENT_ID[1]),
+                            this.mockClientTimesheetMap.get(InvoicingMockData.TEST_CLIENT_ID[2]),
+                            this.mockClientTimesheetMap.get(InvoicingMockData.TEST_CLIENT_ID[3]));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single timesheet case setup failed");
@@ -253,17 +218,25 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         ProjClient mockClientCriteria = new ProjClient();
         mockClientCriteria.setClientId(ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockClientCriteria))).thenReturn(this.mockClientFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(ProjClient.class)))
+                    .thenReturn(
+                            this.mockClientMap.get(InvoicingMockData.TEST_CLIENT_ID[0]),
+                            this.mockClientMap.get(InvoicingMockData.TEST_CLIENT_ID[1]),
+                            this.mockClientMap.get(InvoicingMockData.TEST_CLIENT_ID[2]),
+                            this.mockClientMap.get(InvoicingMockData.TEST_CLIENT_ID[3]));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single client case setup failed");
         }
         
         // Stub Employee Fetch
-        ProjEmployee mockEmpCriteria = new ProjEmployee();
-        mockEmpCriteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockEmpCriteria))).thenReturn(this.mockEmployeeFetchSingle);
+            when(this.mockPersistenceClient.retrieveList(isA(ProjEmployee.class)))
+                    .thenReturn(
+                            this.mockEmployeeMap.get(InvoicingMockData.TEST_EMPLOYEE_ID[0]),
+                            this.mockEmployeeMap.get(InvoicingMockData.TEST_EMPLOYEE_ID[1]),
+                            this.mockEmployeeMap.get(InvoicingMockData.TEST_EMPLOYEE_ID[2]),
+                            this.mockEmployeeMap.get(InvoicingMockData.TEST_EMPLOYEE_ID[3]));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch all employee case setup failed");
@@ -273,7 +246,11 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         VwTimesheetHours mockHoursCriteria = new VwTimesheetHours();
         mockHoursCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockHoursCriteria))).thenReturn(this.mockTimesheetHours);
+            when(this.mockPersistenceClient.retrieveList(isA(VwTimesheetHours.class))).thenReturn(
+                            this.mockTimesheetHoursMap.get(InvoicingMockData.TEST_TIMESHEET_ID[0]),
+                            this.mockTimesheetHoursMap.get(InvoicingMockData.TEST_TIMESHEET_ID[1]),
+                            this.mockTimesheetHoursMap.get(InvoicingMockData.TEST_TIMESHEET_ID[2]),
+                            this.mockTimesheetHoursMap.get(InvoicingMockData.TEST_TIMESHEET_ID[3]));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch timesheet total hours case setup failed");
@@ -288,12 +265,10 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Stub Approved Timehseet Current Status Fetch
-        ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
-        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         try {
             // Change status id of mock data to APPROVED.
             this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_APPROVED);
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockCurrentProjTimesheetHist);
+            when(this.mockPersistenceClient.retrieveList(isA(ProjTimesheetHist.class))).thenReturn(this.mockCurrentProjTimesheetHist);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch timesheet approved current history case setup failed");
@@ -336,8 +311,11 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         } catch (TimesheetApiException e) {
             e.printStackTrace();
         }
-//        Assert.assertNotNull(results);
-        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_INVOICE_ID, results);
+        Assert.assertNotNull(results);
+        Assert.assertEquals(4, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            Assert.assertEquals((ProjectTrackerMockDataFactory.TEST_INVOICE_ID + ndx), results.get(ndx), 0);    
+        }
     }
     
 }
