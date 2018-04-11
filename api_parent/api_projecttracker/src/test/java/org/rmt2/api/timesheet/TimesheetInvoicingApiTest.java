@@ -5,38 +5,36 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
-import org.dao.mapping.orm.rmt2.ProjEvent;
-import org.dao.mapping.orm.rmt2.ProjProjectTask;
 import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.timesheet.TimesheetConst;
-import org.dto.EventDto;
-import org.dto.ProjectTaskDto;
-import org.dto.TimesheetDto;
-import org.dto.adapter.orm.ProjectObjectFactory;
-import org.dto.adapter.orm.TimesheetObjectFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
 import org.modules.timesheet.invoice.InvoiceTimesheetApi;
 import org.modules.timesheet.invoice.InvoiceTimesheetApiFactory;
+import org.modules.timesheet.invoice.InvoiceTimesheetApiImpl;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
+import org.rmt2.jaxb.AccountingTransactionRequest;
+import org.rmt2.jaxb.AccountingTransactionResponse;
+import org.rmt2.jaxb.ObjectFactory;
+import org.rmt2.jaxb.ReplyStatusType;
+import org.rmt2.util.ReplyStatusTypeBuilder;
 
+import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
@@ -49,15 +47,19 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
-        ResultSet.class, TimesheetApiFactory.class })
+        ResultSet.class, InvoiceTimesheetApiImpl.class, TimesheetApiFactory.class })
 public class TimesheetInvoicingApiTest extends TimesheetMockData {
 
+    private MessageRouterHelper mockMessageRouterHelper;
+    
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        this.mockMessageRouterHelper = Mockito.mock(MessageRouterHelper.class);
+        PowerMockito.whenNew(MessageRouterHelper.class).withNoArguments().thenReturn(this.mockMessageRouterHelper);
     }
 
     /**
@@ -69,42 +71,55 @@ public class TimesheetInvoicingApiTest extends TimesheetMockData {
         return;
     }
 
-    private TimesheetDto buildTimesheetDto(boolean newTimesheet) {
-        ProjTimesheet ormTs = this.mockProjTimesheetSingle.get(0);
-        if (newTimesheet) {
-            ormTs.setTimesheetId(0);
-            ormTs.setProjId(0);
-            ormTs.setDisplayValue(null);
-        }
-        TimesheetDto ts = TimesheetObjectFactory.createTimesheetDtoInstance(ormTs);
-        return ts;
-    }
+//    private TimesheetDto buildTimesheetDto(boolean newTimesheet) {
+//        ProjTimesheet ormTs = this.mockProjTimesheetSingle.get(0);
+//        if (newTimesheet) {
+//            ormTs.setTimesheetId(0);
+//            ormTs.setProjId(0);
+//            ormTs.setDisplayValue(null);
+//        }
+//        TimesheetDto ts = TimesheetObjectFactory.createTimesheetDtoInstance(ormTs);
+//        return ts;
+//    }
+//    
+//    private Map<ProjectTaskDto, List<EventDto>> buildTimesheetHoursDtoMap(boolean newTimesheet) {
+//        Map<ProjectTaskDto, List<EventDto>> hours = new HashMap<>(); 
+//        for (ProjProjectTask pt : this.mockProjProjectTaskMultiple) {
+//            if (newTimesheet) {
+//                pt.setTimesheetId(0);
+//                pt.setProjectTaskId(0);
+//            }
+//            ProjectTaskDto ptDto = ProjectObjectFactory.createProjectTaskDtoInstance(pt);
+//            List<EventDto> eventsDto = this.buildTimesheetEventDtoList(pt.getProjectTaskId(), newTimesheet);
+//            hours.put(ptDto, eventsDto);
+//        }
+//        return hours;
+//    }
+//    
+//    private List<EventDto> buildTimesheetEventDtoList(int projectTaskId, boolean newTimesheet) {
+//        List<ProjEvent> projEvents = createMockMultiple_Day_Task_Events(projectTaskId);
+//        List<EventDto> eventsDto = new ArrayList<>();
+//        for (ProjEvent evt : projEvents) {
+//            if (newTimesheet) {
+//                evt.setEventId(0);
+//            }
+//            EventDto evtDto = ProjectObjectFactory.createEventDtoInstance(evt);
+//            eventsDto.add(evtDto);
+//        }
+//        return eventsDto;
+//    }
     
-    private Map<ProjectTaskDto, List<EventDto>> buildTimesheetHoursDtoMap(boolean newTimesheet) {
-        Map<ProjectTaskDto, List<EventDto>> hours = new HashMap<>(); 
-        for (ProjProjectTask pt : this.mockProjProjectTaskMultiple) {
-            if (newTimesheet) {
-                pt.setTimesheetId(0);
-                pt.setProjectTaskId(0);
-            }
-            ProjectTaskDto ptDto = ProjectObjectFactory.createProjectTaskDtoInstance(pt);
-            List<EventDto> eventsDto = this.buildTimesheetEventDtoList(pt.getProjectTaskId(), newTimesheet);
-            hours.put(ptDto, eventsDto);
-        }
-        return hours;
-    }
-    
-    private List<EventDto> buildTimesheetEventDtoList(int projectTaskId, boolean newTimesheet) {
-        List<ProjEvent> projEvents = createMockMultiple_Day_Task_Events(projectTaskId);
-        List<EventDto> eventsDto = new ArrayList<>();
-        for (ProjEvent evt : projEvents) {
-            if (newTimesheet) {
-                evt.setEventId(0);
-            }
-            EventDto evtDto = ProjectObjectFactory.createEventDtoInstance(evt);
-            eventsDto.add(evtDto);
-        }
-        return eventsDto;
+    private void setupClientWebServiceInvoiceStub() {
+        ObjectFactory jaxbObjFactory = new ObjectFactory();
+        AccountingTransactionResponse mockResponse = jaxbObjFactory.createAccountingTransactionResponse();
+
+        // Mock reply status type so to receive the sales order invoice id
+        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder.create().withStatus(true)
+                .withReturnCode(ProjectTrackerMockDataFactory.TEST_INVOICE_ID).withMessage("SUCCESS").withDetailMessage("Timesheet Invoice operation completed successfully").build();
+
+        mockResponse.setReplyStatus(mockReplyStatusType);
+        when(this.mockMessageRouterHelper.routeXmlMessage(isA(String.class), 
+                isA(AccountingTransactionRequest.class))).thenReturn(mockResponse);
     }
     
     @Test
@@ -195,6 +210,10 @@ public class TimesheetInvoicingApiTest extends TimesheetMockData {
             Assert.fail("Insert timesheet current history case setup failed");
         }
         
+        // Setup web service stup
+        this.setupClientWebServiceInvoiceStub();
+        
+        // Perform test
         InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
         InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
         int results = 0;
@@ -204,7 +223,7 @@ public class TimesheetInvoicingApiTest extends TimesheetMockData {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_XACT_ID, results);
+        Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_INVOICE_ID, results);
     }
     
 
