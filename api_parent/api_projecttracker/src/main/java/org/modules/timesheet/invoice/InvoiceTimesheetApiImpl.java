@@ -1,5 +1,6 @@
 package org.modules.timesheet.invoice;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,17 +26,19 @@ import org.modules.employee.EmployeeApiFactory;
 import org.modules.timesheet.TimesheetApi;
 import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
+import org.rmt2.constants.ApiTransactionCodes;
+import org.rmt2.jaxb.AccountingTransactionRequest;
+import org.rmt2.jaxb.AccountingTransactionResponse;
 import org.rmt2.jaxb.HeaderType;
 import org.rmt2.jaxb.ObjectFactory;
-import org.rmt2.jaxb.RQAccountingInvoiceSalesOrder;
-import org.rmt2.jaxb.RSAccountingInvoiceSalesOrder;
 import org.rmt2.jaxb.SalesOrderType;
+import org.rmt2.jaxb.TransactionDetailGroup;
 import org.rmt2.util.JaxbPayloadFactory;
 
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.api.messaging.webservice.ServiceReturnCode;
+import com.api.foundation.TransactionApiException;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
@@ -255,18 +258,30 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      */
     private int startClientBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
         int invoiceId;
-        try {
-            InvoiceBean invBean = this.setupBilling(client, timesheets);
-            ServiceReturnCode rc = this.sendClientBilling(invBean);
-            if (rc.getCode() <= 0) {
-                throw new InvoiceTimesheetApiException(rc.getMessage());
-            }
-            invoiceId = rc.getCode();
-            this.postInvoice(timesheets, invoiceId);
-            return invoiceId;
-        } catch (Exception e) {
-            throw new InvoiceTimesheetApiException(e);
+        InvoiceBean invBean = this.setupBilling(client, timesheets);
+        invoiceId = this.sendClientBilling(invBean);
+        if (invoiceId <= 0) {
+            throw new InvoiceTimesheetApiException(
+                    "An invalid invoice id/transaction code was returned from Accounting Sales Order service");
         }
+        this.postInvoice(timesheets, invoiceId);
+        return invoiceId;
+        
+//        try {
+//            InvoiceBean invBean = this.setupBilling(client, timesheets);
+//            ServiceReturnCode rc = this.sendClientBilling(invBean);
+//            if (rc.getCode() <= 0) {
+//                throw new InvoiceTimesheetApiException(rc.getMessage());
+//            }
+//            invoiceId = rc.getCode();
+//            this.postInvoice(timesheets, invoiceId);
+//            return invoiceId;
+//        } catch (Exception e) {
+//            throw new InvoiceTimesheetApiException(e);
+//        }
+        
+        
+        
     }
 
     /**
@@ -281,35 +296,67 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
      *             errors pertaining to sending billing data to the accounting
      *             system or general Systems errors.
      */
-    private ServiceReturnCode sendClientBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
+    private int sendClientBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
         ObjectFactory f = new ObjectFactory();
         String serviceId = "RQ_accounting_invoice_sales_order";
-        RQAccountingInvoiceSalesOrder ws = f
-                .createRQAccountingInvoiceSalesOrder();
+//        RQAccountingInvoiceSalesOrder ws = f
+//                .createRQAccountingInvoiceSalesOrder();
+        
+        AccountingTransactionRequest request = f.createAccountingTransactionRequest();
         HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
                 "module", serviceId, "SYNC", "REQUEST", this.getApiUser());
-        ws.setHeader(header);
+        request.setHeader(header);
+        request.setHeader(header);
 
         // Setup customer's sales order that will be invoiced
-        SalesOrderType sot = InvoiceTimesheetApiFactory
-                .createJaxbSalesOrderInstance(invBean);
-        ws.setSalesOrder(sot);
+        TransactionDetailGroup details = f.createTransactionDetailGroup();
+        SalesOrderType sot = InvoiceTimesheetApiFactory.createJaxbSalesOrderInstance(invBean);
+        details.getSalesOrder().add(sot);
+        request.setProfile(details);
 
         // Send message directly via JMS
-        MessageRouterHelper helper = new MessageRouterHelper();
-        Object results = null;
+//        MessageRouterHelper helper = new MessageRouterHelper();
+        AccountingTransactionResponse r = null;
+        Object response;
         try {
-            results = helper.routeSerialMessage(serviceId, ws);
-            RSAccountingInvoiceSalesOrder response = null;
-            if (results instanceof RSAccountingInvoiceSalesOrder) {
-                response = (RSAccountingInvoiceSalesOrder) results;
-            }
-            ServiceReturnCode rc = new ServiceReturnCode();
-            rc.setCode(response.getInvoiceResult().getReturnCode().intValue());
-            rc.setMessage(response.getInvoiceResult().getReturnMessage());
-            return rc;
+            response = this.sendMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, request);
+        } catch (TransactionApiException e) {
+            this.msg = "A web service problem occurred sending time sheet(s) to accounting for the purpose of creating a sales order: timesheet id's["
+                    + this.timesheetIdList + "]";
+            throw new InvoiceTimesheetApiException(this.msg, e);
+        }
+        if (response != null && response instanceof AccountingTransactionResponse) {
+            r = (AccountingTransactionResponse) response;
+        }
+        else {
+            throw new InvoiceTimesheetApiException(
+                    "An invalid response was returned from the Timesheet-to-sales order web service operation");
+        }
+        return r.getReplyStatus().getReturnCode().intValue();
+//        try {
+//            results = helper.routeXmlMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, request);
+//            RSAccountingInvoiceSalesOrder response = null;
+//            if (results instanceof RSAccountingInvoiceSalesOrder) {
+//                response = (RSAccountingInvoiceSalesOrder) results;
+//            }
+//            ServiceReturnCode rc = new ServiceReturnCode();
+//            rc.setCode(response.getInvoiceResult().getReturnCode().intValue());
+//            rc.setMessage(response.getInvoiceResult().getReturnMessage());
+//            return rc;
+//        } catch (MessageRoutingException e) {
+//            throw new InvoiceTimesheetApiException(e);
+//        }
+    }
+    
+    @Override
+    public Object sendMessage(String messageId, Serializable payload) throws TransactionApiException {
+        String msg = null;
+        MessageRouterHelper helper = new MessageRouterHelper();
+        try {
+            return helper.routeXmlMessage(messageId, payload);
         } catch (MessageRoutingException e) {
-            throw new InvoiceTimesheetApiException(e);
+            msg = "Error occurred routing Timesheet XML message to its designated API handler";
+            throw new TransactionApiException(msg, e);
         }
     }
 
@@ -593,4 +640,6 @@ class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implements Invo
             throw new InvalidDataException("Time sheet Id must be greater than zero");
         }
     }
+    
+    
 }
