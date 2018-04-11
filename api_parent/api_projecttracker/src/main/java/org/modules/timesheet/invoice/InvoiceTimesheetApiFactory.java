@@ -3,6 +3,7 @@ package org.modules.timesheet.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.rmt2.jaxb.CustomerType;
 import org.rmt2.jaxb.ItemMasterType;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.jaxb.SalesInvoiceType;
@@ -83,6 +84,8 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
     public static SalesOrderType createJaxbSalesOrderInstance(InvoiceBean so) {
         ObjectFactory f = new ObjectFactory();
         SalesOrderType sot = f.createSalesOrderType();
+        CustomerType cust = f.createCustomerType();
+        sot.setCustomer(cust);
         sot.getCustomer().setAccountNo(so.getAccountNo());
         sot.setSalesOrderId(BigInteger.valueOf(so.getSalesOrderId()));
         sot.getCustomer().setCustomerId(BigInteger.valueOf(so.getCustomerId()));
