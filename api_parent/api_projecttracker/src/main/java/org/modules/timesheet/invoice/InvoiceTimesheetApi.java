@@ -37,15 +37,17 @@ public interface InvoiceTimesheetApi extends TransactionApi {
     int invoice(Integer timesheetId) throws InvoiceTimesheetApiException;
 
     /**
-     * Invoices all timesheets related to one or more clients as a single
-     * transaction.
+     * Invoices all timesheets related to one or more clients.
+     * <p>
+     * An invoice id shall be created per client that is procesed.
      * 
      * @param clientIdList
-     *            A List of client unique identifiers to invoice timesheets.
-     * @return int
+     *            A List of client unique identifiers.
+     * @return A List of invoice id's where each invoice id represent one of the
+     *         clients that were processed.
      * @throws InvoiceTimesheetApiException
      */
-    int invoice(List<Integer> clientIdList) throws InvoiceTimesheetApiException;
+    List<Integer> invoice(List<Integer> clientIdList) throws InvoiceTimesheetApiException;
 
     /**
      * Calculates the invoice amount of the timesheet using regular rate and
