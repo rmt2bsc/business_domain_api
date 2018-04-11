@@ -891,6 +891,12 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                     throw new InvalidStatusChangeException(this.msg);
                 }
                 break;
+            case TimesheetConst.STATUS_INVOICED:
+                if (currentStatusId != TimesheetConst.STATUS_APPROVED) {
+                    this.msg = "Timesheet status can only change to Invoiced when the current status is Approved";
+                    throw new InvalidStatusChangeException(this.msg);
+                }
+                break;
             default:
                 this.msg = "An invalid timesheet status code was provided [" + newStatusId + "]";
                 throw new InvalidStatusChangeException(this.msg);
