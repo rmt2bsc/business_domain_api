@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.dao.timesheet.TimesheetConst;
 import org.dao.timesheet.TimesheetDao;
+import org.dao.timesheet.TimesheetDaoException;
 import org.dao.timesheet.TimesheetDaoFactory;
 import org.dto.ClientDto;
 import org.dto.EmployeeDto;
@@ -125,12 +126,19 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         this.empApi = ef.createApi(connection);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Invoices all timesheets related to multiple clients.
+     * <p>
+     * An invoice id shall be created per client that is procesed. This process
+     * executes on an all or none basis. For example, if one client is incapable
+     * of being processed successfully, then the entire batch of clients are
+     * aborted.
      * 
-     * @see
-     * org.modules.timesheet.invoice.InvoiceTimesheetApi#invoice(java.util.List
-     * [])
+     * @param clientIdList
+     *            A List of client unique identifiers.
+     * @return A List of invoice id's where each invoice id represent one of the
+     *         clients that were processed.
+     * @throws InvoiceTimesheetApiException
      */
     @Override
     public List<Integer> invoice(List<Integer> clientIdList) throws InvoiceTimesheetApiException {
@@ -143,12 +151,24 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         InvoiceResultsBean results = new InvoiceResultsBean();
         List<Integer> invoiceIdList = new ArrayList<Integer>();
         for (Integer clientId : clientIdList) {
+            // Validate Client Id
             try {
-                int invoiceId = this.startBilling(clientId);
+                Verifier.verifyNotNull(clientId);
+            }
+            catch (VerifyException e) {
+                throw new InvalidDataException("All elements in the list client id's are required to not be null");
+            }
+            
+            // Get client profile
+            try {
+                ClientDto client = this.getClient(clientId);
+                int invoiceId = this.startBilling(client);
                 results.setProcessedClientTimesheets(clientId, this.timesheetIdList);
-                invoiceIdList.add(invoiceId);
-            } catch (Exception e) {
-                throw new InvoiceTimesheetApiException(e);
+                invoiceIdList.add(invoiceId);    
+            }
+            catch (NotFoundException e) {
+                this.msg = "Skip invoicing time sheets for client, " + clientId + ", due to client does not exists";
+                throw new InvoiceTimesheetApiException(this.msg, e);
             }
         }
         // Complete packaging the results with transaction id's
@@ -182,24 +202,12 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
             throw new InvoiceTimesheetApiException(this.msg);
         }
         // Verify client
-        List<ClientDto> client;
-        try {
-            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
-            criteria.setClientId(ts.getClientId());
-            client = this.projApi.getClient(criteria);
-            if (client == null) {
-                this.msg = "Timesheet's client cannot be found [client id=" + ts.getClientId() + "]";
-                throw new NotFoundException(this.msg);
-            }
-        } catch (ProjectAdminApiException e) {
-            this.msg = "Problem fetching timesheet's client [client id=" + ts.getClientId() + "]";
-            throw new InvoiceTimesheetApiException(this.msg);
-        }
+        ClientDto client = this.getClient(ts.getClientId());
 
         // Invoice the timesheet
         List<TimesheetDto> tsList = new ArrayList<TimesheetDto>();
         tsList.add(ts);
-        int invoiceId = this.startBilling(client.get(0), tsList);
+        int invoiceId = this.startBilling(client, tsList);
         return invoiceId;
     }
 
@@ -220,26 +228,23 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      * @throws InvoiceTimesheetApiException
      *             client validation errors, problem gathering timesheets, or
      *             sales order processing errors or database access errors.
+     * @throws NotFoundException
+     *             when there are not approved time sheets for client to
+     *             process.
      */
-    private int startBilling(int clientId) throws InvoiceTimesheetApiException {
-        List<ClientDto> clients = null;
+    private int startBilling(ClientDto client) throws InvoiceTimesheetApiException {
+        List<TimesheetDto> ts = null;
         try {
-            // Get client object
-            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
-            criteria.setClientId(clientId);
-            clients = this.projApi.getClient(criteria);
-            // TODO: May need to provide null and emepty checks before attempting to access first element
-            ClientDto client = clients.get(0);
-            
             // Get client approved timesheets
-            List<TimesheetDto> ts = this.tsApi.getClientApproved(clientId);
+            ts = this.tsApi.getClientApproved(client.getClientId());
             if (ts == null) {
-                return 0;
+                throw new NotFoundException("Unable to find approved time sheets to invoice for client, "
+                                + client.getClientId());
             }
             // Begin to bill the client's timesheets
             int invoiceId = this.startBilling(client, ts);
             return invoiceId;
-        } catch (Exception e) {
+        } catch (TimesheetApiException e) {
             throw new InvoiceTimesheetApiException(e);
         }
     }
@@ -259,8 +264,8 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         InvoiceBean invBean = this.prepareBilling(client, timesheets);
         invoiceId = this.submitBilling(invBean);
         if (invoiceId <= 0) {
-            throw new InvoiceTimesheetApiException(
-                    "An invalid sales order invoice id was returned from Accounting Sales Order service");
+            throw new InvoiceTimesheetApiException("Detected a problem with time sheet invoicing."
+                            + "  An invalid sales order invoice id was returned from Accounting Sales Order service");
         }
         this.postInvoice(timesheets, invoiceId);
         return invoiceId;
@@ -303,8 +308,8 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                         "An invalid response was returned from the Timesheet-to-sales order web service operation");
             }
         } catch (TransactionApiException e) {
-            this.msg = "A web service problem occurred sending time sheet(s) to accounting for the purpose of creating a sales order: timesheet id's["
-                    + this.timesheetIdList + "]";
+            this.msg = "A web service problem occurred sending time sheet(s) to accounting for the purpose of creating a sales order: timesheet id's "
+                    + this.timesheetIdList;
             throw new InvoiceTimesheetApiException(this.msg, e);
         }
     }
@@ -342,9 +347,14 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         this.invoiceAmt = 0;
         this.timesheetIdList = new ArrayList<String>();
         for (TimesheetDto ts : timesheets) {
-            InvoiceDetailsBean soi = this.prepareBilling(ts);
-            if (soi == null) {
-                continue;
+            InvoiceDetailsBean soi = null; 
+            try {
+                soi = this.prepareBilling(ts);
+            }
+            catch (InvalidStateForBillingException e) {
+                this.msg = "Time sheet billing preparation failed. The processing of all time sheets is aborted for client, "
+                        + client.getClientId() + ".";
+                throw new InvoiceTimesheetApiException(this.msg, e);
             }
             this.timesheetIdList.add(String.valueOf(ts.getTimesheetId()));
             this.invoiceAmt += soi.getInitUnitCost() * soi.getOrderQty();
@@ -376,19 +386,20 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      * @throws InvoiceTimesheetApiException
      */
     private InvoiceDetailsBean prepareBilling(TimesheetDto ts) throws InvoiceTimesheetApiException {
-
         int timesheetId = ts.getTimesheetId();
+   
+        // Calculate timesheet invoice amount
+        double timesheetAmt = this.calculateInvoice(timesheetId);
+        double hours = this.calculateBillableHours(timesheetId);
         try {
-            // Calculate timesheet invoice amount
-            double timesheetAmt = this.calculateInvoice(timesheetId);
-            double hours = this.calculateBillableHours(timesheetId);
-
             TimesheetHistDto status = this.tsApi.getCurrentStatus(timesheetId);
             if (status == null) {
-                return null;
+                this.msg = "Unable to identify timesheet's current status [time sheet=" + timesheetId + "]";
+                throw new InvalidStateForBillingException(this.msg);
             }
             if (status.getStatusId() != TimesheetConst.STATUS_APPROVED) {
-                return null;
+                this.msg = "Timsheet's current status is invalid for billing/invoicing process [time sheet=" + timesheetId + "]";
+                throw new InvalidStateForBillingException(this.msg);
             }
 
             // Create Sales Order Item
@@ -410,8 +421,9 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
             invDetailBean.setInitMarkup(1);
             invDetailBean.setOrderQty(1);
             return invDetailBean;
-        } catch (Exception e) {
-            throw new InvoiceTimesheetApiException(e);
+        } catch (EmployeeApiException | TimesheetApiException e) {
+            this.msg = "Unable to prepare billing for time sheet, " + ts.getDisplayValue();
+            throw new InvoiceTimesheetApiException(this.msg, e);
         }
     }
 
@@ -435,8 +447,13 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                 this.tsApi.changeTimesheetStatus(ts.getTimesheetId(), TimesheetConst.STATUS_INVOICED);
                 logger.info("Timesheet " + ts.getDisplayValue() + " was successfully invoiced.");
             }
-        } catch (TimesheetApiException e) {
-            throw new InvoiceTimesheetApiException(e);
+        } catch (TimesheetDaoException e) {
+            this.msg = "DAO error occurred attempting to post time sheet invoicing";
+            throw new InvoiceTimesheetApiException(this.msg, e);
+        }
+        catch (TimesheetApiException e) {
+            this.msg = "An error occurred attempting to change the status of a time sheet during invoice posting";
+            throw new InvoiceTimesheetApiException(this.msg, e);
         }
     }
 
@@ -457,7 +474,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                 return 0;
             }
         } catch (TimesheetApiException e) {
-            this.msg = "Fetching timesheet invoice hours failed";
+            this.msg = "Error occurred fetching invoice hours for time sheet, " + timesheetId;
             throw new InvoiceTimesheetApiException(this.msg, e);
         }
 
@@ -479,8 +496,14 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                     if (peps != null) {
                         pep = peps.get(0);
                     }
+                    else {
+                        this.msg = "Unable to process time sheet hours due to project/employee profile is unavailable [project id="
+                                + hoursEvent.getProjId() + ", employee id=" + hoursEvent.getEmpId() + "]";
+                        throw new InvoiceTimesheetApiException(this.msg);
+                    }
                 } catch (EmployeeApiException e) {
-                    throw new InvoiceTimesheetApiException(e);
+                    this.msg = "Error occurred fetching project/employee profile while processing time sheet hours";
+                    throw new InvoiceTimesheetApiException(this.msg, e);
                 }
             }
 
@@ -531,7 +554,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                 return 0;
             }
         } catch (TimesheetApiException e) {
-            this.msg = "Timesheet Invoice Error:  Fetching timesheet billable hours failed";
+            this.msg = "Error occcured fetching time sheet billable hours for timesheet, " + timesheetId;
             throw new InvoiceTimesheetApiException(this.msg, e);
         }
 
@@ -602,5 +625,26 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         }
     }
     
+    
+    private ClientDto getClient(int clientId) throws InvoiceTimesheetApiException, NotFoundException {
+        List<ClientDto> clients = null;
+        ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
+        criteria.setClientId(clientId);
+        try {
+            clients = this.projApi.getClient(criteria);
+        }
+        catch (ProjectAdminApiException e) {
+            this.msg = "Error fetching client profile";
+            throw new InvoiceTimesheetApiException(this.msg, e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(clients);
+            return clients.get(0);
+        }
+        catch (VerifyException e) {
+            throw new NotFoundException("Client profile was not found [client id=" + clientId + "]");
+        }
+    }
     
 }
