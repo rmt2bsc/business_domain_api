@@ -140,16 +140,13 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         catch (VerifyException e) {
             throw new InvalidDataException("Client Id list is required");
         }
-        
-        int count = 0;
         InvoiceResultsBean results = new InvoiceResultsBean();
         List<Integer> invoiceIdList = new ArrayList<Integer>();
         for (Integer clientId : clientIdList) {
             try {
-                int invoiceId = this.startClientBilling(clientId);
+                int invoiceId = this.startBilling(clientId);
                 results.setProcessedClientTimesheets(clientId, this.timesheetIdList);
                 invoiceIdList.add(invoiceId);
-                count++;
             } catch (Exception e) {
                 throw new InvoiceTimesheetApiException(e);
             }
@@ -202,7 +199,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         // Invoice the timesheet
         List<TimesheetDto> tsList = new ArrayList<TimesheetDto>();
         tsList.add(ts);
-        int invoiceId = this.startClientBilling(client.get(0), tsList);
+        int invoiceId = this.startBilling(client.get(0), tsList);
         return invoiceId;
     }
 
@@ -224,7 +221,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      *             client validation errors, problem gathering timesheets, or
      *             sales order processing errors or database access errors.
      */
-    private int startClientBilling(int clientId) throws InvoiceTimesheetApiException {
+    private int startBilling(int clientId) throws InvoiceTimesheetApiException {
         List<ClientDto> client = null;
         try {
             // Get client object
@@ -237,7 +234,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                 return 0;
             }
             // Begin to bill the client's timesheets
-            int invoiceId = this.startClientBilling(client.get(0), ts);
+            int invoiceId = this.startBilling(client.get(0), ts);
             return invoiceId;
         } catch (Exception e) {
             throw new InvoiceTimesheetApiException(e);
@@ -254,10 +251,10 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      * @return the sales order invoice id
      * @throws InvoiceTimesheetApiException
      */
-    private int startClientBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
+    private int startBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
         int invoiceId;
-        InvoiceBean invBean = this.setupBilling(client, timesheets);
-        invoiceId = this.sendClientBilling(invBean);
+        InvoiceBean invBean = this.prepareBilling(client, timesheets);
+        invoiceId = this.submitBilling(invBean);
         if (invoiceId <= 0) {
             throw new InvoiceTimesheetApiException(
                     "An invalid sales order invoice id was returned from Accounting Sales Order service");
@@ -278,7 +275,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      *             errors pertaining to sending billing data to the accounting
      *             system or general Systems errors.
      */
-    private int sendClientBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
+    private int submitBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
         ObjectFactory f = new ObjectFactory();
         AccountingTransactionRequest request = f.createAccountingTransactionRequest();
         HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
@@ -331,7 +328,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      * @return a {@link InvoiceBean} object
      * @throws InvoiceTimesheetApiException
      */
-    private InvoiceBean setupBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
+    private InvoiceBean prepareBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
         // Setup sales order object
         InvoiceBean invBean = new InvoiceBean();
         invBean.setCustomerId(client.getClientId());
@@ -342,7 +339,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         this.invoiceAmt = 0;
         this.timesheetIdList = new ArrayList<String>();
         for (TimesheetDto ts : timesheets) {
-            InvoiceDetailsBean soi = this.setupBilling(ts);
+            InvoiceDetailsBean soi = this.prepareBilling(ts);
             if (soi == null) {
                 continue;
             }
@@ -375,7 +372,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      * @return {@link InvoiceDetailsBean}
      * @throws InvoiceTimesheetApiException
      */
-    private InvoiceDetailsBean setupBilling(TimesheetDto ts) throws InvoiceTimesheetApiException {
+    private InvoiceDetailsBean prepareBilling(TimesheetDto ts) throws InvoiceTimesheetApiException {
 
         int timesheetId = ts.getTimesheetId();
         try {
@@ -457,7 +454,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                 return 0;
             }
         } catch (TimesheetApiException e) {
-            this.msg = "Timesheet Invoice Error:  Fetching timesheet invoice hours failed";
+            this.msg = "Fetching timesheet invoice hours failed";
             throw new InvoiceTimesheetApiException(this.msg, e);
         }
 
