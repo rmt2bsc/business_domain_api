@@ -222,19 +222,22 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      *             sales order processing errors or database access errors.
      */
     private int startBilling(int clientId) throws InvoiceTimesheetApiException {
-        List<ClientDto> client = null;
+        List<ClientDto> clients = null;
         try {
             // Get client object
             ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
             criteria.setClientId(clientId);
-            client = this.projApi.getClient(criteria);
+            clients = this.projApi.getClient(criteria);
+            // TODO: May need to provide null and emepty checks before attempting to access first element
+            ClientDto client = clients.get(0);
+            
             // Get client approved timesheets
             List<TimesheetDto> ts = this.tsApi.getClientApproved(clientId);
             if (ts == null) {
                 return 0;
             }
             // Begin to bill the client's timesheets
-            int invoiceId = this.startBilling(client.get(0), ts);
+            int invoiceId = this.startBilling(client, ts);
             return invoiceId;
         } catch (Exception e) {
             throw new InvoiceTimesheetApiException(e);
