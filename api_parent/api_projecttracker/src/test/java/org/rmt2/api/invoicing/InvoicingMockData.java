@@ -29,6 +29,7 @@ public class InvoicingMockData extends TimesheetMockData {
     public static final int TEST_EMPLOYEE_ID[] = {2220, 2221, 2222, 2223};
     public static final int TEST_CLIENT_ID[] = {1110, 1111, 1112, 1113};
     public static List<Integer> TEST_CLIENT_ID_LIST = Arrays.asList(1110, 1111, 1112, 1113);
+    public static List<Integer> TEST_NULL_CLIENT_ID_LIST = Arrays.asList(null, 1111, 1112, 1113);
     public static final int TEST_CLIENT_BUSINESS_ID[] = {1350, 1351, 1352, 1353};
     public static final int TEST_TIMESHEET_ID[] = {111, 112, 113, 114};
     public static final int TEST_PROJ_ID[] = {4440, 4441, 4442, 4443};
