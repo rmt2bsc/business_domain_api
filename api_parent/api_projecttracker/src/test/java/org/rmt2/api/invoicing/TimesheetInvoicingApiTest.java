@@ -1,4 +1,4 @@
-package org.rmt2.api.timesheet;
+package org.rmt2.api.invoicing;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -30,7 +30,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
-import org.rmt2.api.invoicing.InvoicingMockData;
 import org.rmt2.jaxb.AccountingTransactionRequest;
 import org.rmt2.jaxb.AccountingTransactionResponse;
 import org.rmt2.jaxb.ObjectFactory;
@@ -306,7 +305,6 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
         List<Integer> results = null;
         try {
-//            List clientList =  Arrays.asList(InvoicingMockData.TEST_CLIENT_ID); //Arrays.stream(InvoicingMockData.TEST_CLIENT_ID).boxed().collect(Collectors.toList());
             results = api.invoice(InvoicingMockData.TEST_CLIENT_ID_LIST);
         } catch (TimesheetApiException e) {
             e.printStackTrace();
