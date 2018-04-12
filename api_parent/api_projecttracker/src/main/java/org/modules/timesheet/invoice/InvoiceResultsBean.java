@@ -37,13 +37,11 @@ class InvoiceResultsBean {
      * @param processedClientTimesheets
      *            the processedClientTimesheets to set
      */
-    public void setProcessedClientTimesheets(
-            Map<Integer, List<String>> processedClientTimesheets) {
+    public void setProcessedClientTimesheets(Map<Integer, List<String>> processedClientTimesheets) {
         this.processedClientTimesheets = processedClientTimesheets;
     }
 
-    public void setProcessedClientTimesheets(int clientId,
-            List<String> timesheets) {
+    public void setProcessedClientTimesheets(int clientId, List<String> timesheets) {
         this.processedClientTimesheets.put(clientId, timesheets);
     }
 
