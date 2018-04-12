@@ -926,16 +926,22 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         this.verifyStatusChange(currentStatusId, newStatusId);
         
         // terminate current status
-        if (currentStatus != null) {
-            this.dao.maintainStatusHistory(currentStatus);
+        try {
+            if (currentStatus != null) {
+                this.dao.maintainStatusHistory(currentStatus);
+            }
+            // Add new current status
+            TimesheetHistDto newStatus = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
+            newStatus.setTimesheetId(timesheetId);
+            newStatus.setStatusId(newStatusId);
+            int newStatusHistId = this.dao.maintainStatusHistory(newStatus);
+            newStatus.setStatusHistId(newStatusHistId);
+            return newStatus;    
         }
-        // Add new current status
-        TimesheetHistDto newStatus = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
-        newStatus.setTimesheetId(timesheetId);
-        newStatus.setStatusId(newStatusId);
-        int newStatusHistId = this.dao.maintainStatusHistory(newStatus);
-        newStatus.setStatusHistId(newStatusHistId);
-        return newStatus;
+        catch (TimesheetDaoException e) {
+            this.msg = "Updating time sheet status operation failed";
+            throw new TimesheetApiException(this.msg, e);
+        }
     }
 
     /*
