@@ -507,12 +507,12 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
                 }
             }
 
-            totHrs += hoursEvent.getEventHours();
             // Calculate only billable hours
             if (hoursEvent.getTaskBillable() == TimesheetConst.HOUR_TYPE_NONBILLABLE) {
                 continue;
             }
 
+            totHrs += hoursEvent.getEventHours();
             // Calculate invoice pay
             if (totHrs <= TimesheetConst.REG_PAY_HOURS) {
                 // Calculate regular hours
@@ -520,15 +520,16 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
             }
             else {
                 // Calculate overtime hours
-                double overtimeHrs = hoursEvent.getEventHours();
-                if (overtimeHrs > (totHrs - TimesheetConst.REG_PAY_HOURS)) {
+                double eventHrs = hoursEvent.getEventHours();
+                double overtimeHrs = totHrs - TimesheetConst.REG_PAY_HOURS;
+                if (eventHrs > overtimeHrs) {
                     // Calculate remaining regular hours
-                    invoiceAmt += (overtimeHrs - (totHrs - TimesheetConst.REG_PAY_HOURS)) * pep.getHourlyRate();
+                    invoiceAmt += (eventHrs - overtimeHrs) * pep.getHourlyRate();
                     // Apply overtime to a portion of the hours
-                    invoiceAmt += ((totHrs - TimesheetConst.REG_PAY_HOURS) * pep.getHourlyOverRate());
+                    invoiceAmt += (overtimeHrs * pep.getHourlyOverRate());
                 }
                 else {
-                    invoiceAmt += (overtimeHrs * pep.getHourlyOverRate());
+                    invoiceAmt += (eventHrs * pep.getHourlyOverRate());
                 }
             } // end else
             ndx++;
