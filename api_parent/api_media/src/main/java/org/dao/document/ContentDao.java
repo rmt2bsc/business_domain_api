@@ -81,7 +81,6 @@ public interface ContentDao extends DaoClient {
      * @return Object a List of {@link MimeTypeDto} or null if no data is found.
      * @throws ContentDaoException
      */
-    List<MimeTypeDto> fetchMimeType(MimeTypeDto criteria)
-            throws ContentDaoException;
+    List<MimeTypeDto> fetchMimeType(MimeTypeDto criteria) throws ContentDaoException;
 
 }

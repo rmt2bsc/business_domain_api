@@ -30,8 +30,7 @@ public interface DocumentContentApi extends TransactionApi {
      * @return The internal unique identifier of the document object added.
      * @throws MediaModuleException
      */
-    int addMedia(ContentDto media, boolean embedded)
-            throws MediaModuleException;
+    int addMedia(ContentDto media, boolean embedded) throws MediaModuleException;
 
     /**
      * Retrieve the media based on it internal unique identifier
@@ -47,8 +46,7 @@ public interface DocumentContentApi extends TransactionApi {
      *         document.
      * @throws MediaModuleException
      */
-    ContentDto getMedia(int contentId, boolean embedded)
-            throws MediaModuleException;
+    ContentDto getMedia(int contentId, boolean embedded) throws MediaModuleException;
 
     /**
      * Remove media document.
@@ -80,8 +78,7 @@ public interface DocumentContentApi extends TransactionApi {
      * @return a List of {@link MimeTypeDto} objects
      * @throws MediaModuleException
      */
-    List<MimeTypeDto> getMimeType(MimeTypeDto criteria)
-            throws MediaModuleException;
+    List<MimeTypeDto> getMimeType(MimeTypeDto criteria) throws MediaModuleException;
 
     /**
      * Start the thread responsible for listening for the existence of media

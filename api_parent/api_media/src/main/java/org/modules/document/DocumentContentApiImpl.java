@@ -3,14 +3,11 @@ package org.modules.document;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
 import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoException;
 import org.dao.document.ContentDaoFactory;
-
 import org.dto.ContentDto;
 import org.dto.MimeTypeDto;
-
 import org.modules.MediaModuleException;
 import org.modules.services.DocumentInboundDirectoryListener;
 
@@ -24,11 +21,9 @@ import com.util.RMT2File;
  * @author Roy Terrell
  * 
  */
-class DocumentContentApiImpl extends AbstractTransactionApiImpl implements
-        DocumentContentApi {
+class DocumentContentApiImpl extends AbstractTransactionApiImpl implements DocumentContentApi {
 
-    private static Logger logger = Logger
-            .getLogger(AbstractTransactionApiImpl.class);
+    private static Logger logger = Logger.getLogger(AbstractTransactionApiImpl.class);
 
     private ContentDaoFactory factory;
 
@@ -58,8 +53,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements
      * @throws MediaModuleException
      */
     @Override
-    public int addMedia(ContentDto media, boolean embedded)
-            throws MediaModuleException {
+    public int addMedia(ContentDto media, boolean embedded) throws MediaModuleException {
         ContentDao dao;
         if (embedded) {
             dao = this.factory.createEmbeddedMediaDaoInstance();
@@ -86,8 +80,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements
      * @return The internal unique identifier of the document object added.
      * @throws MediaModuleException
      */
-    private int addMedia(ContentDao dao, ContentDto media)
-            throws MediaModuleException {
+    private int addMedia(ContentDao dao, ContentDto media) throws MediaModuleException {
         dao.setDaoUser(this.apiUser);
         int newContentId = 0;
         try {
@@ -119,8 +112,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements
      * @throws MediaModuleException
      */
     @Override
-    public ContentDto getMedia(int contentId, boolean embedded)
-            throws MediaModuleException {
+    public ContentDto getMedia(int contentId, boolean embedded) throws MediaModuleException {
         ContentDao dao;
         if (embedded) {
             dao = this.factory.createEmbeddedMediaDaoInstance();
@@ -147,8 +139,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements
      * @return The internal unique identifier of the document object added.
      * @throws MediaModuleException
      */
-    private ContentDto getMedia(int contentId, ContentDao dao)
-            throws MediaModuleException {
+    private ContentDto getMedia(int contentId, ContentDao dao) throws MediaModuleException {
         ContentDto content = null;
         try {
             content = dao.fetchContent(contentId);
@@ -240,8 +231,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements
      * org.modules.document.DocumentContentApi#getMimeType(org.dto.MimeTypeDto)
      */
     @Override
-    public List<MimeTypeDto> getMimeType(MimeTypeDto criteria)
-            throws MediaModuleException {
+    public List<MimeTypeDto> getMimeType(MimeTypeDto criteria) throws MediaModuleException {
         ContentDao dao = this.factory.createEmbeddedMediaDaoInstance();
         List<MimeTypeDto> results = null;
         try {

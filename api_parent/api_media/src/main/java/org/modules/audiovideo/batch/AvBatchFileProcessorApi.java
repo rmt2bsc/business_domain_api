@@ -9,7 +9,7 @@ import com.api.BatchFileProcessor;
  * @author appdev
  * 
  */
-public interface AudioVideoBatchFileProcessorApi extends BatchFileProcessor {
+public interface AvBatchFileProcessorApi extends BatchFileProcessor {
 
     /**
      * Perform any validations specific to the implementation design.

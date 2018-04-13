@@ -29,11 +29,9 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2OrmEmbeddedMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
-        implements ContentDao {
+class Rmt2OrmEmbeddedMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl implements ContentDao {
 
-    private static Logger logger = Logger
-            .getLogger(Rmt2OrmEmbeddedMediaDaoImpl.class);
+    private static Logger logger = Logger.getLogger(Rmt2OrmEmbeddedMediaDaoImpl.class);
 
     /**
      * Create a Rmt2OrmSybaseEmbeddedMediaDaoImpl object
@@ -75,8 +73,7 @@ class Rmt2OrmEmbeddedMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
      */
     public int addContent(ContentDto mediaRec) throws ContentDaoException {
         logger.info("Begin to calculate and/or assign data to content DTO for update");
-        byte[] binaryData = RMT2File.getFileContentsAsBytes(mediaRec
-                .getFilepath() + mediaRec.getFilename());
+        byte[] binaryData = RMT2File.getFileContentsAsBytes(mediaRec.getFilepath() + mediaRec.getFilename());
         mediaRec.setImageData(binaryData);
 
         logger.info("Validate Content record");
@@ -163,8 +160,7 @@ class Rmt2OrmEmbeddedMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
 
         int newContentId = 0;
         try {
-            UserTimestamp ut = RMT2Date.getUserTimeStamp(mediaRec
-                    .getUpdateUserId());
+            UserTimestamp ut = RMT2Date.getUserTimeStamp(mediaRec.getUpdateUserId());
             rec.setDateCreated(ut.getDateCreated());
             rec.setUserId(ut.getLoginId());
             rec.setNull(Content.PROP_PROJECTID);
@@ -200,11 +196,8 @@ class Rmt2OrmEmbeddedMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
         // or long text MIME data using straight JDBC call.
         Statement stmt;
         try {
-            stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
-                    ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt
-                    .executeQuery("select image_data from content where content_id = "
-                            + contentId);
+            stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery("select image_data from content where content_id = " + contentId);
             if (rs != null && rs.next()) {
                 rs.updateBytes("image_data", binaryData);
                 rs.updateRow();
@@ -232,8 +225,7 @@ class Rmt2OrmEmbeddedMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
      * @return an isntance of {@link ContentDto} or null if no data is found.
      * @throws ContentDaoException
      */
-    public ContentDto fetchContentAsFile(int contentId)
-            throws ContentDaoException {
+    public ContentDto fetchContentAsFile(int contentId) throws ContentDaoException {
         ContentDto mime = super.fetchContent(contentId);
         if (mime == null) {
             return mime;

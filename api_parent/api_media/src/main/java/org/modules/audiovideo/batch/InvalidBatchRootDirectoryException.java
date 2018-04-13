@@ -4,8 +4,7 @@ package org.modules.audiovideo.batch;
  * @author Roy Terrell
  * 
  */
-public class InvalidBatchRootDirectoryException extends
-        BatchFileProcessException {
+public class InvalidBatchRootDirectoryException extends BatchFileProcessException {
 
     /**
      * 
@@ -16,7 +15,7 @@ public class InvalidBatchRootDirectoryException extends
      * 
      */
     public InvalidBatchRootDirectoryException() {
-        // TODO Auto-generated constructor stub
+
     }
 
     /**
@@ -24,7 +23,6 @@ public class InvalidBatchRootDirectoryException extends
      */
     public InvalidBatchRootDirectoryException(String msg) {
         super(msg);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -32,7 +30,6 @@ public class InvalidBatchRootDirectoryException extends
      */
     public InvalidBatchRootDirectoryException(Exception e) {
         super(e);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -41,7 +38,6 @@ public class InvalidBatchRootDirectoryException extends
      */
     public InvalidBatchRootDirectoryException(String msg, Throwable e) {
         super(msg, e);
-        // TODO Auto-generated constructor stub
     }
 
 }

@@ -25,17 +25,22 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
-        implements ContentDao {
+class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl implements ContentDao {
 
-    private static Logger logger = Logger
-            .getLogger(Rmt2OrmExternalFileMediaDaoImpl.class);
+    private static Logger logger = Logger.getLogger(Rmt2OrmExternalFileMediaDaoImpl.class);
 
+    /**
+     * 
+     */
     public Rmt2OrmExternalFileMediaDaoImpl() {
         super();
         return;
     }
 
+    /**
+     * 
+     * @param appName
+     */
     public Rmt2OrmExternalFileMediaDaoImpl(String appName) {
         super(appName);
         return;
@@ -124,8 +129,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
         int newContentId = 0;
         this.client.beginTrans();
         try {
-            UserTimestamp ut = RMT2Date.getUserTimeStamp(mediaRec
-                    .getUpdateUserId());
+            UserTimestamp ut = RMT2Date.getUserTimeStamp(mediaRec.getUpdateUserId());
             rec.setDateCreated(ut.getDateCreated());
             rec.setUserId(ut.getLoginId());
             rec.setNull(Content.PROP_PROJECTID);
@@ -176,8 +180,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
                 String encodedImg = RMT2Base64Encoder.encode(binaryData);
                 mime.setImageData(encodedImg);
             } catch (Exception e) {
-                this.msg = "Error fetching external media file, "
-                        + file.getAbsolutePath();
+                this.msg = "Error fetching external media file, " + file.getAbsolutePath();
                 throw new ContentDaoException(this.msg, e);
             }
         }
@@ -199,8 +202,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
      * @return An instance of {@link ContentDto}
      * @throws ContentDaoException
      */
-    public ContentDto fetchContentAsFile(int contentId)
-            throws ContentDaoException {
+    public ContentDto fetchContentAsFile(int contentId) throws ContentDaoException {
         ContentDto mime = super.fetchContent(contentId);
         if (mime == null) {
             return null;
@@ -210,8 +212,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
         File file = new File(mime.getFilepath() + mime.getFilename());
         int fileVerifyCode = RMT2File.verifyFile(file);
         if (fileVerifyCode != RMT2File.FILE_IO_EXIST) {
-            this.msg = "Unable to locate external media file, "
-                    + file.getAbsolutePath();
+            this.msg = "Unable to locate external media file, " + file.getAbsolutePath();
             throw new ContentDaoException(this.msg);
         }
         mime.setImageData(file);
@@ -240,8 +241,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
      */
     protected File validate(ContentDto dto) throws ContentDaoException {
         String inFileName = dto.getFilename();
-        if (inFileName == null
-                || inFileName.equals(RMT2String.spaces(inFileName.length()))) {
+        if (inFileName == null || inFileName.equals(RMT2String.spaces(inFileName.length()))) {
             this.msg = "The filename property is required";
             throw new ContentValidationDaoException(this.msg);
         }
@@ -299,7 +299,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
     }
 
     /**
-     * Performs asynchronously saves the media file so that the user does not
+     * Asynchronously saves the media file so that the user does not
      * have to wait.
      * 
      * @author Roy Terrell
@@ -328,8 +328,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl
             int bytesWritten = 0;
             if (this.rec.getImageData() != null) {
                 path = this.rec.getFilepath() + this.rec.getFilename();
-                byte binaryData[] = RMT2Base64Decoder.decodeToBytes(this.rec
-                        .getImageData().toString());
+                byte binaryData[] = RMT2Base64Decoder.decodeToBytes(this.rec.getImageData().toString());
                 bytesWritten = RMT2File.outputFile(binaryData, path);
                 this.rec.setSize(bytesWritten);
                 msg = "External media file, "

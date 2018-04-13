@@ -8,12 +8,12 @@ import com.RMT2Base;
  * @author Roy Terrell
  * 
  */
-public class AudioVideoBatchApiFactory extends RMT2Base {
+public class AvBatchApiFactory extends RMT2Base {
 
     /**
      * Default contructor
      */
-    public AudioVideoBatchApiFactory() {
+    public AvBatchApiFactory() {
         return;
     }
 
@@ -23,11 +23,11 @@ public class AudioVideoBatchApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link AudioVideoBatchFileProcessorApi}
      */
-    public AudioVideoBatchFileProcessorApi createRmt2OrmBatchLoaderDaoInstance(
+    public AvBatchFileProcessorApi createRmt2OrmBatchLoaderDaoInstance(
             String srcDir) {
-        AudioVideoBatchFileProcessorApi dao;
+        AvBatchFileProcessorApi dao;
         try {
-            dao = new MetaDataFileLoaderApiImpl(srcDir);
+            dao = new AvFileMetaDataLoaderImpl(srcDir);
             return dao;
         } catch (BatchFileProcessException e) {
             return null;

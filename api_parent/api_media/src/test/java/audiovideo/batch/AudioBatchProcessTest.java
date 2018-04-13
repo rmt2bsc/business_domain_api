@@ -8,8 +8,8 @@ import org.dao.audiovideo.AudioVideoDaoFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.modules.audiovideo.batch.AudioVideoBatchApiFactory;
-import org.modules.audiovideo.batch.AudioVideoBatchFileProcessorApi;
+import org.modules.audiovideo.batch.AvBatchApiFactory;
+import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
 
 import com.api.foundation.TransactionApi;
 import com.util.RMT2File;
@@ -20,9 +20,9 @@ import com.util.RMT2File;
  */
 public class AudioBatchProcessTest {
 
-    private AudioVideoBatchApiFactory f;
+    private AvBatchApiFactory f;
 
-    private AudioVideoBatchFileProcessorApi api;
+    private AvBatchFileProcessorApi api;
 
     private AudioVideoDaoFactory f2;
 
@@ -43,7 +43,7 @@ public class AudioBatchProcessTest {
      */
     @Before
     public void setUp() throws Exception {
-        this.f = new AudioVideoBatchApiFactory();
+        this.f = new AvBatchApiFactory();
         this.f2 = new AudioVideoDaoFactory();
         this.dao = this.f2.createRmt2OrmDaoInstance();
         this.dao.setDaoUser("testuser");

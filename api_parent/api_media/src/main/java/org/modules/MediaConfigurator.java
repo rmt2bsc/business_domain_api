@@ -49,13 +49,11 @@ public class MediaConfigurator extends AbstractApiConfiguratorPropertiesImpl {
     @Override
     protected void setupLogger() {
         // Setup Logging environment
-        String logPath = this.config
-                .getString(ConfigConstants.API_LOGGER_CONFIG_PATH_KEY);
+        String logPath = this.config.getString(ConfigConstants.API_LOGGER_CONFIG_PATH_KEY);
         Properties prop = RMT2File.loadPropertiesFromClasspath(logPath);
         PropertyConfigurator.configure(prop);
         logger = Logger.getLogger(MediaConfigurator.class);
-        logger.info("Logger initialized locally for application, "
-                + this.appName);
+        logger.info("Logger initialized locally for application, " + this.appName);
 
     }
 }

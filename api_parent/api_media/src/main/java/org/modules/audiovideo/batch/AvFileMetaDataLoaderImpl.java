@@ -1,7 +1,13 @@
 package org.modules.audiovideo.batch;
 
-import org.apache.log4j.Logger;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.NullEnumeration;
 import org.dao.audiovideo.AudioVideoConstants;
 import org.dao.audiovideo.AudioVideoDao;
@@ -14,28 +20,16 @@ import org.dao.audiovideo.AvProjectDataValidationException;
 import org.dao.audiovideo.AvTrackDataValidationException;
 import org.dao.audiovideo.MP3ApiInstantiationException;
 
-import java.io.File;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-
 import com.RMT2Constants;
 import com.SystemException;
-
 import com.api.BatchFileException;
-
 import com.api.config.ConfigConstants;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.foundation.TransactionApi;
-
 import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
-
 import com.api.persistence.DatabaseException;
-
 import com.util.RMT2Date;
 import com.util.RMT2File;
 
@@ -50,11 +44,10 @@ import com.util.RMT2File;
  * @author Roy Terrell
  * 
  */
-class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
-        AudioVideoBatchFileProcessorApi, TransactionApi {
+class AvFileMetaDataLoaderImpl extends AbstractTransactionApiImpl implements
+        AvBatchFileProcessorApi, TransactionApi {
 
-    private static Logger logger = Logger
-            .getLogger(MetaDataFileLoaderApiImpl.class);
+    private static Logger logger = Logger.getLogger(AvFileMetaDataLoaderImpl.class);
 
     private File resourcePath;
 
@@ -80,7 +73,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      * 
      * @throws BatchFileProcessException
      */
-    protected MetaDataFileLoaderApiImpl() throws BatchFileProcessException {
+    protected AvFileMetaDataLoaderImpl() throws BatchFileProcessException {
         super();
         return;
     }
@@ -96,11 +89,10 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      *            the complete path where to start processing audio/video files
      * @throws BatchFileProcessException
      */
-    protected MetaDataFileLoaderApiImpl(String dirPath)
-            throws BatchFileProcessException {
+    protected AvFileMetaDataLoaderImpl(String dirPath) throws BatchFileProcessException {
         this();
         this.initConnection(dirPath);
-        MetaDataFileLoaderApiImpl.logger
+        AvFileMetaDataLoaderImpl.logger
                 .info("Audio/Video batch processor is initialized");
     }
 
@@ -115,12 +107,12 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
     public void initConnection(Object dirPath) throws BatchFileProcessException {
         if (dirPath == null) {
             this.msg = "The root directory path is invalid or null";
-            MetaDataFileLoaderApiImpl.logger.error(this.msg);
+            AvFileMetaDataLoaderImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
         if (!(dirPath instanceof String)) {
             this.msg = "The root directory path must be of String datatype";
-            MetaDataFileLoaderApiImpl.logger.error(this.msg);
+            AvFileMetaDataLoaderImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
         this.resourcePath = new File(dirPath.toString());
@@ -167,12 +159,11 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
 
         // Begin process all files
         try {
-            this.expectedFileCount = dao
-                    .computeTotalFileCount(this.resourcePath);
+            this.expectedFileCount = dao.computeTotalFileCount(this.resourcePath);
             this.msg = "Audio/Video Batch Update process started ["
                     + this.expectedFileCount + " files discovered]...";
             if (useLogger) {
-                MetaDataFileLoaderApiImpl.logger.info(this.msg);
+                AvFileMetaDataLoaderImpl.logger.info(this.msg);
             }
             else {
                 System.out.println(this.msg);
@@ -186,35 +177,21 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
             dao = null;
             this.endTime = new Date();
             if (useLogger) {
-                MetaDataFileLoaderApiImpl.logger.info("Batch start time: "
-                        + startTime.toString());
-                MetaDataFileLoaderApiImpl.logger.info("Batch end time: "
-                        + endTime.toString());
-                MetaDataFileLoaderApiImpl.logger
-                        .info("Total Media Files Processed: " + this.totCnt);
-                MetaDataFileLoaderApiImpl.logger
-                        .info("Total Media Files Successfully Processed: "
-                                + this.successCnt);
-                MetaDataFileLoaderApiImpl.logger
-                        .info("Total Media Files Unsuccessfully Processed: "
-                                + this.errorCnt);
-                MetaDataFileLoaderApiImpl.logger
-                        .info("Total Non-Audio/Video Files encountered: "
-                                + this.nonAvFileCnt);
-                MetaDataFileLoaderApiImpl.logger.info("End Audio-Video Update");
+                AvFileMetaDataLoaderImpl.logger.info("Batch start time: " + startTime.toString());
+                AvFileMetaDataLoaderImpl.logger.info("Batch end time: " + endTime.toString());
+                AvFileMetaDataLoaderImpl.logger.info("Total Media Files Processed: " + this.totCnt);
+                AvFileMetaDataLoaderImpl.logger.info("Total Media Files Successfully Processed: " + this.successCnt);
+                AvFileMetaDataLoaderImpl.logger.info("Total Media Files Unsuccessfully Processed: " + this.errorCnt);
+                AvFileMetaDataLoaderImpl.logger.info("Total Non-Audio/Video Files encountered: " + this.nonAvFileCnt);
+                AvFileMetaDataLoaderImpl.logger.info("End Audio-Video Update");
             }
             else {
                 System.out.println("Batch start time: " + startTime.toString());
                 System.out.println("Batch end time: " + endTime.toString());
-                System.out.println("Total Media Files Processed: "
-                        + this.totCnt);
-                System.out.println("Total Media Files Successfully Processed: "
-                        + this.successCnt);
-                System.out
-                        .println("Total Media Files Unsuccessfully Processed: "
-                                + this.errorCnt);
-                System.out.println("Total Non-Audio/Video Files encountered: "
-                        + this.nonAvFileCnt);
+                System.out.println("Total Media Files Processed: " + this.totCnt);
+                System.out.println("Total Media Files Successfully Processed: " + this.successCnt);
+                System.out.println("Total Media Files Unsuccessfully Processed: " + this.errorCnt);
+                System.out.println("Total Non-Audio/Video Files encountered: " + this.nonAvFileCnt);
                 System.out.println("End Audio-Video Update");
             }
 
@@ -236,9 +213,8 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      */
     public void validate() throws BatchFileProcessException {
         if (!this.resourcePath.isDirectory()) {
-            this.msg = resourcePath
-                    + " is required to be a directory for Audio Video Batch process";
-            MetaDataFileLoaderApiImpl.logger.log(Level.ERROR, this.msg);
+            this.msg = resourcePath + " is required to be a directory for Audio Video Batch process";
+            AvFileMetaDataLoaderImpl.logger.log(Level.ERROR, this.msg);
             throw new AvSourceNotADirectoryException(this.msg);
         }
     }
@@ -252,8 +228,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      * @return Always returns an {@link Integer} object which equals "1".
      * @throws BatchFileProcessException
      */
-    public Object processDirectory(File mediaResource, Object parent)
-            throws BatchFileProcessException {
+    public Object processDirectory(File mediaResource, Object parent) throws BatchFileProcessException {
         File mediaList[];
         int itemCount = 0;
 
@@ -287,8 +262,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      * @throws MP3ApiInstantiationException
      * @throws BatchFileProcessException
      */
-    public Object processSingleFile(File mediaFile, Object parent)
-            throws BatchFileProcessException {
+    public Object processSingleFile(File mediaFile, Object parent) throws BatchFileProcessException {
         String pathName;
         AvCombinedProjectBean avb;
         AudioVideoDaoFactory f = new AudioVideoDaoFactory();
@@ -304,38 +278,30 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
             }
             this.successCnt++;
         } catch (MP3ApiInstantiationException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "Error creating MP3 Api", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Error creating MP3 Api", e.getMessage()));
             // throw new MP3ApiInstantiationException(e);
             this.nonAvFileCnt++;
         } catch (AvInvalidSourceFileException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "Invalid Audio/Video Source File", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Invalid Audio/Video Source File", e.getMessage()));
             this.errorCnt++;
         } catch (AvProjectDataValidationException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "Audio/Video Project Data Validation", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Project Data Validation", e.getMessage()));
             this.errorCnt++;
         } catch (AvTrackDataValidationException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "Audio/Video Track Data Validation", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Track Data Validation", e.getMessage()));
             this.errorCnt++;
         } catch (SystemException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "Audio/Video System", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video System", e.getMessage()));
             this.errorCnt++;
         } catch (AvFileExtractionException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "Audio/Video Source File Data Extraction", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Source File Data Extraction", e.getMessage()));
             this.errorCnt++;
         } catch (AudioVideoDaoException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "General Audio/Video", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "General Audio/Video", e.getMessage()));
             this.errorCnt++;
             e.printStackTrace();
         } catch (DatabaseException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName,
-                    "Audio/Video Database Access", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Database Access", e.getMessage()));
             this.errorCnt++;
         } finally {
             this.totCnt++;
@@ -354,8 +320,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      * @param msg
      * @return
      */
-    private String buildFileErrorMessage(String fileName, String msgCatg,
-            String msg) {
+    private String buildFileErrorMessage(String fileName, String msgCatg, String msg) {
         StringBuffer errMsg = new StringBuffer();
         errMsg.append("File: ");
         errMsg.append(fileName);
@@ -392,8 +357,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
         // pool which is loaded at server start up.
         String fromAddr = null;
         try {
-            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP,
-                    AudioVideoConstants.BATCH_REPORT_EMAIL);
+            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, AudioVideoConstants.BATCH_REPORT_EMAIL);
         } catch (Exception e) {
             this.msg = "Unable to obtain the recipient's email address from AppParms.properties needed to send batch report";
             throw new AvBatchReportException(this.msg, e);
@@ -407,8 +371,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
 
         body.append("This is a report of the results of the Audio/Video Batch process\n");
         body.append("Start Time: ");
-        body.append(RMT2Date
-                .formatDate(this.startTime, "MM-dd-yyyy HH:mm:ss.S"));
+        body.append(RMT2Date.formatDate(this.startTime, "MM-dd-yyyy HH:mm:ss.S"));
         body.append("\n");
         body.append("End Time: ");
         body.append(RMT2Date.formatDate(this.endTime, "MM-dd-yyyy HH:mm:ss.S"));
@@ -416,11 +379,9 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
 
         body.append("Total Media Files Processed: " + this.totCnt);
         body.append("\n");
-        body.append("Total Media Files Successfully Processed: "
-                + this.successCnt);
+        body.append("Total Media Files Successfully Processed: " + this.successCnt);
         body.append("\n");
-        body.append("Total Media Files Unsuccessfully Processed: "
-                + this.errorCnt);
+        body.append("Total Media Files Unsuccessfully Processed: " + this.errorCnt);
         body.append("\n\n\n");
 
         if (this.fileErrorMsg.size() > 0) {
@@ -468,8 +429,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      * @see com.api.BatchFileProcessor#getFileListing()
      */
     public List<String> getFileListing() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -478,8 +438,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      * @see com.api.BatchFileProcessor#initConnection()
      */
     public void initConnection() throws BatchFileException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -490,8 +449,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      */
     public void initConnection(String arg0, String arg1)
             throws BatchFileException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -501,8 +459,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      */
     public Object processFiles(List<String> arg0, Object parent)
             throws BatchFileException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -512,8 +469,7 @@ class MetaDataFileLoaderApiImpl extends AbstractTransactionApiImpl implements
      */
     public Object processSingleFile(String arg0, Object parent)
             throws BatchFileException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
 }

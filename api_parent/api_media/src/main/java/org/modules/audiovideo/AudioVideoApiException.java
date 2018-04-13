@@ -14,7 +14,6 @@ public class AudioVideoApiException extends MediaModuleException {
      * 
      */
     public AudioVideoApiException() {
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -22,7 +21,6 @@ public class AudioVideoApiException extends MediaModuleException {
      */
     public AudioVideoApiException(String msg) {
         super(msg);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -30,7 +28,6 @@ public class AudioVideoApiException extends MediaModuleException {
      */
     public AudioVideoApiException(Exception e) {
         super(e);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -39,7 +36,6 @@ public class AudioVideoApiException extends MediaModuleException {
      */
     public AudioVideoApiException(String msg, Throwable e) {
         super(msg, e);
-        // TODO Auto-generated constructor stub
     }
 
 }
