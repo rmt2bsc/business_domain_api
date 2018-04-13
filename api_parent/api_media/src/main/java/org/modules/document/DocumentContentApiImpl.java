@@ -145,8 +145,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             content = dao.fetchContent(contentId);
             return content;
         } catch (ContentDaoException e) {
-            this.msg = "Unable to retrieve media document identified by document id: "
-                    + contentId;
+            this.msg = "Unable to retrieve media document identified by document id: " + contentId;
             throw new MediaModuleException(this.msg, e);
         } finally {
             dao.close();
@@ -180,12 +179,10 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             // successfully
             if (deletedRec != null) {
                 rows = 1;
-                logger.info("Media document detail record was deleted successfully [document id = "
-                        + contentId + "]");
+                logger.info("Media document detail record was deleted successfully [document id = " + contentId + "]");
             }
         } catch (ContentDaoException e) {
-            this.msg = "Unable to delete media document identified by document id: "
-                    + contentId;
+            this.msg = "Unable to delete media document identified by document id: " + contentId;
             throw new MediaModuleException(this.msg, e);
         } finally {
             dao.close();
@@ -196,8 +193,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         if (deletedRec.getImageData() == null) {
             String path = deletedRec.getFilepath() + deletedRec.getFilename();
             rows = RMT2File.deleteFile(path);
-            logger.info("Media document external file was deleted successfully ["
-                    + path + "]");
+            logger.info("Media document external file was deleted successfully [" + path + "]");
         }
         return rows;
     }
@@ -215,8 +211,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             mt = dao.fetchMimeType(mimeTypeId);
             return mt;
         } catch (ContentDaoException e) {
-            this.msg = "Unable to retrieve mime type object identified by mime type id: "
-                    + mimeTypeId;
+            this.msg = "Unable to retrieve mime type object identified by mime type id: " + mimeTypeId;
             throw new MediaModuleException(this.msg, e);
         } finally {
             dao.close();
