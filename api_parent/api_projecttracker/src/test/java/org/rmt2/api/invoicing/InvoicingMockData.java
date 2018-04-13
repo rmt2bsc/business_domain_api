@@ -92,8 +92,7 @@ public class InvoicingMockData extends TimesheetMockData {
     private void buildMockTimesheetHoursData() {
         this.mockTimesheetHoursMap = new HashMap<>();
         for (int ndx = 0; ndx < InvoicingMockData.TEST_TIMESHEET_ID.length; ndx++) {
-            this.mockTimesheetHoursMap.put(
-                    InvoicingMockData.TEST_TIMESHEET_ID[ndx],
+            this.mockTimesheetHoursMap.put(InvoicingMockData.TEST_TIMESHEET_ID[ndx],
                     this.createMockDynamicTimesheetHours(InvoicingMockData.TEST_TIMESHEET_ID[ndx],
                             InvoicingMockData.TEST_CLIENT_ID[ndx],
                             InvoicingMockData.TEST_PROJ_ID[ndx],
