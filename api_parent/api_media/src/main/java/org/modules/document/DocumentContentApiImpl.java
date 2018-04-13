@@ -8,6 +8,7 @@ import org.dao.document.ContentDaoException;
 import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.MimeTypeDto;
+import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.services.DocumentInboundDirectoryListener;
 
@@ -30,13 +31,23 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
     private DocumentInboundDirectoryListener listener;
 
     /**
-     * 
+     * Creates an DocumentContentApiImpl
      */
     protected DocumentContentApiImpl() {
-        super();
-        this.factory = new ContentDaoFactory();
+        this(MediaConstants.DEFAULT_CONTEXT_NAME);
     }
 
+    /**
+     * Creates an DocumentContentApiImpl which creates based on the identified
+     * application.
+     * 
+     * @param appName
+     */
+    protected DocumentContentApiImpl(String appName) {
+        super(appName);
+        this.factory = new ContentDaoFactory();
+    }
+    
     /**
      * Add media document using a particular {@link ContentDao} implementation
      * based on the flag, <i>embedded</i>.
