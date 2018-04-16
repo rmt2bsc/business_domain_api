@@ -19,34 +19,23 @@ public interface DocumentContentApi extends TransactionApi {
     /**
      * Add media document.
      * 
-     * @param media
-     *            an instance of {@link ContentDto}
-     * @param embedded
-     *            Determines how the image data of the media document image data
-     *            is to be persisted. Set to <i>true</i> when the media image
-     *            data is to be saved in the same datastore as the media detail
-     *            data. Set to <i>false</i> when the media document image data
-     *            is to be saved as an external file.
+     * @param filePath
+     *            The full path of the media file to be added.
      * @return The internal unique identifier of the document object added.
      * @throws MediaModuleException
      */
-    int addMedia(ContentDto media, boolean embedded) throws MediaModuleException;
+    int add(String filePath) throws MediaModuleException;
 
     /**
      * Retrieve the media based on it internal unique identifier
      * 
      * @param contentId
-     *            The internal unique identifier of the media document. param
-     *            embedded Determines how the image data of the media document
-     *            detail record is to be retrieved. Set to <i>true</i> when the
-     *            media image data exists as part of the document detail record.
-     *            Set to <i>false</i> when the media document's image data is to
-     *            be retrieved from an external file.
+     *            The internal unique identifier of the media document.
      * @return An instance of {@link ContentDto} representing the media
      *         document.
      * @throws MediaModuleException
      */
-    ContentDto getMedia(int contentId, boolean embedded) throws MediaModuleException;
+    ContentDto get(int contentId) throws MediaModuleException;
 
     /**
      * Remove media document.
@@ -56,7 +45,7 @@ public interface DocumentContentApi extends TransactionApi {
      * @return The total number of instances effected by the operation.
      * @throws MediaModuleException
      */
-    int deleteMedia(int contentId) throws MediaModuleException;
+    int delete(int contentId) throws MediaModuleException;
 
     /**
      * Retrieve a mime type object using its internal unique identifier.
