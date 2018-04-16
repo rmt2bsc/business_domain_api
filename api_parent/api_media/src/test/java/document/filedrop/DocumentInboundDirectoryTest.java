@@ -38,7 +38,7 @@ public class DocumentInboundDirectoryTest {
         // logger.info("Begin Application Configuration...");
 
         this.f = new ContentDaoFactory();
-        this.dao = this.f.createEmbeddedMediaDaoInstance();
+        this.dao = this.f.createDatabaseMediaDaoInstance();
         this.dao.setDaoUser("TestUser");
     }
 
