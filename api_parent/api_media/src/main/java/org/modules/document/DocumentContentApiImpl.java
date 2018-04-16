@@ -1,5 +1,6 @@
 package org.modules.document;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -8,12 +9,17 @@ import org.dao.document.ContentDaoException;
 import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.MimeTypeDto;
+import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.services.DocumentInboundDirectoryListener;
 
+import com.InvalidDataException;
+import com.SystemException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.util.RMT2File;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * A basic impelentation of {@link DocumentContentApi} that provides the user
@@ -27,84 +33,110 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
     private static Logger logger = Logger.getLogger(AbstractTransactionApiImpl.class);
 
     private ContentDaoFactory factory;
+    
+    private ContentDao dao;
 
     private DocumentInboundDirectoryListener listener;
 
     /**
-     * Creates an DocumentContentApiImpl
+     * Creates an DocumentContentApiImpl which defaults to saving media to the
+     * database.
      */
     protected DocumentContentApiImpl() {
         this(MediaConstants.DEFAULT_CONTEXT_NAME);
     }
 
     /**
-     * Creates an DocumentContentApiImpl which creates based on the identified
-     * application.
+     * Creates an DocumentContentApiImpl identified application and defaults to
+     * saving media to the database.
      * 
      * @param appName
      */
     protected DocumentContentApiImpl(String appName) {
-        super(appName);
-        this.factory = new ContentDaoFactory();
+        this(appName, true);
     }
     
     /**
-     * Add media document using a particular {@link ContentDao} implementation
-     * based on the flag, <i>embedded</i>.
+     * Creates an DocumentContentApiImpl identified by application name.
      * 
-     * @param media
-     *            an instance of {@link ContentDto}
-     * @param embedded
-     *            Determines how the image data of the media document image data
-     *            is to be persisted. Set to <i>true</i> when the media image
-     *            data is to be saved in the same datastore as the media detail
-     *            data. Set to <i>false</i> when the media document image data
-     *            is to be saved as an external file.
-     * @return The internal unique identifier of the document object added.
-     * @throws MediaModuleException
+     * @param appName
+     *            the application name
+     * @param persistInDb
+     *            Determines how the media document image data is to be
+     *            persisted. Set to <i>true</i> when the media image data is to
+     *            be saved in the same datastore as the media detail data. Set
+     *            to <i>false</i> when the media document image data is to be
+     *            saved as an external file.
      */
-    @Override
-    public int addMedia(ContentDto media, boolean embedded) throws MediaModuleException {
-        ContentDao dao;
-        if (embedded) {
-            dao = this.factory.createEmbeddedMediaDaoInstance();
+    protected DocumentContentApiImpl(String appName, boolean persistInDb) {
+        super(appName);
+        this.factory = new ContentDaoFactory();
+        if (persistInDb) {
+            dao = this.factory.createDatabaseMediaDaoInstance();
         }
         else {
             dao = this.factory.createExternalFileMediaDaoInstance();
         }
-        return this.addMedia(dao, media);
     }
-
+    
     /**
      * Creates a media document detail record in the <i>document</i> table and
      * either saves the media document image data as a column in the
      * <i>document</i> table or as an external file.
      * <p>
-     * This logic is dependent upon the runtime type of <i>dao</i> input
-     * paramteter.
+     * This logic is dependent upon the runtime type of <i>ContentDao</i> used.
      * 
-     * @param dao
-     *            an implementation of {@link ContentDao} which is either a
-     *            database or external file implementation.
      * @param media
      *            an instance of {@link ContentDto}
      * @return The internal unique identifier of the document object added.
      * @throws MediaModuleException
      */
-    private int addMedia(ContentDao dao, ContentDto media) throws MediaModuleException {
+    @Override
+    public int add(String filePath) throws MediaModuleException {
+        try {
+            Verifier.verifyNotEmpty(filePath);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("File Path is required");
+        }
+        
         dao.setDaoUser(this.apiUser);
         int newContentId = 0;
         try {
-            newContentId = dao.addContent(media);
+            ContentDto media = Rmt2MediaDtoFactory.getContentInstance(filePath);
+            byte[] binaryData = this.getContentAsBytes(filePath);
+            media.setSize(binaryData.length);
+            
+            // Now that we've obtained the media's content, set the filePath property to the output directory.
+            // This property is only used by the DAO repsonsible for creating external physical files.  Other
+            // DAO implementations should ignore.
+            String outputDir = this.getConfig().getProperty("media_output_location");
+            media.setFilepath(outputDir);
+            
+            // Validate Media DTO
+            this.validate(media);
+            
+            newContentId = dao.saveMetaData(media);
+            media.setImageData(binaryData);
+            dao.saveContent(media);
             return newContentId;
         } catch (ContentDaoException e) {
             this.msg = "Unable to add media document as a database recrod or as an external file";
             throw new MediaModuleException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
+        } 
+    }
+
+    private byte[] getContentAsBytes(String fileName) throws MediaModuleException {
+        byte[] binaryData = null;
+        try {
+            InputStream is = RMT2File.getFileInputStream(fileName);
+            binaryData = RMT2File.getStreamByteData(is);
+            return binaryData;
+        } catch (SystemException e) {
+            throw new MediaModuleException("Unalbe to obtain content as a byte stream: " + fileName, e);
         }
     }
+
 
     /**
      * Retrieves the media based on it internal unique identifier using a
@@ -123,34 +155,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      * @throws MediaModuleException
      */
     @Override
-    public ContentDto getMedia(int contentId, boolean embedded) throws MediaModuleException {
-        ContentDao dao;
-        if (embedded) {
-            dao = this.factory.createEmbeddedMediaDaoInstance();
-        }
-        else {
-            dao = this.factory.createExternalFileMediaDaoInstance();
-        }
-        return this.getMedia(contentId, dao);
-    }
-
-    /**
-     * Retrieves the media document detail record from the <i>document</i> table
-     * and either obtains the media document image data from a property or as an
-     * external file.
-     * <p>
-     * This logic is dependent upon the runtime type of <i>dao</i> input
-     * paramteter.
-     * 
-     * @param contentId
-     *            the internal unique id of the document record to retrieve
-     * @param dao
-     *            an implementation of {@link ContentDao} which is either a
-     *            database or external file implementation.
-     * @return The internal unique identifier of the document object added.
-     * @throws MediaModuleException
-     */
-    private ContentDto getMedia(int contentId, ContentDao dao) throws MediaModuleException {
+    public ContentDto get(int contentId) throws MediaModuleException {
         ContentDto content = null;
         try {
             content = dao.fetchContent(contentId);
@@ -158,11 +163,10 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } catch (ContentDaoException e) {
             this.msg = "Unable to retrieve media document identified by document id: " + contentId;
             throw new MediaModuleException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
+
+
 
     /**
      * Deletes media document from the systems based on the internal unique
@@ -178,8 +182,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      * @throws MediaModuleException
      */
     @Override
-    public int deleteMedia(int contentId) throws MediaModuleException {
-        ContentDao dao = this.factory.createEmbeddedMediaDaoInstance();
+    public int delete(int contentId) throws MediaModuleException {
         ContentDto deletedRec = null;
         int rows = 0;
 
@@ -195,10 +198,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } catch (ContentDaoException e) {
             this.msg = "Unable to delete media document identified by document id: " + contentId;
             throw new MediaModuleException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
+        } 
 
         // Determine if we need to delete an external file
         if (deletedRec.getImageData() == null) {
@@ -216,7 +216,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      */
     @Override
     public MimeTypeDto getMimeType(int mimeTypeId) throws MediaModuleException {
-        ContentDao dao = this.factory.createEmbeddedMediaDaoInstance();
         MimeTypeDto mt = null;
         try {
             mt = dao.fetchMimeType(mimeTypeId);
@@ -224,10 +223,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } catch (ContentDaoException e) {
             this.msg = "Unable to retrieve mime type object identified by mime type id: " + mimeTypeId;
             throw new MediaModuleException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
+        } 
     }
 
     /*
@@ -238,7 +234,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      */
     @Override
     public List<MimeTypeDto> getMimeType(MimeTypeDto criteria) throws MediaModuleException {
-        ContentDao dao = this.factory.createEmbeddedMediaDaoInstance();
         List<MimeTypeDto> results = null;
         try {
             results = dao.fetchMimeType(criteria);
@@ -246,10 +241,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } catch (ContentDaoException e) {
             this.msg = "Unable to retrieve list of mime type objects using DTO selection criteria";
             throw new MediaModuleException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
+        } 
     }
 
     /*
@@ -278,4 +270,68 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         this.listener.stop();
     }
 
+    
+    /**
+     * Verifies that the media content record contains valid data..
+     * <p>
+     * It is required that the file name and file path are populated. Also, validates whether the
+     * file extension is registered in the database. If the MIME type exists,
+     * then the MIME type id is assigned to the mimeTypeId property of
+     * <i>dto</i>.
+     * 
+     * @param dto
+     *            an instance of {@link ContentDto} which will be validated.
+     * @return an instance of {@link File} representing the media document in
+     *         the file system.
+     * @throws ContentDaoException
+     *             when either file name, file extension or image data proerties
+     *             are not present, or general database error while attempting
+     *             to obtain MIME type data based on file extension.
+     */
+    /**
+     * Verifies that the file name and file path properties are present.
+     * 
+     * @param dto
+     *            an instance of {@link ContentDto} which will be validated.
+     * @return always returns null.
+     * @throws MediaModuleException Error occurred obtaining MIME type information
+     * @throws InvalidDataException
+     *             when either the file name or file path is not present.
+     */
+    protected void validate(ContentDto dto) throws MediaModuleException {
+        logger.info("Validate file name");
+        if (dto.getFilename() == null) {
+            this.msg = "File name is required to persist MIME type";
+            DocumentContentApiImpl.logger.error(this.msg);
+            throw new InvalidDataException(this.msg);
+        }
+
+        logger.info("Validate file path");
+        if (dto.getFilepath() == null) {
+            this.msg = "File path is required to persist MIME type";
+            DocumentContentApiImpl.logger.error(this.msg);
+            throw new InvalidDataException(this.msg);
+        }
+        
+        logger.info("Validate file extension");
+        String ext = RMT2File.getFileExt(dto.getFilename());
+        if (ext == null) {
+            this.msg = "File name is required to have an extension for the purposes of identifying/validationg the MIME type";
+            throw new InvalidDataException(this.msg);
+        }
+
+        // Get mime type id of file name.
+        MimeTypeDto mtCriteria = Rmt2MediaDtoFactory.getMimeTypeInstance(null);
+        mtCriteria.setFileExt(ext);
+        List<MimeTypeDto> list = this.getMimeType(mtCriteria);
+        if (list == null) {
+            this.msg = "File, "
+                    + dto.getFilename()
+                    + ", was not persisted due to file extension is not registered in the MIME database";
+            throw new InvalidDataException(this.msg);
+        }
+        MimeTypeDto mt = list.get(0);
+        dto.setMimeTypeId(mt.getMimeTypeId());
+        logger.info("Passed media file validations");
+    }
 }
