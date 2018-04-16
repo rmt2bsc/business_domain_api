@@ -58,8 +58,8 @@ public class ContentDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link ContentDao}
      */
-    public ContentDao createEmbeddedMediaDaoInstance() {
-        return new Rmt2OrmEmbeddedMediaDaoImpl();
+    public ContentDao createDatabaseMediaDaoInstance() {
+        return new Rmt2OrmDatabaseMediaDaoImpl();
     }
 
     /**
