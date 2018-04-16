@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
+import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 
 import com.SystemException;
 import com.api.BatchFileException;
@@ -408,7 +409,7 @@ class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoImpl {
 
     private int deleteContent(int contentId) {
         ContentDaoFactory daoFactory = new ContentDaoFactory();
-        ContentDao dao = daoFactory.createEmbeddedMediaDaoInstance();
+        ContentDao dao = daoFactory.createDatabaseMediaDaoInstance();
         try {
             dao.deleteContent(contentId);
             return 1;
@@ -447,7 +448,7 @@ class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoImpl {
      * @return {@link ContentDto}
      */
     protected ContentDto createContentObject(String mediaFileName) {
-        ContentDto mime = super.createContentObject(mediaFileName);
+        ContentDto mime =  Rmt2MediaDtoFactory.getContentInstance(mediaFileName);
         String fn = mime.getFilename();
         String path = mime.getFilepath();
         if (fn != null && path != null) {
