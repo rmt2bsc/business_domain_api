@@ -26,6 +26,7 @@ import org.dto.TracksDto;
 import org.dto.VwPhotoDto;
 
 import com.RMT2Base;
+import com.util.RMT2File;
 
 /**
  * A factory for creating Multi Media module DTO instances using various adapter
@@ -118,6 +119,31 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      */
     public static final ContentDto getContentInstance(Content content) {
         ContentDto dto = new ContentRmt2OrmDtoAdapter(content);
+        return dto;
+    }
+    
+    /**
+     * Creates a <i>ContentDto</i> object using the name of
+     * <i>mediaFileName</i>.
+     * <p>
+     * The <i>ContentDto</i> properties, <i>filename</i> and <i>filepath</i>,
+     * are set based on the value of <i>mediaFileName</i>. If
+     * <i>mediaFileName</i> contains the file name and file extension, but the
+     * path sequence is not present, then <i>filepath</i> will equal
+     * <i>filename</i>. Otherwise, <i>filepath</i> and <i>filename</i> will be
+     * assigned the path sequence and file name, respectively.
+     * 
+     * @param mediaFileName
+     *            the name of the file to build Content object.
+     * @return {@link ContentDto}
+     */
+    public static final ContentDto getContentInstance(String mediaFileName) {
+        Content nullContent = null;
+        ContentDto dto = Rmt2MediaDtoFactory.getContentInstance(nullContent);
+        String fn = RMT2File.getFileName(mediaFileName);
+        String path = RMT2File.getFilePathInfo(mediaFileName);
+        dto.setFilename(fn);
+        dto.setFilepath(path);
         return dto;
     }
 
