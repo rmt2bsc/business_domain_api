@@ -61,7 +61,7 @@ public class MediaMockData extends BaseMediaDaoTest {
         o = MediaMockDataFactory.createOrmMimeTypes(106, ".mp3", "audio/x-mpeg-3");
         list.add(o);
         
-        o = MediaMockDataFactory.createOrmMimeTypes(10, ".wmv", "video/x-ms-wmv");
+        o = MediaMockDataFactory.createOrmMimeTypes(107, ".mp4", "video/mp4");
         list.add(o);
         
         return list;
