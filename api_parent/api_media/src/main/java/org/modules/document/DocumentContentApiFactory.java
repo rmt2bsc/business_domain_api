@@ -36,4 +36,17 @@ public class DocumentContentApiFactory extends RMT2Base {
         DocumentContentApi api = new DocumentContentApiImpl(appName);
         return api;
     }
+    
+    /**
+     * Creates an instance of {@link DocumentContentApi} using the transaction api
+     * implementation.
+     * 
+     * @param appName
+     * @param persistInDb
+     * @return
+     */
+    public DocumentContentApi createMediaContentApi(String appName, boolean persistInDb) {
+        DocumentContentApi api = new DocumentContentApiImpl(appName,  persistInDb);
+        return api;
+    }
 }
