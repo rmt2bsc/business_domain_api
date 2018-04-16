@@ -3,8 +3,8 @@ package org.dao.document.file;
 import org.apache.log4j.Logger;
 import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
-import org.dao.document.ContentObjectHepler;
 import org.dto.ContentDto;
+import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 
 import com.api.BatchFileException;
 
@@ -17,8 +17,7 @@ import com.api.BatchFileException;
  */
 class SingleMediaFileProcessorDaoImpl extends AbstractMediaFileProcessorDaoImp {
 
-    private static Logger logger = Logger
-            .getLogger(SingleMediaFileProcessorDaoImpl.class);
+    private static Logger logger = Logger.getLogger(SingleMediaFileProcessorDaoImpl.class);
 
     /**
      * Creates a SingleMediaFileProcessorDaoImpl object.
@@ -52,28 +51,23 @@ class SingleMediaFileProcessorDaoImpl extends AbstractMediaFileProcessorDaoImp {
      *             the target record of the home application, or <i>fileName</i>
      *             is not in the correct format.
      */
-    public Integer processSingleFile(String fileName, Object parent)
-            throws BatchFileException {
+    public Integer processSingleFile(String fileName, Object parent) throws BatchFileException {
         int uid = 0;
         ContentDaoFactory daoFactory = new ContentDaoFactory();
         ContentDao dao = null;
         try {
             // Build MIME document object
-            SingleMediaFileProcessorDaoImpl.logger
-                    .info("Create Content Object");
-            ContentDto mime = this.createContentObject(fileName);
+            SingleMediaFileProcessorDaoImpl.logger.info("Create Content Object");
+            ContentDto mime = Rmt2MediaDtoFactory.getContentInstance(fileName);
 
             // Add media file to the document table in the database.
             SingleMediaFileProcessorDaoImpl.logger.info("Get document API");
-            dao = daoFactory.createEmbeddedMediaDaoInstance();
+            dao = daoFactory.createDatabaseMediaDaoInstance();
             dao.setDaoUser(AbstractMediaFileProcessorDaoImp.UPDATE_USERID);
-            SingleMediaFileProcessorDaoImpl.logger
-                    .info("Initialize document API");
-            SingleMediaFileProcessorDaoImpl.logger
-                    .info("Add document to MIME database");
+            SingleMediaFileProcessorDaoImpl.logger.info("Initialize document API");
+            SingleMediaFileProcessorDaoImpl.logger.info("Add document to MIME database");
             uid = dao.addContent(mime);
-            SingleMediaFileProcessorDaoImpl.logger
-                    .info("MIME Database updates completed");
+            SingleMediaFileProcessorDaoImpl.logger.info("MIME Database updates completed");
             return uid;
         } catch (Exception e) {
             SingleMediaFileProcessorDaoImpl.logger.error(e.getMessage());
@@ -82,20 +76,6 @@ class SingleMediaFileProcessorDaoImpl extends AbstractMediaFileProcessorDaoImp {
             dao.close();
             dao = null;
         }
-    }
-
-    /**
-     * Obtains an instance of <i>ContentDto</i> object using the name of
-     * <i>mediaFileName</i>.
-     * 
-     * @param mediaFileName
-     *            the name of the file to build Content object.
-     * @return {@link ContentDto}
-     */
-    protected ContentDto createContentObject(String mediaFileName) {
-        ContentDto mime = ContentObjectHepler
-                .createContentInstance(mediaFileName);
-        return mime;
     }
 
 }
