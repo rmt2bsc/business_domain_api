@@ -169,11 +169,10 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
                 path = this.rec.getFilepath() + this.rec.getFilename();
                 byte binaryData[] = (byte[]) rec.getImageData(); 
                 bytesWritten = RMT2File.outputFile(binaryData, path);
-                System.out.println("Total bytes written to path, " + path + ", from thread: " + bytesWritten );
                 this.rec.setSize(bytesWritten);
                 msg = "External media file, "
                         + this.rec.getFilename()
-                        + ", was persisted successfully in the following location:  "
+                        + ", was persisted successfully in the following location: "
                         + this.rec.getFilepath();
                 logger.info(msg);
                 msg = "External media file, "

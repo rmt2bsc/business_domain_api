@@ -331,6 +331,8 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             throw new InvalidDataException(this.msg);
         }
         MimeTypeDto mt = list.get(0);
+        logger.info("Media File: " + dto.getFilepath() + dto.getFilename());
+        logger.info("Mime Type: " + mt.getMediaType());
         dto.setMimeTypeId(mt.getMimeTypeId());
         logger.info("Passed media file validations");
     }

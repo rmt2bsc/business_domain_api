@@ -18,8 +18,9 @@ import com.util.RMT2Date;
 import com.util.UserTimestamp;
 
 /**
- * An common implementation of the {@link ContentDao} for fetching, deleting,
- * and validating media file document.
+ * An common RMT2 ORM implementation of the {@link ContentDao} for managing
+ * media meta data and media content such as text, audio, video, images, binary
+ * documents and etc.
  * 
  * @author Roy Terrell
  * 

@@ -18,7 +18,7 @@ import org.junit.Before;
  */
 public class MediaMockData extends BaseMediaDaoTest {
     protected List<MimeTypes> mockClientFetchMimeTypeMultiple;
-    protected MimeTypes mockClientFetchMimeTypeSingle;
+    protected List<MimeTypes> mockClientFetchMimeTypeSingle;
     
 
     /**
@@ -28,7 +28,7 @@ public class MediaMockData extends BaseMediaDaoTest {
     public void setUp() throws Exception {
         super.setUp();
         this.mockClientFetchMimeTypeMultiple = this.createMockMimeTypeMultiple();
-      
+        this.mockClientFetchMimeTypeSingle = new ArrayList<>();
         return;
     }
 
