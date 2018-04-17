@@ -73,8 +73,8 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
         String sql = "select content_id, mime_type_id, app_code, module_code, filepath, filename, size, date_created, user_id, image_data, text_data from content where content_id = "
                 + contentId;
         logger.info("Execute Query: " + sql);
-        ResultSet rs = this.client.executeSql(sql);
         try {
+            ResultSet rs = this.client.executeSql(sql);
             if (rs != null && rs.next()) {
                 mime = new Content();
                 mime.setContentId(rs.getInt("content_id"));
@@ -93,8 +93,9 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
             else {
                 return null;
             }
-        } catch (SQLException e) {
-            throw new ContentDaoException(e);
+        } catch (SQLException | DatabaseException e) {
+            this.msg = "Error occurred saving document media meta data to the database";
+            throw new ContentDaoException(this.msg, e);
         }
 
         ContentDto dto = Rmt2MediaDtoFactory.getContentInstance(mime);
@@ -195,7 +196,7 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
             mediaRec.setContentId(newContentId);
             return newContentId;
         } catch (Exception e) {
-            this.msg = "Error adding media record without embedded content";
+            this.msg = "Error adding media meta data to the content table";
             throw new ContentDaoException(this.msg, e);
         }
     }
