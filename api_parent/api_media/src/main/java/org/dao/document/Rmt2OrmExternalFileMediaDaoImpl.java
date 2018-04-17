@@ -1,12 +1,8 @@
 package org.dao.document;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 import org.apache.log4j.Logger;
 import org.dto.ContentDto;
 
-import com.util.RMT2Base64Encoder;
 import com.util.RMT2File;
 
 /**
@@ -55,36 +51,16 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
     public ContentDto fetchContent(int uid) throws ContentDaoException {
         // Try to input file to Content instance.
         ContentDto mime = null;
-        try {
-            mime = this.fetchContentAsFile(uid);
-            if (mime == null) {
-                return null;
-            }
-        } catch (Exception e) {
-            throw new ContentDaoException(e);
-        }
-
-        File file = (File) mime.getImageData();
-        if (file == null) {
-            mime.setImageData(null);
-        }
-        else {
-            try {
-                FileInputStream fis = new FileInputStream(file);
-                byte binaryData[] = RMT2File.getStreamByteData(fis);
-                String encodedImg = RMT2Base64Encoder.encode(binaryData);
-                mime.setImageData(encodedImg);
-            } catch (Exception e) {
-                this.msg = "Error fetching external media file, " + file.getAbsolutePath();
-                throw new ContentDaoException(this.msg, e);
-            }
+        mime = this.fetchContentAsFile(uid);
+        if (mime == null) {
+            return null;
         }
         return mime;
     }
 
     /**
      * Returns a {@link ContentDto} object where the image data property is
-     * represented as an {@link File} object.
+     * represented as byte array.
      * <p>
      * In this case, the media record's image data is not stored directly in the
      * database table, <i>content</i>. Instead the media record points to a
@@ -103,17 +79,17 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
             return null;
         }
 
-        // Try to input file to Content instance.
-        File file = new File(mime.getFilepath() + mime.getFilename());
-        int fileVerifyCode = RMT2File.verifyFile(file);
-        if (fileVerifyCode != RMT2File.FILE_IO_EXIST) {
-            this.msg = "Unable to locate external media file, " + file.getAbsolutePath();
-            throw new ContentDaoException(this.msg);
+        // Get file contents as a byte array and assign to the Content instance.
+        try {
+            String filePath = mime.getFilepath() + mime.getFilename();
+            byte fileContents[] = RMT2File.getFileContentsAsBytes(filePath);
+            mime.setImageData(fileContents);
+            return mime;    
         }
-        
-        // TODO: need to obtain the file contents as byte array
-        mime.setImageData(file);
-        return mime;
+        catch (Exception e) {
+            this.msg = "Unable to fetch file as bytes for content id, " + contentId;
+            throw new ContentDaoException(this.msg, e);
+        }
     }
 
 

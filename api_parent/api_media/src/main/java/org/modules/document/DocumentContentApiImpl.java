@@ -1,6 +1,5 @@
 package org.modules.document;
 
-import java.io.InputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -16,7 +15,6 @@ import org.modules.services.DocumentInboundDirectoryListener;
 
 import com.InvalidDataException;
 import com.NotFoundException;
-import com.SystemException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.util.RMT2File;
 import com.util.assistants.Verifier;
@@ -105,7 +103,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         int newContentId = 0;
         try {
             ContentDto media = Rmt2MediaDtoFactory.getContentInstance(filePath);
-            byte[] binaryData = this.getContentAsBytes(filePath);
+            byte[] binaryData = RMT2File.getFileContentsAsBytes(filePath);
             media.setSize(binaryData.length);
             
             // Now that we've obtained the media's content, set the filePath property to the output directory.
@@ -130,21 +128,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             throw new MediaModuleException(this.msg, e);
         }
     }
-
-    private byte[] getContentAsBytes(String fileName) throws MediaModuleException {
-        byte[] binaryData = null;
-        try {
-            InputStream is = RMT2File.getFileInputStream(fileName);
-            if (is == null) {
-                throw new NotFoundException(fileName + " is not found");
-            }
-            binaryData = RMT2File.getStreamByteData(is);
-            return binaryData;
-        } catch (SystemException e) {
-            throw new MediaModuleException("Unalbe to obtain content as a byte stream: " + fileName, e);
-        }
-    }
-
 
     /**
      * Retrieves the media based on it internal unique identifier using a
