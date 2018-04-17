@@ -11,8 +11,13 @@ import com.api.config.ConfigException;
 import com.util.RMT2File;
 
 /**
- * @author appdev
- *
+ * Configurator for initializing the Security API.
+ * <p>
+ * This implementation basically sets up the logging environment. The core level
+ * logic handles the remaining tasks needed to bootstrap this API.
+ * 
+ * @author roy terrell
+ * 
  */
 public class SecurityConfigurator extends AbstractApiConfiguratorPropertiesImpl {
 
@@ -44,13 +49,11 @@ public class SecurityConfigurator extends AbstractApiConfiguratorPropertiesImpl 
     @Override
     protected void setupLogger() {
         // Setup Logging environment
-        String logPath = this.config
-                .getString(ConfigConstants.API_LOGGER_CONFIG_PATH_KEY);
+        String logPath = this.config.getString(ConfigConstants.API_LOGGER_CONFIG_PATH_KEY);
         Properties prop = RMT2File.loadPropertiesFromClasspath(logPath);
         PropertyConfigurator.configure(prop);
         logger = Logger.getLogger(SecurityConfigurator.class);
-        logger.info("Logger initialized locally for application, "
-                + this.appName);
+        logger.info("Logger initialized locally for application, " + this.appName);
 
     }
 }

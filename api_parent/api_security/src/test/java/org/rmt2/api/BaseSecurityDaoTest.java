@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
-import org.modules.ProjectTrackerConfigurator;
+import org.modules.SecurityConfigurator;
 import org.powermock.api.mockito.PowerMockito;
 
 import com.api.persistence.DaoClient;
@@ -20,14 +20,14 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  *
  */
 
-public class BaseProjectTrackerDaoTest {
+public class BaseSecurityDaoTest {
     protected PersistenceClient mockPersistenceClient;
     protected DaoClient mockDaoClient;
 
     /**
      * 
      */
-    public BaseProjectTrackerDaoTest() {
+    public BaseSecurityDaoTest() {
         return;
     }
 
@@ -38,7 +38,7 @@ public class BaseProjectTrackerDaoTest {
      */
     @Before
     public void setUp() throws Exception {
-        ProjectTrackerConfigurator configurator = new ProjectTrackerConfigurator();
+        SecurityConfigurator configurator = new SecurityConfigurator();
         configurator.start();
         
         // Mock database connection since the common transaction Api expects

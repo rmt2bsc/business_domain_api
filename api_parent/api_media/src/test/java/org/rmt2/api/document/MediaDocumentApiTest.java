@@ -51,6 +51,7 @@ public class MediaDocumentApiTest extends MediaMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
         Connection mockDbConnection = Mockito.mock(Connection.class);
         Statement mockStatement = Mockito.mock(Statement.class);
         ResultSet mockResultSet = Mockito.mock(ResultSet.class);

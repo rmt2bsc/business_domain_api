@@ -1,7 +1,6 @@
 package org.modules;
 
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -12,16 +11,19 @@ import com.api.config.ConfigException;
 import com.util.RMT2File;
 
 /**
- * @author appdev
- *
+ * Configurator for initializing the Media API.
+ * <p>
+ * This implementation basically sets up the logging environment. The core level
+ * logic handles the remaining tasks needed to bootstrap this API.
+ * 
+ * @author roy terrell
+ * 
  */
 public class MediaConfigurator extends AbstractApiConfiguratorPropertiesImpl {
 
     private static Logger logger;
 
     private static final String CONFIG_PATH = "config.Media-AppParms";
-
-    private ResourceBundle config;
 
     /**
      * Creates an MediaConfigurator.
@@ -32,7 +34,7 @@ public class MediaConfigurator extends AbstractApiConfiguratorPropertiesImpl {
      *             error loading configuration.
      */
     public MediaConfigurator() {
-        this.configPath = "config.Media-AppParms";
+        this.configPath = MediaConfigurator.CONFIG_PATH;
     }
 
     /**

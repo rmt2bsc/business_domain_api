@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
+import org.modules.MediaConfigurator;
 import org.powermock.api.mockito.PowerMockito;
 
 import com.api.persistence.DaoClient;
@@ -37,6 +38,9 @@ public class BaseMediaDaoTest {
      */
     @Before
     public void setUp() throws Exception {
+        MediaConfigurator configurator = new MediaConfigurator();
+        configurator.start();
+        
         // Mock database connection since the common transaction Api expects
         // derived Api modules to obtain and pass in an instance of DaoClient.
         PowerMockito.mockStatic(Rmt2OrmClientFactory.class);
