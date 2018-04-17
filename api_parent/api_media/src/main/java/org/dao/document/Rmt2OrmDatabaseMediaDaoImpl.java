@@ -67,10 +67,11 @@ class Rmt2OrmDatabaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
         }
         // Lastly, attempt to update the record with the long binary
         // or long text MIME data using straight JDBC call.
-        Statement stmt;
+        Statement stmt = null;
+        ResultSet rs = null;
         try {
             stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery("select image_data from content where content_id = " + mediaRec.getContentId());
+            rs = stmt.executeQuery("select image_data from content where content_id = " + mediaRec.getContentId());
             if (rs != null && rs.next()) {
                 byte[] data = (byte[]) mediaRec.getImageData();
                 rs.updateBytes("image_data", data);
@@ -79,8 +80,21 @@ class Rmt2OrmDatabaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
             }
             return 0;
         } catch (SQLException | SystemException e) {
-            this.msg = "Error occurred saving media binary data to the content table";
+            this.msg = "Error occurred saving media binary data to the content table [contentId=" + mediaRec.getContentId() + "]";
             throw new ContentDaoException(this.msg, e);
+        }
+        finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();    
+                }
+                if (rs != null) {
+                    rs.close();    
+                }
+            }
+            catch (SQLException e) {
+                throw new ContentDaoException("An error occurred attempting to close either SQL Statement or ResultSet objects");
+            }
         }
     }
 
