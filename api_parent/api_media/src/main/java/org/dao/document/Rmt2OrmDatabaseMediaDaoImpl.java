@@ -72,7 +72,7 @@ class Rmt2OrmDatabaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
             stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = stmt.executeQuery("select image_data from content where content_id = " + mediaRec.getContentId());
             if (rs != null && rs.next()) {
-                byte[] data = RMT2File.getBytes(mediaRec.getImageData());
+                byte[] data = (byte[]) mediaRec.getImageData();
                 rs.updateBytes("image_data", data);
                 rs.updateRow();
                 return data.length;
