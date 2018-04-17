@@ -15,6 +15,7 @@ import org.modules.MediaModuleException;
 import org.modules.services.DocumentInboundDirectoryListener;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.SystemException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.util.RMT2File;
@@ -124,12 +125,19 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             this.msg = "Unable to add media document as a database recrod or as an external file";
             throw new MediaModuleException(this.msg, e);
         } 
+        catch (NotFoundException e) {
+            this.msg = "Unable to add media document as a database recrod or as an external file due to input file cannot be located";
+            throw new MediaModuleException(this.msg, e);
+        }
     }
 
     private byte[] getContentAsBytes(String fileName) throws MediaModuleException {
         byte[] binaryData = null;
         try {
             InputStream is = RMT2File.getFileInputStream(fileName);
+            if (is == null) {
+                throw new NotFoundException(fileName + " is not found");
+            }
             binaryData = RMT2File.getStreamByteData(is);
             return binaryData;
         } catch (SystemException e) {
