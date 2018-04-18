@@ -3,6 +3,7 @@ package org.rmt2.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.mapping.orm.rmt2.Content;
 import org.dao.mapping.orm.rmt2.MimeTypes;
 import org.junit.After;
 import org.junit.Before;
@@ -17,9 +18,10 @@ import org.junit.Before;
  * 
  */
 public class MediaMockData extends BaseMediaDaoTest {
-    protected List<MimeTypes> mockClientFetchMimeTypeMultiple;
-    protected List<MimeTypes> mockClientFetchMimeTypeSingle;
-    
+    protected Content mockSingleContent;
+    protected List<MimeTypes> mockMultipleMimeTypeList;
+    protected List<MimeTypes> mockSingleMimeTypeList;
+    protected MimeTypes mockSingleMimeTypes;
 
     /**
      * @throws java.lang.Exception
@@ -27,8 +29,11 @@ public class MediaMockData extends BaseMediaDaoTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        this.mockClientFetchMimeTypeMultiple = this.createMockMimeTypeMultiple();
-        this.mockClientFetchMimeTypeSingle = new ArrayList<>();
+        
+        this.mockSingleContent = this.createMockSingleContent();
+        this.mockMultipleMimeTypeList = this.createMockMimeTypeMultiple();
+        this.mockSingleMimeTypeList = new ArrayList<>();
+        this.mockSingleMimeTypes = this.createMockSingleMimeTypes();
         return;
     }
 
@@ -41,27 +46,41 @@ public class MediaMockData extends BaseMediaDaoTest {
         return;
     }
 
+    private Content createMockSingleContent() {
+        Content o = MediaMockDataFactory.createOrmContent(
+                MediaMockDataFactory.TEST_CONTENT_ID,
+                MediaMockDataFactory.TEST_MIME_TYPE_ID, "tmp/", "image.jpg",
+                1024, 5555, "Media");
+        return o;
+    }
+    
+    private MimeTypes createMockSingleMimeTypes() {
+        MimeTypes o = MediaMockDataFactory.createOrmMimeTypes(MediaMockDataFactory.TEST_MIME_TYPE_ID, ".jpg", "image/jpg");
+        return o;
+    }
+    
     private List<MimeTypes> createMockMimeTypeMultiple() {
+        int mimeTypeId = MediaMockDataFactory.TEST_MIME_TYPE_ID;
         List<MimeTypes> list = new ArrayList<>();
-        MimeTypes o = MediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
+        MimeTypes o = MediaMockDataFactory.createOrmMimeTypes(mimeTypeId, ".jpg", "image/jpg");
         list.add(o);
         
-        o = MediaMockDataFactory.createOrmMimeTypes(102, ".pdf", "application/pdf");
+        o = MediaMockDataFactory.createOrmMimeTypes(++mimeTypeId, ".pdf", "application/pdf");
         list.add(o);
         
-        o = MediaMockDataFactory.createOrmMimeTypes(103, ".txt", "text/plain");
+        o = MediaMockDataFactory.createOrmMimeTypes(++mimeTypeId, ".txt", "text/plain");
         list.add(o);
         
-        o = MediaMockDataFactory.createOrmMimeTypes(104, ".doc", "application/msword");
+        o = MediaMockDataFactory.createOrmMimeTypes(++mimeTypeId, ".doc", "application/msword");
         list.add(o);
         
-        o = MediaMockDataFactory.createOrmMimeTypes(105, ".xlsx", "application/vnd.ms-excel");
+        o = MediaMockDataFactory.createOrmMimeTypes(++mimeTypeId, ".xlsx", "application/vnd.ms-excel");
         list.add(o);
         
-        o = MediaMockDataFactory.createOrmMimeTypes(106, ".mp3", "audio/x-mpeg-3");
+        o = MediaMockDataFactory.createOrmMimeTypes(++mimeTypeId, ".mp3", "audio/x-mpeg-3");
         list.add(o);
         
-        o = MediaMockDataFactory.createOrmMimeTypes(107, ".mp4", "video/mp4");
+        o = MediaMockDataFactory.createOrmMimeTypes(++mimeTypeId, ".mp4", "video/mp4");
         list.add(o);
         
         return list;

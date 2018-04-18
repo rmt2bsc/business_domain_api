@@ -67,7 +67,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
                 .thenReturn(MediaMockDataFactory.TEST_CONTENT_ID);
 
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-                .thenReturn(this.mockClientFetchMimeTypeMultiple);
+                .thenReturn(this.mockMultipleMimeTypeList);
         
         // Setup stubs for content updates to database
         when(this.mockPersistenceClient.getConnection()).thenReturn(mockDbConnection);
@@ -88,12 +88,11 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         return;
     }
 
-   
     @Test
     public void testSuccess_Add_Image_As_File() {
-        this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(0));
+        this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(0));
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockClientFetchMimeTypeSingle);
+        .thenReturn(this.mockSingleMimeTypeList);
         
         DocumentContentApiFactory f = new DocumentContentApiFactory();
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
@@ -121,9 +120,9 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
     
     @Test
     public void testSuccess_Add_Audio_As_File() {
-        this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(5));
+        this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(5));
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockClientFetchMimeTypeSingle);
+        .thenReturn(this.mockSingleMimeTypeList);
         
         DocumentContentApiFactory f = new DocumentContentApiFactory();
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
@@ -151,9 +150,9 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
     
     @Test
     public void testSuccess_Add_Image_To_Database() {
-        this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(1));
+        this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(1));
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockClientFetchMimeTypeSingle);
+        .thenReturn(this.mockSingleMimeTypeList);
         
         DocumentContentApiFactory f = new DocumentContentApiFactory();
         // Test default constructor which should employ the database DAO implementation.
@@ -171,10 +170,10 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
     
     @Test
     public void testError_Add_To_Database_SaveContent_DB_Access_Fault() throws Exception {
-        this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(1));
+        this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(1));
 
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockClientFetchMimeTypeSingle);
+        .thenReturn(this.mockSingleMimeTypeList);
         
         when(this.mockPersistenceClient.insertRow(isA(Content.class), eq(true)))
                 .thenThrow(new DatabaseException("A database error occurre"));
@@ -199,9 +198,9 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
     
     @Test
     public void testError_Add_To_Database_SaveContent_Null_ResultSet_Returned() throws Exception {
-        this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(1));
+        this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(1));
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockClientFetchMimeTypeSingle);
+        .thenReturn(this.mockSingleMimeTypeList);
         
         when(mockStatement.executeQuery(isA(String.class))).thenReturn(null);
         

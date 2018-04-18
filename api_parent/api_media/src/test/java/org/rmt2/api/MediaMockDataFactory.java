@@ -5,6 +5,7 @@ import org.dao.mapping.orm.rmt2.MimeTypes;
 
 public class MediaMockDataFactory {
     public static final int TEST_CONTENT_ID = 999991;
+    public static final int TEST_MIME_TYPE_ID = 101;
 
     /**
      * 
