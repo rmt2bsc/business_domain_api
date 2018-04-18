@@ -15,20 +15,7 @@ import com.api.persistence.DaoClient;
  * 
  */
 public interface ContentDao extends DaoClient {
-    
-    /**
-     * Adds a record to the <i>content</i> table without including the image
-     * data (binary or text).
-     * 
-     * @param mediaRec
-     *            An instance of {@link ContentDto}
-     * @return The primary key of the row just added to the <i>content</i>
-     *         table.
-     * @throws ContentDaoException
-     *             general database access error
-     */
-    int saveMetaData(ContentDto mediaRec) throws ContentDaoException;
-    
+   
     /**
      * Adds media's image data (binary or text) to some external datasource.
      * 

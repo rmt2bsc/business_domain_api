@@ -160,10 +160,10 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
         MimeTypeDto dto = Rmt2MediaDtoFactory.getMimeTypeInstance(results);
         return dto;
     }
-
+    
     /**
-     * Adds a record to the <i>content</i> table without including the image
-     * data (binary or text).
+     * Adds a record to the <i>content</i> table including the image
+     * data.
      * 
      * @param mediaRec
      *            An instance of {@link ContentDto}
@@ -173,7 +173,7 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
      *             general database access error
      */
     @Override
-    public int saveMetaData(ContentDto mediaRec) throws ContentDaoException {
+    public int saveContent(ContentDto mediaRec) throws ContentDaoException {
         mediaRec.setUpdateUserId(this.getDaoUser());
 
         Content rec = new Content();
@@ -181,7 +181,6 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
         rec.setFilepath(mediaRec.getFilepath());
         rec.setFilename(mediaRec.getFilename());
         rec.setSize(mediaRec.getSize());
-        rec.setImageData(null);
         rec.setTextData(null);
         rec.setAppCode(null);
         rec.setModuleCode(null);
@@ -196,11 +195,10 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
             mediaRec.setContentId(newContentId);
             return newContentId;
         } catch (Exception e) {
-            this.msg = "Error adding media meta data to the content table";
+            this.msg = "Error adding media meta data and content to the content table";
             throw new ContentDaoException(this.msg, e);
         }
     }
-    
     
     /**
      * Deletes a single media document record from the database

@@ -104,7 +104,9 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         try {
             ContentDto media = Rmt2MediaDtoFactory.getContentInstance(filePath);
             byte[] binaryData = RMT2File.getFileContentsAsBytes(filePath);
+            media.setImageData(binaryData);
             media.setSize(binaryData.length);
+            
             
             // Now that we've obtained the media's content, set the filePath property to the output directory.
             // This property is only used by the DAO repsonsible for creating external physical files.  Other
@@ -114,10 +116,8 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             
             // Validate Media DTO
             this.validate(media);
-            
-            newContentId = dao.saveMetaData(media);
-            media.setImageData(binaryData);
-            dao.saveContent(media);
+            // Save content
+            newContentId = dao.saveContent(media);
             return newContentId;
         } catch (ContentDaoException e) {
             this.msg = "Unable to add media document as a database recrod or as an external file";

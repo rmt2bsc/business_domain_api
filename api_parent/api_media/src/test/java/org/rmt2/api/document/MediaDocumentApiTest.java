@@ -3,12 +3,10 @@ package org.rmt2.api.document;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.TimeUnit;
 
@@ -172,38 +170,14 @@ public class MediaDocumentApiTest extends MediaMockData {
     }
     
     @Test
-    public void testError_Add_To_Database_SaveMetaData_DB_Access_Fault() {
+    public void testError_Add_To_Database_SaveContent_DB_Access_Fault() throws Exception {
         this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(1));
+
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
         .thenReturn(this.mockClientFetchMimeTypeSingle);
         
         when(this.mockPersistenceClient.insertRow(isA(Content.class), eq(true)))
-        .thenThrow(new DatabaseException("A database access error occurred"));
-        
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        // Test default constructor which should employ the database DAO implementation.
-        DocumentContentApi api = f.createMediaContentApi();
-        try {
-            api.add("media/AdobeFile.pdf");
-            Assert.fail("Expected an exception to occur");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof MediaModuleException);
-            Assert.assertEquals("Unable to add media document as a database recrod or as an external file", e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof ContentDaoException);
-            Assert.assertEquals("Error adding media meta data to the content table", e.getCause().getMessage());
-        }
-    }
-    
-    @Test
-    public void testError_Add_To_Database_SaveContent_DB_Access_Fault() throws Exception {
-        this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(1));
-        when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockClientFetchMimeTypeSingle);
-        
-        when(mockStatement.executeQuery(isA(String.class)))
-                .thenThrow(new SQLException("A database error occurre"));
+                .thenThrow(new DatabaseException("A database error occurre"));
         
         DocumentContentApiFactory f = new DocumentContentApiFactory();
         // Test default constructor which should employ the database DAO implementation.
@@ -218,34 +192,7 @@ public class MediaDocumentApiTest extends MediaMockData {
             Assert.assertEquals("Unable to add media document as a database recrod or as an external file",
                     e.getMessage());
             Assert.assertTrue(e.getCause() instanceof ContentDaoException);
-            String errMsg = "Error occurred saving media binary data to the content table [contentId="
-                    + MediaMockDataFactory.TEST_CONTENT_ID + "]";
-            Assert.assertEquals(errMsg, e.getCause().getMessage());
-        }
-    }
-    
-    @Test
-    public void testError_Add_To_Database_SaveContent_DB_Access_Fault_Closing_Statement() throws Exception {
-        this.mockClientFetchMimeTypeSingle.add(this.mockClientFetchMimeTypeMultiple.get(1));
-        when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockClientFetchMimeTypeSingle);
-        
-        doThrow(new SQLException("Error closing SQL statement")).when(mockStatement).close();
-        
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        // Test default constructor which should employ the database DAO implementation.
-        DocumentContentApi api = f.createMediaContentApi();
-        try {
-            api.add("media/AdobeFile.pdf");
-            Assert.fail("Expected an exception to occur");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof MediaModuleException);
-            Assert.assertEquals("Unable to add media document as a database recrod or as an external file",
-                    e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof ContentDaoException);
-            String errMsg = "An error occurred attempting to close either SQL Statement or ResultSet objects";
+            String errMsg = "Error adding media meta data and content to the content table";
             Assert.assertEquals(errMsg, e.getCause().getMessage());
         }
     }

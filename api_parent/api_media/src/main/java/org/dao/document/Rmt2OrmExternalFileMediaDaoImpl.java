@@ -104,13 +104,30 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
      * @param mediaRec
      *            an instance of {@link ContentDto} containing the image data to
      *            be saved.
-     * @return the total number of bytes saved to disk.
+     * @return the new content id of the media added to the content table.
+     * @throws ContentDaoException
      */
     @Override
     public int saveContent(ContentDto mediaRec) {
+        // Do not include image data in the content table
+        byte[] imageDataHold = mediaRec.getImageData();
+        mediaRec.setImageData(null);
+        int newContentId;
+        try {
+            newContentId = super.saveContent(mediaRec);    
+        }
+        catch (Exception e) {
+            this.msg = "Unable to persist media content as an external file due to saveConent operation failed";
+            throw new ContentDaoException(this.msg, e);
+        }
+        
+        // Create the external file
+        mediaRec.setImageData(imageDataHold);
         Thread t = new Thread(new MediaFilePeristenceThread(mediaRec));
         t.start();
-        return mediaRec.getSize();
+        mediaRec.getSize();
+        
+        return newContentId;
     }
 
     /**
