@@ -289,4 +289,125 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         }
     }
     
+    @Test
+    public void testSuccess_Delete_From_Database_Only() {
+        when(this.mockPersistenceClient.deleteRow(isA(Content.class))).thenReturn(1);
+        
+        DocumentContentApiFactory f = new DocumentContentApiFactory();
+        // Test default constructor which should employ the database DAO implementation.
+        DocumentContentApi api = f.createMediaContentApi();
+        int rows = 0;
+        try {
+            rows = api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+        }
+        catch (MediaModuleException e) {
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertEquals(1, rows);
+    }
+    
+    @Test
+    public void testError_Delete_From_Database_Only_Database_Access_Fault() {
+        when(this.mockPersistenceClient.deleteRow(isA(Content.class)))
+                .thenThrow(new DatabaseException("A database error occurred"));
+        
+        DocumentContentApiFactory f = new DocumentContentApiFactory();
+        // Test default constructor which should employ the database DAO implementation.
+        DocumentContentApi api = f.createMediaContentApi();
+        try {
+            api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            Assert.assertTrue(e instanceof MediaModuleException);
+            Assert.assertEquals("Unable to delete media document identified by document id: "
+                            + MediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof ContentDaoException);
+            Assert.assertEquals("Error deleting media content from the content table [contentId="
+                            + MediaMockDataFactory.TEST_CONTENT_ID + "]",
+                    e.getCause().getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_Zero_ContentId() {
+        DocumentContentApiFactory f = new DocumentContentApiFactory();
+        // Test default constructor which should employ the database DAO implementation.
+        DocumentContentApi api = f.createMediaContentApi();
+        try {
+            api.delete(0);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Content Id must be greater than zero", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Delete_Negative_ContentId() {
+        DocumentContentApiFactory f = new DocumentContentApiFactory();
+        // Test default constructor which should employ the database DAO implementation.
+        DocumentContentApi api = f.createMediaContentApi();
+        try {
+            api.delete(-1234);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Content Id must be greater than zero", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Delete_From_Database_And_FileSystem() {
+        // Create real file to be deleted from the file system.
+        byte[] expectedImage = RMT2File.getFileContentsAsBytes("media/image.jpg");
+        String filePath = outDir + "@@@image.jpg";
+        RMT2File.outputFile(expectedImage, filePath);
+        
+        this.mockSingleContent.setFilepath(outDir);
+        this.mockSingleContent.setFilename("@@@image.jpg");
+        this.mockSingleContent.setImageData(null);
+        when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
+                .thenReturn(this.mockSingleContent);
+        when(this.mockPersistenceClient.deleteRow(isA(Content.class))).thenReturn(1);
+        
+        DocumentContentApiFactory f = new DocumentContentApiFactory();
+        // Test constructor which targets the file system DAO implementation.
+        DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
+        int rows = 0;
+        try {
+            rows = api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+        }
+        catch (MediaModuleException e) {
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertEquals(2, rows);
+    }
+    
+    @Test
+    public void testError_Delete_From_Database__And_FileSystem_Database_Access_Fault() {
+        when(this.mockPersistenceClient.deleteRow(isA(Content.class)))
+                .thenThrow(new DatabaseException("A database error occurred"));
+        
+        DocumentContentApiFactory f = new DocumentContentApiFactory();
+        // Test default constructor which should employ the database DAO implementation.
+        DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
+        try {
+            api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            Assert.assertTrue(e instanceof MediaModuleException);
+            Assert.assertEquals("Unable to delete media document identified by document id: "
+                            + MediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof ContentDaoException);
+            Assert.assertEquals("Error deleting media content from the content table [contentId="
+                            + MediaMockDataFactory.TEST_CONTENT_ID + "]",
+                    e.getCause().getMessage());
+        }
+    }
 }
