@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.dto.ContentDto;
 
 import com.InvalidDataException;
+import com.NotFoundException;
+import com.SystemException;
 import com.util.RMT2File;
 
 /**
@@ -91,7 +93,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
             byte fileContents[] = RMT2File.getFileContentsAsBytes(filePath);
             mediaContent.setImageData(fileContents);
         }
-        catch (Exception e) {
+        catch (NotFoundException | SystemException e) {
             this.msg = "Unable to fetch media content from the file system for content id, " + mediaContent.getContentId();
             throw new ContentDaoException(this.msg, e);
         }
