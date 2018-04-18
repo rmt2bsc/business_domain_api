@@ -42,16 +42,16 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
      * The results are returned as a {@link ContentDto} object which the value
      * of the <i>imageData</i> property is an instance of {@link File}.
      * 
-     * @param uid
+     * @param contentId
      *            a integer value representing the database primary key of the
      *            multi media document that is to be fetched.
      * @return an instance of {@link ContentDto} or null no data is found.
      * @throws ContentDaoException
      */
-    public ContentDto fetchContent(int uid) throws ContentDaoException {
+    public ContentDto fetchContent(int contentId) throws ContentDaoException {
         // Try to input file to Content instance.
-        ContentDto mime = null;
-        mime = this.fetchContentAsFile(uid);
+        ContentDto mime = super.fetchContent(contentId);
+        mime = this.fetchContentAsFile(contentId);
         if (mime == null) {
             return null;
         }

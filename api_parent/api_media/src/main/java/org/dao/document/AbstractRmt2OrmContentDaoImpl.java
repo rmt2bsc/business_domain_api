@@ -1,7 +1,5 @@
 package org.dao.document;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,36 +67,21 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
      *             NotFoundException
      */
     public ContentDto fetchContent(int contentId) throws ContentDaoException {
-        Content mime = null;
-        String sql = "select content_id, mime_type_id, app_code, module_code, filepath, filename, size, date_created, user_id, image_data, text_data from content where content_id = "
-                + contentId;
-        logger.info("Execute Query: " + sql);
+        Content criteria = new Content();
+        criteria.addCriteria(Content.PROP_CONTENTID, contentId);
+        Content results;
         try {
-            ResultSet rs = this.client.executeSql(sql);
-            if (rs != null && rs.next()) {
-                mime = new Content();
-                mime.setContentId(rs.getInt("content_id"));
-                mime.setMimeTypeId(rs.getInt("mime_type_id"));
-                mime.setAppCode(rs.getString("app_code"));
-                mime.setModuleCode(rs.getString("module_code"));
-                mime.setFilepath(rs.getString("filepath"));
-                mime.setFilename(rs.getString("filename"));
-                mime.setSize(rs.getInt("size"));
-                mime.setDateCreated(rs.getDate("date_created"));
-                mime.setUserId(rs.getString("user_id"));
-                mime.setTextData(rs.getString("text_data"));
-                byte binaryData[] = rs.getBytes("image_data");
-                mime.setImageData(binaryData);
-            }
-            else {
+            results = (Content) this.client.retrieveObject(criteria);
+            if (results == null) {
                 return null;
             }
-        } catch (SQLException | DatabaseException e) {
-            this.msg = "Error occurred saving document media meta data to the database";
+        } catch (Exception e) {
+            this.msg = "DAO error occurred fetching media content record by content id, " + contentId;
             throw new ContentDaoException(this.msg, e);
         }
-
-        ContentDto dto = Rmt2MediaDtoFactory.getContentInstance(mime);
+        
+        // Convert results to DTO
+        ContentDto dto = Rmt2MediaDtoFactory.getContentInstance(results);
         return dto;
     }
 

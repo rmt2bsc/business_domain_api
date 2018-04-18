@@ -1,5 +1,6 @@
 package org.dao.document;
 
+import org.apache.log4j.Logger;
 import org.dto.ContentDto;
 
 import com.util.RMT2File;
@@ -16,6 +17,8 @@ import com.util.RMT2File;
  * 
  */
 class Rmt2OrmDatabaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
+    
+    private static final Logger logger = Logger.getLogger(Rmt2OrmDatabaseMediaDaoImpl.class);
 
     /**
      * Create a Rmt2OrmSybaseEmbeddedMediaDaoImpl object
@@ -36,6 +39,7 @@ class Rmt2OrmDatabaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
         return;
     }
 
+   
     /**
      * Fetches the media content record from the database table, <i>content</i>,
      * to where the actual image data is represented as an instance of
