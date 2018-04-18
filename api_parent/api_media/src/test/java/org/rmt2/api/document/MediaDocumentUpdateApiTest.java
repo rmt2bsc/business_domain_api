@@ -2,12 +2,9 @@ package org.rmt2.api.document;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.concurrent.TimeUnit;
 
 import org.dao.document.ContentDaoException;
@@ -18,7 +15,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.document.DocumentContentApi;
@@ -45,9 +41,6 @@ import com.util.RMT2File;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class MediaDocumentUpdateApiTest extends MediaMockData {
     private String outDir;
-    private Connection mockDbConnection;
-    private Statement mockStatement;
-    private ResultSet mockResultSet;
     
     /**
      * @throws java.lang.Exception
@@ -56,27 +49,14 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
     public void setUp() throws Exception {
         super.setUp();
         
-        mockDbConnection = Mockito.mock(Connection.class);
-        mockStatement = Mockito.mock(Statement.class);
-        mockResultSet = Mockito.mock(ResultSet.class);
-        
         outDir = RMT2File.loadAppConfigProperties("config.Media-AppParms").getString("media_output_location");
         
-        // Setuop stubs for meta data updates
+        // Setup stubs for meta data updates
         when(this.mockPersistenceClient.insertRow(isA(Content.class), eq(true)))
                 .thenReturn(MediaMockDataFactory.TEST_CONTENT_ID);
 
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
                 .thenReturn(this.mockMultipleMimeTypeList);
-        
-        // Setup stubs for content updates to database
-        when(this.mockPersistenceClient.getConnection()).thenReturn(mockDbConnection);
-        when(mockDbConnection.createStatement(eq(ResultSet.TYPE_FORWARD_ONLY),
-                eq(ResultSet.CONCUR_UPDATABLE))).thenReturn(mockStatement);
-        when(mockStatement.executeQuery(isA(String.class))).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-        doNothing().when(mockResultSet).updateBytes(eq("image_data"), isA(byte[].class));
-        doNothing().when(mockResultSet).updateRow();
     }
 
     /**
@@ -200,9 +180,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
     public void testError_Add_To_Database_SaveContent_Null_ResultSet_Returned() throws Exception {
         this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(1));
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-        .thenReturn(this.mockSingleMimeTypeList);
-        
-        when(mockStatement.executeQuery(isA(String.class))).thenReturn(null);
+                 .thenReturn(this.mockSingleMimeTypeList);
         
         DocumentContentApiFactory f = new DocumentContentApiFactory();
         // Test default constructor which should employ the database DAO implementation.
