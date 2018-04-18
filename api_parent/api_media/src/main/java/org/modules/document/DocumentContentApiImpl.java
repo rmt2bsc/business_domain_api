@@ -237,7 +237,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         this.listener = new DocumentInboundDirectoryListener();
         Thread t = new Thread(this.listener);
         t.start();
-
     }
 
     /*
