@@ -38,18 +38,6 @@ public interface ContentDao extends DaoClient {
     ContentDto fetchContent(int contentId) throws ContentDaoException;
 
     /**
-     * Retrieves multi media document where the image document is represented as
-     * an instance of {@link java.io.File}
-     * 
-     * @param contentId
-     *            a integer value representing the unique id or primary key of
-     *            the multi media document that is to be fetched.
-     * @return An instance of {@link ContentDto}
-     * @throws ContentDaoException
-     */
-    ContentDto fetchContentAsFile(int contentId) throws ContentDaoException;
-
-    /**
      * Delete multi media document from some external data source.
      * 
      * @param contentId

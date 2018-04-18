@@ -3,6 +3,7 @@ package org.dao.document;
 import org.apache.log4j.Logger;
 import org.dto.ContentDto;
 
+import com.InvalidDataException;
 import com.util.RMT2File;
 
 /**
@@ -45,49 +46,53 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
      * @param contentId
      *            a integer value representing the database primary key of the
      *            multi media document that is to be fetched.
-     * @return an instance of {@link ContentDto} or null no data is found.
+     * @return an instance of {@link ContentDto} or null when <i>contentId</i>'s file is not found in the file system.
      * @throws ContentDaoException
      */
     public ContentDto fetchContent(int contentId) throws ContentDaoException {
         // Try to input file to Content instance.
-        ContentDto mime = super.fetchContent(contentId);
-        mime = this.fetchContentAsFile(contentId);
-        if (mime == null) {
+        ContentDto mediaContent = super.fetchContent(contentId);
+        if (mediaContent == null) {
             return null;
         }
-        return mime;
+        this.fetchContentFromFile(mediaContent);
+        
+        return mediaContent;
     }
 
     /**
-     * Returns a {@link ContentDto} object where the image data property is
-     * represented as byte array.
+     * Retrieves the media's image data from the file system and populates
+     * <i>mime</i>'s imageData property with the fetched results.
      * <p>
      * In this case, the media record's image data is not stored directly in the
      * database table, <i>content</i>. Instead the media record points to a
      * media file somewhere in the file system via the properties <i>file
      * path</i> and <i>file name</i>.
      * 
-     * @param contentId
-     *            a integer value representing the unique id or primary key of
-     *            the multi media document that is to be fetched.
+     * @param mediaContent
+     *            An instance of {@link ContentDto} which uses its
+     *            {@link ContentDto#getFilepath()} and
+     *            {@link ContentDto#getFilename()} methods to locate and
+     *            retrieve the contents from the file system.
      * @return An instance of {@link ContentDto}
      * @throws ContentDaoException
+     *             Error obtaining the contents from the file system
+     * @throws InvalidDataException
+     *             <i>mime</i> is null
      */
-    public ContentDto fetchContentAsFile(int contentId) throws ContentDaoException {
-        ContentDto mime = super.fetchContent(contentId);
-        if (mime == null) {
-            return null;
+    protected void fetchContentFromFile(ContentDto mediaContent) throws ContentDaoException {
+        if (mediaContent == null) {
+            throw new InvalidDataException("Content DTO cannot be null when fetching image data from a file");
         }
 
         // Get file contents as a byte array and assign to the Content instance.
         try {
-            String filePath = mime.getFilepath() + mime.getFilename();
+            String filePath = mediaContent.getFilepath() + mediaContent.getFilename();
             byte fileContents[] = RMT2File.getFileContentsAsBytes(filePath);
-            mime.setImageData(fileContents);
-            return mime;    
+            mediaContent.setImageData(fileContents);
         }
         catch (Exception e) {
-            this.msg = "Unable to fetch file as bytes for content id, " + contentId;
+            this.msg = "Unable to fetch media content from the file system for content id, " + mediaContent.getContentId();
             throw new ContentDaoException(this.msg, e);
         }
     }
