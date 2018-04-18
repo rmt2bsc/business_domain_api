@@ -184,33 +184,25 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
     }
     
     /**
-     * Deletes a single media document record from the database
+     * Deletes a single media document record from the database.
      * 
      * @param contentId
      *            a integer value representing the database primary key of the
      *            document record that is to be deleted.
-     * @return an instance of {@link ContentDto} as the orginal record just
-     *         deleted.
+     * @return The total number of rows removed from the content table.
      * @throws ContentDaoException
      */
-    public ContentDto deleteContent(int contentId) throws ContentDaoException {
-        if (contentId <= 0) {
-            this.msg = "Content id is invalid";
-            throw new ContentValidationDaoException(this.msg);
-        }
-        ContentDto origRec = this.fetchContent(contentId);
-
+    public int deleteContent(int contentId) throws ContentDaoException {
+        int rows = 0;
         Content mime = new Content();
         mime.addCriteria(Content.PROP_CONTENTID, contentId);
-        this.client.beginTrans();
         try {
-            int rows = this.client.deleteRow(mime);
+            rows = this.client.deleteRow(mime);
             logger.info("The total number of records deleted: " + rows);
-            this.client.commitTrans();
-            return origRec;
         } catch (Exception e) {
-            this.client.rollbackTrans();
-            throw new ContentDaoException(e);
+            this.msg = "Error deleting media content from the content table [contentId=" + contentId + "]";
+            throw new ContentDaoException(this.msg, e);
         }
+        return rows;
     }
 }

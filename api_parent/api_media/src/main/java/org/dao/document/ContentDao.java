@@ -47,7 +47,7 @@ public interface ContentDao extends DaoClient {
      *         deleted.
      * @throws ContentDaoException
      */
-    ContentDto deleteContent(int contentId) throws ContentDaoException;
+    int deleteContent(int contentId) throws ContentDaoException;
 
     /**
      * Retrieve a specific mime type record based on its unique id.

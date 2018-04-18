@@ -174,29 +174,21 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      */
     @Override
     public int delete(int contentId) throws MediaModuleException {
-        ContentDto deletedRec = null;
-        int rows = 0;
+        try {
+            Verifier.verifyPositive(contentId);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Content Id must be greater than zero", e);
+        }
 
         // Delete detail record
+        int rows = 0;
         try {
-            deletedRec = dao.deleteContent(contentId);
-            // Recognize that the media document detail record was handled
-            // successfully
-            if (deletedRec != null) {
-                rows = 1;
-                logger.info("Media document detail record was deleted successfully [document id = " + contentId + "]");
-            }
+            rows = dao.deleteContent(contentId);
         } catch (ContentDaoException e) {
             this.msg = "Unable to delete media document identified by document id: " + contentId;
             throw new MediaModuleException(this.msg, e);
         } 
-
-        // Determine if we need to delete an external file
-        if (deletedRec.getImageData() == null) {
-            String path = deletedRec.getFilepath() + deletedRec.getFilename();
-            rows = RMT2File.deleteFile(path);
-            logger.info("Media document external file was deleted successfully [" + path + "]");
-        }
         return rows;
     }
 

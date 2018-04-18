@@ -192,5 +192,47 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
             }
         }
     }
+
+    /**
+     * Delete multi media document from the database and from the file system.
+     * 
+     * @param contentId
+     *            a integer value representing the unique id or primary key of
+     *            the multi media document that is to be deleted.
+     * @return The total number of rows deleted from the content table and file system.
+     * @throws ContentDaoException
+     */
+    @Override
+    public int deleteContent(int contentId) throws ContentDaoException {
+        logger.info("Preparing to delete database entry and external file related to content id, "
+                        + contentId);
+        // Fetch the original record from the content table. Do not call this
+        // fetchContent method to prevent picking up the the image data from the
+        // file system.
+        ContentDto origRec = super.fetchContent(contentId);
+        // Now delete the original record.
+        int rows = super.deleteContent(contentId);
+        
+        // Attempt to delete associated external file, if it exists.
+        // As a safeguard to deleting the wrong record, delete only those
+        // records not conatining any image data.
+        String path = null;
+        if (origRec.getImageData() == null) {
+            path = origRec.getFilepath() + origRec.getFilename();
+            rows += RMT2File.deleteFile(path);
+            if (rows == 1) {
+                logger.warn("Unable to locate media document in file system for deleltion [File=" + path + "]");
+            }
+            else {
+            logger.info("Media document was deleted successfully as an external file [" + path + "]");
+            }
+        }
+        else {
+            logger.warn("Skip deleting media content file, " + path
+                    + ", due to the record contains image data from the content table");
+        }
+        
+        return rows;
+    }
     
 }

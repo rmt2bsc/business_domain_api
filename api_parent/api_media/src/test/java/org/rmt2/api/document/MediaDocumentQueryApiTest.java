@@ -60,7 +60,7 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         
         outDir = RMT2File.loadAppConfigProperties("config.Media-AppParms").getString("media_output_location");
         
-        // Setu stubs for fetching data successfully
+        // Setup stubs for fetching data successfully
         when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
                 .thenReturn(this.mockSingleContent);
 
