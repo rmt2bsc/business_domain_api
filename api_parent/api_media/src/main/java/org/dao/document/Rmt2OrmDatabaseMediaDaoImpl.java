@@ -129,12 +129,12 @@ class Rmt2OrmDatabaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
 
             // Save media contents as a file in the outbound directory
             path = outBoundDir + fileName;
-            byte binaryData[] = (byte[]) mime.getImageData();
+            byte binaryData[] = mime.getImageData();
             RMT2File.outputFile(binaryData, path);
             // Create File instance and assign to the imageData property.
             File file = new File(path);
-            mime.setImageData(file);
-            mime.setFilepath(path);
+            // mime.setImageData(file);
+            // mime.setFilepath(path);
             return mime;
         }
         else {

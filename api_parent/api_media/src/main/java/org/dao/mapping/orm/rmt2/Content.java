@@ -1,12 +1,10 @@
 package org.dao.mapping.orm.rmt2;
 
 
-import java.util.Date;
-import java.io.*;
+import com.SystemException;
+import com.api.persistence.db.orm.OrmBean;
 import com.util.assistants.EqualityAssistant;
 import com.util.assistants.HashCodeAssistant;
-import com.api.persistence.db.orm.OrmBean;
-import com.SystemException;
 
 
 /**
@@ -53,7 +51,7 @@ public class Content extends OrmBean {
 /** The javabean property equivalent of database column content.mime_type_id */
   private int mimeTypeId;
 /** The javabean property equivalent of database column content.image_data */
-  private Object imageData;
+  private byte[] imageData;
 /** The javabean property equivalent of database column content.text_data */
   private String textData;
 /** The javabean property equivalent of database column content.app_code */
@@ -110,13 +108,13 @@ public class Content extends OrmBean {
 /**
  * Sets the value of member variable imageData
  */
-  public void setImageData(Object value) {
+  public void setImageData(byte[] value) {
     this.imageData = value;
   }
 /**
  * Gets the value of member variable imageData
  */
-  public Object getImageData() {
+  public byte[] getImageData() {
     return this.imageData;
   }
 /**
@@ -246,9 +244,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.mimeTypeId, other.mimeTypeId)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.imageData, other.imageData)) {
-      return false;
-   }
+        if (EqualityAssistant.notEqual(this.imageData, other.imageData)) {
+            return false;
+        }
    if (EqualityAssistant.notEqual(this.textData, other.textData)) {
       return false;
    }
@@ -265,6 +263,12 @@ public boolean equals(Object obj) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.size, other.size)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.dateCreated, other.dateCreated)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.userId, other.userId)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.projectId, other.projectId)) {
@@ -284,6 +288,8 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.filepath),
                HashCodeAssistant.hashObject(this.filename),
                HashCodeAssistant.hashObject(this.size),
+               HashCodeAssistant.hashObject(this.dateCreated),
+               HashCodeAssistant.hashObject(this.userId),
                HashCodeAssistant.hashObject(this.projectId));
 } 
 
@@ -298,6 +304,8 @@ public String toString() {
           ", filepath=" + filepath + 
           ", filename=" + filename + 
           ", size=" + size + 
+          ", dateCreated=" + dateCreated + 
+          ", userId=" + userId + 
           ", projectId=" + projectId  + "]";
 }
 

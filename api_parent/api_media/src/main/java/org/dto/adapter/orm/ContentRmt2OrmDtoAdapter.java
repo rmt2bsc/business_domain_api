@@ -105,10 +105,10 @@ class ContentRmt2OrmDtoAdapter extends TransactionDtoImpl implements ContentDto 
     /*
      * (non-Javadoc)
      * 
-     * @see org.dto.ContentDto#setImageData(java.lang.Object)
+     * @see org.dto.ContentDto#setImageData(byte[])
      */
     @Override
-    public void setImageData(Object value) {
+    public void setImageData(byte[] value) {
         this.c.setImageData(value);
     }
 
@@ -118,7 +118,7 @@ class ContentRmt2OrmDtoAdapter extends TransactionDtoImpl implements ContentDto 
      * @see org.dto.ContentDto#getImageData()
      */
     @Override
-    public Object getImageData() {
+    public byte[] getImageData() {
         return this.c.getImageData();
     }
 

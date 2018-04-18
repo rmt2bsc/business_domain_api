@@ -41,7 +41,7 @@ public class MediaAdapterTest {
         Assert.assertEquals(5555, dto.getProjectId());
         Assert.assertEquals("ModuleCode", dto.getModuleCode());
         Assert.assertEquals("TextData", dto.getTextData());
-        Assert.assertEquals("ImageData", dto.getImageData());
+        Assert.assertEquals("ImageData".length(), dto.getImageData().length);
         
         try {
             Content nullParm = null;
@@ -54,7 +54,7 @@ public class MediaAdapterTest {
             dto.setProjectId(5555);
             dto.setModuleCode("ModuleCode");
             dto.setTextData("TextData");
-            dto.setImageData("ImageData");
+            dto.setImageData("ImageData".getBytes());
             
             Assert.assertEquals(1000, dto.getContentId());
             Assert.assertEquals(101, dto.getMimeTypeId());
@@ -64,7 +64,7 @@ public class MediaAdapterTest {
             Assert.assertEquals(5555, dto.getProjectId());
             Assert.assertEquals("ModuleCode", dto.getModuleCode());
             Assert.assertEquals("TextData", dto.getTextData());
-            Assert.assertEquals("ImageData", dto.getImageData());
+            Assert.assertEquals("ImageData".length(), dto.getImageData().length);
         }
         catch (Exception e) {
             e.printStackTrace();

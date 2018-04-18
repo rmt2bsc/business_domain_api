@@ -83,7 +83,7 @@ public class ContentOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setImageData("ImageData");
+        o2.setImageData("ImageData".getBytes());
         result = o1.equals(o2);
         Assert.assertTrue(result);
     }

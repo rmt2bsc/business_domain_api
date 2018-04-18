@@ -46,7 +46,7 @@ public class MediaMockDataFactory {
         o.setAppCode(appCode);
         o.setModuleCode("ModuleCode");
         o.setTextData("TextData");
-        o.setImageData("ImageData");
+        o.setImageData("ImageData".getBytes());
         return o;
     }
 }

@@ -4,7 +4,7 @@
    <TableUsage DBName="content" Name="ContentTable" Updateable="true" />
    <ColAttr Computed="false" DBName="content_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ContentId" PrimaryKey="true" SqlType="integer" TableName="ContentTable" Updateable="true" />
    <ColAttr Computed="false" DBName="mime_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="MimeTypeId" PrimaryKey="false" SqlType="integer" TableName="ContentTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="image_data" DataValue="" DisplayHeader="" IsNull="true" JavaType="Object" Name="ImageData" PrimaryKey="false" SqlType="long binary" TableName="ContentTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="image_data" DataValue="" DisplayHeader="" IsNull="true" JavaType="byte[]" Name="ImageData" PrimaryKey="false" SqlType="long binary" TableName="ContentTable" Updateable="true" />
    <ColAttr Computed="false" DBName="text_data" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="TextData" PrimaryKey="false" SqlType="long varchar" TableName="ContentTable" Updateable="true" />
    <ColAttr Computed="false" DBName="app_code" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AppCode" PrimaryKey="false" SqlType="varchar" TableName="ContentTable" Updateable="true" />
    <ColAttr Computed="false" DBName="module_code" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ModuleCode" PrimaryKey="false" SqlType="varchar" TableName="ContentTable" Updateable="true" />

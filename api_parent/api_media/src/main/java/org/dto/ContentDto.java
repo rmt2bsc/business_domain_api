@@ -44,12 +44,12 @@ public interface ContentDto extends TransactionDto {
     /**
      * Sets the image Data
      */
-    void setImageData(Object value);
+    void setImageData(byte[] value);
 
     /**
      * Gets the image Data
      */
-    Object getImageData();
+    byte[] getImageData();
 
     /**
      * Sets the text Data
