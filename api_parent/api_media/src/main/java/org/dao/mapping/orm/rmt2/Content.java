@@ -1,10 +1,12 @@
 package org.dao.mapping.orm.rmt2;
 
 
-import com.SystemException;
-import com.api.persistence.db.orm.OrmBean;
+import java.util.Date;
+import java.io.*;
 import com.util.assistants.EqualityAssistant;
 import com.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
+import com.SystemException;
 
 
 /**
@@ -244,9 +246,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.mimeTypeId, other.mimeTypeId)) {
       return false;
    }
-        if (EqualityAssistant.notEqual(this.imageData, other.imageData)) {
-            return false;
-        }
+   if (EqualityAssistant.bytesNotEqual(this.imageData, other.imageData)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.textData, other.textData)) {
       return false;
    }
@@ -281,7 +283,7 @@ public boolean equals(Object obj) {
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.contentId),
                HashCodeAssistant.hashObject(this.mimeTypeId),
-               HashCodeAssistant.hashObject(this.imageData),
+               HashCodeAssistant.hashByteArray(this.imageData),
                HashCodeAssistant.hashObject(this.textData),
                HashCodeAssistant.hashObject(this.appCode),
                HashCodeAssistant.hashObject(this.moduleCode),
