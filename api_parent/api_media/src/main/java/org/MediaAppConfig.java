@@ -18,8 +18,7 @@ public class MediaAppConfig extends RMT2Base {
 
     public static final String configFile = "MimeConfig";
 
-    public static final String ENV = RMT2File.getPropertyValue(
-            ConfigConstants.CONFIG_APP, "ENVIRONMENT");
+    public static final String ENV = System.getProperty(ConfigConstants.PROPNAME_ENV);
 
     /**
      * Create

@@ -35,7 +35,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
     
     private ContentDao dao;
 
-    private DocumentInboundDirectoryListener listener;
+    private static DocumentInboundDirectoryListener MEDIA_DIR_LISTENER;
 
     /**
      * Creates an DocumentContentApiImpl which defaults to saving media to the
@@ -234,8 +234,8 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      */
     @Override
     public void startMediaFileListener() {
-        this.listener = new DocumentInboundDirectoryListener();
-        Thread t = new Thread(this.listener);
+        MEDIA_DIR_LISTENER = new DocumentInboundDirectoryListener();
+        Thread t = new Thread(MEDIA_DIR_LISTENER);
         t.start();
     }
 
@@ -246,10 +246,10 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      */
     @Override
     public void stopMediaFileListener() {
-        if (this.listener == null) {
+        if (MEDIA_DIR_LISTENER == null) {
             return;
         }
-        this.listener.stop();
+        MEDIA_DIR_LISTENER.stop();
     }
 
     

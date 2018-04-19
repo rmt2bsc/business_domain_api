@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.modules.document.DocumentContentApiFactory;
 
 import com.api.config.AbstractApiConfiguratorPropertiesImpl;
 import com.api.config.ConfigConstants;
@@ -57,5 +58,16 @@ public class MediaConfigurator extends AbstractApiConfiguratorPropertiesImpl {
         logger = Logger.getLogger(MediaConfigurator.class);
         logger.info("Logger initialized locally for application, " + this.appName);
 
+    }
+
+    /**
+     * Responsible for starting the media directory/file listener
+     */
+    @Override
+    protected void doPostStart() {
+        super.doPostStart();
+        // Start Media inbound directory file listener
+        DocumentContentApiFactory f = new DocumentContentApiFactory();
+        f.createMediaContentApi().startMediaFileListener();
     }
 }

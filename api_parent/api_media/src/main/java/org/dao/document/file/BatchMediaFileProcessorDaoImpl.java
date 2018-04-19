@@ -46,7 +46,7 @@ import com.util.RMT2Utility;
  * @author rterrell
  * 
  */
-class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoImpl {
+public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoImpl {
 
     private static Logger logger = Logger
             .getLogger(BatchMediaFileProcessorDaoImpl.class);

@@ -1,18 +1,14 @@
 package org.modules.services;
 
-import java.util.Properties;
-
 import org.FileListenerConfig;
 import org.MediaAppConfig;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.dao.document.file.FileDropProcessingException;
 import org.dao.document.file.MediaFileDaoProcessor;
 import org.dao.document.file.MediaFileFactory;
 import org.dao.document.file.MediaFileOperationDaoException;
 
 import com.RMT2Base;
-import com.api.config.old.StandAloneCoreSysConfigurator;
 import com.util.RMT2File;
 import com.util.RMT2String;
 
@@ -23,10 +19,8 @@ import com.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-public class DocumentInboundDirectoryListener extends RMT2Base implements
-        Runnable {
-    private static Logger logger = Logger
-            .getLogger("DocumentInboundDirectoryListener");
+public class DocumentInboundDirectoryListener extends RMT2Base implements Runnable {
+    private static Logger logger = Logger.getLogger(DocumentInboundDirectoryListener.class);
 
     private boolean continueToRun;
 
@@ -47,18 +41,9 @@ public class DocumentInboundDirectoryListener extends RMT2Base implements
      * should provide this file)
      */
     public void init() {
-        // TODO: remove system property and log4j configuration load logic when
-        // deployed on business server.
-        RMT2File.loadSystemProperties("config.ProdStandaloneSystemParms");
-        // Setup Logging environment
-        String logPath = "config.log4j";
-        Properties props = RMT2File.loadPropertiesFromClasspath(logPath);
-        PropertyConfigurator.configure(props);
-        logger = Logger.getLogger(StandAloneCoreSysConfigurator.class);
         logger.info("Begin Inbound Directory Listener Logging...");
 
-        DocumentInboundDirectoryListener.logger
-                .info("Initializing media file listener");
+        DocumentInboundDirectoryListener.logger.info("Initializing media file listener");
         this.config = MediaAppConfig.getConfigInstance();
         this.continueToRun = true;
     }
@@ -74,16 +59,14 @@ public class DocumentInboundDirectoryListener extends RMT2Base implements
      * specified in the application's media file configuration.
      */
     public void run() {
-        DocumentInboundDirectoryListener.logger
-                .info("Starting media file listener");
+        DocumentInboundDirectoryListener.logger.info("Starting media file listener");
 
         // More than likely the archive destination is a network share. Verify
         // if user has the correct permissions to access archive share.
         if (!this.isMediaFileDirAccessible()) {
             return;
         }
-        DocumentInboundDirectoryListener.logger
-                .info("Media file listener started successfully");
+        DocumentInboundDirectoryListener.logger.info("Media file listener started successfully");
 
         while (this.continueToRun) {
             try {
@@ -95,8 +78,7 @@ public class DocumentInboundDirectoryListener extends RMT2Base implements
 
             // Put the thread to sleep...
             try {
-                DocumentInboundDirectoryListener.logger
-                        .info("Media file listener sleeping...");
+                DocumentInboundDirectoryListener.logger.info("Media file listener sleeping...");
                 Thread.sleep(this.config.getPollFreq());
             } catch (InterruptedException e) {
                 // Do nothing...This thread sleep was interrupted by another
@@ -104,8 +86,7 @@ public class DocumentInboundDirectoryListener extends RMT2Base implements
             }
         }
 
-        DocumentInboundDirectoryListener.logger
-                .info("Media file listener has stopped");
+        DocumentInboundDirectoryListener.logger.info("Media file listener has stopped");
     }
 
     /**
@@ -155,12 +136,10 @@ public class DocumentInboundDirectoryListener extends RMT2Base implements
      * @throws FileDropProcessingException
      */
     public int processMultiMediaFiles() throws FileDropProcessingException {
-        MediaFileDaoProcessor processor = MediaFileFactory
-                .createBatchFileProcessor();
+        MediaFileDaoProcessor processor = MediaFileFactory.createBatchFileProcessor();
         int fileCount = 0;
         try {
-            DocumentInboundDirectoryListener.logger
-                    .info("Media file listener commencing batch process...");
+            DocumentInboundDirectoryListener.logger.info("Media file listener commencing batch process...");
             processor.initConnection();
             fileCount = processor.processBatch();
             return fileCount;
@@ -174,25 +153,19 @@ public class DocumentInboundDirectoryListener extends RMT2Base implements
         }
     }
 
-    public int processSingleMediaFiles(String fileName)
-            throws MediaFileOperationDaoException {
-        if (fileName == null
-                || fileName.equals(RMT2String.spaces(fileName.length()))) {
-            throw new MediaFileOperationDaoException(
-                    "Input file name cannot be null or spaces");
+    public int processSingleMediaFiles(String fileName) throws MediaFileOperationDaoException {
+        if (fileName == null || fileName.equals(RMT2String.spaces(fileName.length()))) {
+            throw new MediaFileOperationDaoException("Input file name cannot be null or spaces");
         }
-        MediaFileDaoProcessor processor = MediaFileFactory
-                .createSingleFileProcessor();
+        MediaFileDaoProcessor processor = MediaFileFactory.createSingleFileProcessor();
         int fileCount = 0;
         try {
-            DocumentInboundDirectoryListener.logger
-                    .info("Media file listener looking for files to process...");
+            DocumentInboundDirectoryListener.logger.info("Media file listener looking for files to process...");
             processor.initConnection();
             Integer rc = (Integer) processor.processSingleFile(fileName, null);
             fileCount = rc.intValue();
             if (fileCount > 0) {
-                String msgCount = fileName
-                        + " media file was processed successfully";
+                String msgCount = fileName + " media file was processed successfully";
                 DocumentInboundDirectoryListener.logger.info(msgCount);
                 // Attempt to send report.
                 if (this.config.isEmailResults()) {
