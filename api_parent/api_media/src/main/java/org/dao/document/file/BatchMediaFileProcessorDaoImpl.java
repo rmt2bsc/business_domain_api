@@ -11,15 +11,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.AppModuleConfig;
-import org.FileListenerConfig;
-import org.MediaAppConfig;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
+import org.modules.services.AppModuleConfig;
+import org.modules.services.FileListenerConfig;
+import org.modules.services.MediaAppConfig;
 
 import com.SystemException;
 import com.api.BatchFileException;

@@ -1,7 +1,5 @@
 package org.modules.services;
 
-import org.FileListenerConfig;
-import org.MediaAppConfig;
 import org.apache.log4j.Logger;
 import org.dao.document.file.FileDropProcessingException;
 import org.dao.document.file.MediaFileDaoProcessor;

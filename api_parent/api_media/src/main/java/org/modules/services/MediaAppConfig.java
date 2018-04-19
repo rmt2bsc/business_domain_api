@@ -1,4 +1,4 @@
-package org;
+package org.modules.services;
 
 import org.apache.log4j.Logger;
 import org.modules.MediaConstants;

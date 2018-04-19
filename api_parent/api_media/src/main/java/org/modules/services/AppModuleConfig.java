@@ -1,4 +1,4 @@
-package org;
+package org.modules.services;
 
 import com.RMT2Base;
 
