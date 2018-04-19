@@ -9,6 +9,7 @@ import org.dao.document.file.MediaFileFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
+import org.modules.MediaConfigurator;
 import org.powermock.api.mockito.PowerMockito;
 
 import com.api.config.ConfigConstants;
@@ -51,6 +52,10 @@ public class BaseMediaDaoTest {
        
         // To be used with the MediaConfigurator
         System.setProperty(ConfigConstants.PROPNAME_ENV, ConfigConstants.ENVTYPE_DEV);
+        // Since we are not testing the Inbound Directory Listener process, mock its batch process for this JUnit.
+        this.mockListenerBatchProcess();
+        MediaConfigurator configurator = new MediaConfigurator();
+        configurator.start();
         
         return;
     }

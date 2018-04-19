@@ -18,7 +18,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modules.MediaConfigurator;
 import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.document.DocumentContentApi;
@@ -52,11 +51,6 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        // Since we are not testing the Inbound Directory Listener process, mock its batch process for this JUnit.
-        this.mockListenerBatchProcess();
-        MediaConfigurator configurator = new MediaConfigurator();
-        configurator.start();
         
         outDir = RMT2File.loadAppConfigProperties("config.Media-AppParms").getString("media_output_location");
         
