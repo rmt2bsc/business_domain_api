@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.dao.document.ContentDaoException;
+import org.dao.document.file.MediaFileFactory;
 import org.dao.mapping.orm.rmt2.Content;
 import org.dao.mapping.orm.rmt2.MimeTypes;
 import org.dto.ContentDto;
@@ -17,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modules.MediaConfigurator;
 import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.document.DocumentContentApi;
@@ -40,7 +42,7 @@ import com.util.RMT2File;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class, MediaFileFactory.class })
 public class MediaDocumentQueryApiTest extends MediaMockData {
     private String outDir;
     
@@ -50,6 +52,11 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        
+        // Since we are not testing the Inbound Directory Listener process, mock its batch process for this JUnit.
+        this.mockListenerBatchProcess();
+        MediaConfigurator configurator = new MediaConfigurator();
+        configurator.start();
         
         outDir = RMT2File.loadAppConfigProperties("config.Media-AppParms").getString("media_output_location");
         
