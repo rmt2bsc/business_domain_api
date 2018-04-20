@@ -1,4 +1,4 @@
-package org.modules.services;
+package org.modules.services.directory;
 
 import org.apache.log4j.Logger;
 import org.modules.MediaConstants;
@@ -8,14 +8,14 @@ import com.api.config.ConfigConstants;
 import com.util.RMT2File;
 
 /**
- * A factory for creating MIME file hanlder related objects.
+ * Manages the configuration for the DocumentInboundDirectoryListener .
  * 
  * @author appdev
  * 
  */
-public class MediaAppConfig extends RMT2Base {
+public class DirectoryListenerConfigFactory extends RMT2Base {
 
-    private static Logger logger = Logger.getLogger(MediaAppConfig.class);
+    private static Logger logger = Logger.getLogger(DirectoryListenerConfigFactory.class);
 
     public static final String configFile = "MimeConfig";
 
@@ -24,8 +24,8 @@ public class MediaAppConfig extends RMT2Base {
     /**
      * Create
      */
-    private MediaAppConfig() {
-        MediaAppConfig.logger.info("Logger initialized");
+    private DirectoryListenerConfigFactory() {
+        DirectoryListenerConfigFactory.logger.info("Logger initialized");
     }
 
     /**
@@ -34,11 +34,12 @@ public class MediaAppConfig extends RMT2Base {
      * 
      * @return {@link FileListenerConfig}
      */
-    public static FileListenerConfig getConfigInstance() {
+    public static DirectoryListenerConfigBean getConfigInstance() {
         String propFile = MediaConstants.CONFIG_CLASSPATH + "."
-                + MediaAppConfig.configFile + "_" + MediaAppConfig.ENV;
+                + DirectoryListenerConfigFactory.configFile + "_"
+                + DirectoryListenerConfigFactory.ENV;
         logger.info("Looking for MIME Configuration in, " + propFile);
-        return MediaAppConfig.getConfigInstance(propFile);
+        return DirectoryListenerConfigFactory.getConfigInstance(propFile);
     }
 
     /**
@@ -49,8 +50,8 @@ public class MediaAppConfig extends RMT2Base {
      *            a .properties file containing the MIME configuration.
      * @return an instance of {@link FileListenerConfig}
      */
-    public static FileListenerConfig getConfigInstance(String propFile) {
-        FileListenerConfig config = new FileListenerConfig();
+    public static DirectoryListenerConfigBean getConfigInstance(String propFile) {
+        DirectoryListenerConfigBean config = new DirectoryListenerConfigBean();
         String msg = null;
         String propVal = null;
 
@@ -94,7 +95,7 @@ public class MediaAppConfig extends RMT2Base {
         } catch (NumberFormatException e) {
             moduleCount = 10000;
             msg = "Module count for MIME listener could not be determined.  Defaulting to zero";
-            MediaAppConfig.logger.warn(msg);
+            DirectoryListenerConfigFactory.logger.warn(msg);
         } finally {
             propVal = RMT2File.getPropertyValue(propFile, "mime.moduleCount");
             logger.info("mime.moduleCount = " + propVal);
@@ -123,7 +124,7 @@ public class MediaAppConfig extends RMT2Base {
             String dbPassword = RMT2File.getPropertyValue(propFile,
                     "mime.module." + moduleNdx + ".datasource.pw");
 
-            AppModuleConfig mod = new AppModuleConfig(moduleNdx);
+            ApplicationModuleBean mod = new ApplicationModuleBean(moduleNdx);
             mod.setFilePattern(filePattern);
             mod.setDbUrl(dbUrl);
             mod.setDbDriver(dbDriver);
@@ -143,7 +144,7 @@ public class MediaAppConfig extends RMT2Base {
         } catch (NumberFormatException e) {
             pollFreq = 10000;
             msg = "Polling frequency for MIME listener could not be determined.  Defaulting to 10 seconds";
-            MediaAppConfig.logger.error(msg);
+            DirectoryListenerConfigFactory.logger.error(msg);
         } finally {
             propVal = RMT2File.getPropertyValue(propFile, "mime.pollFreq");
             logger.info("mime.pollFreq = " + propVal);
@@ -173,7 +174,7 @@ public class MediaAppConfig extends RMT2Base {
         } catch (NumberFormatException e) {
             archiveAge = 72;
             msg = "Archiving age for MIME listener could not be determined.  Defaulting to 72 hours";
-            MediaAppConfig.logger.warn(msg);
+            DirectoryListenerConfigFactory.logger.warn(msg);
         } finally {
             propVal = RMT2File.getPropertyValue(propFile, "mime.archiveAge");
             logger.info("mime.archiveAge = " + propVal);

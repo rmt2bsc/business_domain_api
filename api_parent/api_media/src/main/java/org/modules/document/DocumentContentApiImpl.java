@@ -11,7 +11,7 @@ import org.dto.MimeTypeDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
-import org.modules.services.DocumentInboundDirectoryListener;
+import org.modules.services.directory.DirectoryInboundDocumentListener;
 
 import com.InvalidDataException;
 import com.NotFoundException;
@@ -35,7 +35,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
     
     private ContentDao dao;
 
-    private static DocumentInboundDirectoryListener MEDIA_DIR_LISTENER;
+    private static DirectoryInboundDocumentListener MEDIA_DIR_LISTENER;
 
     /**
      * Creates an DocumentContentApiImpl which defaults to saving media to the
@@ -234,7 +234,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      */
     @Override
     public void startMediaFileListener() {
-        MEDIA_DIR_LISTENER = new DocumentInboundDirectoryListener();
+        MEDIA_DIR_LISTENER = new DirectoryInboundDocumentListener();
         Thread t = new Thread(MEDIA_DIR_LISTENER);
         t.start();
     }

@@ -1,4 +1,4 @@
-package org.modules.services;
+package org.modules.services.directory;
 
 import com.RMT2Base;
 
@@ -8,7 +8,7 @@ import com.RMT2Base;
  * @author appdev
  * 
  */
-public class AppModuleConfig extends RMT2Base {
+public class ApplicationModuleBean extends RMT2Base {
 
     private int moduleCode;
 
@@ -31,7 +31,7 @@ public class AppModuleConfig extends RMT2Base {
     /**
      * Creates an empty AppModuleConfig object
      */
-    public AppModuleConfig() {
+    protected ApplicationModuleBean() {
         return;
     }
 
@@ -41,7 +41,7 @@ public class AppModuleConfig extends RMT2Base {
      * @param moduleCode
      *            The module code
      */
-    public AppModuleConfig(int moduleCode) {
+    protected ApplicationModuleBean(int moduleCode) {
         this.moduleCode = moduleCode;
         return;
     }

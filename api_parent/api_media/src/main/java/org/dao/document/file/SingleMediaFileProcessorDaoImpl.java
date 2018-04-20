@@ -52,7 +52,7 @@ class SingleMediaFileProcessorDaoImpl extends AbstractMediaFileProcessorDaoImp {
      *             is not in the correct format.
      */
     public Integer processSingleFile(String fileName, Object parent) throws BatchFileException {
-        int uid = 0;
+        int contentId = 0;
         ContentDaoFactory daoFactory = new ContentDaoFactory();
         ContentDao dao = null;
         try {
@@ -66,9 +66,9 @@ class SingleMediaFileProcessorDaoImpl extends AbstractMediaFileProcessorDaoImp {
             dao.setDaoUser(AbstractMediaFileProcessorDaoImp.UPDATE_USERID);
             SingleMediaFileProcessorDaoImpl.logger.info("Initialize document API");
             SingleMediaFileProcessorDaoImpl.logger.info("Add document to MIME database");
-            uid = dao.addContent(mime);
+            contentId = dao.saveContent(mime);
             SingleMediaFileProcessorDaoImpl.logger.info("MIME Database updates completed");
-            return uid;
+            return contentId;
         } catch (Exception e) {
             SingleMediaFileProcessorDaoImpl.logger.error(e.getMessage());
             throw new MediaFileOperationDaoException(e);

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.dao.document.ContentDaoException;
-import org.dao.document.file.MediaFileFactory;
 import org.dao.mapping.orm.rmt2.Content;
 import org.dao.mapping.orm.rmt2.MimeTypes;
 import org.dto.ContentDto;
@@ -41,7 +40,7 @@ import com.util.RMT2File;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class, MediaFileFactory.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
 public class MediaDocumentQueryApiTest extends MediaMockData {
     private String outDir;
     

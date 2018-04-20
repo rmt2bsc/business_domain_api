@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.util.concurrent.TimeUnit;
 
 import org.dao.document.ContentDaoException;
-import org.dao.document.file.MediaFileFactory;
 import org.dao.mapping.orm.rmt2.Content;
 import org.dao.mapping.orm.rmt2.MimeTypes;
 import org.junit.After;
@@ -39,7 +38,7 @@ import com.util.RMT2File;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class, MediaFileFactory.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class MediaDocumentUpdateApiTest extends MediaMockData {
     private String outDir;
     

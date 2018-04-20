@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import org.modules.MediaConfigurator;
 import org.powermock.api.mockito.PowerMockito;
 
-import com.api.config.ConfigConstants;
 import com.api.persistence.DaoClient;
 import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -42,6 +41,9 @@ public class BaseMediaDaoTest {
      */
     @Before
     public void setUp() throws Exception {
+        MediaConfigurator configurator = new MediaConfigurator();
+        configurator.start();
+        
         // Mock database connection since the common transaction Api expects
         // derived Api modules to obtain and pass in an instance of DaoClient.
         PowerMockito.mockStatic(Rmt2OrmClientFactory.class);
@@ -49,14 +51,6 @@ public class BaseMediaDaoTest {
         this.mockPersistenceClient = Mockito.mock(PersistenceClient.class);
         when(this.mockDaoClient.getClient()).thenReturn(this.mockPersistenceClient);
         when(Rmt2OrmClientFactory.createOrmClientInstance(any(String.class))).thenReturn(this.mockPersistenceClient);
-       
-        // To be used with the MediaConfigurator
-        System.setProperty(ConfigConstants.PROPNAME_ENV, ConfigConstants.ENVTYPE_DEV);
-        // Since we are not testing the Inbound Directory Listener process, mock its batch process for this JUnit.
-        this.mockListenerBatchProcess();
-        MediaConfigurator configurator = new MediaConfigurator();
-        configurator.start();
-        
         return;
     }
 

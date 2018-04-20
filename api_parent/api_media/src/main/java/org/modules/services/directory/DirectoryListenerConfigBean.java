@@ -1,4 +1,4 @@
-package org.modules.services;
+package org.modules.services.directory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,12 +7,12 @@ import com.RMT2Base;
 import com.SystemException;
 
 /**
- * A bean representing the Application's MIME configuration
+ * A bean managing the directory listener's application module configurations.
  * 
  * @author appdev
  * 
  */
-public class FileListenerConfig extends RMT2Base {
+public class DirectoryListenerConfigBean extends RMT2Base {
 
     private static final long serialVersionUID = 518549554653952863L;
 
@@ -26,7 +26,7 @@ public class FileListenerConfig extends RMT2Base {
 
     private int moduleCount;
 
-    private Map<Integer, AppModuleConfig> modules;
+    private Map<Integer, ApplicationModuleBean> modules;
 
     private String inboundDir;
 
@@ -47,9 +47,9 @@ public class FileListenerConfig extends RMT2Base {
     /**
      * @throws SystemException
      */
-    FileListenerConfig() throws SystemException {
+    DirectoryListenerConfigBean() throws SystemException {
         super();
-        this.modules = new HashMap<Integer, AppModuleConfig>();
+        this.modules = new HashMap<Integer, ApplicationModuleBean>();
     }
 
     /**
@@ -130,7 +130,7 @@ public class FileListenerConfig extends RMT2Base {
     /**
      * @return the modules
      */
-    public Map<Integer, AppModuleConfig> getModules() {
+    public Map<Integer, ApplicationModuleBean> getModules() {
         return modules;
     }
 

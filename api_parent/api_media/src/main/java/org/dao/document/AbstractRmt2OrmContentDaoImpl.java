@@ -27,8 +27,6 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
 
     private static Logger logger = Logger.getLogger(AbstractRmt2OrmContentDaoImpl.class);
 
-    protected org.modules.services.FileListenerConfig config;
-
     /**
      * Default constructor which sets up or obtains the configuration for the
      * media file environment.

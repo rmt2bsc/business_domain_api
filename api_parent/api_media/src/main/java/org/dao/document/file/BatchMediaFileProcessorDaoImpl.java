@@ -17,9 +17,9 @@ import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
-import org.modules.services.AppModuleConfig;
-import org.modules.services.FileListenerConfig;
-import org.modules.services.MediaAppConfig;
+import org.modules.services.directory.ApplicationModuleBean;
+import org.modules.services.directory.DirectoryListenerConfigBean;
+import org.modules.services.directory.DirectoryListenerConfigFactory;
 
 import com.SystemException;
 import com.api.BatchFileException;
@@ -53,7 +53,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
 
     private DatabaseConnectionBean appConBean;
 
-    private FileListenerConfig config;
+    private DirectoryListenerConfigBean config;
 
     private List<String> mimeMsgs;
 
@@ -81,7 +81,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
     public BatchMediaFileProcessorDaoImpl() {
         super();
         try {
-            this.config = MediaAppConfig.getConfigInstance();
+            this.config = DirectoryListenerConfigFactory.getConfigInstance();
         } catch (Exception e) {
             this.msg = "Error instantiating AbstractMediaFileProcessorDaoImp object";
             throw new SystemException(this.msg, e);
@@ -112,7 +112,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         DatabaseConnectionFactory f = new DatabaseConnectionFactory();
         try {
             for (int ndx = 0; ndx < modCount; ndx++) {
-                AppModuleConfig mod = this.config.getModules().get(ndx);
+                ApplicationModuleBean mod = this.config.getModules().get(ndx);
                 SimpleConnectionProviderImpl conUtil = new SimpleConnectionProviderImpl();
                 DatabaseConnectionBean con = conUtil.getConnection(
                         mod.getDbDriver(), mod.getDbUrl(), mod.getDbUserId(),
@@ -177,7 +177,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         }
 
         // Get file pattern by targeting the module using module id
-        AppModuleConfig mod = this.config.getModules().get(this.moduleId);
+        ApplicationModuleBean mod = this.config.getModules().get(this.moduleId);
         StringBuffer wildcards = new StringBuffer();
         wildcards.append(mod.getFilePattern());
         List<String> fileListing = RMT2File.getDirectoryListing(
@@ -584,7 +584,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         logger.log(Level.INFO, "Inside updateHomeApp");
         String pkVal = fileNameTokens.get(2);
 
-        AppModuleConfig mod = this.config.getModules().get(this.moduleId);
+        ApplicationModuleBean mod = this.config.getModules().get(this.moduleId);
         if (mod == null) {
             this.msg = "Failure to update target application record due to an invalid moudle configuration instance";
             logger.log(Level.ERROR, this.msg);
@@ -645,7 +645,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
      *            the id of the MIME record.
      * @return SQL query.
      */
-    private String buildTargetAppQuery(AppModuleConfig appModuleConfig,
+    private String buildTargetAppQuery(ApplicationModuleBean appModuleConfig,
             String primaryKey, int contentId) {
         StringBuffer sql = new StringBuffer();
         sql.append("select ");
