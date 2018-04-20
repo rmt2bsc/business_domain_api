@@ -1,4 +1,4 @@
-package org.dao.document.file;
+package org.modules.services.directory.file;
 
 import com.api.BatchFileException;
 
@@ -9,21 +9,21 @@ import com.api.BatchFileException;
  * @author Roy Terrell
  * 
  */
-public class MediaFileOperationDaoException extends BatchFileException {
+public class MediaFileOperationException extends BatchFileException {
 
     private static final long serialVersionUID = -2249933179263928838L;
 
     /**
      * 
      */
-    public MediaFileOperationDaoException() {
+    public MediaFileOperationException() {
         return;
     }
 
     /**
      * @param msg
      */
-    public MediaFileOperationDaoException(String msg) {
+    public MediaFileOperationException(String msg) {
         super(msg);
         return;
     }
@@ -31,7 +31,7 @@ public class MediaFileOperationDaoException extends BatchFileException {
     /**
      * @param e
      */
-    public MediaFileOperationDaoException(Exception e) {
+    public MediaFileOperationException(Exception e) {
         super(e);
         return;
     }
@@ -40,7 +40,7 @@ public class MediaFileOperationDaoException extends BatchFileException {
      * @param msg
      * @param cause
      */
-    public MediaFileOperationDaoException(String msg, Throwable cause) {
+    public MediaFileOperationException(String msg, Throwable cause) {
         super(msg, cause);
         return;
     }

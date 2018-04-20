@@ -1,29 +1,29 @@
-package org.dao.document.file;
+package org.modules.services.directory.file;
 
 import com.api.BatchFileException;
 
 /**
- * An exception thrown when the format of the source data file's filename is
- * incorrect.
+ * An exception thrown when an error occurs during the File Drop Report creation
+ * and/or transmission.
  * 
  * @author appdev
  * 
  */
-public class InvalidMediaFileFormatDaoException extends BatchFileException {
+public class FileDropReportException extends BatchFileException {
 
     private static final long serialVersionUID = -2249933179263928838L;
 
     /**
      * 
      */
-    public InvalidMediaFileFormatDaoException() {
+    public FileDropReportException() {
         return;
     }
 
     /**
      * @param msg
      */
-    public InvalidMediaFileFormatDaoException(String msg) {
+    public FileDropReportException(String msg) {
         super(msg);
         return;
     }
@@ -31,7 +31,7 @@ public class InvalidMediaFileFormatDaoException extends BatchFileException {
     /**
      * @param e
      */
-    public InvalidMediaFileFormatDaoException(Exception e) {
+    public FileDropReportException(Exception e) {
         super(e);
         return;
     }
@@ -40,7 +40,7 @@ public class InvalidMediaFileFormatDaoException extends BatchFileException {
      * @param msg
      * @param cause
      */
-    public InvalidMediaFileFormatDaoException(String msg, Throwable cause) {
+    public FileDropReportException(String msg, Throwable cause) {
         super(msg, cause);
         return;
     }

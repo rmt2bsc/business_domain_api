@@ -1,20 +1,16 @@
-package org.dao.document.file;
+package org.modules.services.directory.file;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
+import org.dao.document.file.HomeAppDao;
+import org.dao.document.file.HomeAppDaoImpl;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.services.directory.ApplicationModuleBean;
@@ -27,10 +23,6 @@ import com.api.config.ConfigConstants;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
-import com.api.persistence.DatabaseException;
-import com.api.persistence.db.DatabaseConnectionBean;
-import com.api.persistence.db.DatabaseConnectionFactory;
-import com.api.persistence.db.SimpleConnectionProviderImpl;
 import com.util.RMT2Date;
 import com.util.RMT2File;
 import com.util.RMT2String;
@@ -46,18 +38,15 @@ import com.util.RMT2Utility;
  * @author rterrell
  * 
  */
-public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoImpl {
+public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl {
 
-    private static Logger logger = Logger
-            .getLogger(BatchMediaFileProcessorDaoImpl.class);
+    private static Logger logger = Logger.getLogger(BatchMediaFileProcessorImpl.class);
 
-    private DatabaseConnectionBean appConBean;
+    private HomeAppDao homeAppDao;
 
     private DirectoryListenerConfigBean config;
 
     private List<String> mimeMsgs;
-
-    private Map<Integer, DatabaseConnectionBean> conMap;
 
     private int moduleId;
 
@@ -78,12 +67,12 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
      * application, archive the source data file, and send a file drop report to
      * the user designated in the home application's MIME configuration.
      */
-    public BatchMediaFileProcessorDaoImpl() {
+    public BatchMediaFileProcessorImpl() {
         super();
         try {
             this.config = DirectoryListenerConfigFactory.getConfigInstance();
         } catch (Exception e) {
-            this.msg = "Error instantiating AbstractMediaFileProcessorDaoImp object";
+            this.msg = "Error instantiating BatchMediaFileProcessorDaoImpl object";
             throw new SystemException(this.msg, e);
         }
 
@@ -93,72 +82,14 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
     }
 
     /**
-     * Setup database connections for the home application as well as the
-     * <i>mime</i> database using the individual {@link AppModuleConfig}
-     * instances representing each home application that are contained in the
-     * member variable which is an instance of {@link FileListenerConfig} for a
-     * particular execution environment.
+     * Setup conntection to the Home Application DAO.
      * 
      * @throws BatchFileException
      *             when the attempt to establish a connection for either system
      *             fails.
      */
     public synchronized void initConnection() throws BatchFileException {
-        super.initConnection();
-
-        int modCount = this.config.getModuleCount();
-        this.conMap = new HashMap<Integer, DatabaseConnectionBean>();
-        int count = 0;
-        DatabaseConnectionFactory f = new DatabaseConnectionFactory();
-        try {
-            for (int ndx = 0; ndx < modCount; ndx++) {
-                ApplicationModuleBean mod = this.config.getModules().get(ndx);
-                SimpleConnectionProviderImpl conUtil = new SimpleConnectionProviderImpl();
-                DatabaseConnectionBean con = conUtil.getConnection(
-                        mod.getDbDriver(), mod.getDbUrl(), mod.getDbUserId(),
-                        mod.getDbPassword());
-                this.conMap.put(ndx, con);
-                logger.info("Opened database connection object for home application, "
-                        + con.getName() + ", DB URL: " + con.getDbUrl());
-                count++;
-            }
-        } catch (Exception e) {
-            throw new FileDropConnectionException(e);
-        }
-        if (this.conMap.isEmpty()) {
-            this.msg = "Failed to establish a database connection for the home application(s) required for the media file drop operation";
-            logger.log(Level.ERROR, this.msg);
-            throw new FileDropConnectionException(this.msg);
-        }
-        logger.info("Media file drop thread opened " + count
-                + " home application database connection(s)");
-
-    }
-
-    /**
-     * Closes the database connection for the home application and the MIME
-     * application.
-     */
-    public synchronized void close() {
-        super.close();
-
-        // Close all module DB connections
-        if (this.conMap != null && !this.conMap.isEmpty()) {
-            Iterator<Integer> iter = this.conMap.keySet().iterator();
-            int count = 0;
-            while (iter.hasNext()) {
-                Integer key = iter.next();
-                DatabaseConnectionBean con = this.conMap.get(key);
-                logger.info("Closing database connection object for application, "
-                        + con.getName() + ", DB URL: " + con.getDbUrl());
-                con.close();
-                con = null;
-                count++;
-            }
-            logger.info(count
-                    + " home application database connections were closed successfully for the MIME thread");
-        }
-        this.appConBean = null;
+        this.homeAppDao = new HomeAppDaoImpl(this.config);
     }
 
     /**
@@ -180,8 +111,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         ApplicationModuleBean mod = this.config.getModules().get(this.moduleId);
         StringBuffer wildcards = new StringBuffer();
         wildcards.append(mod.getFilePattern());
-        List<String> fileListing = RMT2File.getDirectoryListing(
-                config.getInboundDir(), wildcards.toString());
+        List<String> fileListing = RMT2File.getDirectoryListing(config.getInboundDir(), wildcards.toString());
         return fileListing;
     }
 
@@ -196,8 +126,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
             return false;
         }
         // See if one or more files exist in the Inbound directory
-        List<String> fileListing = RMT2File.getDirectoryListing(
-                config.getInboundDir(), null);
+        List<String> fileListing = RMT2File.getDirectoryListing(config.getInboundDir(), null);
         return fileListing.size() > 0;
     }
 
@@ -210,16 +139,14 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
     public int processBatch() throws BatchFileException {
         int fileCount = 0;
         try {
-            BatchMediaFileProcessorDaoImpl.logger
-                    .info("Media file batch process looking for files in inbound directory, "
+            BatchMediaFileProcessorImpl.logger.info("Media file batch process looking for files in inbound directory, "
                             + this.config.getInboundDir());
             if (this.isFilesAvailable()) {
                 Integer rc = (Integer) this.processFiles(null, null);
                 fileCount = rc.intValue();
                 if (fileCount > 0) {
-                    String msgCount = fileCount
-                            + " media files in designated inbound directory were processed for all modules";
-                    BatchMediaFileProcessorDaoImpl.logger.info(msgCount);
+                    String msgCount = fileCount + " media files in designated inbound directory were processed for all modules";
+                    BatchMediaFileProcessorImpl.logger.info(msgCount);
                     // Attempt to send report.
                     if (this.config.isEmailResults()) {
                         try {
@@ -231,12 +158,11 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
                 }
             }
             else {
-                BatchMediaFileProcessorDaoImpl.logger
-                        .info("No files available for media file thread to process!");
+                BatchMediaFileProcessorImpl.logger.info("No files available for media file thread to process!");
             }
             return fileCount;
         } catch (Exception e) {
-            BatchMediaFileProcessorDaoImpl.logger.error(e);
+            BatchMediaFileProcessorImpl.logger.error(e);
             throw new FileDropProcessingException(e);
         }
     }
@@ -254,8 +180,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
      * @throws BatchFileException
      *             file validation errors and general database errors
      */
-    public synchronized Object processFiles(List<String> files, Object parent)
-            throws BatchFileException {
+    public synchronized Object processFiles(List<String> files, Object parent) throws BatchFileException {
         this.startTime = new Date();
         int count = 0;
         String cmd = null;
@@ -266,8 +191,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
             // for copy/moving files remotely
             if (!this.config.isArchiveLocal()) {
                 cmd = "cmd /c net use " + config.getArchiveDir();
-                logger.log(Level.DEBUG, "Connecting to shared resource, "
-                        + config.getArchiveDir());
+                logger.log(Level.DEBUG, "Connecting to shared resource, " + config.getArchiveDir());
                 cmdMsg = RMT2Utility.execShellCommand(cmd);
                 logger.log(Level.DEBUG, cmdMsg);
             }
@@ -281,37 +205,14 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
                     for (String fileName : files) {
                         String fileMsg = null;
                         try {
-                            logger.log(Level.INFO, "Begin proecessing file, "
-                                    + fileName);
-                            Integer rc = (Integer) this.processSingleFile(
-                                    fileName, null);
+                            logger.log(Level.INFO, "Begin proecessing file, "  + fileName);
+                            Integer rc = (Integer) this.processSingleFile(fileName, null);
                             int uid = rc.intValue();
-                            logger.log(Level.INFO, fileName
-                                    + " was added to the database");
-                            this.mimeConBean.getNativeConnection().commit();
-                            logger.log(Level.INFO,
-                                    "Media File was committed in MIME database");
-                            if (AbstractMediaFileProcessorDaoImp.ADD_AND_LINK) {
-                                this.appConBean.getNativeConnection().commit();
-                                logger.log(Level.INFO,
-                                        "Media File was committed in HOME database");
-                            }
-                            fileMsg = fileName
-                                    + " was added to the MIME database successfully as "
-                                    + uid;
+                            logger.log(Level.INFO, fileName + " was added to the database");
+                            this.homeAppDao.commitTrans();
+                            fileMsg = fileName + " was added to the MIME database successfully as " + uid;
                         } catch (Exception e) {
-                            try {
-                                this.mimeConBean.getNativeConnection()
-                                        .rollback();
-                                if (AbstractMediaFileProcessorDaoImp.ADD_AND_LINK) {
-                                    this.appConBean.getNativeConnection()
-                                            .rollback();
-                                }
-                            } catch (SQLException ee) {
-                                this.msg = "Error processing multi media file, "
-                                        + fileName;
-                                throw new DatabaseException(this.msg, ee);
-                            }
+                            this.homeAppDao.rollbackTrans();
                             fileMsg = "[ERROR] "
                                     + fileName
                                     + " was not added to the MIME database and/or assoicated with the target record of the home application.  Cause: "
@@ -319,14 +220,11 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
                         } finally {
                             logger.log(Level.INFO, fileMsg);
                             this.mimeMsgs.add(fileMsg);
-                            logger.log(Level.INFO, "MIME Message buffer size: "
-                                    + this.mimeMsgs.size());
-                            this.appConBean = null;
+                            logger.log(Level.INFO, "MIME Message buffer size: " + this.mimeMsgs.size());
                             count++;
                         }
                     } // end for
-                    this.msg = "Media files were processed for module: "
-                            + this.moduleId;
+                    this.msg = "Media files were processed for module: " + this.moduleId;
                     logger.log(Level.INFO, this.msg);
                 } // end if
             } // end for
@@ -336,8 +234,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
             // Cancel the connection to computer share(s)
             if (!this.config.isArchiveLocal()) {
                 cmd = "cmd /c net use " + config.getArchiveDir() + " /delete";
-                logger.log(Level.DEBUG, "Disconnecting from shared resource, "
-                        + config.getArchiveDir());
+                logger.log(Level.DEBUG, "Disconnecting from shared resource, " + config.getArchiveDir());
                 cmdMsg = RMT2Utility.execShellCommand(cmd);
                 logger.log(Level.DEBUG, cmdMsg);
             }
@@ -374,34 +271,34 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
      *             archive destination or deleting the <i>fileName</i> from the
      *             inbound directory.
      */
-    public Integer processSingleFile(String fileName, Object parent)
-            throws BatchFileException {
-        List<String> fileNameTokens = null;
-        int uid = 0;
+    public Integer processSingleFile(String fileName, Object parent) throws BatchFileException {
+        List<String> fileNamePrimaryKeyTokens = null;
+        int newContentId = 0;
         try {
             // Validate the format of the file name.
             logger.info("Validate file format");
-            fileNameTokens = this.verifyFileFormat(fileName);
+            fileNamePrimaryKeyTokens = this.verifyFileFormat(fileName);
 
-            // Save media file data to the document table
-            uid = super.processSingleFile(fileName, parent);
+            // Save media file data to the content table
+            newContentId = super.processSingleFile(fileName, parent);
 
             // Assoicate MIME document with a record from the target application
             // using document id and the module code
-            if (AbstractMediaFileProcessorDaoImp.ADD_AND_LINK) {
+            if (this.homeAppDao.isAddLink()) {
                 logger.info("Add document to HOME database");
-                this.updateHomeApp(uid, fileNameTokens);
+                // Make call to Home App DAO to link document to a particular app module
+                this.homeAppDao.update(this.moduleId, newContentId, fileNamePrimaryKeyTokens);
             }
             logger.info("MIME Database updates completed");
-            return uid;
+            return newContentId;
         } catch (Exception e) {
             logger.error(e.getMessage());
             // If document data has been added, delete from the database since
             // an error occurred.
-            if (uid > 0) {
-                this.deleteContent(uid);
+            if (newContentId > 0) {
+                this.deleteContent(newContentId);
             }
-            throw new MediaFileOperationDaoException(e);
+            throw new MediaFileOperationException(e);
         } finally {
             this.archiveFile(fileName);
         }
@@ -476,8 +373,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
      * @return List<String> the application code, moudle code, and the primary
      *         key.
      */
-    private List<String> verifyFileFormat(String fileName)
-            throws InvalidMediaFileFormatDaoException {
+    private List<String> verifyFileFormat(String fileName) throws InvalidMediaFileFormatException {
         // remove extra path info, if available
         fileName = RMT2File.getFileName(fileName);
         List<String> tokens = RMT2String.getTokens(fileName, "_");
@@ -485,13 +381,13 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
             this.msg = fileName
                     + ": Parsing error occurred...The underscore character must be used as a separator in the file name";
             logger.log(Level.ERROR, this.msg);
-            throw new InvalidMediaFileFormatDaoException(this.msg);
+            throw new InvalidMediaFileFormatException(this.msg);
         }
         if (tokens.size() != 3) {
             this.msg = fileName
                     + ": Parsing error occurred...The file name must be in the format  <app_code>_<module>_<primary_key>.<file extension>";
             logger.log(Level.ERROR, this.msg);
-            throw new InvalidMediaFileFormatDaoException(this.msg);
+            throw new InvalidMediaFileFormatException(this.msg);
         }
 
         // Validate that third element is an integer value representing the
@@ -504,7 +400,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
                     + ": Failure to recognize the third position in the file name as the primary key for the target datasource during the second phase of file name parsing.  The invalid value is "
                     + tokens.get(2);
             logger.log(Level.ERROR, this.msg);
-            throw new InvalidMediaFileFormatDaoException(this.msg);
+            throw new InvalidMediaFileFormatException(this.msg);
         }
         // Assign the parsed primary key value to original set of tokens
         tokens.set(2, tokens2.get(0));
@@ -534,8 +430,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         timestampStr.append("_");
         timestampStr.append(RMT2Date.formatDate(timestamp, "S"));
         timestampStr.append(".");
-        String fileNameTs = fileToken.get(0) + timestampStr.toString()
-                + fileToken.get(1);
+        String fileNameTs = fileToken.get(0) + timestampStr.toString() + fileToken.get(1);
 
         // Prepare for media file maintenance...
         String fromFile = dto.getFilepath() + dto.getFilename();
@@ -550,113 +445,6 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         } catch (IOException e) {
             throw new SystemException(e);
         }
-    }
-
-    /**
-     * Applies database updates to the target record of the home application
-     * using the primary key value of the MIME record recently added to the
-     * document table. The parameters, <i>contentId</i> and
-     * <i>fileNameTokens</i> are used to dynamically build SQL query needed
-     * target and update the appropriate record of the home application based on
-     * the mime configuration specified by the application.
-     * 
-     * @param contentId
-     *            the id of the document record from the MIME database.
-     * @param fileNameTokens
-     *            a List of Strings representing the parsed file name. The List
-     *            collection should contain three elements where element(0) is
-     *            the applictaion code, element(1) is the module code, and
-     *            element(2) is the target recrod's primary key value.
-     * @throws HomeApplicationRecordCommittedException
-     *             home application record is already associated with MIME
-     *             document.
-     * @throws HomeApplicationRecordNotFoundException
-     *             hombe application record was not found using the primary key
-     *             contained in <i>fileNameTokens</i>
-     * @throws DatabaseException
-     *             general database errors
-     * @throws BatchFileException
-     *             an invalid module configuration instance was obtained.
-     * 
-     */
-    protected void updateHomeApp(int contentId, List<String> fileNameTokens)
-            throws BatchFileException {
-        logger.log(Level.INFO, "Inside updateHomeApp");
-        String pkVal = fileNameTokens.get(2);
-
-        ApplicationModuleBean mod = this.config.getModules().get(this.moduleId);
-        if (mod == null) {
-            this.msg = "Failure to update target application record due to an invalid moudle configuration instance";
-            logger.log(Level.ERROR, this.msg);
-            throw new BatchFileException(this.msg);
-        }
-        String sql = this.buildTargetAppQuery(mod, pkVal, contentId);
-        logger.log(Level.INFO, sql);
-        this.appConBean = this.conMap.get(this.moduleId);
-        try {
-            Statement stmt = this.appConBean.getNativeConnection()
-                    .createStatement(ResultSet.TYPE_FORWARD_ONLY,
-                            ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs == null || !rs.next()) {
-                this.msg = "The home application record was not found by primary key, "
-                        + fileNameTokens.get(2) + ".  SQL: " + sql;
-                logger.log(Level.ERROR, this.msg);
-                throw new HomeApplicationRecordNotFoundException(this.msg);
-            }
-            // Verify that home application record is not already assoicated
-            // with document.
-            int content_id = rs.getInt(mod.getForeignKey());
-            logger.log(Level.INFO,
-                    "Content Id value fetched from Home App record foreign key, ["
-                            + mod.getForeignKey() + "] :" + content_id);
-            if (content_id > 0) {
-                this.msg = "Unable to update the home application record's document id, because it is already assigned with document identified by: "
-                        + content_id;
-                logger.log(Level.ERROR, this.msg);
-                throw new HomeApplicationRecordCommittedException(this.msg);
-            }
-            logger.log(Level.INFO, "Updating Home App with document id, "
-                    + contentId);
-            rs.updateInt(mod.getForeignKey(), contentId);
-            rs.updateRow();
-            logger.log(Level.INFO, "Home App updated successfully");
-            return;
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, e.getMessage());
-            throw new DatabaseException(e);
-        }
-    }
-
-    /**
-     * Builds SQL query using a valid moduld configuration instance, the primary
-     * key of the target record of the home application, and the document id
-     * from the MIME database.
-     * 
-     * @param moduleConfig
-     *            the configuration needed to obtain the database table name,
-     *            primary key column name, and the foreign key name of the home
-     *            application's target record to build SQL query.
-     * @param primaryKey
-     *            the primary key value that is encoded as part of the source
-     *            file's filename which represents the id of the home
-     *            application's target record.
-     * @param contentId
-     *            the id of the MIME record.
-     * @return SQL query.
-     */
-    private String buildTargetAppQuery(ApplicationModuleBean appModuleConfig,
-            String primaryKey, int contentId) {
-        StringBuffer sql = new StringBuffer();
-        sql.append("select ");
-        sql.append(appModuleConfig.getForeignKey());
-        sql.append(" from ");
-        sql.append(appModuleConfig.getTable());
-        sql.append(" where ");
-        sql.append(appModuleConfig.getPrimaryKey());
-        sql.append(" = ");
-        sql.append(primaryKey);
-        return sql.toString();
     }
 
     /*
@@ -689,8 +477,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         // pool which is loaded at server start up.
         String fromAddr = null;
         try {
-            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP,
-                    ConfigConstants.OWNER_EMAIL);
+            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, ConfigConstants.OWNER_EMAIL);
         } catch (Exception ee) {
             this.msg = "FROM Email address is invalid and will probably be the root cause of transmission failure of MIME File Drop Report";
             logger.log(Level.ERROR, this.msg);
@@ -704,8 +491,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
             throw new FileDropReportException(this.msg);
         }
         String subject = "MIME Content File Drop Report";
-        String appname = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP,
-                ConfigConstants.PROPNAME_APP_NAME);
+        String appname = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, ConfigConstants.PROPNAME_APP_NAME);
         appname = (appname == null ? "[Unknown Application]" : appname);
 
         body.append("The following files where dropped in the inbound directory, ");
@@ -715,8 +501,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
         body.append(".\n\n");
 
         body.append("Start Time: ");
-        body.append(RMT2Date
-                .formatDate(this.startTime, "MM-dd-yyyy HH:mm:ss.S"));
+        body.append(RMT2Date.formatDate(this.startTime, "MM-dd-yyyy HH:mm:ss.S"));
         body.append("\n");
         body.append("End Time: ");
         body.append(RMT2Date.formatDate(this.endTime, "MM-dd-yyyy HH:mm:ss.S"));
@@ -724,8 +509,7 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
 
         int count = 0;
         // Add details about each file that was processed
-        logger.log(Level.INFO,
-                "MIME Drop Report will detail " + this.mimeMsgs.size()
+        logger.log(Level.INFO, "MIME Drop Report will detail " + this.mimeMsgs.size()
                         + " messages regarding MIME files processed");
         for (String msg : this.mimeMsgs) {
             count++;
@@ -752,14 +536,14 @@ public class BatchMediaFileProcessorDaoImpl extends SingleMediaFileProcessorDaoI
             api.sendMessage(bean);
             // Close the service.
             api.close();
-            logger.log(Level.INFO, "MIME Drop Report email was sent to "
-                    + toAddr);
+            logger.log(Level.INFO, "MIME Drop Report email was sent to " + toAddr);
         } catch (Exception e) {
-            this.msg = "MIME Drop Report email submission failed: "
-                    + e.getMessage();
+            this.msg = "MIME Drop Report email submission failed: " + e.getMessage();
             logger.log(Level.INFO, this.msg);
             throw new FileDropReportException(this.msg);
         }
         return;
     }
+
+    
 }

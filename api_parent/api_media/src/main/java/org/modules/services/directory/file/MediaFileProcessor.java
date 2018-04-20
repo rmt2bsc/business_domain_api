@@ -1,4 +1,4 @@
-package org.dao.document.file;
+package org.modules.services.directory.file;
 
 import com.api.BatchFileProcessor;
 
@@ -8,7 +8,7 @@ import com.api.BatchFileProcessor;
  * @author Roy Terrell
  * 
  */
-public interface MediaFileDaoProcessor extends BatchFileProcessor {
+public interface MediaFileProcessor extends BatchFileProcessor {
 
     static final String CONFIG_CLASSPATH = "com.resources.config.";
 

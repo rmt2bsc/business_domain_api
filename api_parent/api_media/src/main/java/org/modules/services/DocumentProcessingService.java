@@ -1,12 +1,12 @@
 package org.modules.services;
 
 import org.apache.log4j.Logger;
-import org.dao.document.file.FileDropProcessingException;
-import org.dao.document.file.MediaFileDaoProcessor;
-import org.dao.document.file.MediaFileFactory;
-import org.dao.document.file.MediaFileOperationDaoException;
 import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
+import org.modules.services.directory.file.FileDropProcessingException;
+import org.modules.services.directory.file.MediaFileProcessor;
+import org.modules.services.directory.file.MediaFileFactory;
+import org.modules.services.directory.file.MediaFileOperationException;
 
 import com.RMT2Base;
 import com.util.RMT2File;
@@ -84,7 +84,7 @@ public class DocumentProcessingService extends RMT2Base {
      * @throws FileDropProcessingException
      */
     public int processMultiMediaFiles() throws FileDropProcessingException {
-        MediaFileDaoProcessor processor = MediaFileFactory.createBatchFileProcessor();
+        MediaFileProcessor processor = MediaFileFactory.createBatchFileProcessor();
         int fileCount = 0;
         try {
             DocumentProcessingService.logger.info("Begin Multi Media file batch processing...");
@@ -101,11 +101,11 @@ public class DocumentProcessingService extends RMT2Base {
         }
     }
 
-    public int processSingleMediaFiles(String fileName) throws MediaFileOperationDaoException {
+    public int processSingleMediaFiles(String fileName) throws MediaFileOperationException {
         if (fileName == null || fileName.equals(RMT2String.spaces(fileName.length()))) {
-            throw new MediaFileOperationDaoException("Input file name cannot be null or spaces");
+            throw new MediaFileOperationException("Input file name cannot be null or spaces");
         }
-        MediaFileDaoProcessor processor = MediaFileFactory.createSingleFileProcessor();
+        MediaFileProcessor processor = MediaFileFactory.createSingleFileProcessor();
         int fileCount = 0;
         try {
             DocumentProcessingService.logger.info("Media file listener looking for files to process...");
@@ -127,7 +127,7 @@ public class DocumentProcessingService extends RMT2Base {
             return fileCount;
         } catch (Exception e) {
             DocumentProcessingService.logger.error(e);
-            throw new MediaFileOperationDaoException(e);
+            throw new MediaFileOperationException(e);
         } finally {
             if (processor != null) {
                 processor.close();

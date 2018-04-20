@@ -4,12 +4,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import org.dao.document.file.BatchMediaFileProcessorDaoImpl;
-import org.dao.document.file.MediaFileFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
 import org.modules.MediaConfigurator;
+import org.modules.services.directory.file.BatchMediaFileProcessorImpl;
+import org.modules.services.directory.file.MediaFileFactory;
 import org.powermock.api.mockito.PowerMockito;
 
 import com.api.persistence.DaoClient;
@@ -62,7 +62,7 @@ public class BaseMediaDaoTest {
     protected void mockListenerBatchProcess() throws Exception {
         // 
         PowerMockito.mockStatic(MediaFileFactory.class);
-        BatchMediaFileProcessorDaoImpl mockBatchMediaFileProcessorDaoImpl = Mockito.mock(BatchMediaFileProcessorDaoImpl.class);
+        BatchMediaFileProcessorImpl mockBatchMediaFileProcessorDaoImpl = Mockito.mock(BatchMediaFileProcessorImpl.class);
         when(MediaFileFactory.createBatchFileProcessor()).thenReturn(mockBatchMediaFileProcessorDaoImpl);
         doNothing().when(mockBatchMediaFileProcessorDaoImpl).initConnection();
         when(mockBatchMediaFileProcessorDaoImpl.processBatch()).thenReturn(0); 

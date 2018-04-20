@@ -1,4 +1,4 @@
-package org.dao.document.file;
+package org.modules.services.directory.file;
 
 import org.apache.log4j.Logger;
 
@@ -28,9 +28,9 @@ public class MediaFileFactory extends RMT2Base {
      * @return an instance of {@link MediaFileDaoProcessor} or null if unable to
      *         create implementation.
      */
-    public static MediaFileDaoProcessor createSingleFileProcessor() {
+    public static MediaFileProcessor createSingleFileProcessor() {
         try {
-            MediaFileDaoProcessor api = new SingleMediaFileProcessorDaoImpl();
+            MediaFileProcessor api = new SingleMediaFileProcessorImpl();
             return api;
         } catch (Exception e) {
             return null;
@@ -44,9 +44,9 @@ public class MediaFileFactory extends RMT2Base {
      * @return an instance of {@link MediaFileDaoProcessor} or null if unable to
      *         create implementation.
      */
-    public static MediaFileDaoProcessor createBatchFileProcessor() {
+    public static MediaFileProcessor createBatchFileProcessor() {
         try {
-            MediaFileDaoProcessor api = new BatchMediaFileProcessorDaoImpl();
+            MediaFileProcessor api = new BatchMediaFileProcessorImpl();
             return api;
         } catch (Exception e) {
             return null;

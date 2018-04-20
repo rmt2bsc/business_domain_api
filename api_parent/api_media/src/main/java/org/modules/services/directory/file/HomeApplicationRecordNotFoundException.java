@@ -1,4 +1,4 @@
-package org.dao.document.file;
+package org.modules.services.directory.file;
 
 import org.dao.MediaDaoException;
 

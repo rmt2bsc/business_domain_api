@@ -1,11 +1,16 @@
-package org.dao.document.file;
+package org.modules.services.directory.file;
+
+import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
+import org.modules.MediaConstants;
 
+import com.RMT2Base;
+import com.RMT2Constants;
 import com.api.BatchFileException;
 
 /**
@@ -15,15 +20,15 @@ import com.api.BatchFileException;
  * @author rterrell
  * 
  */
-class SingleMediaFileProcessorDaoImpl extends AbstractMediaFileProcessorDaoImp {
+abstract class AbstractMediaFileProcessorImpl extends RMT2Base implements MediaFileProcessor { //extends AbstractMediaFileProcessorDaoImp {
 
-    private static Logger logger = Logger.getLogger(SingleMediaFileProcessorDaoImpl.class);
+    private static Logger logger = Logger.getLogger(AbstractMediaFileProcessorImpl.class);
 
     /**
      * Creates a SingleMediaFileProcessorDaoImpl object.
      * 
      */
-    protected SingleMediaFileProcessorDaoImpl() {
+    protected AbstractMediaFileProcessorImpl() {
         super();
         return;
     }
@@ -57,25 +62,49 @@ class SingleMediaFileProcessorDaoImpl extends AbstractMediaFileProcessorDaoImp {
         ContentDao dao = null;
         try {
             // Build MIME document object
-            SingleMediaFileProcessorDaoImpl.logger.info("Create Content Object");
+            AbstractMediaFileProcessorImpl.logger.info("Create Content Object");
             ContentDto mime = Rmt2MediaDtoFactory.getContentInstance(fileName);
 
             // Add media file to the document table in the database.
-            SingleMediaFileProcessorDaoImpl.logger.info("Get document API");
+            AbstractMediaFileProcessorImpl.logger.info("Get document API");
             dao = daoFactory.createDatabaseMediaDaoInstance();
-            dao.setDaoUser(AbstractMediaFileProcessorDaoImp.UPDATE_USERID);
-            SingleMediaFileProcessorDaoImpl.logger.info("Initialize document API");
-            SingleMediaFileProcessorDaoImpl.logger.info("Add document to MIME database");
+            dao.setDaoUser(MediaConstants.UPDATE_USERID);
+            AbstractMediaFileProcessorImpl.logger.info("Initialize document API");
+            AbstractMediaFileProcessorImpl.logger.info("Add document to MIME database");
             contentId = dao.saveContent(mime);
-            SingleMediaFileProcessorDaoImpl.logger.info("MIME Database updates completed");
+            AbstractMediaFileProcessorImpl.logger.info("MIME Database updates completed");
             return contentId;
         } catch (Exception e) {
-            SingleMediaFileProcessorDaoImpl.logger.error(e.getMessage());
-            throw new MediaFileOperationDaoException(e);
+            AbstractMediaFileProcessorImpl.logger.error(e.getMessage());
+            throw new MediaFileOperationException(e);
         } finally {
             dao.close();
             dao = null;
         }
     }
 
+    @Override
+    public void initConnection(Object extSource) throws BatchFileException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public void initConnection(String configFile1, String configFile2) throws BatchFileException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public Object processDirectory(File dir, Object parent) throws BatchFileException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public Object processSingleFile(File file, Object parent) throws BatchFileException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
 }
