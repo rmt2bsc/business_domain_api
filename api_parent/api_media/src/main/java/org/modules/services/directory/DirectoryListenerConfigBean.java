@@ -16,13 +16,9 @@ public class DirectoryListenerConfigBean extends RMT2Base {
 
     private static final long serialVersionUID = 518549554653952863L;
 
-    private String dbUrl;
-
     private boolean emailResults;
 
-    private String reportEmail;
-
-    private String appCode;
+    private String emailRecipients;
 
     private int moduleCount;
 
@@ -40,8 +36,6 @@ public class DirectoryListenerConfigBean extends RMT2Base {
 
     private int pollFreq;
 
-    private String handlerClass;
-
     private boolean archiveLocal;
 
     /**
@@ -55,16 +49,16 @@ public class DirectoryListenerConfigBean extends RMT2Base {
     /**
      * @return the reportEmail
      */
-    public String getReportEmail() {
-        return reportEmail;
+    public String getEmailRecipients() {
+        return emailRecipients;
     }
 
     /**
      * @param reportEmail
      *            the reportEmail to set
      */
-    public void setReportEmail(String reportEmail) {
-        this.reportEmail = reportEmail;
+    public void setEmailRecipients(String reportEmail) {
+        this.emailRecipients = reportEmail;
     }
 
     /**
@@ -150,36 +144,6 @@ public class DirectoryListenerConfigBean extends RMT2Base {
     }
 
     /**
-     * @return the handlerClass
-     */
-    public String getHandlerClass() {
-        return handlerClass;
-    }
-
-    /**
-     * @param handlerClass
-     *            the handlerClass to set
-     */
-    public void setHandlerClass(String handlerClass) {
-        this.handlerClass = handlerClass;
-    }
-
-    /**
-     * @return the appCode
-     */
-    public String getAppCode() {
-        return appCode;
-    }
-
-    /**
-     * @param appCode
-     *            the appCode to set
-     */
-    public void setAppCode(String appCode) {
-        this.appCode = appCode;
-    }
-
-    /**
      * @return the outboundDir
      */
     public String getOutboundDir() {
@@ -192,21 +156,6 @@ public class DirectoryListenerConfigBean extends RMT2Base {
      */
     public void setOutboundDir(String outboundDir) {
         this.outboundDir = outboundDir;
-    }
-
-    /**
-     * @return the dbUrl
-     */
-    public String getDbUrl() {
-        return dbUrl;
-    }
-
-    /**
-     * @param dbUrl
-     *            the dbUrl to set
-     */
-    public void setDbUrl(String dbUrl) {
-        this.dbUrl = dbUrl;
     }
 
     /**
@@ -253,5 +202,4 @@ public class DirectoryListenerConfigBean extends RMT2Base {
     public void setFetchDir(String fetchDir) {
         this.fetchDir = fetchDir;
     }
-
 }

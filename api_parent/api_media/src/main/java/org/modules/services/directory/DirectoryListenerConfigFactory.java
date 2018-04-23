@@ -8,9 +8,10 @@ import com.api.config.ConfigConstants;
 import com.util.RMT2File;
 
 /**
- * Manages the configuration for the DocumentInboundDirectoryListener .
+ * Factory class for creating entities related to configuring the
+ * DocumentInboundDirectoryListener.
  * 
- * @author appdev
+ * @author roy.terrell
  * 
  */
 public class DirectoryListenerConfigFactory extends RMT2Base {
@@ -34,12 +35,16 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
      * 
      * @return {@link FileListenerConfig}
      */
-    public static DirectoryListenerConfigBean getConfigInstance() {
-        String propFile = MediaConstants.CONFIG_CLASSPATH + "."
-                + DirectoryListenerConfigFactory.configFile + "_"
-                + DirectoryListenerConfigFactory.ENV;
+    public static DirectoryListenerConfigBean getDocumentListenerConfigBeanInstance() {
+        // Setup to use default MimeConfig.properties file
+        String propFile = MediaConstants.CONFIG_CLASSPATH + "."  + DirectoryListenerConfigFactory.configFile; 
+        if (ENV != null) {
+            // Use environment specific MimeConfig_<ENV>.properties file
+            propFile += "_" + DirectoryListenerConfigFactory.ENV;            
+        }
+
         logger.info("Looking for MIME Configuration in, " + propFile);
-        return DirectoryListenerConfigFactory.getConfigInstance(propFile);
+        return DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance(propFile);
     }
 
     /**
@@ -50,48 +55,29 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
      *            a .properties file containing the MIME configuration.
      * @return an instance of {@link FileListenerConfig}
      */
-    public static DirectoryListenerConfigBean getConfigInstance(String propFile) {
+    public static DirectoryListenerConfigBean getDocumentListenerConfigBeanInstance(String propFile) {
         DirectoryListenerConfigBean config = new DirectoryListenerConfigBean();
         String msg = null;
         String propVal = null;
 
-        // Set MIME Database URL
-        propVal = RMT2File.getPropertyValue(propFile, "mime.dbURL");
-        logger.info("mime.dbURL = " + propVal);
-        config.setDbUrl(propVal);
-
-        // Set MIME file handler class
-        propVal = RMT2File.getPropertyValue(propFile, "mime.handler");
-        logger.info("mime.handler = " + propVal);
-        config.setHandlerClass(propVal);
-
         // Set email results indicator
         boolean flag = false;
         try {
-            flag = Boolean.parseBoolean(RMT2File.getPropertyValue(propFile,
-                    "mime.emailResults"));
+            flag = Boolean.parseBoolean(RMT2File.getPropertyValue(propFile, "mime.emailResults"));
         } catch (Exception e) {
             flag = false;
         } finally {
-            propVal = RMT2File.getPropertyValue(propFile, "mime.emailResults");
-            logger.info("mime.emailResults = " + propVal);
+            logger.info("mime.emailResults = " + flag);
             config.setEmailResults(flag);
         }
 
         // Set Reporting email recipient
-        config.setReportEmail(RMT2File.getPropertyValue(propFile,
-                "mime.reportEmail"));
-
-        // Set Application code
-        propVal = RMT2File.getPropertyValue(propFile, "mime.appCode");
-        logger.info("mime.appCode = " + propVal);
-        config.setAppCode(propVal);
+        config.setEmailRecipients(RMT2File.getPropertyValue(propFile, "mime.emailRecipients"));
 
         // Set module count
         int moduleCount = 0;
         try {
-            moduleCount = Integer.parseInt(RMT2File.getPropertyValue(propFile,
-                    "mime.moduleCount"));
+            moduleCount = Integer.parseInt(RMT2File.getPropertyValue(propFile, "mime.moduleCount"));
         } catch (NumberFormatException e) {
             moduleCount = 10000;
             msg = "Module count for MIME listener could not be determined.  Defaulting to zero";
@@ -108,7 +94,7 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
             String filePattern = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".filePattern");
             String moduleName = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".moduleName");
             String projectName = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".projectName");
-            String entityUid = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".endityUid");
+            String entityUid = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".entityUid");
             String moduleCode = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx);
             ApplicationModuleBean mod = new ApplicationModuleBean(moduleCode);
             mod.setFilePattern(filePattern);
@@ -121,8 +107,7 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
         // Set Polling frequency
         int pollFreq = 0;
         try {
-            pollFreq = Integer.parseInt(RMT2File.getPropertyValue(propFile,
-                    "mime.pollFreq"));
+            pollFreq = Integer.parseInt(RMT2File.getPropertyValue(propFile,"mime.pollFreq"));
         } catch (NumberFormatException e) {
             pollFreq = 10000;
             msg = "Polling frequency for MIME listener could not be determined.  Defaulting to 10 seconds";
@@ -151,8 +136,7 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
         // Set archive age
         int archiveAge = 0;
         try {
-            archiveAge = Integer.parseInt(RMT2File.getPropertyValue(propFile,
-                    "mime.archiveAge"));
+            archiveAge = Integer.parseInt(RMT2File.getPropertyValue(propFile, "mime.archiveAge"));
         } catch (NumberFormatException e) {
             archiveAge = 72;
             msg = "Archiving age for MIME listener could not be determined.  Defaulting to 72 hours";

@@ -43,7 +43,7 @@ public class DocumentProcessingService extends RMT2Base {
     public void init() {
         logger.info("Initializing Document Service...");
         DocumentProcessingService.logger.info("Initializing media file listener");
-        this.config = DirectoryListenerConfigFactory.getConfigInstance();
+        this.config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
     }
 
     /*

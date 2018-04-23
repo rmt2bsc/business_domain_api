@@ -76,7 +76,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
     public BatchMediaFileProcessorImpl() {
         super();
         try {
-            this.config = DirectoryListenerConfigFactory.getConfigInstance();
+            this.config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
         } catch (Exception e) {
             this.msg = "Error instantiating BatchMediaFileProcessorDaoImpl object";
             throw new SystemException(this.msg, e);
@@ -519,7 +519,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new FileDropReportException(this.msg);
         }
 
-        String toAddr = this.config.getReportEmail();
+        String toAddr = this.config.getEmailRecipients();
         if (toAddr == null) {
             this.msg = "TO Email address is invalid and will probably be the root cause of transmission failure of MIME File Drop Report";
             logger.log(Level.ERROR, this.msg);
