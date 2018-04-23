@@ -1,0 +1,114 @@
+package org.rmt2.api.document.service;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.modules.services.directory.ApplicationModuleBean;
+import org.modules.services.directory.DirectoryListenerConfigBean;
+import org.modules.services.directory.DirectoryListenerConfigFactory;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.rmt2.api.MediaMockData;
+
+import com.SystemException;
+import com.api.config.ConfigConstants;
+import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.util.RMT2File;
+
+/**
+ * Test the Document Listener Configuration Factory functionality of the Media API service module.
+ * 
+ * @author rterrell
+ * 
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
+public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
+    
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+    }
+
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        super.tearDown();
+        return;
+    }
+
+   
+    @Test
+    public void testSuccess_Load_From_Default_Prop_File() {
+        // Make sure that "ENV" System property does not exist.
+        String prevEnvSetting = System.clearProperty(ConfigConstants.PROPNAME_ENV);
+        Assert.assertEquals(ConfigConstants.ENVTYPE_TEST, prevEnvSetting);
+        
+        DirectoryListenerConfigBean config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
+        
+        Assert.assertNotNull(config);
+        Assert.assertEquals("rmt2bsc@gmail.com", config.getEmailRecipients());
+        Assert.assertTrue(config.isEmailResults());
+        Assert.assertEquals("/data/mime/in/", config.getInboundDir());
+        Assert.assertEquals("/data/mime/out/", config.getOutboundDir());
+        Assert.assertEquals("/data/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals(10000, config.getPollFreq());
+        Assert.assertEquals(2, config.getModuleCount());
+        
+        ApplicationModuleBean a = config.getModules().get(0);
+        Assert.assertEquals("cd", a.getModuleCode());
+        Assert.assertEquals("acct_*.*", a.getFilePattern());
+        Assert.assertEquals("Accounting", a.getProjectName());
+        Assert.assertEquals("transaction", a.getModuleName());
+        Assert.assertEquals("xact_id", a.getEntityUid());
+        
+        a = config.getModules().get(1);
+        Assert.assertEquals("ts", a.getModuleCode());
+        Assert.assertEquals("proj_ts*.*", a.getFilePattern());
+        Assert.assertEquals("ProjectTracker", a.getProjectName());
+        Assert.assertEquals("timesheet", a.getModuleName());
+        Assert.assertEquals("timesheet_id", a.getEntityUid());
+    }
+    
+    @Test
+    public void testSuccess_Load_From_Test_Prop_File() {
+        DirectoryListenerConfigBean config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
+        
+        Assert.assertNotNull(config);
+        Assert.assertEquals("john.smith@gte.net", config.getEmailRecipients());
+        Assert.assertTrue(config.isEmailResults());
+        Assert.assertEquals("/data/mime/in/", config.getInboundDir());
+        Assert.assertEquals("/data/mime/out/", config.getOutboundDir());
+        Assert.assertEquals("/data/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals(10000, config.getPollFreq());
+        Assert.assertEquals(2, config.getModuleCount());
+        
+        for (int ndx = 0; ndx < config.getModuleCount(); ndx++) {
+            ApplicationModuleBean a = config.getModules().get(ndx);
+            Assert.assertEquals("cd" + (ndx + 1), a.getModuleCode());
+            Assert.assertEquals("filepattern_*.*" + (ndx + 1), a.getFilePattern());
+            Assert.assertEquals("projectName" + (ndx + 1), a.getProjectName());
+            Assert.assertEquals("moduleName" + (ndx + 1), a.getModuleName());
+            Assert.assertEquals("entityUid" + (ndx + 1), a.getEntityUid());
+        }
+   }
+    
+    @Test
+    public void testError_NonExisting_Prop_File() {
+        try {
+            DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance("MimeConfig_NotExist");    
+            Assert.fail("Expected an exception to be thrown");
+        }
+        catch (Exception e) {
+            Assert.assertTrue(e instanceof SystemException);
+        }
+  }
+}

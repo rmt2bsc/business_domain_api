@@ -12,6 +12,7 @@ import org.modules.services.directory.file.BatchMediaFileProcessorImpl;
 import org.modules.services.directory.file.MediaFileFactory;
 import org.powermock.api.mockito.PowerMockito;
 
+import com.api.config.ConfigConstants;
 import com.api.persistence.DaoClient;
 import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -41,6 +42,8 @@ public class BaseMediaDaoTest {
      */
     @Before
     public void setUp() throws Exception {
+        System.setProperty(ConfigConstants.PROPNAME_ENV, ConfigConstants.ENVTYPE_TEST);
+        
         MediaConfigurator configurator = new MediaConfigurator();
         configurator.start();
         
