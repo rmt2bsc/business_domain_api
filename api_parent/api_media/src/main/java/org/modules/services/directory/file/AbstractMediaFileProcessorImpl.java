@@ -9,9 +9,9 @@ import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.MediaConstants;
 
-import com.RMT2Base;
 import com.RMT2Constants;
 import com.api.BatchFileException;
+import com.api.foundation.AbstractTransactionApiImpl;
 
 /**
  * An implementation of {@link MediaFileDaoProcessor} for managing a single
@@ -20,7 +20,7 @@ import com.api.BatchFileException;
  * @author rterrell
  * 
  */
-abstract class AbstractMediaFileProcessorImpl extends RMT2Base implements MediaFileProcessor { //extends AbstractMediaFileProcessorDaoImp {
+abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl implements MediaFileProcessor { //extends AbstractMediaFileProcessorDaoImp {
 
     private static Logger logger = Logger.getLogger(AbstractMediaFileProcessorImpl.class);
 

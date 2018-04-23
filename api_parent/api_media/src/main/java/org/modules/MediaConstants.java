@@ -14,6 +14,9 @@ public class MediaConstants {
      * to processing media files
      */
     public static final String UPDATE_USERID = "media_api_user";
+    
+    public static final String MODULE_FILEPATTERN_ACCOUNTING = "acct_*.*";
+    public static final String MODULE_FILEPATTERN_PROJECTTRACKER = "proj_ts*.*";
 
     public MediaConstants() {
         return;

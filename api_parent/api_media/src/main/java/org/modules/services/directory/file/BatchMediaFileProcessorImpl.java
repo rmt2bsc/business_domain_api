@@ -1,6 +1,8 @@
 package org.modules.services.directory.file;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,20 +11,26 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
-import org.dao.document.file.HomeAppDao;
-import org.dao.document.file.HomeAppDaoImpl;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.services.directory.ApplicationModuleBean;
 import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
+import org.rmt2.constants.ApiTransactionCodes;
+import org.rmt2.jaxb.HeaderType;
+import org.rmt2.jaxb.MediaApplicationLinkRequest;
+import org.rmt2.jaxb.ObjectFactory;
+import org.rmt2.util.JaxbPayloadFactory;
 
 import com.SystemException;
 import com.api.BatchFileException;
 import com.api.config.ConfigConstants;
+import com.api.foundation.TransactionApiException;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
+import com.api.messaging.webservice.router.MessageRouterHelper;
+import com.api.messaging.webservice.router.MessageRoutingException;
 import com.util.RMT2Date;
 import com.util.RMT2File;
 import com.util.RMT2String;
@@ -41,8 +49,6 @@ import com.util.RMT2Utility;
 public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl {
 
     private static Logger logger = Logger.getLogger(BatchMediaFileProcessorImpl.class);
-
-    private HomeAppDao homeAppDao;
 
     private DirectoryListenerConfigBean config;
 
@@ -89,7 +95,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      *             fails.
      */
     public synchronized void initConnection() throws BatchFileException {
-        this.homeAppDao = new HomeAppDaoImpl(this.config);
+        return;
     }
 
     /**
@@ -208,11 +214,9 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                             logger.log(Level.INFO, "Begin proecessing file, "  + fileName);
                             Integer rc = (Integer) this.processSingleFile(fileName, null);
                             int uid = rc.intValue();
-                            logger.log(Level.INFO, fileName + " was added to the database");
-                            this.homeAppDao.commitTrans();
+                            logger.log(Level.INFO, fileName + " was linked to its respective project module");
                             fileMsg = fileName + " was added to the MIME database successfully as " + uid;
                         } catch (Exception e) {
-                            this.homeAppDao.rollbackTrans();
                             fileMsg = "[ERROR] "
                                     + fileName
                                     + " was not added to the MIME database and/or assoicated with the target record of the home application.  Cause: "
@@ -284,11 +288,10 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
 
             // Assoicate MIME document with a record from the target application
             // using document id and the module code
-            if (this.homeAppDao.isAddLink()) {
-                logger.info("Add document to HOME database");
-                // Make call to Home App DAO to link document to a particular app module
-                this.homeAppDao.update(this.moduleId, newContentId, fileNamePrimaryKeyTokens);
-            }
+            logger.info("Add document to HOME application");
+            // Make web service call to Home App in order to link document
+            // to a particular application module
+            this.updateProjectModule(this.moduleId, newContentId);
             logger.info("MIME Database updates completed");
             return newContentId;
         } catch (Exception e) {
@@ -304,6 +307,38 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         }
     }
 
+    private void updateProjectModule(int moduleId, int contentId) throws BatchFileException {
+        logger.log(Level.INFO, "Inside updateHomeApp");
+
+        ApplicationModuleBean mod = this.config.getModules().get(moduleId);
+        if (mod == null) {
+            this.msg = "Failure to update target application record due to an invalid moudle configuration instance";
+            logger.log(Level.ERROR, this.msg);
+            throw new BatchFileException(this.msg);
+        }
+
+        ObjectFactory f = new ObjectFactory();
+        MediaApplicationLinkRequest request = f.createMediaApplicationLinkRequest();
+        HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
+                "module", ApiTransactionCodes.MEDIA_CONTENT_APP_LINK, "ASYNC", "REQUEST", this.getApiUser());
+        request.setHeader(header);
+
+        // Setup customer's sales order that will be invoiced
+       request.setContentId(BigInteger.valueOf(contentId));
+       request.setEntityId(BigInteger.valueOf(Integer.getInteger(mod.getEntityUid())));
+       request.setProjectName(mod.getProjectName());
+       request.setModuleName(mod.getModuleName());
+
+        // Send time sheet deatils to Accounting systsem to create and invoice sales order
+        try {
+            this.sendMessage(ApiTransactionCodes.MEDIA_CONTENT_APP_LINK, request);
+        } catch (TransactionApiException e) {
+            this.msg = "A web service problem occurred sending Media Content updates to API [project=" + mod.getProjectName() + ", module=" + mod.getModuleName() + "]";
+            throw new BatchFileException(this.msg, e);
+        }
+    }
+    
+    
     private int deleteContent(int contentId) {
         ContentDaoFactory daoFactory = new ContentDaoFactory();
         ContentDao dao = daoFactory.createDatabaseMediaDaoInstance();
@@ -543,6 +578,18 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new FileDropReportException(this.msg);
         }
         return;
+    }
+
+    @Override
+    public Object sendMessage(String messageId, Serializable payload) throws TransactionApiException {
+        String msg = null;
+        MessageRouterHelper helper = new MessageRouterHelper();
+        try {
+            return helper.routeXmlMessage(messageId, payload);
+        } catch (MessageRoutingException e) {
+            msg = "Error occurred routing Media content identifier to its Home Application";
+            throw new TransactionApiException(msg, e);
+        }
     }
 
     

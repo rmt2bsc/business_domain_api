@@ -9,24 +9,34 @@ import com.RMT2Base;
  * 
  */
 public class ApplicationModuleBean extends RMT2Base {
+    private String projectName;
+    
+    private String moduleCode;
+    
+    private String moduleName;
 
-    private int moduleCode;
-
-    private String dbUrl;
-
-    private String dbDriver;
-
-    private String table;
-
-    private String primaryKey;
-
-    private String foreignKey;
+    private String entityUid;
 
     private String filePattern;
 
-    private String dbUserId;
-
-    private String dbPassword;
+    
+//    private int moduleCode;
+//
+//    private String dbUrl;
+//
+//    private String dbDriver;
+//
+//    private String table;
+//
+//    private String primaryKey;
+//
+//    private String foreignKey;
+//
+//    private String filePattern;
+//
+//    private String dbUserId;
+//
+//    private String dbPassword;
 
     /**
      * Creates an empty AppModuleConfig object
@@ -41,54 +51,9 @@ public class ApplicationModuleBean extends RMT2Base {
      * @param moduleCode
      *            The module code
      */
-    protected ApplicationModuleBean(int moduleCode) {
+    protected ApplicationModuleBean(String moduleCode) {
         this.moduleCode = moduleCode;
         return;
-    }
-
-    /**
-     * @return the table
-     */
-    public String getTable() {
-        return table;
-    }
-
-    /**
-     * @param table
-     *            the table to set
-     */
-    public void setTable(String table) {
-        this.table = table;
-    }
-
-    /**
-     * @return the primaryKey
-     */
-    public String getPrimaryKey() {
-        return primaryKey;
-    }
-
-    /**
-     * @param primaryKey
-     *            the primaryKey to set
-     */
-    public void setPrimaryKey(String primaryKey) {
-        this.primaryKey = primaryKey;
-    }
-
-    /**
-     * @return the foreignKey
-     */
-    public String getForeignKey() {
-        return foreignKey;
-    }
-
-    /**
-     * @param foreignKey
-     *            the foreignKey to set
-     */
-    public void setForeignKey(String foreignKey) {
-        this.foreignKey = foreignKey;
     }
 
     /**
@@ -106,79 +71,157 @@ public class ApplicationModuleBean extends RMT2Base {
         this.filePattern = filePattern;
     }
 
-    /**
-     * @return the moduleCode
-     */
-    public int getModuleCode() {
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getModuleCode() {
         return moduleCode;
     }
 
-    /**
-     * @param moduleCode
-     *            the moduleCode to set
-     */
-    public void setModuleCode(int moduleCode) {
+    public void setModuleCode(String moduleCode) {
         this.moduleCode = moduleCode;
     }
 
-    /**
-     * @return the dbUrl
-     */
-    public String getDbUrl() {
-        return dbUrl;
+    public String getModuleName() {
+        return moduleName;
     }
 
-    /**
-     * @param dbUrl
-     *            the dbUrl to set
-     */
-    public void setDbUrl(String dbUrl) {
-        this.dbUrl = dbUrl;
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 
-    /**
-     * @return the dbUserId
-     */
-    public String getDbUserId() {
-        return dbUserId;
+    public String getEntityUid() {
+        return entityUid;
     }
 
-    /**
-     * @param dbUserId
-     *            the dbUserId to set
-     */
-    public void setDbUserId(String dbUserId) {
-        this.dbUserId = dbUserId;
+    public void setEntityUid(String entityUid) {
+        this.entityUid = entityUid;
     }
+    
+    
 
-    /**
-     * @return the dbPassword
-     */
-    public String getDbPassword() {
-        return dbPassword;
-    }
-
-    /**
-     * @param dbPassword
-     *            the dbPassword to set
-     */
-    public void setDbPassword(String dbPassword) {
-        this.dbPassword = dbPassword;
-    }
-
-    /**
-     * @return the dbDriver
-     */
-    public String getDbDriver() {
-        return dbDriver;
-    }
-
-    /**
-     * @param dbDriver
-     *            the dbDriver to set
-     */
-    public void setDbDriver(String dbDriver) {
-        this.dbDriver = dbDriver;
-    }
+//    /**
+//     * @return the table
+//     */
+//    public String getTable() {
+//        return table;
+//    }
+//
+//    /**
+//     * @param table
+//     *            the table to set
+//     */
+//    public void setTable(String table) {
+//        this.table = table;
+//    }
+//
+//    /**
+//     * @return the primaryKey
+//     */
+//    public String getPrimaryKey() {
+//        return primaryKey;
+//    }
+//
+//    /**
+//     * @param primaryKey
+//     *            the primaryKey to set
+//     */
+//    public void setPrimaryKey(String primaryKey) {
+//        this.primaryKey = primaryKey;
+//    }
+//
+//    /**
+//     * @return the foreignKey
+//     */
+//    public String getForeignKey() {
+//        return foreignKey;
+//    }
+//
+//    /**
+//     * @param foreignKey
+//     *            the foreignKey to set
+//     */
+//    public void setForeignKey(String foreignKey) {
+//        this.foreignKey = foreignKey;
+//    }
+//    /**
+//     * @return the moduleCode
+//     */
+//    public int getModuleCode() {
+//        return moduleCode;
+//    }
+//
+//    /**
+//     * @param moduleCode
+//     *            the moduleCode to set
+//     */
+//    public void setModuleCode(int moduleCode) {
+//        this.moduleCode = moduleCode;
+//    }
+//
+//    /**
+//     * @return the dbUrl
+//     */
+//    public String getDbUrl() {
+//        return dbUrl;
+//    }
+//
+//    /**
+//     * @param dbUrl
+//     *            the dbUrl to set
+//     */
+//    public void setDbUrl(String dbUrl) {
+//        this.dbUrl = dbUrl;
+//    }
+//
+//    /**
+//     * @return the dbUserId
+//     */
+//    public String getDbUserId() {
+//        return dbUserId;
+//    }
+//
+//    /**
+//     * @param dbUserId
+//     *            the dbUserId to set
+//     */
+//    public void setDbUserId(String dbUserId) {
+//        this.dbUserId = dbUserId;
+//    }
+//
+//    /**
+//     * @return the dbPassword
+//     */
+//    public String getDbPassword() {
+//        return dbPassword;
+//    }
+//
+//    /**
+//     * @param dbPassword
+//     *            the dbPassword to set
+//     */
+//    public void setDbPassword(String dbPassword) {
+//        this.dbPassword = dbPassword;
+//    }
+//
+//    /**
+//     * @return the dbDriver
+//     */
+//    public String getDbDriver() {
+//        return dbDriver;
+//    }
+//
+//    /**
+//     * @param dbDriver
+//     *            the dbDriver to set
+//     */
+//    public void setDbDriver(String dbDriver) {
+//        this.dbDriver = dbDriver;
+//    }
 
 }

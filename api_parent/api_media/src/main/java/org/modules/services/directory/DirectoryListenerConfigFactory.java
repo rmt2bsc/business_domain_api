@@ -105,34 +105,16 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
         // Load module specific configurations such as datasource, table,
         // primary key, foreign key hashes, and etc.
         for (int moduleNdx = 0; moduleNdx < moduleCount; moduleNdx++) {
-            String moduleCode = RMT2File.getPropertyValue(propFile,
-                    "mime.module." + moduleNdx);
-            String filePattern = RMT2File.getPropertyValue(propFile,
-                    "mime.module." + moduleNdx + ".filePattern");
-            String dbUrl = RMT2File.getPropertyValue(propFile, "mime.module."
-                    + moduleNdx + ".datasource.url");
-            String dbDriver = RMT2File.getPropertyValue(propFile,
-                    "mime.module." + moduleNdx + ".datasource.dbdriver");
-            String table = RMT2File.getPropertyValue(propFile, "mime.module."
-                    + moduleNdx + ".datasource.table");
-            String primaryKey = RMT2File.getPropertyValue(propFile,
-                    "mime.module." + moduleNdx + ".datasource.pk");
-            String foreignKey = RMT2File.getPropertyValue(propFile,
-                    "mime.module." + moduleNdx + ".datasource.fk");
-            String dbUserId = RMT2File.getPropertyValue(propFile,
-                    "mime.module." + moduleNdx + ".datasource.uid");
-            String dbPassword = RMT2File.getPropertyValue(propFile,
-                    "mime.module." + moduleNdx + ".datasource.pw");
-
-            ApplicationModuleBean mod = new ApplicationModuleBean(moduleNdx);
+            String filePattern = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".filePattern");
+            String moduleName = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".moduleName");
+            String projectName = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".projectName");
+            String entityUid = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx + ".endityUid");
+            String moduleCode = RMT2File.getPropertyValue(propFile, "mime.module." + moduleNdx);
+            ApplicationModuleBean mod = new ApplicationModuleBean(moduleCode);
             mod.setFilePattern(filePattern);
-            mod.setDbUrl(dbUrl);
-            mod.setDbDriver(dbDriver);
-            mod.setTable(table);
-            mod.setPrimaryKey(primaryKey);
-            mod.setForeignKey(foreignKey);
-            mod.setDbUserId(dbUserId);
-            mod.setDbPassword(dbPassword);
+            mod.setProjectName(projectName);
+            mod.setEntityUid(entityUid);
+            mod.setModuleName(moduleName);
             config.getModules().put(moduleNdx, mod);
         }
 
