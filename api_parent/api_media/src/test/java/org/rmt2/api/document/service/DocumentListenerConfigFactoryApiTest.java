@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.modules.services.directory.ApplicationModuleBean;
 import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
@@ -48,9 +49,9 @@ public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
    
     @Test
     public void testSuccess_Load_From_Default_Prop_File() {
-        // Make sure that "ENV" System property does not exist.
-        String prevEnvSetting = System.clearProperty(ConfigConstants.PROPNAME_ENV);
-        Assert.assertEquals(ConfigConstants.ENVTYPE_TEST, prevEnvSetting);
+        // Ensure that System property is set to null
+        DirectoryListenerConfigFactory f = new DirectoryListenerConfigFactory();
+        Whitebox.setInternalState(f, "ENV", null);
         
         DirectoryListenerConfigBean config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
         
@@ -76,10 +77,18 @@ public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
         Assert.assertEquals("ProjectTracker", a.getProjectName());
         Assert.assertEquals("timesheet", a.getModuleName());
         Assert.assertEquals("timesheet_id", a.getEntityUid());
+
+        // Ensure that the System prpoerty, ENV, is set back to "TEST"
+        System.setProperty(ConfigConstants.PROPNAME_ENV, ConfigConstants.ENVTYPE_TEST);
+
     }
     
     @Test
     public void testSuccess_Load_From_Test_Prop_File() {
+        // Ensure that System property is set to ConfigConstants.ENVTYPE_TEST
+        DirectoryListenerConfigFactory f = new DirectoryListenerConfigFactory();
+        Whitebox.setInternalState(f, "ENV", ConfigConstants.ENVTYPE_TEST);
+        
         DirectoryListenerConfigBean config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
         
         Assert.assertNotNull(config);

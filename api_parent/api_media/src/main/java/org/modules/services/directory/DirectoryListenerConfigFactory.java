@@ -20,12 +20,12 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
 
     public static final String configFile = "MimeConfig";
 
-    public static final String ENV = System.getProperty(ConfigConstants.PROPNAME_ENV);
+    public static String ENV = System.getProperty(ConfigConstants.PROPNAME_ENV);
 
     /**
-     * Create
+     * Create DirectoryListenerConfigFactory
      */
-    private DirectoryListenerConfigFactory() {
+    public DirectoryListenerConfigFactory() {
         DirectoryListenerConfigFactory.logger.info("Logger initialized");
     }
 
