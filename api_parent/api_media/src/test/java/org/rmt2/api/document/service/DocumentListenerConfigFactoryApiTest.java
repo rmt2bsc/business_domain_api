@@ -58,9 +58,9 @@ public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
         Assert.assertNotNull(config);
         Assert.assertEquals("rmt2bsc@gmail.com", config.getEmailRecipients());
         Assert.assertTrue(config.isEmailResults());
-        Assert.assertEquals("/data/mime/in/", config.getInboundDir());
-        Assert.assertEquals("/data/mime/out/", config.getOutboundDir());
-        Assert.assertEquals("/data/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals("/AppServer/data/mime/in/", config.getInboundDir());
+        Assert.assertEquals("/AppServer/data/mime/out/", config.getOutboundDir());
+        Assert.assertEquals("/AppServer/data/mime/archive/", config.getArchiveDir());
         Assert.assertEquals(10000, config.getPollFreq());
         Assert.assertEquals(2, config.getModuleCount());
         
@@ -94,9 +94,9 @@ public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
         Assert.assertNotNull(config);
         Assert.assertEquals("john.smith@gte.net", config.getEmailRecipients());
         Assert.assertTrue(config.isEmailResults());
-        Assert.assertEquals("/data/mime/in/", config.getInboundDir());
-        Assert.assertEquals("/data/mime/out/", config.getOutboundDir());
-        Assert.assertEquals("/data/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals("/AppServer/data/mime/in/", config.getInboundDir());
+        Assert.assertEquals("/AppServer/data/mime/out/", config.getOutboundDir());
+        Assert.assertEquals("/AppServer/data/mime/archive/", config.getArchiveDir());
         Assert.assertEquals(10000, config.getPollFreq());
         Assert.assertEquals(2, config.getModuleCount());
         
