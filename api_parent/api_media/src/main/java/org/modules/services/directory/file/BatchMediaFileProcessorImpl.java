@@ -13,6 +13,9 @@ import org.dao.document.ContentDao;
 import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
+import org.modules.MediaConstants;
+import org.modules.document.DocumentContentApi;
+import org.modules.document.DocumentContentApiFactory;
 import org.modules.services.directory.ApplicationModuleBean;
 import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
@@ -22,6 +25,7 @@ import org.rmt2.jaxb.MediaApplicationLinkRequest;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.util.JaxbPayloadFactory;
 
+import com.RMT2Constants;
 import com.SystemException;
 import com.api.BatchFileException;
 import com.api.config.ConfigConstants;
@@ -35,6 +39,8 @@ import com.util.RMT2Date;
 import com.util.RMT2File;
 import com.util.RMT2String;
 import com.util.RMT2Utility;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link MediaFileDaoProcessor} for processing multiple
@@ -73,7 +79,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      * application, archive the source data file, and send a file drop report to
      * the user designated in the home application's MIME configuration.
      */
-    public BatchMediaFileProcessorImpl() {
+    protected BatchMediaFileProcessorImpl() {
         super();
         try {
             this.config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
@@ -120,21 +126,26 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         List<String> fileListing = RMT2File.getDirectoryListing(config.getInboundDir(), wildcards.toString());
         return fileListing;
     }
-
-    /**
-     * Checks the Inbound directory for available files regardless of the
-     * modules configured.
-     * 
-     * @return true when files are availabe, and false otherwise.
-     */
+    
+    @Override
     public boolean isFilesAvailable() {
-        if (this.config == null) {
-            return false;
-        }
-        // See if one or more files exist in the Inbound directory
-        List<String> fileListing = RMT2File.getDirectoryListing(config.getInboundDir(), null);
-        return fileListing.size() > 0;
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
+
+//    /**
+//     * Checks the Inbound directory for available files regardless of the
+//     * modules configured.
+//     * 
+//     * @return true when files are availabe, and false otherwise.
+//     */
+//    public boolean isFilesAvailable() {
+//        if (this.config == null) {
+//            return false;
+//        }
+//        // See if one or more files exist in the Inbound directory
+//        List<String> fileListing = RMT2File.getDirectoryListing(config.getInboundDir(), null);
+//        return fileListing.size() > 0;
+//    }
 
     /*
      * (non-Javadoc)
@@ -147,24 +158,19 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         try {
             BatchMediaFileProcessorImpl.logger.info("Media file batch process looking for files in inbound directory, "
                             + this.config.getInboundDir());
-            if (this.isFilesAvailable()) {
-                Integer rc = (Integer) this.processFiles(null, null);
-                fileCount = rc.intValue();
-                if (fileCount > 0) {
-                    String msgCount = fileCount + " media files in designated inbound directory were processed for all modules";
-                    BatchMediaFileProcessorImpl.logger.info(msgCount);
-                    // Attempt to send report.
-                    if (this.config.isEmailResults()) {
-                        try {
-                            this.sendDropReport();
-                        } catch (Exception e) {
-                            // Do nothing
-                        }
+            Integer rc = (Integer) this.processFiles(null, null);
+            fileCount = rc.intValue();
+            if (fileCount > 0) {
+                String msgCount = fileCount + " media files in designated inbound directory were processed for all modules";
+                BatchMediaFileProcessorImpl.logger.info(msgCount);
+                // Attempt to send report.
+                if (this.config.isEmailResults()) {
+                    try {
+                        this.sendDropReport();
+                    } catch (Exception e) {
+                        // Do nothing
                     }
                 }
-            }
-            else {
-                BatchMediaFileProcessorImpl.logger.info("No files available for media file thread to process!");
             }
             return fileCount;
         } catch (Exception e) {
@@ -207,30 +213,33 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                 this.setModuleId(ndx);
                 files = this.getFileListing();
                 // Process all files of the current module
-                if (files != null && files.size() > 0) {
+                try {
+                    Verifier.verifyNotEmpty(files);
                     for (String fileName : files) {
                         String fileMsg = null;
                         try {
-                            logger.log(Level.INFO, "Begin proecessing file, "  + fileName);
+                            logger.info("Begin proecessing file, "  + fileName);
                             Integer rc = (Integer) this.processSingleFile(fileName, null);
                             int uid = rc.intValue();
-                            logger.log(Level.INFO, fileName + " was linked to its respective project module");
+                            logger.info(fileName + " was linked to its respective project module");
                             fileMsg = fileName + " was added to the MIME database successfully as " + uid;
+                            logger.info(fileMsg);
                         } catch (Exception e) {
-                            fileMsg = "[ERROR] "
-                                    + fileName
-                                    + " was not added to the MIME database and/or assoicated with the target record of the home application.  Cause: "
-                                    + e.getMessage();
+                            fileMsg = fileName
+                                    + " was not added to the MIME database and/or assoicated with the target record of the home application.";
+                            logger.error(fileMsg);
                         } finally {
-                            logger.log(Level.INFO, fileMsg);
                             this.mimeMsgs.add(fileMsg);
-                            logger.log(Level.INFO, "MIME Message buffer size: " + this.mimeMsgs.size());
+                            logger.info("MIME Message buffer size: " + this.mimeMsgs.size());
                             count++;
                         }
-                    } // end for
-                    this.msg = "Media files were processed for module: " + this.moduleId;
-                    logger.log(Level.INFO, this.msg);
-                } // end if
+                    }
+                }
+                catch (VerifyException e) {
+                 // Do nothing...
+                }
+                this.msg = "Media files were processed for module: " + this.moduleId;
+                logger.log(Level.INFO, this.msg);
             } // end for
         } catch (Exception e) {
             // Do nothing
@@ -276,23 +285,24 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      *             inbound directory.
      */
     public Integer processSingleFile(String fileName, Object parent) throws BatchFileException {
-        List<String> fileNamePrimaryKeyTokens = null;
         int newContentId = 0;
         try {
             // Validate the format of the file name.
             logger.info("Validate file format");
-            fileNamePrimaryKeyTokens = this.verifyFileFormat(fileName);
+            this.verifyFileFormat(fileName);
 
             // Save media file data to the content table
-            newContentId = super.processSingleFile(fileName, parent);
+            DocumentContentApiFactory dcApiFact = new DocumentContentApiFactory();
+            DocumentContentApi dcApi = dcApiFact.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME);
+            newContentId = dcApi.add(fileName);
 
             // Assoicate MIME document with a record from the target application
             // using document id and the module code
-            logger.info("Add document to HOME application");
+            logger.info("Link media content to HOME application...");
             // Make web service call to Home App in order to link document
             // to a particular application module
-            this.updateProjectModule(this.moduleId, newContentId);
-            logger.info("MIME Database updates completed");
+            this.linkHomeApplication(this.moduleId, newContentId);
+            logger.info("Linking of media content to Home Application completed");
             return newContentId;
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -307,7 +317,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         }
     }
 
-    private void updateProjectModule(int moduleId, int contentId) throws BatchFileException {
+    private void linkHomeApplication(int moduleId, int contentId) throws BatchFileException {
         logger.log(Level.INFO, "Inside updateHomeApp");
 
         ApplicationModuleBean mod = this.config.getModules().get(moduleId);
@@ -591,6 +601,8 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new TransactionApiException(msg, e);
         }
     }
+
+    
 
     
 }
