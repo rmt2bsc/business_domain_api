@@ -28,7 +28,6 @@ import org.rmt2.util.JaxbPayloadFactory;
 import com.RMT2Constants;
 import com.SystemException;
 import com.api.BatchFileException;
-import com.api.config.ConfigConstants;
 import com.api.foundation.TransactionApiException;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
@@ -127,25 +126,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         return fileListing;
     }
     
-    @Override
-    public boolean isFilesAvailable() {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-//    /**
-//     * Checks the Inbound directory for available files regardless of the
-//     * modules configured.
-//     * 
-//     * @return true when files are availabe, and false otherwise.
-//     */
-//    public boolean isFilesAvailable() {
-//        if (this.config == null) {
-//            return false;
-//        }
-//        // See if one or more files exist in the Inbound directory
-//        List<String> fileListing = RMT2File.getDirectoryListing(config.getInboundDir(), null);
-//        return fileListing.size() > 0;
-//    }
+    
 
     /*
      * (non-Javadoc)
@@ -158,8 +139,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         try {
             BatchMediaFileProcessorImpl.logger.info("Media file batch process looking for files in inbound directory, "
                             + this.config.getInboundDir());
-            Integer rc = (Integer) this.processFiles(null, null);
-            fileCount = rc.intValue();
+            fileCount = this.processInboundDirectory();
             if (fileCount > 0) {
                 String msgCount = fileCount + " media files in designated inbound directory were processed for all modules";
                 BatchMediaFileProcessorImpl.logger.info(msgCount);
@@ -180,11 +160,11 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
     }
 
     /**
+     * Driver of processing the files dropped in the Inbound directory.
+     * <p>
      * Traverses the list of file names in <i>files</i> adding the document of
      * each file to the MIME database and assoicating the MIME document record
-     * with the targeted record of the home application. This method is the
-     * driver of concept of processing the files dropped in the Inbound
-     * directory.
+     * with the targeted record of the home application.
      * 
      * @param files
      *            a List<String> of fiel names to process
@@ -192,16 +172,18 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      * @throws BatchFileException
      *             file validation errors and general database errors
      */
-    public synchronized Object processFiles(List<String> files, Object parent) throws BatchFileException {
+    public synchronized int processInboundDirectory() throws BatchFileException {
         this.startTime = new Date();
         int count = 0;
+        List<String> files = null;
         String cmd = null;
         String cmdMsg = null;
-
+        String fullPathFileName = null;
         try {
             // Establish a connection to the computer share which will be used
             // for copy/moving files remotely
             if (!this.config.isArchiveLocal()) {
+                // TODO: This logic needs to consider UNIX environment
                 cmd = "cmd /c net use " + config.getArchiveDir();
                 logger.log(Level.DEBUG, "Connecting to shared resource, " + config.getArchiveDir());
                 cmdMsg = RMT2Utility.execShellCommand(cmd);
@@ -216,16 +198,17 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                 try {
                     Verifier.verifyNotEmpty(files);
                     for (String fileName : files) {
+                        fullPathFileName = config.getInboundDir() + fileName;
                         String fileMsg = null;
                         try {
-                            logger.info("Begin proecessing file, "  + fileName);
-                            Integer rc = (Integer) this.processSingleFile(fileName, null);
+                            logger.info("Begin proecessing file, "  + fullPathFileName);
+                            Integer rc = (Integer) this.processSingleFile(fullPathFileName, null);
                             int uid = rc.intValue();
-                            logger.info(fileName + " was linked to its respective project module");
-                            fileMsg = fileName + " was added to the MIME database successfully as " + uid;
+                            logger.info(fullPathFileName + " was linked to its respective project module");
+                            fileMsg = fullPathFileName + " was added to the MIME database successfully as " + uid;
                             logger.info(fileMsg);
                         } catch (Exception e) {
-                            fileMsg = fileName
+                            fileMsg = fullPathFileName
                                     + " was not added to the MIME database and/or assoicated with the target record of the home application.";
                             logger.error(fileMsg);
                         } finally {
@@ -236,13 +219,17 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                     }
                 }
                 catch (VerifyException e) {
-                 // Do nothing...
+                    this.msg = "No Media files were found in inbound directory, " + config.getInboundDir() + ", for module, " + this.moduleId;
+                    logger.warn(this.msg);
+                    return 0;
                 }
                 this.msg = "Media files were processed for module: " + this.moduleId;
                 logger.log(Level.INFO, this.msg);
-            } // end for
+            }
+            return count;
         } catch (Exception e) {
-            // Do nothing
+            this.msg = "Error occurred processing file, " + fullPathFileName;
+            throw new MediaFileOperationException(this.msg, e);
         } finally {
             // Cancel the connection to computer share(s)
             if (!this.config.isArchiveLocal()) {
@@ -251,9 +238,8 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                 cmdMsg = RMT2Utility.execShellCommand(cmd);
                 logger.log(Level.DEBUG, cmdMsg);
             }
+            this.endTime = new Date();
         }
-        this.endTime = new Date();
-        return count;
     }
 
     /**
@@ -305,41 +291,39 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             logger.info("Linking of media content to Home Application completed");
             return newContentId;
         } catch (Exception e) {
-            logger.error(e.getMessage());
             // If document data has been added, delete from the database since
             // an error occurred.
             if (newContentId > 0) {
                 this.deleteContent(newContentId);
             }
-            throw new MediaFileOperationException(e);
+            throw new MediaFileOperationException("Unable to process file, " + fileName, e);
         } finally {
             this.archiveFile(fileName);
+            logger.info("Archiving of file, " + fileName + ", completed");
         }
     }
 
     private void linkHomeApplication(int moduleId, int contentId) throws BatchFileException {
-        logger.log(Level.INFO, "Inside updateHomeApp");
-
+        logger.info("Preparing to link media content to its home application");
         ApplicationModuleBean mod = this.config.getModules().get(moduleId);
         if (mod == null) {
             this.msg = "Failure to update target application record due to an invalid moudle configuration instance";
-            logger.log(Level.ERROR, this.msg);
             throw new BatchFileException(this.msg);
         }
 
+        // Setup request object
         ObjectFactory f = new ObjectFactory();
         MediaApplicationLinkRequest request = f.createMediaApplicationLinkRequest();
         HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
                 "module", ApiTransactionCodes.MEDIA_CONTENT_APP_LINK, "ASYNC", "REQUEST", this.getApiUser());
         request.setHeader(header);
-
-        // Setup customer's sales order that will be invoiced
+        
        request.setContentId(BigInteger.valueOf(contentId));
-       request.setEntityId(BigInteger.valueOf(Integer.getInteger(mod.getEntityUid())));
+       request.setEntityId(mod.getEntityUid());
        request.setProjectName(mod.getProjectName());
        request.setModuleName(mod.getModuleName());
 
-        // Send time sheet deatils to Accounting systsem to create and invoice sales order
+        // Send request to its destination
         try {
             this.sendMessage(ApiTransactionCodes.MEDIA_CONTENT_APP_LINK, request);
         } catch (TransactionApiException e) {
@@ -478,15 +462,12 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         String fileNameTs = fileToken.get(0) + timestampStr.toString() + fileToken.get(1);
 
         // Prepare for media file maintenance...
-        String fromFile = dto.getFilepath() + dto.getFilename();
         String toFile = this.config.getArchiveDir() + fileNameTs;
         try {
             // Rename and copy file to archive destination
-            RMT2File.copyFile(fromFile, toFile);
+            RMT2File.copyFile(fileName, toFile);
             // Delete file from inbound directory, if applicable.
-            if (dto.getFilepath().equalsIgnoreCase(this.config.getInboundDir())) {
-                RMT2File.deleteFile(this.config.getInboundDir() + fileName);
-            }
+            RMT2File.deleteFile(fileName);
         } catch (IOException e) {
             throw new SystemException(e);
         }
@@ -512,9 +493,6 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      *             SMTP.
      */
     public void sendDropReport() throws FileDropReportException {
-        if (!this.config.isEmailResults()) {
-            return;
-        }
         logger.log(Level.INFO, "Creating MIME Drop Report...");
         StringBuffer body = new StringBuffer();
 
@@ -522,7 +500,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         // pool which is loaded at server start up.
         String fromAddr = null;
         try {
-            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, ConfigConstants.OWNER_EMAIL);
+            fromAddr = this.config.getEmailSender();
         } catch (Exception ee) {
             this.msg = "FROM Email address is invalid and will probably be the root cause of transmission failure of MIME File Drop Report";
             logger.log(Level.ERROR, this.msg);
@@ -536,13 +514,11 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new FileDropReportException(this.msg);
         }
         String subject = "MIME Content File Drop Report";
-        String appname = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, ConfigConstants.PROPNAME_APP_NAME);
-        appname = (appname == null ? "[Unknown Application]" : appname);
 
         body.append("The following files where dropped in the inbound directory, ");
         body.append(this.config.getInboundDir());
         body.append(", in order to be added to the MIME database and linked to various record types of the application, ");
-        body.append(appname);
+        body.append(MediaConstants.DEFAULT_CONTEXT_NAME);
         body.append(".\n\n");
 
         body.append("Start Time: ");
@@ -602,7 +578,19 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         }
     }
 
-    
+    @Override
+    public Object processFiles(List<String> files, Object parent) throws BatchFileException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
 
-    
+    @Override
+    public boolean isFilesAvailable() {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public void close() {
+        return;
+    }
+
 }

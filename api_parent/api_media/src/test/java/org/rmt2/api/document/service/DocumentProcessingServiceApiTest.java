@@ -2,6 +2,7 @@ package org.rmt2.api.document.service;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modules.services.DocumentProcessingService;
+import org.modules.services.directory.file.BatchMediaFileProcessorImpl;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -23,6 +25,9 @@ import org.rmt2.api.MediaMockData;
 import org.rmt2.api.MediaMockDataFactory;
 import org.rmt2.jaxb.MediaApplicationLinkRequest;
 
+import com.api.messaging.email.EmailMessageBean;
+import com.api.messaging.email.smtp.SmtpApi;
+import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -35,7 +40,8 @@ import com.util.RMT2File;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
+        RMT2File.class, BatchMediaFileProcessorImpl.class, SmtpFactory.class })
 public class DocumentProcessingServiceApiTest extends MediaMockData {
     private String outDir;
     
@@ -57,6 +63,29 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
         this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(1));
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
         .thenReturn(this.mockSingleMimeTypeList);
+        
+        // Mock web service call to link media content with home application
+        MessageRouterHelper mockMessageRouterHelper = Mockito.mock(MessageRouterHelper.class);
+        PowerMockito.whenNew(MessageRouterHelper.class).withNoArguments().thenReturn(mockMessageRouterHelper);
+        when(mockMessageRouterHelper.routeXmlMessage(isA(String.class),
+                isA(MediaApplicationLinkRequest.class))).thenReturn(new Object());
+        
+        // Setup stub for SMTP mocking
+        SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
+        PowerMockito.mockStatic(SmtpFactory.class);
+        try {
+            when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
+        }
+        catch (Exception e) {
+            Assert.fail("Failed to stub SmtpFactory.getSmtpInstance method");
+        }
+        try {
+            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenReturn(1);  
+            doNothing().when(mockSmtpApi).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
+        }
     }
 
     /**
@@ -90,25 +119,21 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
        }
    }
    
-   private void setupClientWebServiceInvoiceStub() throws Exception {
-       // Mock web service call to link media content with home application
-       MessageRouterHelper mockMessageRouterHelper = Mockito.mock(MessageRouterHelper.class);
-       PowerMockito.whenNew(MessageRouterHelper.class).withNoArguments().thenReturn(mockMessageRouterHelper);
-       when(mockMessageRouterHelper.routeXmlMessage(isA(String.class),
-               isA(MediaApplicationLinkRequest.class))).thenReturn(new Object());
-   }
    
     @Test
-    public void testSuccess_Fetch_Content_From_Database() {
+    public void testSuccess_Multi_File_Processor() {
+        int fileCount = 0;
         try {
             this.copyFilesToDataDir();
             DocumentProcessingService dps = new DocumentProcessingService();
+            fileCount = dps.processMultiMediaFiles();
         }
         catch (Exception e) {
+            e.printStackTrace();
             Assert.fail("An exception was not expected");
         }
         
-//        Assert.assertNotNull(results);
+        Assert.assertEquals(5, fileCount);
 //        Assert.assertTrue(Arrays.equals("ImageData".getBytes(), results.getImageData()));
     }
     
