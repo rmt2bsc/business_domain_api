@@ -71,6 +71,8 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
             config.setEmailResults(flag);
         }
 
+        // Set Reporting email sender
+        config.setEmailSender(RMT2File.getPropertyValue(propFile, "mime.emailSender"));
         // Set Reporting email recipient
         config.setEmailRecipients(RMT2File.getPropertyValue(propFile, "mime.emailRecipients"));
 

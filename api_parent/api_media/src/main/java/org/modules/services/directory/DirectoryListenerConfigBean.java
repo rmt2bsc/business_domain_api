@@ -17,6 +17,8 @@ public class DirectoryListenerConfigBean extends RMT2Base {
     private static final long serialVersionUID = 518549554653952863L;
 
     private boolean emailResults;
+    
+    private String emailSender;
 
     private String emailRecipients;
 
@@ -201,5 +203,13 @@ public class DirectoryListenerConfigBean extends RMT2Base {
      */
     public void setFetchDir(String fetchDir) {
         this.fetchDir = fetchDir;
+    }
+
+    public String getEmailSender() {
+        return emailSender;
+    }
+
+    public void setEmailSender(String emailSender) {
+        this.emailSender = emailSender;
     }
 }
