@@ -56,7 +56,7 @@ public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
         DirectoryListenerConfigBean config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
         
         Assert.assertNotNull(config);
-        Assert.assertEquals("rmt2bsc@gmail.com", config.getEmailRecipients());
+        Assert.assertEquals("royterrell@hotmail.com", config.getEmailRecipients());
         Assert.assertTrue(config.isEmailResults());
         Assert.assertEquals("/AppServer/data/mime/in/", config.getInboundDir());
         Assert.assertEquals("/AppServer/data/mime/out/", config.getOutboundDir());
