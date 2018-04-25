@@ -4,13 +4,15 @@ import org.apache.log4j.Logger;
 import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
 import org.modules.services.directory.file.FileDropProcessingException;
-import org.modules.services.directory.file.MediaFileProcessor;
 import org.modules.services.directory.file.MediaFileFactory;
 import org.modules.services.directory.file.MediaFileOperationException;
+import org.modules.services.directory.file.MediaFileProcessor;
 
+import com.InvalidDataException;
 import com.RMT2Base;
 import com.util.RMT2File;
-import com.util.RMT2String;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * Servcie for processing media documents.
@@ -101,11 +103,22 @@ public class DocumentProcessingService extends RMT2Base {
         }
     }
 
+    /**
+     * 
+     * @param fileName
+     * @return
+     * @throws MediaFileOperationException
+     * @throws InvalidMediaFileFormatException
+     */
     public int processSingleMediaFiles(String fileName) throws MediaFileOperationException {
-        if (fileName == null || fileName.equals(RMT2String.spaces(fileName.length()))) {
-            throw new MediaFileOperationException("Input file name cannot be null or spaces");
+        try {
+            Verifier.verifyNotEmpty(fileName);
         }
-        MediaFileProcessor processor = MediaFileFactory.createSingleFileProcessor();
+        catch (VerifyException e) {
+            throw new InvalidDataException("Input file name is required");
+        }
+
+        MediaFileProcessor processor = MediaFileFactory.createBatchFileProcessor();
         int fileCount = 0;
         try {
             DocumentProcessingService.logger.info("Media file listener looking for files to process...");

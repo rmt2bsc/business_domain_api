@@ -22,22 +22,6 @@ public class MediaFileFactory extends RMT2Base {
     }
 
     /**
-     * Creates an instance of MediaFileDaoProcessor iterface using the single
-     * file processor DAO implementation.
-     * 
-     * @return an instance of {@link MediaFileDaoProcessor} or null if unable to
-     *         create implementation.
-     */
-    public static MediaFileProcessor createSingleFileProcessor() {
-        try {
-            MediaFileProcessor api = new SingleMediaFileProcessorImpl();
-            return api;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * Creates an instance of MediaFileDaoProcessor iterface using the batch
      * file processor DAO implementation.
      * 

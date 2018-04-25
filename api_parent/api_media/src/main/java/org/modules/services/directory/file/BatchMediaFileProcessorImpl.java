@@ -14,8 +14,6 @@ import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.MediaConstants;
-import org.modules.document.DocumentContentApi;
-import org.modules.document.DocumentContentApiFactory;
 import org.modules.services.directory.ApplicationModuleBean;
 import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
@@ -164,7 +162,15 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      * <p>
      * Traverses the list of file names in <i>files</i> adding the document of
      * each file to the MIME database and assoicating the MIME document record
-     * with the targeted record of the home application.
+     * with the targeted record of the home application. *
+     * <p>
+     * Successful execution of this method requires that the name of the file,
+     * <i>fileName</i>, is of the correct format
+     * "<app_code>_<module_code>_<primary key value of target recrod>.*". After
+     * determining that <i>fileName</i> is correctly formatted, the MIME
+     * document is added to the MIME database and then associated with target
+     * record of the home application. The primary key value identified in
+     * <i>fileName</i> is used to locate the correct home appliation record.
      * 
      * @param files
      *            a List<String> of fiel names to process
@@ -201,13 +207,22 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                         fullPathFileName = config.getInboundDir() + fileName;
                         String fileMsg = null;
                         try {
+                            // Validate the format of the file name.
+                            logger.info("Validate file format");
+                            this.verifyFileFormat(fileName);
+                            
                             logger.info("Begin proecessing file, "  + fullPathFileName);
                             Integer rc = (Integer) this.processSingleFile(fullPathFileName, null);
                             int uid = rc.intValue();
                             logger.info(fullPathFileName + " was linked to its respective project module");
                             fileMsg = fullPathFileName + " was added to the MIME database successfully as " + uid;
                             logger.info(fileMsg);
-                        } catch (Exception e) {
+                        }
+                        catch (InvalidMediaFileFormatException e) {
+                            fileMsg = fullPathFileName + " faile file name validations";
+                            logger.error(fileMsg);
+                        }
+                        catch (MediaFileOperationException e) {
                             fileMsg = fullPathFileName
                                     + " was not added to the MIME database and/or assoicated with the target record of the home application.";
                             logger.error(fileMsg);
@@ -270,17 +285,13 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      *             archive destination or deleting the <i>fileName</i> from the
      *             inbound directory.
      */
+    @Override
     public Integer processSingleFile(String fileName, Object parent) throws BatchFileException {
         int newContentId = 0;
+         
         try {
-            // Validate the format of the file name.
-            logger.info("Validate file format");
-            this.verifyFileFormat(fileName);
-
             // Save media file data to the content table
-            DocumentContentApiFactory dcApiFact = new DocumentContentApiFactory();
-            DocumentContentApi dcApi = dcApiFact.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME);
-            newContentId = dcApi.add(fileName);
+            newContentId =  super.processSingleFile(fileName, parent);
 
             // Assoicate MIME document with a record from the target application
             // using document id and the module code

@@ -1,6 +1,6 @@
 package org.modules.services.directory.file;
 
-import com.api.BatchFileException;
+import com.InvalidDataException;
 
 /**
  * An exception thrown when the format of the source data file's filename is
@@ -9,7 +9,7 @@ import com.api.BatchFileException;
  * @author appdev
  * 
  */
-public class InvalidMediaFileFormatException extends BatchFileException {
+public class InvalidMediaFileFormatException extends InvalidDataException {
 
     private static final long serialVersionUID = -2249933179263928838L;
 
