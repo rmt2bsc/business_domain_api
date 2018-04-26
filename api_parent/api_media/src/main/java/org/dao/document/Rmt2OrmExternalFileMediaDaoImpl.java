@@ -5,6 +5,7 @@ import org.dto.ContentDto;
 
 import com.InvalidDataException;
 import com.NotFoundException;
+import com.RMT2RuntimeException;
 import com.SystemException;
 import com.util.RMT2File;
 
@@ -221,19 +222,19 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
         String path = null;
         if (origRec.getImageData() == null) {
             path = origRec.getFilepath() + origRec.getFilename();
-            rows += RMT2File.deleteFile(path);
-            if (rows == 1) {
-                logger.warn("Unable to locate media document in file system for deleltion [File=" + path + "]");
+            try {
+                RMT2File.deleteFile(path);
+                logger.info("Media document was deleted successfully as an external file [" + path + "]");
+                rows++;
             }
-            else {
-            logger.info("Media document was deleted successfully as an external file [" + path + "]");
+            catch (RMT2RuntimeException e) {
+                logger.warn("Unable to locate media document in file system for deleltion [File=" + path + "]");
             }
         }
         else {
             logger.warn("Skip deleting media content file, " + path
                     + ", due to the record contains image data from the content table");
         }
-        
         return rows;
     }
     
