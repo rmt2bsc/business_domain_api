@@ -1,4 +1,4 @@
-package org.rmt2.api.document.service;
+package org.rmt2.api.service.document;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
