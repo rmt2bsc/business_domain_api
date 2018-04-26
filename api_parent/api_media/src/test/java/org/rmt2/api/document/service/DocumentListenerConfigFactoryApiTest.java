@@ -66,14 +66,14 @@ public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
         
         ApplicationModuleBean a = config.getModules().get(0);
         Assert.assertEquals("cd", a.getModuleCode());
-        Assert.assertEquals("acct_*.*", a.getFilePattern());
+        Assert.assertEquals("acct*.*", a.getFilePattern().trim());
         Assert.assertEquals("Accounting", a.getProjectName());
         Assert.assertEquals("transaction", a.getModuleName());
         Assert.assertEquals("xact_id", a.getEntityUid());
         
         a = config.getModules().get(1);
         Assert.assertEquals("ts", a.getModuleCode());
-        Assert.assertEquals("proj_ts*.*", a.getFilePattern());
+        Assert.assertEquals("proj*.*", a.getFilePattern().trim());
         Assert.assertEquals("ProjectTracker", a.getProjectName());
         Assert.assertEquals("timesheet", a.getModuleName());
         Assert.assertEquals("timesheet_id", a.getEntityUid());
