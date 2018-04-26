@@ -23,7 +23,6 @@ import org.rmt2.jaxb.MediaApplicationLinkRequest;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.util.JaxbPayloadFactory;
 
-import com.RMT2Constants;
 import com.SystemException;
 import com.api.BatchFileException;
 import com.api.foundation.TransactionApiException;
@@ -90,16 +89,6 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         return;
     }
 
-    /**
-     * Setup conntection to the Home Application DAO.
-     * 
-     * @throws BatchFileException
-     *             when the attempt to establish a connection for either system
-     *             fails.
-     */
-    public synchronized void initConnection() throws BatchFileException {
-        return;
-    }
 
     /**
      * Obtains a list of file names from the file system based on the wildcard
@@ -209,7 +198,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                         try {
                             // Validate the format of the file name.
                             logger.info("Validate file format");
-                            this.verifyFileFormat(fileName);
+                            this.validateInboundFileFormat(fileName);
                             
                             logger.info("Begin proecessing file, "  + fullPathFileName);
                             Integer rc = (Integer) this.processSingleFile(fullPathFileName, null);
@@ -406,26 +395,34 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
     }
 
     /**
-     * Validate naming convention of the file name. Should be in the format of
+     * Validate naming convention of the inbound file name.
+     * <p>
+     * An example of the file format goes as follows:
      * <app_code>_<module>_<primary_key>.<file extension>
      * 
      * @param fileName
+     *            the name of the file to be validated
      * @return List<String> the application code, moudle code, and the primary
      *         key.
+     * @throws InvalidMediaFileFormatException
+     *             <i>fileName</i> does not contain the correct separators,
+     *             <i>fileName</i> is not in correct format, or the primary key
+     *             portion of <i>fileName</i> cannot be converted to a numeric
+     *             value.
      */
-    private List<String> verifyFileFormat(String fileName) throws InvalidMediaFileFormatException {
+    protected List<String> validateInboundFileFormat(String fileName) {
         // remove extra path info, if available
         fileName = RMT2File.getFileName(fileName);
         List<String> tokens = RMT2String.getTokens(fileName, "_");
         if (tokens == null) {
             this.msg = fileName
-                    + ": Parsing error occurred...The underscore character must be used as a separator in the file name";
+                    + ": The underscore character must be used as a separator in the file name";
             logger.log(Level.ERROR, this.msg);
             throw new InvalidMediaFileFormatException(this.msg);
         }
         if (tokens.size() != 3) {
             this.msg = fileName
-                    + ": Parsing error occurred...The file name must be in the format  <app_code>_<module>_<primary_key>.<file extension>";
+                    + ": The file name must be in the format  <app_code>_<module>_<primary_key>.<file extension>";
             logger.log(Level.ERROR, this.msg);
             throw new InvalidMediaFileFormatException(this.msg);
         }
@@ -436,13 +433,13 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         try {
             Integer.parseInt(tokens2.get(0));
         } catch (NumberFormatException e) {
-            this.msg = fileName
-                    + ": Failure to recognize the third position in the file name as the primary key for the target datasource during the second phase of file name parsing.  The invalid value is "
-                    + tokens.get(2);
+            this.msg = fileName + ": Failure to convert the primary key value ["
+                    + tokens.get(2)
+                    + "] contained in the file name to a numeric value";
             logger.log(Level.ERROR, this.msg);
             throw new InvalidMediaFileFormatException(this.msg);
         }
-        // Assign the parsed primary key value to original set of tokens
+        // Overrided the file name token with the primary key value.
         tokens.set(2, tokens2.get(0));
         return tokens;
     }
@@ -450,13 +447,15 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
     /**
      * Renames the source file, <i>fileName</i>, and copies the renamed results
      * to the archived desination, and deletes the source file from its inbound
-     * location. The file is renamed using the following format: <file
+     * location. 
+     * <p>
+     * The file is renamed using the following format: <file
      * name>_<yyyymmdd_HHmmss_millsecs>.<original file extension>.
      * 
      * @param fileName
      *            the name of the file to archive.
      */
-    private void archiveFile(String fileName) {
+    protected void archiveFile(String fileName) {
         ContentDto dto = this.createContentObject(fileName);
 
         // Rename inbound file
@@ -588,20 +587,4 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new TransactionApiException(msg, e);
         }
     }
-
-    @Override
-    public Object processFiles(List<String> files, Object parent) throws BatchFileException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-    @Override
-    public boolean isFilesAvailable() {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-    @Override
-    public void close() {
-        return;
-    }
-
 }

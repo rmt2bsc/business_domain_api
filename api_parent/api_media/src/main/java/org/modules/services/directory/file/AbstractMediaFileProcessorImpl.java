@@ -1,6 +1,7 @@
 package org.modules.services.directory.file;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.modules.MediaConstants;
@@ -60,6 +61,25 @@ abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl
         } 
     }
 
+    /**
+     * Subbed method
+     * 
+     * @throws BatchFileException
+     *             when the attempt to establish a connection for either system
+     *             fails.
+     */
+    public synchronized void initConnection() throws BatchFileException {
+        return;
+    }
+    
+    /**
+     * Stubbed method
+     */
+    @Override
+    public void close() {
+        return;
+    }
+    
     @Override
     public void initConnection(Object extSource) throws BatchFileException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
@@ -71,17 +91,22 @@ abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl
     }
 
     @Override
-    public void close() {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-    @Override
     public Object processDirectory(File dir, Object parent) throws BatchFileException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     @Override
     public Object processSingleFile(File file, Object parent) throws BatchFileException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+    
+    @Override
+    public Object processFiles(List<String> files, Object parent) throws BatchFileException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public boolean isFilesAvailable() {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 }

@@ -124,7 +124,7 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
     public void testSuccess_Multi_File_Processor() {
         int fileCount = 0;
         try {
-            // this.copyFilesToDataDir();
+            this.copyFilesToDataDir();
             DocumentProcessingService dps = new DocumentProcessingService();
             fileCount = dps.processMultiMediaFiles();
         }
