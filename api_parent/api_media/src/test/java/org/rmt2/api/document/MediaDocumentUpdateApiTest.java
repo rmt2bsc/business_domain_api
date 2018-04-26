@@ -78,7 +78,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         int contentId = 0;
         try {
-            contentId = api.add("media/image.jpg");
+            contentId = api.add("media/document/image.jpg");
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -108,7 +108,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         int contentId = 0;
         try {
-            contentId = api.add("media/Audio.mp3");
+            contentId = api.add("media/document/Audio.mp3");
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -139,7 +139,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi();
         int contentId = 0;
         try {
-            contentId = api.add("media/AdobeFile.pdf");
+            contentId = api.add("media/document/AdobeFile.pdf");
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -162,7 +162,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi();
         try {
-            api.add("media/AdobeFile.pdf");
+            api.add("media/document/AdobeFile.pdf");
             Assert.fail("Expected an exception to occur");
         }
         catch (Exception e) {
@@ -187,7 +187,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi();
         int rc = 0;
         try {
-            rc = api.add("media/AdobeFile.pdf");
+            rc = api.add("media/document/AdobeFile.pdf");
         }
         catch (Exception e) {
             Assert.fail("Did not expect an exception to occur");
@@ -218,7 +218,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi();
         try {
-            api.add("media/file_not_exist.pdf");
+            api.add("media/document/file_not_exist.pdf");
             Assert.fail("Expected an exception to occur");
         }
         catch (Exception e) {
@@ -227,7 +227,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
             String errMsg = "Unable to add media document as a database recrod or as an external file due to input file cannot be located";
             Assert.assertEquals(errMsg, e.getMessage());
             Assert.assertTrue(e.getCause() instanceof NotFoundException);
-            Assert.assertEquals("media/file_not_exist.pdf is not found", e.getCause().getMessage());
+            Assert.assertEquals("media/document/file_not_exist.pdf is not found", e.getCause().getMessage());
         }
     }
     
@@ -237,7 +237,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi();
         try {
-            api.add("media/FileNoExt");
+            api.add("media/document/FileNoExt");
             Assert.fail("Expected an exception to occur");
         }
         catch (Exception e) {
@@ -256,7 +256,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi();
         try {
-            api.add("media/InvalidFileExt.123");
+            api.add("media/document/InvalidFileExt.123");
             Assert.fail("Expected an exception to occur");
         }
         catch (Exception e) {
@@ -341,7 +341,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
     @Test
     public void testSuccess_Delete_From_Database_And_FileSystem() {
         // Create real file to be deleted from the file system.
-        byte[] expectedImage = RMT2File.getFileContentsAsBytes("media/image.jpg");
+        byte[] expectedImage = RMT2File.getFileContentsAsBytes("media/document/image.jpg");
         String filePath = outDir + "@@@image.jpg";
         RMT2File.outputFile(expectedImage, filePath);
         

@@ -112,10 +112,10 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
        String srcDir = RMT2File.getCurrentDirectory();
        logger.info("Listener Data Dir: " + srcDir);
        if (win) {
-           srcDir += "\\src\\test\\resources\\media\\listener\\";
+           srcDir += "\\src\\test\\resources\\media\\document\\listener\\";
        }
        else {
-           srcDir += "/src/test/resources/media/listener/";
+           srcDir += "/src/test/resources/media/document/listener/";
        }
        logger.info("Listener Data Dir after UNC conversion: " + srcDir);
        
@@ -134,10 +134,10 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
        String srcDir = RMT2File.getCurrentDirectory();
        logger.info("Listener Data Dir: " + srcDir);
        if (win) {
-           srcDir += "\\src\\test\\resources\\media\\listener\\bad_files\\";
+           srcDir += "\\src\\test\\resources\\media\\document\\listener\\bad_files\\";
        }
        else {
-           srcDir += "/src/test/resources/media/listener/bad_files/";
+           srcDir += "/src/test/resources/media/document/listener/bad_files/";
        }
        logger.info("Listener Data Dir after UNC conversion: " + srcDir);
        

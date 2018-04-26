@@ -112,7 +112,7 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
     public void testSuccess_Fetch_Content_From_File() {
         // We want the API to actually fetch a file from the test/resources source folder on the build path.
         Content contentFile = MediaMockDataFactory.createOrmContent(MediaMockDataFactory.TEST_CONTENT_ID,
-                MediaMockDataFactory.TEST_MIME_TYPE_ID, "media/", "image.jpg",
+                MediaMockDataFactory.TEST_MIME_TYPE_ID, "media/document/", "image.jpg",
                 1024, 5555, "Media");
         contentFile.setImageData(null);
         when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
@@ -129,7 +129,7 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         }
         
         Assert.assertNotNull(results);
-        byte[] expectedImage = RMT2File.getFileContentsAsBytes("media/image.jpg");
+        byte[] expectedImage = RMT2File.getFileContentsAsBytes("media/document/image.jpg");
         // Save expected image to disc for visual inspection
         String filePath = outDir + "@@image.jpg";
         RMT2File.outputFile(expectedImage, filePath);
