@@ -5,14 +5,10 @@ import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
 import org.modules.services.directory.file.FileDropProcessingException;
 import org.modules.services.directory.file.MediaFileFactory;
-import org.modules.services.directory.file.MediaFileOperationException;
 import org.modules.services.directory.file.MediaFileProcessor;
 
-import com.InvalidDataException;
 import com.RMT2Base;
 import com.util.RMT2File;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
 
 /**
  * Servcie for processing media documents.
@@ -103,50 +99,6 @@ public class DocumentProcessingService extends RMT2Base {
         }
     }
 
-    /**
-     * 
-     * @param fileName
-     * @return
-     * @throws MediaFileOperationException
-     * @throws InvalidMediaFileFormatException
-     */
-    public int processSingleMediaFiles(String fileName) throws MediaFileOperationException {
-        try {
-            Verifier.verifyNotEmpty(fileName);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Input file name is required");
-        }
-
-        MediaFileProcessor processor = MediaFileFactory.createBatchFileProcessor();
-        int fileCount = 0;
-        try {
-            DocumentProcessingService.logger.info("Media file listener looking for files to process...");
-            processor.initConnection();
-            Integer rc = (Integer) processor.processSingleFile(fileName, null);
-            fileCount = rc.intValue();
-            if (fileCount > 0) {
-                String msgCount = fileName + " media file was processed successfully";
-                DocumentProcessingService.logger.info(msgCount);
-                // Attempt to send report.
-                if (this.config.isEmailResults()) {
-                    try {
-                        processor.sendDropReport();
-                    } catch (Exception e) {
-                        // Do nothing
-                    }
-                }
-            }
-            return fileCount;
-        } catch (Exception e) {
-            DocumentProcessingService.logger.error(e);
-            throw new MediaFileOperationException(e);
-        } finally {
-            if (processor != null) {
-                processor.close();
-            }
-        }
-    }
 
     /**
      * Return the directory poll frequency
