@@ -34,7 +34,6 @@ import com.api.messaging.webservice.router.MessageRoutingException;
 import com.util.RMT2Date;
 import com.util.RMT2File;
 import com.util.RMT2String;
-import com.util.RMT2Utility;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
 
@@ -171,20 +170,8 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         this.startTime = new Date();
         int count = 0;
         List<String> files = null;
-        String cmd = null;
-        String cmdMsg = null;
         String fullPathFileName = null;
         try {
-            // Establish a connection to the computer share which will be used
-            // for copy/moving files remotely
-            if (!this.config.isArchiveLocal()) {
-                // TODO: This logic needs to consider UNIX environment
-                cmd = "cmd /c net use " + config.getArchiveDir();
-                logger.log(Level.DEBUG, "Connecting to shared resource, " + config.getArchiveDir());
-                cmdMsg = RMT2Utility.execShellCommand(cmd);
-                logger.log(Level.DEBUG, cmdMsg);
-            }
-
             // Process each module
             for (int ndx = 0; ndx < config.getModuleCount(); ndx++) {
                 this.setModuleId(ndx);
@@ -235,13 +222,6 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             this.msg = "Error occurred processing file, " + fullPathFileName;
             throw new MediaFileOperationException(this.msg, e);
         } finally {
-            // Cancel the connection to computer share(s)
-            if (!this.config.isArchiveLocal()) {
-                cmd = "cmd /c net use " + config.getArchiveDir() + " /delete";
-                logger.log(Level.DEBUG, "Disconnecting from shared resource, " + config.getArchiveDir());
-                cmdMsg = RMT2Utility.execShellCommand(cmd);
-                logger.log(Level.DEBUG, cmdMsg);
-            }
             this.endTime = new Date();
         }
     }
