@@ -124,7 +124,7 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
     public void testSuccess_Multi_File_Processor() {
         int fileCount = 0;
         try {
-            this.copyFilesToDataDir();
+            // this.copyFilesToDataDir();
             DocumentProcessingService dps = new DocumentProcessingService();
             fileCount = dps.processMultiMediaFiles();
         }
@@ -134,6 +134,10 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
         }
         
         Assert.assertEquals(5, fileCount);
+
+        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(0, listing.size());
 //        Assert.assertTrue(Arrays.equals("ImageData".getBytes(), results.getImageData()));
     }
     
