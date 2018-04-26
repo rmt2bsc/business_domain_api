@@ -3,7 +3,6 @@ package org.modules.services.directory.file;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,8 +52,6 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
 
     private DirectoryListenerConfigBean config;
 
-    private List<String> mimeMsgs;
-
     private int moduleId;
 
     private Date startTime;
@@ -82,9 +79,6 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             this.msg = "Error instantiating BatchMediaFileProcessorDaoImpl object";
             throw new SystemException(this.msg, e);
         }
-
-        // Initialize MIME message collection
-        this.mimeMsgs = new ArrayList<String>();
         return;
     }
 
@@ -183,19 +177,15 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                         fullPathFileName = config.getInboundDir() + fileName;
                         String fileMsg = null;
                         try {
-                            // Validate the format of the file name.
-                            logger.info("Validate file format");
-                            this.validateInboundFileFormat(fileName);
-                            
                             logger.info("Begin proecessing file, "  + fullPathFileName);
                             Integer rc = (Integer) this.processSingleFile(fullPathFileName, null);
                             int uid = rc.intValue();
                             logger.info(fullPathFileName + " was linked to its respective project module");
-                            fileMsg = fullPathFileName + " was added to the MIME database successfully as " + uid;
-                            logger.info(fileMsg);
+                            this.msg = fullPathFileName + " was added to the MIME database successfully as " + uid;
+                            logger.info(this.msg);
                         }
                         catch (InvalidMediaFileFormatException e) {
-                            fileMsg = fullPathFileName + " faile file name validations";
+                            fileMsg = "Inbound File Name Validation Error: " + e.getMessage();
                             logger.error(fileMsg);
                         }
                         catch (MediaFileOperationException e) {
@@ -203,8 +193,10 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                                     + " was not added to the MIME database and/or assoicated with the target record of the home application.";
                             logger.error(fileMsg);
                         } finally {
-                            this.mimeMsgs.add(fileMsg);
-                            logger.info("MIME Message buffer size: " + this.mimeMsgs.size());
+                            if (fileMsg != null) {
+                                this.addErrorMessage(fileMsg);    
+                            }
+                            logger.debug("MIME Message buffer size: " + this.getErrorMessages().size());
                             count++;
                         }
                     }
@@ -212,7 +204,6 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                 catch (VerifyException e) {
                     this.msg = "No Media files were found in inbound directory, " + config.getInboundDir() + ", for module, " + this.moduleId;
                     logger.warn(this.msg);
-                    return 0;
                 }
                 this.msg = "Media files were processed for module: " + this.moduleId;
                 logger.log(Level.INFO, this.msg);
@@ -247,8 +238,6 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
      *             if an error occurs adding the document to the MIME database
      *             or and error occurs associating the MIME document record with
      *             the target record of the home application.
-     * @throws InvalidMediaFileFormatDaoException
-     *             if <i>fileName</i> is not in the correct format.
      * @throws SystemException
      *             problem occurs renaming and copying <i>fileName</i> to the
      *             archive destination or deleting the <i>fileName</i> from the
@@ -259,6 +248,10 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         int newContentId = 0;
          
         try {
+            // Validate the format of the file name.
+            logger.info("Validate file format");
+            this.validateInboundFileFormat(fileName);
+            
             // Save media file data to the content table
             newContentId =  super.processSingleFile(fileName, parent);
 
@@ -270,7 +263,8 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             this.linkHomeApplication(this.moduleId, newContentId);
             logger.info("Linking of media content to Home Application completed");
             return newContentId;
-        } catch (Exception e) {
+        }
+        catch (BatchFileException e) {
             // If document data has been added, delete from the database since
             // an error occurred.
             if (newContentId > 0) {
@@ -394,15 +388,15 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         // remove extra path info, if available
         fileName = RMT2File.getFileName(fileName);
         List<String> tokens = RMT2String.getTokens(fileName, "_");
-        if (tokens == null) {
-            this.msg = fileName
-                    + ": The underscore character must be used as a separator in the file name";
+        if (tokens.size() == 1) {
+            this.msg = "[" + fileName + "] "
+                    + "The underscore character must be used as a separator in the file name";
             logger.log(Level.ERROR, this.msg);
             throw new InvalidMediaFileFormatException(this.msg);
         }
         if (tokens.size() != 3) {
-            this.msg = fileName
-                    + ": The file name must be in the format  <app_code>_<module>_<primary_key>.<file extension>";
+            this.msg = "[" + fileName + "] "
+                    + "The file name must be in the format  <app_code>_<module>_<primary_key>.<file extension>";
             logger.log(Level.ERROR, this.msg);
             throw new InvalidMediaFileFormatException(this.msg);
         }
@@ -413,8 +407,8 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         try {
             Integer.parseInt(tokens2.get(0));
         } catch (NumberFormatException e) {
-            this.msg = fileName + ": Failure to convert the primary key value ["
-                    + tokens.get(2)
+            this.msg = "[" + fileName + "] Failure to convert the primary key value ["
+                    + tokens2.get(0)
                     + "] contained in the file name to a numeric value";
             logger.log(Level.ERROR, this.msg);
             throw new InvalidMediaFileFormatException(this.msg);
@@ -520,9 +514,9 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
 
         int count = 0;
         // Add details about each file that was processed
-        logger.log(Level.INFO, "MIME Drop Report will detail " + this.mimeMsgs.size()
+        logger.info("MIME Drop Report will detail " + this.getErrorMessages().size()
                         + " messages regarding MIME files processed");
-        for (String msg : this.mimeMsgs) {
+        for (String msg : this.getErrorMessages()) {
             count++;
             body.append(count);
             body.append(".  ");

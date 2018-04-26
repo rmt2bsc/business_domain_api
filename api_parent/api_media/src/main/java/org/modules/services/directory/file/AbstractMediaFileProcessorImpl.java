@@ -1,6 +1,7 @@
 package org.modules.services.directory.file;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,6 +23,7 @@ import com.api.foundation.AbstractTransactionApiImpl;
 abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl implements MediaFileProcessor { //extends AbstractMediaFileProcessorDaoImp {
 
     private static Logger logger = Logger.getLogger(AbstractMediaFileProcessorImpl.class);
+    private List<String> errorMessages;
 
     /**
      * Creates a SingleMediaFileProcessorDaoImpl object.
@@ -29,6 +31,8 @@ abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl
      */
     protected AbstractMediaFileProcessorImpl() {
         super();
+        // Initialize MIME message collection
+        this.errorMessages = new ArrayList<>();
         return;
     }
 
@@ -79,6 +83,26 @@ abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl
     public void close() {
         return;
     }
+    
+    /**
+     * Adds a message to the list of error messages.
+     * 
+     * @param msg
+     */
+    protected void addErrorMessage(String msg) {
+        this.errorMessages.add(msg);
+    }
+    
+    /**
+     * Return the list of error messages.
+     * 
+     * @return Always return a valid List messages even if empty, never null.
+     */
+    @Override
+    public List<String> getErrorMessages() {
+        return this.errorMessages;
+    }
+    
     
     @Override
     public void initConnection(Object extSource) throws BatchFileException {

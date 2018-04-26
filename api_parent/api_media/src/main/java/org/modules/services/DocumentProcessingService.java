@@ -1,5 +1,7 @@
 package org.modules.services;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.modules.services.directory.DirectoryListenerConfigBean;
 import org.modules.services.directory.DirectoryListenerConfigFactory;
@@ -23,6 +25,7 @@ import com.util.RMT2File;
 public class DocumentProcessingService extends RMT2Base {
     private static Logger logger = Logger.getLogger(DocumentProcessingService.class);
     private DirectoryListenerConfigBean config;
+    private MediaFileProcessor processor;
 
     /**
      * Creates an DocumentInboundDirectoryListener object initialized with one
@@ -42,6 +45,7 @@ public class DocumentProcessingService extends RMT2Base {
         logger.info("Initializing Document Service...");
         DocumentProcessingService.logger.info("Initializing media file listener");
         this.config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
+        processor = MediaFileFactory.createBatchFileProcessor();
     }
 
     /*
@@ -82,24 +86,31 @@ public class DocumentProcessingService extends RMT2Base {
      * @throws FileDropProcessingException
      */
     public int processMultiMediaFiles() throws FileDropProcessingException {
-        MediaFileProcessor processor = MediaFileFactory.createBatchFileProcessor();
         int fileCount = 0;
         try {
             DocumentProcessingService.logger.info("Begin Multi Media file batch processing...");
-            processor.initConnection();
-            fileCount = processor.processBatch();
+            this.processor.initConnection();
+            fileCount = this.processor.processBatch();
             return fileCount;
         } catch (Exception e) {
             DocumentProcessingService.logger.error(e);
             throw new FileDropProcessingException(e);
         } finally {
-            if (processor != null) {
-                processor.close();
+            if (this.processor != null) {
+                this.processor.close();
             }
         }
     }
 
-
+    /**
+     * Return error messages that may have been produced from the batch operation
+     * 
+     * @return List<String> instance.  Should never return null.
+     */
+    public List<String> getBatchErrorMessages() {
+        return processor.getErrorMessages();
+    }
+    
     /**
      * Return the directory poll frequency
      * 

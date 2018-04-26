@@ -1,5 +1,7 @@
 package org.modules.services.directory.file;
 
+import java.util.List;
+
 import com.api.BatchFileProcessor;
 
 /**
@@ -35,4 +37,10 @@ public interface MediaFileProcessor extends BatchFileProcessor {
      * @return true when files are availabe, and false otherwise.
      */
     boolean isFilesAvailable();
+    
+    /**
+     * Return a List of Stings representing error messages.
+     * @return List<String> instance.
+     */
+    List<String> getErrorMessages();
 }
