@@ -29,7 +29,9 @@ import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.messaging.webservice.router.MessageRouterHelper;
+import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2File;
 
@@ -43,8 +45,6 @@ import com.util.RMT2File;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
         RMT2File.class, BatchMediaFileProcessorImpl.class, SmtpFactory.class })
 public class DocumentProcessingServiceApiTest extends MediaMockData {
-    private String outDir;
-    
     Logger logger = Logger.getLogger(DocumentProcessingServiceApiTest.class);
     
     /**
@@ -268,6 +268,84 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
         List<String> errors = dps.getBatchErrorMessages();
         Assert.assertEquals(1, errors.size());
         String msg = "Inbound File Name Validation Error: [acct_cd_xxx.jpg] Failure to convert the primary key value [xxx] contained in the file name to a numeric value"; 
+        Assert.assertEquals(msg, errors.get(0));
+    }
+    
+    @Test
+    public void testError_Multi_File_Processor_DB_Access_Fault() {
+        // Setup stubs for meta data updates
+        when(this.mockPersistenceClient.insertRow(isA(Content.class), eq(true)))
+                .thenThrow(new DatabaseException("A database error occurred"));
+        
+        int fileCount = 0;
+        DocumentProcessingService dps = null;
+        try {
+            this.copyErrorFileToDataDir("acct_cd_111.jpg");
+            dps = new DocumentProcessingService();
+            fileCount = dps.processMultiMediaFiles();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertEquals(1, fileCount);
+
+        // Verify that files have been deleted from the Inbound directory
+        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String inDir = destDir;
+        List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(0, listing.size());
+        
+        // Verify that files have been copied to the archive directory
+        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(1, listing.size());
+        
+        // Verfify error message was added.
+        List<String> errors = dps.getBatchErrorMessages();
+        Assert.assertEquals(1, errors.size());
+        String msg = "Media file opertation error: Unable to persist media content and/or link media content to home application for file, " + inDir + "acct_cd_111.jpg"; 
+        Assert.assertEquals(msg, errors.get(0));
+    }
+    
+    @Test
+    public void testError_Multi_File_Processor_WebService_Access_Fault() throws Exception {
+        // Mock web service call to link media content with home application
+        MessageRouterHelper mockMessageRouterHelper = Mockito.mock(MessageRouterHelper.class);
+        PowerMockito.whenNew(MessageRouterHelper.class).withNoArguments().thenReturn(mockMessageRouterHelper);
+        when(mockMessageRouterHelper.routeXmlMessage(isA(String.class),
+                isA(MediaApplicationLinkRequest.class))).thenThrow(new MessageRoutingException("A web service error occurred"));
+        
+        int fileCount = 0;
+        DocumentProcessingService dps = null;
+        try {
+            this.copyErrorFileToDataDir("acct_cd_111.jpg");
+            dps = new DocumentProcessingService();
+            fileCount = dps.processMultiMediaFiles();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertEquals(1, fileCount);
+
+        // Verify that files have been deleted from the Inbound directory
+        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String inDir = destDir;
+        List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(0, listing.size());
+        
+        // Verify that files have been copied to the archive directory
+        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(1, listing.size());
+        
+        // Verfify error message was added.
+        List<String> errors = dps.getBatchErrorMessages();
+        Assert.assertEquals(1, errors.size());
+        String msg = "Media file opertation error: Unable to persist media content and/or link media content to home application for file, " + inDir + "acct_cd_111.jpg"; 
         Assert.assertEquals(msg, errors.get(0));
     }
 }

@@ -189,8 +189,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                             logger.error(fileMsg);
                         }
                         catch (MediaFileOperationException e) {
-                            fileMsg = fullPathFileName
-                                    + " was not added to the MIME database and/or assoicated with the target record of the home application.";
+                            fileMsg = "Media file opertation error: " + e.getMessage();
                             logger.error(fileMsg);
                         } finally {
                             if (fileMsg != null) {
@@ -270,7 +269,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             if (newContentId > 0) {
                 this.deleteContent(newContentId);
             }
-            throw new MediaFileOperationException("Unable to process file, " + fileName, e);
+            throw new MediaFileOperationException("Unable to persist media content and/or link media content to home application for file, " + fileName, e);
         } finally {
             this.archiveFile(fileName);
             logger.info("Archiving of file, " + fileName + ", completed");
@@ -482,10 +481,8 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
 
         // Attempt to obtain From email address from the application's property
         // pool which is loaded at server start up.
-        String fromAddr = null;
-        try {
-            fromAddr = this.config.getEmailSender();
-        } catch (Exception ee) {
+        String fromAddr = this.config.getEmailSender();
+        if (fromAddr == null) {
             this.msg = "FROM Email address is invalid and will probably be the root cause of transmission failure of MIME File Drop Report";
             logger.log(Level.ERROR, this.msg);
             throw new FileDropReportException(this.msg);
@@ -544,7 +541,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             logger.log(Level.INFO, "MIME Drop Report email was sent to " + toAddr);
         } catch (Exception e) {
             this.msg = "MIME Drop Report email submission failed: " + e.getMessage();
-            logger.log(Level.INFO, this.msg);
+            logger.log(Level.ERROR, this.msg);
             throw new FileDropReportException(this.msg);
         }
         return;
