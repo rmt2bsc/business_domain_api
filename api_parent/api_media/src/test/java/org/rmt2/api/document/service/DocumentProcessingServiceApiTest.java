@@ -94,6 +94,15 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+        
+        // Clear out the archive directory
+        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        for (String file : listing) {
+            logger.info("Deleting files in Archive directory");
+            RMT2File.deleteFile(destDir + file);   
+        }
+        
         return;
     }
 
@@ -135,10 +144,15 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
         
         Assert.assertEquals(5, fileCount);
 
+        // Verify that files have been deleted from the Inbound directory
         String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(0, listing.size());
-//        Assert.assertTrue(Arrays.equals("ImageData".getBytes(), results.getImageData()));
+        
+        // Verify that files have been copied to the archive directory
+        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(5, listing.size());
     }
     
    
