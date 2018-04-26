@@ -109,25 +109,42 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
    private void copyFilesToDataDir() throws Exception {
        String OS = System.getProperty("os.name").toLowerCase();
        boolean win = (OS.indexOf("win") >= 0);
-       String dir = RMT2File.getCurrentDirectory();
-       logger.info("Listener Data Dir: " + dir);
+       String srcDir = RMT2File.getCurrentDirectory();
+       logger.info("Listener Data Dir: " + srcDir);
        if (win) {
-           dir += "\\src\\test\\resources\\media\\listener\\";
+           srcDir += "\\src\\test\\resources\\media\\listener\\";
        }
        else {
-           dir += "/src/test/resources/media/listener/";
+           srcDir += "/src/test/resources/media/listener/";
        }
-       logger.info("Listener Data Dir after UNC conversion: " + dir);
+       logger.info("Listener Data Dir after UNC conversion: " + srcDir);
        
        // TODO:  Write a utility method in core to handle copy files with wildcards
        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
-       List<String> listing = RMT2File.getDirectoryListing(dir, "*.*");
+       List<String> listing = RMT2File.getDirectoryListing(srcDir, "*.*");
        for (String file : listing) {
-           logger.info("Copying file: " + dir + file + "...");
-           RMT2File.copyFileWithOverwrite(dir + file, destDir);    
+           logger.info("Copying file: " + srcDir + file + "...");
+           RMT2File.copyFileWithOverwrite(srcDir + file, destDir);    
        }
    }
    
+   private void copyErrorFileToDataDir(String fileName) throws Exception {
+       String OS = System.getProperty("os.name").toLowerCase();
+       boolean win = (OS.indexOf("win") >= 0);
+       String srcDir = RMT2File.getCurrentDirectory();
+       logger.info("Listener Data Dir: " + srcDir);
+       if (win) {
+           srcDir += "\\src\\test\\resources\\media\\listener\\bad_files\\";
+       }
+       else {
+           srcDir += "/src/test/resources/media/listener/bad_files/";
+       }
+       logger.info("Listener Data Dir after UNC conversion: " + srcDir);
+       
+       String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+       logger.info("Copying Bad file: " + srcDir + fileName + "...");
+       RMT2File.copyFileWithOverwrite(srcDir + fileName, destDir);   
+   }
    
     @Test
     public void testSuccess_Multi_File_Processor() {
@@ -155,5 +172,102 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
         Assert.assertEquals(5, listing.size());
     }
     
-   
+    @Test
+    public void testValidation_Multi_File_Processor_No_Separators_In_FileName() {
+        int fileCount = 0;
+        DocumentProcessingService dps = null;
+        try {
+            this.copyErrorFileToDataDir("acctcd113.jpg");
+            dps = new DocumentProcessingService();
+            fileCount = dps.processMultiMediaFiles();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertEquals(1, fileCount);
+
+        // Verify that files have been deleted from the Inbound directory
+        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(0, listing.size());
+        
+        // Verify that files have been copied to the archive directory
+        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(1, listing.size());
+        
+        // Verfify error message was added.
+        List<String> errors = dps.getBatchErrorMessages();
+        Assert.assertEquals(1, errors.size());
+        String msg = "Inbound File Name Validation Error: [acctcd113.jpg] The underscore character must be used as a separator in the file name"; 
+        Assert.assertEquals(msg, errors.get(0));
+    }
+    
+    @Test
+    public void testValidation_Multi_File_Processor_FileName_Invalid_Format() {
+        int fileCount = 0;
+        DocumentProcessingService dps = null;
+        try {
+            this.copyErrorFileToDataDir("acct_cd_114_xxx.jpg");
+            dps = new DocumentProcessingService();
+            fileCount = dps.processMultiMediaFiles();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertEquals(1, fileCount);
+
+        // Verify that files have been deleted from the Inbound directory
+        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(0, listing.size());
+        
+        // Verify that files have been copied to the archive directory
+        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(1, listing.size());
+        
+        // Verfify error message was added.
+        List<String> errors = dps.getBatchErrorMessages();
+        Assert.assertEquals(1, errors.size());
+        String msg = "Inbound File Name Validation Error: [acct_cd_114_xxx.jpg] The file name must be in the format  <app_code>_<module>_<primary_key>.<file extension>"; 
+        Assert.assertEquals(msg, errors.get(0));
+    }
+    
+    @Test
+    public void testValidation_Multi_File_Processor_FileName_NonNumeric_EntityId() {
+        int fileCount = 0;
+        DocumentProcessingService dps = null;
+        try {
+            this.copyErrorFileToDataDir("acct_cd_xxx.jpg");
+            dps = new DocumentProcessingService();
+            fileCount = dps.processMultiMediaFiles();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertEquals(1, fileCount);
+
+        // Verify that files have been deleted from the Inbound directory
+        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(0, listing.size());
+        
+        // Verify that files have been copied to the archive directory
+        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        listing = RMT2File.getDirectoryListing(destDir, "*.*");
+        Assert.assertEquals(1, listing.size());
+        
+        // Verfify error message was added.
+        List<String> errors = dps.getBatchErrorMessages();
+        Assert.assertEquals(1, errors.size());
+        String msg = "Inbound File Name Validation Error: [acct_cd_xxx.jpg] Failure to convert the primary key value [xxx] contained in the file name to a numeric value"; 
+        Assert.assertEquals(msg, errors.get(0));
+    }
 }
