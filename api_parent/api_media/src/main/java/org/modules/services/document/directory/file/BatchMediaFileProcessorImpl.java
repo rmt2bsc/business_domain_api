@@ -1,4 +1,4 @@
-package org.modules.services.directory.file;
+package org.modules.services.document.directory.file;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -13,9 +13,9 @@ import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.MediaConstants;
-import org.modules.services.directory.ApplicationModuleBean;
-import org.modules.services.directory.DirectoryListenerConfigBean;
-import org.modules.services.directory.DirectoryListenerConfigFactory;
+import org.modules.services.document.directory.ApplicationModuleBean;
+import org.modules.services.document.directory.DirectoryListenerConfigBean;
+import org.modules.services.document.directory.DirectoryListenerConfigFactory;
 import org.rmt2.constants.ApiTransactionCodes;
 import org.rmt2.jaxb.HeaderType;
 import org.rmt2.jaxb.MediaApplicationLinkRequest;

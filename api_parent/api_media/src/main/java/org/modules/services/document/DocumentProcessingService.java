@@ -1,13 +1,13 @@
-package org.modules.services;
+package org.modules.services.document;
 
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.modules.services.directory.DirectoryListenerConfigBean;
-import org.modules.services.directory.DirectoryListenerConfigFactory;
-import org.modules.services.directory.file.FileDropProcessingException;
-import org.modules.services.directory.file.MediaFileFactory;
-import org.modules.services.directory.file.MediaFileProcessor;
+import org.modules.services.document.directory.DirectoryListenerConfigBean;
+import org.modules.services.document.directory.DirectoryListenerConfigFactory;
+import org.modules.services.document.directory.file.FileDropProcessingException;
+import org.modules.services.document.directory.file.MediaFileFactory;
+import org.modules.services.document.directory.file.MediaFileProcessor;
 
 import com.RMT2Base;
 import com.util.RMT2File;

@@ -1,7 +1,7 @@
-package org.modules.services.directory;
+package org.modules.services.document.directory;
 
 import org.apache.log4j.Logger;
-import org.modules.services.DocumentProcessingService;
+import org.modules.services.document.DocumentProcessingService;
 
 import com.RMT2Base;
 

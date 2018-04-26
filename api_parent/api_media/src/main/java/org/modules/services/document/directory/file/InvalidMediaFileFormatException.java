@@ -1,4 +1,4 @@
-package org.modules.services.directory.file;
+package org.modules.services.document.directory.file;
 
 import com.InvalidDataException;
 

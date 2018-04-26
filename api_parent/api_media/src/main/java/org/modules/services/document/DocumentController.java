@@ -1,4 +1,4 @@
-package org.modules.services;
+package org.modules.services.document;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

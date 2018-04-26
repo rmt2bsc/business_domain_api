@@ -8,8 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
 import org.modules.MediaConfigurator;
-import org.modules.services.directory.file.BatchMediaFileProcessorImpl;
-import org.modules.services.directory.file.MediaFileFactory;
+import org.modules.services.document.directory.file.BatchMediaFileProcessorImpl;
+import org.modules.services.document.directory.file.MediaFileFactory;
 import org.powermock.api.mockito.PowerMockito;
 
 import com.api.config.ConfigConstants;

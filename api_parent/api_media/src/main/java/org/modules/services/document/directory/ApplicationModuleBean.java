@@ -1,4 +1,4 @@
-package org.modules.services.directory;
+package org.modules.services.document.directory;
 
 import com.RMT2Base;
 

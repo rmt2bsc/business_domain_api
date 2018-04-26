@@ -11,7 +11,7 @@ import org.dto.MimeTypeDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
-import org.modules.services.directory.DirectoryInboundDocumentListener;
+import org.modules.services.document.directory.DirectoryInboundDocumentListener;
 
 import com.InvalidDataException;
 import com.NotFoundException;
