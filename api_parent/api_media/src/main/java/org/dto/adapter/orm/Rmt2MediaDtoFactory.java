@@ -44,7 +44,7 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      * @return an instance of {@link ArtistDto}. Set to null for the purpose of
      *         instantiating a new AvArtist object.
      */
-    public static final ArtistDto getArtistInstance(AvArtist artist) {
+    public static final ArtistDto getAvArtistInstance(AvArtist artist) {
         ArtistDto dto = new MediaLookupInfoRmt2OrmDtoAdapter(artist);
         return dto;
     }
@@ -56,7 +56,7 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      * @return an instance of {@link GenreDto}. Set to null for the purpose of
      *         instantiating a new AvGenre object.
      */
-    public static final GenreDto getGenreInstance(AvGenre genre) {
+    public static final GenreDto getAvGenreInstance(AvGenre genre) {
         GenreDto dto = new MediaLookupInfoRmt2OrmDtoAdapter(genre);
         return dto;
     }
@@ -68,7 +68,7 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      * @return an instance of {@link MediaTypeDto}. Set to null for the purpose
      *         of instantiating a new AvMediaType object.
      */
-    public static final MediaTypeDto getMediaTypeInstance(AvMediaType mediaType) {
+    public static final MediaTypeDto getAvMediaTypeInstance(AvMediaType mediaType) {
         MediaTypeDto dto = new MediaLookupInfoRmt2OrmDtoAdapter(mediaType);
         return dto;
     }
@@ -80,7 +80,7 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      * @return an instance of {@link ProjectTypeDto}. Set to null for the
      *         purpose of instantiating a new AvProjectType object.
      */
-    public static final ProjectTypeDto getProjectTypeInstance(
+    public static final ProjectTypeDto getAvProjectTypeInstance(
             AvProjectType projectType) {
         ProjectTypeDto dto = new MediaLookupInfoRmt2OrmDtoAdapter(projectType);
         return dto;
@@ -93,7 +93,7 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      * @return an instance of {@link ProjectDto}. Set to null for the purpose of
      *         instantiating a new AvProject object.
      */
-    public static final ProjectDto getProjectInstance(AvProject project) {
+    public static final ProjectDto getAvProjectInstance(AvProject project) {
         ProjectDto dto = new ProjectRmt2OrmDtoAdapter(project);
         return dto;
     }
@@ -105,7 +105,7 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      * @return an instance of {@link TracksDto}. Set to null for the purpose of
      *         instantiating a new AvTracks object.
      */
-    public static final TracksDto getTrackInstance(AvTracks track) {
+    public static final TracksDto getAvTrackInstance(AvTracks track) {
         TracksDto dto = new TracksRmt2OrmDtoAdapter(track);
         return dto;
     }

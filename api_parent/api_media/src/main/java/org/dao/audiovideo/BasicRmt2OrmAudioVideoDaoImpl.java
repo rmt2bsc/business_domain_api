@@ -96,7 +96,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         // Package results
         List<ArtistDto> list = new ArrayList<ArtistDto>();
         for (AvArtist item : results) {
-            ArtistDto dto = Rmt2MediaDtoFactory.getArtistInstance(item);
+            ArtistDto dto = Rmt2MediaDtoFactory.getAvArtistInstance(item);
             list.add(dto);
         }
         return list;
@@ -169,7 +169,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         // Package results
         List<ProjectDto> list = new ArrayList<ProjectDto>();
         for (AvProject item : results) {
-            ProjectDto dto = Rmt2MediaDtoFactory.getProjectInstance(item);
+            ProjectDto dto = Rmt2MediaDtoFactory.getAvProjectInstance(item);
             list.add(dto);
         }
         return list;
@@ -223,7 +223,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         // Package results
         List<TracksDto> list = new ArrayList<TracksDto>();
         for (AvTracks item : results) {
-            TracksDto dto = Rmt2MediaDtoFactory.getTrackInstance(item);
+            TracksDto dto = Rmt2MediaDtoFactory.getAvTrackInstance(item);
             list.add(dto);
         }
         return list;
@@ -268,7 +268,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         // Package results
         List<GenreDto> list = new ArrayList<GenreDto>();
         for (AvGenre item : results) {
-            GenreDto dto = Rmt2MediaDtoFactory.getGenreInstance(item);
+            GenreDto dto = Rmt2MediaDtoFactory.getAvGenreInstance(item);
             list.add(dto);
         }
         return list;
@@ -316,7 +316,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         List<ProjectTypeDto> list = new ArrayList<ProjectTypeDto>();
         for (AvProjectType item : results) {
             ProjectTypeDto dto = Rmt2MediaDtoFactory
-                    .getProjectTypeInstance(item);
+                    .getAvProjectTypeInstance(item);
             list.add(dto);
         }
         return list;
@@ -637,13 +637,13 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
     }
 
     private int insertArtistFromFile(AvArtist artist) throws DatabaseException {
-        ArtistDto aDto = Rmt2MediaDtoFactory.getArtistInstance(artist);
+        ArtistDto aDto = Rmt2MediaDtoFactory.getAvArtistInstance(artist);
         this.validateArtist(aDto);
         int artistId = 0;
         if (artist.getArtistId() == 0) {
             // Check if artist alread exists
             ArtistDto artistCriteria = Rmt2MediaDtoFactory
-                    .getArtistInstance(null);
+                    .getAvArtistInstance(null);
             artistCriteria.setDescription(aDto.getDescritpion());
             List<ArtistDto> a = this.fetchArtist(artistCriteria);
             if (a != null && a.size() == 1) {
@@ -665,13 +665,13 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
     private int insertProjectFromFile(AvProject project, String genreName)
             throws DatabaseException {
         int artistId = project.getArtistId();
-        ProjectDto pDto = Rmt2MediaDtoFactory.getProjectInstance(project);
+        ProjectDto pDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
         project.setArtistId(artistId);
         pDto.setArtistId(artistId);
         this.validateProject(pDto);
 
-        GenreDto genreCriteria = Rmt2MediaDtoFactory.getGenreInstance(null);
+        GenreDto genreCriteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
         genreCriteria.setDescription(genreName);
         List<GenreDto> g = this.fetchGenre(genreCriteria);
         int genreId = AudioVideoConstants.UNKNOWN_GENRE;
@@ -682,7 +682,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         pDto.setGenreId(genreId);
         if (project.getProjectId() == 0) {
             ProjectDto projCriteria = Rmt2MediaDtoFactory
-                    .getProjectInstance(null);
+                    .getAvProjectInstance(null);
             projCriteria.setTitle(pDto.getTitle());
             List<ProjectDto> p = this.fetchProject(projCriteria);
             if (p != null && p.size() == 1) {
@@ -702,7 +702,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
     }
 
     private int insertTrackFromFile(AvTracks track) throws DatabaseException {
-        TracksDto tDto = Rmt2MediaDtoFactory.getTrackInstance(track);
+        TracksDto tDto = Rmt2MediaDtoFactory.getAvTrackInstance(track);
         int trackId = 0;
         tDto.setProjectId(track.getProjectId());
         this.validateTarck(tDto);

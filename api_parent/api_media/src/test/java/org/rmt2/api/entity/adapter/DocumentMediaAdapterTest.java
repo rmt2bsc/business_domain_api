@@ -17,7 +17,7 @@ import org.rmt2.api.MediaMockDataFactory;
  * @author roy.terrell
  *
  */
-public class MediaAdapterTest {
+public class DocumentMediaAdapterTest {
 
     @Before
     public void setUp() throws Exception {
