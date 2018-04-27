@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.MediaMockDataFactory;
+import org.rmt2.api.document.DocumentMediaMockDataFactory;
 
 /**
  * Test of MimeTypes ORM class
@@ -25,7 +25,7 @@ public class MimeTypeOrmTest {
 
     @Test
     public void testToString() {
-        MimeTypes o1 = MediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
+        MimeTypes o1 = DocumentMediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
         String val = o1.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -40,7 +40,7 @@ public class MimeTypeOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = MediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
+        o1 = DocumentMediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
         o2 = new MimeTypes();
         result = o1.equals(o2);
         Assert.assertFalse(result);
@@ -60,8 +60,8 @@ public class MimeTypeOrmTest {
 
     @Test
     public void testHashCode() {
-        MimeTypes o1 = MediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
-        MimeTypes o2 = MediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
+        MimeTypes o1 = DocumentMediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
+        MimeTypes o2 = DocumentMediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

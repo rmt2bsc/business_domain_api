@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.MediaMockDataFactory;
+import org.rmt2.api.document.DocumentMediaMockDataFactory;
 
 /**
  * Test adapters pertaining to the Project Administation module.
@@ -29,7 +29,7 @@ public class DocumentMediaAdapterTest {
 
     @Test
     public void testOrmContent() {
-        Content o1 = MediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
+        Content o1 = DocumentMediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
                 "image.jpg", 1024, 5555, "Media");
         ContentDto dto = Rmt2MediaDtoFactory.getContentInstance(o1);
         
@@ -74,7 +74,7 @@ public class DocumentMediaAdapterTest {
  
     @Test
     public void testOrmMimeTypes() {
-        MimeTypes o1 = MediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
+        MimeTypes o1 = DocumentMediaMockDataFactory.createOrmMimeTypes(101, ".jpg", "image/jpg");
         MimeTypeDto dto = Rmt2MediaDtoFactory.getMimeTypeInstance(o1);
         
         Assert.assertEquals(101, dto.getMimeTypeId());

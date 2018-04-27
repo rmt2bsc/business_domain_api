@@ -21,8 +21,6 @@ import org.modules.document.DocumentContentApi;
 import org.modules.document.DocumentContentApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.MediaMockData;
-import org.rmt2.api.MediaMockDataFactory;
 
 import com.InvalidDataException;
 import com.NotFoundException;
@@ -39,7 +37,7 @@ import com.util.RMT2File;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class MediaDocumentUpdateApiTest extends MediaMockData {
+public class MediaDocumentUpdateApiTest extends DocumentMediaMockData {
     private String outDir;
     
     /**
@@ -53,7 +51,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         
         // Setup stubs for meta data updates
         when(this.mockPersistenceClient.insertRow(isA(Content.class), eq(true)))
-                .thenReturn(MediaMockDataFactory.TEST_CONTENT_ID);
+                .thenReturn(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
 
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
                 .thenReturn(this.mockMultipleMimeTypeList);
@@ -84,7 +82,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
             Assert.fail("An exception was not expected");
         }
         
-        Assert.assertEquals(MediaMockDataFactory.TEST_CONTENT_ID, contentId);
+        Assert.assertEquals(DocumentMediaMockDataFactory.TEST_CONTENT_ID, contentId);
         
         // Verify that file was created
         try {
@@ -114,7 +112,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
             Assert.fail("An exception was not expected");
         }
         
-        Assert.assertEquals(MediaMockDataFactory.TEST_CONTENT_ID, contentId);
+        Assert.assertEquals(DocumentMediaMockDataFactory.TEST_CONTENT_ID, contentId);
        
         // Verify that file was created
         try {
@@ -145,7 +143,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
             Assert.fail("An exception was not expected");
         }
         
-        Assert.assertEquals(MediaMockDataFactory.TEST_CONTENT_ID, contentId);
+        Assert.assertEquals(DocumentMediaMockDataFactory.TEST_CONTENT_ID, contentId);
     }
     
     @Test
@@ -193,7 +191,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
             Assert.fail("Did not expect an exception to occur");
         }
         
-        Assert.assertEquals(MediaMockDataFactory.TEST_CONTENT_ID, rc);
+        Assert.assertEquals(DocumentMediaMockDataFactory.TEST_CONTENT_ID, rc);
     }
     
     @Test
@@ -276,7 +274,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi();
         int rows = 0;
         try {
-            rows = api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+            rows = api.delete(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -294,16 +292,16 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi();
         try {
-            api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+            api.delete(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
             Assert.assertTrue(e instanceof MediaModuleException);
             Assert.assertEquals("Unable to delete media document identified by document id: "
-                            + MediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
             Assert.assertTrue(e.getCause() instanceof ContentDaoException);
             Assert.assertEquals("Error deleting media content from the content table [contentId="
-                            + MediaMockDataFactory.TEST_CONTENT_ID + "]",
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID + "]",
                     e.getCause().getMessage());
         }
     }
@@ -357,7 +355,7 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         int rows = 0;
         try {
-            rows = api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+            rows = api.delete(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -375,16 +373,16 @@ public class MediaDocumentUpdateApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         try {
-            api.delete(MediaMockDataFactory.TEST_CONTENT_ID);
+            api.delete(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
             Assert.assertTrue(e instanceof MediaModuleException);
             Assert.assertEquals("Unable to delete media document identified by document id: "
-                            + MediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
             Assert.assertTrue(e.getCause() instanceof ContentDaoException);
             Assert.assertEquals("Error deleting media content from the content table [contentId="
-                            + MediaMockDataFactory.TEST_CONTENT_ID + "]",
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID + "]",
                     e.getCause().getMessage());
         }
     }

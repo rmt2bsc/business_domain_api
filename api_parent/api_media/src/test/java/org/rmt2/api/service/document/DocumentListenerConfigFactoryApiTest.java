@@ -11,7 +11,7 @@ import org.modules.services.document.directory.DirectoryListenerConfigBean;
 import org.modules.services.document.directory.DirectoryListenerConfigFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.MediaMockData;
+import org.rmt2.api.document.DocumentMediaMockData;
 
 import com.SystemException;
 import com.api.config.ConfigConstants;
@@ -27,7 +27,7 @@ import com.util.RMT2File;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
-public class DocumentListenerConfigFactoryApiTest extends MediaMockData {
+public class DocumentListenerConfigFactoryApiTest extends DocumentMediaMockData {
     
     /**
      * @throws java.lang.Exception

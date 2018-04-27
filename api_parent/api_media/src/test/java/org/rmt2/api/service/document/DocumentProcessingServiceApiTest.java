@@ -21,8 +21,8 @@ import org.modules.services.document.directory.file.BatchMediaFileProcessorImpl;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.MediaMockData;
-import org.rmt2.api.MediaMockDataFactory;
+import org.rmt2.api.document.DocumentMediaMockData;
+import org.rmt2.api.document.DocumentMediaMockDataFactory;
 import org.rmt2.jaxb.MediaApplicationLinkRequest;
 
 import com.api.messaging.email.EmailMessageBean;
@@ -44,7 +44,7 @@ import com.util.RMT2File;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
         RMT2File.class, BatchMediaFileProcessorImpl.class, SmtpFactory.class })
-public class DocumentProcessingServiceApiTest extends MediaMockData {
+public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
     Logger logger = Logger.getLogger(DocumentProcessingServiceApiTest.class);
     
     /**
@@ -58,7 +58,7 @@ public class DocumentProcessingServiceApiTest extends MediaMockData {
         
         // Setup stubs for meta data updates
         when(this.mockPersistenceClient.insertRow(isA(Content.class), eq(true)))
-                .thenReturn(MediaMockDataFactory.TEST_CONTENT_ID);
+                .thenReturn(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
         
         this.mockSingleMimeTypeList.add(this.mockMultipleMimeTypeList.get(1));
         when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))

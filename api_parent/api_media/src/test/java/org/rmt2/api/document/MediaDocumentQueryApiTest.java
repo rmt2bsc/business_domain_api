@@ -24,8 +24,6 @@ import org.modules.document.DocumentContentApiFactory;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.MediaMockData;
-import org.rmt2.api.MediaMockDataFactory;
 
 import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
@@ -41,7 +39,7 @@ import com.util.RMT2File;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
-public class MediaDocumentQueryApiTest extends MediaMockData {
+public class MediaDocumentQueryApiTest extends DocumentMediaMockData {
     private String outDir;
     
     /**
@@ -80,7 +78,7 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, true);
         ContentDto results = null;
         try {
-            results = api.get(MediaMockDataFactory.TEST_CONTENT_ID);
+            results = api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -99,7 +97,7 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, true);
         ContentDto results = null;
         try {
-            results = api.get(MediaMockDataFactory.TEST_CONTENT_ID);
+            results = api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -111,8 +109,8 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
     @Test
     public void testSuccess_Fetch_Content_From_File() {
         // We want the API to actually fetch a file from the test/resources source folder on the build path.
-        Content contentFile = MediaMockDataFactory.createOrmContent(MediaMockDataFactory.TEST_CONTENT_ID,
-                MediaMockDataFactory.TEST_MIME_TYPE_ID, "media/document/", "image.jpg",
+        Content contentFile = DocumentMediaMockDataFactory.createOrmContent(DocumentMediaMockDataFactory.TEST_CONTENT_ID,
+                DocumentMediaMockDataFactory.TEST_MIME_TYPE_ID, "media/document/", "image.jpg",
                 1024, 5555, "Media");
         contentFile.setImageData(null);
         when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
@@ -122,7 +120,7 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         ContentDto results = null;
         try {
-            results = api.get(MediaMockDataFactory.TEST_CONTENT_ID);
+            results = api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -158,7 +156,7 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         MimeTypeDto results = null;
         try {
-            results = api.getMimeType(MediaMockDataFactory.TEST_MIME_TYPE_ID);
+            results = api.getMimeType(DocumentMediaMockDataFactory.TEST_MIME_TYPE_ID);
         }
         catch (MediaModuleException e) {
             Assert.fail("An exception was not expected");
@@ -176,16 +174,16 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi();
         try {
-            api.get(MediaMockDataFactory.TEST_CONTENT_ID);
+            api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
             Assert.assertTrue(e instanceof MediaModuleException);
             Assert.assertEquals("Unable to retrieve media document identified by document id: " +
-                            + MediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
             Assert.assertTrue(e.getCause() instanceof ContentDaoException);
             Assert.assertEquals("DAO error occurred fetching media content record by content id, " +
-                            + MediaMockDataFactory.TEST_CONTENT_ID , e.getCause().getMessage());
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID , e.getCause().getMessage());
         }
     }
     
@@ -199,16 +197,16 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         try {
-            api.get(MediaMockDataFactory.TEST_CONTENT_ID);
+            api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
             Assert.assertTrue(e instanceof MediaModuleException);
             Assert.assertEquals("Unable to retrieve media document identified by document id: " +
-                    + MediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
+                    + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
             Assert.assertTrue(e.getCause() instanceof ContentDaoException);
             Assert.assertEquals("DAO error occurred fetching media content record by content id, "
-                            + MediaMockDataFactory.TEST_CONTENT_ID,
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID,
                     e.getCause().getMessage());
         }
     }
@@ -223,16 +221,16 @@ public class MediaDocumentQueryApiTest extends MediaMockData {
         // Test default constructor which should employ the database DAO implementation.
         DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
         try {
-            api.get(MediaMockDataFactory.TEST_CONTENT_ID);
+            api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
             Assert.assertTrue(e instanceof MediaModuleException);
             Assert.assertEquals("Unable to retrieve media document identified by document id: " +
-                    + MediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
+                    + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
             Assert.assertTrue(e.getCause() instanceof ContentDaoException);
             Assert.assertEquals("Unable to fetch media content from the file system for content id, "
-                            + MediaMockDataFactory.TEST_CONTENT_ID,
+                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID,
                     e.getCause().getMessage());
             Assert.assertTrue(e.getCause().getCause() instanceof NotFoundException);
             Assert.assertEquals("External File is not found", e.getCause().getCause().getMessage());

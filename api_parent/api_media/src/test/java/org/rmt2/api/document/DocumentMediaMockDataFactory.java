@@ -1,9 +1,9 @@
-package org.rmt2.api;
+package org.rmt2.api.document;
 
 import org.dao.mapping.orm.rmt2.Content;
 import org.dao.mapping.orm.rmt2.MimeTypes;
 
-public class MediaMockDataFactory {
+public class DocumentMediaMockDataFactory {
     public static final int TEST_CONTENT_ID = 999991;
     public static final int TEST_MIME_TYPE_ID = 101;
 

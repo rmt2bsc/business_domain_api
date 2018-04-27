@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.rmt2.api.MediaMockDataFactory;
+import org.rmt2.api.document.DocumentMediaMockDataFactory;
 
 /**
  * Test of Content ORM class
@@ -25,7 +25,7 @@ public class ContentOrmTest {
 
     @Test
     public void testToString() {
-        Content o1 = MediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
+        Content o1 = DocumentMediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
                 "image.jpg", 1024, 5555, "Media");
         String val = o1.toString();
         System.out.println(val);
@@ -41,7 +41,7 @@ public class ContentOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
-        o1 = MediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
+        o1 = DocumentMediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
                 "image.jpg", 1024, 5555, "Media");
         o2 = new Content();
         result = o1.equals(o2);
@@ -90,9 +90,9 @@ public class ContentOrmTest {
 
     @Test
     public void testHashCode() {
-        Content o1 = MediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
+        Content o1 = DocumentMediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
                 "image.jpg", 1024, 5555, "Media");
-        Content o2 = MediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
+        Content o2 = DocumentMediaMockDataFactory.createOrmContent(1000, 101, "tmp/",
                 "image.jpg", 1024, 5555, "Media");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
