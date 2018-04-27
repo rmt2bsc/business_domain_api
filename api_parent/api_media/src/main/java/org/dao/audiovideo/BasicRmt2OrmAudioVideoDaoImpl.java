@@ -35,11 +35,9 @@ import com.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
-        AudioVideoDao {
+class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDao {
 
-    private static Logger logger = Logger
-            .getLogger(BasicRmt2OrmAudioVideoDaoImpl.class);
+    private static Logger logger = Logger.getLogger(BasicRmt2OrmAudioVideoDaoImpl.class);
 
     /**
      * Defaul constructor that opens a connection to the MIME database.
@@ -77,8 +75,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
                 queryObj.addCriteria(AvArtist.PROP_ARTISTID, criteria.getUid());
             }
             if (criteria.getDescritpion() != null) {
-                queryObj.addLikeClause(AvArtist.PROP_NAME,
-                        criteria.getDescritpion());
+                queryObj.addLikeClause(AvArtist.PROP_NAME, criteria.getDescritpion());
             }
         }
 
@@ -114,41 +111,33 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AudioVideoDaoException
      */
     @Override
-    public List<ProjectDto> fetchProject(ProjectDto criteria)
-            throws AudioVideoDaoException {
+    public List<ProjectDto> fetchProject(ProjectDto criteria) throws AudioVideoDaoException {
         // Setup criteria
         AvProject queryObj = new AvProject();
         if (criteria != null) {
             if (criteria.getProjectId() > 0) {
-                queryObj.addCriteria(AvProject.PROP_PROJECTID,
-                        criteria.getProjectId());
+                queryObj.addCriteria(AvProject.PROP_PROJECTID, criteria.getProjectId());
             }
             if (criteria.getArtistId() > 0) {
-                queryObj.addCriteria(AvProject.PROP_ARTISTID,
-                        criteria.getArtistId());
+                queryObj.addCriteria(AvProject.PROP_ARTISTID, criteria.getArtistId());
             }
             if (criteria.getProjectTypeId() > 0) {
-                queryObj.addCriteria(AvProject.PROP_PROJECTTYPEID,
-                        criteria.getProjectTypeId());
+                queryObj.addCriteria(AvProject.PROP_PROJECTTYPEID, criteria.getProjectTypeId());
             }
             if (criteria.getGenreId() > 0) {
-                queryObj.addCriteria(AvProject.PROP_GENREID,
-                        criteria.getGenreId());
+                queryObj.addCriteria(AvProject.PROP_GENREID, criteria.getGenreId());
             }
             if (criteria.getMediaTypeId() > 0) {
-                queryObj.addCriteria(AvProject.PROP_MEDIATYPEID,
-                        criteria.getMediaTypeId());
+                queryObj.addCriteria(AvProject.PROP_MEDIATYPEID, criteria.getMediaTypeId());
             }
             if (criteria.getTitle() != null) {
-                queryObj.addLikeClause(AvProject.PROP_TITLE,
-                        criteria.getTitle());
+                queryObj.addLikeClause(AvProject.PROP_TITLE, criteria.getTitle());
             }
             if (criteria.getYear() > 0) {
                 queryObj.addCriteria(AvProject.PROP_YEAR, criteria.getYear());
             }
             if (criteria.getRippedInd() > 0) {
-                queryObj.addCriteria(AvProject.PROP_RIPPED,
-                        criteria.getRippedInd());
+                queryObj.addCriteria(AvProject.PROP_RIPPED, criteria.getRippedInd());
             }
             if (criteria.getCost() > 0) {
                 queryObj.addCriteria(AvProject.PROP_COST, criteria.getCost());
@@ -186,26 +175,21 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AudioVideoDaoException
      */
     @Override
-    public List<TracksDto> fetchTrack(TracksDto criteria)
-            throws AudioVideoDaoException {
+    public List<TracksDto> fetchTrack(TracksDto criteria) throws AudioVideoDaoException {
         // Setup criteria
         AvTracks queryObj = new AvTracks();
         if (criteria != null) {
             if (criteria.getTrackId() > 0) {
-                queryObj.addCriteria(AvTracks.PROP_TRACKID,
-                        criteria.getTrackId());
+                queryObj.addCriteria(AvTracks.PROP_TRACKID, criteria.getTrackId());
             }
             if (criteria.getProjectId() > 0) {
-                queryObj.addCriteria(AvTracks.PROP_PROJECTID,
-                        criteria.getProjectId());
+                queryObj.addCriteria(AvTracks.PROP_PROJECTID, criteria.getProjectId());
             }
             if (criteria.getTrackTitle() != null) {
-                queryObj.addLikeClause(AvTracks.PROP_TRACKTITLE,
-                        criteria.getTrackTitle());
+                queryObj.addLikeClause(AvTracks.PROP_TRACKTITLE, criteria.getTrackTitle());
             }
             if (criteria.getComments() != null) {
-                queryObj.addLikeClause(AvTracks.PROP_COMMENTS,
-                        criteria.getComments(), OrmBean.LIKE_CONTAINS);
+                queryObj.addLikeClause(AvTracks.PROP_COMMENTS, criteria.getComments(), OrmBean.LIKE_CONTAINS);
             }
         }
 
@@ -240,8 +224,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AudioVideoDaoException
      */
     @Override
-    public List<GenreDto> fetchGenre(GenreDto criteria)
-            throws AudioVideoDaoException {
+    public List<GenreDto> fetchGenre(GenreDto criteria) throws AudioVideoDaoException {
         // Setup criteria
         AvGenre queryObj = new AvGenre();
         if (criteria != null) {
@@ -249,8 +232,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
                 queryObj.addCriteria(AvGenre.PROP_GENREID, criteria.getUid());
             }
             if (criteria.getDescritpion() != null) {
-                queryObj.addCriteria(AvGenre.PROP_DESCRIPTION,
-                        criteria.getDescritpion());
+                queryObj.addCriteria(AvGenre.PROP_DESCRIPTION, criteria.getDescritpion());
             }
         }
 
@@ -286,18 +268,15 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AudioVideoDaoException
      */
     @Override
-    public List<ProjectTypeDto> fetchProjectType(ProjectTypeDto criteria)
-            throws AudioVideoDaoException {
+    public List<ProjectTypeDto> fetchProjectType(ProjectTypeDto criteria) throws AudioVideoDaoException {
         // Setup criteria
         AvProjectType queryObj = new AvProjectType();
         if (criteria != null) {
             if (criteria.getUid() > 0) {
-                queryObj.addCriteria(AvProjectType.PROP_PROJECTTYPEID,
-                        criteria.getUid());
+                queryObj.addCriteria(AvProjectType.PROP_PROJECTTYPEID, criteria.getUid());
             }
             if (criteria.getDescritpion() != null) {
-                queryObj.addLikeClause(AvProjectType.PROP_DESCRIPTION,
-                        criteria.getDescritpion());
+                queryObj.addLikeClause(AvProjectType.PROP_DESCRIPTION, criteria.getDescritpion());
             }
         }
 
@@ -315,8 +294,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         // Package results
         List<ProjectTypeDto> list = new ArrayList<ProjectTypeDto>();
         for (AvProjectType item : results) {
-            ProjectTypeDto dto = Rmt2MediaDtoFactory
-                    .getAvProjectTypeInstance(item);
+            ProjectTypeDto dto = Rmt2MediaDtoFactory.getAvProjectTypeInstance(item);
             list.add(dto);
         }
         return list;
@@ -393,15 +371,13 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AvProjectDataValidationException
      *             a validation rule fails
      */
-    protected void validateArtist(ArtistDto artist)
-            throws AvProjectDataValidationException {
+    protected void validateArtist(ArtistDto artist) throws AvProjectDataValidationException {
         if (artist == null) {
             this.msg = "Artist object is invalid or null";
             throw new AvProjectDataValidationException(this.msg);
         }
         if (artist.getDescritpion() == null) {
-            throw new AvProjectDataValidationException(
-                    "Artist name is required");
+            throw new AvProjectDataValidationException("Artist name is required");
         }
         return;
     }
@@ -490,8 +466,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AvProjectDataValidationException
      *             a validation rule fails
      */
-    protected void validateProject(ProjectDto proj)
-            throws AvProjectDataValidationException {
+    protected void validateProject(ProjectDto proj) throws AvProjectDataValidationException {
         if (proj == null) {
             this.msg = "Project object is invalid or null";
             throw new AvProjectDataValidationException(this.msg);
@@ -587,8 +562,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AvProjectDataValidationException
      *             a validation rule fails
      */
-    protected void validateTarck(TracksDto track)
-            throws AvProjectDataValidationException {
+    protected void validateTarck(TracksDto track) throws AvProjectDataValidationException {
         if (track == null) {
             this.msg = "Track object is invalid or null";
             throw new AvProjectDataValidationException(this.msg);
@@ -622,8 +596,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AudioVideoDaoException
      */
     @Override
-    public int addAudioVideoFileData(AvCombinedProjectBean avProj)
-            throws AudioVideoDaoException {
+    public int addAudioVideoFileData(AvCombinedProjectBean avProj) throws AudioVideoDaoException {
         AvArtist artist = avProj.getAva();
         AvProject project = avProj.getAv();
         AvTracks track = avProj.getAvt();
@@ -662,8 +635,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
         return artistId;
     }
 
-    private int insertProjectFromFile(AvProject project, String genreName)
-            throws DatabaseException {
+    private int insertProjectFromFile(AvProject project, String genreName) throws DatabaseException {
         int artistId = project.getArtistId();
         ProjectDto pDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
@@ -730,8 +702,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
      * @throws AudioVideoDaoException
      */
     @Override
-    public AvCombinedProjectBean extractFileMetaData(File sourceFile)
-            throws AudioVideoDaoException {
+    public AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoDaoException {
         if (sourceFile == null) {
             this.msg = "Unable to extract meta data from audio/video file - The source file is invalid or null";
             throw new AvInvalidSourceFileException(this.msg);
@@ -825,9 +796,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
             avt.setLocFilename(fileName);
 
             // Initialized Ripped flag
-            av.setRipped(mediaPath
-                    .indexOf(AudioVideoConstants.DIRNAME_NON_RIPPED) > -1 ? 0
-                    : 1);
+            av.setRipped(mediaPath.indexOf(AudioVideoConstants.DIRNAME_NON_RIPPED) > -1 ? 0 : 1);
             return avb;
         } catch (Exception e) {
             this.msg = "Audio/Video file extraction error for " + mediaPath;
@@ -870,8 +839,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements
             rows = this.client.executeUpdate(sql.toString());
             tot += rows;
 
-            DatabaseConnectionBean con = (DatabaseConnectionBean) this.client
-                    .getConnectionWrapper();
+            DatabaseConnectionBean con = (DatabaseConnectionBean) this.client.getConnectionWrapper();
             spApi = DynamicSqlFactory.create(con);
             spApi.clearParms();
             spApi.addParm("tbl_name", Types.VARCHAR, "av_project", false);

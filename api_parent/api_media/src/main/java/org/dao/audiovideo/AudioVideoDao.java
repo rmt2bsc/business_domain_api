@@ -30,8 +30,7 @@ public interface AudioVideoDao extends DaoClient {
      * @return a List of {@link ArtistDto} objects or null if no data was found.
      * @throws AudioVideoDaoException
      */
-    List<ArtistDto> fetchArtist(ArtistDto criteria)
-            throws AudioVideoDaoException;
+    List<ArtistDto> fetchArtist(ArtistDto criteria) throws AudioVideoDaoException;
 
     /**
      * Fetches project information based on the selection criteria data elements
@@ -44,8 +43,7 @@ public interface AudioVideoDao extends DaoClient {
      *         found.
      * @throws AudioVideoDaoException
      */
-    List<ProjectDto> fetchProject(ProjectDto criteria)
-            throws AudioVideoDaoException;
+    List<ProjectDto> fetchProject(ProjectDto criteria) throws AudioVideoDaoException;
 
     /**
      * Fetches track information based on the selection criteria data elements
@@ -57,8 +55,7 @@ public interface AudioVideoDao extends DaoClient {
      * @return a List of {@link TracksDto} objects or null if no data was found.
      * @throws AudioVideoDaoException
      */
-    List<TracksDto> fetchTrack(TracksDto criteria)
-            throws AudioVideoDaoException;
+    List<TracksDto> fetchTrack(TracksDto criteria) throws AudioVideoDaoException;
 
     /**
      * Fetches genre information based on the selection criteria data elements
@@ -83,8 +80,7 @@ public interface AudioVideoDao extends DaoClient {
      *         found.
      * @throws AudioVideoDaoException
      */
-    List<ProjectTypeDto> fetchProjectType(ProjectTypeDto criteria)
-            throws AudioVideoDaoException;
+    List<ProjectTypeDto> fetchProjectType(ProjectTypeDto criteria) throws AudioVideoDaoException;
 
     /**
      * Creates a new or modifies an existing artist object.
@@ -131,8 +127,7 @@ public interface AudioVideoDao extends DaoClient {
      * @return The total number of tracks added for the artist's project.
      * @throws AudioVideoDaoException
      */
-    int addAudioVideoFileData(AvCombinedProjectBean avProj)
-            throws AudioVideoDaoException;
+    int addAudioVideoFileData(AvCombinedProjectBean avProj) throws AudioVideoDaoException;
 
     /**
      * Reads the tag data from the media file, <i>sourceFile</i>, and packages
@@ -143,8 +138,7 @@ public interface AudioVideoDao extends DaoClient {
      * @return an instance of {@link AvCombinedProjectBean}
      * @throws AudioVideoDaoException
      */
-    AvCombinedProjectBean extractFileMetaData(File sourceFile)
-            throws AudioVideoDaoException;
+    AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoDaoException;
 
     /**
      * Removes all entries from the audio_video and audio_video_tracks tables
