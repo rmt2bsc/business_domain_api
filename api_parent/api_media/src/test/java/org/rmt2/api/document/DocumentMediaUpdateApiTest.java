@@ -37,7 +37,7 @@ import com.util.RMT2File;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
-public class MediaDocumentUpdateApiTest extends DocumentMediaMockData {
+public class DocumentMediaUpdateApiTest extends DocumentMediaMockData {
     private String outDir;
     
     /**
