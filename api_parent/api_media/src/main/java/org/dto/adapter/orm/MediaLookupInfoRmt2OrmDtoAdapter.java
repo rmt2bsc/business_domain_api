@@ -1,10 +1,8 @@
 package org.dto.adapter.orm;
 
-import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
 import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProjectType;
-import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.MediaLookupInfoDto;
 import org.dto.MediaTypeDto;
@@ -12,15 +10,13 @@ import org.dto.ProjectTypeDto;
 
 /**
  * A common implementation that uses the adapter patttern to maintain data for
- * artist, genre, media type, and project type adaptees.
+ * genre, media type, and project type adaptees.
  * 
  * @author rterrell
  * 
  */
 class MediaLookupInfoRmt2OrmDtoAdapter implements MediaLookupInfoDto,
-        ArtistDto, GenreDto, MediaTypeDto, ProjectTypeDto {
-
-    private AvArtist a;
+ GenreDto, MediaTypeDto, ProjectTypeDto {
 
     private AvGenre g;
 
@@ -33,26 +29,9 @@ class MediaLookupInfoRmt2OrmDtoAdapter implements MediaLookupInfoDto,
      * not initialize.
      */
     private MediaLookupInfoRmt2OrmDtoAdapter() {
-        this.a = null;
         this.g = null;
         this.pt = null;
         this.mt = null;
-    }
-
-    /**
-     * Creates a MediaLookupInfoRmt2OrmDtoAdapter that adapts an artist ORM
-     * object.
-     * 
-     * @param src
-     *            an instance of {@link AvArtist}. When null, a new AvArtist
-     *            instance is created.
-     */
-    protected MediaLookupInfoRmt2OrmDtoAdapter(AvArtist src) {
-        this();
-        if (src == null) {
-            src = new AvArtist();
-        }
-        this.a = src;
     }
 
     /**
@@ -114,10 +93,7 @@ class MediaLookupInfoRmt2OrmDtoAdapter implements MediaLookupInfoDto,
      */
     @Override
     public int getUid() {
-        if (this.a != null) {
-            return this.a.getArtistId();
-        }
-        else if (this.g != null) {
+        if (this.g != null) {
             return this.g.getGenreId();
         }
         else if (this.mt != null) {
@@ -137,10 +113,7 @@ class MediaLookupInfoRmt2OrmDtoAdapter implements MediaLookupInfoDto,
      */
     @Override
     public void setUid(int uid) {
-        if (this.a != null) {
-            this.a.setArtistId(uid);
-        }
-        else if (this.g != null) {
+        if (this.g != null) {
             this.g.setGenreId(uid);
         }
         else if (this.mt != null) {
@@ -163,10 +136,7 @@ class MediaLookupInfoRmt2OrmDtoAdapter implements MediaLookupInfoDto,
      */
     @Override
     public String getDescritpion() {
-        if (this.a != null) {
-            return this.a.getName();
-        }
-        else if (this.g != null) {
+        if (this.g != null) {
             return this.g.getDescription();
         }
         else if (this.mt != null) {
@@ -186,10 +156,7 @@ class MediaLookupInfoRmt2OrmDtoAdapter implements MediaLookupInfoDto,
      */
     @Override
     public void setDescription(String descr) {
-        if (this.a != null) {
-            this.a.setName(descr);
-        }
-        else if (this.g != null) {
+        if (this.g != null) {
             this.g.setDescription(descr);
         }
         else if (this.mt != null) {

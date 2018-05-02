@@ -64,8 +64,8 @@ public class AudioVideoDaoFactory extends RMT2Base {
      */
     public static final AvArtist createArtistInstance(ArtistDto artist) {
         AvArtist a = new AvArtist();
-        a.setArtistId(artist.getUid());
-        a.setName(artist.getDescritpion());
+        a.setArtistId(artist.getId());
+        a.setName(artist.getName());
         return a;
     }
 

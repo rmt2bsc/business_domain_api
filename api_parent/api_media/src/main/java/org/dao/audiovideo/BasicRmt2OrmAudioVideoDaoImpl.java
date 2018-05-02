@@ -71,11 +71,11 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         // Setup criteria
         AvArtist queryObj = new AvArtist();
         if (criteria != null) {
-            if (criteria.getUid() > 0) {
-                queryObj.addCriteria(AvArtist.PROP_ARTISTID, criteria.getUid());
+            if (criteria.getId() > 0) {
+                queryObj.addCriteria(AvArtist.PROP_ARTISTID, criteria.getId());
             }
-            if (criteria.getDescritpion() != null) {
-                queryObj.addLikeClause(AvArtist.PROP_NAME, criteria.getDescritpion());
+            if (criteria.getName() != null) {
+                queryObj.addLikeClause(AvArtist.PROP_NAME, criteria.getName());
             }
         }
 
@@ -325,7 +325,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         try {
             if (a.getArtistId() == 0) {
                 rc = this.insertArtist(a);
-                artist.setUid(rc);
+                artist.setId(rc);
             }
             if (a.getArtistId() > 0) {
                 rc = this.updateArtist(a);
@@ -376,7 +376,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             this.msg = "Artist object is invalid or null";
             throw new AvProjectDataValidationException(this.msg);
         }
-        if (artist.getDescritpion() == null) {
+        if (artist.getName() == null) {
             throw new AvProjectDataValidationException("Artist name is required");
         }
         return;
@@ -615,18 +615,17 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         int artistId = 0;
         if (artist.getArtistId() == 0) {
             // Check if artist alread exists
-            ArtistDto artistCriteria = Rmt2MediaDtoFactory
-                    .getAvArtistInstance(null);
-            artistCriteria.setDescription(aDto.getDescritpion());
+            ArtistDto artistCriteria = Rmt2MediaDtoFactory.getAvArtistInstance(null);
+            artistCriteria.setName(aDto.getName());
             List<ArtistDto> a = this.fetchArtist(artistCriteria);
             if (a != null && a.size() == 1) {
-                artistId = a.get(0).getUid();
+                artistId = a.get(0).getId();
             }
             else {
                 artistId = this.insertArtist(artist);
             }
             artist.setArtistId(artistId);
-            aDto.setUid(artistId);
+            aDto.setId(artistId);
         }
         else {
             this.updateArtist(artist);

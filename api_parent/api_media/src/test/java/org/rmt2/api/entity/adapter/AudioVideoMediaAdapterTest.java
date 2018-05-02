@@ -110,17 +110,17 @@ public class AudioVideoMediaAdapterTest {
                 "Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID);
         ArtistDto dto = Rmt2MediaDtoFactory.getAvArtistInstance(o1);
 
-        Assert.assertEquals(AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getUid());
-        Assert.assertEquals("ProjectType" + AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getDescritpion());
+        Assert.assertEquals(AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getId());
+        Assert.assertEquals("Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getName());
 
         try {
             AvArtist nullParm = null;
             dto = Rmt2MediaDtoFactory.getAvArtistInstance(nullParm);
-            dto.setUid(AvMediaMockDataFactory.TEST_ARTIST_ID);
-            dto.setDescription("Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID);
+            dto.setId(AvMediaMockDataFactory.TEST_ARTIST_ID);
+            dto.setName("Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID);
 
-            Assert.assertEquals(AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getUid());
-            Assert.assertEquals("Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getDescritpion());
+            Assert.assertEquals(AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getId());
+            Assert.assertEquals("Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getName());
 
         } catch (Exception e) {
             e.printStackTrace();

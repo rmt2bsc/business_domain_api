@@ -45,7 +45,7 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
      *         instantiating a new AvArtist object.
      */
     public static final ArtistDto getAvArtistInstance(AvArtist artist) {
-        ArtistDto dto = new MediaLookupInfoRmt2OrmDtoAdapter(artist);
+        ArtistDto dto = new ArtistRmt2OrmDtoAdapter(artist);
         return dto;
     }
 
