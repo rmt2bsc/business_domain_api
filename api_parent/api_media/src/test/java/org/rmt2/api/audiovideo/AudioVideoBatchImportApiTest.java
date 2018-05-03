@@ -1,17 +1,15 @@
 package org.rmt2.api.audiovideo;
 
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.List;
 
-import org.dao.document.ContentDaoException;
+import org.dao.mapping.orm.rmt2.AvArtist;
+import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.Content;
-import org.dao.mapping.orm.rmt2.MimeTypes;
 import org.dto.ContentDto;
-import org.dto.MimeTypeDto;
-import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,28 +19,24 @@ import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.document.DocumentContentApi;
 import org.modules.document.DocumentContentApiFactory;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.rmt2.api.document.DocumentMediaMockData;
 import org.rmt2.api.document.DocumentMediaMockDataFactory;
 
-import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
-import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2File;
 
 /**
- * Test the document module functionality of the Media API.
+ * Test the audio/video batch file import module functionality in the Media API.
  * 
  * @author rterrell
  * 
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
-public class AudioVideoQueryApiTest extends DocumentMediaMockData {
-    private String outDir;
+public class AudioVideoBatchImportApiTest extends AvMediaMockData {
+    
     
     /**
      * @throws java.lang.Exception
@@ -51,17 +45,19 @@ public class AudioVideoQueryApiTest extends DocumentMediaMockData {
     public void setUp() throws Exception {
         super.setUp();
         
-        outDir = RMT2File.loadAppConfigProperties("config.Media-AppParms").getString("media_output_location");
-        
         // Setup stubs for fetching data successfully
-        when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
-                .thenReturn(this.mockSingleContent);
-
-        when(this.mockPersistenceClient.retrieveList(isA(MimeTypes.class)))
-                .thenReturn(this.mockMultipleMimeTypeList);
+        when(this.mockPersistenceClient.retrieveList(isA(AvArtist.class)))
+                .thenReturn(this.mockAvArtistData);
+        when(this.mockPersistenceClient.insertRow(isA(AvArtist.class), eq(true)))
+                .thenReturn(AvMediaMockDataFactory.TEST_ARTIST_ID);
+        when(this.mockPersistenceClient.updateRow(isA(AvArtist.class))).thenReturn(1);
         
-        when(this.mockPersistenceClient.retrieveObject(isA(MimeTypes.class)))
-                .thenReturn(this.mockSingleMimeTypes);
+        when(this.mockPersistenceClient.retrieveList(isA(AvProject.class)))
+                .thenReturn(this.mockAvProjectData);
+        when(this.mockPersistenceClient.insertRow(isA(AvProject.class), eq(true)))
+                .thenReturn(AvMediaMockDataFactory.TEST_PROJECT_ID);
+        when(this.mockPersistenceClient.updateRow(isA(AvProject.class))).thenReturn(1);
+        
     }
 
     /**
@@ -108,134 +104,5 @@ public class AudioVideoQueryApiTest extends DocumentMediaMockData {
         Assert.assertNull(results);
     }
     
-    @Test
-    public void testSuccess_Fetch_Content_From_File() {
-        // We want the API to actually fetch a file from the test/resources source folder on the build path.
-        Content contentFile = DocumentMediaMockDataFactory.createOrmContent(DocumentMediaMockDataFactory.TEST_CONTENT_ID,
-                DocumentMediaMockDataFactory.TEST_MIME_TYPE_ID, "media/document/", "image.jpg",
-                1024, 5555, "Media");
-        contentFile.setImageData(null);
-        when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
-             .thenReturn(contentFile);
-        
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
-        ContentDto results = null;
-        try {
-            results = api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
-        }
-        catch (MediaModuleException e) {
-            Assert.fail("An exception was not expected");
-        }
-        
-        Assert.assertNotNull(results);
-        byte[] expectedImage = RMT2File.getFileContentsAsBytes("media/document/image.jpg");
-        // Save expected image to disc for visual inspection
-        String filePath = outDir + "@@image.jpg";
-        RMT2File.outputFile(expectedImage, filePath);
-        Assert.assertTrue(Arrays.equals(expectedImage, results.getImageData()));
-    }
-    
-    @Test
-    public void testSuccess_Fetch_MimeTypes_Multiple() {
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
-        List<MimeTypeDto> results = null;
-        try {
-            MimeTypeDto criteria = Rmt2MediaDtoFactory.getMimeTypeInstance(null);
-            results = api.getMimeType(criteria);
-        }
-        catch (MediaModuleException e) {
-            Assert.fail("An exception was not expected");
-        }
-        
-        Assert.assertNotNull(results);
-    }
-    
-    @Test
-    public void testSuccess_Fetch_MimeTypes_Single() {
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
-        MimeTypeDto results = null;
-        try {
-            results = api.getMimeType(DocumentMediaMockDataFactory.TEST_MIME_TYPE_ID);
-        }
-        catch (MediaModuleException e) {
-            Assert.fail("An exception was not expected");
-        }
-        
-        Assert.assertNotNull(results);
-    }
-    
-    @Test
-    public void testError_Fetch_From_Database_Database_Access_Fault() {
-        when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
-                .thenThrow(new DatabaseException("A database error occurred"));
-        
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        // Test default constructor which should employ the database DAO implementation.
-        DocumentContentApi api = f.createMediaContentApi();
-        try {
-            api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
-            Assert.fail("An exception was expected to be thrown");
-        }
-        catch (Exception e) {
-            Assert.assertTrue(e instanceof MediaModuleException);
-            Assert.assertEquals("Unable to retrieve media document identified by document id: " +
-                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof ContentDaoException);
-            Assert.assertEquals("DAO error occurred fetching media content record by content id, " +
-                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID , e.getCause().getMessage());
-        }
-    }
-    
-    
-    @Test
-    public void testError_Fetch_From_FileSystem_Database_Access_Fault() {
-        when(this.mockPersistenceClient.retrieveObject(isA(Content.class)))
-                   .thenThrow(new DatabaseException("A database error occurred"));
-        
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        // Test default constructor which should employ the database DAO implementation.
-        DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
-        try {
-            api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
-            Assert.fail("An exception was expected to be thrown");
-        }
-        catch (Exception e) {
-            Assert.assertTrue(e instanceof MediaModuleException);
-            Assert.assertEquals("Unable to retrieve media document identified by document id: " +
-                    + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof ContentDaoException);
-            Assert.assertEquals("DAO error occurred fetching media content record by content id, "
-                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID,
-                    e.getCause().getMessage());
-        }
-    }
-    
-    @Test
-    public void testError_Fetch_From_FileSystem_Extract_File_Content_Fault() {
-        PowerMockito.mockStatic(RMT2File.class);
-        when(RMT2File.getFileContentsAsBytes(isA(String.class)))
-                .thenThrow(new NotFoundException("External File is not found"));
-        
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        // Test default constructor which should employ the database DAO implementation.
-        DocumentContentApi api = f.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME, false);
-        try {
-            api.get(DocumentMediaMockDataFactory.TEST_CONTENT_ID);
-            Assert.fail("An exception was expected to be thrown");
-        }
-        catch (Exception e) {
-            Assert.assertTrue(e instanceof MediaModuleException);
-            Assert.assertEquals("Unable to retrieve media document identified by document id: " +
-                    + DocumentMediaMockDataFactory.TEST_CONTENT_ID, e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof ContentDaoException);
-            Assert.assertEquals("Unable to fetch media content from the file system for content id, "
-                            + DocumentMediaMockDataFactory.TEST_CONTENT_ID,
-                    e.getCause().getMessage());
-            Assert.assertTrue(e.getCause().getCause() instanceof NotFoundException);
-            Assert.assertEquals("External File is not found", e.getCause().getCause().getMessage());
-        }
-    }
+   
 }

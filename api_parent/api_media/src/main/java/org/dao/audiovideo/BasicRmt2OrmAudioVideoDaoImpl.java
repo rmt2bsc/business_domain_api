@@ -64,8 +64,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
      * @throws AudioVideoDaoException
      */
     @Override
-    public List<ArtistDto> fetchArtist(ArtistDto criteria)
-            throws AudioVideoDaoException {
+    public List<ArtistDto> fetchArtist(ArtistDto criteria)  throws AudioVideoDaoException {
         // Setup criteria
         AvArtist queryObj = new AvArtist();
         if (criteria != null) {
