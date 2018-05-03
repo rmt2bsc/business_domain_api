@@ -18,7 +18,7 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
 
     private static Logger logger = Logger.getLogger(DirectoryListenerConfigFactory.class);
 
-    public static final String configFile = "MimeConfig";
+    public static final String configFile = "BatchImportConfig";
 
     public static String ENV = System.getProperty(ConfigConstants.PROPNAME_ENV);
 

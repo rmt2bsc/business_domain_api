@@ -47,6 +47,7 @@ import com.util.RMT2File;
 public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
     Logger logger = Logger.getLogger(DocumentProcessingServiceApiTest.class);
     
+    private static final String CONFIG_FILE = "config.BatchImportConfig_TEST";
     /**
      * @throws java.lang.Exception
      */
@@ -96,7 +97,7 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
         super.tearDown();
         
         // Clear out the archive directory
-        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.archiveDir");
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         for (String file : listing) {
             logger.info("Deleting files in Archive directory");
@@ -120,7 +121,7 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
        logger.info("Listener Data Dir after UNC conversion: " + srcDir);
        
        // TODO:  Write a utility method in core to handle copy files with wildcards
-       String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+       String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
        List<String> listing = RMT2File.getDirectoryListing(srcDir, "*.*");
        for (String file : listing) {
            logger.info("Copying file: " + srcDir + file + "...");
@@ -141,7 +142,7 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
        }
        logger.info("Listener Data Dir after UNC conversion: " + srcDir);
        
-       String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+       String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
        logger.info("Copying Bad file: " + srcDir + fileName + "...");
        RMT2File.copyFileWithOverwrite(srcDir + fileName, destDir);   
    }
@@ -162,12 +163,12 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
         Assert.assertEquals(5, fileCount);
 
         // Verify that files have been deleted from the Inbound directory
-        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(0, listing.size());
         
         // Verify that files have been copied to the archive directory
-        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.archiveDir");
         listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(5, listing.size());
     }
@@ -189,12 +190,12 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
         Assert.assertEquals(1, fileCount);
 
         // Verify that files have been deleted from the Inbound directory
-        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(0, listing.size());
         
         // Verify that files have been copied to the archive directory
-        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.archiveDir");
         listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(1, listing.size());
         
@@ -222,12 +223,12 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
         Assert.assertEquals(1, fileCount);
 
         // Verify that files have been deleted from the Inbound directory
-        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(0, listing.size());
         
         // Verify that files have been copied to the archive directory
-        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.archiveDir");
         listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(1, listing.size());
         
@@ -255,12 +256,12 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
         Assert.assertEquals(1, fileCount);
 
         // Verify that files have been deleted from the Inbound directory
-        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(0, listing.size());
         
         // Verify that files have been copied to the archive directory
-        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.archiveDir");
         listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(1, listing.size());
         
@@ -292,13 +293,13 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
         Assert.assertEquals(1, fileCount);
 
         // Verify that files have been deleted from the Inbound directory
-        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
         String inDir = destDir;
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(0, listing.size());
         
         // Verify that files have been copied to the archive directory
-        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.archiveDir");
         listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(1, listing.size());
         
@@ -332,13 +333,13 @@ public class DocumentProcessingServiceApiTest extends DocumentMediaMockData {
         Assert.assertEquals(1, fileCount);
 
         // Verify that files have been deleted from the Inbound directory
-        String destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.inboundDir");
+        String destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.inboundDir");
         String inDir = destDir;
         List<String> listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(0, listing.size());
         
         // Verify that files have been copied to the archive directory
-        destDir = RMT2File.getPropertyValue("config.MimeConfig_TEST", "mime.archiveDir");
+        destDir = RMT2File.getPropertyValue(CONFIG_FILE, "mime.archiveDir");
         listing = RMT2File.getDirectoryListing(destDir, "*.*");
         Assert.assertEquals(1, listing.size());
         
