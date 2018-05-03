@@ -1,6 +1,5 @@
 package org.dao.audiovideo;
 
-import java.io.File;
 import java.util.List;
 
 import org.dto.ArtistDto;
@@ -119,28 +118,6 @@ public interface AudioVideoDao extends DaoClient {
     int maintainTrack(TracksDto track) throws AudioVideoDaoException;
 
     /**
-     * Combines the efforts of adding artist, project, and all project tracks to
-     * the system under the auspices of one transaction.
-     * 
-     * @param avProj
-     *            an instance of {@link AvCombinedProjectBean}
-     * @return The total number of tracks added for the artist's project.
-     * @throws AudioVideoDaoException
-     */
-    int addAudioVideoFileData(AvCombinedProjectBean avProj) throws AudioVideoDaoException;
-
-    /**
-     * Reads the tag data from the media file, <i>sourceFile</i>, and packages
-     * the data in an instance of AvCombinedProjectBean.
-     * 
-     * @param sourceFile
-     *            the audio/video file to extract data from.
-     * @return an instance of {@link AvCombinedProjectBean}
-     * @throws AudioVideoDaoException
-     */
-    AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoDaoException;
-
-    /**
      * Removes all entries from the audio_video and audio_video_tracks tables
      * where streaming files exist on the server.
      * 
@@ -149,26 +126,4 @@ public interface AudioVideoDao extends DaoClient {
      * @throws AudioVideoDaoException
      */
     int purge(int projectTypeId) throws AudioVideoDaoException;
-
-    /**
-     * Counts the total number of files of the directory, <i>dir</i>, and its
-     * sub-directories.
-     * 
-     * @param filePath
-     *            the path of the source directory
-     * @return the file count.
-     */
-    int computeTotalFileCount(String filePath);
-
-    /**
-     * Counts the total number of files of the directory, <i>mediaResource</i>,
-     * and its sub-directories.
-     * 
-     * @param file
-     *            an instance of File which must represent a directory in the
-     *            file system.
-     * @return int the file count.
-     */
-    int computeTotalFileCount(File file);
-
 }

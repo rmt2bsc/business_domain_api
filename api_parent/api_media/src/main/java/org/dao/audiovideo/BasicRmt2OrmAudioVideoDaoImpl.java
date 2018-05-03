@@ -1,6 +1,5 @@
 package org.dao.audiovideo;
 
-import java.io.File;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,6 @@ import com.api.persistence.db.DynamicSqlApi;
 import com.api.persistence.db.DynamicSqlFactory;
 import com.api.persistence.db.orm.OrmBean;
 import com.util.RMT2Date;
-import com.util.RMT2File;
 import com.util.UserTimestamp;
 
 /**
@@ -316,8 +314,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
      */
     @Override
     public int maintainArtist(ArtistDto artist) throws AudioVideoDaoException {
-        this.validateArtist(artist);
-
         AvArtist a = AudioVideoDaoFactory.createArtistInstance(artist);
 
         int rc = 0;
@@ -361,28 +357,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     }
 
     /**
-     * Verifies if <i>artist</i> is valid.
-     * <p>
-     * The artist object cannot be null and the artist's name is required to
-     * have a value.
-     * 
-     * @param artist
-     *            an instance of {@link ArtistDto}
-     * @throws AvProjectDataValidationException
-     *             a validation rule fails
-     */
-    protected void validateArtist(ArtistDto artist) throws AvProjectDataValidationException {
-        if (artist == null) {
-            this.msg = "Artist object is invalid or null";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        if (artist.getName() == null) {
-            throw new AvProjectDataValidationException("Artist name is required");
-        }
-        return;
-    }
-
-    /**
      * Creates a new or modifies an existing project record in the
      * <i>av_project</i> table.
      * <p>
@@ -398,10 +372,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
      */
     @Override
     public int maintainProject(ProjectDto proj) throws AudioVideoDaoException {
-        this.validateProject(proj);
-
         AvProject p = AudioVideoDaoFactory.createProjectInstance(proj);
-
         int rc = 0;
         this.client.beginTrans();
         try {
@@ -456,36 +427,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     }
 
     /**
-     * Verifies that a project object is valid.
-     * <p>
-     * <i>proj</i> must be a valid instance, and the following properties are
-     * required to have values: artist id, project type id, and title.
-     * 
-     * @param proj
-     *            an instance of {@link ProjectDto}
-     * @throws AvProjectDataValidationException
-     *             a validation rule fails
-     */
-    protected void validateProject(ProjectDto proj) throws AvProjectDataValidationException {
-        if (proj == null) {
-            this.msg = "Project object is invalid or null";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        if (proj.getArtistId() <= 0) {
-            this.msg = "Artist id is required";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        if (proj.getProjectTypeId() < 1 || proj.getProjectTypeId() > 2) {
-            this.msg = "Project Type id is required";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        if (proj.getTitle() == null || proj.getTitle().length() <= 0) {
-            this.msg = "Title id is required";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-    }
-
-    /**
      * Creates a new or modifies an existing track record in the
      * <i>av_tracks</i> table.
      * <p>
@@ -501,9 +442,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
      */
     @Override
     public int maintainTrack(TracksDto track) throws AudioVideoDaoException {
-        this.validateTarck(track);
         AvTracks t = AudioVideoDaoFactory.createTrackInstance(track);
-
         int rc = 0;
         this.client.beginTrans();
         try {
@@ -548,260 +487,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         } catch (DatabaseException e) {
             this.msg = "Error updating audio/video record";
             throw new AudioVideoDaoException(this.msg);
-        }
-    }
-
-    /**
-     * Verifies that the tracks object is valid for database updates.
-     * <p>
-     * A track object is considered valid for database updates when it is not
-     * null, track title has a value, and track number is greater than zero.
-     * 
-     * @param track
-     *            an instance of {@link TracksDto}
-     * @throws AvProjectDataValidationException
-     *             a validation rule fails
-     */
-    protected void validateTarck(TracksDto track) throws AvProjectDataValidationException {
-        if (track == null) {
-            this.msg = "Track object is invalid or null";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        if (track.getTrackTitle() == null) {
-            this.msg = "Track title is required";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        if (track.getTrackNumber() <= 0) {
-            this.msg = "Track number must be a numeric greater than zero";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        return;
-    }
-
-    /**
-     * Combines the efforts of adding artist, project, and all project tracks to
-     * the tables, <i>av_artist</i>, <i>av_project</i>, and <i>av_tracks</i>,
-     * respectively, under a single transaction.
-     * <p>
-     * The update sequence mandates that the <i>av_artist</i>,
-     * <i>av_project</i>, and <i>av_tracks</i> tables are inserted into the
-     * order stipulated. For eachtable encounterd, a SQL insert is performed
-     * when the tables's primary key is equal to zero. When the primary key id
-     * is greater than zero, an SQL update is applied.
-     * 
-     * 
-     * @param avProj
-     *            an instance of {@link AvCombinedProjectBean}
-     * @return The total number of tracks added for the artist's project.
-     * @throws AudioVideoDaoException
-     */
-    @Override
-    public int addAudioVideoFileData(AvCombinedProjectBean avProj) throws AudioVideoDaoException {
-        AvArtist artist = avProj.getAva();
-        AvProject project = avProj.getAv();
-        AvTracks track = avProj.getAvt();
-
-        int artistId = this.insertArtistFromFile(artist);
-        project.setArtistId(artistId);
-        int projectId = this.insertProjectFromFile(project, avProj.getGenre());
-        track.setProjectId(projectId);
-        this.insertTrackFromFile(track);
-        return projectId;
-    }
-
-    private int insertArtistFromFile(AvArtist artist) throws DatabaseException {
-        ArtistDto aDto = Rmt2MediaDtoFactory.getAvArtistInstance(artist);
-        this.validateArtist(aDto);
-        int artistId = 0;
-        if (artist.getArtistId() == 0) {
-            // Check if artist alread exists
-            ArtistDto artistCriteria = Rmt2MediaDtoFactory.getAvArtistInstance(null);
-            artistCriteria.setName(aDto.getName());
-            List<ArtistDto> a = this.fetchArtist(artistCriteria);
-            if (a != null && a.size() == 1) {
-                artistId = a.get(0).getId();
-            }
-            else {
-                artistId = this.insertArtist(artist);
-            }
-            artist.setArtistId(artistId);
-            aDto.setId(artistId);
-        }
-        else {
-            this.updateArtist(artist);
-            artistId = artist.getArtistId();
-        }
-        return artistId;
-    }
-
-    private int insertProjectFromFile(AvProject project, String genreName) throws DatabaseException {
-        int artistId = project.getArtistId();
-        ProjectDto pDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
-        int projectId = 0;
-        project.setArtistId(artistId);
-        pDto.setArtistId(artistId);
-        this.validateProject(pDto);
-
-        GenreDto genreCriteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
-        genreCriteria.setDescription(genreName);
-        List<GenreDto> g = this.fetchGenre(genreCriteria);
-        int genreId = AudioVideoConstants.UNKNOWN_GENRE;
-        if (g != null && g.size() == 1) {
-            genreId = g.get(0).getUid();
-        }
-        project.setGenreId(genreId);
-        pDto.setGenreId(genreId);
-        if (project.getProjectId() == 0) {
-            ProjectDto projCriteria = Rmt2MediaDtoFactory
-                    .getAvProjectInstance(null);
-            projCriteria.setTitle(pDto.getTitle());
-            List<ProjectDto> p = this.fetchProject(projCriteria);
-            if (p != null && p.size() == 1) {
-                projectId = p.get(0).getProjectId();
-            }
-            else {
-                projectId = this.insertProject(project);
-            }
-            project.setProjectId(projectId);
-            pDto.setProjectId(projectId);
-        }
-        else {
-            this.updateProject(project);
-            projectId = project.getProjectId();
-        }
-        return projectId;
-    }
-
-    private int insertTrackFromFile(AvTracks track) throws DatabaseException {
-        TracksDto tDto = Rmt2MediaDtoFactory.getAvTrackInstance(track);
-        int trackId = 0;
-        tDto.setProjectId(track.getProjectId());
-        this.validateTarck(tDto);
-        if (track.getTrackId() == 0) {
-            trackId = this.insertTrack(track);
-            track.setTrackId(trackId);
-            tDto.setTrackId(trackId);
-        }
-        else {
-            this.updateTrack(track);
-            trackId = track.getTrackId();
-        }
-        return trackId;
-    }
-
-    /**
-     * Reads the tag data from the media file, <i>sourceFile</i>, and packages
-     * the data in an instance of AvCombinedProjectBean.
-     * <p>
-     * Afterwards, initiates the process of updating the database with tag data.
-     * 
-     * @param sourceFile
-     *            the audio/video file to extract data from.
-     * @return an instance of {@link AvCombinedProjectBean}
-     * @throws AudioVideoDaoException
-     */
-    @Override
-    public AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoDaoException {
-        if (sourceFile == null) {
-            this.msg = "Unable to extract meta data from audio/video file - The source file is invalid or null";
-            throw new AvInvalidSourceFileException(this.msg);
-        }
-
-        AvCombinedProjectBean avb = null;
-        AvArtist ava = null;
-        AvProject av = null;
-        AvTracks avt = null;
-
-        try {
-            avb = new AvCombinedProjectBean();
-            ava = avb.getAva();
-            av = avb.getAv();
-            avt = avb.getAvt();
-        } catch (com.SystemException e) {
-            return null;
-        }
-
-        // Get file name with complet path
-        String mediaPath = sourceFile.getPath();
-        this.msg = "Extracting meta data from: " + mediaPath;
-        logger.info(this.msg);
-        System.out.println(this.msg);
-
-        // Get the appropriate MP3Reader implementation
-        // MP3Reader mp3 = AudioVideoDaoFactory.createJid3mp3WmvApi(sourceFile);
-        // MP3Reader mp3 = AudioVideoDaoFactory.createJID3Mp3Api(sourceFile);
-        // MP3Reader mp3 = AudioVideoDaoFactory.createMyId3Api(sourceFile);
-        MP3Reader mp3 = AudioVideoDaoFactory.createEntaggedId3Api(sourceFile);
-        if (mp3 == null) {
-            return null;
-        }
-
-        String fileExt = RMT2File.getFileExt(mediaPath);
-        if (fileExt.equalsIgnoreCase(".wmv")) {
-            av.setProjectTypeId(AudioVideoConstants.PROJ_TYPE_ID_VIDEO);
-            av.setMediaTypeId(AudioVideoConstants.MEDIA_TYPE_DVD);
-        }
-        else {
-            av.setProjectTypeId(AudioVideoConstants.PROJ_TYPE_ID_AUDIO);
-            av.setMediaTypeId(AudioVideoConstants.MEDIA_TYPE_CD);
-        }
-
-        try {
-            // Get Artist
-            ava.setName(mp3.getArtist());
-
-            // Get Album
-            av.setTitle(mp3.getAlbum());
-
-            // Get Track Number
-            avt.setTrackNumber(mp3.getTrack());
-
-            // Get Track Title
-            avt.setTrackTitle(mp3.getTrackTitle());
-
-            // Get comments.
-            String comments = mp3.getComment();
-            avt.setComments(comments);
-            // Make data adjustments in the event we are dealing with a Various
-            // Artists type album.
-            if (comments.contains(AudioVideoConstants.VARIOUS_ARTIST_TOKEN)) {
-                ava.setName(AudioVideoConstants.VARIOUS_ARTIST_NAME);
-            }
-
-            // Get Genre
-            avb.setGenre(mp3.getGenre());
-
-            // Get Year Released
-            av.setYear(mp3.getYear());
-
-            // Get Recording Time
-            List<Integer> list = mp3.getDuration();
-            if (list != null && list.size() > 0) {
-                avt.setTrackHours(list.get(0));
-                avt.setTrackMinutes(list.get(1));
-                avt.setTrackSeconds(list.get(2));
-            }
-
-            // Get Disc Number
-            int discNo = mp3.getDiscNumber();
-            avt.setTrackDisc(String.valueOf(discNo));
-
-            // Capture the media file location data
-            String pathOnly = RMT2File.getFilePathInfo(mediaPath);
-            avt.setLocPath(pathOnly);
-
-            // Set File name
-            String fileName = sourceFile.getName();
-            avt.setLocFilename(fileName);
-
-            // Initialized Ripped flag
-            av.setRipped(mediaPath.indexOf(AudioVideoConstants.DIRNAME_NON_RIPPED) > -1 ? 0 : 1);
-            return avb;
-        } catch (Exception e) {
-            this.msg = "Audio/Video file extraction error for " + mediaPath;
-            System.out.println(this.msg);
-            e.printStackTrace();
-            throw new AvFileExtractionException(this.msg, e);
         }
     }
 
@@ -875,45 +560,5 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
                 spApi = null;
             }
         }
-    }
-
-    /**
-     * Counts the total number of files of the directory, <i>filePath</i>, and
-     * its sub-directories.
-     * 
-     * @param filePath
-     * @return int
-     */
-    public int computeTotalFileCount(String filePath) {
-        File dir = new File(filePath);
-        return this.computeTotalFileCount(dir);
-    }
-
-    /**
-     * Counts the total number of files of the directory, <i>file</i>, and its
-     * sub-directories.
-     * 
-     * @param file
-     *            an instance of File which must represent a directory in the
-     *            file system.
-     * @return int the file count.
-     */
-    public int computeTotalFileCount(File file) {
-        File mediaList[];
-        int itemCount = 0;
-        int total = 0;
-
-        mediaList = file.listFiles();
-        itemCount = mediaList.length;
-        for (int ndx = 0; ndx < itemCount; ndx++) {
-            if (mediaList[ndx].isDirectory()) {
-                // Make recursive call to process next level
-                total += this.computeTotalFileCount(mediaList[ndx]);
-            }
-            if (mediaList[ndx].isFile()) {
-                total += 1;
-            }
-        }
-        return total;
     }
 }
