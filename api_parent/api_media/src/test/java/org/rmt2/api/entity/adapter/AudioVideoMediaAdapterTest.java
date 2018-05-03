@@ -5,11 +5,13 @@ import org.dao.mapping.orm.rmt2.AvGenre;
 import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
+import org.dao.mapping.orm.rmt2.AvTracks;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
+import org.dto.TracksDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -188,6 +190,74 @@ public class AudioVideoMediaAdapterTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("An exception occurred setting properties for AV Project Adapater");
+        }
+    }
+
+    @Test
+    public void testOrmTrack() {
+        int ndx = AvMediaMockDataFactory.TEST_TRACK_ID;
+        int trackNo = 1;
+        AvTracks o1 = AvMediaMockDataFactory.createOrmAvTracks(AvMediaMockDataFactory.TEST_TRACK_ID,
+                AvMediaMockDataFactory.TEST_PROJECT_ID, trackNo, "Track" + trackNo, 5, 30, 00, "1", "/FilePath/"
+                        + AvMediaMockDataFactory.TEST_TRACK_ID, "ProjectFileName"
+                        + AvMediaMockDataFactory.TEST_TRACK_ID);
+        TracksDto dto = Rmt2MediaDtoFactory.getAvTrackInstance(o1);
+
+        Assert.assertEquals(AvMediaMockDataFactory.TEST_TRACK_ID, dto.getTrackId());
+        Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getProjectId());
+        Assert.assertEquals(trackNo, dto.getTrackNumber());
+        Assert.assertEquals(5, dto.getTrackHours());
+        Assert.assertEquals(30, dto.getTrackMinutes());
+        Assert.assertEquals(0, dto.getTrackSeconds());
+        Assert.assertEquals("1", dto.getTrackDisc());
+        Assert.assertEquals("/FilePath/" + AvMediaMockDataFactory.TEST_TRACK_ID, dto.getLocPath());
+        Assert.assertEquals("ProjectFileName" + AvMediaMockDataFactory.TEST_TRACK_ID, dto.getLocFilename());
+        Assert.assertEquals("ServerName", dto.getLocServername());
+        Assert.assertEquals("www.rmt2.net", dto.getLocRootPath());
+        Assert.assertEquals("multimedia", dto.getLocSharename());
+        Assert.assertEquals("john smith", dto.getTrackComposer());
+        Assert.assertEquals("john smith", dto.getTrackProducer());
+        Assert.assertEquals("john smith", dto.getTrackLyricist());
+
+        try {
+            AvTracks nullParm = null;
+            dto = Rmt2MediaDtoFactory.getAvTrackInstance(nullParm);
+            dto.setTrackId(AvMediaMockDataFactory.TEST_TRACK_ID);
+            dto.setProjectId(AvMediaMockDataFactory.TEST_PROJECT_ID);
+            dto.setTrackNumber(trackNo);
+            dto.setTrackHours(5);
+            dto.setTrackMinutes(30);
+            dto.setTrackSeconds(0);
+            dto.setTrackDisc("1");
+            dto.setLocPath("/FilePath/" + AvMediaMockDataFactory.TEST_TRACK_ID);
+            dto.setLocFilename("ProjectFileName" + AvMediaMockDataFactory.TEST_TRACK_ID);
+            dto.setLocServername("ServerName");
+            dto.setLocRootPath("www.rmt2.net");
+            dto.setLocSharename("multimedia");
+            dto.setComments("CommentsFor" + AvMediaMockDataFactory.TEST_TRACK_ID);
+            dto.setTrackComposer("john smith");
+            dto.setTrackLyricist("john smith");
+            dto.setTrackProducer("john smith");
+
+            Assert.assertEquals(AvMediaMockDataFactory.TEST_TRACK_ID, dto.getTrackId());
+            Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getProjectId());
+            Assert.assertEquals(trackNo, dto.getTrackNumber());
+            Assert.assertEquals(5, dto.getTrackHours());
+            Assert.assertEquals(30, dto.getTrackMinutes());
+            Assert.assertEquals(0, dto.getTrackSeconds());
+            Assert.assertEquals("1", dto.getTrackDisc());
+            Assert.assertEquals("/FilePath/" + AvMediaMockDataFactory.TEST_TRACK_ID, dto.getLocPath());
+            Assert.assertEquals("ProjectFileName" + AvMediaMockDataFactory.TEST_TRACK_ID, dto.getLocFilename());
+            Assert.assertEquals("ServerName", dto.getLocServername());
+            Assert.assertEquals("www.rmt2.net", dto.getLocRootPath());
+            Assert.assertEquals("multimedia", dto.getLocSharename());
+            Assert.assertEquals("john smith", dto.getTrackComposer());
+            Assert.assertEquals("john smith", dto.getTrackProducer());
+            Assert.assertEquals("john smith", dto.getTrackLyricist());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception occurred setting properties for AV Tracks Adapater");
         }
     }
 }
