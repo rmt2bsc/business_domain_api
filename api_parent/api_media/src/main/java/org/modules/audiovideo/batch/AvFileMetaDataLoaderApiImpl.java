@@ -112,6 +112,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * configuration is known at implementation.
      * 
      * @param dirPath
+     *            a String representing the directory path process audio/video
+     *            files
      * 
      * @throws BatchFileProcessException
      */
