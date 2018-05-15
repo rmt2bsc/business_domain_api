@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvProject;
+import org.dao.mapping.orm.rmt2.AvTracks;
 import org.dao.mapping.orm.rmt2.Content;
 import org.dto.ContentDto;
 import org.junit.After;
@@ -44,22 +45,35 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        
-        // Setup stubs for fetching data successfully
-        when(this.mockPersistenceClient.retrieveList(isA(AvArtist.class)))
-                .thenReturn(this.mockAvArtistData);
-        when(this.mockPersistenceClient.insertRow(isA(AvArtist.class), eq(true)))
-                .thenReturn(AvMediaMockDataFactory.TEST_ARTIST_ID);
-        when(this.mockPersistenceClient.updateRow(isA(AvArtist.class))).thenReturn(1);
-        
-        when(this.mockPersistenceClient.retrieveList(isA(AvProject.class)))
-                .thenReturn(this.mockAvProjectData);
-        when(this.mockPersistenceClient.insertRow(isA(AvProject.class), eq(true)))
-                .thenReturn(AvMediaMockDataFactory.TEST_PROJECT_ID);
-        when(this.mockPersistenceClient.updateRow(isA(AvProject.class))).thenReturn(1);
-        
     }
 
+    private void setupStubsForProcessingNewData() {
+        when(this.mockPersistenceClient.retrieveList(isA(AvArtist.class))).thenReturn(null);
+
+        int artist = AvMediaMockDataFactory.TEST_ARTIST_ID;
+        when(this.mockPersistenceClient.insertRow(isA(AvArtist.class),
+                eq(true))).thenReturn(artist++, artist++, artist++, artist++, artist++, artist);
+
+        when(this.mockPersistenceClient.retrieveList(isA(AvProject.class)))
+                .thenReturn(null, null, null, this.mockAvProjectData, null, this.mockAvProjectData);
+
+        int projectId = AvMediaMockDataFactory.TEST_PROJECT_ID;
+        when(this.mockPersistenceClient.insertRow(isA(AvProject.class),
+                eq(true))).thenReturn(projectId++, projectId++, projectId++, projectId);
+        
+        int trackId = AvMediaMockDataFactory.TEST_TRACK_ID;
+        when(this.mockPersistenceClient.insertRow(isA(AvTracks.class),
+                eq(true))).thenReturn(trackId++, trackId++, trackId++, trackId++, trackId++, trackId);
+        
+    }
+    
+    private void setupStubsForProcessingExistingData() {
+        when(this.mockPersistenceClient.updateRow(isA(AvArtist.class)))
+                .thenReturn(1);
+        when(this.mockPersistenceClient.updateRow(isA(AvProject.class))).thenReturn(1);
+    }
+    
+    
     /**
      * @throws java.lang.Exception
      */
