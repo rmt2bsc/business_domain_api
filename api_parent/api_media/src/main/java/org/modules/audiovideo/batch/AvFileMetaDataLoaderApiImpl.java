@@ -212,6 +212,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * @return Always returns an {@link Integer} object which equals "1".
      * @throws BatchFileProcessException
      */
+    @Override
     public Object processDirectory(File mediaResource, Object parent) throws BatchFileProcessException {
         File mediaList[];
         int itemCount = 0;
@@ -222,10 +223,10 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             for (int ndx = 0; ndx < itemCount; ndx++) {
                 if (mediaList[ndx].isDirectory()) {
                     // Make recursive call to process next level
-                    this.processDirectory(mediaList[ndx], null);
+                    this.processDirectory(mediaList[ndx], mediaList[ndx]);
                 }
                 if (mediaList[ndx].isFile()) {
-                    this.processSingleFile(mediaList[ndx], null);
+                    this.processSingleFile(mediaList[ndx], parent);
                 }
             }
             return 1;
@@ -246,16 +247,18 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * @throws MP3ApiInstantiationException
      * @throws BatchFileProcessException
      */
+    @Override
     public Object processSingleFile(File mediaFile, Object parent) throws BatchFileProcessException {
         String pathName;
         AvCombinedProjectBean avb;
 
+        File parentDirectory = (File) parent;
         pathName = mediaFile.getPath();
         logger.log(Level.DEBUG, "Processing File: " + pathName);
         try {
             avb = this.extractFileMetaData(mediaFile);
             if (avb != null) {
-                this.addAudioVideoFileData(avb);
+                this.addAudioVideoFileData(avb, parentDirectory);
             }
             this.successCnt++;
         } catch (MP3ApiInstantiationException e) {
@@ -342,7 +345,10 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         }
 
         String fileExt = RMT2File.getFileExt(mediaPath);
-        if (fileExt.equalsIgnoreCase(".wmv")) {
+        if (fileExt.equalsIgnoreCase(".wmv") 
+                || fileExt.equalsIgnoreCase(".mp4")
+                || fileExt.equalsIgnoreCase(".avi")
+                || fileExt.equalsIgnoreCase(".mpg")) {
             av.setProjectTypeId(AudioVideoConstants.PROJ_TYPE_ID_VIDEO);
             av.setMediaTypeId(AudioVideoConstants.MEDIA_TYPE_DVD);
         }
@@ -394,6 +400,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             // Capture the media file location data
             String pathOnly = RMT2File.getFilePathInfo(mediaPath);
             avt.setLocPath(pathOnly);
+            av.setContentPath(pathOnly);
 
             // Set File name
             String fileName = sourceFile.getName();
@@ -424,17 +431,20 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * 
      * @param avProj
      *            an instance of {@link AvCombinedProjectBean}
+     * @param parentDirectory
+     *            the directory containing the information gathered for
+     *            <i>avProj<i>.
      * @return The total number of tracks added for the artist's project.
      * @throws AudioVideoDaoException
      */
-    protected int addAudioVideoFileData(AvCombinedProjectBean avProj) throws AudioVideoDaoException {
+    protected int addAudioVideoFileData(AvCombinedProjectBean avProj, File parentDirectory) throws AudioVideoDaoException {
         AvArtist artist = avProj.getAva();
         AvProject project = avProj.getAv();
         AvTracks track = avProj.getAvt();
 
         int artistId = this.insertArtistFromFile(artist);
         project.setArtistId(artistId);
-        int projectId = this.insertProjectFromFile(project, avProj.getGenre());
+        int projectId = this.insertProjectFromFile(project, avProj.getGenre(), parentDirectory);
         track.setProjectId(projectId);
         this.insertTrackFromFile(track);
         return projectId;
@@ -465,7 +475,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return artistId;
     }
 
-    private int insertProjectFromFile(AvProject project, String genreName) throws DatabaseException {
+    private int insertProjectFromFile(AvProject project, String genreName, File parentDirectory) throws DatabaseException {
         int artistId = project.getArtistId();
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
@@ -483,11 +493,11 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         project.setGenreId(genreId);
         projectDto.setGenreId(genreId);
         if (project.getProjectId() == 0) {
-            ProjectDto projCriteria = Rmt2MediaDtoFactory
-                    .getAvProjectInstance(null);
+            ProjectDto projCriteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
             projCriteria.setTitle(projectDto.getTitle());
             List<ProjectDto> p = this.avDao.fetchProject(projCriteria);
-            if (p != null && p.size() == 1) {
+            if (p != null && p.size() == 1 && p.get(0).getContentPath() != null
+                    && p.get(0).getContentPath().equalsIgnoreCase(parentDirectory.getPath())) {
                 projectId = p.get(0).getProjectId();
             }
             else {
