@@ -139,6 +139,9 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getCost() > 0) {
                 queryObj.addCriteria(AvProject.PROP_COST, criteria.getCost());
             }
+            if (criteria.getContentPath() != null) {
+                queryObj.addCriteria(AvProject.PROP_CONTENTPATH, criteria.getContentPath());
+            }
         }
 
         // Query data
@@ -316,7 +319,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         AvArtist a = AudioVideoDaoFactory.createArtistInstance(artist);
 
         int rc = 0;
-        this.client.beginTrans();
         try {
             if (a.getArtistId() == 0) {
                 rc = this.insertArtist(a);
@@ -325,11 +327,10 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (a.getArtistId() > 0) {
                 rc = this.updateArtist(a);
             }
-            this.client.commitTrans();
             return rc;
         } catch (AudioVideoDaoException e) {
-            this.client.rollbackTrans();
-            throw e;
+            this.msg = "Error adding/updating artist, " + artist.getName();
+            throw new AudioVideoDaoException(this.msg, e);
         }
     }
 
@@ -373,7 +374,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     public int maintainProject(ProjectDto proj) throws AudioVideoDaoException {
         AvProject p = AudioVideoDaoFactory.createProjectInstance(proj);
         int rc = 0;
-        this.client.beginTrans();
         try {
             if (p.getProjectId() == 0) {
                 rc = this.insertProject(p);
@@ -382,11 +382,10 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (p.getProjectId() > 0) {
                 rc = this.updateProject(p);
             }
-            this.client.commitTrans();
             return rc;
         } catch (AudioVideoDaoException e) {
-            this.client.rollbackTrans();
-            throw e;
+            this.msg = "Error adding/updating project/album, " + proj.getTitle();
+            throw new AudioVideoDaoException(this.msg, e);
         }
     }
 
@@ -443,7 +442,6 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     public int maintainTrack(TracksDto track) throws AudioVideoDaoException {
         AvTracks t = AudioVideoDaoFactory.createTrackInstance(track);
         int rc = 0;
-        this.client.beginTrans();
         try {
             if (t.getTrackId() == 0) {
                 rc = this.insertTrack(t);
@@ -452,11 +450,10 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (t.getTrackId() > 0) {
                 rc = this.updateTrack(t);
             }
-            this.client.commitTrans();
             return rc;
         } catch (AudioVideoDaoException e) {
-            this.client.rollbackTrans();
-            throw e;
+            this.msg = "Error adding/updating track, " + track.getTrackTitle();
+            throw new AudioVideoDaoException(this.msg, e);
         }
     }
 

@@ -27,27 +27,4 @@ public interface AvBatchFileProcessorApi extends BatchFileProcessor {
      */
     AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoDaoException;
     
-    
-    /**
-     * Counts the total number of files of the directory, <i>dir</i>, and its
-     * sub-directories.
-     * 
-     * @param filePath
-     *            the path of the source directory
-     * @return the file count.
-     */
-    int computeTotalFileCount(String filePath);
-
-    /**
-     * Counts the total number of files of the directory, <i>mediaResource</i>,
-     * and its sub-directories.
-     * 
-     * @param file
-     *            an instance of File which must represent a directory in the
-     *            file system.
-     * @return int the file count.
-     */
-    int computeTotalFileCount(File file);
-
-
 }

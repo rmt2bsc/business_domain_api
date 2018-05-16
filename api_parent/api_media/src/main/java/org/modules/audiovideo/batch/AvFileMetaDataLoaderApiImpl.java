@@ -104,7 +104,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     protected AvFileMetaDataLoaderApiImpl(String dirPath) throws BatchFileProcessException {
         this();
         this.initConnection(dirPath);
-        AvFileMetaDataLoaderApiImpl.logger.info("Audio/Video batch processor is initialized");
+        logger.info("Audio/Video batch processor is initialized.");
+        logger.info("Audio/Video batch processing witll begin at this location: " + this.resourcePath.getAbsolutePath());
     }
 
     /**
@@ -128,7 +129,14 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             AvFileMetaDataLoaderApiImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
-        this.resourcePath = new File(dirPath.toString());
+        
+        // Verify that the starting resource path is a directory
+        File testFile = new File(dirPath.toString());
+        if (RMT2File.verifyDirectory(testFile) != RMT2File.FILE_IO_EXIST) {
+            this.msg = testFile + " is required to be a directory for Audio Video Batch process";
+            throw new AvSourceNotADirectoryException(this.msg);
+        }
+        this.resourcePath = testFile;
         this.successCnt = 0;
         this.errorCnt = 0;
         this.totCnt = 0;
@@ -153,6 +161,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * and audio_video_tracks are deleted before processing artist's
      * directories.
      * 
+     * @return the total count of media resources processed.
      * @throws AudioVideoException
      * @throws AvBatchValidationException
      */
@@ -160,21 +169,14 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
        
         this.startTime = new Date();
         
-        // Verify that the starting resource path is a directory
-        if (RMT2File.verifyDirectory(this.resourcePath) != RMT2File.FILE_IO_EXIST) {
-            this.msg = resourcePath + " is required to be a directory for Audio Video Batch process";
-            throw new AvSourceNotADirectoryException(this.msg);
-        }
-
         AudioVideoDaoFactory f = new AudioVideoDaoFactory();
         AudioVideoDao dao = f.createRmt2OrmDaoInstance();
         dao.setDaoUser(this.getApiUser());
 
         // Begin process all files
         try {
-            this.expectedFileCount = this.computeTotalFileCount(this.resourcePath);
-            this.msg = "Audio/Video Batch Update process started ["
-                    + this.expectedFileCount + " files discovered]...";
+            this.expectedFileCount = RMT2File.getDirectoryListingCount(this.resourcePath);
+            this.msg = "Audio/Video Batch Update process started [" + this.expectedFileCount + " files discovered]...";
             logger.info(this.msg);
             this.processDirectory(this.resourcePath, null);
             return this.totCnt;
@@ -185,13 +187,13 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             dao = null;
             this.endTime = new Date();
             
-            AvFileMetaDataLoaderApiImpl.logger.info("Batch start time: " + startTime.toString());
-            AvFileMetaDataLoaderApiImpl.logger.info("Batch end time: " + endTime.toString());
-            AvFileMetaDataLoaderApiImpl.logger.info("Total Media Files Processed: " + this.totCnt);
-            AvFileMetaDataLoaderApiImpl.logger.info("Total Media Files Successfully Processed: " + this.successCnt);
-            AvFileMetaDataLoaderApiImpl.logger.info("Total Media Files Unsuccessfully Processed: " + this.errorCnt);
-            AvFileMetaDataLoaderApiImpl.logger.info("Total Non-Audio/Video Files encountered: " + this.nonAvFileCnt);
-            AvFileMetaDataLoaderApiImpl.logger.info("End Audio-Video Update");
+            logger.info("Batch start time: " + startTime.toString());
+            logger.info("Batch end time: " + endTime.toString());
+            logger.info("Total Media Files Processed: " + this.totCnt);
+            logger.info("Total Media Files Successfully Processed: " + this.successCnt);
+            logger.info("Total Media Files Unsuccessfully Processed: " + this.errorCnt);
+            logger.info("Total Non-Audio/Video Files encountered: " + this.nonAvFileCnt);
+            logger.info("End Audio-Video Update");
 
             // Send batch report via SMTP
             try {
@@ -289,10 +291,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             this.errorCnt++;
         } finally {
             this.totCnt++;
-            if (avDao != null) {
-                avDao.close();
-                avDao = null;
-            }
         }
         return 1;
     }
@@ -315,25 +313,15 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             throw new AvInvalidSourceFileException(this.msg);
         }
 
-        AvCombinedProjectBean avb = null;
-        AvArtist ava = null;
-        AvProject av = null;
-        AvTracks avt = null;
-
-        try {
-            avb = new AvCombinedProjectBean();
-            ava = avb.getAva();
-            av = avb.getAv();
-            avt = avb.getAvt();
-        } catch (com.SystemException e) {
-            return null;
-        }
+        AvCombinedProjectBean avb = new AvCombinedProjectBean();
+        AvArtist ava = avb.getAva();
+        AvProject av = avb.getAv();
+        AvTracks avt = avb.getAvt();
 
         // Get file name with complet path
         String mediaPath = sourceFile.getPath();
         this.msg = "Extracting meta data from: " + mediaPath;
         logger.info(this.msg);
-        System.out.println(this.msg);
 
         // Get the appropriate MP3Reader implementation
         // MP3Reader mp3 = AudioVideoDaoFactory.createJid3mp3WmvApi(sourceFile);
@@ -353,6 +341,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             av.setMediaTypeId(AudioVideoConstants.MEDIA_TYPE_DVD);
         }
         else {
+            // We are assuming that this is an audio file...may need to eliminate dangerous assumption.
             av.setProjectTypeId(AudioVideoConstants.PROJ_TYPE_ID_AUDIO);
             av.setMediaTypeId(AudioVideoConstants.MEDIA_TYPE_CD);
         }
@@ -372,10 +361,10 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
             // Get comments.
             String comments = mp3.getComment();
-            avt.setComments(comments);
             // Make data adjustments in the event we are dealing with a Various
             // Artists type album.
-            if (comments.contains(AudioVideoConstants.VARIOUS_ARTIST_TOKEN)) {
+            if (comments != null && comments.contains(AudioVideoConstants.VARIOUS_ARTIST_TOKEN)) {
+                avt.setComments(comments);
                 ava.setName(AudioVideoConstants.VARIOUS_ARTIST_NAME);
             }
 
@@ -395,7 +384,10 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
             // Get Disc Number
             int discNo = mp3.getDiscNumber();
-            avt.setTrackDisc(String.valueOf(discNo));
+            if (discNo >= 1) {
+                avt.setTrackDisc(String.valueOf(discNo));    
+            }
+            
 
             // Capture the media file location data
             String pathOnly = RMT2File.getFilePathInfo(mediaPath);
@@ -411,8 +403,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             return avb;
         } catch (Exception e) {
             this.msg = "Audio/Video file extraction error for " + mediaPath;
-            System.out.println(this.msg);
-            e.printStackTrace();
+            logger.error(this.msg, e);
             throw new AvFileExtractionException(this.msg, e);
         }
     }
@@ -442,10 +433,15 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         AvProject project = avProj.getAv();
         AvTracks track = avProj.getAvt();
 
+        // Process artist
         int artistId = this.insertArtistFromFile(artist);
         project.setArtistId(artistId);
+        
+        // Process Project/Album
         int projectId = this.insertProjectFromFile(project, avProj.getGenre(), parentDirectory);
         track.setProjectId(projectId);
+        
+        // Process track
         this.insertTrackFromFile(track);
         return projectId;
     }
@@ -494,22 +490,37 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         projectDto.setGenreId(genreId);
         if (project.getProjectId() == 0) {
             ProjectDto projCriteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
+            
+            // Verify the existence of project by artist/project title
             projCriteria.setTitle(projectDto.getTitle());
+            projCriteria.setArtistId(artistId);
             List<ProjectDto> p = this.avDao.fetchProject(projCriteria);
-            if (p != null && p.size() == 1 && p.get(0).getContentPath() != null
-                    && p.get(0).getContentPath().equalsIgnoreCase(parentDirectory.getPath())) {
+            if (p != null && p.size() == 1) {
                 projectId = p.get(0).getProjectId();
             }
             else {
-                projectId = this.avDao.maintainProject(projectDto);
+                // Verify the existence of project by project title/content path
+                // (This is typically for albums with multiple artists).
+                projCriteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
+                projCriteria.setTitle(projectDto.getTitle());
+                projCriteria.setContentPath(project.getContentPath());
+                p = this.avDao.fetchProject(projCriteria);
+                if (p != null && p.size() == 1) {
+                    projectId = p.get(0).getProjectId();
+                }
+                else {
+                    // Create project/album
+                    projectId = this.avDao.maintainProject(projectDto);
+                }
             }
-            project.setProjectId(projectId);
-            projectDto.setProjectId(projectId);
         }
         else {
             this.avDao.maintainProject(projectDto);
             projectId = project.getProjectId();
         }
+        projectDto.setProjectId(projectId);
+        project.setProjectId(projectId);
+        
         return projectId;
     }
 
@@ -716,49 +727,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             throw new AvBatchReportException(e);
         }
         return;
-    }
-
-    /**
-     * Counts the total number of files of the directory, <i>filePath</i>, and
-     * its sub-directories.
-     * 
-     * @param filePath
-     * @return int
-     * 
-     */
-    @Override
-    public int computeTotalFileCount(String filePath) {
-        File dir = new File(filePath);
-        return this.computeTotalFileCount(dir);
-    }
-
-    /**
-     * Counts the total number of files of the directory, <i>file</i>, and its
-     * sub-directories.
-     * 
-     * @param file
-     *            an instance of File which must represent a directory in the
-     *            file system.
-     * @return int the file count.
-     */
-    @Override
-    public int computeTotalFileCount(File file) {
-        File mediaList[];
-        int itemCount = 0;
-        int total = 0;
-
-        mediaList = file.listFiles();
-        itemCount = mediaList.length;
-        for (int ndx = 0; ndx < itemCount; ndx++) {
-            if (mediaList[ndx].isDirectory()) {
-                // Make recursive call to process next level
-                total += this.computeTotalFileCount(mediaList[ndx]);
-            }
-            if (mediaList[ndx].isFile()) {
-                total += 1;
-            }
-        }
-        return total;
     }
     
     /*

@@ -18,16 +18,16 @@ public class AvBatchApiFactory extends RMT2Base {
     }
 
     /**
-     * Creates an instance of the {@link AudioVideoBatchFileProcessorApi} using
+     * Creates an instance of the AvBatchFileProcessorApi using
      * the batch file meta data importer implementation.
      * 
-     * @return an instance of {@link AudioVideoBatchFileProcessorApi}
+     * @return an instance of {@link AvBatchFileProcessorApi}
      */
-    public AvBatchFileProcessorApi createRmt2OrmBatchLoaderDaoInstance(String srcDir) {
-        AvBatchFileProcessorApi dao;
+    public AvBatchFileProcessorApi createApiInstance(String srcDir) {
+        AvBatchFileProcessorApi api;
         try {
-            dao = new AvFileMetaDataLoaderApiImpl(srcDir);
-            return dao;
+            api = new AvFileMetaDataLoaderApiImpl(srcDir);
+            return api;
         } catch (BatchFileProcessException e) {
             return null;
         }
