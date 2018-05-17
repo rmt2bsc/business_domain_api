@@ -26,6 +26,7 @@ import org.dto.GenreDto;
 import org.dto.ProjectDto;
 import org.dto.TracksDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
+import org.modules.audiovideo.AudioVideoApiException;
 
 import com.RMT2Constants;
 import com.SystemException;
@@ -166,9 +167,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * @throws AvBatchValidationException
      */
     public int processBatch() throws BatchFileProcessException {
-       
         this.startTime = new Date();
-        
         AudioVideoDaoFactory f = new AudioVideoDaoFactory();
         AudioVideoDao dao = f.createRmt2OrmDaoInstance();
         dao.setDaoUser(this.getApiUser());
@@ -282,7 +281,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         } catch (AvFileExtractionException e) {
             this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Source File Data Extraction", e.getMessage()));
             this.errorCnt++;
-        } catch (AudioVideoDaoException e) {
+        } catch (AudioVideoApiException e) {
             this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "General Audio/Video", e.getMessage()));
             this.errorCnt++;
             e.printStackTrace();
@@ -387,7 +386,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             if (discNo >= 1) {
                 avt.setTrackDisc(String.valueOf(discNo));    
             }
-            
 
             // Capture the media file location data
             String pathOnly = RMT2File.getFilePathInfo(mediaPath);
@@ -426,9 +424,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      *            the directory containing the information gathered for
      *            <i>avProj<i>.
      * @return The total number of tracks added for the artist's project.
-     * @throws AudioVideoDaoException
+     * @throws AudioVideoApiException
      */
-    protected int addAudioVideoFileData(AvCombinedProjectBean avProj, File parentDirectory) throws AudioVideoDaoException {
+    protected int addAudioVideoFileData(AvCombinedProjectBean avProj, File parentDirectory) throws AudioVideoApiException {
         AvArtist artist = avProj.getAva();
         AvProject project = avProj.getAv();
         AvTracks track = avProj.getAvt();
@@ -446,32 +444,41 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return projectId;
     }
     
-    private int insertArtistFromFile(AvArtist artist) throws DatabaseException {
+    private int insertArtistFromFile(AvArtist artist) throws AudioVideoApiException {
         ArtistDto artistDto = Rmt2MediaDtoFactory.getAvArtistInstance(artist);
         this.validateArtist(artistDto);
         int artistId = 0;
-        if (artist.getArtistId() == 0) {
-            // Check if artist alread exists
-            ArtistDto artistCriteria = Rmt2MediaDtoFactory.getAvArtistInstance(null);
-            artistCriteria.setName(artistDto.getName());
-            List<ArtistDto> a = this.avDao.fetchArtist(artistCriteria);
-            if (a != null && a.size() == 1) {
-                artistId = a.get(0).getId();
-            }
-            else {
+        
+        // Check if artist exists
+        try {
+            if (artist.getArtistId() == 0) {
+                ArtistDto artistCriteria = Rmt2MediaDtoFactory.getAvArtistInstance(null);
+                artistCriteria.setName(artistDto.getName());
+                List<ArtistDto> a = this.avDao.fetchArtist(artistCriteria);
+                if (a != null && a.size() == 1) {
+                    artistId = a.get(0).getId();
+                    artistDto.setId(artistId);
+                    artist.setArtistId(artistId);
+                }
+            }    
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Unable to verify artist existence by artist name: " + artistDto.getName(), e); 
+        }
+        
+        // Since artist does not exist, add it.
+        try {
+            if (artist.getArtistId() == 0) {
                 artistId = this.avDao.maintainArtist(artistDto);
             }
-            artist.setArtistId(artistId);
-            artistDto.setId(artistId);
         }
-        else {
-            this.avDao.maintainArtist(artistDto);
-            artistId = artist.getArtistId();
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Unable to create artist: " + artistDto.getName(), e); 
         }
         return artistId;
     }
 
-    private int insertProjectFromFile(AvProject project, String genreName, File parentDirectory) throws DatabaseException {
+    private int insertProjectFromFile(AvProject project, String genreName, File parentDirectory) throws AudioVideoApiException {
         int artistId = project.getArtistId();
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
@@ -488,55 +495,102 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         }
         project.setGenreId(genreId);
         projectDto.setGenreId(genreId);
+        
+        // Verify if project already exists
         if (project.getProjectId() == 0) {
             ProjectDto projCriteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
             
             // Verify the existence of project by artist/project title
             projCriteria.setTitle(projectDto.getTitle());
             projCriteria.setArtistId(artistId);
-            List<ProjectDto> p = this.avDao.fetchProject(projCriteria);
+            List<ProjectDto> p = null;
+            try {
+                p = this.avDao.fetchProject(projCriteria);    
+            }
+            catch (AudioVideoDaoException e) {
+                throw new AudioVideoApiException(
+                        "Unable to verify project/album existence by artist id and title ["
+                                + artistId + ", " + projectDto.getTitle() + "]", e);
+            }
             if (p != null && p.size() == 1) {
                 projectId = p.get(0).getProjectId();
+                project.setProjectId(projectId);
+                projectDto.setProjectId(projectId);
             }
             else {
                 // Verify the existence of project by project title/content path
                 // (This is typically for albums with multiple artists).
                 projCriteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
                 projCriteria.setTitle(projectDto.getTitle());
-                projCriteria.setContentPath(project.getContentPath());
-                p = this.avDao.fetchProject(projCriteria);
+                projCriteria.setContentPath(projectDto.getContentPath());
+                try {
+                    p = this.avDao.fetchProject(projCriteria);    
+                }
+                catch (AudioVideoDaoException e) {
+                    throw new AudioVideoApiException(
+                            "Unable to verify project/album existence by title and project content path ["
+                                    + projectDto.getTitle() + ", "
+                                    + projectDto.getContentPath() + "]", e);
+                }
                 if (p != null && p.size() == 1) {
                     projectId = p.get(0).getProjectId();
-                }
-                else {
-                    // Create project/album
-                    projectId = this.avDao.maintainProject(projectDto);
+                    project.setProjectId(projectId);
+                    projectDto.setProjectId(projectId);
                 }
             }
         }
-        else {
-            this.avDao.maintainProject(projectDto);
-            projectId = project.getProjectId();
-        }
-        projectDto.setProjectId(projectId);
-        project.setProjectId(projectId);
         
+        try {
+            if (projectId == 0) {
+                // Create project/album
+                projectId = this.avDao.maintainProject(projectDto);
+            }
+            else {
+                this.avDao.maintainProject(projectDto);
+            }    
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Unable to create/modify project/album: " + project.getTitle(), e); 
+        }
         return projectId;
     }
 
-    private int insertTrackFromFile(AvTracks track) throws DatabaseException {
+    private int insertTrackFromFile(AvTracks track) throws AudioVideoApiException {
         TracksDto trackDto = Rmt2MediaDtoFactory.getAvTrackInstance(track);
         int trackId = 0;
         trackDto.setProjectId(track.getProjectId());
         this.validateTarck(trackDto);
-        if (track.getTrackId() == 0) {
-            trackId = this.avDao.maintainTrack(trackDto);
-            track.setTrackId(trackId);
-            trackDto.setTrackId(trackId);
+
+        // Verify that track does not exists for this project
+        try {
+            if (track.getTrackId() == 0) {
+                TracksDto criteria = Rmt2MediaDtoFactory.getAvTrackInstance(null);
+                criteria.setProjectId(track.getProjectId());
+                criteria.setTrackTitle(track.getTrackTitle());
+                List<TracksDto> t = this.avDao.fetchTrack(criteria);
+                if (t != null && t.size() == 1) {
+                    trackId = t.get(0).getTrackId();
+                }
+            }
         }
-        else {
-            this.avDao.maintainTrack(trackDto);
-            trackId = track.getTrackId();
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Unable to verify track existence: " + track.getTrackTitle(), e); 
+        }
+       
+        try {
+            if (trackId == 0) {
+                // Create new track
+                trackId = this.avDao.maintainTrack(trackDto);
+                track.setTrackId(trackId);
+                trackDto.setTrackId(trackId);
+            }
+            else {
+                // Update existing track
+                this.avDao.maintainTrack(trackDto);
+            }    
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Unable to create/modify track: " + track.getTrackTitle(), e); 
         }
         return trackId;
     }
