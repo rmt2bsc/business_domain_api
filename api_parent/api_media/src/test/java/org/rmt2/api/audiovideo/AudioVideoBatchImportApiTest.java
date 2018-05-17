@@ -90,6 +90,8 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         when(this.mockPersistenceClient.insertRow(isA(AvProject.class), eq(true)))
               .thenReturn(projectId++, projectId++, projectId++, projectId);
         
+        
+        when(this.mockPersistenceClient.retrieveList(isA(AvTracks.class))).thenReturn(null);
         int trackId = AvMediaMockDataFactory.TEST_TRACK_ID;
         when(this.mockPersistenceClient.insertRow(isA(AvTracks.class), eq(true)))
               .thenReturn(trackId++, trackId++, trackId++, trackId++, trackId++, trackId);
