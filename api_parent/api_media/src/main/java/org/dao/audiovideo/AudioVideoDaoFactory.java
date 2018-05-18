@@ -2,6 +2,7 @@ package org.dao.audiovideo;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvTracks;
@@ -20,6 +21,7 @@ import com.RMT2Base;
  */
 public class AudioVideoDaoFactory extends RMT2Base {
 
+    private static final Logger LOGGER = Logger.getLogger(AudioVideoDaoFactory.class);
     private static String ERROR_MP3_API = "MP3 Api Instantiation Error: ";
 
     /**
@@ -129,11 +131,12 @@ public class AudioVideoDaoFactory extends RMT2Base {
      * @return an instance of {@link MP3Reader}
      * @throws MP3ApiInstantiationException
      */
-    public static MP3Reader createMyId3Api(File mp3Source) {
+    public static MP3Reader createMyId3Instance(File mp3Source) {
         String msg = ERROR_MP3_API;
         MP3Reader api = null;
         try {
             api = new MyMp3LibImpl(mp3Source);
+            LOGGER.info("API is using MyId3 implementation for MP3Reader");
             return api;
         } catch (Exception e) {
             msg += "Unable to create MyId3 MP3Reader implementation for media resource, " + mp3Source.getAbsolutePath();
@@ -148,11 +151,12 @@ public class AudioVideoDaoFactory extends RMT2Base {
      * @return an instance of {@link MP3Reader}
      * @throws MP3ApiInstantiationException
      */
-    public static MP3Reader createJID3Mp3Api(File mp3Source) {
+    public static MP3Reader createJID3Mp3Instance(File mp3Source) {
         String msg = ERROR_MP3_API;
         MP3Reader api = null;
         try {
             api = new JID3Mp3LibImpl(mp3Source);
+            LOGGER.info("API is using JID3 implementation for MP3Reader");
             return api;
         } catch (NotFoundException e) {
             return null;
@@ -170,11 +174,12 @@ public class AudioVideoDaoFactory extends RMT2Base {
      * @return an instance of {@link MP3Reader}
      * @throws MP3ApiInstantiationException
      */
-    public static MP3Reader createEntaggedId3Api(File mp3Source) {
+    public static MP3Reader createEntaggedId3Instance(File mp3Source) {
         String msg = ERROR_MP3_API;
         MP3Reader api = null;
         try {
             api = new EntaggedMp3LibImpl(mp3Source);
+            LOGGER.info("API is using Entagged ID3 implementation for MP3Reader");
             return api;
         } catch (Throwable e) {
             msg += "Unable to create EntaggedId3 MP3Reader implementation for media resource, " + mp3Source.getAbsolutePath();
@@ -189,11 +194,12 @@ public class AudioVideoDaoFactory extends RMT2Base {
      * @return an instacne of {@link MP3Reader}
      * @throws MP3ApiInstantiationException
      */
-    public static MP3Reader createId3mp3WmvApi(File mp3Source) {
+    public static MP3Reader createId3mp3WmvInstance(File mp3Source) {
         String msg = ERROR_MP3_API;
         MP3Reader api = null;
         try {
             api = new Id3Mp3WmvLibImpl(mp3Source);
+            LOGGER.info("API is using Id3Mp3Wmv implementation for MP3Reader");
             return api;
         } catch (Throwable e) {
             msg += "Unable to create Id3Mp3Wmv MP3Reader implementation for media resource, " + mp3Source.getAbsolutePath();

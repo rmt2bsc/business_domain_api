@@ -8,9 +8,10 @@ import org.apache.log4j.Logger;
 import org.cmc.music.metadata.IMusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
+import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
+import com.InvalidDataException;
 import com.RMT2Base;
-import com.SystemException;
 import com.util.RMT2Date;
 
 /**
@@ -38,19 +39,18 @@ class MyMp3LibImpl extends RMT2Base implements MP3Reader {
         if (source == null) {
             this.msg = "Source audio/video file is invalid or null";
             logger.log(Level.ERROR, this.msg);
-            throw new SystemException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
         try {
-            System.out.println("Processing: " + source.getPath());
+            logger.info("Processing: " + source.getPath());
             this.metaDataSet = new MyID3().read(source);
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-            throw new SystemException(e);
+        } catch (Throwable e) {
+            throw new Mp3ReaderIdentityNotConfiguredException("Unable to create MyMp3Lib Implementation", e);
         }
         if (this.metaDataSet == null) {
             this.msg = "MP3 source file does not contain any meta data";
             logger.log(Level.ERROR, this.msg);
-            throw new SystemException(this.msg);
+            throw new InvalidDataException(this.msg);
         }
         this.mp3Data = this.metaDataSet.getSimplified();
     }

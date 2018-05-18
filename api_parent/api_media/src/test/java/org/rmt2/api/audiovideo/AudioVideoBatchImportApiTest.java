@@ -128,6 +128,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
             results = api.processBatch();
         }
         catch (BatchFileException e) {
+            e.printStackTrace();
             Assert.fail("An exception was not expected");
         }
         

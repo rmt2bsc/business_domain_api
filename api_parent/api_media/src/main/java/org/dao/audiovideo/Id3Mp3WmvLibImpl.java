@@ -8,6 +8,7 @@ import org.blinkenlights.jid3.ID3Tag;
 import org.blinkenlights.jid3.MP3File;
 import org.blinkenlights.jid3.v1.ID3V1Tag;
 import org.blinkenlights.jid3.v2.ID3V2Tag;
+import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
 import com.RMT2Base;
 
@@ -29,14 +30,14 @@ class Id3Mp3WmvLibImpl extends RMT2Base implements MP3Reader {
      * 
      */
     public Id3Mp3WmvLibImpl(File mp3Source) {
-        this.mediaFile = new MP3File(mp3Source);
         try {
+            this.mediaFile = new MP3File(mp3Source);
             this.tag1 = this.mediaFile.getID3V1Tag();
             this.tag2 = this.mediaFile.getID3V2Tag();
             ID3Tag tags[] = this.mediaFile.getTags();
             return;
-        } catch (ID3Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            throw new Mp3ReaderIdentityNotConfiguredException("Unable to create Id3Mp3Wmv Implementation", e);
         }
     }
 

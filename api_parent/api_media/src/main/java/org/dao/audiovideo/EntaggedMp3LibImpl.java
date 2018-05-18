@@ -3,12 +3,11 @@ package org.dao.audiovideo;
 import java.io.File;
 import java.util.List;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
 import com.RMT2Base;
 import com.RMT2Constants;
-import com.SystemException;
 import com.util.RMT2Date;
 
 import entagged.audioformats.AudioFile;
@@ -37,9 +36,8 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
     EntaggedMp3LibImpl(File source) {
         try {
             this.mp3 = AudioFileIO.read(source);
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-            throw new SystemException(e);
+        } catch (Throwable e) {
+            throw new Mp3ReaderIdentityNotConfiguredException("Unable to create Entagged Mp3 Implementation", e);
         }
     }
 

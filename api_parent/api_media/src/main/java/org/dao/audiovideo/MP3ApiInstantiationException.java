@@ -1,6 +1,6 @@
 package org.dao.audiovideo;
 
-import com.SystemException;
+import com.RMT2RuntimeException;
 
 /**
  * Used to report the inability to create the proper MP3 utility that is used to
@@ -9,7 +9,7 @@ import com.SystemException;
  * @author appdev
  * 
  */
-public class MP3ApiInstantiationException extends SystemException {
+public class MP3ApiInstantiationException extends RMT2RuntimeException {
     private static final long serialVersionUID = -4204042569634960159L;
 
     /**

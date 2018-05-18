@@ -26,6 +26,7 @@ import org.dto.GenreDto;
 import org.dto.ProjectDto;
 import org.dto.TracksDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
+import org.modules.MediaConstants;
 import org.modules.audiovideo.AudioVideoApiException;
 
 import com.RMT2Constants;
@@ -56,6 +57,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         TransactionApi {
 
     private static Logger logger = Logger.getLogger(AvFileMetaDataLoaderApiImpl.class);
+    
+    private static Integer MP3_READER_IMPL_TO_USE;
 
     private File resourcePath;
 
@@ -85,9 +88,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      */
     protected AvFileMetaDataLoaderApiImpl() throws BatchFileProcessException {
         super();
-        AudioVideoDaoFactory f = new AudioVideoDaoFactory();
-        this.avDao = f.createRmt2OrmDaoInstance();
-        this.avDao.setDaoUser(this.getApiUser());
         return;
     }
 
@@ -103,7 +103,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * @throws BatchFileProcessException
      */
     protected AvFileMetaDataLoaderApiImpl(String dirPath) throws BatchFileProcessException {
-        this();
+        super(MediaConstants.APP_NAME);
         this.initConnection(dirPath);
         logger.info("Audio/Video batch processor is initialized.");
         logger.info("Audio/Video batch processing witll begin at this location: " + this.resourcePath.getAbsolutePath());
@@ -143,6 +143,11 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         this.totCnt = 0;
         this.nonAvFileCnt = 0;
         this.fileErrorMsg = new ArrayList<String>();
+        
+        // Setup DAO
+        AudioVideoDaoFactory f = new AudioVideoDaoFactory();
+        this.avDao = f.createRmt2OrmDaoInstance();
+        this.avDao.setDaoUser(this.getApiUser());
     }
 
     /*
@@ -176,11 +181,17 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         try {
             this.expectedFileCount = RMT2File.getDirectoryListingCount(this.resourcePath);
             this.msg = "Audio/Video Batch Update process started [" + this.expectedFileCount + " files discovered]...";
-            logger.info(this.msg);
             this.processDirectory(this.resourcePath, null);
             return this.totCnt;
         } catch (BatchFileProcessException e) {
-            throw e;
+            this.msg = "A batch file error occurred";
+            throw new BatchFileProcessException(this.msg, e);
+        } catch (Mp3ReaderIdentityNotConfiguredException e) {
+            this.msg = "An error occurred trying to identify the MP3Reader implemetation to use";
+            throw new BatchFileProcessException(this.msg, e);
+        } catch (Exception e) {
+            this.msg = "An unknown error was discovered";
+            throw new BatchFileProcessException(this.msg, e);
         } finally {
             dao.close();
             dao = null;
@@ -217,7 +228,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     public Object processDirectory(File mediaResource, Object parent) throws BatchFileProcessException {
         File mediaList[];
         int itemCount = 0;
-
+        File mediaFile = null;
         try {
             mediaList = mediaResource.listFiles();
             itemCount = mediaList.length;
@@ -227,14 +238,17 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                     this.processDirectory(mediaList[ndx], mediaList[ndx]);
                 }
                 if (mediaList[ndx].isFile()) {
-                    this.processSingleFile(mediaList[ndx], parent);
+                    mediaFile = mediaList[ndx];
+                    this.processSingleFile(mediaFile, parent);
                 }
             }
             return 1;
         } catch (SecurityException e) {
-            throw new BatchFileProcessException(e);
+            throw new BatchFileProcessException("A problem with security was discovered while processing file, "
+                            + mediaFile.getAbsolutePath(), e);
         } catch (MP3ApiInstantiationException e) {
-            throw new BatchFileProcessException(e);
+            throw new BatchFileProcessException("A problem instantiating MP3 library was discovered while processing file, "
+                            + mediaFile.getAbsolutePath(), e);
         }
     }
 
@@ -262,9 +276,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 this.addAudioVideoFileData(avb, parentDirectory);
             }
             this.successCnt++;
-        } catch (MP3ApiInstantiationException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Error creating MP3 Api", e.getMessage()));
-            this.nonAvFileCnt++;
         } catch (AvInvalidSourceFileException e) {
             this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Invalid Audio/Video Source File", e.getMessage()));
             this.errorCnt++;
@@ -293,6 +304,55 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return 1;
     }
 
+    /**
+     * Create an instance of MP3Reader based on the implementation selected in
+     * configuration.
+     * 
+     * @param mp3Source
+     * @return an instance of {@link MP3Reader}
+     * @throws MP3ApiInstantiationException
+     */
+    protected MP3Reader getMp3ReaderInstance(File mp3Source) {
+        // Determine the implementation to use for MP3Reader 
+        if (AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE == null) {
+            String val;
+            try {
+                val = this.getConfig().getProperty(MediaConstants.MP3_READER_TO_USE_CONFIG_KEY);
+                AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE = Integer.valueOf(val);
+            }
+            catch (NumberFormatException e) {
+                this.msg = "The configuration was not setup to identify the MP3 reader implementation to use for this API";
+                throw new Mp3ReaderIdentityNotConfiguredException(this.msg, e);
+            }
+            catch (Exception e) {
+                this.msg = "A general error occurred attempting to read configuration for MP3 reader implementation";
+                throw new Mp3ReaderIdentityNotConfiguredException(this.msg, e);
+            }
+        }
+        
+        // Create MP3Reader based on selected implementation
+        MP3Reader api = null;
+        switch (AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE) {
+            case MediaConstants.MP3_READER_IMPL_ENTAGGED:
+                api = AudioVideoDaoFactory.createEntaggedId3Instance(mp3Source);
+                break;
+            case MediaConstants.MP3_READER_IMPL_ID3MP3WMV:
+                api = AudioVideoDaoFactory.createId3mp3WmvInstance(mp3Source);
+                break;
+            case MediaConstants.MP3_READER_IMPL_JID3:
+                api = AudioVideoDaoFactory.createJID3Mp3Instance(mp3Source);
+                break;
+            case MediaConstants.MP3_READER_IMPL_MYID3:
+                api = AudioVideoDaoFactory.createMyId3Instance(mp3Source);
+                break;
+            default:
+                this.msg = "An invalid MP3 reader implementation code was specified in configuration: " + AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE;
+                throw new Mp3ReaderIdentityNotConfiguredException(this.msg);
+        }
+        return api;
+    }
+    
+    
     /**
      * Reads the tag data from the media file, <i>sourceFile</i>, and packages
      * the data in an instance of AvCombinedProjectBean.
@@ -325,7 +385,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // MP3Reader mp3 = AudioVideoDaoFactory.createJid3mp3WmvApi(sourceFile);
         // MP3Reader mp3 = AudioVideoDaoFactory.createJID3Mp3Api(sourceFile);
         // MP3Reader mp3 = AudioVideoDaoFactory.createMyId3Api(sourceFile);
-        MP3Reader mp3 = AudioVideoDaoFactory.createEntaggedId3Api(sourceFile);
+//        MP3Reader mp3 = AudioVideoDaoFactory.createEntaggedId3Instance(sourceFile);
+        
+        MP3Reader mp3 = this.getMp3ReaderInstance(sourceFile);
         if (mp3 == null) {
             return null;
         }

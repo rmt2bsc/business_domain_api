@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.farng.mp3.MP3File;
 import org.farng.mp3.id3.FrameBodyTALB;
@@ -19,11 +18,11 @@ import org.farng.mp3.id3.FrameBodyTRCK;
 import org.farng.mp3.id3.FrameBodyTYER;
 import org.farng.mp3.id3.ID3v2_2;
 import org.farng.mp3.id3.ID3v2_2Frame;
+import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
 import com.NotFoundException;
 import com.RMT2Base;
 import com.RMT2Constants;
-import com.SystemException;
 
 /**
  * A JID3 implementaion of {@link MP3Reader}
@@ -54,9 +53,8 @@ class JID3Mp3LibImpl extends RMT2Base implements MP3Reader {
             this.tag = (ID3v2_2) mediaFile.getID3v2Tag();
         } catch (FileNotFoundException e) {
             throw new NotFoundException(e);
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-            throw new SystemException(e);
+        } catch (Throwable e) {
+            throw new Mp3ReaderIdentityNotConfiguredException("Unable to create JID3 Implementation", e);
         }
     }
 
