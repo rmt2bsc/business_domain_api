@@ -1,4 +1,6 @@
-package org.dao.audiovideo;
+package org.modules.audiovideo.batch;
+
+import org.dao.audiovideo.AudioVideoDaoException;
 
 /**
  * 

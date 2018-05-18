@@ -1,4 +1,4 @@
-package org.dao.audiovideo;
+package org.modules.audiovideo;
 
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvProject;

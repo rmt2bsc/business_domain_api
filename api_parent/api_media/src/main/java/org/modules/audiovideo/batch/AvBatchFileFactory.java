@@ -1,19 +1,23 @@
 package org.modules.audiovideo.batch;
 
+import org.apache.log4j.Logger;
+
 import com.RMT2Base;
 
 /**
- * A factory for creating audio video batch API objects.
+ * A factory for creating audio video API objects related to the batch file process.
  * 
  * @author Roy Terrell
  * 
  */
-public class AvBatchApiFactory extends RMT2Base {
+public class AvBatchFileFactory extends RMT2Base {
+    
+    public static final Logger LOGGER = Logger.getLogger(AvBatchFileFactory.class);
 
     /**
      * Default contructor
      */
-    public AvBatchApiFactory() {
+    public AvBatchFileFactory() {
         return;
     }
 

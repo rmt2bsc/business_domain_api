@@ -7,17 +7,10 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.dao.audiovideo.AudioVideoConstants;
+import org.dao.audiovideo.AudioVideoDaoConstants;
 import org.dao.audiovideo.AudioVideoDao;
 import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.audiovideo.AudioVideoDaoFactory;
-import org.dao.audiovideo.AvCombinedProjectBean;
-import org.dao.audiovideo.AvFileExtractionException;
-import org.dao.audiovideo.AvInvalidSourceFileException;
-import org.dao.audiovideo.AvProjectDataValidationException;
-import org.dao.audiovideo.AvTrackDataValidationException;
-import org.dao.audiovideo.MP3ApiInstantiationException;
-import org.dao.audiovideo.MP3Reader;
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvTracks;
@@ -28,6 +21,13 @@ import org.dto.TracksDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.MediaConstants;
 import org.modules.audiovideo.AudioVideoApiException;
+import org.modules.audiovideo.AudioVideoFactory;
+import org.modules.audiovideo.AvCombinedProjectBean;
+import org.modules.audiovideo.AvProjectDataValidationException;
+import org.modules.audiovideo.AvTrackDataValidationException;
+import org.modules.audiovideo.MP3ApiInstantiationException;
+import org.modules.audiovideo.MP3Reader;
+import org.modules.audiovideo.Mp3ReaderIdentityNotConfiguredException;
 
 import com.RMT2Constants;
 import com.SystemException;
@@ -334,16 +334,16 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         MP3Reader api = null;
         switch (AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE) {
             case MediaConstants.MP3_READER_IMPL_ENTAGGED:
-                api = AudioVideoDaoFactory.createEntaggedId3Instance(mp3Source);
+                api = AudioVideoFactory.createEntaggedId3Instance(mp3Source);
                 break;
             case MediaConstants.MP3_READER_IMPL_ID3MP3WMV:
-                api = AudioVideoDaoFactory.createId3mp3WmvInstance(mp3Source);
+                api = AudioVideoFactory.createId3mp3WmvInstance(mp3Source);
                 break;
             case MediaConstants.MP3_READER_IMPL_JID3:
-                api = AudioVideoDaoFactory.createJID3Mp3Instance(mp3Source);
+                api = AudioVideoFactory.createJID3Mp3Instance(mp3Source);
                 break;
             case MediaConstants.MP3_READER_IMPL_MYID3:
-                api = AudioVideoDaoFactory.createMyId3Instance(mp3Source);
+                api = AudioVideoFactory.createMyId3Instance(mp3Source);
                 break;
             default:
                 this.msg = "An invalid MP3 reader implementation code was specified in configuration: " + AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE;
@@ -397,13 +397,13 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 || fileExt.equalsIgnoreCase(".mp4")
                 || fileExt.equalsIgnoreCase(".avi")
                 || fileExt.equalsIgnoreCase(".mpg")) {
-            av.setProjectTypeId(AudioVideoConstants.PROJ_TYPE_ID_VIDEO);
-            av.setMediaTypeId(AudioVideoConstants.MEDIA_TYPE_DVD);
+            av.setProjectTypeId(AudioVideoDaoConstants.PROJ_TYPE_ID_VIDEO);
+            av.setMediaTypeId(AudioVideoDaoConstants.MEDIA_TYPE_DVD);
         }
         else {
             // We are assuming that this is an audio file...may need to eliminate dangerous assumption.
-            av.setProjectTypeId(AudioVideoConstants.PROJ_TYPE_ID_AUDIO);
-            av.setMediaTypeId(AudioVideoConstants.MEDIA_TYPE_CD);
+            av.setProjectTypeId(AudioVideoDaoConstants.PROJ_TYPE_ID_AUDIO);
+            av.setMediaTypeId(AudioVideoDaoConstants.MEDIA_TYPE_CD);
         }
 
         try {
@@ -423,9 +423,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             String comments = mp3.getComment();
             // Make data adjustments in the event we are dealing with a Various
             // Artists type album.
-            if (comments != null && comments.contains(AudioVideoConstants.VARIOUS_ARTIST_TOKEN)) {
+            if (comments != null && comments.contains(AudioVideoDaoConstants.VARIOUS_ARTIST_TOKEN)) {
                 avt.setComments(comments);
-                ava.setName(AudioVideoConstants.VARIOUS_ARTIST_NAME);
+                ava.setName(AudioVideoDaoConstants.VARIOUS_ARTIST_NAME);
             }
 
             // Get Genre
@@ -458,7 +458,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             avt.setLocFilename(fileName);
 
             // Initialized Ripped flag
-            av.setRipped(mediaPath.indexOf(AudioVideoConstants.DIRNAME_NON_RIPPED) > -1 ? 0 : 1);
+            av.setRipped(mediaPath.indexOf(AudioVideoDaoConstants.DIRNAME_NON_RIPPED) > -1 ? 0 : 1);
             return avb;
         } catch (Exception e) {
             this.msg = "Audio/Video file extraction error for " + mediaPath;
@@ -550,7 +550,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         GenreDto genreCriteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
         genreCriteria.setDescription(genreName);
         List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
-        int genreId = AudioVideoConstants.UNKNOWN_GENRE;
+        int genreId = AudioVideoDaoConstants.UNKNOWN_GENRE;
         if (g != null && g.size() == 1) {
             genreId = g.get(0).getUid();
         }
@@ -778,7 +778,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // pool which is loaded at server start up.
         String fromAddr = null;
         try {
-            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, AudioVideoConstants.BATCH_REPORT_EMAIL);
+            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, AudioVideoDaoConstants.BATCH_REPORT_EMAIL);
         } catch (Exception e) {
             this.msg = "Unable to obtain the recipient's email address from AppParms.properties needed to send batch report";
             throw new AvBatchReportException(this.msg, e);

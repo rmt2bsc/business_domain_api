@@ -3,7 +3,7 @@ package org.modules.audiovideo.batch;
 import java.io.File;
 
 import org.dao.audiovideo.AudioVideoDaoException;
-import org.dao.audiovideo.AvCombinedProjectBean;
+import org.modules.audiovideo.AvCombinedProjectBean;
 
 import com.api.BatchFileProcessor;
 

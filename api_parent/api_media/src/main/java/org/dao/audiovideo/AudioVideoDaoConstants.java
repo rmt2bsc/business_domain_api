@@ -4,7 +4,7 @@ package org.dao.audiovideo;
  * @author rterrell
  * 
  */
-public class AudioVideoConstants {
+public class AudioVideoDaoConstants {
     /**
      * 
      */

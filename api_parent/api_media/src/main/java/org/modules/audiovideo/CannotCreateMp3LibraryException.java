@@ -1,4 +1,4 @@
-package org.modules.audiovideo.batch;
+package org.modules.audiovideo;
 
 /**
  * Used to report the inability to create specific MP3 Reader implementation to use with API.

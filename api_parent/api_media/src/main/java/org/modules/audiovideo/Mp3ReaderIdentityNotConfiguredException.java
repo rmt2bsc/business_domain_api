@@ -1,4 +1,4 @@
-package org.modules.audiovideo.batch;
+package org.modules.audiovideo;
 
 import com.RMT2RuntimeException;
 

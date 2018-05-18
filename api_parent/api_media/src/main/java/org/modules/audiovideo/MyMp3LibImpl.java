@@ -1,4 +1,4 @@
-package org.dao.audiovideo;
+package org.modules.audiovideo;
 
 import java.io.File;
 import java.util.List;
@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.cmc.music.metadata.IMusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
-import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
 import com.InvalidDataException;
 import com.RMT2Base;

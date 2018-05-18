@@ -1,4 +1,4 @@
-package org.dao.audiovideo;
+package org.modules.audiovideo;
 
 import com.RMT2RuntimeException;
 

@@ -1,10 +1,9 @@
-package org.dao.audiovideo;
+package org.modules.audiovideo;
 
 import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
 import com.RMT2Base;
 import com.RMT2Constants;

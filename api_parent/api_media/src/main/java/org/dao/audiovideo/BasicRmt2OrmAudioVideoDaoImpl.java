@@ -17,6 +17,7 @@ import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
+import org.modules.audiovideo.AudioVideoFactory;
 
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.DatabaseConnectionBean;
@@ -316,7 +317,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
      */
     @Override
     public int maintainArtist(ArtistDto artist) throws AudioVideoDaoException {
-        AvArtist a = AudioVideoDaoFactory.createArtistInstance(artist);
+        AvArtist a = AudioVideoFactory.createArtistInstance(artist);
 
         int rc = 0;
         try {
@@ -372,7 +373,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
      */
     @Override
     public int maintainProject(ProjectDto proj) throws AudioVideoDaoException {
-        AvProject p = AudioVideoDaoFactory.createProjectInstance(proj);
+        AvProject p = AudioVideoFactory.createProjectInstance(proj);
         int rc = 0;
         try {
             if (p.getProjectId() == 0) {
@@ -440,7 +441,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
      */
     @Override
     public int maintainTrack(TracksDto track) throws AudioVideoDaoException {
-        AvTracks t = AudioVideoDaoFactory.createTrackInstance(track);
+        AvTracks t = AudioVideoFactory.createTrackInstance(track);
         int rc = 0;
         try {
             if (t.getTrackId() == 0) {

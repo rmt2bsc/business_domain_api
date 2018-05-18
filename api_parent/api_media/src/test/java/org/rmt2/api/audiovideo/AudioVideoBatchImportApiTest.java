@@ -16,7 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modules.audiovideo.batch.AvBatchApiFactory;
+import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -121,7 +121,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         // Get full directory path for relative path which resides on the classpath
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
         
-        AvBatchApiFactory f = new AvBatchApiFactory();
+        AvBatchFileFactory f = new AvBatchFileFactory();
         AvBatchFileProcessorApi api = f.createApiInstance(dir);
         int results = 0;
         try {

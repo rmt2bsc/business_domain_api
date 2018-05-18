@@ -1,4 +1,4 @@
-package org.dao.audiovideo;
+package org.modules.audiovideo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +18,6 @@ import org.farng.mp3.id3.FrameBodyTRCK;
 import org.farng.mp3.id3.FrameBodyTYER;
 import org.farng.mp3.id3.ID3v2_2;
 import org.farng.mp3.id3.ID3v2_2Frame;
-import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
 import com.NotFoundException;
 import com.RMT2Base;

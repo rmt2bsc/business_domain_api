@@ -1,4 +1,4 @@
-package org.dao.audiovideo;
+package org.modules.audiovideo;
 
 import java.io.File;
 import java.util.List;
@@ -8,7 +8,6 @@ import org.blinkenlights.jid3.ID3Tag;
 import org.blinkenlights.jid3.MP3File;
 import org.blinkenlights.jid3.v1.ID3V1Tag;
 import org.blinkenlights.jid3.v2.ID3V2Tag;
-import org.modules.audiovideo.batch.Mp3ReaderIdentityNotConfiguredException;
 
 import com.RMT2Base;
 
