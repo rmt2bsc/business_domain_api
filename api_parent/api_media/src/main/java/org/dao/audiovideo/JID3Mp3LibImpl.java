@@ -2,15 +2,13 @@ package org.dao.audiovideo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-
+import org.apache.log4j.Logger;
 import org.farng.mp3.MP3File;
 import org.farng.mp3.id3.FrameBodyTALB;
 import org.farng.mp3.id3.FrameBodyTCON;
@@ -28,14 +26,14 @@ import com.RMT2Constants;
 import com.SystemException;
 
 /**
+ * A JID3 implementaion of {@link MP3Reader}
+ * 
  * @author appdev
  * 
  */
-public class JID3Mp3LibImpl extends RMT2Base implements MP3Reader {
+class JID3Mp3LibImpl extends RMT2Base implements MP3Reader {
 
     private static Logger logger = Logger.getLogger(JID3Mp3LibImpl.class);
-
-    // private MP3File mediaFile;
 
     private MP3File mediaFile;
 

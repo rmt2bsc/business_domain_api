@@ -3,6 +3,8 @@ package org.dao.audiovideo;
 import java.util.List;
 
 /**
+ * A contract for managing the metadata attributes of an audio or video file
+ * 
  * @author appdev
  * 
  */

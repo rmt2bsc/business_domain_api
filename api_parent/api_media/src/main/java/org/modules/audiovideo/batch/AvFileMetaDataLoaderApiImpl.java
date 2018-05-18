@@ -264,7 +264,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             this.successCnt++;
         } catch (MP3ApiInstantiationException e) {
             this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Error creating MP3 Api", e.getMessage()));
-            // throw new MP3ApiInstantiationException(e);
             this.nonAvFileCnt++;
         } catch (AvInvalidSourceFileException e) {
             this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Invalid Audio/Video Source File", e.getMessage()));

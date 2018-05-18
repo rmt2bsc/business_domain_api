@@ -1,11 +1,10 @@
 package org.dao.audiovideo;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-
 import java.io.File;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.cmc.music.metadata.IMusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
@@ -15,10 +14,12 @@ import com.SystemException;
 import com.util.RMT2Date;
 
 /**
+ * A MyMp3 implementaion of {@link MP3Reader}
+ * 
  * @author appdev
  * 
  */
-public class MyMp3LibImpl extends RMT2Base implements MP3Reader {
+class MyMp3LibImpl extends RMT2Base implements MP3Reader {
 
     private static Logger logger = Logger.getLogger(MyMp3LibImpl.class);
 

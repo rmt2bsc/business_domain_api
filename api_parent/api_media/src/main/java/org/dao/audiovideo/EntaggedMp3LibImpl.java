@@ -1,10 +1,10 @@
 package org.dao.audiovideo;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-
 import java.io.File;
 import java.util.List;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import com.RMT2Base;
 import com.RMT2Constants;
@@ -13,18 +13,15 @@ import com.util.RMT2Date;
 
 import entagged.audioformats.AudioFile;
 import entagged.audioformats.AudioFileIO;
-import entagged.audioformats.Tag;
-import entagged.audioformats.generic.GenericTag;
-import entagged.audioformats.generic.TagField;
 import entagged.audioformats.generic.TagTextField;
-import entagged.audioformats.mp3.util.id3frames.CommId3Frame;
-import entagged.audioformats.mp3.util.id3frames.TextId3Frame;
 
 /**
+ * An EntaggedMp3 implementaion of {@link MP3Reader}
+ * 
  * @author appdev
  * 
  */
-public class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
+class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
 
     private static Logger logger = Logger.getLogger(EntaggedMp3LibImpl.class);
 

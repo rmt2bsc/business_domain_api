@@ -12,10 +12,12 @@ import org.blinkenlights.jid3.v2.ID3V2Tag;
 import com.RMT2Base;
 
 /**
+ * An Id3Mp3Wmv implementaion of {@link MP3Reader}
+ * 
  * @author rterrell
  * 
  */
-public class Id3Mp3WmvLibImpl extends RMT2Base implements MP3Reader {
+class Id3Mp3WmvLibImpl extends RMT2Base implements MP3Reader {
 
     private MP3File mediaFile;
 
