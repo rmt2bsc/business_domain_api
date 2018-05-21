@@ -50,7 +50,7 @@ public class AudioVideoDaoConstants {
      */
     public static final int UNKNOWN_GENRE = 999;
 
-    public static final String BATCH_REPORT_EMAIL = "BATCH_REPORT_EMAIL";
+    public static final String AV_BATCH_FILE_REPORT_EMAIL = "audioVideoBatchImportEmail";
 
     public static final String VARIOUS_ARTIST_TOKEN = "##VA##";
 

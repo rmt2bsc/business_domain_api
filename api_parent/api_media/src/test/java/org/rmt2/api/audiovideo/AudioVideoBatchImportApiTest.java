@@ -2,6 +2,7 @@ package org.rmt2.api.audiovideo;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -16,12 +17,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.api.BatchFileException;
+import com.api.messaging.email.EmailMessageBean;
+import com.api.messaging.email.smtp.SmtpApi;
+import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2File;
@@ -33,7 +39,7 @@ import com.util.RMT2File;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class, SmtpFactory.class })
 public class AudioVideoBatchImportApiTest extends AvMediaMockData {
     
     
@@ -46,6 +52,23 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         
         when(this.mockPersistenceClient.retrieveList(isA(AvGenre.class)))
                 .thenReturn(this.mockAvGenreData);
+        
+        // Setup stub for SMTP mocking
+        SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
+        PowerMockito.mockStatic(SmtpFactory.class);
+        try {
+            when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
+        }
+        catch (Exception e) {
+            Assert.fail("Failed to stub SmtpFactory.getSmtpInstance method");
+        }
+        try {
+            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenReturn(1);  
+            doNothing().when(mockSmtpApi).close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
+        }
     }
 
     private List<AvArtist> setupMockSingleArtist(int artistId, String name) {

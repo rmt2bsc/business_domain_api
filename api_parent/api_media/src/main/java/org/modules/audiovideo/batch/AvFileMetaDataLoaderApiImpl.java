@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.dao.audiovideo.AudioVideoDaoConstants;
 import org.dao.audiovideo.AudioVideoDao;
+import org.dao.audiovideo.AudioVideoDaoConstants;
 import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.audiovideo.AudioVideoDaoFactory;
 import org.dao.mapping.orm.rmt2.AvArtist;
@@ -32,7 +32,6 @@ import org.modules.audiovideo.Mp3ReaderIdentityNotConfiguredException;
 import com.RMT2Constants;
 import com.SystemException;
 import com.api.BatchFileException;
-import com.api.config.ConfigConstants;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.foundation.TransactionApi;
 import com.api.messaging.email.EmailMessageBean;
@@ -778,7 +777,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // pool which is loaded at server start up.
         String fromAddr = null;
         try {
-            fromAddr = RMT2File.getPropertyValue(ConfigConstants.CONFIG_APP, AudioVideoDaoConstants.BATCH_REPORT_EMAIL);
+            fromAddr = this.getConfig().getProperty(AudioVideoDaoConstants.AV_BATCH_FILE_REPORT_EMAIL);
         } catch (Exception e) {
             this.msg = "Unable to obtain the recipient's email address from AppParms.properties needed to send batch report";
             throw new AvBatchReportException(this.msg, e);
@@ -788,9 +787,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             throw new AvBatchReportException(this.msg);
         }
         String toAddr = fromAddr;
-        String subject = "Audio/Video Batch Report";
+        String subject = this.getConfig().getProperty("audioVideoBatchImportSubject");
 
-        body.append("This is a report of the results of the Audio/Video Batch process\n");
+        body.append("This is a report of the results of the Audio/Video Batch File Import process\n");
         body.append("Start Time: ");
         body.append(RMT2Date.formatDate(this.startTime, "MM-dd-yyyy HH:mm:ss.S"));
         body.append("\n");
