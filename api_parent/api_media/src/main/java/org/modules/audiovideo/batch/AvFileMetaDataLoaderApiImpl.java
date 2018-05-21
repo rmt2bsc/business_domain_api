@@ -276,26 +276,26 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             }
             this.successCnt++;
         } catch (AvInvalidSourceFileException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Invalid Audio/Video Source File", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Invalid Source File", e.getMessage()));
             this.errorCnt++;
         } catch (AvProjectDataValidationException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Project Data Validation", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Project Data Not Valid", e.getMessage()));
             this.errorCnt++;
         } catch (AvTrackDataValidationException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Track Data Validation", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Track Data Not Valid", e.getMessage()));
             this.errorCnt++;
         } catch (SystemException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video System", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "System Error", e.getMessage()));
             this.errorCnt++;
         } catch (AvFileExtractionException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Source File Data Extraction", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "MetaData Extraction Error", e.getMessage()));
             this.errorCnt++;
         } catch (AudioVideoApiException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "General Audio/Video", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "General API Error", e.getMessage()));
             this.errorCnt++;
             e.printStackTrace();
         } catch (DatabaseException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Audio/Video Database Access", e.getMessage()));
+            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Database Access Error", e.getMessage()));
             this.errorCnt++;
         } finally {
             this.totCnt++;
