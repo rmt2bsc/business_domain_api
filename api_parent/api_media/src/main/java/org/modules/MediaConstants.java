@@ -52,6 +52,16 @@ public class MediaConstants {
     public static final int MP3_READER_IMPL_MYID3 = 4000;
     
     /**
+     * Audio Video batch file import subject line key
+     */
+    public static final String BATCH_FILE_IMPORT_REPORT_SUBJECT = "audioVideoBatchImportSubject";
+    
+    /**
+     * Audio Video batch file import email key
+     */
+    public static final String BATCH_FILE_IMPORT_REPORT_EMAIL = "audioVideoBatchImportEmail";
+    
+    /**
      * Default constructor
      */
     public MediaConstants() {

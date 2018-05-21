@@ -777,7 +777,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // pool which is loaded at server start up.
         String fromAddr = null;
         try {
-            fromAddr = this.getConfig().getProperty(AudioVideoDaoConstants.AV_BATCH_FILE_REPORT_EMAIL);
+            fromAddr = this.getConfig().getProperty(MediaConstants.BATCH_FILE_IMPORT_REPORT_EMAIL);
         } catch (Exception e) {
             this.msg = "Unable to obtain the recipient's email address from AppParms.properties needed to send batch report";
             throw new AvBatchReportException(this.msg, e);
@@ -787,7 +787,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             throw new AvBatchReportException(this.msg);
         }
         String toAddr = fromAddr;
-        String subject = this.getConfig().getProperty("audioVideoBatchImportSubject");
+        String subject = this.getConfig().getProperty(MediaConstants.BATCH_FILE_IMPORT_REPORT_SUBJECT);
 
         body.append("This is a report of the results of the Audio/Video Batch File Import process\n");
         body.append("Start Time: ");
