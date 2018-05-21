@@ -26,14 +26,15 @@ public class AvBatchFileFactory extends RMT2Base {
      * the batch file meta data importer implementation.
      * 
      * @return an instance of {@link AvBatchFileProcessorApi}
+     * @throws BatchFileProcessException Unable to create AvBatchFileProcessorApi
      */
-    public AvBatchFileProcessorApi createApiInstance(String srcDir) {
+    public AvBatchFileProcessorApi createApiInstance(String srcDir) throws BatchFileProcessException {
         AvBatchFileProcessorApi api;
         try {
             api = new AvFileMetaDataLoaderApiImpl(srcDir);
             return api;
         } catch (BatchFileProcessException e) {
-            return null;
+            throw new BatchFileProcessException("Could not instantiate Audio/Video batch file loader class", e);
         }
     }
 }

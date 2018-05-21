@@ -20,6 +20,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
+import org.modules.audiovideo.batch.AvSourceNotADirectoryException;
+import org.modules.audiovideo.batch.BatchFileProcessException;
+import org.modules.audiovideo.batch.InvalidBatchRootDirectoryException;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -138,16 +141,16 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
     }
 
     @Test
-    public void testSuccess_Batch_Refresh() {
+    public void testSuccess_Batch_Import() {
         // Setup mock stubs for creating new audio entries.
         this.setupStubsForProcessingNewData();
         // Get full directory path for relative path which resides on the classpath
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
         
         AvBatchFileFactory f = new AvBatchFileFactory();
-        AvBatchFileProcessorApi api = f.createApiInstance(dir);
         int results = 0;
         try {
+            AvBatchFileProcessorApi api = f.createApiInstance(dir);
             results = api.processBatch();
         }
         catch (BatchFileException e) {
@@ -160,5 +163,42 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
     }
     
   
-   
+    @Test
+    public void testError_Null_Directory() {
+        String dir = null;
+        AvBatchFileFactory f = new AvBatchFileFactory();
+        try {
+            f.createApiInstance(dir);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof BatchFileProcessException);
+            Assert.assertEquals("Could not instantiate Audio/Video batch file loader class", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof InvalidBatchRootDirectoryException);
+            Assert.assertEquals("The root directory path is invalid or null", e.getCause().getMessage());
+
+        }
+    }
+    
+    
+    @Test
+    public void testError_File_As_Directory() {
+        String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
+        dir += "/Aaliyah/One In A Million/Aaliyah-One In A Million-17-Came To Give Love (Outro).mp3";
+        AvBatchFileFactory f = new AvBatchFileFactory();
+        try {
+            f.createApiInstance(dir);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof BatchFileProcessException);
+            Assert.assertEquals("Could not instantiate Audio/Video batch file loader class", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof AvSourceNotADirectoryException);
+            String msg = " is required to be a directory for Audio Video Batch process";
+            Assert.assertTrue(e.getCause().getMessage().contains(msg));
+
+        }
+    }
 }
