@@ -810,6 +810,10 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             body.append("=============================================================");
             body.append("\n");
         }
+        else {
+            body.append("All audio/video files processed successfully!");
+            body.append("\n");
+        }
         int count = 0;
         // Add details about each file that was processed
         for (String msg : this.fileErrorMsg) {
