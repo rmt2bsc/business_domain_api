@@ -59,7 +59,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     
     private static Integer MP3_READER_IMPL_TO_USE;
 
-    private File resourcePath;
+    private File directoryPath;
 
     private List<String> fileErrorMsg;
 
@@ -105,7 +105,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         super(MediaConstants.APP_NAME);
         this.initConnection(dirPath);
         logger.info("Audio/Video batch processor is initialized.");
-        logger.info("Audio/Video batch processing witll begin at this location: " + this.resourcePath.getAbsolutePath());
+        logger.info("Audio/Video batch processing witll begin at this location: " + this.directoryPath.getAbsolutePath());
     }
 
     /**
@@ -136,7 +136,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             this.msg = testFile + " is required to be a directory for Audio Video Batch process";
             throw new AvSourceNotADirectoryException(this.msg);
         }
-        this.resourcePath = testFile;
+        this.directoryPath = testFile;
         this.successCnt = 0;
         this.errorCnt = 0;
         this.totCnt = 0;
@@ -178,9 +178,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
         // Begin process all files
         try {
-            this.expectedFileCount = RMT2File.getDirectoryListingCount(this.resourcePath);
+            this.expectedFileCount = RMT2File.getDirectoryListingCount(this.directoryPath);
             this.msg = "Audio/Video Batch Update process started [" + this.expectedFileCount + " files discovered]...";
-            this.processDirectory(this.resourcePath, null);
+            this.processDirectory(this.directoryPath, null);
             return this.totCnt;
         } catch (BatchFileProcessException e) {
             this.msg = "A batch file error occurred";
