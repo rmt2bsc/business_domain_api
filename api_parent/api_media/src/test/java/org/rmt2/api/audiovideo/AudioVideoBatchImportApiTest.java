@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
@@ -18,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.modules.MediaConstants;
+import org.modules.audiovideo.Mp3ReaderIdentityNotConfiguredException;
 import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
 import org.modules.audiovideo.batch.AvSourceNotADirectoryException;
@@ -198,6 +201,89 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
             Assert.assertTrue(e.getCause() instanceof AvSourceNotADirectoryException);
             String msg = " is required to be a directory for Audio Video Batch process";
             Assert.assertTrue(e.getCause().getMessage().contains(msg));
+
+        }
+    }
+    
+    @Test
+    public void testError_Create_MP3Reader_Invalid__Config_mp3ReaderToUse() {
+        String invalidImplCode = "9999";
+        
+        // Get full directory path for relative path which resides on the classpath
+        String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
+        AvBatchFileFactory f = new AvBatchFileFactory();
+        try {
+            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi apiSpy = Mockito.spy(api);
+            
+            Properties mockConfig = Mockito.mock(Properties.class);
+            when(apiSpy.getConfig()).thenReturn(mockConfig);
+            when(mockConfig.getProperty(MediaConstants.MP3_READER_TO_USE_CONFIG_KEY)).thenReturn(invalidImplCode);
+            
+            apiSpy.processBatch();
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof BatchFileProcessException);
+            Assert.assertEquals("An error occurred trying to identify the MP3Reader implemetation to use", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof Mp3ReaderIdentityNotConfiguredException);
+//            String msg = "An invalid MP3 reader implementation code was specified in configuration: " + invalidImplCode;
+//            Assert.assertEquals(msg, e.getCause().getMessage());
+
+        }
+    }
+    
+    @Test
+    public void testError_Create_MP3Reader_NonNumeric_Config_mp3ReaderToUse() {
+        String invalidImplCode = "T9999";
+        
+        // Get full directory path for relative path which resides on the classpath
+        String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
+        AvBatchFileFactory f = new AvBatchFileFactory();
+        try {
+            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi apiSpy = Mockito.spy(api);
+            
+            Properties mockConfig = Mockito.mock(Properties.class);
+            when(apiSpy.getConfig()).thenReturn(mockConfig);
+            when(mockConfig.getProperty(MediaConstants.MP3_READER_TO_USE_CONFIG_KEY)).thenReturn(invalidImplCode);
+            
+            apiSpy.processBatch();
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof BatchFileProcessException);
+            Assert.assertEquals("An error occurred trying to identify the MP3Reader implemetation to use", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof Mp3ReaderIdentityNotConfiguredException);
+//            String msg = "A non-numeric code was discovered to be configured for the MP3 reader implementation to use for this API [" + invalidImplCode + "]";
+//            Assert.assertEquals(msg, e.getCause().getMessage());
+
+        }
+    }
+        
+    @Test
+    public void testError_Create_MP3Reader_Null_Config_Object() {
+        // Get full directory path for relative path which resides on the classpath
+        String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
+        AvBatchFileFactory f = new AvBatchFileFactory();
+        try {
+            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi apiSpy = Mockito.spy(api);
+            
+            when(apiSpy.getConfig()).thenReturn(null);
+            
+            apiSpy.processBatch();
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof BatchFileProcessException);
+            Assert.assertEquals("An error occurred trying to identify the MP3Reader implemetation to use", e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof Mp3ReaderIdentityNotConfiguredException);
+//            String msg = "A general error occurred attempting to read configuration for MP3 reader implementation";
+//            Assert.assertEquals(msg, e.getCause().getMessage());
 
         }
     }

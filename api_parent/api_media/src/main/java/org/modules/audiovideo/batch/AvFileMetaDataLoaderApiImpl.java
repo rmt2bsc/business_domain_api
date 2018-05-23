@@ -33,7 +33,6 @@ import com.RMT2Constants;
 import com.SystemException;
 import com.api.BatchFileException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.api.foundation.TransactionApi;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
@@ -52,8 +51,7 @@ import com.util.RMT2File;
  * @author Roy Terrell
  * 
  */
-class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements AvBatchFileProcessorApi, 
-        TransactionApi {
+class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements AvBatchFileProcessorApi {
 
     private static Logger logger = Logger.getLogger(AvFileMetaDataLoaderApiImpl.class);
     
@@ -233,7 +231,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             itemCount = mediaList.length;
             for (int ndx = 0; ndx < itemCount; ndx++) {
                 if (mediaList[ndx].isDirectory()) {
-                    // Make recursive call to process next level
+                    // Make recursive call to process sub-directroy
                     this.processDirectory(mediaList[ndx], mediaList[ndx]);
                 }
                 if (mediaList[ndx].isFile()) {
@@ -314,13 +312,13 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     protected MP3Reader getMp3ReaderInstance(File mp3Source) {
         // Determine the implementation to use for MP3Reader 
         if (AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE == null) {
-            String val;
+            String val = null;
             try {
                 val = this.getConfig().getProperty(MediaConstants.MP3_READER_TO_USE_CONFIG_KEY);
                 AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE = Integer.valueOf(val);
             }
             catch (NumberFormatException e) {
-                this.msg = "The configuration was not setup to identify the MP3 reader implementation to use for this API";
+                this.msg = "A non-numeric code was discovered to be configured for the MP3 reader implementation to use for this API [" + val + "]";
                 throw new Mp3ReaderIdentityNotConfiguredException(this.msg, e);
             }
             catch (Exception e) {
@@ -358,14 +356,15 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * <p>
      * Afterwards, initiates the process of updating the database with tag data.
      * 
-     * @param sourceFile
+     * @param mediaFile
      *            the audio/video file to extract data from.
      * @return an instance of {@link AvCombinedProjectBean}
-     * @throws AudioVideoDaoException
+     * @throws AudioVideoApiException
+     * @throws Mp3ReaderIdentityNotConfiguredException
      */
     @Override
-    public AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoDaoException {
-        if (sourceFile == null) {
+    public AvCombinedProjectBean extractFileMetaData(File mediaFile) throws AudioVideoApiException {
+        if (mediaFile == null) {
             this.msg = "Unable to extract meta data from audio/video file - The source file is invalid or null";
             throw new AvInvalidSourceFileException(this.msg);
         }
@@ -376,7 +375,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         AvTracks avt = avb.getAvt();
 
         // Get file name with complet path
-        String mediaPath = sourceFile.getPath();
+        String mediaPath = mediaFile.getPath();
         this.msg = "Extracting meta data from: " + mediaPath;
         logger.info(this.msg);
 
@@ -386,7 +385,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // MP3Reader mp3 = AudioVideoDaoFactory.createMyId3Api(sourceFile);
 //        MP3Reader mp3 = AudioVideoDaoFactory.createEntaggedId3Instance(sourceFile);
         
-        MP3Reader mp3 = this.getMp3ReaderInstance(sourceFile);
+        MP3Reader mp3 = this.getMp3ReaderInstance(mediaFile);
         if (mp3 == null) {
             return null;
         }
@@ -453,7 +452,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             av.setContentPath(pathOnly);
 
             // Set File name
-            String fileName = sourceFile.getName();
+            String fileName = mediaFile.getName();
             avt.setLocFilename(fileName);
 
             // Initialized Ripped flag

@@ -2,7 +2,7 @@ package org.modules.audiovideo.batch;
 
 import java.io.File;
 
-import org.dao.audiovideo.AudioVideoDaoException;
+import org.modules.audiovideo.AudioVideoApiException;
 import org.modules.audiovideo.AvCombinedProjectBean;
 
 import com.api.BatchFileProcessor;
@@ -23,8 +23,8 @@ public interface AvBatchFileProcessorApi extends BatchFileProcessor {
      * @param sourceFile
      *            the audio/video file to extract data from.
      * @return an instance of {@link AvCombinedProjectBean}
-     * @throws AudioVideoDaoException
+     * @throws AudioVideoApiException
      */
-    AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoDaoException;
+    AvCombinedProjectBean extractFileMetaData(File sourceFile) throws AudioVideoApiException;
     
 }

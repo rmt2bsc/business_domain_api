@@ -1,13 +1,13 @@
 package org.modules.audiovideo.batch;
 
-import org.dao.audiovideo.AudioVideoDaoException;
+import org.modules.audiovideo.AudioVideoApiException;
 
 /**
  * 
  * @author appdev
  * 
  */
-public class AvFileExtractionException extends AudioVideoDaoException {
+public class AvFileExtractionException extends AudioVideoApiException {
     private static final long serialVersionUID = -4204042569634960159L;
 
     public AvFileExtractionException() {
