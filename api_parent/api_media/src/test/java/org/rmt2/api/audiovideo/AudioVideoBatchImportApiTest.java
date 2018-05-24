@@ -37,6 +37,7 @@ import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.util.RMT2File;
 
@@ -154,8 +155,9 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         
         AvBatchFileFactory f = new AvBatchFileFactory();
         int results = 0;
+        AvBatchFileProcessorApi api = null;
         try {
-            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            api = f.createApiInstance(dir);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }
@@ -166,11 +168,15 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         
         Assert.assertNotNull(results);
         Assert.assertEquals(6, results);
+        Assert.assertEquals(0, api.getErrorCount());
+        Assert.assertEquals(results, api.getSuccessCount());
+        Assert.assertNotNull(api.getErrorMessages());
+        Assert.assertEquals(0, api.getErrorMessages().size());
     }
     
   
     @Test
-    public void testError_Null_Directory() {
+    public void testValidation_Null_Directory() {
         String dir = null;
         AvBatchFileFactory f = new AvBatchFileFactory();
         try {
@@ -189,7 +195,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
     
     
     @Test
-    public void testError_File_As_Directory() {
+    public void testValidation_File_As_Directory() {
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
         dir += "/Aaliyah/One In A Million/Aaliyah-One In A Million-17-Came To Give Love (Outro).mp3";
         AvBatchFileFactory f = new AvBatchFileFactory();
@@ -209,7 +215,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
     }
     
     @Test
-    public void testError_Create_MP3Reader_Invalid_Config_mp3ReaderToUse() {
+    public void testValidation_Create_MP3Reader_Invalid_Config_mp3ReaderToUse() {
         String invalidImplCode = "9999";
         
         // Get full directory path for relative path which resides on the classpath
@@ -240,7 +246,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
     }
     
     @Test
-    public void testError_Create_MP3Reader_NonNumeric_Config_mp3ReaderToUse() {
+    public void testValidation_Create_MP3Reader_NonNumeric_Config_mp3ReaderToUse() {
         String invalidImplCode = "TESTCODE";
         
         // Get full directory path for relative path which resides on the classpath
@@ -289,5 +295,34 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
             Assert.assertEquals("An error occurred trying to identify the MP3Reader implemetation to use", e.getMessage());
             Assert.assertTrue(e.getCause() instanceof Mp3ReaderIdentityNotConfiguredException);
         }
+    }
+    
+    @Test
+    public void testError_SingleFile_DB_Access_Fault() {
+        when(this.mockPersistenceClient.retrieveList(isA(AvArtist.class)))
+        .thenThrow(new DatabaseException("A db error occurred"));
+        
+        // Get full directory path for relative path which resides on the classpath
+        String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
+        
+        AvBatchFileFactory f = new AvBatchFileFactory();
+        int results = 0;
+        AvBatchFileProcessorApi api = null;
+        try {
+            api = f.createApiInstance(dir);
+            Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
+            results = api.processBatch();
+        }
+        catch (BatchFileException e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+        
+        Assert.assertNotNull(results);
+        Assert.assertEquals(6, results);
+        Assert.assertEquals(results, api.getErrorCount());
+        Assert.assertEquals(0, api.getSuccessCount());
+        Assert.assertNotNull(api.getErrorMessages());
+        Assert.assertEquals(results, api.getErrorMessages().size());
     }
 }
