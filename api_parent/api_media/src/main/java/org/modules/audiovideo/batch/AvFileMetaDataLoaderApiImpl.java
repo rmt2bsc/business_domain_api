@@ -846,6 +846,21 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return;
     }
     
+    @Override
+    public int getErrorCount() {
+        return this.errorCnt;
+    }
+
+    @Override
+    public int getSuccessCount() {
+        return this.successCnt;
+    }
+
+    @Override
+    public List<String> getErrorMessages() {
+        return this.fileErrorMsg;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -894,5 +909,4 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             throws BatchFileException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
-
 }

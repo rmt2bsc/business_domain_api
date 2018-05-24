@@ -1,6 +1,7 @@
 package org.modules.audiovideo.batch;
 
 import java.io.File;
+import java.util.List;
 
 import org.modules.audiovideo.AudioVideoApiException;
 import org.modules.audiovideo.AvCombinedProjectBean;
@@ -15,6 +16,26 @@ import com.api.BatchFileProcessor;
  * 
  */
 public interface AvBatchFileProcessorApi extends BatchFileProcessor {
+    
+    /**
+     * Return the number of events that were erroneous.
+     * 
+     * @return
+     */
+    int getErrorCount();
+    
+    /**
+     * Return the number of events that were successful
+     * @return
+     */
+    int getSuccessCount();
+    
+    /**
+     * Return error messages.
+     * 
+     * @return List of Strings
+     */
+    List<String> getErrorMessages();
   
     /**
      * Reads the tag data from the media file, <i>sourceFile</i>, and packages
