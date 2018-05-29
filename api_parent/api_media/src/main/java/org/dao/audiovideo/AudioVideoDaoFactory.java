@@ -1,6 +1,7 @@
 package org.dao.audiovideo;
 
 import com.RMT2Base;
+import com.api.persistence.DaoClient;
 
 /**
  * A factory for creating audio video DAO objects.
@@ -39,5 +40,18 @@ public class AudioVideoDaoFactory extends RMT2Base {
     public AudioVideoDao createRmt2OrmDaoInstance(String appName) {
         AudioVideoDao dao = new BasicRmt2OrmAudioVideoDaoImpl(appName);
         return dao;
+    }
+    
+    /**
+     * Creates an instance of the {@link AudioVideoDao} using the RMT2 ORM basic
+     * DAO implementation.
+     * 
+     * @param dao
+     *            an instnace of {@link PersistenceClient}
+     * @return an instance of {@link AudioVideoDao}
+     */
+    public AudioVideoDao createRmt2OrmDaoInstance(DaoClient dao) {
+        AudioVideoDao d = new BasicRmt2OrmAudioVideoDaoImpl(dao.getClient());
+        return d;
     }
 }

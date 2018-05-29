@@ -20,6 +20,7 @@ import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.audiovideo.AudioVideoFactory;
 
 import com.api.persistence.DatabaseException;
+import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.DatabaseConnectionBean;
 import com.api.persistence.db.DynamicSqlApi;
 import com.api.persistence.db.DynamicSqlFactory;
@@ -41,7 +42,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     /**
      * Defaul constructor that opens a connection to the MIME database.
      */
-    protected BasicRmt2OrmAudioVideoDaoImpl() {
+    BasicRmt2OrmAudioVideoDaoImpl() {
         super();
         return;
     }
@@ -49,11 +50,20 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     /**
      * Defaul constructor that opens a connection to the MIME database.
      */
-    protected BasicRmt2OrmAudioVideoDaoImpl(String appName) {
+    BasicRmt2OrmAudioVideoDaoImpl(String appName) {
         super(appName);
         return;
     }
 
+    /**
+     * Creates a BasicRmt2OrmAudioVideoDaoImpl object with a shared persistent client.
+     * 
+     * @param client
+     */
+    BasicRmt2OrmAudioVideoDaoImpl(PersistenceClient client) {
+        super(client);
+    }
+    
     /**
      * Fetches artist information from the <i>av_artist</i> table based on
      * selection criteria contained in <i>criteria</i>.
