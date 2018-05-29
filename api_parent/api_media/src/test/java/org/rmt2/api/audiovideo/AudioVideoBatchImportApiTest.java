@@ -318,6 +318,8 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
             Assert.fail("An exception was not expected");
         }
         
+        // Since the exception is not thrown as a end result, we must chech the
+        // totals to determine if an error occurred.
         Assert.assertNotNull(results);
         Assert.assertEquals(6, results);
         Assert.assertEquals(results, api.getErrorCount());
