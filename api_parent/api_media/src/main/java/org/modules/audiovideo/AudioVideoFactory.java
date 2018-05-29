@@ -32,6 +32,96 @@ public class AudioVideoFactory extends RMT2Base {
     }
 
     /**
+     * Creates an instance of AudioVideoApi using the
+     * {@link AudioVideoMetadataImpl} implementation.
+     * 
+     * @return an instance of {@link DocumentContentApi}
+     */
+    public static final AudioVideoApi createApi() {
+        AudioVideoApi api = new AudioVideoMetadataImpl();
+        return api;
+    }
+
+    /**
+     * Creates an instance of AudioVideoApi using the
+     * {@link AudioVideoMetadataImpl} implementation.
+     */
+    public static final AudioVideoApi createApi(String appName) {
+        AudioVideoApi api = new AudioVideoMetadataImpl(appName);
+        return api;
+    }
+    
+    /**
+     * Create and instance of ArtistDto.
+     * 
+     * @param artist
+     *            an instance of {@link ArtistDto}
+     * @return an instance of {@link AvArtist}
+     */
+    public static final AvArtist createArtistInstance(ArtistDto artist) {
+        AvArtist a = new AvArtist();
+        a.setArtistId(artist.getId());
+        a.setName(artist.getName());
+        return a;
+    }
+    
+    /**
+     * Create an instance of AvTracks by adapting a TracksDto object.
+     * 
+     * @param track
+     *            an instance of {@link TracksDto}
+     * @return an instance of {@link AvTracks}
+     */
+    public static final AvTracks createTrackInstance(TracksDto track) {
+        AvTracks t = new AvTracks();
+        t.setTrackId(track.getTrackId());
+        t.setProjectId(track.getProjectId());
+        t.setTrackNumber(track.getTrackNumber());
+        t.setTrackTitle(track.getTrackTitle());
+        t.setTrackHours(track.getTrackHours());
+        t.setTrackMinutes(track.getTrackMinutes());
+        t.setTrackSeconds(track.getTrackSeconds());
+        t.setTrackDisc(track.getTrackDisc());
+        t.setTrackProducer(track.getTrackProducer());
+        t.setTrackComposer(track.getTrackComposer());
+        t.setTrackLyricist(track.getTrackLyricist());
+        t.setLocFilename(track.getLocFilename());
+        t.setLocPath(track.getLocPath());
+        t.setLocRootPath(track.getLocRootPath());
+        t.setLocServername(track.getLocServername());
+        t.setLocSharename(track.getLocSharename());
+        t.setComments(track.getComments());
+        t.setDateCreated(track.getDateCreated());
+        return t;
+    
+    }
+
+    /**
+     * Create an instance of AvProject by adapting a ProjectDto object.
+     * 
+     * @param proj
+     *            an instance of {@link ProjectDto}
+     * @return an instance of {@link AvProject}
+     */
+    public static final AvProject createProjectInstance(ProjectDto proj) {
+        AvProject p = new AvProject();
+        p.setProjectId(proj.getProjectId());
+        p.setArtistId(proj.getArtistId());
+        p.setProjectTypeId(proj.getProjectTypeId());
+        p.setGenreId(proj.getGenreId());
+        p.setMediaTypeId(proj.getMediaTypeId());
+        p.setTitle(proj.getTitle());
+        p.setYear(proj.getYear());
+        p.setMasterDupId(proj.getMasterDupId());
+        p.setRipped(proj.getRippedInd());
+        p.setCost(proj.getCost());
+        p.setContentId(proj.getContentId());
+        p.setDateCreated(proj.getDateCreated());
+        return p;
+    }
+
+    
+    /**
      * Create an instance of MP3Reader from a Id3Mp3Wmv API implementation.
      * 
      * @param mp3Source
@@ -114,72 +204,6 @@ public class AudioVideoFactory extends RMT2Base {
         }
     }
 
-    /**
-     * Create an instance of AvTracks by adapting a TracksDto object.
-     * 
-     * @param track
-     *            an instance of {@link TracksDto}
-     * @return an instance of {@link AvTracks}
-     */
-    public static final AvTracks createTrackInstance(TracksDto track) {
-        AvTracks t = new AvTracks();
-        t.setTrackId(track.getTrackId());
-        t.setProjectId(track.getProjectId());
-        t.setTrackNumber(track.getTrackNumber());
-        t.setTrackTitle(track.getTrackTitle());
-        t.setTrackHours(track.getTrackHours());
-        t.setTrackMinutes(track.getTrackMinutes());
-        t.setTrackSeconds(track.getTrackSeconds());
-        t.setTrackDisc(track.getTrackDisc());
-        t.setTrackProducer(track.getTrackProducer());
-        t.setTrackComposer(track.getTrackComposer());
-        t.setTrackLyricist(track.getTrackLyricist());
-        t.setLocFilename(track.getLocFilename());
-        t.setLocPath(track.getLocPath());
-        t.setLocRootPath(track.getLocRootPath());
-        t.setLocServername(track.getLocServername());
-        t.setLocSharename(track.getLocSharename());
-        t.setComments(track.getComments());
-        t.setDateCreated(track.getDateCreated());
-        return t;
     
-    }
-
-    /**
-     * Create an instance of AvProject by adapting a ProjectDto object.
-     * 
-     * @param proj
-     *            an instance of {@link ProjectDto}
-     * @return an instance of {@link AvProject}
-     */
-    public static final AvProject createProjectInstance(ProjectDto proj) {
-        AvProject p = new AvProject();
-        p.setProjectId(proj.getProjectId());
-        p.setArtistId(proj.getArtistId());
-        p.setProjectTypeId(proj.getProjectTypeId());
-        p.setGenreId(proj.getGenreId());
-        p.setMediaTypeId(proj.getMediaTypeId());
-        p.setTitle(proj.getTitle());
-        p.setYear(proj.getYear());
-        p.setMasterDupId(proj.getMasterDupId());
-        p.setRipped(proj.getRippedInd());
-        p.setCost(proj.getCost());
-        p.setContentId(proj.getContentId());
-        p.setDateCreated(proj.getDateCreated());
-        return p;
-    }
-
-    /**
-     * Create and instance of ArtistDto.
-     * 
-     * @param artist
-     *            an instance of {@link ArtistDto}
-     * @return an instance of {@link AvArtist}
-     */
-    public static final AvArtist createArtistInstance(ArtistDto artist) {
-        AvArtist a = new AvArtist();
-        a.setArtistId(artist.getId());
-        a.setName(artist.getName());
-        return a;
-    }
+    
 }
