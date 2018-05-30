@@ -352,7 +352,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             return rc;
         } catch (DatabaseException e) {
             this.msg = "Error inserting artist record";
-            throw new AudioVideoDaoException(this.msg);
+            throw new AudioVideoDaoException(this.msg,e );
         }
     }
 
@@ -363,7 +363,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             return rc;
         } catch (DatabaseException e) {
             this.msg = "Error updating artist record";
-            throw new AudioVideoDaoException(this.msg);
+            throw new AudioVideoDaoException(this.msg, e);
         }
     }
 
@@ -431,7 +431,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             return rc;
         } catch (DatabaseException e) {
             this.msg = "Error updating project record";
-            throw new AudioVideoDaoException(this.msg);
+            throw new AudioVideoDaoException(this.msg, e);
         }
     }
 
@@ -479,7 +479,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             return rc;
         } catch (DatabaseException e) {
             this.msg = "Error inserting audio/video track record";
-            throw new AudioVideoDaoException(this.msg);
+            throw new AudioVideoDaoException(this.msg, e);
         }
     }
 
@@ -493,7 +493,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             return rc;
         } catch (DatabaseException e) {
             this.msg = "Error updating audio/video record";
-            throw new AudioVideoDaoException(this.msg);
+            throw new AudioVideoDaoException(this.msg, e);
         }
     }
 

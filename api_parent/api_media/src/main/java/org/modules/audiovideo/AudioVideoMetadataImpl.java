@@ -100,7 +100,15 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     @Override
     public int updateArtist(ArtistDto artist) throws AudioVideoApiException {
-        return 0;
+        this.validate(artist);
+        try {
+            int rc = this.dao.maintainArtist(artist);
+            return rc;    
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to create/modify artist", e);
+        }
+        
     }
 
     /**
@@ -185,5 +193,21 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
     @Override
     public int deleteTracks(TracksDto criteria) throws AudioVideoApiException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+    
+    private void validate(ArtistDto artist) {
+        try {
+            Verifier.verifyNotNull(artist);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Artist criteria object is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(artist.getName());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Artist name is required", e);
+        }
     }
 }

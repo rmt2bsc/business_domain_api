@@ -142,8 +142,9 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AudioVideoApiException);
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
-            Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+            Assert.assertTrue(e.getCause().getCause() instanceof AudioVideoDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals(errMsg, e.getCause().getCause().getCause().getMessage());
         }
     }
     
@@ -186,8 +187,9 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AudioVideoApiException);
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
-            Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+            Assert.assertTrue(e.getCause().getCause() instanceof AudioVideoDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals(errMsg, e.getCause().getCause().getCause().getMessage());
         }
     }
     
@@ -299,8 +301,9 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AudioVideoApiException);
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
-            Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+            Assert.assertTrue(e.getCause().getCause() instanceof AudioVideoDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals(errMsg, e.getCause().getCause().getCause().getMessage());
         }
     }
     
@@ -348,8 +351,9 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AudioVideoApiException);
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
-            Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+            Assert.assertTrue(e.getCause().getCause() instanceof AudioVideoDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals(errMsg, e.getCause().getCause().getCause().getMessage());
         }
     }
     
@@ -541,8 +545,9 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AudioVideoApiException);
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
-            Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+            Assert.assertTrue(e.getCause().getCause() instanceof AudioVideoDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals(errMsg, e.getCause().getCause().getCause().getMessage());
         }
     }
     
@@ -589,8 +594,9 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AudioVideoApiException);
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
-            Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+            Assert.assertTrue(e.getCause().getCause() instanceof AudioVideoDaoException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals(errMsg, e.getCause().getCause().getCause().getMessage());
         }
     }
     
