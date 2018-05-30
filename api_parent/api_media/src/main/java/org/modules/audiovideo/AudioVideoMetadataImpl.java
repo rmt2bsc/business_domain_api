@@ -154,7 +154,21 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     @Override
     public List<TracksDto> getTracks(TracksDto criteria) throws AudioVideoApiException {
-        return null;
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Track criteria object is required", e);
+        }
+        
+        List<TracksDto> results = null;
+        try {
+            results = this.dao.fetchTrack(criteria);
+            return results;
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve track(s)", e);
+        }
     }
 
     /* (non-Javadoc)

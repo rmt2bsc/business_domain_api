@@ -202,7 +202,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
     @Test
     public void testError_Track_Fetch_DB_Access_Fault() {
         String errMsg = "A Database error occurred retrieving project track(s) data";
-        when(this.mockPersistenceClient.retrieveList(isA(AvProject.class)))
+        when(this.mockPersistenceClient.retrieveList(isA(AvTracks.class)))
                .thenThrow(new DatabaseException(errMsg));
         
         AudioVideoApi api = null;
@@ -223,7 +223,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
     
     @Test
     public void testValidation_Track_Fetch_Null_Data_Object() {
-        String errMsg = "Tracks criteria object is required";
+        String errMsg = "Track criteria object is required";
         AudioVideoApi api = null;
         try {
             api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
