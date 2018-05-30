@@ -9,6 +9,7 @@ import org.dto.ProjectDto;
 import org.dto.TracksDto;
 import org.modules.MediaConstants;
 
+import com.RMT2Constants;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
 
@@ -84,12 +85,12 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see org.modules.audiovideo.AudioVideoApi#deleteArtist(org.dto.ArtistDto)
+    /**
+     * Not supported
      */
     @Override
     public int deleteArtist(ArtistDto criteria) throws AudioVideoApiException {
-        return 0;
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /* (non-Javadoc)
@@ -108,12 +109,12 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see org.modules.audiovideo.AudioVideoApi#deleteProject(org.dto.ProjectDto)
+    /**
+     * Not supported
      */
     @Override
     public int deleteProject(ProjectDto criteria) throws AudioVideoApiException {
-        return 0;
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /* (non-Javadoc)
@@ -132,11 +133,11 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see org.modules.audiovideo.AudioVideoApi#deleteTracks(org.dto.TracksDto)
+    /**
+     * Not supported
      */
     @Override
     public int deleteTracks(TracksDto criteria) throws AudioVideoApiException {
-        return 0;
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 }
