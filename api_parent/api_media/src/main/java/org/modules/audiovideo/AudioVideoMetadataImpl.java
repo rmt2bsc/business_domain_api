@@ -3,15 +3,19 @@ package org.modules.audiovideo;
 import java.util.List;
 
 import org.dao.audiovideo.AudioVideoDao;
+import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.audiovideo.AudioVideoDaoFactory;
 import org.dto.ArtistDto;
 import org.dto.ProjectDto;
 import org.dto.TracksDto;
 import org.modules.MediaConstants;
 
+import com.InvalidDataException;
 import com.RMT2Constants;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * API for managing the meta data of audio/video media.
@@ -74,7 +78,22 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     @Override
     public List<ArtistDto> getArtist(ArtistDto criteria) throws AudioVideoApiException {
-        return null;
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Artist criteria object is required", e);
+        }
+        
+        List<ArtistDto> results = null;
+        try {
+            results = this.dao.fetchArtist(criteria);
+            return results;
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve artist(s)", e);
+        }
+
     }
 
     /* (non-Javadoc)
