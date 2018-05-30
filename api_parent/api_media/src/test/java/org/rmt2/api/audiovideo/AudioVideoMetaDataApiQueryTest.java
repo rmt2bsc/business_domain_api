@@ -110,7 +110,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
     
     @Test
     public void testValidation_Artist_Fetch_Null_Data_Object() {
-        String errMsg = "The Artist criteria object is required";
+        String errMsg = "Artist criteria object is required";
         AudioVideoApi api = null;
         try {
             api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
@@ -167,7 +167,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
     
     @Test
     public void testValidation_Album_Fetch_Null_Data_Object() {
-        String errMsg = "The Project/Album criteria object is required";
+        String errMsg = "Project/Album criteria object is required";
         AudioVideoApi api = null;
         try {
             api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
@@ -223,7 +223,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
     
     @Test
     public void testValidation_Track_Fetch_Null_Data_Object() {
-        String errMsg = "The Tracks criteria object is required";
+        String errMsg = "Tracks criteria object is required";
         AudioVideoApi api = null;
         try {
             api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
