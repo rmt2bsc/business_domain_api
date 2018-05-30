@@ -192,6 +192,23 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
     }
     
     @Test
+    public void testError_Artist_Delete() {
+        List<AvArtist> list = this.setupMockDataSingleArtist(AvMediaMockDataFactory.TEST_ARTIST_ID, "Exisitng Artist");
+        AudioVideoApi api = null;
+        ArtistDto obj = Rmt2MediaDtoFactory.getAvArtistInstance(list.get(0));
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            api.deleteArtist(obj);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UnsupportedOperationException);
+        }
+    }
+    
+    
+    @Test
     public void testValidation_Artist_With_Null_Data_Object() {
         String errMsg = "Artist criteria object is required";
         AudioVideoApi api = null;
@@ -333,6 +350,25 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
             Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
             Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+        }
+    }
+    
+    @Test
+    public void testError_Album_Delete() {
+        List<AvProject> list = this.setupMockDataSingleProject(
+                AvMediaMockDataFactory.TEST_PROJECT_ID,
+                AvMediaMockDataFactory.TEST_ARTIST_ID,
+                "Existing Project/Album");
+        AudioVideoApi api = null;
+        ProjectDto obj = Rmt2MediaDtoFactory.getAvProjectInstance(list.get(0));
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            api.deleteProject(obj);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UnsupportedOperationException);
         }
     }
     
@@ -539,8 +575,11 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
         when(this.mockPersistenceClient.updateRow(isA(AvTracks.class)))
                .thenThrow(new DatabaseException(errMsg));
         
+        List<AvTracks> list = this.setupMockDataSingleTrack(
+                AvMediaMockDataFactory.TEST_TRACK_ID,
+                AvMediaMockDataFactory.TEST_PROJECT_ID, 1, "Track Title");
         AudioVideoApi api = null;
-        TracksDto obj = Rmt2MediaDtoFactory.getAvTrackInstance(null);
+        TracksDto obj = Rmt2MediaDtoFactory.getAvTrackInstance(list.get(0));
         try {
             api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
             api.updateTrack(obj);
@@ -552,6 +591,24 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
             Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
             Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
             Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+        }
+    }
+    
+    @Test
+    public void testError_Track_Delete() {
+        List<AvTracks> list = this.setupMockDataSingleTrack(
+                AvMediaMockDataFactory.TEST_TRACK_ID,
+                AvMediaMockDataFactory.TEST_PROJECT_ID, 1, "Track Title");
+        AudioVideoApi api = null;
+        TracksDto obj = Rmt2MediaDtoFactory.getAvTrackInstance(list.get(0));
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            api.deleteTracks(obj);
+            Assert.fail("An exception was expected to be thrown");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UnsupportedOperationException);
         }
     }
     
