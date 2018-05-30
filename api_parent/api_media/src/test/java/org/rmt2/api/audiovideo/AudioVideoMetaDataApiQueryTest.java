@@ -83,7 +83,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
         }
         
         Assert.assertNotNull(results);
-        Assert.assertEquals(5, results);
+        Assert.assertEquals(5, results.size());
     }
     
     @Test
@@ -140,7 +140,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
         }
         
         Assert.assertNotNull(results);
-        Assert.assertEquals(5, results);
+        Assert.assertEquals(5, results.size());
     }
     
     @Test
@@ -196,7 +196,7 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
         }
         
         Assert.assertNotNull(results);
-        Assert.assertEquals(5, results);
+        Assert.assertEquals(5, results.size());
     }
     
     @Test
