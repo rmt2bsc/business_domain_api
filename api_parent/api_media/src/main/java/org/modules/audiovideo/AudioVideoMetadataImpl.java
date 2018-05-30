@@ -108,7 +108,6 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         catch (AudioVideoDaoException e) {
             throw new AudioVideoApiException("Audio/Video DAO error: Unable to create/modify artist", e);
         }
-        
     }
 
     /**
@@ -146,7 +145,14 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     @Override
     public int updateProject(ProjectDto project) throws AudioVideoApiException {
-        return 0;
+        this.validate(project);
+        try {
+            int rc = this.dao.maintainProject(project);
+            return rc;    
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to create/modify project/album", e);
+        }
     }
 
     /**
@@ -210,4 +216,50 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
             throw new InvalidDataException("Artist name is required", e);
         }
     }
+    
+    private void validate(ProjectDto project) {
+        try {
+            Verifier.verifyNotNull(project);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Project/Album criteria object is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(project.getTitle());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Project/Album title is required", e);
+        }
+        
+        try {
+            Verifier.verifyPositive(project.getArtistId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Project/Album artist id is required", e);
+        }
+        
+        try {
+            Verifier.verifyPositive(project.getGenreId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Project/Album genre id is required", e);
+        }
+        
+        try {
+            Verifier.verifyPositive(project.getMediaTypeId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Project/Album media type id is required", e);
+        }
+        
+        try {
+            Verifier.verifyPositive(project.getProjectTypeId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Project/Album project type id is required", e);
+        }
+    }
+    
+    
 }
