@@ -190,7 +190,14 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     @Override
     public int updateTrack(TracksDto track) throws AudioVideoApiException {
-        return 0;
+        this.validate(track);
+        try {
+            int rc = this.dao.maintainTrack(track);
+            return rc;    
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to create/modify track", e);
+        }
     }
 
     /**
@@ -261,5 +268,34 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         }
     }
     
+    private void validate(TracksDto project) {
+        try {
+            Verifier.verifyNotNull(project);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Track criteria object is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(project.getTrackTitle());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Track title is required", e);
+        }
+        
+        try {
+            Verifier.verifyPositive(project.getProjectId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Track project id is required", e);
+        }
+        
+        try {
+            Verifier.verifyPositive(project.getTrackNumber());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Track number is required", e);
+        }
+    }
     
 }

@@ -88,7 +88,7 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
     private List<AvTracks> setupMockDataSingleTrack(int trackId, int projId, int trackNo, String title) {
         List<AvTracks> list = new ArrayList<>();
         AvTracks o = AvMediaMockDataFactory.createOrmAvTracks(trackId, projId,
-                ++trackNo, title, 5, 30, 00, "1", "/FilePath/" + trackId,
+                trackNo, title, 5, 30, 00, "1", "/FilePath/" + trackId,
                 "ProjectFileName" + trackId);
         list.add(o);
         return list;
@@ -534,8 +534,10 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
         when(this.mockPersistenceClient.insertRow(isA(AvTracks.class), eq(true)))
                .thenThrow(new DatabaseException(errMsg));
         
+        List<AvTracks> list = this.setupMockDataSingleTrack(0,
+                AvMediaMockDataFactory.TEST_PROJECT_ID, 1, "Track Title");
         AudioVideoApi api = null;
-        TracksDto obj = Rmt2MediaDtoFactory.getAvTrackInstance(null);
+        TracksDto obj = Rmt2MediaDtoFactory.getAvTrackInstance(list.get(0));
         try {
             api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
             api.updateTrack(obj);
