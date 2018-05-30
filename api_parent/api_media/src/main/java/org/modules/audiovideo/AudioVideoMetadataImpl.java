@@ -93,7 +93,6 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         catch (AudioVideoDaoException e) {
             throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve artist(s)", e);
         }
-
     }
 
     /* (non-Javadoc)
@@ -117,7 +116,21 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     @Override
     public List<ProjectDto> getProject(ProjectDto criteria) throws AudioVideoApiException {
-        return null;
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Project/Album criteria object is required", e);
+        }
+        
+        List<ProjectDto> results = null;
+        try {
+            results = this.dao.fetchProject(criteria);
+            return results;
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve project/album(s)", e);
+        }
     }
 
     /* (non-Javadoc)
