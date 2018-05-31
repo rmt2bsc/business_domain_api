@@ -3,7 +3,6 @@ package org.modules.application;
 import java.util.List;
 
 import org.dto.ApplicationDto;
-
 import org.modules.SecurityModuleException;
 
 import com.api.foundation.TransactionApi;
@@ -19,31 +18,12 @@ public interface AppApi extends TransactionApi {
     /**
      * Retrieve all Application records.
      * 
+     * @param criteria an instance of {@link ApplicationDto} containing the values needed for building selection criteria
      * @return A List of {@link ApplicationDto} objects or null if no data is
      *         found.
      * @throws SecurityModuleException
      */
-    List<ApplicationDto> get() throws SecurityModuleException;
-
-    /**
-     * Retrieve an Application record using its unique key id.
-     * 
-     * @param uid
-     *            A unique id identifying the entity targeted to be fetched.
-     * @return An instance of {@link ApplicationDto}
-     * @throws SecurityModuleException
-     */
-    ApplicationDto get(int uid) throws SecurityModuleException;
-
-    /**
-     * Retrieve an application record using its unique key id.
-     * 
-     * @param appName
-     *            the name of the application.
-     * @return An instance of {@link ApplicationDto}
-     * @throws ApplicationApiException
-     */
-    ApplicationDto get(String appName) throws AppApiException;
+    List<ApplicationDto> get(ApplicationDto criteria) throws SecurityModuleException;
 
     /**
      * Create a new Application instance of a particular category.
@@ -77,14 +57,4 @@ public interface AppApi extends TransactionApi {
      * @throws AppApiException
      */
     int delete(int uid) throws AppApiException;
-
-    /**
-     * Delete an application object from a data source by its name
-     * 
-     * @param appName
-     *            The name of the application
-     * @return the total number of records deleted.
-     * @throws AppApiException
-     */
-    int delete(String appName) throws AppApiException;
 }

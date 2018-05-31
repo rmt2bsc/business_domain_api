@@ -17,35 +17,17 @@ import com.api.persistence.DaoClient;
 public interface AppDao extends DaoClient {
 
     /**
-     * Find application using primary key id.
+     * Retrieves a list of application objects using various selection criteria.
      * 
-     * @param uid
-     *            A unique id identifying an application.
-     * @return An instance of {@link ApplicationDto} conatining the desired
-     *         application data or null if no data is found.
+     * @param criteria
+     *            An instance of {@link ApplicationDto} containing the values
+     *            needed to build selection criteria.
+     * @return An List of {@link ApplicationDto} instances or null if no data is
+     *         found.
      * @throws SecurityDaoException
      */
-    ApplicationDto fetchApp(int uid) throws SecurityDaoException;
-
-    /**
-     * Find application using application name.
-     * 
-     * @param appName
-     * @return An instance of {@link ApplicationDto} conatining the desired
-     *         application data or null if no data is found.
-     * @throws SecurityDaoException
-     */
-    ApplicationDto fetchApp(String appName) throws SecurityDaoException;
-
-    /**
-     * Fetches all applications in the system.
-     * 
-     * @return A List of {@link ApplicationDto} objects conatining the desired
-     *         application data or null if no data is found.
-     * @throws SecurityDaoException
-     */
-    List<ApplicationDto> fetchApp() throws SecurityDaoException;
-
+    List<ApplicationDto> fetchApp(ApplicationDto criteria) throws SecurityDaoException;
+    
     /**
      * Creates or modifies an application object.
      * 
@@ -58,6 +40,7 @@ public interface AppDao extends DaoClient {
      */
     int maintainApp(ApplicationDto app) throws SecurityDaoException;
 
+    
     /**
      * Delete an application from the system using the id of the application.
      * 
@@ -68,13 +51,4 @@ public interface AppDao extends DaoClient {
      */
     int deleteApp(int appId) throws SecurityDaoException;
 
-    /**
-     * Delete an application from the system using its name
-     * 
-     * @param appName
-     *            The name of the application
-     * @return Total number of application records deleted.
-     * @throws SecurityDaoException
-     */
-    int deleteApp(String appName) throws SecurityDaoException;
 }

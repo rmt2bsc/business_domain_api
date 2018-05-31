@@ -8,9 +8,14 @@ import org.dao.application.AppDaoException;
 import org.dao.application.AppDaoFactory;
 import org.dto.ApplicationDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
+import org.modules.SecurityConstants;
+import org.modules.SecurityModuleException;
 
-import com.RMT2Constants;
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.api.persistence.DaoClient;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * Api for managing the Application module.
@@ -21,84 +26,71 @@ import com.api.foundation.AbstractTransactionApiImpl;
 class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
 
     private static Logger logger = Logger.getLogger(AppApiImpl.class);
+    
+    private AppDaoFactory daoFact;
+    private AppDao dao;
 
     /**
-     * Create a ApplicationApiImpl
+     * Create a AppApiImpl using the default application name,
+     * {@link MediaConstants#APP_NAME}
      */
-    protected AppApiImpl() {
-        super();
-        logger.info("Logger intialized for class, " + AppApiImpl.class.getName());
+    AppApiImpl() {
+        super(SecurityConstants.APP_NAME);
+        this.dao = this.daoFact.createRmt2OrmDao(SecurityConstants.APP_NAME);
+        this.setSharedDao(this.dao);
+        logger.info("AppApi is initialized by default constructor");
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Create a AudioVideoMetadataImpl using the specified application name.
      * 
-     * @see org.category.application.ApplicationApi#fetch(int)
+     * @param appName
+     *            the application name
      */
-    @Override
-    public ApplicationDto get(int appId) throws AppApiException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-
-        // AppDaoFactory f = new AppDaoFactory();
-        // AppDao dao = f.createRmt2OrmDao();
-        // ApplicationDto data = null;
-        // try {
-        // data = dao.fetchApp(appId);
-        // return data;
-        // }
-        // catch (AppDaoException e) {
-        // this.msg = "Unable to fetch application profile by application id, "
-        // + appId;
-        // throw new AppApiException(this.msg, e);
-        // }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
+    AppApiImpl(String appName) {
+        super(appName);
+        this.dao = this.daoFact.createRmt2OrmDao(appName);
+        this.setSharedDao(this.dao);
+        logger.info("AppApi is initialized by application name, " + appName);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Create a AudioVideoMetadataImpl using DaoClient instance that is intended
+     * to be shared by another related application.
      * 
-     * @see org.modules.application.AppApi#fetch(java.lang.String)
+     * @param dao
+     *            instance of {@link DaoClient}
      */
+    AppApiImpl(DaoClient dao) {
+        super(dao);
+        this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        logger.info("AppApi is initialized using a shared DAO client");
+    }
+
     @Override
-    public ApplicationDto get(String appName) throws AppApiException {
-        AppDaoFactory f = new AppDaoFactory();
-        AppDao dao = f.createLdapDao();
-        ApplicationDto data = null;
+    public void init() {
+        super.init();
+        this.daoFact = new AppDaoFactory();
+    }
+
+
+    @Override
+    public List<ApplicationDto> get(ApplicationDto criteria) throws SecurityModuleException {
         try {
-            data = dao.fetchApp(appName);
-            return data;
-        } catch (AppDaoException e) {
-            this.msg = "Unable to fetch application profile by application name, " + appName;
-            throw new AppApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
+            Verifier.verifyNotNull(criteria);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.category.application.ApplicationApi#fetchAll()
-     */
-    @Override
-    public List<ApplicationDto> get() throws AppApiException {
-        AppDaoFactory f = new AppDaoFactory();
-        AppDao dao = f.createLdapDao();
+        catch (VerifyException e) {
+            throw new InvalidDataException("Application crtieria object is required", e);
+        }
+        
         List<ApplicationDto> apps;
         try {
-            apps = dao.fetchApp();
+            apps = dao.fetchApp(criteria);
             return apps;
         } catch (AppDaoException e) {
-            this.msg = "Unable to fetch all applications";
+            this.msg = "Unable to fetch application data";
             throw new AppApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
+        } 
     }
 
     /*
@@ -118,18 +110,11 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
      * org.category.application.ApplicationApi#update(org.dao.bean.Application)
      */
     @Override
-    public int update(ApplicationDto dto) throws AppApiException {
-        AppDaoFactory f = new AppDaoFactory();
-        AppDao dao = null;
+    public int update(ApplicationDto app) throws AppApiException {
         try {
-            dao = f.createLdapDao();
-            dao.setDaoUser(this.apiUser);
-            return dao.maintainApp(dto);
+            return dao.maintainApp(app);
         } catch (AppDaoException e) {
             throw new AppApiException("Unable to execute API update for Application module", e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -140,41 +125,10 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
      */
     @Override
     public int delete(int appId) throws AppApiException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-
-        // AppDaoFactory f = new AppDaoFactory();
-        // AppDao dao = null;
-        // try {
-        // dao = f.createRmt2OrmDao();
-        // return dao.deleteApp(appId);
-        // }
-        // catch (AppDaoException e) {
-        // throw new AppApiException("Application record delete failed", e);
-        // }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.application.AppApi#delete(java.lang.String)
-     */
-    @Override
-    public int delete(String appName) throws AppApiException {
-        AppDaoFactory f = new AppDaoFactory();
-        AppDao dao = null;
         try {
-            dao = f.createLdapDao();
-            return dao.deleteApp(appName);
+            return dao.deleteApp(appId);
         } catch (AppDaoException e) {
             throw new AppApiException("Application record delete failed", e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
-
 }

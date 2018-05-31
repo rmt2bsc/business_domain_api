@@ -12,8 +12,8 @@ import org.dto.ApplicationDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
 import com.InvalidDataException;
-import com.RMT2Constants;
 import com.api.persistence.DatabaseException;
+import com.api.persistence.PersistenceClient;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
 
@@ -26,8 +26,7 @@ import com.util.UserTimestamp;
  */
 class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
 
-    private static final Logger logger = Logger
-            .getLogger(Rmt2OrmApplicationDaoImpl.class);
+    private static final Logger logger = Logger.getLogger(Rmt2OrmApplicationDaoImpl.class);
 
     /**
      * Create an ApplicationDaoRmt2OrmImpl object.
@@ -48,72 +47,19 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
         super(appName);
         return;
     }
-
+    
     /**
-     * Find an application record using primary key id.
+     * Create an ApplicationDaoRmt2OrmImpl object.
      * 
-     * @param uid
-     *            A unique id identifying an application.
-     * @return An {@link Application}
-     * @throws ApplicationDaoException
-     *             General database errors.
+     * @param client
      */
-    public ApplicationDto fetchApp(int uid) throws AppDaoException {
-        Application app = new Application();
-        app.addCriteria(Application.PROP_APPID, uid);
-        try {
-            Application data = (Application) this.client.retrieveObject(app);
-            if (data == null) {
-                return null;
-            }
-            else {
-                return Rmt2OrmDtoFactory.getAppDtoInstance(data);
-            }
-        } catch (DatabaseException e) {
-            throw new AppDaoException(e);
-        }
+    public Rmt2OrmApplicationDaoImpl(PersistenceClient client) {
+        super(client);
     }
 
-    /**
-     * Find application using application name.
-     * 
-     * @param appName
-     *            The name of the applicatio to query.
-     * @return An instance of {@link ApplicationDto} containing the application
-     *         data.
-     * @throws ApplicationDaoException
-     *             When appName is null or general database errors
-     */
-    public ApplicationDto fetchApp(String appName) throws AppDaoException {
-        if (appName == null) {
-            throw new AppDaoException(
-                    "Application name is required as an input parameter when fetching list of applications by application name");
-        }
-        Application app = new Application();
-        app.addCriteria(Application.PROP_NAME, appName);
-        try {
-            Application data = (Application) this.client.retrieveObject(app);
-            if (data == null) {
-                return null;
-            }
-            else {
-                return Rmt2OrmDtoFactory.getAppDtoInstance(data);
-            }
-        } catch (DatabaseException e) {
-            throw new AppDaoException(e);
-        }
-    }
-
-    /**
-     * Fetches the complete list of application records.
-     * 
-     * @return A List of {@link ApplicationDto} containing application related
-     *         data.
-     * @throws ApplicationDaoException
-     *             General database errors
-     */
-    public List<ApplicationDto> fetchApp() throws AppDaoException {
-        Application app = new Application();
+    @Override
+    public List<ApplicationDto> fetchApp(ApplicationDto criteria) throws SecurityDaoException {
+        Application app = AppDaoFactory.createCriteria(criteria);
         app.addOrderBy(Application.PROP_NAME, Application.ORDERBY_ASCENDING);
         List<Application> apps = null;
         try {
@@ -147,6 +93,7 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
      *         rows effected for an update operation.
      * @throws ApplicationDaoException
      */
+    @Override
     public int maintainApp(ApplicationDto appDto) throws AppDaoException {
         if (appDto == null) {
             throw new AppDaoException("The input parameter is required");
@@ -261,6 +208,7 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
      * @return Total number of rows deleted.
      * @throws ApplicationDaoException
      */
+    @Override
     public int deleteApp(int appId) throws AppDaoException {
         if (appId <= 0) {
             this.msg = "Application object delete failure.  Application id is invalid: "
@@ -283,14 +231,4 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
                     + appId + ", due to database error", e);
         }
     }
-
-    /**
-     * Not Supported.
-     */
-    @Override
-    public int deleteApp(String appName) throws SecurityDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
 }

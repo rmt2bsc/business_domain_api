@@ -37,6 +37,21 @@ class LdapApplicationDaoImpl extends AbstractLdapDaoClient implements AppDao {
     public LdapApplicationDaoImpl() {
         super();
     }
+    
+    @Override
+    public List<ApplicationDto> fetchApp(ApplicationDto criteria) throws SecurityDaoException {
+        if (criteria == null) {
+            return this.fetchApp();
+        }
+        
+        if (criteria.getAppName() != null) {
+            ApplicationDto dto = this.fetchApp(criteria.getAppName());
+            List<ApplicationDto> list = new ArrayList<>();
+            list.add(dto);
+            return list;
+        }
+        return null;
+    }
 
     /**
      * Fetch an application configuration record by application name at base DN,
@@ -48,7 +63,6 @@ class LdapApplicationDaoImpl extends AbstractLdapDaoClient implements AppDao {
      *         application data or null if no data is found.
      * @throws SecurityDaoException
      */
-    @Override
     public ApplicationDto fetchApp(String appName) throws SecurityDaoException {
         LdapApplication ldapApp = null;
         List<LdapApplication> appList = null;
@@ -85,8 +99,7 @@ class LdapApplicationDaoImpl extends AbstractLdapDaoClient implements AppDao {
      *         application data or null if no data is found.
      * @throws SecurityDaoException
      */
-    @Override
-    public List<ApplicationDto> fetchApp() throws SecurityDaoException {
+    private List<ApplicationDto> fetchApp() throws SecurityDaoException {
         List<LdapApplication> appList = null;
         try {
             LdapSearchOperation op = new LdapSearchOperation();
@@ -330,7 +343,6 @@ class LdapApplicationDaoImpl extends AbstractLdapDaoClient implements AppDao {
      * @return Total number of application records deleted.
      * @throws SecurityDaoException
      */
-    @Override
     public int deleteApp(String appName) throws AppDaoException {
         if (appName == null) {
             this.msg = "Application name is required for delete operation";
@@ -354,10 +366,11 @@ class LdapApplicationDaoImpl extends AbstractLdapDaoClient implements AppDao {
     /**
      * Not supported
      */
-    @Override
     public ApplicationDto fetchApp(int uid) throws SecurityDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
+
+    
 
 }
