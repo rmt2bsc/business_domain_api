@@ -25,7 +25,7 @@ import org.junit.After;
 import org.junit.Before;
 
 /**
- * Audio/Video Media testing facility that is mainly responsible for setting up mock data.
+ * Security testing facility that is mainly responsible for setting up mock data.
  * <p>
  * All derived media related Api unit tests should inherit this class
  * to prevent duplicating common functionality.
