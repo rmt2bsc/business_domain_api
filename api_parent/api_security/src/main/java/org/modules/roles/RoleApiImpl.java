@@ -38,8 +38,7 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
      */
     @Override
     public CategoryDto get(int roleId) throws SecurityModuleException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -118,13 +117,11 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
             dao = this.daoFactory.createLdapDao();
             dao.setDaoUser(this.apiUser);
             int rc = dao.maintainRole(role);
-            this.msg = "Role, " + role.getRoleName()
-                    + ", was updated successfully";
+            this.msg = "Role, " + role.getRoleName() + ", was updated successfully";
             logger.info(this.msg);
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to update Role identitfied as "
-                    + role.getRoleName();
+            this.msg = "Unable to update Role identitfied as " + role.getRoleName();
             logger.error(this.msg);
             throw new RoleApiException(this.msg, e);
         } finally {

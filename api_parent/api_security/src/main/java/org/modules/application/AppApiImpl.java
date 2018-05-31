@@ -27,8 +27,7 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
      */
     protected AppApiImpl() {
         super();
-        logger.info("Logger intialized for class, "
-                + AppApiImpl.class.getName());
+        logger.info("Logger intialized for class, " + AppApiImpl.class.getName());
     }
 
     /*
@@ -38,8 +37,7 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
      */
     @Override
     public ApplicationDto get(int appId) throws AppApiException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
 
         // AppDaoFactory f = new AppDaoFactory();
         // AppDao dao = f.createRmt2OrmDao();
@@ -73,8 +71,7 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
             data = dao.fetchApp(appName);
             return data;
         } catch (AppDaoException e) {
-            this.msg = "Unable to fetch application profile by application name, "
-                    + appName;
+            this.msg = "Unable to fetch application profile by application name, " + appName;
             throw new AppApiException(this.msg, e);
         } finally {
             dao.close();
@@ -129,8 +126,7 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
             dao.setDaoUser(this.apiUser);
             return dao.maintainApp(dto);
         } catch (AppDaoException e) {
-            throw new AppApiException(
-                    "Unable to execute API update for Application module", e);
+            throw new AppApiException("Unable to execute API update for Application module", e);
         } finally {
             dao.close();
             dao = null;
@@ -144,8 +140,7 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
      */
     @Override
     public int delete(int appId) throws AppApiException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
 
         // AppDaoFactory f = new AppDaoFactory();
         // AppDao dao = null;

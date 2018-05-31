@@ -31,8 +31,7 @@ public interface Authenticator extends TransactionApi {
      *             There are no actvie applications in which the user is logged
      *             onto.
      */
-    RMT2SecurityToken authenticate(String userName)
-            throws AuthenticationException;
+    RMT2SecurityToken authenticate(String userName) throws AuthenticationException;
 
     /**
      * Authenticate a user for the first time using basic login credentials,
@@ -50,8 +49,7 @@ public interface Authenticator extends TransactionApi {
      * @throws AuthenticationException
      *             The user does not exist or the password is incorrect.
      */
-    RMT2SecurityToken authenticate(String userName, String password)
-            throws AuthenticationException;
+    RMT2SecurityToken authenticate(String userName, String password) throws AuthenticationException;
 
     /**
      * Determines if a user is currently signed on to the system.
@@ -72,8 +70,7 @@ public interface Authenticator extends TransactionApi {
      *         logged into system.
      * @throws SecurityTokenAccessException
      */
-    RMT2SecurityToken getSecurityToken(String userName)
-            throws SecurityTokenAccessException;
+    RMT2SecurityToken getSecurityToken(String userName) throws SecurityTokenAccessException;
 
     /**
      * Log specified user out of the system.
@@ -99,8 +96,7 @@ public interface Authenticator extends TransactionApi {
      * @throws AuthorizationException
      * @throws AuthenticationException
      */
-    void authorize(String userName, List<String> requiredRoles)
-            throws AuthorizationException, AuthenticationException;
+    void authorize(String userName, List<String> requiredRoles) throws AuthorizationException, AuthenticationException;
 
     /**
      * Sets the login count of the specified user to zero.
@@ -110,6 +106,5 @@ public interface Authenticator extends TransactionApi {
      * @return true when count is successfully reset and false otherwise.
      * @throws SecurityTokenAccessException
      */
-    boolean resetLoginCount(String userName)
-            throws SecurityTokenAccessException;
+    boolean resetLoginCount(String userName) throws SecurityTokenAccessException;
 }

@@ -59,8 +59,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      *             When the user is not logged on to any applications.
      */
     @Override
-    public RMT2SecurityToken authenticate(String userName)
-            throws AuthenticationException {
+    public RMT2SecurityToken authenticate(String userName) throws AuthenticationException {
         RMT2SecurityToken token;
         try {
             token = this.getSecurityToken(userName);
@@ -68,10 +67,8 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
             token = null;
         }
         if (token == null) {
-            throw new AuthenticationException(
-                    "Single sign on authentication failed for user, "
-                            + userName
-                            + ".  Must provide user id and password in order to authenticate.");
+            throw new AuthenticationException( "Single sign on authentication failed for user, "
+                            + userName + ".  Must provide user id and password in order to authenticate.");
         }
         token.getUser().incrementAppCount();
         // Update token properties with changes made to its User instance.
@@ -98,8 +95,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      *             For any case where the user's login attempt fails.
      */
     @Override
-    public RMT2SecurityToken authenticate(String userName, String password)
-            throws AuthenticationException {
+    public RMT2SecurityToken authenticate(String userName, String password) throws AuthenticationException {
         // If user has already signed on, just return security token without
         // incrementing application count.
         RMT2SecurityToken token = null;
@@ -170,11 +166,9 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      *             type {@link RMT2SecurityToken}
      */
     @Override
-    public RMT2SecurityToken getSecurityToken(String userName)
-            throws SecurityTokenAccessException {
+    public RMT2SecurityToken getSecurityToken(String userName) throws SecurityTokenAccessException {
         try {
-            RMT2SecurityToken token = UserAuthenticatorImpl.USER_TOKENS
-                    .get(userName);
+            RMT2SecurityToken token = UserAuthenticatorImpl.USER_TOKENS.get(userName);
             return token;
         } catch (Exception e) {
             throw new SecurityTokenAccessException(e);
@@ -245,11 +239,9 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      * @throws AuthenticationException
      */
     @Override
-    public void authorize(String userName, List<String> requiredRoles)
-            throws AuthorizationException, AuthenticationException {
+    public void authorize(String userName, List<String> requiredRoles) throws AuthorizationException, AuthenticationException {
         List<String> userRoles = this.getUserRoles(userName);
-        boolean authorized = this.isAuthorized(userName, requiredRoles,
-                userRoles);
+        boolean authorized = this.isAuthorized(requiredRoles, userRoles);
         if (authorized) {
             return;
         }
@@ -268,8 +260,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      * @throws CannotRetrieveException
      *             Error fetching the application roles.
      */
-    private List<String> getUserRoles(String userName)
-            throws CannotRetrieveException {
+    private List<String> getUserRoles(String userName) throws CannotRetrieveException {
         UserAppRoleApi rolesApi = null;
         List<CategoryDto> roleList = null;
         try {
@@ -277,9 +268,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
             rolesApi = roleFactory.createUserAppRoleApi();
             roleList = rolesApi.get(userName);
         } catch (SecurityModuleException e) {
-            throw new SecurityDaoException(
-                    "Unable to retrieve user's application roles during user authorization",
-                    e);
+            throw new CannotRetrieveException("Unable to retrieve user application roles for " + userName, e);
         }
 
         if (roleList == null) {
@@ -312,36 +301,33 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      *             Either <i>requiredRoles</i> and <i>userRoles</i> are found to
      *             be null or contain no elements.
      */
-    private boolean isAuthorized(String userName, List<String> requiredRoles,
-            List<String> userRoles) throws AuthorizationException {
+    private boolean isAuthorized(List<String> requiredRoles, List<String> userRoles) throws AuthorizationException {
         if (requiredRoles == null || requiredRoles.size() == 0) {
-            this.msg = "The list of required roles are invalid or null";
+            this.msg = "A list of required roles are required";
             throw new AuthorizationException(this.msg);
         }
         if (userRoles == null || userRoles.size() == 0) {
-            this.msg = "The user, " + userName
-                    + ", has not been granted any application roles";
+            this.msg = "A list of user roles are required";
             throw new AuthorizationException(this.msg);
         }
 
         // Match up the roles.
-        List<String> matches = this.getMatchingRoles(userRoles, requiredRoles);
+        List<String> matches = this.getAssignedRequiredRoles(userRoles, requiredRoles);
         return (matches.size() > 0);
     }
 
     /**
-     * Determines if the user possesses one or more required roles and builds a
-     * list every user role that matches with a required role.
+     * Determines if the user possesses one or more required roles and returns a
+     * list of all the required roles the user has been granted.
      * 
      * @param userRoles
      *            The roles assigned to the user.
      * @param requiredRoles
-     *            The roles the user must authorized for.
+     *            The roles the user must be authorized for.
      * @return A List of roles in code name form that match one or more of the
      *         required roles.
      */
-    private List<String> getMatchingRoles(List<String> userRoles,
-            List<String> requiredRoles) {
+    private List<String> getAssignedRequiredRoles(List<String> userRoles, List<String> requiredRoles) {
         List<String> matchedRoles = new ArrayList<String>();
         for (int ndx = 0; ndx < requiredRoles.size(); ndx++) {
             String reqRole = (String) requiredRoles.get(ndx);
@@ -364,8 +350,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      * @throws SecurityTokenAccessException
      */
     @Override
-    public boolean resetLoginCount(String userName)
-            throws SecurityTokenAccessException {
+    public boolean resetLoginCount(String userName) throws SecurityTokenAccessException {
         RMT2SecurityToken token;
         token = this.getSecurityToken(userName);
         if (token == null) {

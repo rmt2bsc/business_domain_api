@@ -16,7 +16,7 @@ public class SecurityTokenAccessException extends SecurityModuleException {
      * 
      */
     public SecurityTokenAccessException() {
-        // TODO Auto-generated constructor stub
+        return;
     }
 
     /**
@@ -24,7 +24,6 @@ public class SecurityTokenAccessException extends SecurityModuleException {
      */
     public SecurityTokenAccessException(String msg) {
         super(msg);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -32,7 +31,6 @@ public class SecurityTokenAccessException extends SecurityModuleException {
      */
     public SecurityTokenAccessException(Exception e) {
         super(e);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -41,7 +39,6 @@ public class SecurityTokenAccessException extends SecurityModuleException {
      */
     public SecurityTokenAccessException(String msg, Throwable e) {
         super(msg, e);
-        // TODO Auto-generated constructor stub
     }
 
 }

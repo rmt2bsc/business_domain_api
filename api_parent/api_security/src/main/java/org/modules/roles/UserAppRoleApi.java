@@ -46,8 +46,7 @@ public interface UserAppRoleApi extends CategoryApiModule {
      *         does not return a data set.
      * @throws SecurityModuleException
      */
-    List<CategoryDto> getAssignedRoles(CategoryDto criteria)
-            throws SecurityModuleException;
+    List<CategoryDto> getAssignedRoles(CategoryDto criteria) throws SecurityModuleException;
 
     /**
      * Obtains a list of application-roles that have not been assigned (revoked)
@@ -65,8 +64,7 @@ public interface UserAppRoleApi extends CategoryApiModule {
      *         the revoked application roles.
      * @throws SecurityDaoException
      */
-    List<CategoryDto> getRevokedRoles(CategoryDto criteria)
-            throws SecurityModuleException;
+    List<CategoryDto> getRevokedRoles(CategoryDto criteria) throws SecurityModuleException;
 
     /**
      * Assigns a new list of roles to the user for an a given application.
@@ -86,8 +84,7 @@ public interface UserAppRoleApi extends CategoryApiModule {
      * @return Total number of roles assinged
      * @throws SecurityDaoException
      */
-    int update(CategoryDto userAppDetails, List<String> roleCodes)
-            throws SecurityModuleException;
+    int update(CategoryDto userAppDetails, List<String> roleCodes) throws SecurityModuleException;
 
     /**
      * Delete the specified roles which belongs to a user of a particular
@@ -100,6 +97,5 @@ public interface UserAppRoleApi extends CategoryApiModule {
      * @return The total number of roles deleted.
      * @throws SecurityModuleException
      */
-    int delete(String userName, List<String> appRoles)
-            throws SecurityModuleException;
+    int delete(String userName, List<String> appRoles) throws SecurityModuleException;
 }

@@ -14,32 +14,6 @@ import org.modules.SecurityModuleException;
  */
 public interface AppRoleApi extends CategoryApiModule {
 
-    // /**
-    // * Obtains a list of application roles related to a user.
-    // *
-    // * @param userName
-    // * the login id of user.
-    // * @return
-    // * List of {@link CategoryDto} objects containing application role data.
-    // * @throws SecurityModuleException
-    // */
-    // List<CategoryDto> get(String userName) throws SecurityModuleException;
-    //
-    // /**
-    // * Obtains a list of application roles related to a user and an
-    // application.
-    // *
-    // * @param userName
-    // * the login id of user.
-    // * @param appName
-    // * the name/code of the application
-    // * @return
-    // * List of {@link CategoryDto} objects containing application role data.
-    // * @throws SecurityModuleException
-    // */
-    // List<CategoryDto> get(String userName, String appName) throws
-    // SecurityModuleException;
-
     /**
      * Obtains a list of application roles based on various selection properties
      * contained in <i>criteria</i>.

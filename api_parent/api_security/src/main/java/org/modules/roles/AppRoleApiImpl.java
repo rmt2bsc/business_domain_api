@@ -42,8 +42,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         RoleDao dao = this.daoFactory.createLdapDao();
         try {
             CategoryDto dto = dao.fetchAppRole(appRoleId);
-            this.msg = "Application Role, " + appRoleId
-                    + ", was retrieved successfully";
+            this.msg = "Application Role, " + appRoleId + ", was retrieved successfully";
             logger.info(this.msg);
             return dto;
         } catch (Exception e) {
@@ -66,8 +65,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         RoleDao dao = this.daoFactory.createLdapDao();
         try {
             List<CategoryDto> list = dao.fetchAppRole();
-            this.msg = "Total application roles retrieved: "
-                    + (list == null ? 0 : list.size());
+            this.msg = "Total application roles retrieved: " + (list == null ? 0 : list.size());
             logger.info(this.msg);
             return list;
         } catch (Exception e) {
@@ -139,8 +137,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
      * @see org.modules.roles.AppRoleApi#fetch(org.dto.CategoryDto)
      */
     @Override
-    public List<CategoryDto> get(CategoryDto criteria)
-            throws SecurityModuleException {
+    public List<CategoryDto> get(CategoryDto criteria) throws SecurityModuleException {
         RoleDao dao = this.daoFactory.createLdapDao();
         try {
             List<CategoryDto> list = dao.fetchAppRole(criteria);
@@ -182,13 +179,11 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
             dao = this.daoFactory.createLdapDao();
             dao.setDaoUser(this.apiUser);
             int rc = dao.maintainAppRole(appRole);
-            this.msg = "Application Role, " + appRole.getAppRoleName()
-                    + ", was updated successfully";
+            this.msg = "Application Role, " + appRole.getAppRoleName() + ", was updated successfully";
             logger.info(this.msg);
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to update Application Role identitfied as "
-                    + appRole.getAppRoleName();
+            this.msg = "Unable to update Application Role identitfied as " + appRole.getAppRoleName();
             logger.error(this.msg);
             throw new RoleApiException(this.msg, e);
         } finally {
@@ -208,13 +203,11 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         try {
             dao = this.daoFactory.createLdapDao();
             int rc = dao.deleteAppRole(appRoleId);
-            this.msg = "Application Role, " + appRoleId
-                    + ", was deleted successfully";
+            this.msg = "Application Role, " + appRoleId + ", was deleted successfully";
             logger.info(this.msg);
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to delete Application Role identitfied by id, "
-                    + appRoleId;
+            this.msg = "Unable to delete Application Role identitfied by id, " + appRoleId;
             logger.error(this.msg);
             throw new RoleApiException(this.msg, e);
         } finally {
@@ -237,13 +230,11 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         try {
             dao = this.daoFactory.createLdapDao();
             int rc = dao.deleteAppRole(appRoleCode);
-            this.msg = "Application Role, " + appRoleCode
-                    + ", was deleted successfully";
+            this.msg = "Application Role, " + appRoleCode + ", was deleted successfully";
             logger.info(this.msg);
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to delete Application Role identitfied by id, "
-                    + appRoleCode;
+            this.msg = "Unable to delete Application Role identitfied by id, " + appRoleCode;
             logger.error(this.msg);
             throw new RoleApiException(this.msg, e);
         } finally {

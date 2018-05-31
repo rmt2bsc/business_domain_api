@@ -3,10 +3,8 @@ package org.modules.resource;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-
 import org.dao.resources.ResourceDao;
 import org.dao.resources.ResourcesDaoFactory;
-
 import org.dto.ResourceDto;
 
 import com.RMT2Constants;
@@ -23,11 +21,9 @@ import com.api.foundation.AbstractTransactionApiImpl;
  * @author Roy Terrell
  * 
  */
-class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
-        ResourceRegistryApi {
+class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements ResourceRegistryApi {
 
-    private static final Logger logger = Logger
-            .getLogger(WebServiceRegistryApiImpl.class);
+    private static final Logger logger = Logger.getLogger(WebServiceRegistryApiImpl.class);
 
     private ResourcesDaoFactory factory;
 
@@ -70,8 +66,7 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public List<ResourceDto> getResourceType()
-            throws ResourceRegistryApiException {
+    public List<ResourceDto> getResourceType() throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         try {
             List<ResourceDto> results = dao.fetchResourceType();
@@ -94,8 +89,7 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public List<ResourceDto> getResourceSubType()
-            throws ResourceRegistryApiException {
+    public List<ResourceDto> getResourceSubType() throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         try {
             List<ResourceDto> results = dao.fetchResourceSubType();
@@ -121,15 +115,13 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public ResourceDto getResourceSubType(String resourceSubTypeName)
-            throws ResourceRegistryApiException {
+    public ResourceDto getResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         try {
             ResourceDto results = dao.fetchResourceSubType(resourceSubTypeName);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to fetch resource sub type with by its unique key, "
-                    + resourceSubTypeName;
+            this.msg = "Unable to fetch resource sub type with by its unique key, " + resourceSubTypeName;
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
         } finally {
@@ -175,8 +167,7 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public List<ResourceDto> getResource(ResourceDto criteria)
-            throws ResourceRegistryApiException {
+    public List<ResourceDto> getResource(ResourceDto criteria) throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         try {
             List<ResourceDto> results = dao.fetchResource(criteria);
@@ -203,8 +194,7 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public int updateResource(ResourceDto obj)
-            throws ResourceRegistryApiException {
+    public int updateResource(ResourceDto obj) throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         dao.setDaoUser(this.apiUser);
         try {
@@ -231,15 +221,13 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public int updateResourceType(ResourceDto obj)
-            throws ResourceRegistryApiException {
+    public int updateResourceType(ResourceDto obj) throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         dao.setDaoUser(this.apiUser);
         try {
             return dao.maintainResourceType(obj);
         } catch (Exception e) {
-            this.msg = "Unable to update resource type object:  "
-                    + obj.getTypeDescription();
+            this.msg = "Unable to update resource type object:  " + obj.getTypeDescription();
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
         } finally {
@@ -261,15 +249,13 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public int updateResourceSubType(ResourceDto obj)
-            throws ResourceRegistryApiException {
+    public int updateResourceSubType(ResourceDto obj) throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         dao.setDaoUser(this.apiUser);
         try {
             return dao.maintainResourceSubType(obj);
         } catch (Exception e) {
-            this.msg = "Unable to update resource sub type object:  "
-                    + obj.getSubTypeDescription();
+            this.msg = "Unable to update resource sub type object:  " + obj.getSubTypeDescription();
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
         } finally {
@@ -288,14 +274,36 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public int deleteResource(ResourceDto criteria)
-            throws ResourceRegistryApiException {
+    public int deleteResource(ResourceDto criteria) throws ResourceRegistryApiException {
         ResourceDao dao = this.factory.createLdapDao();
         try {
             return dao.deleteResource(criteria);
         } catch (Exception e) {
             this.msg = "Unable to delete resource object identified by:  "
                     + criteria.getName();
+            logger.error(this.msg);
+            throw new ResourceRegistryApiException(this.msg, e);
+        } finally {
+            dao.close();
+            dao = null;
+        }
+    }
+
+    /**
+     * Deletes a resource sub type object using the RMT ORM DAO
+     * 
+     * @param resourceSubTypeName
+     *            the unique id for the resouce sub type object to be deleted.
+     * @return the total number of objects effected by the delete operation.
+     * @throws ResourceRegistryApiException
+     */
+    @Override
+    public int deleteResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException {
+        ResourceDao dao = this.factory.createLdapDao();
+        try {
+            return dao.deleteResourceSubType(resourceSubTypeName);
+        } catch (Exception e) {
+            this.msg = "Unable to delete resource sub type object identified by:  "  + resourceSubTypeName;
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
         } finally {
@@ -313,65 +321,31 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements
      * @throws ResourceRegistryApiException
      */
     @Override
-    public int deleteResourceType(String resourceTypeId)
-            throws ResourceRegistryApiException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    public int deleteResourceType(String resourceTypeId) throws ResourceRegistryApiException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
-
+    
     /**
-     * Deletes a resource sub type object using the RMT ORM DAO
-     * 
-     * @param resourceSubTypeName
-     *            the unique id for the resouce sub type object to be deleted.
-     * @return the total number of objects effected by the delete operation.
-     * @throws ResourceRegistryApiException
+     * Not supported
      */
     @Override
-    public int deleteResourceSubType(String resourceSubTypeName)
-            throws ResourceRegistryApiException {
-        ResourceDao dao = this.factory.createLdapDao();
-        try {
-            return dao.deleteResourceSubType(resourceSubTypeName);
-        } catch (Exception e) {
-            this.msg = "Unable to delete resource sub type object identified by:  "
-                    + resourceSubTypeName;
-            logger.error(this.msg);
-            throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
+    public ResourceDto getResourceType(int resourceTypeId) throws ResourceRegistryApiException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
      * Not supported
      */
     @Override
-    public ResourceDto getResourceType(int resourceTypeId)
-            throws ResourceRegistryApiException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    public ResourceDto getResourceSubType(int resourceSubTypeId) throws ResourceRegistryApiException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
      * Not supported
      */
     @Override
-    public ResourceDto getResourceSubType(int resourceSubTypeId)
-            throws ResourceRegistryApiException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    public ResourceDto getResource(int resourceId) throws ResourceRegistryApiException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
-
-    /**
-     * Not supported
-     */
-    @Override
-    public ResourceDto getResource(int resourceId)
-            throws ResourceRegistryApiException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
 }

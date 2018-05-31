@@ -52,8 +52,7 @@ public interface ResourceRegistryApi extends TransactionApi {
      *         data or null if no data is found
      * @throws ResourceRegistryApiException
      */
-    ResourceDto getResourceType(int resourceTypeId)
-            throws ResourceRegistryApiException;
+    ResourceDto getResourceType(int resourceTypeId) throws ResourceRegistryApiException;
 
     /**
      * Obtains a master list of resource sub type objects.
@@ -73,8 +72,7 @@ public interface ResourceRegistryApi extends TransactionApi {
      *         type data or null if no data is found
      * @throws ResourceRegistryApiException
      */
-    ResourceDto getResourceSubType(int resourceSubTypeId)
-            throws ResourceRegistryApiException;
+    ResourceDto getResourceSubType(int resourceSubTypeId) throws ResourceRegistryApiException;
 
     /**
      * Obtains a single resource sub type object based on a unique id.
@@ -85,8 +83,7 @@ public interface ResourceRegistryApi extends TransactionApi {
      *         type data or null if no data is found
      * @throws ResourceRegistryApiException
      */
-    ResourceDto getResourceSubType(String resourceSubTypeName)
-            throws ResourceRegistryApiException;
+    ResourceDto getResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException;
 
     /**
      * Obtains one or more extended resource objects based any combination
@@ -124,8 +121,7 @@ public interface ResourceRegistryApi extends TransactionApi {
      *         ascending order or null if no data is found.
      * @throws ResourceRegistryApiException
      */
-    List<ResourceDto> getResource(ResourceDto criteria)
-            throws ResourceRegistryApiException;
+    List<ResourceDto> getResource(ResourceDto criteria) throws ResourceRegistryApiException;
 
     /**
      * Create a new or modifies an existing resource.
@@ -164,8 +160,7 @@ public interface ResourceRegistryApi extends TransactionApi {
      *         effeccted by the modification process.
      * @throws ResourceRegistryApiException
      */
-    int updateResourceSubType(ResourceDto obj)
-            throws ResourceRegistryApiException;
+    int updateResourceSubType(ResourceDto obj)  throws ResourceRegistryApiException;
 
     /**
      * Deletes a resource object
@@ -176,8 +171,7 @@ public interface ResourceRegistryApi extends TransactionApi {
      * @return the total number of objects effected by the delete operation.
      * @throws ResourceRegistryApiException
      */
-    int deleteResource(ResourceDto criteria)
-            throws ResourceRegistryApiException;
+    int deleteResource(ResourceDto criteria) throws ResourceRegistryApiException;
 
     /**
      * Deletes a resource type object
@@ -187,8 +181,7 @@ public interface ResourceRegistryApi extends TransactionApi {
      * @return the total number of objects effected by the delete operation.
      * @throws ResourceRegistryApiException
      */
-    int deleteResourceType(String resourceTypeName)
-            throws ResourceRegistryApiException;
+    int deleteResourceType(String resourceTypeName) throws ResourceRegistryApiException;
 
     /**
      * Deletes a resource sub type object
@@ -198,6 +191,5 @@ public interface ResourceRegistryApi extends TransactionApi {
      * @return the total number of objects effected by the delete operation.
      * @throws ResourceRegistryApiException
      */
-    int deleteResourceSubType(String resourceSubTypeName)
-            throws ResourceRegistryApiException;
+    int deleteResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException;
 }
