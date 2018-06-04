@@ -28,9 +28,13 @@ public class SecurityMockDataFactory {
     public static final int TEST_RESOURCE_ID = 2000;
     public static final int TEST_RESOURCE_TYPE_ID = 3000;
     public static final int TEST_RESOURCE_SUBTYPE_ID = 4000;
-    public static final int TEST_ROLE_ID = 55550;
-    public static final int TEST_APP_ROLE_ID = 66660;
-    public static final int TEST_USER_APP_ROLE_ID = 77770;
+    public static final int TEST_ROLE_ID = 5000;
+    public static final int TEST_APP_ROLE_ID = 6000;
+    public static final int TEST_USER_APP_ROLE_ID = 7000;
+    public static final int TEST_APP_ACCESS_ID = 8000;
+    public static final int TEST_GROUP_ROLD_ID = 9000;
+    public static final int TEST_RESOURCE_ACCESS_ID = 5555;
+    public static final int TEST_GROUP_ID = 500;
     public static final int TEST_UPDATE_RC = 1;
     
     /**
@@ -243,58 +247,45 @@ public class SecurityMockDataFactory {
     /**
      * 
      * @param appRoleId
-     * @param appRoleCode
-     * @param appRoleName
      * @param appId
-     * @param roleid
-     * @param roleName
-     * @param appName
-     * @param appRoleDescription
+     * @param roleId
      * @return
      */
-    public static final VwAppRoles createOrmVwAppRoles(int appRoleId, String appRoleCode, String appRoleName, 
-            int appId, int roleid, String roleName, String appName, String appRoleDescription) {
+    public static final VwAppRoles createOrmVwAppRoles(int appRoleId, int appId, int roleId) {
         VwAppRoles o = new VwAppRoles();
         o.setAppRoleId(appRoleId);
         o.setApplicationId(appId);
-        o.setRoleId(roleid);
-        o.setAppRoleCode(appRoleCode);
-        o.setAppRoleName(appRoleName);
-        o.setRoleName(roleName);
-        o.setAppName(appName);
-        o.setAppRoleDescription(appRoleDescription);
+        o.setRoleId(roleId);
+        o.setAppRoleCode("AppRoleCode_" + appRoleId);
+        o.setAppRoleName("AppRoleName_" + appRoleId);
+        o.setRoleName("RoleName_" + roleId);
+        o.setAppName("AppName_" + appId);
+        o.setAppRoleDescription("AppRoleDescription_" + appRoleId);
         return o;
     }
     
     /**
      * 
      * @param rsrcId
-     * @param name
      * @param url
-     * @param description
      * @param rsrcTypeId
-     * @param typeDesc
      * @param rsrcSubtypeId
-     * @param subTypeName
-     * @param subTypeDescr
      * @param secured
      * @return
      */
-    public static final VwResource createOrmVwResource(int rsrcId, String name,
-            String url, String description, int rsrcTypeId, String typeDesc,
-            int rsrcSubtypeId, String subTypeName, String subTypeDescr,
-            boolean secured) {
+    public static final VwResource createOrmVwResource(int rsrcId, String url, int rsrcTypeId, 
+            int rsrcSubtypeId,  boolean secured) {
         VwResource o = new VwResource();
         o.setRsrcId(rsrcId);
         o.setRsrcTypeId(rsrcTypeId);
         o.setRsrcSubtypeId(rsrcSubtypeId);
         o.setUrl(url);
-        o.setDescription(description);
+        o.setDescription("ResourceDescription_" + rsrcId);
         o.setSecured(secured ? 1 : 0);
-        o.setName(name);
-        o.setTypeDescr(typeDesc);
-        o.setSubtypeName(subTypeDescr);
-        o.setSubtypeName(subTypeName);
+        o.setName("ResourceName_" + rsrcId);
+        o.setTypeDescr("ResourceTypeDescription_" + rsrcTypeId);
+        o.setSubtypeName("ResourceSubTypeDescription_" + rsrcSubtypeId);
+        o.setSubtypeName("ResourceSubTypeName_" + rsrcSubtypeId);
 
         return o;
     }
@@ -302,20 +293,16 @@ public class SecurityMockDataFactory {
     /**
      * 
      * @param rsrcTypeId
-     * @param rsrcTypeName
      * @param rsrcSubtypeId
-     * @param subTypeName
-     * @param subTypeDescr
      * @return
      */
-    public static final VwResourceType createOrmVwResourceType(int rsrcTypeId, String rsrcTypeName, 
-            int rsrcSubtypeId, String subTypeName, String subTypeDescr) {
+    public static final VwResourceType createOrmVwResourceType(int rsrcTypeId, int rsrcSubtypeId) {
         VwResourceType o = new VwResourceType();
         o.setResrcTypeId(rsrcTypeId);
-        o.setResrcTypeName(rsrcTypeName);
+        o.setResrcTypeName("ResourceTypeName_" + rsrcTypeId);
         o.setResrcSubtypeId(rsrcSubtypeId);
-        o.setResrcSubtypeName(subTypeName);
-        o.setResrcSubtypeDesc(subTypeDescr);
+        o.setResrcSubtypeName("ResourceSubtypeName_" + rsrcSubtypeId);
+        o.setResrcSubtypeDesc("ResourceSubtypeDescription_" + rsrcSubtypeId);
         return o;
     }
     
@@ -424,8 +411,8 @@ public class SecurityMockDataFactory {
      * @param secured
      * @return
      */
-    public static final VwUserResourceAccess createOrmVwUserResourceAccess(int loginId, String userName, int grpId, int rsrcId, 
-            String url, int rsrcTypeId, int rsrcSubtypeId, boolean secured) {
+    public static final VwUserResourceAccess createOrmVwUserResourceAccess(int loginId, String userName, int grpId, 
+            int rsrcId, String url, int rsrcTypeId, int rsrcSubtypeId, boolean secured) {
         VwUserResourceAccess o = new VwUserResourceAccess();
         o.setUserUid(loginId);
         o.setUserGroupId(grpId);
