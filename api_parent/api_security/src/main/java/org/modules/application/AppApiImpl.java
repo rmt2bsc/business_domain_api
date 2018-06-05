@@ -9,7 +9,6 @@ import org.dao.application.AppDaoFactory;
 import org.dto.ApplicationDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import org.modules.SecurityConstants;
-import org.modules.SecurityModuleException;
 
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
@@ -75,7 +74,7 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
 
 
     @Override
-    public List<ApplicationDto> get(ApplicationDto criteria) throws SecurityModuleException {
+    public List<ApplicationDto> get(ApplicationDto criteria) throws AppApiException {
         try {
             Verifier.verifyNotNull(criteria);
         }

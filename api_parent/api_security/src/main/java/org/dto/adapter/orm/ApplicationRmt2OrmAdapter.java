@@ -30,6 +30,9 @@ class ApplicationRmt2OrmAdapter extends DefaultApplicationAdpater {
      */
     protected ApplicationRmt2OrmAdapter(Application appOrm) {
         this();
+        if (appOrm == null) {
+            appOrm = new Application();
+        }
         this.app = appOrm;
         this.setUpdateUserId(appOrm.getUserId());
     }

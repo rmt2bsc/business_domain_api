@@ -130,20 +130,15 @@ public class SecurityMockData extends BaseSecurityDaoTest {
     private List<Application> createApplicationMockData() {
         List<Application> list = new ArrayList<>();
         int appId = SecurityMockDataFactory.TEST_APP_ID;
-        Application o = SecurityMockDataFactory.createOrmApplication(appId,
-                "AppName_" + appId, "AppDescription_" + appId);
+        Application o = SecurityMockDataFactory.createOrmApplication(appId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmApplication(++appId,
-                "AppName_" + appId, "AppDescription_" + appId);
+        o = SecurityMockDataFactory.createOrmApplication(++appId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmApplication(++appId,
-                "AppName_" + appId, "AppDescription_" + appId);
+        o = SecurityMockDataFactory.createOrmApplication(++appId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmApplication(++appId,
-                "AppName_" + appId, "AppDescription_" + appId);
+        o = SecurityMockDataFactory.createOrmApplication(++appId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmApplication(++appId,
-                "AppName_" + appId, "AppDescription_" + appId);
+        o = SecurityMockDataFactory.createOrmApplication(++appId);
         list.add(o);
         
         return list;

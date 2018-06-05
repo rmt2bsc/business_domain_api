@@ -1,5 +1,7 @@
 package org.modules.application;
 
+import org.modules.SecurityConstants;
+
 import com.RMT2Base;
 
 /**
@@ -24,7 +26,17 @@ public class AppApiFactory extends RMT2Base {
      * @return an instance of {@link AppApi}
      */
     public AppApi createApi() {
-        AppApi api = new AppApiImpl();
+        AppApi api = createApiInstance(SecurityConstants.APP_NAME);
         return api;
     }
+
+    /**
+     * Creates an instance of AppApi using the {@link AppApiImpl}
+     * implementation.
+     */
+    public static final AppApi createApiInstance(String appName) {
+        AppApi api = new AppApiImpl(appName);
+        return api;
+    }
+
 }

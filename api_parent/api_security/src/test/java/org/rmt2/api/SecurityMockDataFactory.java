@@ -37,18 +37,16 @@ public class SecurityMockDataFactory {
     public static final int TEST_GROUP_ID = 500;
     public static final int TEST_UPDATE_RC = 1;
     
-    /**
-     * 
-     * @param id
-     * @param name
-     * @param description
-     * @return
-     */
-    public static final Application createOrmApplication(int id, String name, String description) {
+   /**
+    * 
+    * @param id
+    * @return
+    */
+    public static final Application createOrmApplication(int id) {
         Application o = new Application();
         o.setAppId(id);
-        o.setName(name);
-        o.setDescription(description);
+        o.setName("ApplicationName_" + id);
+        o.setDescription("ApplicationDescription_" + id);
         return o;
     }
     

@@ -3,7 +3,6 @@ package org.modules.application;
 import java.util.List;
 
 import org.dto.ApplicationDto;
-import org.modules.SecurityModuleException;
 
 import com.api.foundation.TransactionApi;
 
@@ -21,9 +20,9 @@ public interface AppApi extends TransactionApi {
      * @param criteria an instance of {@link ApplicationDto} containing the values needed for building selection criteria
      * @return A List of {@link ApplicationDto} objects or null if no data is
      *         found.
-     * @throws SecurityModuleException
+     * @throws AppApiException
      */
-    List<ApplicationDto> get(ApplicationDto criteria) throws SecurityModuleException;
+    List<ApplicationDto> get(ApplicationDto criteria) throws AppApiException;
 
     /**
      * Create a new Application instance of a particular category.
