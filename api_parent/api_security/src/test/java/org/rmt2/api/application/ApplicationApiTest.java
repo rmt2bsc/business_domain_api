@@ -54,6 +54,8 @@ public class ApplicationApiTest extends SecurityMockData {
              .thenReturn(SecurityMockDataFactory.TEST_APP_ID);
         when(this.mockPersistenceClient.updateRow(any(Application.class)))
              .thenReturn(1);
+        when(this.mockPersistenceClient.deleteRow(any(Application.class)))
+             .thenReturn(1);
     }
 
     /**
@@ -242,6 +244,50 @@ public class ApplicationApiTest extends SecurityMockData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testSuccess_Delete() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        int results = 0;
+        try {
+            results = api.delete(1350);
+        } catch (AppApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
+    public void testSuccess_Delete_NotFound() {
+        when(this.mockPersistenceClient.deleteRow(any(Application.class))).thenReturn(0);
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        int results = 0;
+        try {
+            results = api.delete(1350);
+        } catch (AppApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(0, results);
+    }
+    
+    @Test
+    public void testError_Delete_DB_Access_Fault() {
+        when(this.mockPersistenceClient.deleteRow(any(Application.class)))
+             .thenThrow(new DatabaseException("Error deleting application data"));
+        
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        try {
+            api.delete(1350);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof AppApiException);
+            Assert.assertTrue(e.getCause() instanceof AppDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
 }
