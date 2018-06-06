@@ -3,8 +3,6 @@ package role;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.dao.mapping.orm.ldap.LdapUser;
 import org.dao.user.UserDao;
 import org.dao.user.UserDaoFactory;
@@ -21,6 +19,8 @@ import org.modules.roles.UserAppRoleApi;
 
 import com.RMT2RuntimeException;
 import com.util.RMT2Date;
+
+import junit.framework.Assert;
 
 /**
  * @author rterrell
@@ -49,7 +49,7 @@ public class UserAppRoleApiTest {
     public void tearDown() throws Exception {
         this.api = null;
         this.f = null;
-        this.deleteData();
+//        this.deleteData();
     }
 
     private void createData() {
@@ -134,32 +134,32 @@ public class UserAppRoleApiTest {
         }
     }
 
-    private void deleteData() {
-        UserDaoFactory f = new UserDaoFactory();
-        UserDao dao = f.createLdapDao();
-
-        // Delete user from DB
-        dao = f.createRmt2OrmDao();
-        try {
-            dao.deleteUser("testuser1");
-        } catch (Exception e) {
-            throw new RMT2RuntimeException(e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-        // Delete user from LDAP
-        dao = f.createLdapDao();
-        try {
-            dao.deleteUser("testuser1");
-        } catch (Exception e) {
-            throw new RMT2RuntimeException(e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-
-    }
+//    private void deleteData() {
+//        UserDaoFactory f = new UserDaoFactory();
+//        UserDao dao = f.createLdapDao();
+//
+//        // Delete user from DB
+//        dao = f.createRmt2OrmDao();
+//        try {
+//            dao.deleteUser("testuser1");
+//        } catch (Exception e) {
+//            throw new RMT2RuntimeException(e);
+//        } finally {
+//            dao.close();
+//            dao = null;
+//        }
+//        // Delete user from LDAP
+//        dao = f.createLdapDao();
+//        try {
+//            dao.deleteUser("testuser1");
+//        } catch (Exception e) {
+//            throw new RMT2RuntimeException(e);
+//        } finally {
+//            dao.close();
+//            dao = null;
+//        }
+//
+//    }
 
     /**
      * Test fetch all application roles belonging to a particular user.

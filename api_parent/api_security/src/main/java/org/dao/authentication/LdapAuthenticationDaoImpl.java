@@ -1,10 +1,14 @@
 package org.dao.authentication;
 
+import java.util.List;
+
 import org.dao.SecurityDaoException;
+import org.dao.roles.RoleDaoException;
 import org.dao.user.UserDao;
 import org.dao.user.UserDaoException;
 import org.dao.user.UserDaoFactory;
 import org.dto.UserDto;
+import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
 import com.RMT2Constants;
 import com.api.ldap.AbstractLdapDaoClient;
@@ -79,7 +83,7 @@ class LdapAuthenticationDaoImpl extends AbstractLdapDaoClient implements
         UserDaoFactory uf = new UserDaoFactory();
         UserDao dao = uf.createLdapDao();
         try {
-            UserDto dto = dao.fetchUser(loginId);
+            UserDto dto = this.getUserByUsername(loginId);
             // update user login count
             int logons = dto.getTotalLogons();
             dto.setTotalLogons(++logons);
@@ -95,6 +99,24 @@ class LdapAuthenticationDaoImpl extends AbstractLdapDaoClient implements
         }
     }
 
+    private UserDto getUserByUsername(String userName) {
+        List<UserDto> userList = null;
+        UserDaoFactory uf = new UserDaoFactory();
+        UserDao uDao = uf.createLdapDao();
+        try {
+            UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
+            userCriteria.setUsername(userName);
+            userList = uDao.fetchUser(userCriteria);
+            if (userList != null && userList.size() == 1) {
+                return userList.get(0);
+            }
+            return null;
+        } catch (Exception e) {
+            this.msg = "Error obtaining user profile from the LDAP server";
+            throw new RoleDaoException(this.msg);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 

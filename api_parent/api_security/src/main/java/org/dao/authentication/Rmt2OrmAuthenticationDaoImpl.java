@@ -69,27 +69,12 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
      * @throws NotFoundException
      *             <i>userName</i> is null or does not exist in the database.
      */
-    public User loginUser(String userName, String password)
-            throws SecurityDaoException {
+    public User loginUser(String userName, String password) throws SecurityDaoException {
         if (userName == null) {
             throw new UsernameInvalidDaoException("User is invalid");
         }
 
-        UserDaoFactory userFactory = new UserDaoFactory();
-        UserDao dao = null;
-        UserDto user = null;
-        try {
-            dao = userFactory.createRmt2OrmDao();
-            dao.setDaoUser(this.getDaoUser());
-            user = dao.fetchUser(userName);
-        } catch (UserDaoException e) {
-            throw new SecurityDaoException(
-                    "Unable to retrieve user's profile during authentication",
-                    e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
+        UserDto user = this.getUserByUsername(userName);
         if (user == null) {
             throw new UsernameInvalidDaoException(
                     "User profile does not exist for user, " + userName);
@@ -120,6 +105,8 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
         }
 
         // Update the authenticated user's profile
+        UserDaoFactory userFactory = new UserDaoFactory();
+        UserDao dao = null;
         try {
             // Password has to be reset each time the user logs in to prevent
             // over encryption
@@ -141,6 +128,25 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
         }
     }
 
+    private UserDto getUserByUsername(String userName) {
+        UserDaoFactory userFactory = new UserDaoFactory();
+        UserDao dao = null;
+        List<UserDto> userList = null;
+        try {
+            dao = userFactory.createRmt2OrmDao();
+            dao.setDaoUser(this.getDaoUser());
+            UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
+            userCriteria.setUsername(userName);
+            userList = dao.fetchUser(userCriteria);
+            if (userList != null && userList.size() == 1) {
+                return userList.get(0);
+            }
+            return null;
+        } catch (UserDaoException e) {
+            throw new SecurityDaoException("Unable to retrieve user's profile during authentication", e);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 

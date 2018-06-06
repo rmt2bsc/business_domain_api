@@ -14,9 +14,6 @@ import org.dto.UserDto;
 import org.dto.adapter.ldap.LdapDtoFactory;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
-
-
-
 import com.NotFoundException;
 import com.RMT2Constants;
 import com.api.ldap.AbstractLdapDaoClient;
@@ -213,8 +210,14 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         UserDaoFactory uf = new UserDaoFactory();
         UserDao uDao = uf.createLdapDao();
         UserDto userDto = null;
+        List<UserDto> userList = null;
         try {
-            userDto = uDao.fetchUser(criteria.getUsername());
+            UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
+            userCriteria.setUsername(criteria.getUsername());
+            userList = uDao.fetchUser(userCriteria);
+            if (userList != null && userList.size() == 1) {
+                userDto = userList.get(0);
+            }
         } catch (Exception e) {
             this.msg = "Error obtaining user profile from the LDAP server";
             throw new RoleDaoException(this.msg);
@@ -265,15 +268,7 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
             this.msg = "The user's login id is required";
             throw new RoleDaoException(this.msg);
         }
-        UserDaoFactory uf = new UserDaoFactory();
-        UserDao uDao = uf.createLdapDao();
-        UserDto userDto = null;
-        try {
-            userDto = uDao.fetchUser(criteria.getUsername());
-        } catch (Exception e) {
-            this.msg = "Error obtaining user profile from the LDAP server";
-            throw new RoleDaoException(this.msg);
-        }
+        UserDto userDto = this.getUserByUsername(criteria.getUsername());
         if (userDto == null) {
             this.msg = "User profile is not found";
             throw new NotFoundException(this.msg);
@@ -599,16 +594,7 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         }
 
         // Verify user and get current list of roles
-        UserDaoFactory uf = new UserDaoFactory();
-        UserDao uDao = uf.createLdapDao();
-        UserDto user = null;
-        try {
-            user = uDao.fetchUser(userAppRole.getUsername());
-        } catch (Exception e) {
-            this.msg = "Unable to maintain user application role(s) due to an LDAP data access error while verifying user, "
-                    + userAppRole.getUsername();
-            throw new SecurityDaoException(this.msg, e);
-        }
+        UserDto user = this.getUserByUsername(userAppRole.getUsername());
         if (user == null) {
             this.msg = "Unable to maintain user application role(s) due to user, "
                     + userAppRole.getUsername() + ", does not exist";
@@ -689,16 +675,7 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         }
 
         // Verify user and get current list of roles
-        UserDaoFactory uf = new UserDaoFactory();
-        UserDao uDao = uf.createLdapDao();
-        UserDto user = null;
-        try {
-            user = uDao.fetchUser(userName);
-        } catch (Exception e) {
-            this.msg = "Unable to delete user application role(s) due to an LDAP data access error while verifying user, "
-                    + userName;
-            throw new SecurityDaoException(this.msg, e);
-        }
+        UserDto user = this.getUserByUsername(userName);
         if (user == null) {
             this.msg = "Unable to delete user application role(s) due to user, "
                     + userName + ", does not exist";
@@ -729,6 +706,24 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         return this.ldap.updateRow(op);
     }
 
+    private UserDto getUserByUsername(String userName) {
+        List<UserDto> userList = null;
+        UserDaoFactory uf = new UserDaoFactory();
+        UserDao uDao = uf.createLdapDao();
+        try {
+            UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
+            userCriteria.setUsername(userName);
+            userList = uDao.fetchUser(userCriteria);
+            if (userList != null && userList.size() == 1) {
+                return userList.get(0);
+            }
+            return null;
+        } catch (Exception e) {
+            this.msg = "Error obtaining user profile from the LDAP server";
+            throw new RoleDaoException(this.msg);
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 

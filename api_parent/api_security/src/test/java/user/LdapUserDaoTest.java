@@ -3,8 +3,6 @@ package user;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.dao.mapping.orm.ldap.LdapUser;
 import org.dao.user.UserDao;
 import org.dao.user.UserDaoFactory;
@@ -16,6 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.util.RMT2Date;
+
+import junit.framework.Assert;
 
 /**
  * Test the user operations of an LDAP implementation of the {@link UserDao}
