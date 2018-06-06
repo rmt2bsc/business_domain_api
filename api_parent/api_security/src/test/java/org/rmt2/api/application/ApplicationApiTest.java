@@ -1,6 +1,7 @@
 package org.rmt2.api.application;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -49,6 +50,10 @@ public class ApplicationApiTest extends SecurityMockData {
 
         when(this.mockPersistenceClient.retrieveList(any(Application.class)))
              .thenReturn(this.mockApplicationData);
+        when(this.mockPersistenceClient.insertRow(any(Application.class), eq(true)))
+             .thenReturn(SecurityMockDataFactory.TEST_APP_ID);
+        when(this.mockPersistenceClient.updateRow(any(Application.class)))
+             .thenReturn(1);
     }
 
     /**
@@ -107,6 +112,7 @@ public class ApplicationApiTest extends SecurityMockData {
         ApplicationDto criteria = Rmt2OrmDtoFactory.getAppDtoInstance(null);
         try {
             api.get(criteria);
+            Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AppApiException);
@@ -120,10 +126,122 @@ public class ApplicationApiTest extends SecurityMockData {
         AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
         try {
             api.get(null);
+            Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof InvalidDataException);
             Assert.assertEquals("Application crtieria object is required", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Create() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(0);
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        int results = 0;
+        try {
+            results = api.update(dto);
+        } catch (AppApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(SecurityMockDataFactory.TEST_APP_ID, results);
+    }
+
+    @Test
+    public void testError_Create_DB_Access_Fault() {
+        when(this.mockPersistenceClient.insertRow(any(Application.class), eq(true)))
+             .thenThrow(new DatabaseException("Error inserting application data"));
+        
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(0);
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof AppApiException);
+            Assert.assertTrue(e.getCause() instanceof AppDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testSuccess_Modify() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(1350);
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        int results = 0;
+        try {
+            results = api.update(dto);
+        } catch (AppApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results);
+    }
+    
+    @Test
+    public void testError_Modify_DB_Access_Fault() {
+        when(this.mockPersistenceClient.updateRow(any(Application.class)))
+             .thenThrow(new DatabaseException("Error updating application data"));
+        
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(1350);
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof AppApiException);
+            Assert.assertTrue(e.getCause() instanceof AppDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Data_Object_Null() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(1350);
+        try {
+            api.update(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Application_Name_Null() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(1350);
+        obj.setName(null);
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Application_Name_Empty() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(1350);
+        obj.setName("");
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
         }
     }
 }

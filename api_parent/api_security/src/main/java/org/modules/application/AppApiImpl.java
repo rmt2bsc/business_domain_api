@@ -100,6 +100,19 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
     @Override
     public int update(ApplicationDto app) throws AppApiException {
         try {
+            Verifier.verifyNotNull(app);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Application object is required", e);
+        }
+        try {
+            Verifier.verifyNotEmpty(app.getAppName());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Application name property is required", e);
+        }
+        
+        try {
             return dao.maintainApp(app);
         } catch (AppDaoException e) {
             throw new AppApiException("Unable to execute API update for Application module", e);
