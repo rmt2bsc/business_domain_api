@@ -6,6 +6,8 @@ import org.dao.SecurityDaoImpl;
 import org.dto.UserDto;
 
 /**
+ * A common implementation of UserDao interface
+ * 
  * @author Roy Terrell
  * 
  */
@@ -15,7 +17,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      * 
      */
     public DefaultUserDaoImpl() {
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -25,8 +26,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public void close() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -36,7 +35,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public String getDaoUser() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -47,41 +45,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public void setDaoUser(String userName) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#fetchUser()
-     */
-    @Override
-    public List<UserDto> fetchUser() throws UserDaoException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#fetchUser(int)
-     */
-    @Override
-    public UserDto fetchUser(int uid) throws UserDaoException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#fetchUser(java.lang.String)
-     */
-    @Override
-    public UserDto fetchUser(String userName) throws UserDaoException {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     /*
@@ -91,7 +54,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public List<UserDto> fetchUser(UserDto user) throws UserDaoException {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -102,7 +64,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public int maintainUser(UserDto user) throws UserDaoException {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -113,18 +74,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public int deleteUser(int uid) throws UserDaoException {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#deleteUser(java.lang.String)
-     */
-    @Override
-    public int deleteUser(String userName) throws UserDaoException {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -135,7 +84,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public int activateUser(String userName) throws UserDaoException {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -146,41 +94,7 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public int inActivateUser(String userName) throws UserDaoException {
-        // TODO Auto-generated method stub
         return 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#fetchGroup()
-     */
-    @Override
-    public List<UserDto> fetchGroup() throws UserDaoException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#fetchGroup(int)
-     */
-    @Override
-    public UserDto fetchGroup(int grpId) throws UserDaoException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#fetchGroup(java.lang.String)
-     */
-    @Override
-    public UserDto fetchGroup(String grpName) throws UserDaoException {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     /*
@@ -190,7 +104,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public int maintainGroup(UserDto grp) throws UserDaoException {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -201,19 +114,11 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public int deleteGroup(int grpId) throws UserDaoException {
-        // TODO Auto-generated method stub
         return 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#deleteGroup(java.lang.String)
-     */
     @Override
-    public int deleteGroup(String grpName) throws UserDaoException {
-        // TODO Auto-generated method stub
-        return 0;
+    public List<UserDto> fetchGroup(UserDto group) throws UserDaoException {
+        return null;
     }
-
 }

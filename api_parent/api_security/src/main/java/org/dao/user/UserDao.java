@@ -16,35 +16,6 @@ import com.api.persistence.DaoClient;
 public interface UserDao extends DaoClient {
 
     /**
-     * Return all users.
-     * 
-     * @return a List of {@link UserDto} objects containing the user data.
-     * 
-     * @throws UserDaoException
-     */
-    List<UserDto> fetchUser() throws UserDaoException;
-
-    /**
-     * Find user using primary key id.
-     * 
-     * @param uid
-     *            A unique id identifying the user.
-     * @return An instance of {@link UserDto} containing the user data.
-     * @throws UserDaoException
-     */
-    UserDto fetchUser(int uid) throws UserDaoException;
-
-    /**
-     * Fetch user by user name (Login id).
-     * 
-     * @param userName
-     *            the user login id.
-     * @return an instance of {@link UserDto}
-     * @throws UserDaoException
-     */
-    UserDto fetchUser(String userName) throws UserDaoException;
-
-    /**
      * Find user using custom criteria.
      * 
      * @param user
@@ -77,16 +48,6 @@ public interface UserDao extends DaoClient {
     int deleteUser(int uid) throws UserDaoException;
 
     /**
-     * Delete a user using user name.
-     * 
-     * @param userName
-     *            the user's login id.
-     * @return the total number of rows effected.
-     * @throws UserDaoException
-     */
-    int deleteUser(String userName) throws UserDaoException;
-
-    /**
      * Set the activate flag of a user to true. Results should be persisted via
      * an external data source.
      * 
@@ -111,32 +72,14 @@ public interface UserDao extends DaoClient {
     /**
      * Return all user groups.
      * 
+     * @param group
+     *            an instance of {@link UserDto} containing the group data.
      * @return a List of {@link UserDto} objects containing the group data or
      *         null if no data is found.
      * 
      * @throws UserDaoException
      */
-    List<UserDto> fetchGroup() throws UserDaoException;
-
-    /**
-     * Find user group using primary key id.
-     * 
-     * @param grpId
-     *            A unique id identifying the user group.
-     * @return An instance of {@link UserDto} containing the user group data.
-     * @throws UserDaoException
-     */
-    UserDto fetchGroup(int grpId) throws UserDaoException;
-
-    /**
-     * Find user group by name.
-     * 
-     * @param grpName
-     *            The group's name
-     * @return An instance of {@link UserDto} containing the user group data.
-     * @throws UserDaoException
-     */
-    UserDto fetchGroup(String grpName) throws UserDaoException;
+    List<UserDto> fetchGroup(UserDto group) throws UserDaoException;
 
     /**
      * Create or update a User Group object.
@@ -160,14 +103,4 @@ public interface UserDao extends DaoClient {
      * @throws UserDaoException
      */
     int deleteGroup(int grpId) throws UserDaoException;
-
-    /**
-     * Deletes a user group from the system using group name.
-     * 
-     * @param grpName
-     *            The group name
-     * @return an int value acting as the total number of targets affected.
-     * @throws UserDaoException
-     */
-    int deleteGroup(String grpName) throws UserDaoException;
 }

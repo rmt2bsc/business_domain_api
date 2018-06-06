@@ -52,7 +52,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
      * 
      * @throws UserDaoException
      */
-    @Override
     public List<UserDto> fetchUser() throws UserDaoException {
         List<LdapUser> userList = null;
         try {
@@ -85,7 +84,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
      * @return an instance of {@link UserDto}
      * @throws UserDaoException
      */
-    @Override
     public UserDto fetchUser(String userName) throws UserDaoException {
         LdapUser ldapUser = null;
         List<LdapUser> userList = null;
@@ -203,7 +201,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
      * 
      * @throws UserDaoException
      */
-    @Override
     public List<UserDto> fetchGroup() throws UserDaoException {
         List<LdapUserGroup> userList = null;
         try {
@@ -237,7 +234,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
      *         null if no data is found.
      * @throws UserDaoException
      */
-    @Override
     public UserDto fetchGroup(String grpName) throws UserDaoException {
         List<LdapUserGroup> userList = null;
         try {
@@ -626,7 +622,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
      * @return the total number of rows effected.
      * @throws UserDaoException
      */
-    @Override
     public int deleteUser(String userName) throws UserDaoException {
         if (userName == null) {
             this.msg = "User's login id (user name) is required for delete operation";
@@ -718,7 +713,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
      * @return an int value acting as the total number of targets affected.
      * @throws UserDaoException
      */
-    @Override
     public int deleteGroup(String grpName) throws UserDaoException {
         if (grpName == null) {
             this.msg = "User gropup's name is required for delete operation";
@@ -762,7 +756,7 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
     /**
      * Not supported.
      */
-    @Override
+
     public UserDto fetchUser(int uid) throws UserDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
@@ -798,7 +792,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
     /**
      * Not supported.
      */
-    @Override
     public UserDto fetchGroup(int grpId) throws UserDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
@@ -811,5 +804,11 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
     public int deleteGroup(int grpId) throws UserDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public List<UserDto> fetchGroup(UserDto group) throws UserDaoException {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

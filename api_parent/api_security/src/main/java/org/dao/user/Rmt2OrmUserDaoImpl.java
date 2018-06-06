@@ -9,12 +9,10 @@ import org.dao.SecurityDaoImpl;
 import org.dao.mapping.orm.rmt2.UserGroup;
 import org.dao.mapping.orm.rmt2.UserLogin;
 import org.dao.mapping.orm.rmt2.VwUser;
-import org.dao.mapping.orm.rmt2.VwUserGroup;
 import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
 import com.NotFoundException;
-import com.RMT2Constants;
 import com.api.persistence.DatabaseException;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
@@ -49,87 +47,6 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
     }
 
     /**
-     * Return all records from the vw_user_group table.
-     * 
-     * @return a List of {@link UserDto} objects containing the user data.
-     * 
-     * @throws UserDaoException
-     */
-    @Override
-    public List<UserDto> fetchUser() throws UserDaoException {
-        VwUserGroup user = new VwUserGroup();
-        List<VwUserGroup> results = null;
-        try {
-            results = this.client.retrieveList(user);
-            if (results == null) {
-                return null;
-            }
-        } catch (DatabaseException e) {
-            throw new UserDaoException(e);
-        }
-
-        List<UserDto> users = new ArrayList<UserDto>();
-        for (VwUserGroup item : results) {
-            UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(item);
-            users.add(dto);
-        }
-        return users;
-    }
-
-    /**
-     * Query the user_login table for one record using primary key.
-     * 
-     * @param uid
-     *            A unique id identifying the user.
-     * @return An instance of {@link UserDto} containing the user data.
-     * @throws UserDaoException
-     */
-    @Override
-    public UserDto fetchUser(int uid) throws UserDaoException {
-        if (uid <= 0) {
-            throw new UserDaoException("Internal user id, " + uid
-                    + ", must be a value greater than zero");
-        }
-        UserLogin user = new UserLogin();
-        user.addCriteria(UserLogin.PROP_LOGINID, uid);
-        try {
-            user = (UserLogin) this.client.retrieveObject(user);
-            if (user == null) {
-                return null;
-            }
-            return Rmt2OrmDtoFactory.getUserDtoInstance(user);
-        } catch (DatabaseException e) {
-            throw new UserDaoException(e);
-        }
-    }
-
-    /**
-     * Query the user_login table for one record using user name.
-     * 
-     * @param userName
-     *            the user login id.
-     * @return an instance of {@link UserDto}
-     * @throws UserDaoException
-     */
-    @Override
-    public UserDto fetchUser(String userName) throws UserDaoException {
-        if (userName == null) {
-            throw new UserDaoException("User name is required");
-        }
-        UserLogin user = new UserLogin();
-        user.addCriteria(UserLogin.PROP_USERNAME, userName);
-        try {
-            user = (UserLogin) this.client.retrieveObject(user);
-            if (user == null) {
-                return null;
-            }
-            return Rmt2OrmDtoFactory.getUserDtoInstance(user);
-        } catch (DatabaseException e) {
-            throw new UserDaoException(e);
-        }
-    }
-
-    /**
      * Query the user_login table for one or more records using a combination of
      * user related property values contained in <i>criteria</i>.
      * 
@@ -157,48 +74,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public List<UserDto> fetchUser(UserDto criteria) throws UserDaoException {
-        VwUser user = new VwUser();
-
-        if (criteria != null) {
-            if (criteria.getLoginUid() > 0) {
-                user.addCriteria(VwUser.PROP_LOGINID, criteria.getLoginUid());
-            }
-            if (criteria.getGroupId() > 0) {
-                user.addCriteria(VwUser.PROP_GRPID, criteria.getGroupId());
-            }
-            if (criteria.getUsername() != null) {
-                user.addLikeClause(VwUser.PROP_USERNAME, criteria.getUsername());
-            }
-            if (criteria.getFirstname() != null) {
-                user.addLikeClause(VwUser.PROP_FIRSTNAME,
-                        criteria.getFirstname());
-            }
-            if (criteria.getLastname() != null) {
-                user.addLikeClause(VwUser.PROP_LASTNAME, criteria.getLastname());
-            }
-            if (criteria.getEmail() != null) {
-                user.addCriteria(VwUser.PROP_EMAIL, criteria.getEmail());
-            }
-            if (criteria.getBirthDate() != null) {
-                user.addCriteria(VwUser.PROP_BIRTHDATE, criteria.getBirthDate());
-            }
-            if (criteria.getSsn() != null) {
-                user.addCriteria(VwUser.PROP_SSN, criteria.getSsn());
-            }
-            if (criteria.getStartDate() != null) {
-                user.addCriteria(VwUser.PROP_STARTDATE, criteria.getStartDate());
-            }
-            if (criteria.getTerminationDate() != null) {
-                user.addCriteria(VwUser.PROP_TERMINATIONDATE,
-                        criteria.getTerminationDate());
-            }
-            if (criteria.getActive() > 0) {
-                user.addCriteria(VwUser.PROP_ACTIVE, criteria.getActive());
-            }
-            if (criteria.isQueryLoggedInFlag()) {
-                user.addCriteria(VwUser.PROP_LOGGEDIN, criteria.getLoggedIn());
-            }
-        }
+        VwUser user = UserDaoFactory.buildUserCriteria(criteria);
         user.addOrderBy(VwUser.PROP_LASTNAME, VwUser.ORDERBY_ASCENDING);
         user.addOrderBy(VwUser.PROP_FIRSTNAME, VwUser.ORDERBY_ASCENDING);
         user.addOrderBy(VwUser.PROP_USERNAME, VwUser.ORDERBY_ASCENDING);
@@ -462,20 +338,6 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
     }
 
     /**
-     * Delete a record from the user_login table using the user's user name.
-     * 
-     * @param userName
-     *            the user's login id.
-     * @return the total number of rows effected.
-     * @throws UserDaoException
-     */
-    @Override
-    public int deleteUser(String userName) throws UserDaoException {
-        UserLogin user = this.getUserProfile(userName);
-        return this.deleteUser(user.getLoginId());
-    }
-
-    /**
      * Set the activate flag of a user to true. Results should be persisted via
      * an external data source.
      * 
@@ -536,14 +398,16 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
     /**
      * Query the user_group table for all records.
      * 
+     * @param group
+     *            an instance of {@link UserDto} containing the group data.
      * @return List of {@link UserDto} objects containing group data or null if
      *         no data is found
      * @throws UserDaoException
      *             database access errors.
      */
     @Override
-    public List<UserDto> fetchGroup() throws UserDaoException {
-        UserGroup grp = new UserGroup();
+    public List<UserDto> fetchGroup(UserDto group) throws UserDaoException {
+        UserGroup grp = UserDaoFactory.buildGroupCriteria(group);
         grp.addOrderBy(UserGroup.PROP_DESCRIPTION, UserGroup.ORDERBY_ASCENDING);
         List<UserGroup> results = null;
         try {
@@ -561,33 +425,6 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
             groups.add(dto);
         }
         return groups;
-    }
-
-    /**
-     * Queries the user_group table for a specific group
-     * 
-     * @param grpId
-     *            A unique id identifying the user group.
-     * @return An instance of {@link UserDto} containing the group data or null
-     *         if no data is not found.
-     * @throws UserDaoException
-     *             database access errors
-     */
-    @Override
-    public UserDto fetchGroup(int grpId) throws UserDaoException {
-        UserGroup grp = new UserGroup();
-        grp.addCriteria(UserGroup.PROP_GRPID, grpId);
-        UserGroup results = null;
-        try {
-            results = (UserGroup) this.client.retrieveObject(grp);
-            if (results == null) {
-                return null;
-            }
-            UserDto dto = Rmt2OrmDtoFactory.getGroupDtoInstance(results);
-            return dto;
-        } catch (DatabaseException e) {
-            throw new UserDaoException(e);
-        }
     }
 
     /**
@@ -756,27 +593,5 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
             throw new UserDaoException("User Group delete opertaion failed", e);
         }
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#fetchGroup(java.lang.String)
-     */
-    @Override
-    public UserDto fetchGroup(String grpName) throws UserDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#deleteGroup(java.lang.String)
-     */
-    @Override
-    public int deleteGroup(String grpName) throws UserDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 }

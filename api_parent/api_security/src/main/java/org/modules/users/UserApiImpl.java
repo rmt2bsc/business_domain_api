@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.dao.user.UserDao;
 import org.dao.user.UserDaoException;
 import org.dao.user.UserDaoFactory;
-
 import org.dto.UserDto;
 
 import com.api.foundation.AbstractTransactionApiImpl;
@@ -30,75 +29,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
     protected UserApiImpl() {
         super();
         this.factory = new UserDaoFactory();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.users.UserApi#fetchUser()
-     */
-    @Override
-    public List<UserDto> getUser() throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
-        try {
-            List<UserDto> list = dao.fetchUser();
-            this.msg = "master list of users were retrieved successfully";
-            logger.info(this.msg);
-            return list;
-        } catch (Exception e) {
-            this.msg = "Unable to fetch master list of users";
-            logger.error(this.msg);
-            throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.users.UserApi#fetchUser(int)
-     */
-    @Override
-    public UserDto getUser(int uid) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
-        try {
-            UserDto dto = dao.fetchUser(uid);
-            this.msg = "User, " + uid + ", was retrieved successfully";
-            logger.info(this.msg);
-            return dto;
-        } catch (UserDaoException e) {
-            this.msg = "Unable to fetch user by UID, " + uid;
-            logger.error(this.msg);
-            throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.users.UserApi#fetchUser(java.lang.String)
-     */
-    @Override
-    public UserDto getUser(String userName) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
-        try {
-            UserDto dto = dao.fetchUser(userName);
-            this.msg = "User, " + userName + ", was retrieved successfully";
-            logger.info(this.msg);
-            return dto;
-        } catch (Exception e) {
-            this.msg = "Unable to fetch user by login id, " + userName;
-            logger.error(this.msg);
-            throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
     }
 
     /*
@@ -175,87 +105,18 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.users.UserApi#deleteUser(java.lang.String)
-     */
-    @Override
-    public int deleteUser(String userName) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
-        try {
-            int rc = dao.deleteUser(userName);
-            this.msg = "User was deleted successfully: " + userName;
-            logger.info(this.msg);
-            return rc;
-        } catch (UserDaoException e) {
-            this.msg = "Unable to delete user, " + userName;
-            logger.error(this.msg);
-            throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.modules.users.UserApi#fetchGroup()
      */
     @Override
-    public List<UserDto> getGroup() throws UserApiException {
+    public List<UserDto> getGroup(UserDto group) throws UserApiException {
         UserDao dao = this.factory.createLdapDao();
         try {
-            List<UserDto> list = dao.fetchGroup();
+            List<UserDto> list = dao.fetchGroup(group);
             this.msg = "master list of groups were retrieved successfully";
             logger.info(this.msg);
             return list;
         } catch (Exception e) {
             this.msg = "Unable to fetch master list of groups";
-            logger.error(this.msg);
-            throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.users.UserApi#fetchGroup(int)
-     */
-    @Override
-    public UserDto getGroup(int grpId) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
-        try {
-            UserDto dto = dao.fetchGroup(grpId);
-            this.msg = "Group, " + grpId + ", was retrieved successfully";
-            logger.info(this.msg);
-            return dto;
-        } catch (UserDaoException e) {
-            this.msg = "Unable to fetch group by group id, " + grpId;
-            logger.error(this.msg);
-            throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.users.UserApi#fetchGroup(java.lang.String)
-     */
-    @Override
-    public UserDto getGroup(String grpName) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
-        try {
-            UserDto dto = dao.fetchGroup(grpName);
-            this.msg = "Group, " + grpName + ", was retrieved successfully";
-            logger.info(this.msg);
-            return dto;
-        } catch (Exception e) {
-            this.msg = "Unable to fetch group by group name, " + grpName;
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
         } finally {
@@ -311,28 +172,4 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             dao = null;
         }
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.users.UserApi#deleteGroup(java.lang.String)
-     */
-    @Override
-    public int deleteGroup(String grpName) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
-        try {
-            int rc = dao.deleteGroup(grpName);
-            this.msg = "Group was deleted successfully: " + grpName;
-            logger.info(this.msg);
-            return rc;
-        } catch (Exception e) {
-            this.msg = "Unable to delete group, " + grpName;
-            logger.error(this.msg);
-            throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
 }
