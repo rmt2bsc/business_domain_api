@@ -44,6 +44,8 @@ public class ApplicationApiTest extends SecurityMockData {
     public void setUp() throws Exception {
         super.setUp();
 
+        when(this.mockPersistenceClient.retrieveList(any(Application.class)))
+             .thenReturn(this.mockApplicationData);
     }
 
     /**
@@ -57,13 +59,13 @@ public class ApplicationApiTest extends SecurityMockData {
 
     @Test
     public void testSuccess_Fetch() {
-        try {
-            when(this.mockPersistenceClient.retrieveList(any(Application.class)))
-                            .thenReturn(this.mockApplicationData);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch Application test case setup failed");
-        }
+//        try {
+//            when(this.mockPersistenceClient.retrieveList(any(Application.class)))
+//                            .thenReturn(this.mockApplicationData);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Fetch Application test case setup failed");
+//        }
 
         AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
         ApplicationDto criteria = Rmt2OrmDtoFactory.getAppDtoInstance(null);
