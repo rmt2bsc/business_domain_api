@@ -3,9 +3,9 @@ package org.rmt2.api.application;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-import java.sql.ResultSet;
 import java.util.List;
 
+import org.dao.application.AppDaoException;
 import org.dao.mapping.orm.rmt2.Application;
 import org.dto.ApplicationDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
@@ -21,8 +21,11 @@ import org.modules.application.AppApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.SecurityMockData;
+import org.rmt2.api.SecurityMockDataFactory;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
@@ -32,7 +35,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
 public class ApplicationApiTest extends SecurityMockData {
 
     
@@ -59,14 +62,6 @@ public class ApplicationApiTest extends SecurityMockData {
 
     @Test
     public void testSuccess_Fetch() {
-//        try {
-//            when(this.mockPersistenceClient.retrieveList(any(Application.class)))
-//                            .thenReturn(this.mockApplicationData);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Assert.fail("Fetch Application test case setup failed");
-//        }
-
         AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
         ApplicationDto criteria = Rmt2OrmDtoFactory.getAppDtoInstance(null);
         List<ApplicationDto> results = null;
@@ -77,8 +72,58 @@ public class ApplicationApiTest extends SecurityMockData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
-        
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ApplicationDto item = results.get(ndx);
+            int currentAppId = SecurityMockDataFactory.TEST_APP_ID + ndx;
+            Assert.assertEquals(currentAppId, item.getApplicationId());
+            Assert.assertEquals("ApplicationName_" + currentAppId, item.getAppName());
+            Assert.assertEquals("ApplicationDescription_" + currentAppId, item.getAppDescription());
+        }
     }
 
+    
+    @Test
+    public void testSuccess_Fetch_NotFound() {
+        when(this.mockPersistenceClient.retrieveList(any(Application.class)))
+              .thenReturn(null);
+        
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        ApplicationDto criteria = Rmt2OrmDtoFactory.getAppDtoInstance(null);
+        List<ApplicationDto> results = null;
+        try {
+            results = api.get(criteria);
+        } catch (AppApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
  
+    @Test
+    public void testError_Fetch_DB_Access_Fault() {
+        when(this.mockPersistenceClient.retrieveList(any(Application.class)))
+            .thenThrow(new DatabaseException("Error fetching application data"));
+        
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        ApplicationDto criteria = Rmt2OrmDtoFactory.getAppDtoInstance(null);
+        try {
+            api.get(criteria);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof AppApiException);
+            Assert.assertTrue(e.getCause() instanceof AppDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Fetch_Null_Criteria_Parameter() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        try {
+            api.get(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("Application crtieria object is required", e.getMessage());
+        }
+    }
 }
