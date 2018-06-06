@@ -7,6 +7,7 @@ import org.dao.user.UserDao;
 import org.dao.user.UserDaoException;
 import org.dao.user.UserDaoFactory;
 import org.dto.UserDto;
+import org.modules.SecurityConstants;
 
 import com.api.foundation.AbstractTransactionApiImpl;
 
@@ -21,16 +22,38 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
 
     private static final Logger logger = Logger.getLogger(UserApiImpl.class);
 
-    private UserDaoFactory factory;
+    private UserDaoFactory daoFact;
+    private UserDao dao;
 
     /**
      * Create an UserApiImpl object that initializes the DAO factory.
      */
-    protected UserApiImpl() {
-        super();
-        this.factory = new UserDaoFactory();
+    UserApiImpl() {
+        super(SecurityConstants.APP_NAME);
+        this.dao = this.daoFact.createRmt2OrmDao(SecurityConstants.APP_NAME);
+        this.setSharedDao(this.dao);
+        logger.info("User Api is initialized by default constructor");
     }
 
+    /**
+     * Create a UserApiImpl using the specified application name.
+     * 
+     * @param appName
+     *            the user name
+     */
+    UserApiImpl(String appName) {
+        super(appName);
+        this.dao = this.daoFact.createRmt2OrmDao(appName);
+        this.setSharedDao(this.dao);
+        logger.info("User Api is initialized by application name, " + appName);
+    }
+    
+    @Override
+    public void init() {
+        super.init();
+        this.daoFact = new UserDaoFactory();
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -38,7 +61,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public List<UserDto> getUser(UserDto user) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
         try {
             List<UserDto> list = dao.fetchUser(user);
             this.msg = "User was retrieved successfully using custom criteria";
@@ -61,7 +83,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public int updateUser(UserDto user) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
         dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainUser(user);
@@ -86,7 +107,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public int deleteUser(int uid) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
         try {
             int rc = dao.deleteUser(uid);
             this.msg = "User was deleted successfully: " + uid;
@@ -109,7 +129,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public List<UserDto> getGroup(UserDto group) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
         try {
             List<UserDto> list = dao.fetchGroup(group);
             this.msg = "master list of groups were retrieved successfully";
@@ -132,7 +151,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public int updateGroup(UserDto grp) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
         dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainGroup(grp);
@@ -157,7 +175,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public int deleteGroup(int grpId) throws UserApiException {
-        UserDao dao = this.factory.createLdapDao();
         try {
             int rc = dao.deleteGroup(grpId);
             this.msg = "Group was deleted successfully: " + grpId;
