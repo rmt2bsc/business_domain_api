@@ -7,7 +7,6 @@ import org.dao.application.AppDao;
 import org.dao.application.AppDaoException;
 import org.dao.application.AppDaoFactory;
 import org.dto.ApplicationDto;
-import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import org.modules.SecurityConstants;
 
 import com.InvalidDataException;
@@ -90,16 +89,6 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
             this.msg = "Unable to fetch application data";
             throw new AppApiException(this.msg, e);
         } 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.category.application.ApplicationApi#create()
-     */
-    @Override
-    public ApplicationDto create() {
-        return Rmt2OrmDtoFactory.getNewAppCategoryInstance();
     }
 
     /*

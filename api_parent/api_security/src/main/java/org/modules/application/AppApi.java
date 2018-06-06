@@ -25,13 +25,6 @@ public interface AppApi extends TransactionApi {
     List<ApplicationDto> get(ApplicationDto criteria) throws AppApiException;
 
     /**
-     * Create a new Application instance of a particular category.
-     * 
-     * @return an instance of {@link ApplicationDto}
-     */
-    ApplicationDto create();
-
-    /**
      * Persist changes to a single Application entity to the database.
      * <p>
      * This method will handle SQL inserts and updates where applicable. When
