@@ -21,21 +21,6 @@ public interface WebServiceDto extends ResourceDto {
     String getRequestUrl();
 
     /**
-     * Sets the secured flag
-     * 
-     * @param value
-     *            the secured flag
-     */
-    void setSecured(int value);
-
-    /**
-     * Gets the secured flag
-     * 
-     * @return secured flag
-     */
-    int getSecured();
-
-    /**
      * Get the host name where resource can be located
      * 
      * @return the host name

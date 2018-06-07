@@ -33,14 +33,6 @@ class DefaultResourceImpl extends SecurityDaoImpl implements ResourceDao {
      * Always return null
      */
     @Override
-    public List<ResourceDto> fetchResource() throws ResourceDaoException {
-        return null;
-    }
-
-    /**
-     * Always return null
-     */
-    @Override
     public List<ResourceDto> fetchResource(ResourceDto criteria)
             throws ResourceDaoException {
         return null;
@@ -59,24 +51,8 @@ class DefaultResourceImpl extends SecurityDaoImpl implements ResourceDao {
      * Always return null
      */
     @Override
-    public List<ResourceDto> fetchResourceType() throws ResourceDaoException {
-        return null;
-    }
-
-    /**
-     * Always return null
-     */
-    @Override
     public ResourceDto fetchResourceType(int resourceTypeId)
             throws ResourceDaoException {
-        return null;
-    }
-
-    /**
-     * Always return null
-     */
-    @Override
-    public List<ResourceDto> fetchResourceSubType() throws ResourceDaoException {
         return null;
     }
 
@@ -173,8 +149,16 @@ class DefaultResourceImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public int deleteResource(ResourceDto rsrc) throws ResourceDaoException {
-        // TODO Auto-generated method stub
         return 0;
     }
 
+    @Override
+    public List<ResourceDto> fetchResourceType(ResourceDto criteria) throws ResourceDaoException {
+        return null;
+    }
+
+    @Override
+    public List<ResourceDto> fetchResourceSubType(ResourceDto criteria) throws ResourceDaoException {
+        return null;
+    }
 }

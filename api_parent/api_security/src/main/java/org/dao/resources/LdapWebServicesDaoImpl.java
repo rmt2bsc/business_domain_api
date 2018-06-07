@@ -74,7 +74,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
      *             Database access error
      */
     @Override
-    public List<ResourceDto> fetchResourceSubType() throws ResourceDaoException {
+    public List<ResourceDto> fetchResourceSubType(ResourceDto rsrc) throws ResourceDaoException {
         List<LdapWebService> subTypeList = null;
         try {
             LdapSearchOperation op = new LdapSearchOperation();
@@ -217,7 +217,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
                         op.getMatchAttributes().put(
                                 "isSecured",
                                 String.valueOf(((WebServiceDto) criteria)
-                                        .getSecured()));
+                                        .isSecured()));
                     }
                     op.setUseSearchFilterExpression(false);
                 }
@@ -240,7 +240,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
                         op.getSearchFilterArgs().put(
                                 "isSecured",
                                 String.valueOf(((WebServiceDto) criteria)
-                                        .getSecured()));
+                                        .isSecured()));
                     }
                     op.setUseSearchFilterExpression(true);
                     logger.info("LDAP filter to be applied: "
@@ -435,7 +435,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
         op.addAttribute("cn", wsConfig.getName());
         op.addAttribute("description", wsConfig.getDescription());
         op.addAttribute("isSecured",
-                String.valueOf(((WebServiceDto) wsConfig).getSecured()));
+                String.valueOf(((WebServiceDto) wsConfig).isSecured()));
         op.addAttribute("requestUrl",
                 ((WebServiceDto) wsConfig).getRequestUrl());
         op.addAttribute("replyMsgId",
@@ -468,7 +468,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
         op.addAttribute("description", wsConfig.getDescription(),
                 LdapClient.MOD_OPERATION_REPLACE);
         op.addAttribute("isSecured",
-                String.valueOf(((WebServiceDto) wsConfig).getSecured()),
+                String.valueOf(((WebServiceDto) wsConfig).isSecured()),
                 LdapClient.MOD_OPERATION_REPLACE);
         op.addAttribute("requestUrl",
                 ((WebServiceDto) wsConfig).getRequestUrl(),
@@ -556,11 +556,8 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
             throw new ResourceDaoException(
                     "Web service resource request URL is required");
         }
-        if (((WebServiceDto) rsrc).getSecured() != 0
-                && ((WebServiceDto) rsrc).getSecured() != 1) {
-            throw new ResourceDaoException(
-                    "Web service resource security flag contains an invalid value: "
-                            + ((WebServiceDto) rsrc).getSecured());
+        if (rsrc.isSecured() == null) {
+            rsrc.setSecured(false);
         }
         return;
     }

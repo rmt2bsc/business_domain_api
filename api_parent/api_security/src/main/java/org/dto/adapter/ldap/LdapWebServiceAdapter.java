@@ -82,7 +82,7 @@ public class LdapWebServiceAdapter extends ResourceLdapAdapter implements
      * @see org.dto.WebServiceDto#setSecured(int)
      */
     @Override
-    public void setSecured(int value) {
+    public void setSecured(Boolean value) {
         this.ws.setIsSecured(String.valueOf(value));
     }
 
@@ -92,11 +92,11 @@ public class LdapWebServiceAdapter extends ResourceLdapAdapter implements
      * @see org.dto.WebServiceDto#getSecured()
      */
     @Override
-    public int getSecured() {
+    public Boolean isSecured() {
         try {
-            return Integer.parseInt(this.ws.getIsSecured());
+            return Boolean.getBoolean(this.ws.getIsSecured());
         } catch (NumberFormatException e) {
-            return 0;
+            return false;
         }
     }
 

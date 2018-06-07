@@ -37,18 +37,6 @@ public interface ResourceDto extends TransactionDto {
      */
     public String getName();
 
-    // /**
-    // * Sets the URL of the resource
-    // */
-    // public void setRequestUrl(String value);
-    //
-    // /**
-    // * Gets the URL of the resource
-    // *
-    // *
-    // */
-    // public String getRequestUrl();
-
     /**
      * Sets the description of the resource
      * 
@@ -63,53 +51,6 @@ public interface ResourceDto extends TransactionDto {
      * @return String
      */
     public String getDescription();
-
-    // /**
-    // * Sets the secured flag
-    // *
-    // * @param value
-    // * the secured flag
-    // */
-    // public void setSecured(int value);
-    //
-    // /**
-    // * Gets the secured flag
-    // *
-    // * @return secured flag
-    // */
-    // public int getSecured();
-    //
-    // /**
-    // * Get the host name where resource can be located
-    // *
-    // * @return
-    // * the host name
-    // */
-    // String getHost();
-    //
-    // /**
-    // * Set the host name where resource can be located
-    // *
-    // * @param hostName
-    // * the host name
-    // */
-    // void setHost(String hostName);
-    //
-    // /**
-    // * Get the router type.
-    // *
-    // * @return
-    // * router type
-    // */
-    // String getRouterType();
-    //
-    // /**
-    // * Set the router type.
-    // *
-    // * @param routerType
-    // * the router type
-    // */
-    // void setRouterType(String routerType);
 
     /**
      * Sets the id of the resource type
@@ -185,30 +126,19 @@ public interface ResourceDto extends TransactionDto {
      * @return name of sub type
      */
     public String getSubTypeName();
+    
+    /**
+     * Sets the secured flag
+     * 
+     * @param value
+     *            the secured flag
+     */
+    void setSecured(Boolean value);
 
-    // /**
-    // * @return the querySecureFlag
-    // */
-    // public boolean isQuerySecureFlag();
-    //
-    // /**
-    // * @param querySecureFlag the querySecureFlag to set
-    // */
-    // public void setQuerySecureFlag(boolean querySecureFlag);
-    //
-    //
-    // /**
-    // * Set the message id for the reply
-    // *
-    // * @param value
-    // * String
-    // */
-    // void setReplyMsgId(String value);
-    //
-    // /**
-    // * Get the message id for the reply
-    // *
-    // * @return String
-    // */
-    // String getReplyMsgId();
+    /**
+     * Gets the secured flag
+     * 
+     * @return secured flag
+     */
+    Boolean isSecured();
 }

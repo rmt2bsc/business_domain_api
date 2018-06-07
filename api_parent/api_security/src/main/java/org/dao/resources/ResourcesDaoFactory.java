@@ -1,5 +1,7 @@
 package org.dao.resources;
 
+import org.dao.mapping.orm.rmt2.UserResource;
+import org.dto.ResourceDto;
 import org.modules.SecurityConstants;
 
 import com.RMT2Base;
@@ -66,6 +68,38 @@ public class ResourcesDaoFactory extends RMT2Base {
     public static final ComputerResourceDao createLdapComputerAppServerDao() {
         ComputerResourceDao dao = new LdapComputerAppServerDaoImpl();
         return dao;
+    }
+    
+    /**
+     * Build Extended User selection criteria from a UserDto instance
+     * 
+     * @param criteria an instance of {@link UserDto}
+     * @return an instance of [{@link VwUser}
+     */
+    public static final UserResource buildResourceCriteria(ResourceDto criteria) {
+        UserResource user = new UserResource();
+
+        if (criteria != null) {
+            if (criteria.getUid() > 0) {
+                user.addCriteria(UserResource.PROP_RSRCID, criteria.getUid());
+            }
+            if (criteria.getTypeId() > 0) {
+                user.addCriteria(UserResource.PROP_RSRCTYPEID, criteria.getTypeId());
+            }
+            if (criteria.getName() != null) {
+                user.addLikeClause(UserResource.PROP_NAME, criteria.getName());
+            }
+            if (criteria.getSubTypeId() > 0) {
+                user.addCriteria(UserResource.PROP_RSRCSUBTYPEID, criteria.getSubTypeId());
+            }
+            if (criteria.isSecured() != null) {
+                user.addCriteria(UserResource.PROP_SECURED, criteria.isSecured() ? 1 : 0);
+            }
+            if (criteria.getDescription() != null) {
+                user.addLikeClause(UserResource.PROP_DESCRIPTION, criteria.getDescription());
+            }
+        }
+        return user;
     }
 
 }

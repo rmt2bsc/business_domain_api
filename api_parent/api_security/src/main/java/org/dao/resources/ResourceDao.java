@@ -13,13 +13,6 @@ import com.api.persistence.DaoClient;
  * 
  */
 public interface ResourceDao extends DaoClient {
-    /**
-     * Fetch all top level resource records.
-     * 
-     * @return List of {@link ResourceDto} objects.
-     * @throws ResourceDaoException
-     */
-    List<ResourceDto> fetchResource() throws ResourceDaoException;
 
     /**
      * Fetch all resource records that match the given selection criterai,
@@ -30,8 +23,7 @@ public interface ResourceDao extends DaoClient {
      * @return A List of {@link ResourceDto} objects or null if no data is found
      * @throws ResourceDaoException
      */
-    List<ResourceDto> fetchResource(ResourceDto criteria)
-            throws ResourceDaoException;
+    List<ResourceDto> fetchResource(ResourceDto criteria) throws ResourceDaoException;
 
     /**
      * Fetch a single resource record by its resource id.
@@ -49,7 +41,7 @@ public interface ResourceDao extends DaoClient {
      * @return A List of {@link ResourceDto} objects containting resource data.
      * @throws ResourceDaoException
      */
-    List<ResourceDto> fetchResourceType() throws ResourceDaoException;
+    List<ResourceDto> fetchResourceType(ResourceDto criteria) throws ResourceDaoException;
 
     /**
      * Fetch a single resource type record by its resource type id.
@@ -59,8 +51,7 @@ public interface ResourceDao extends DaoClient {
      *         type data.
      * @throws ResourceDaoException
      */
-    ResourceDto fetchResourceType(int resourceTypeId)
-            throws ResourceDaoException;
+    ResourceDto fetchResourceType(int resourceTypeId) throws ResourceDaoException;
 
     /**
      * Fetch all resource sub type records.
@@ -69,7 +60,7 @@ public interface ResourceDao extends DaoClient {
      *         type data.
      * @throws ResourceDaoException
      */
-    List<ResourceDto> fetchResourceSubType() throws ResourceDaoException;
+    List<ResourceDto> fetchResourceSubType(ResourceDto criteria) throws ResourceDaoException;
 
     /**
      * Fetch a single resource sub type record by its resource sub type id.
@@ -79,8 +70,7 @@ public interface ResourceDao extends DaoClient {
      *         sub type data.
      * @throws ResourceDaoException
      */
-    ResourceDto fetchResourceSubType(int resourceSubTypeId)
-            throws ResourceDaoException;
+    ResourceDto fetchResourceSubType(int resourceSubTypeId) throws ResourceDaoException;
 
     /**
      * Fetch a single resource sub type record by its name
@@ -91,8 +81,7 @@ public interface ResourceDao extends DaoClient {
      *         sub type data.
      * @throws ResourceDaoException
      */
-    ResourceDto fetchResourceSubType(String resourceSubTypeName)
-            throws ResourceDaoException;
+    ResourceDto fetchResourceSubType(String resourceSubTypeName) throws ResourceDaoException;
 
     /**
      * Fetch data where the selection criteria targets a single category
@@ -113,8 +102,7 @@ public interface ResourceDao extends DaoClient {
      *         found.
      * @throws ResourceDaoException
      */
-    List<ResourceDto> fetchExtResource(ResourceDto criteria)
-            throws ResourceDaoException;
+    List<ResourceDto> fetchExtResource(ResourceDto criteria) throws ResourceDaoException;
 
     /**
      * Creates a new or modifies an existing Resource record.
@@ -153,8 +141,7 @@ public interface ResourceDao extends DaoClient {
      *         by the update of the resource sub type.
      * @throws ResourceDaoException
      */
-    int maintainResourceSubType(ResourceDto rsrcSubType)
-            throws ResourceDaoException;
+    int maintainResourceSubType(ResourceDto rsrcSubType) throws ResourceDaoException;
 
     /**
      * Deletes a resource record.

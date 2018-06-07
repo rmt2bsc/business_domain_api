@@ -8,8 +8,7 @@ import com.api.foundation.TransactionDtoImpl;
  * @author rterrell
  * 
  */
-public class DefaultResourceAdapter extends TransactionDtoImpl implements
-        ResourceDto {
+public class DefaultResourceAdapter extends TransactionDtoImpl implements ResourceDto {
 
     private boolean querySecureFlag;
 
@@ -323,5 +322,14 @@ public class DefaultResourceAdapter extends TransactionDtoImpl implements
      */
     public void setReplyMsgId(String value) {
         throw new UnsupportedOperationException("this method is not supported");
+    }
+
+    @Override
+    public void setSecured(Boolean value) {
+    }
+
+    @Override
+    public Boolean isSecured() {
+        return false;
     }
 }

@@ -14,76 +14,28 @@ import com.api.foundation.TransactionApi;
  */
 public interface ResourceRegistryApi extends TransactionApi {
 
-//    /**
-//     * Obtains a master list of resource objects.
-//     * 
-//     * @return List of {@link ResourceDto} objects containing the resource data
-//     *         or null if no data is found.
-//     * @throws ResourceRegistryApiException
-//     */
-//    List<ResourceDto> getResource() throws ResourceRegistryApiException;
-//
-//    /**
-//     * Obtains a single resource object based on a unique id.
-//     * 
-//     * @param resourceId
-//     *            the id of the resource
-//     * @return an instance of {@link ResourceDto} objects containing the
-//     *         resource data or null if no data is found
-//     * @throws ResourceRegistryApiException
-//     */
-//    ResourceDto getResource(int resourceId) throws ResourceRegistryApiException;
-
     /**
      * Obtains a master list of resource type objects.
      * 
+     * @param  criteria an instance of {@link ResourceDto} containing values to build
+     *            the selection criteria.
      * @return List of {@link ResourceDto} objects containing the resource type
      *         data or null if no data is found.
      * @throws ResourceRegistryApiException
      */
-    List<ResourceDto> getResourceType() throws ResourceRegistryApiException;
-
-    /**
-     * Obtains a single resource type object based on a unique id.
-     * 
-     * @param resourceTypeId
-     *            the id of the resource
-     * @return an instance of {@link ResourceDto} containing the resource type
-     *         data or null if no data is found
-     * @throws ResourceRegistryApiException
-     */
-    ResourceDto getResourceType(int resourceTypeId) throws ResourceRegistryApiException;
+    List<ResourceDto> getResourceType(ResourceDto criteria) throws ResourceRegistryApiException;
 
     /**
      * Obtains a master list of resource sub type objects.
      * 
+     * @param criteria
+     *            an instance of {@link ResourceDto} containing values to build
+     *            the selection criteria.
      * @return List of {@link ResourceDto} objects containing the resource sub
      *         type data or null if no data is found.
      * @throws ResourceRegistryApiException
      */
-    List<ResourceDto> getResourceSubType() throws ResourceRegistryApiException;
-
-    /**
-     * Obtains a single resource sub type object based on a unique id.
-     * 
-     * @param resourceSubTypeId
-     *            the id of the resource
-     * @return an instance of {@link ResourceDto} containing the resource sub
-     *         type data or null if no data is found
-     * @throws ResourceRegistryApiException
-     */
-    ResourceDto getResourceSubType(int resourceSubTypeId) throws ResourceRegistryApiException;
-
-    /**
-     * Obtains a single resource sub type object based on a unique id.
-     * 
-     * @param resourceSubTypeName
-     *            the name of the resource
-     * @return an instance of {@link ResourceDto} containing the resource sub
-     *         type data or null if no data is found
-     * @throws ResourceRegistryApiException
-     */
-    ResourceDto getResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException;
+    List<ResourceDto> getResourceSubType(ResourceDto criteria) throws ResourceRegistryApiException;
 
     /**
      * Obtains one or more extended resource objects based any combination
@@ -176,20 +128,22 @@ public interface ResourceRegistryApi extends TransactionApi {
     /**
      * Deletes a resource type object
      * 
-     * @param resourceTypeName
-     *            the unique id for the resouce type object to be deleted.
+     * @param criteria
+     *            an instance of {@link ResourceDto} containing values to build
+     *            the selection criteria.
      * @return the total number of objects effected by the delete operation.
      * @throws ResourceRegistryApiException
      */
-    int deleteResourceType(String resourceTypeName) throws ResourceRegistryApiException;
+    int deleteResourceType(ResourceDto criteria) throws ResourceRegistryApiException;
 
     /**
      * Deletes a resource sub type object
      * 
-     * @param resourceSubTypeName
-     *            the unique id for the resouce sub type object to be deleted.
+     * @param criteria
+     *            an instance of {@link ResourceDto} containing values to build
+     *            the selection criteria.
      * @return the total number of objects effected by the delete operation.
      * @throws ResourceRegistryApiException
      */
-    int deleteResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException;
+    int deleteResourceSubType(ResourceDto criteria) throws ResourceRegistryApiException;
 }

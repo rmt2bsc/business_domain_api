@@ -111,8 +111,8 @@ class ResourceExtRmt2OrmAdapter extends DefaultResourceAdapter implements
      * 
      * @see org.dto.DefaultResourceRmt2OrmAdapter#setSecured(boolean)
      */
-    public void setSecured(int value) {
-        this.r.setSecured(value);
+    public void setSecured(Boolean value) {
+        this.r.setSecured((value != null && value ? 1 : 0));
     }
 
     /*
@@ -120,8 +120,8 @@ class ResourceExtRmt2OrmAdapter extends DefaultResourceAdapter implements
      * 
      * @see org.dto.DefaultResourceRmt2OrmAdapter#getSecured()
      */
-    public int getSecured() {
-        return (this.r.getSecured());
+    public Boolean isSecured() {
+        return (this.r.getSecured() == 1 ? true : false);
     }
 
     /*

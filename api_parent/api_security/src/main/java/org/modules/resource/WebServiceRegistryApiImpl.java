@@ -81,9 +81,9 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      * @throws ResourceRegistryApiException
      */
     @Override
-    public List<ResourceDto> getResourceType() throws ResourceRegistryApiException {
+    public List<ResourceDto> getResourceType(ResourceDto criteria) throws ResourceRegistryApiException {
         try {
-            List<ResourceDto> results = dao.fetchResourceType();
+            List<ResourceDto> results = dao.fetchResourceType(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to fetch master list of resource type objects";
@@ -103,9 +103,9 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      * @throws ResourceRegistryApiException
      */
     @Override
-    public List<ResourceDto> getResourceSubType() throws ResourceRegistryApiException {
+    public List<ResourceDto> getResourceSubType(ResourceDto criteria) throws ResourceRegistryApiException {
         try {
-            List<ResourceDto> results = dao.fetchResourceSubType();
+            List<ResourceDto> results = dao.fetchResourceSubType(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to fetch master list of resource sub type objects";
@@ -117,30 +117,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         }
     }
 
-    /**
-     * Obtains a single resource sub type object based on a unique id using the
-     * RMT ORM DAO.
-     * 
-     * @param resourceSubTypeName
-     *            the id of the resource
-     * @return an instance of {@link ResourceDto} containing the resource sub
-     *         type data or null if no data is found
-     * @throws ResourceRegistryApiException
-     */
-    @Override
-    public ResourceDto getResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException {
-        try {
-            ResourceDto results = dao.fetchResourceSubType(resourceSubTypeName);
-            return results;
-        } catch (Exception e) {
-            this.msg = "Unable to fetch resource sub type with by its unique key, " + resourceSubTypeName;
-            logger.error(this.msg);
-            throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
 
     /**
      * Obtains one or more extended resource objects based any combination
@@ -305,11 +281,11 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      * @throws ResourceRegistryApiException
      */
     @Override
-    public int deleteResourceSubType(String resourceSubTypeName) throws ResourceRegistryApiException {
+    public int deleteResourceSubType(ResourceDto criteria) throws ResourceRegistryApiException {
         try {
-            return dao.deleteResourceSubType(resourceSubTypeName);
+            return dao.deleteResourceSubType(criteria.getSubTypeId());
         } catch (Exception e) {
-            this.msg = "Unable to delete resource sub type object identified by:  "  + resourceSubTypeName;
+            this.msg = "Unable to delete resource sub type object identified by id:  "  + criteria.getSubTypeId();
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
         } finally {
@@ -327,31 +303,8 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      * @throws ResourceRegistryApiException
      */
     @Override
-    public int deleteResourceType(String resourceTypeId) throws ResourceRegistryApiException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-    
-    /**
-     * Not supported
-     */
-    @Override
-    public ResourceDto getResourceType(int resourceTypeId) throws ResourceRegistryApiException {
+    public int deleteResourceType(ResourceDto criteria) throws ResourceRegistryApiException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
-    /**
-     * Not supported
-     */
-    @Override
-    public ResourceDto getResourceSubType(int resourceSubTypeId) throws ResourceRegistryApiException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-//    /**
-//     * Not supported
-//     */
-//    @Override
-//    public ResourceDto getResource(int resourceId) throws ResourceRegistryApiException {
-//        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-//    }
 }

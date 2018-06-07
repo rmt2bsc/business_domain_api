@@ -390,4 +390,13 @@ class LdapComputerAdapter extends TransactionDtoImpl implements ComputerDto {
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
+    @Override
+    public void setSecured(Boolean value) {
+    }
+
+    @Override
+    public Boolean isSecured() {
+        return false;
+    }
+
 }

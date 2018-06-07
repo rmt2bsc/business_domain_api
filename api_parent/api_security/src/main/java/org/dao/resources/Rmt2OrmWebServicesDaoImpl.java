@@ -60,8 +60,8 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             Database access error
      */
     @Override
-    public List<ResourceDto> fetchResource() throws ResourceDaoException {
-        UserResource rsrc = new UserResource();
+    public List<ResourceDto> fetchResource(ResourceDto criteria) throws ResourceDaoException {
+        UserResource rsrc = ResourcesDaoFactory.buildResourceCriteria(criteria);
         List<UserResource> rsrcList = null;
         try {
             rsrcList = this.client.retrieveList(rsrc);
@@ -91,8 +91,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             Database access error
      */
     @Override
-    public ResourceDto fetchResource(int resourceId)
-            throws ResourceDaoException {
+    public ResourceDto fetchResource(int resourceId) throws ResourceDaoException {
         UserResource rsrc = new UserResource();
         rsrc.addCriteria(UserResource.PROP_RSRCID, resourceId);
         try {
@@ -117,7 +116,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             Database access error
      */
     @Override
-    public List<ResourceDto> fetchResourceType() throws ResourceDaoException {
+    public List<ResourceDto> fetchResourceType(ResourceDto criteria) throws ResourceDaoException {
         UserResourceType rsrc = new UserResourceType();
         List<UserResourceType> rsrcList = null;
         try {
@@ -173,7 +172,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             Database access error
      */
     @Override
-    public List<ResourceDto> fetchResourceSubType() throws ResourceDaoException {
+    public List<ResourceDto> fetchResourceSubType(ResourceDto criteria) throws ResourceDaoException {
         UserResourceSubtype rsrc = new UserResourceSubtype();
         List<UserResourceSubtype> rsrcList = null;
         try {
@@ -283,7 +282,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
             }
             if (((WebServiceDto) criteria).isQuerySecureFlag()) {
                 rsrc.addCriteria(VwResource.PROP_SECURED,
-                        ((WebServiceDto) criteria).getSecured());
+                        ((WebServiceDto) criteria).isSecured());
             }
 
             // Check for UserResourceType related predicates
@@ -352,8 +351,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      * @throws ResourceDaoException
      */
     @Override
-    public int maintainResource(ResourceDto resource)
-            throws ResourceDaoException {
+    public int maintainResource(ResourceDto resource) throws ResourceDaoException {
         this.validateResource(resource);
 
         int rc = 0;
@@ -364,7 +362,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         r.setRsrcSubtypeId(resource.getSubTypeId());
         r.setUrl(((WebServiceDto) resource).getRequestUrl());
         r.setDescription(resource.getDescription());
-        r.setSecured(((WebServiceDto) resource).getSecured());
+        r.setSecured((resource).isSecured() ? 1 : 0);
         r.setHost(((WebServiceDto) resource).getHost());
         r.setDateCreated(resource.getDateCreated());
         r.setDateUpdated(resource.getDateUpdated());
@@ -761,16 +759,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         } catch (DatabaseException e) {
             throw new ResourceDaoException(e);
         }
-    }
-
-    /**
-     * Method not supported.
-     */
-    @Override
-    public List<ResourceDto> fetchResource(ResourceDto criteria)
-            throws ResourceDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
