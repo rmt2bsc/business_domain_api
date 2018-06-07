@@ -26,6 +26,9 @@ class GroupRmt2OrmAdapter extends DefaultUserAdapter {
      */
     protected GroupRmt2OrmAdapter(UserGroup group) {
         this();
+        if (group == null) {
+            group = new UserGroup();
+        }
         this.u = group;
     }
 

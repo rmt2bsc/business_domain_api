@@ -29,6 +29,9 @@ class UserRmt2OrmAdapter extends DefaultUserAdapter {
      */
     public UserRmt2OrmAdapter(UserLogin userLogin) {
         this();
+        if (userLogin == null) {
+            userLogin = new UserLogin();
+        }
         this.u = userLogin;
         this.setDateCreated(userLogin.getDateCreated());
         this.setDateUpdated(userLogin.getDateUpdated());
@@ -304,6 +307,26 @@ class UserRmt2OrmAdapter extends DefaultUserAdapter {
     @Override
     public int getLoginUid() {
         return u.getLoginId();
+    }
+
+    @Override
+    public void setStartDate(Date value) {
+        u.setStartDate(value);
+    }
+
+    @Override
+    public Date getStartDate() {
+        return u.getStartDate();
+    }
+
+    @Override
+    public void setTerminationDate(Date value) {
+        u.setTerminationDate(value);
+    }
+
+    @Override
+    public Date getTerminationDate() {
+        return u.getTerminationDate();
     }
 
 }
