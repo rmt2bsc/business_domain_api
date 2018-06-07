@@ -1,5 +1,7 @@
 package org.modules.resource;
 
+import org.modules.SecurityConstants;
+
 import com.RMT2Base;
 
 /**
@@ -23,8 +25,20 @@ public class ResourceRegistryApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link ResourceRegistryApi}
      */
-    public ResourceRegistryApi createWebServiceRegistryApi() {
-        ResourceRegistryApi api = new WebServiceRegistryApiImpl();
+    public static final ResourceRegistryApi createWebServiceRegistryApiInstance() {
+        ResourceRegistryApi api = createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
+        return api;
+    }
+    
+    /**
+     * Creates an instance of ResourceRegistryApi from the web service resource
+     * registry api implementation.
+     * 
+     * @param appName
+     * @return an instance of {@link ResourceRegistryApi}
+     */
+    public static final ResourceRegistryApi createWebServiceRegistryApiInstance(String appName) {
+        ResourceRegistryApi api = new WebServiceRegistryApiImpl(appName);
         return api;
     }
 }

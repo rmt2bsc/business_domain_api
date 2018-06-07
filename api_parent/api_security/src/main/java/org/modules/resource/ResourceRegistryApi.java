@@ -14,25 +14,25 @@ import com.api.foundation.TransactionApi;
  */
 public interface ResourceRegistryApi extends TransactionApi {
 
-    /**
-     * Obtains a master list of resource objects.
-     * 
-     * @return List of {@link ResourceDto} objects containing the resource data
-     *         or null if no data is found.
-     * @throws ResourceRegistryApiException
-     */
-    List<ResourceDto> getResource() throws ResourceRegistryApiException;
-
-    /**
-     * Obtains a single resource object based on a unique id.
-     * 
-     * @param resourceId
-     *            the id of the resource
-     * @return an instance of {@link ResourceDto} objects containing the
-     *         resource data or null if no data is found
-     * @throws ResourceRegistryApiException
-     */
-    ResourceDto getResource(int resourceId) throws ResourceRegistryApiException;
+//    /**
+//     * Obtains a master list of resource objects.
+//     * 
+//     * @return List of {@link ResourceDto} objects containing the resource data
+//     *         or null if no data is found.
+//     * @throws ResourceRegistryApiException
+//     */
+//    List<ResourceDto> getResource() throws ResourceRegistryApiException;
+//
+//    /**
+//     * Obtains a single resource object based on a unique id.
+//     * 
+//     * @param resourceId
+//     *            the id of the resource
+//     * @return an instance of {@link ResourceDto} objects containing the
+//     *         resource data or null if no data is found
+//     * @throws ResourceRegistryApiException
+//     */
+//    ResourceDto getResource(int resourceId) throws ResourceRegistryApiException;
 
     /**
      * Obtains a master list of resource type objects.

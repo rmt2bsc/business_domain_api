@@ -1,5 +1,7 @@
 package org.dao.resources;
 
+import org.modules.SecurityConstants;
+
 import com.RMT2Base;
 
 /**
@@ -24,8 +26,8 @@ public class ResourcesDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link ResourceDao}
      */
-    public ResourceDao createRmt2OrmDao() {
-        ResourceDao dao = new Rmt2OrmWebServicesDaoImpl();
+    public static final ResourceDao createRmt2OrmDao() {
+        ResourceDao dao = createRmt2OrmDao(SecurityConstants.APP_NAME);
         return dao;
     }
 
@@ -38,7 +40,7 @@ public class ResourcesDaoFactory extends RMT2Base {
      *            application name
      * @return an instance of {@link ResourceDao}
      */
-    public ResourceDao createRmt2OrmDao(String appName) {
+    public static final ResourceDao createRmt2OrmDao(String appName) {
         ResourceDao dao = new Rmt2OrmWebServicesDaoImpl(appName);
         return dao;
     }
@@ -49,7 +51,7 @@ public class ResourcesDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link ResourceDao}
      */
-    public ResourceDao createLdapDao() {
+    public static final ResourceDao createLdapDao() {
         ResourceDao dao = new LdapWebServicesDaoImpl();
         return dao;
     }
@@ -61,7 +63,7 @@ public class ResourcesDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link ComputerResourceDao}
      */
-    public ComputerResourceDao createLdapComputerAppServerDao() {
+    public static final ComputerResourceDao createLdapComputerAppServerDao() {
         ComputerResourceDao dao = new LdapComputerAppServerDaoImpl();
         return dao;
     }

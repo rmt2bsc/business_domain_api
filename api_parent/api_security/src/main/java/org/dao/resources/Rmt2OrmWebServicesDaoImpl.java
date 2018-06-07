@@ -149,13 +149,11 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             Database access error
      */
     @Override
-    public ResourceDto fetchResourceType(int resourceTypeId)
-            throws ResourceDaoException {
+    public ResourceDto fetchResourceType(int resourceTypeId) throws ResourceDaoException {
         UserResourceType rsrc = new UserResourceType();
         rsrc.addCriteria(UserResource.PROP_RSRCTYPEID, resourceTypeId);
         try {
-            UserResourceType results = (UserResourceType) this.client
-                    .retrieveObject(rsrc);
+            UserResourceType results = (UserResourceType) this.client.retrieveObject(rsrc);
             if (results == null) {
                 return null;
             }
@@ -207,13 +205,11 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             Database access error
      */
     @Override
-    public ResourceDto fetchResourceSubType(int resourceSubTypeId)
-            throws ResourceDaoException {
+    public ResourceDto fetchResourceSubType(int resourceSubTypeId) throws ResourceDaoException {
         UserResourceSubtype rsrc = new UserResourceSubtype();
         rsrc.addCriteria(UserResource.PROP_RSRCSUBTYPEID, resourceSubTypeId);
         try {
-            UserResourceSubtype results = (UserResourceSubtype) this.client
-                    .retrieveObject(rsrc);
+            UserResourceSubtype results = (UserResourceSubtype) this.client.retrieveObject(rsrc);
             if (results == null) {
                 return null;
             }
@@ -781,8 +777,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      * Method not supported.
      */
     @Override
-    public ResourceDto fetchResourceSubType(String resourceSubTypeName)
-            throws ResourceDaoException {
+    public ResourceDto fetchResourceSubType(String resourceSubTypeName) throws ResourceDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
@@ -791,8 +786,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      * Method not supported.
      */
     @Override
-    public int deleteResourceSubType(String subTypeName)
-            throws ResourceDaoException {
+    public int deleteResourceSubType(String subTypeName) throws ResourceDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
