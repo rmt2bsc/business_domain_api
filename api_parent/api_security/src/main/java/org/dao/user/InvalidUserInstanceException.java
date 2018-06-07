@@ -1,12 +1,14 @@
 package org.dao.user;
 
+import com.InvalidDataException;
+
 /**
  * Used for the handling validation errors regarding the User.
  * 
  * @author RTerrell
  * 
  */
-public class InvalidUserInstanceException extends UserDaoException {
+public class InvalidUserInstanceException extends InvalidDataException {
     private static final long serialVersionUID = 2969536074770899864L;
 
     /**

@@ -116,9 +116,6 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
     public int maintainUser(UserDto user) throws UserDaoException {
         int rc;
 
-        // Validate the user object
-        this.validateUser(user);
-
         // Convert input object
         UserLogin u = new UserLogin();
         u.setLoginId(user.getLoginUid());
@@ -147,8 +144,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
                 rc = this.createUser(u);
                 u.setLoginId(rc);
                 user.setLoginUid(rc);
-                this.msg = "User Login record was created successfully for "
-                        + u.getUsername();
+                this.msg = "User Login record was created successfully for " + u.getUsername();
                 logger.info(this.msg);
             }
             else {
@@ -163,9 +159,8 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
             return rc;
         } catch (Exception e) {
             this.client.rollbackTrans();
-            this.msg = "User maintenance database transaction failed for "
-                    + user.getUsername();
-            throw new DatabaseException(this.msg, e);
+            this.msg = "User maintenance database transaction failed for " + user.getUsername();
+            throw new UserDaoException(this.msg, e);
         }
     }
 
@@ -246,53 +241,6 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
     }
 
     /**
-     * Validates a UserDto object.
-     * 
-     * @param user
-     *            the user instance to validate
-     * @throws InvalidUserInstanceException
-     *             <ol>
-     *             <li>When <i>user</i> is null</li>
-     *             <li>The internal unique id is less than or equal to zero</li>
-     *             <li>The login id is null</li>
-     *             <li>The first name is null</li>
-     *             <li>The last name is null</li>
-     *             <li>The group id is less than or equal to zero</li>
-     *             <li>The password is null</li>
-     *             <li></li>
-     *             </ol>
-     */
-    protected void validateUser(UserDto user)
-            throws InvalidUserInstanceException {
-        if (user == null) {
-            throw new InvalidUserInstanceException(
-                    "User DTO object is required");
-        }
-        if (user.getLoginUid() < 0) {
-            throw new InvalidUserInstanceException(
-                    "The user's internal unique key is required and must value greater than or equal to zero");
-        }
-        if (user.getUsername() == null) {
-            throw new InvalidUserInstanceException("Username is required");
-        }
-        if (user.getFirstname() == null) {
-            throw new InvalidUserInstanceException(
-                    "User first name is required");
-        }
-        if (user.getLastname() == null) {
-            throw new InvalidUserInstanceException("User last name is required");
-        }
-        if (user.getGroupId() <= 0) {
-            throw new InvalidUserInstanceException(
-                    "Group id is required for user");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidUserInstanceException("User password is required");
-        }
-        return;
-    }
-
-    /**
      * Obtains the user's profile as an instance of UserLogin from the database
      * using login id.
      * 
@@ -307,8 +255,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
         user.addCriteria(UserLogin.PROP_USERNAME, userName);
         user = (UserLogin) this.client.retrieveObject(user);
         if (user == null) {
-            throw new NotFoundException("User profile not found for "
-                    + userName);
+            throw new NotFoundException("User profile not found for " + userName);
         }
         return user;
     }
@@ -333,7 +280,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
             return rows;
         } catch (Exception e) {
             this.client.rollbackTrans();
-            throw new DatabaseException(e);
+            throw new UserDaoException(e);
         }
     }
 

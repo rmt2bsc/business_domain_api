@@ -3,13 +3,17 @@ package org.modules.users;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.dao.user.InvalidUserInstanceException;
 import org.dao.user.UserDao;
 import org.dao.user.UserDaoException;
 import org.dao.user.UserDaoFactory;
 import org.dto.UserDto;
 import org.modules.SecurityConstants;
 
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An api implemetation of {@link UserApi} that provides functionality for
@@ -60,14 +64,21 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      * @see org.modules.users.UserApi#fetchUser(org.dto.UserDto)
      */
     @Override
-    public List<UserDto> getUser(UserDto user) throws UserApiException {
+    public List<UserDto> getUser(UserDto criteria) throws UserApiException {
         try {
-            List<UserDto> list = dao.fetchUser(user);
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("User crtieria object is required", e);
+        }
+        
+        try {
+            List<UserDto> list = dao.fetchUser(criteria);
             this.msg = "User was retrieved successfully using custom criteria";
             logger.info(this.msg);
             return list;
         } catch (Exception e) {
-            this.msg = "Unable to fetch user by login id, " + user;
+            this.msg = "Unable to fetch user by login id, " + criteria;
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
         } finally {
@@ -83,11 +94,11 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public int updateUser(UserDto user) throws UserApiException {
+        this.validateUser(user);
         dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainUser(user);
-            this.msg = "Changes to user was saved successfully for user, "
-                    + user.getUsername();
+            this.msg = "Changes to user was saved successfully for user, " + user.getUsername();
             logger.info(this.msg);
             return rc;
         } catch (Exception e) {
@@ -100,6 +111,69 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         }
     }
 
+    /**
+     * Validates a UserDto object.
+     * 
+     * @param user
+     *            the user instance to validate
+     * @throws InvalidUserInstanceException
+     *             <ol>
+     *             <li>When <i>user</i> is null</li>
+     *             <li>The internal unique id is less than or equal to zero</li>
+     *             <li>The first name is null</li>
+     *             <li>The last name is null</li>
+     *             <li>The group id is less than or equal to zero</li>
+     *             <li>The password is null</li>
+     *             <li></li>
+     *             </ol>
+     */
+    protected void validateUser(UserDto user) throws InvalidUserInstanceException {
+        try {
+            Verifier.verifyNotNull(user);
+        }
+        catch (VerifyException e) {
+            throw new InvalidUserInstanceException("User DTO object is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(user.getUsername());
+        }
+        catch (VerifyException e) {
+            throw new InvalidUserInstanceException("Username is required", e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(user.getFirstname());
+        }
+        catch (VerifyException e) {
+            throw new InvalidUserInstanceException("User first name is required", e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(user.getLastname());
+        }
+        catch (VerifyException e) {
+            throw new InvalidUserInstanceException("User last name is required", e);
+        }
+
+        try {
+            Verifier.verifyPositive(user.getGroupId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidUserInstanceException("Group id is required for user", e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(user.getPassword());
+        }
+        catch (VerifyException e) {
+            throw new InvalidUserInstanceException("User password is required", e);
+        }
+
+        return;
+    }
+
+    
     /*
      * (non-Javadoc)
      * 
@@ -128,9 +202,16 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      * @see org.modules.users.UserApi#fetchGroup()
      */
     @Override
-    public List<UserDto> getGroup(UserDto group) throws UserApiException {
+    public List<UserDto> getGroup(UserDto criteria) throws UserApiException {
         try {
-            List<UserDto> list = dao.fetchGroup(group);
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("User Group crtieria object is required", e);
+        }
+        
+        try {
+            List<UserDto> list = dao.fetchGroup(criteria);
             this.msg = "master list of groups were retrieved successfully";
             logger.info(this.msg);
             return list;

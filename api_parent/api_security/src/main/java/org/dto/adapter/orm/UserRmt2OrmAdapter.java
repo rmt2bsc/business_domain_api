@@ -2,7 +2,6 @@ package org.dto.adapter.orm;
 
 import java.util.Date;
 
-import org.SecurityHelper;
 import org.dao.mapping.orm.rmt2.UserLogin;
 import org.dto.DefaultUserAdapter;
 
@@ -100,17 +99,18 @@ class UserRmt2OrmAdapter extends DefaultUserAdapter {
      * @return the password
      */
     public String getPassword() {
-        // Decrypt password
-        String inputPassword = this.u.getPassword();
-        SecurityHelper helper = new SecurityHelper();
-        String pw = null;
-        try {
-            pw = helper.decryptPassword(inputPassword);
-        } catch (Exception e) {
-            // password is already decrypted
-            pw = inputPassword;
-        }
-        return pw;
+        return this.u.getPassword();
+//        // Decrypt password
+//        String inputPassword = this.u.getPassword();
+//        SecurityHelper helper = new SecurityHelper();
+//        String pw = null;
+//        try {
+//            pw = helper.decryptPassword(inputPassword);
+//        } catch (Exception e) {
+//            // password is already decrypted
+//            pw = inputPassword;
+//        }
+//        return pw;
     }
 
     /**
