@@ -1,4 +1,4 @@
-package authentication;
+package old.tests.authentication;
 
 import junit.framework.Assert;
 

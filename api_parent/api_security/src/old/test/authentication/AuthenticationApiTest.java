@@ -1,4 +1,4 @@
-package authentication;
+package old.tests.authentication;
 
 import java.util.ArrayList;
 import java.util.List;

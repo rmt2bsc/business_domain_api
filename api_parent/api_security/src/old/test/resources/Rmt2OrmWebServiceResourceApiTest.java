@@ -1,4 +1,4 @@
-package resources;
+package old.tests.resources;
 
 import java.util.ArrayList;
 import java.util.List;

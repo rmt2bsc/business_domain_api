@@ -1,4 +1,4 @@
-package ldap;
+package old.tests.ldap;
 
 import java.util.List;
 

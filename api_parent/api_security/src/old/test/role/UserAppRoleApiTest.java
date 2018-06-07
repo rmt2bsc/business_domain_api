@@ -1,4 +1,4 @@
-package role;
+package old.tests.role;
 
 import java.util.ArrayList;
 import java.util.List;
