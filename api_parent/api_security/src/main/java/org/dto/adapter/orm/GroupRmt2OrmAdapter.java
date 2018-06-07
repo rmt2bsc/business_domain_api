@@ -69,4 +69,14 @@ class GroupRmt2OrmAdapter extends DefaultUserAdapter {
     public void setGrp(String value) {
         this.u.setDescription(value);
     }
+
+    @Override
+    public String getGrpDescription() {
+        return this.u.getDescription();
+    }
+
+    @Override
+    public void setGrpDescription(String value) {
+        this.u.setDescription(value);
+    }
 }

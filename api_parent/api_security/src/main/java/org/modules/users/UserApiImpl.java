@@ -112,7 +112,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
     }
 
     /**
-     * Validates a UserDto object.
+     * Validates a UserDto object based on UserLogin.
      * 
      * @param user
      *            the user instance to validate
@@ -173,6 +173,34 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         return;
     }
 
+    /**
+     * Validates a UserDto object based on UserGroup.
+     * 
+     * @param group
+     *            the user group instance to validate
+     * @throws InvalidUserInstanceException
+     *             <ol>
+     *             <li>When <i>group</i> is null</li>
+     *             <li>The description is null or empty</li>
+     *             <li></li>
+     *             </ol>
+     */
+    protected void validateGroup(UserDto group) throws InvalidUserInstanceException {
+        try {
+            Verifier.verifyNotNull(group);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("User Group crtieria object is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(group.getGrpDescription());
+        }
+        catch (VerifyException e) {
+            throw new InvalidUserInstanceException("Group Description is required", e);
+        }
+        return;
+    }
     
     /*
      * (non-Javadoc)
@@ -232,11 +260,12 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     @Override
     public int updateGroup(UserDto grp) throws UserApiException {
+        this.validateGroup(grp);
+        
         dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainGroup(grp);
-            this.msg = "Changes to group were saved successfully for group, "
-                    + grp.getGrp();
+            this.msg = "Changes to group were saved successfully for group, " + grp.getGrp();
             logger.info(this.msg);
             return rc;
         } catch (Exception e) {

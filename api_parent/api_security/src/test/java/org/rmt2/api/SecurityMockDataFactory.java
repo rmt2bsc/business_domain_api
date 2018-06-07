@@ -137,13 +137,12 @@ public class SecurityMockDataFactory {
     /**
      * 
      * @param id
-     * @param description
      * @return
      */
-    public static final UserGroup createOrmUserGroup(int id, String description) {
+    public static final UserGroup createOrmUserGroup(int id) {
         UserGroup o = new UserGroup();
         o.setGrpId(id);
-        o.setDescription(description);
+        o.setDescription("UserGroupDescription_" + id);
         return o;
     }
     

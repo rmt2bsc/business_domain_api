@@ -413,10 +413,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      */
     @Override
     public int maintainGroup(UserDto grp) throws UserDaoException {
-        // Validate Group
-        this.validateGroup(grp);
-
-        // Convert input object
+              // Convert input object
         UserGroup u = new UserGroup();
         u.setGrpId(grp.getGroupId());
         u.setDescription(grp.getGrp());
@@ -429,22 +426,19 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
         try {
             if (u.getGrpId() > 0) {
                 rc = this.updateGroup(u);
-                this.msg = "Security Group record was created successfully for "
-                        + u.getDescription();
+                this.msg = "Security Group record was created successfully for " + u.getDescription();
             }
             if (u.getGrpId() == 0) {
                 rc = this.createGroup(u);
                 u.setGrpId(rc);
                 grp.setGroupId(rc);
-                this.msg = "Security Group record was created successfully for "
-                        + u.getDescription();
+                this.msg = "Security Group record was created successfully for " + u.getDescription();
             }
             this.client.commitTrans();
             return rc;
         } catch (DatabaseException e) {
             this.client.rollbackTrans();
-            this.msg = "Security Group maintenance database transaction failed for "
-                    + u.getDescription();
+            this.msg = "Security Group maintenance database transaction failed for " + u.getDescription();
             throw new UserDaoException(this.msg, e);
         }
     }
@@ -487,31 +481,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
         return rc;
     }
 
-    /**
-     * This method is responsble for validating an user group profile.
-     * <p>
-     * <i>grp</i> must not be null and the description of the profile is
-     * required to have a value.
-     * 
-     * @param grp
-     *            An instance of {@link UserDto} containing the user group data
-     *            to be validated
-     * @throws InvalidGroupInstanceException
-     *             when <i>grp</i> is null or the description is not present.
-     */
-    protected void validateGroup(UserDto grp)
-            throws InvalidGroupInstanceException {
-        if (grp == null) {
-            throw new DatabaseException("User Group instance cannot be null");
-        }
-
-        if (grp.getGrp() == null || grp.getGrp().length() <= 0) {
-            this.msg = "Group description is required";
-            throw new InvalidGroupInstanceException(this.msg);
-        }
-    }
-
-    /**
+      /**
      * Deletes a record from the user_group table using the groups primary key,
      * <i>grpId</i>.
      * 

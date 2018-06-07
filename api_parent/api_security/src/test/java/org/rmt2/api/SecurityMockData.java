@@ -248,21 +248,16 @@ public class SecurityMockData extends BaseSecurityDaoTest {
     
     private List<UserGroup> createUserGroupMockData() {
         List<UserGroup> list = new ArrayList<>();
-        int roleId = SecurityMockDataFactory.TEST_GROUP_ID;
-        UserGroup o = SecurityMockDataFactory.createOrmUserGroup(roleId,
-                "GroupDescription_" + roleId);
+        int groupId = SecurityMockDataFactory.TEST_GROUP_ID;
+        UserGroup o = SecurityMockDataFactory.createOrmUserGroup(groupId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserGroup(++roleId,
-                "GroupDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmUserGroup(++groupId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserGroup(++roleId,
-                "GroupDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmUserGroup(++groupId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserGroup(++roleId,
-                "GroupDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmUserGroup(++groupId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserGroup(++roleId,
-                "GroupDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmUserGroup(++groupId);
         list.add(o);
         
         return list;
