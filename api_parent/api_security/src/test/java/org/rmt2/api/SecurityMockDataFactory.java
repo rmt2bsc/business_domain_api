@@ -170,6 +170,7 @@ public class SecurityMockDataFactory {
         o.setActive(1);
         o.setTotalLogons(5);
         o.setSsn("111-11-1111");
+        o.setLoggedIn(1);
         
         return o;
     }
