@@ -60,9 +60,17 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      * @return List of {@link ResourceDto} objects containing the resource type
      *         data or null if no data is found.
      * @throws ResourceRegistryApiException
+     * @throws {@link InvalidDataException}
      */
     @Override
     public List<ResourceDto> getResourceType(ResourceDto criteria) throws ResourceRegistryApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Selection criteria object is required for UserResoureceType Query", e);
+        }
+        
         try {
             List<ResourceDto> results = dao.fetchResourceType(criteria);
             return results;
@@ -82,9 +90,17 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      * @return List of {@link ResourceDto} objects containing the resource sub
      *         type data or null if no data is found.
      * @throws ResourceRegistryApiException
+     * @throws {@link InvalidDataException}
      */
     @Override
     public List<ResourceDto> getResourceSubType(ResourceDto criteria) throws ResourceRegistryApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Selection criteria object is required for UserResoureceSubtype Query", e);
+        }
+        
         try {
             List<ResourceDto> results = dao.fetchResourceSubType(criteria);
             return results;
@@ -134,9 +150,17 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      *         resource type description, and resource sub type name in
      *         ascending order or null if no data is found.
      * @throws ResourceRegistryApiException
+     * @throws {@link InvalidDataException}
      */
     @Override
     public List<ResourceDto> getResource(ResourceDto criteria) throws ResourceRegistryApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Selection criteria object is required for UserResourece Query", e);
+        }
+        
         try {
             List<ResourceDto> results = dao.fetchResource(criteria);
             return results;
@@ -169,8 +193,7 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         try {
             return dao.maintainResource(obj);
         } catch (Exception e) {
-            this.msg = "Unable to update resource object:  " + obj.getName();
-            logger.error(this.msg);
+            this.msg = "Unable to update UserResource object:  " + obj.toString();
             throw new ResourceRegistryApiException(this.msg, e);
         } finally {
             dao.close();

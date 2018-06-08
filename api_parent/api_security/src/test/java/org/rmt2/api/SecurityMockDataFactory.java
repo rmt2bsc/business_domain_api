@@ -185,14 +185,15 @@ public class SecurityMockDataFactory {
      * @return
      */
     public static final UserResource createOrmUserResource(int rsrcId, int rsrcTypeId, int rsrcSubtypeId, 
-            String url, boolean secured) {
+            String url, Boolean secured) {
         UserResource o = new UserResource();
         o.setRsrcId(rsrcId);
         o.setRsrcTypeId(rsrcTypeId);
         o.setRsrcSubtypeId(rsrcSubtypeId);
         o.setUrl(url);
+        o.setName("name_" + rsrcId);
         o.setDescription("description_" + rsrcId);
-        o.setSecured(secured ? 1 : 0);
+        o.setSecured(secured != null && secured ? 1 : 0);
         return o;
     }
     
@@ -204,7 +205,8 @@ public class SecurityMockDataFactory {
      * @param loginId
      * @return
      */
-    public static final UserResourceAccess createOrmUserResourceAccess(int rsrcAccessId, int grpId, int rsrcId, int loginId) {
+    public static final UserResourceAccess createOrmUserResourceAccess(
+            int rsrcAccessId, int grpId, int rsrcId, int loginId) {
         UserResourceAccess o = new UserResourceAccess();
         o.setRsrcAccessId(rsrcAccessId);
         o.setGrpId(grpId);

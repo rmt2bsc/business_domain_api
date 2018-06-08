@@ -63,6 +63,10 @@ public class UserResourceOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
+        o2.setName("name_" + SecurityMockDataFactory.TEST_RESOURCE_ID);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+        
         o2.setSecured(1);
         result = o1.equals(o2);
         Assert.assertTrue(result);

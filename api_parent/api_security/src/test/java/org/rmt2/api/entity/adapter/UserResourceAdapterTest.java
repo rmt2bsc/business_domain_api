@@ -37,6 +37,7 @@ public class UserResourceAdapterTest {
         Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID, dto.getTypeId());
         Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID, dto.getSubTypeId());
         Assert.assertEquals("URL", dto.getRequestUrl());
+        Assert.assertEquals("name_" + dto.getUid(), dto.getName());
         Assert.assertEquals("description_" + dto.getUid(), dto.getDescription());
         
         try {
@@ -45,6 +46,7 @@ public class UserResourceAdapterTest {
             dto.setUid(SecurityMockDataFactory.TEST_RESOURCE_ID);
             dto.setTypeId(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
             dto.setSubTypeId(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID);
+            dto.setName("name_" + SecurityMockDataFactory.TEST_RESOURCE_ID);
             dto.setDescription("description_" + SecurityMockDataFactory.TEST_RESOURCE_ID);
             dto.setRequestUrl("URL");
             
@@ -52,6 +54,7 @@ public class UserResourceAdapterTest {
             Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID, dto.getTypeId());
             Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID, dto.getSubTypeId());
             Assert.assertEquals("URL", dto.getRequestUrl());
+            Assert.assertEquals("name_" + dto.getUid(), dto.getName());
             Assert.assertEquals("description_" + dto.getUid(), dto.getDescription());
             
         }
