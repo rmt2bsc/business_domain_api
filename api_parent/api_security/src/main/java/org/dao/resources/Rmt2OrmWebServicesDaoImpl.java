@@ -431,8 +431,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateUpdated(ut.getDateCreated());
             obj.setUserId(ut.getLoginId());
-            obj.addCriteria(UserResourceType.PROP_RSRCTYPEID,
-                    obj.getRsrcTypeId());
+            obj.addCriteria(UserResourceType.PROP_RSRCTYPEID, obj.getRsrcTypeId());
             int rc = this.client.updateRow(obj);
             return rc;
         } catch (DatabaseException e) {

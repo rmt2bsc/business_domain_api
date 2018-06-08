@@ -10,7 +10,6 @@ import org.dto.WebServiceDto;
 import org.modules.SecurityConstants;
 
 import com.InvalidDataException;
-import com.RMT2Constants;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
@@ -221,7 +220,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
             return dao.maintainResourceType(obj);
         } catch (Exception e) {
             this.msg = "Unable to update resource type object:  " + obj.getTypeDescription();
-            logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
         } finally {
             dao.close();
@@ -436,7 +434,12 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      */
     @Override
     public int deleteResourceType(ResourceDto criteria) throws ResourceRegistryApiException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        try {
+            return dao.deleteResourceType(criteria.getTypeId());
+        } catch (Exception e) {
+            this.msg = "Unable to delete resource type object identified by id:  "  + criteria.getSubTypeId();
+            throw new ResourceRegistryApiException(this.msg, e);
+        }
     }
 
 }
