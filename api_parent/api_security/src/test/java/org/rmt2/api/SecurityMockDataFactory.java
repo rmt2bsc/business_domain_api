@@ -220,12 +220,12 @@ public class SecurityMockDataFactory {
      * @param name
      * @return
      */
-    public static final UserResourceSubtype createOrmUserResourceSubtype(int rsrcSubtypeId, int rsrcTypeId, String name) {
+    public static final UserResourceSubtype createOrmUserResourceSubtype(int rsrcSubtypeId, int rsrcTypeId) {
         UserResourceSubtype o = new UserResourceSubtype();
         o.setRsrcSubtypeId(rsrcSubtypeId);
         o.setRsrcTypeId(rsrcTypeId);
-        o.setName(name);
-        o.setDescription("description_for_" + name);
+        o.setName("ResourceSubtypeName_" + rsrcSubtypeId);
+        o.setDescription("ResourceSubtypeDescription_" + rsrcSubtypeId);
         return o;
     }
     
@@ -235,10 +235,10 @@ public class SecurityMockDataFactory {
      * @param description
      * @return
      */
-    public static final UserResourceType createOrmUserResourceType(int rsrcTypeId, String description) {
+    public static final UserResourceType createOrmUserResourceType(int rsrcTypeId) {
         UserResourceType o = new UserResourceType();
         o.setRsrcTypeId(rsrcTypeId);
-        o.setDescription(description);
+        o.setDescription("ResourceTypeDescription_" + rsrcTypeId);
         return o;
     }
     

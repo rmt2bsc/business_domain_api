@@ -24,6 +24,9 @@ class ResourceTypeRmt2OrmAdapter extends DefaultResourceAdapter implements
      */
     protected ResourceTypeRmt2OrmAdapter(UserResourceType rsrcType) {
         super();
+        if (rsrcType == null) {
+            rsrcType = new UserResourceType();
+        }
         this.urt = rsrcType;
         this.dateCreated = rsrcType.getDateCreated();
         this.dateUpdated = rsrcType.getDateUpdated();

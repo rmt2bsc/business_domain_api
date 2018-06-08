@@ -20,7 +20,6 @@ import org.dto.UserDto;
 import org.dto.WebServiceDto;
 
 import com.RMT2Base;
-
 import com.api.security.User;
 
 /**
@@ -340,8 +339,7 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
      *            an instance of {@link UserResourceType}
      * @return an instance of {@link ResourceDto}
      */
-    public static final ResourceDto getResourceDtoInstance(
-            UserResourceType rsrcType) {
+    public static final ResourceDto getResourceDtoInstance(UserResourceType rsrcType) {
         ResourceDto dto = new ResourceTypeRmt2OrmAdapter(rsrcType);
         return dto;
     }
@@ -353,8 +351,7 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
      *            an instance of {@link UserResourceSubtype}
      * @return an instance of {@link ResourceDto}
      */
-    public static final ResourceDto getResourceDtoInstance(
-            UserResourceSubtype rsrcSubType) {
+    public static final ResourceDto getResourceDtoInstance(UserResourceSubtype rsrcSubType) {
         ResourceDto dto = new ResourceSubTypeRmt2OrmAdapter(rsrcSubType);
         return dto;
     }

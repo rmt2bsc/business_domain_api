@@ -22,6 +22,9 @@ class ResourceRmt2OrmAdapter extends DefaultResourceAdapter implements WebServic
      */
     protected ResourceRmt2OrmAdapter(UserResource rsrc) {
         super();
+        if (rsrc == null) {
+            rsrc = new UserResource();
+        }
         this.r = rsrc;
         this.dateCreated = rsrc.getDateCreated();
         this.dateUpdated = rsrc.getDateUpdated();

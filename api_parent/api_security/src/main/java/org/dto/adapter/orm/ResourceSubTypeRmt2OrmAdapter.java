@@ -25,6 +25,9 @@ class ResourceSubTypeRmt2OrmAdapter extends DefaultResourceAdapter implements
      */
     protected ResourceSubTypeRmt2OrmAdapter(UserResourceSubtype rsrcSubType) {
         super();
+        if (rsrcSubType == null) {
+            rsrcSubType = new UserResourceSubtype();
+        }
         this.urst = rsrcSubType;
         this.dateCreated = rsrcSubType.getDateCreated();
         this.dateUpdated = rsrcSubType.getDateUpdated();

@@ -360,24 +360,19 @@ public class SecurityMockData extends BaseSecurityDaoTest {
         List<UserResourceSubtype> list = new ArrayList<>();
         int userResourceSubtypeId = SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID;
         UserResourceSubtype o = SecurityMockDataFactory.createOrmUserResourceSubtype(userResourceSubtypeId,
-                        SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID,
-                        "UserResourceSubtypeName_" + userResourceSubtypeId);
+                        SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         list.add(o);
         o = SecurityMockDataFactory.createOrmUserResourceSubtype(++userResourceSubtypeId,
-                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID,
-                "UserResourceSubtypeName_" + userResourceSubtypeId);
+                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         list.add(o);
         o = SecurityMockDataFactory.createOrmUserResourceSubtype(++userResourceSubtypeId,
-                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID,
-                "UserResourceSubtypeName_" + userResourceSubtypeId);
+                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         list.add(o);
         o = SecurityMockDataFactory.createOrmUserResourceSubtype(++userResourceSubtypeId,
-                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID,
-                "UserResourceSubtypeName_" + userResourceSubtypeId);
+                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         list.add(o);
         o = SecurityMockDataFactory.createOrmUserResourceSubtype(++userResourceSubtypeId,
-                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID,
-                "UserResourceSubtypeName_" + userResourceSubtypeId);
+                SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         list.add(o);
         
         return list;
@@ -386,20 +381,15 @@ public class SecurityMockData extends BaseSecurityDaoTest {
     private List<UserResourceType> createUserResourceTypeMockData() {
         List<UserResourceType> list = new ArrayList<>();
         int resourceTypeId = SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID;
-        UserResourceType o = SecurityMockDataFactory.createOrmUserResourceType(resourceTypeId, 
-                "ResourceTypeDescription_" + resourceTypeId);
+        UserResourceType o = SecurityMockDataFactory.createOrmUserResourceType(resourceTypeId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId,
-                "ResourceTypeDescription_" + resourceTypeId);
+        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId,
-                "ResourceTypeDescription_" + resourceTypeId);
+        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId,
-                "ResourceTypeDescription_" + resourceTypeId);
+        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId,
-                "ResourceTypeDescription_" + resourceTypeId);
+        o = SecurityMockDataFactory.createOrmUserResourceType(++resourceTypeId);
         list.add(o);
         
         return list;
