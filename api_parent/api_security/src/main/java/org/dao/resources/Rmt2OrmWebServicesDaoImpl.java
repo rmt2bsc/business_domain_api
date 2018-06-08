@@ -61,7 +61,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public List<ResourceDto> fetchResource(ResourceDto criteria) throws ResourceDaoException {
-        UserResource rsrc = ResourcesDaoFactory.buildResourceCriteria(criteria);
+        UserResource rsrc = ResourcesDaoFactory.createCriteriaResource(criteria);
         List<UserResource> rsrcList = null;
         try {
             rsrcList = this.client.retrieveList(rsrc);
@@ -95,8 +95,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         UserResource rsrc = new UserResource();
         rsrc.addCriteria(UserResource.PROP_RSRCID, resourceId);
         try {
-            UserResource results = (UserResource) this.client
-                    .retrieveObject(rsrc);
+            UserResource results = (UserResource) this.client.retrieveObject(rsrc);
             if (results == null) {
                 return null;
             }
@@ -117,7 +116,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public List<ResourceDto> fetchResourceType(ResourceDto criteria) throws ResourceDaoException {
-        UserResourceType rsrc = new UserResourceType();
+        UserResourceType rsrc = ResourcesDaoFactory.createCriteriaResourceType(criteria);
         List<UserResourceType> rsrcList = null;
         try {
             rsrcList = this.client.retrieveList(rsrc);
@@ -173,7 +172,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public List<ResourceDto> fetchResourceSubType(ResourceDto criteria) throws ResourceDaoException {
-        UserResourceSubtype rsrc = new UserResourceSubtype();
+        UserResourceSubtype rsrc = ResourcesDaoFactory.createCriteriaResourceSubtype(criteria);
         List<UserResourceSubtype> rsrcList = null;
         try {
             rsrcList = this.client.retrieveList(rsrc);
@@ -258,57 +257,8 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      * @throws ResourceDaoException
      */
     @Override
-    public List<ResourceDto> fetchExtResource(ResourceDto criteria)
-            throws ResourceDaoException {
-        VwResource rsrc = new VwResource();
-
-        // Setup criteria
-        if (criteria != null) {
-            if (!(criteria instanceof WebServiceDto)) {
-                throw new InvalidResourceDaoException(
-                        "Input parameter is required to be of type, WebServiceDto, at runtime for DB query");
-            }
-
-            // Check for UserResource related predicates
-            if (criteria.getUid() > 0) {
-                rsrc.addCriteria(VwResource.PROP_RSRCID, criteria.getUid());
-            }
-            if (criteria.getName() != null) {
-                rsrc.addLikeClause(VwResource.PROP_NAME, criteria.getName());
-            }
-            if (criteria.getDescription() != null) {
-                rsrc.addLikeClause(VwResource.PROP_DESCRIPTION,
-                        criteria.getDescription());
-            }
-            if (((WebServiceDto) criteria).isQuerySecureFlag()) {
-                rsrc.addCriteria(VwResource.PROP_SECURED,
-                        ((WebServiceDto) criteria).isSecured());
-            }
-
-            // Check for UserResourceType related predicates
-            if (criteria.getTypeId() > 0) {
-                rsrc.addCriteria(VwResource.PROP_RSRCTYPEID,
-                        criteria.getTypeId());
-            }
-            if (criteria.getTypeDescription() != null) {
-                rsrc.addLikeClause(VwResource.PROP_TYPEDESCR,
-                        criteria.getTypeDescription());
-            }
-
-            // Check for UserResourceSubtype related predicates
-            if (criteria.getSubTypeId() > 0) {
-                rsrc.addCriteria(VwResource.PROP_RSRCSUBTYPEID,
-                        criteria.getSubTypeId());
-            }
-            if (criteria.getSubTypeName() != null) {
-                rsrc.addLikeClause(VwResource.PROP_SUBTYPENAME,
-                        criteria.getSubTypeName());
-            }
-            if (criteria.getSubTypeDescription() != null) {
-                rsrc.addLikeClause(VwResource.PROP_SUBTYPEDESC,
-                        criteria.getSubTypeDescription());
-            }
-        }
+    public List<ResourceDto> fetchExtResource(ResourceDto criteria) throws ResourceDaoException {
+        VwResource rsrc = ResourcesDaoFactory.createCriteriaResourceExt(criteria);
 
         // Order result set by resource name, resource type description, and
         // resource sub type name in ascending order.
@@ -352,8 +302,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public int maintainResource(ResourceDto resource) throws ResourceDaoException {
-        this.validateResource(resource);
-
         int rc = 0;
         UserResource r = new UserResource();
         r.setRsrcId(resource.getUid());
@@ -386,8 +334,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         }
     }
 
-    private int createResource(UserResource obj)
-            throws ResourceDaoUpdateException {
+    private int createResource(UserResource obj) throws ResourceDaoUpdateException {
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateCreated(ut.getDateCreated());
@@ -404,8 +351,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         }
     }
 
-    private int updateResource(UserResource obj)
-            throws ResourceDaoUpdateException {
+    private int updateResource(UserResource obj) throws ResourceDaoUpdateException {
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateUpdated(ut.getDateCreated());
@@ -422,53 +368,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         }
     }
 
-    /**
-     * This method is responsble for validating a resource profile.
-     * <p>
-     * The name, description, and url of the profile is required to have a
-     * value. The properties resource type and resource sub-type, must have a
-     * value greater than zero.
-     * 
-     * @param resource
-     *            an instance of {@link ResourceDto}
-     * @throws InvalidResourceDaoException
-     *             The properties name, description, and URL are null or the
-     *             properties resource type and resource sub type are less than
-     *             or equal to zero.
-     */
-    protected void validateResource(ResourceDto resource)
-            throws InvalidResourceDaoException {
-        if (resource == null) {
-            throw new InvalidResourceDaoException(
-                    "DTO instance for resource is required and cannot be null");
-        }
-        if (!(resource instanceof WebServiceDto)) {
-            throw new InvalidResourceDaoException(
-                    "The target web service resource object is required to be of type, WebServiceDto, at runtime");
-        }
-        if (resource.getName() == null || resource.getName().length() <= 0) {
-            this.msg = "Resource Name is required";
-            throw new InvalidResourceDaoException(this.msg);
-        }
-        if (resource.getDescription() == null
-                || resource.getDescription().length() <= 0) {
-            this.msg = "Resource Description is required";
-            throw new InvalidResourceDaoException(this.msg);
-        }
-        if (((WebServiceDto) resource).getRequestUrl() == null
-                || ((WebServiceDto) resource).getRequestUrl().length() <= 0) {
-            this.msg = "Resource URL is required";
-            throw new InvalidResourceDaoException(this.msg);
-        }
-        if (resource.getTypeId() <= 0) {
-            this.msg = "Resource type is required";
-            throw new InvalidResourceDaoException(this.msg);
-        }
-        if (resource.getSubTypeId() <= 0) {
-            this.msg = "Resource sub-type is required";
-            throw new InvalidResourceDaoException(this.msg);
-        }
-    }
 
     /**
      * Creates a new or modifies an existing Resource Type record.
@@ -482,10 +381,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      * @throws ResourceDaoException
      */
     @Override
-    public int maintainResourceType(ResourceDto rsrcType)
-            throws ResourceDaoException {
-        this.validateResourceType(rsrcType);
-
+    public int maintainResourceType(ResourceDto rsrcType) throws ResourceDaoException {
         int rc = 0;
         UserResourceType r = new UserResourceType();
         r.setRsrcTypeId(rsrcType.getTypeId());
@@ -513,8 +409,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
 
     }
 
-    private int createResourceType(UserResourceType obj)
-            throws ResourceDaoUpdateException {
+    private int createResourceType(UserResourceType obj) throws ResourceDaoUpdateException {
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateCreated(ut.getDateCreated());
@@ -531,8 +426,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         }
     }
 
-    private int updateResourceType(UserResourceType obj)
-            throws ResourceDaoUpdateException {
+    private int updateResourceType(UserResourceType obj) throws ResourceDaoUpdateException {
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateUpdated(ut.getDateCreated());
@@ -550,29 +444,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         }
     }
 
-    /**
-     * Validates the resource type object.
-     * <p>
-     * The description property is required.
-     * 
-     * @param resourceType
-     *            an instance of {@link ResourceDto} containing resource type
-     *            data
-     * @throws InvalidResourceDaoException
-     *             The description is null or equal to spaces.
-     */
-    protected void validateResourceType(ResourceDto resourceType)
-            throws InvalidResourceDaoException {
-        if (resourceType == null) {
-            throw new InvalidResourceDaoException(
-                    "DTO instance for resourct type is required and cannot be null");
-        }
-        if (resourceType.getTypeDescription() == null
-                || resourceType.getTypeDescription().length() <= 0) {
-            this.msg = "Resource Type Description is required";
-            throw new InvalidResourceDaoException(this.msg);
-        }
-    }
+   
 
     /**
      * Creates a new or modifies an existing Resource Sub Type record.
@@ -586,10 +458,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      * @throws ResourceDaoException
      */
     @Override
-    public int maintainResourceSubType(ResourceDto rsrcSubType)
-            throws ResourceDaoException {
-        this.validateResourceSubType(rsrcSubType);
-
+    public int maintainResourceSubType(ResourceDto rsrcSubType) throws ResourceDaoException {
         int rc = 0;
         UserResourceSubtype r = new UserResourceSubtype();
         r.setRsrcSubtypeId(rsrcSubType.getSubTypeId());
@@ -656,35 +525,26 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         }
     }
 
+    
+
     /**
-     * This method is responsble for validating a resource sub type profile.
-     * <p>
-     * The name and description are required to have a value.
+     * Deletes one or more UserResource records from the user_resource table using various selection criteria.
      * 
-     * @param subType
-     *            an instance of {@link ResourceDto} containing the criteria
-     *            specific to resource sub type.
-     * @throws InvalidResourceDaoException
-     *             The name and description properties are null or spaces.
+     * @param criteria
+     *            instance of {@link ResourceDto}
+     * @return total number of rows effected.
+     * @throws ResourceDaoException
      */
-    protected void validateResourceSubType(ResourceDto subType)
-            throws InvalidResourceDaoException {
-        if (subType == null) {
-            throw new InvalidResourceDaoException(
-                    "DTO instance for resource sub type is required and cannot be null");
-        }
-        if (subType.getSubTypeName() == null
-                || subType.getSubTypeName().length() <= 0) {
-            this.msg = "Resource Sub Type Name is required";
-            throw new InvalidResourceDaoException(this.msg);
-        }
-        if (subType.getSubTypeDescription() == null
-                || subType.getSubTypeDescription().length() <= 0) {
-            this.msg = "Resource Sub Type Description is required";
-            throw new InvalidResourceDaoException(this.msg);
+    @Override
+    public int deleteResource(ResourceDto criteria) throws ResourceDaoException {
+        UserResource obj = ResourcesDaoFactory.createCriteriaResource(criteria);
+        try {
+            return this.client.deleteRow(obj);
+        } catch (DatabaseException e) {
+            throw new ResourceDaoException(e);
         }
     }
-
+    
     /**
      * Deletes a record from the user_resource table using the primary key.
      * 
@@ -696,17 +556,10 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public int deleteResource(int resourceId) throws ResourceDaoException {
-        if (resourceId <= 0) {
-            this.msg = "Resource id is required and must be greater than zero";
-            throw new ResourceDaoException(this.msg);
-        }
-        try {
-            UserResource obj = new UserResource();
-            obj.addCriteria(UserResource.PROP_RSRCID, resourceId);
-            return this.client.deleteRow(obj);
-        } catch (DatabaseException e) {
-            throw new ResourceDaoException(e);
-        }
+        UserResource nullObj = null;
+        ResourceDto criteria = Rmt2OrmDtoFactory.getResourceDtoInstance(nullObj);
+        criteria.setUid(resourceId);
+        return this.deleteResource(criteria);
     }
 
     /**
@@ -719,8 +572,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             <i>resourceTypeId</i> is less than or equal to zero.
      */
     @Override
-    public int deleteResourceType(int resourceTypeId)
-            throws ResourceDaoException {
+    public int deleteResourceType(int resourceTypeId) throws ResourceDaoException {
         if (resourceTypeId <= 0) {
             this.msg = "Resource type id is required and must be greater than zero";
             throw new ResourceDaoException(this.msg);
@@ -745,16 +597,14 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      *             <i>resourceSubTypeId</i> is less than or equal to zero.
      */
     @Override
-    public int deleteResourceSubType(int resourceSubTypeId)
-            throws ResourceDaoException {
+    public int deleteResourceSubType(int resourceSubTypeId) throws ResourceDaoException {
         if (resourceSubTypeId <= 0) {
             this.msg = "Resource sub type id is required and must be greater than zero";
             throw new ResourceDaoException(this.msg);
         }
         try {
             UserResourceSubtype obj = new UserResourceSubtype();
-            obj.addCriteria(UserResourceSubtype.PROP_RSRCSUBTYPEID,
-                    resourceSubTypeId);
+            obj.addCriteria(UserResourceSubtype.PROP_RSRCSUBTYPEID, resourceSubTypeId);
             return this.client.deleteRow(obj);
         } catch (DatabaseException e) {
             throw new ResourceDaoException(e);
@@ -766,8 +616,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public ResourceDto fetchResourceSubType(String resourceSubTypeName) throws ResourceDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /**
@@ -775,16 +624,8 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public int deleteResourceSubType(String subTypeName) throws ResourceDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
-    /**
-     * Method not supported.
-     */
-    @Override
-    public int deleteResource(ResourceDto criteria) throws ResourceDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
+    
 }

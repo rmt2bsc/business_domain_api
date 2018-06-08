@@ -6,10 +6,14 @@ import org.apache.log4j.Logger;
 import org.dao.resources.ResourceDao;
 import org.dao.resources.ResourcesDaoFactory;
 import org.dto.ResourceDto;
+import org.dto.WebServiceDto;
 import org.modules.SecurityConstants;
 
+import com.InvalidDataException;
 import com.RMT2Constants;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * A implementation of {@link ResourceRegistryApi} interface that is
@@ -50,29 +54,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         super.init();
     }
     
-//    /**
-//     * Obtains a master list of resource objects using the RMT ORM DAO.
-//     * 
-//     * @return List of {@link ResourceDto} objects containing the resource data
-//     *         or null if no data is found.
-//     * @throws ResourceRegistryApiException
-//     */
-//    @Override
-//    public List<ResourceDto> getResource() throws ResourceRegistryApiException {
-//        ResourceDao dao = this.factory.createLdapDao();
-//        try {
-//            List<ResourceDto> results = dao.fetchResource();
-//            return results;
-//        } catch (Exception e) {
-//            this.msg = "Unable to fetch master list of resource objects";
-//            logger.error(this.msg);
-//            throw new ResourceRegistryApiException(this.msg, e);
-//        } finally {
-//            dao.close();
-//            dao = null;
-//        }
-//    }
-
     /**
      * Obtains a master list of resource type objects using the RMT ORM DAO.
      * 
@@ -182,6 +163,8 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      */
     @Override
     public int updateResource(ResourceDto obj) throws ResourceRegistryApiException {
+        this.validateResource(obj);
+        
         dao.setDaoUser(this.apiUser);
         try {
             return dao.maintainResource(obj);
@@ -208,6 +191,8 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      */
     @Override
     public int updateResourceType(ResourceDto obj) throws ResourceRegistryApiException {
+        this.validateResourceType(obj);
+        
         dao.setDaoUser(this.apiUser);
         try {
             return dao.maintainResourceType(obj);
@@ -235,6 +220,8 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
      */
     @Override
     public int updateResourceSubType(ResourceDto obj) throws ResourceRegistryApiException {
+        this.validateResourceSubType(obj);
+        
         dao.setDaoUser(this.apiUser);
         try {
             return dao.maintainResourceSubType(obj);
@@ -294,6 +281,128 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         }
     }
 
+    /**
+     * This method is responsble for validating a resource profile.
+     * <p>
+     * The name, description, and url of the profile is required to have a
+     * value. The properties resource type and resource sub-type, must have a
+     * value greater than zero.
+     * 
+     * @param resource
+     *            an instance of {@link ResourceDto}
+     * @throws InvalidDataException
+     *             The properties name, description, and URL are null or the
+     *             properties resource type and resource sub type are less than
+     *             or equal to zero.
+     */
+    protected void validateResource(ResourceDto resource) throws InvalidDataException {
+        try {
+            Verifier.verifyNotNull(resource);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Resource object is required and cannot be null", e);
+        }
+
+        try {
+            Verifier.verifyTrue(resource instanceof WebServiceDto);
+        } catch (VerifyException e) {
+            throw new InvalidDataException(
+                    "The target web service resource object is required to be of type, WebServiceDto, at runtime",
+                    e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(resource.getName());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Resource Name is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(resource.getDescription());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Resource Description is required", e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(((WebServiceDto) resource).getRequestUrl());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Resource URL is required", e);
+        }
+
+        try {
+            Verifier.verifyPositive(resource.getTypeId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Resource Type is required", e);
+        }
+        
+        try {
+            Verifier.verifyPositive(resource.getSubTypeId());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Resource Sub-Type is required", e);
+        }
+    }
+    
+    /**
+     * Validates the resource type object.
+     * <p>
+     * The description property is required.
+     * 
+     * @param resourceType
+     *            an instance of {@link ResourceDto} containing resource type
+     *            data
+     * @throws InvalidDataException
+     *             The description is null or equal to spaces.
+     */
+    protected void validateResourceType(ResourceDto resourceType) throws InvalidDataException {
+        try {
+            Verifier.verifyNotNull(resourceType);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("ResourceType object is required and cannot be null", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(resourceType.getTypeDescription());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Resource Type Description is required", e);
+        }
+    }
+    
+    /**
+     * This method is responsble for validating a resource sub type profile.
+     * <p>
+     * The name and description are required to have a value.
+     * 
+     * @param subType
+     *            an instance of {@link ResourceDto} containing the criteria
+     *            specific to resource sub type.
+     * @throws InvalidDataException
+     *             The name and description properties are null or spaces.
+     */
+    protected void validateResourceSubType(ResourceDto subType) throws InvalidDataException {
+        try {
+            Verifier.verifyNotNull(subType);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("ResourceSubtype object is required and cannot be null", e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(subType.getSubTypeName());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Resource SubType Name is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(subType.getSubTypeDescription());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Resource SubType Description is required", e);
+        }
+    }
+    
     /**
      * Deletes a resource type object using the RMT ORM DAO
      * 

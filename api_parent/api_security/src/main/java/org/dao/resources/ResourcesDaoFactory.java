@@ -1,7 +1,11 @@
 package org.dao.resources;
 
 import org.dao.mapping.orm.rmt2.UserResource;
+import org.dao.mapping.orm.rmt2.UserResourceSubtype;
+import org.dao.mapping.orm.rmt2.UserResourceType;
+import org.dao.mapping.orm.rmt2.VwResource;
 import org.dto.ResourceDto;
+import org.dto.WebServiceDto;
 import org.modules.SecurityConstants;
 
 import com.RMT2Base;
@@ -71,35 +75,127 @@ public class ResourcesDaoFactory extends RMT2Base {
     }
     
     /**
-     * Build Extended User selection criteria from a UserDto instance
+     * Build selection criteria for retrieving UserResource data
      * 
-     * @param criteria an instance of {@link UserDto}
-     * @return an instance of [{@link VwUser}
+     * @param criteria an instance of {@link ResourceDto}
+     * @return an instance of [{@link UserResource}
      */
-    public static final UserResource buildResourceCriteria(ResourceDto criteria) {
-        UserResource user = new UserResource();
+    public static final UserResource createCriteriaResource(ResourceDto criteria) {
+        UserResource results = new UserResource();
 
         if (criteria != null) {
             if (criteria.getUid() > 0) {
-                user.addCriteria(UserResource.PROP_RSRCID, criteria.getUid());
+                results.addCriteria(UserResource.PROP_RSRCID, criteria.getUid());
             }
             if (criteria.getTypeId() > 0) {
-                user.addCriteria(UserResource.PROP_RSRCTYPEID, criteria.getTypeId());
+                results.addCriteria(UserResource.PROP_RSRCTYPEID, criteria.getTypeId());
             }
             if (criteria.getName() != null) {
-                user.addLikeClause(UserResource.PROP_NAME, criteria.getName());
+                results.addLikeClause(UserResource.PROP_NAME, criteria.getName());
             }
             if (criteria.getSubTypeId() > 0) {
-                user.addCriteria(UserResource.PROP_RSRCSUBTYPEID, criteria.getSubTypeId());
+                results.addCriteria(UserResource.PROP_RSRCSUBTYPEID, criteria.getSubTypeId());
             }
             if (criteria.isSecured() != null) {
-                user.addCriteria(UserResource.PROP_SECURED, criteria.isSecured() ? 1 : 0);
+                results.addCriteria(UserResource.PROP_SECURED, criteria.isSecured() ? 1 : 0);
             }
             if (criteria.getDescription() != null) {
-                user.addLikeClause(UserResource.PROP_DESCRIPTION, criteria.getDescription());
+                results.addLikeClause(UserResource.PROP_DESCRIPTION, criteria.getDescription());
             }
         }
-        return user;
+        return results;
     }
 
+    /**
+     * Build selection criteria for retrieving VwResource data
+     * 
+     * @param criteria an instance of {@link ResourceDto}
+     * @return an instance of [{@link VwResource}
+     */
+    public static final VwResource createCriteriaResourceExt(ResourceDto criteria) {
+        VwResource rsrc = new VwResource();
+
+        // Setup criteria
+        if (criteria != null) {
+            // Check for UserResource related predicates
+            if (criteria.getUid() > 0) {
+                rsrc.addCriteria(VwResource.PROP_RSRCID, criteria.getUid());
+            }
+            if (criteria.getName() != null) {
+                rsrc.addLikeClause(VwResource.PROP_NAME, criteria.getName());
+            }
+            if (criteria.getDescription() != null) {
+                rsrc.addLikeClause(VwResource.PROP_DESCRIPTION, criteria.getDescription());
+            }
+            if (((WebServiceDto) criteria).isQuerySecureFlag()) {
+                rsrc.addCriteria(VwResource.PROP_SECURED, ((WebServiceDto) criteria).isSecured());
+            }
+
+            // Check for UserResourceType related predicates
+            if (criteria.getTypeId() > 0) {
+                rsrc.addCriteria(VwResource.PROP_RSRCTYPEID, criteria.getTypeId());
+            }
+            if (criteria.getTypeDescription() != null) {
+                rsrc.addLikeClause(VwResource.PROP_TYPEDESCR, criteria.getTypeDescription());
+            }
+
+            // Check for UserResourceSubtype related predicates
+            if (criteria.getSubTypeId() > 0) {
+                rsrc.addCriteria(VwResource.PROP_RSRCSUBTYPEID, criteria.getSubTypeId());
+            }
+            if (criteria.getSubTypeName() != null) {
+                rsrc.addLikeClause(VwResource.PROP_SUBTYPENAME, criteria.getSubTypeName());
+            }
+            if (criteria.getSubTypeDescription() != null) {
+                rsrc.addLikeClause(VwResource.PROP_SUBTYPEDESC, criteria.getSubTypeDescription());
+            }
+        }
+        return rsrc;
+    }
+    
+    /**
+     * Build selection criteria for retrieving UserResourceSubtype data
+     * 
+     * @param criteria an instance of {@link ResourceDto}
+     * @return an instance of [{@link UserResourceSubtype}
+     */
+    public static final UserResourceSubtype createCriteriaResourceSubtype(ResourceDto criteria) {
+        UserResourceSubtype results = new UserResourceSubtype();
+
+        if (criteria != null) {
+            if (criteria.getSubTypeId() > 0) {
+                results.addCriteria(UserResourceSubtype.PROP_RSRCSUBTYPEID, criteria.getSubTypeId());
+            }
+            if (criteria.getTypeId() > 0) {
+                results.addCriteria(UserResourceSubtype.PROP_RSRCTYPEID, criteria.getTypeId());
+            }
+            if (criteria.getName() != null) {
+                results.addLikeClause(UserResourceSubtype.PROP_NAME, criteria.getName());
+            }
+            if (criteria.getDescription() != null) {
+                results.addLikeClause(UserResourceSubtype.PROP_DESCRIPTION, criteria.getDescription());
+            }
+        }
+        return results;
+    }
+    
+    /**
+     * Build selection criteria for retrieving UserResourceType data
+     * 
+     * @param criteria an instance of {@link ResourceDto}
+     * @return an instance of [{@link UserResourceType}
+     */
+    public static final UserResourceType createCriteriaResourceType(ResourceDto criteria) {
+        UserResourceType results = new UserResourceType();
+
+        if (criteria != null) {
+            if (criteria.getTypeId() > 0) {
+                results.addCriteria(UserResourceType.PROP_RSRCTYPEID, criteria.getTypeId());
+            }
+            if (criteria.getDescription() != null) {
+                results.addLikeClause(UserResourceType.PROP_DESCRIPTION, criteria.getDescription());
+            }
+        }
+        return results;
+    }
 }

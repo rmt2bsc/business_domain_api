@@ -182,8 +182,7 @@ public interface ResourceDao extends DaoClient {
      * @return total number of records effected.
      * @throws ResourceDaoException
      */
-    int deleteResourceSubType(int resourceSubTypeId)
-            throws ResourceDaoException;
+    int deleteResourceSubType(int resourceSubTypeId) throws ResourceDaoException;
 
     /**
      * Deletes a resource sub type record by name.
