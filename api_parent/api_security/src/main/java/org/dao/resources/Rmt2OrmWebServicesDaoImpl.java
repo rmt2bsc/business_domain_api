@@ -572,10 +572,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public int deleteResourceType(int resourceTypeId) throws ResourceDaoException {
-        if (resourceTypeId <= 0) {
-            this.msg = "Resource type id is required and must be greater than zero";
-            throw new ResourceDaoException(this.msg);
-        }
         try {
             UserResourceType obj = new UserResourceType();
             obj.addCriteria(UserResourceType.PROP_RSRCTYPEID, resourceTypeId);
@@ -597,10 +593,6 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
      */
     @Override
     public int deleteResourceSubType(int resourceSubTypeId) throws ResourceDaoException {
-        if (resourceSubTypeId <= 0) {
-            this.msg = "Resource sub type id is required and must be greater than zero";
-            throw new ResourceDaoException(this.msg);
-        }
         try {
             UserResourceSubtype obj = new UserResourceSubtype();
             obj.addCriteria(UserResourceSubtype.PROP_RSRCSUBTYPEID, resourceSubTypeId);

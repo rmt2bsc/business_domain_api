@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.UserResourceType;
+import org.dao.mapping.orm.rmt2.UserResourceSubtype;
 import org.dao.resources.ResourceDaoException;
 import org.dto.ResourceDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
@@ -30,14 +30,14 @@ import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
- * Tests for User Resource Type module of the Security API.
+ * Tests for User Resource Subtype module of the Security API.
  * 
  * @author rterrell
  * 
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
-public class UserResourceTypeApiTest extends SecurityMockData {
+public class UserResourceSubtypeApiTest extends SecurityMockData {
 
     
 
@@ -48,13 +48,13 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     public void setUp() throws Exception {
         super.setUp();
 
-        when(this.mockPersistenceClient.retrieveList(any(UserResourceType.class)))
-             .thenReturn(this.mockUserResourceTypeData);
-        when(this.mockPersistenceClient.insertRow(any(UserResourceType.class), eq(true)))
-             .thenReturn(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
-        when(this.mockPersistenceClient.updateRow(any(UserResourceType.class)))
+        when(this.mockPersistenceClient.retrieveList(any(UserResourceSubtype.class)))
+             .thenReturn(this.mockUserResourceSubtypeData);
+        when(this.mockPersistenceClient.insertRow(any(UserResourceSubtype.class), eq(true)))
+             .thenReturn(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID);
+        when(this.mockPersistenceClient.updateRow(any(UserResourceSubtype.class)))
              .thenReturn(1);
-        when(this.mockPersistenceClient.deleteRow(any(UserResourceType.class)))
+        when(this.mockPersistenceClient.deleteRow(any(UserResourceSubtype.class)))
              .thenReturn(1);
     }
 
@@ -71,10 +71,10 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     public void testSuccess_Fetch() {
         ResourceRegistryApi api = 
                 ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        ResourceDto criteria = Rmt2OrmDtoFactory.getNewResourceTypeInstance();
+        ResourceDto criteria = Rmt2OrmDtoFactory.getNewResourceSubTypeInstance();
         List<ResourceDto> results = null;
         try {
-            results = api.getResourceType(criteria);
+            results = api.getResourceSubType(criteria);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
             Assert.fail("Expected not to throw an exception");
@@ -83,24 +83,26 @@ public class UserResourceTypeApiTest extends SecurityMockData {
         Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             ResourceDto item = results.get(ndx);
-            int currentUid = SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID + ndx;
-            Assert.assertEquals(currentUid, item.getTypeId());
-            Assert.assertEquals("ResourceTypeDescription_" + item.getTypeId(), item.getTypeDescription());
+            int currentUid = SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID + ndx;
+            Assert.assertEquals(currentUid, item.getSubTypeId());
+            Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID , item.getTypeId());
+            Assert.assertEquals("ResourceSubtypeName_" + item.getSubTypeId(), item.getSubTypeName());
+            Assert.assertEquals("ResourceSubtypeDescription_" + item.getSubTypeId(), item.getSubTypeDescription());
         }
     }
 
     
     @Test
     public void testSuccess_Fetch_NotFound() {
-        when(this.mockPersistenceClient.retrieveList(any(UserResourceType.class)))
+        when(this.mockPersistenceClient.retrieveList(any(UserResourceSubtype.class)))
               .thenReturn(null);
         
         ResourceRegistryApi api = 
                 ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        ResourceDto criteria = Rmt2OrmDtoFactory.getNewResourceTypeInstance();
+        ResourceDto criteria = Rmt2OrmDtoFactory.getNewResourceSubTypeInstance();
         List<ResourceDto> results = null;
         try {
-            results = api.getResourceType(criteria);
+            results = api.getResourceSubType(criteria);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
             Assert.fail("Expected not to throw an exception");
@@ -110,14 +112,14 @@ public class UserResourceTypeApiTest extends SecurityMockData {
  
     @Test
     public void testError_Fetch_DB_Access_Fault() {
-        when(this.mockPersistenceClient.retrieveList(any(UserResourceType.class)))
-            .thenThrow(new DatabaseException("Error fetching user resource type data"));
+        when(this.mockPersistenceClient.retrieveList(any(UserResourceSubtype.class)))
+            .thenThrow(new DatabaseException("Error fetching user resource sub type data"));
         
         ResourceRegistryApi api = 
                 ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        ResourceDto criteria = Rmt2OrmDtoFactory.getNewResourceTypeInstance();
+        ResourceDto criteria = Rmt2OrmDtoFactory.getNewResourceSubTypeInstance();
         try {
-            api.getResourceType(criteria);
+            api.getResourceSubType(criteria);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,12 +134,12 @@ public class UserResourceTypeApiTest extends SecurityMockData {
         ResourceRegistryApi api = 
                 ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
         try {
-            api.getResourceType(null);
+            api.getResourceSubType(null);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof InvalidDataException);
-            Assert.assertEquals("Selection criteria object is required for UserResoureceType Query", e.getMessage());
+            Assert.assertEquals("Selection criteria object is required for UserResoureceSubtype Query", e.getMessage());
         }
     }
     
@@ -145,30 +147,32 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     public void testSuccess_Create() {
         ResourceRegistryApi api = 
                 ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = SecurityMockDataFactory.createOrmUserResourceType(0);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(0, SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
         int results = 0;
         try {
-            results = api.updateResourceType(dto);
+            results = api.updateResourceSubType(dto);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
             Assert.fail("Expected not to throw an exception");
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID, results);
+        Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID, results);
     }
 
     @Test
     public void testError_Create_DB_Access_Fault() {
-        when(this.mockPersistenceClient.insertRow(any(UserResourceType.class), eq(true)))
-             .thenThrow(new DatabaseException("Error inserting User Resource Type data"));
+        when(this.mockPersistenceClient.insertRow(any(UserResourceSubtype.class), eq(true)))
+             .thenThrow(new DatabaseException("Error inserting User Resource Sub Type data"));
         
         ResourceRegistryApi api = 
                 ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = SecurityMockDataFactory.createOrmUserResourceType(0);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(0, SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
         try {
-            api.updateResourceType(dto);
+            api.updateResourceSubType(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,12 +186,13 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     public void testSuccess_Modify() {
         ResourceRegistryApi api = 
                 ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = 
-                SecurityMockDataFactory.createOrmUserResourceType(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID,
+                        SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
         int results = 0;
         try {
-            results = api.updateResourceType(dto);
+            results = api.updateResourceSubType(dto);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
             Assert.fail("Expected not to throw an exception");
@@ -198,16 +203,17 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     
     @Test
     public void testError_Modify_DB_Access_Fault() {
-        when(this.mockPersistenceClient.updateRow(any(UserResourceType.class)))
-                .thenThrow(new DatabaseException("Error modifying User Resource Type data"));
+        when(this.mockPersistenceClient.updateRow(any(UserResourceSubtype.class)))
+                .thenThrow(new DatabaseException("Error modifying User Resource Sub Type data"));
    
    ResourceRegistryApi api = 
            ResourceRegistryApiFactory.createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = SecurityMockDataFactory
-                .createOrmUserResourceType(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+   UserResourceSubtype orm = SecurityMockDataFactory
+           .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID,
+                   SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
    ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
    try {
-       api.updateResourceType(dto);
+       api.updateResourceSubType(dto);
        Assert.fail("Expected an exception to be thrown");
    } catch (Exception e) {
        e.printStackTrace();
@@ -222,7 +228,7 @@ public class UserResourceTypeApiTest extends SecurityMockData {
         ResourceRegistryApi api = ResourceRegistryApiFactory
                 .createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
         try {
-            api.updateResourceType(null);
+            api.updateResourceSubType(null);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,12 +241,13 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     public void testValidation_Update_Description_Null() {
         ResourceRegistryApi api = ResourceRegistryApiFactory
                 .createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = SecurityMockDataFactory
-                .createOrmUserResourceType(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID,
+                        SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         orm.setDescription(null);
         ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
         try {
-            api.updateResourceType(dto);
+            api.updateResourceSubType(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -252,12 +259,49 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     public void testValidation_Update_Description_Empty() {
         ResourceRegistryApi api = ResourceRegistryApiFactory
                 .createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = SecurityMockDataFactory
-                .createOrmUserResourceType(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID,
+                        SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
         orm.setDescription("");
         ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
         try {
-            api.updateResource(dto);
+            api.updateResourceSubType(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Name_Null() {
+        ResourceRegistryApi api = ResourceRegistryApiFactory
+                .createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID,
+                        SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+        orm.setName(null);
+        ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
+        try {
+            api.updateResourceSubType(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Name_Empty() {
+        ResourceRegistryApi api = ResourceRegistryApiFactory
+                .createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID,
+                        SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+        orm.setName("");
+        ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
+        try {
+            api.updateResourceSubType(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -269,13 +313,14 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     public void testSuccess_Delete() {
         ResourceRegistryApi api = ResourceRegistryApiFactory
                 .createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = SecurityMockDataFactory
-                .createOrmUserResourceType(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID, 0);
         orm.setDescription(null);
+        orm.setName(null);
         ResourceDto criteria = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
         int results = 0;
         try {
-            results = api.deleteResourceType(criteria);
+            results = api.deleteResourceSubType(criteria);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
             Assert.fail("Expected not to throw an exceptionn");
@@ -286,14 +331,15 @@ public class UserResourceTypeApiTest extends SecurityMockData {
     
     @Test
     public void testError_Delete_DB_Access_Fault() {
-        when(this.mockPersistenceClient.deleteRow(any(UserResourceType.class)))
-             .thenThrow(new DatabaseException("Error deleting user resource type data"));
+        when(this.mockPersistenceClient.deleteRow(any(UserResourceSubtype.class)))
+             .thenThrow(new DatabaseException("Error deleting user resource sub type data"));
         
         ResourceRegistryApi api = ResourceRegistryApiFactory
                 .createWebServiceRegistryApiInstance(SecurityConstants.APP_NAME);
-        UserResourceType orm = SecurityMockDataFactory
-                .createOrmUserResourceType(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID);
+        UserResourceSubtype orm = SecurityMockDataFactory
+                .createOrmUserResourceSubtype(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID, 0);
         orm.setDescription(null);
+        orm.setName(null);
         ResourceDto criteria = Rmt2OrmDtoFactory.getResourceDtoInstance(orm);
         try {
             api.deleteResourceType(criteria);

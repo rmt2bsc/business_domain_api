@@ -78,6 +78,7 @@ public class UserResourceApiTest extends SecurityMockData {
             results = api.getResource(criteria);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
+            Assert.fail("Expected not to throw an exception");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
@@ -106,6 +107,7 @@ public class UserResourceApiTest extends SecurityMockData {
             results = api.getResource(criteria);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
+            Assert.fail("Expected not to throw an exception");
         }
         Assert.assertNull(results);
     }
@@ -156,6 +158,7 @@ public class UserResourceApiTest extends SecurityMockData {
             results = api.updateResource(dto);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
+            Assert.fail("Expected not to throw an exception");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_ID, results);
@@ -197,6 +200,7 @@ public class UserResourceApiTest extends SecurityMockData {
             results = api.updateResource(dto);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
+            Assert.fail("Expected not to throw an exception");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results);
@@ -421,6 +425,7 @@ public class UserResourceApiTest extends SecurityMockData {
             results = api.deleteResource(criteria);
         } catch (ResourceRegistryApiException e) {
             e.printStackTrace();
+            Assert.fail("Expected not to throw an exception");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results);
