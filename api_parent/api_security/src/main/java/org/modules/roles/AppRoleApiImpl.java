@@ -3,14 +3,17 @@ package org.modules.roles;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.dao.mapping.orm.ldap.LdapAppRoles;
 import org.dao.roles.RoleDao;
+import org.dao.roles.RoleDaoException;
 import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
-import org.dto.adapter.ldap.LdapDtoFactory;
+import org.modules.SecurityConstants;
 import org.modules.SecurityModuleException;
 
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An api implemetation of {@link AppRoleApi} that provides functionality for
@@ -23,113 +26,36 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
 
     private static final Logger logger = Logger.getLogger(AppRoleApiImpl.class);
 
-    private RoleDaoFactory daoFactory;
+    private RoleDao dao;
 
     /**
      * Create an AppRoleApiImpl object that initializes the DAO factory.
      */
-    protected AppRoleApiImpl() {
-        this.daoFactory = new RoleDaoFactory();
+    AppRoleApiImpl() {
+        super(SecurityConstants.APP_NAME);
+        this.dao = RoleDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
+        this.setSharedDao(this.dao);
+        logger.info("AppRoleApi is initialized by default constructor");
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Create a AppRoleApiImpl using the specified application name.
      * 
-     * @see org.modules.CategoryApiModule#fetch(int)
+     * @param appName
+     *            the application name
      */
-    @Override
-    public CategoryDto get(int appRoleId) throws SecurityModuleException {
-        RoleDao dao = this.daoFactory.createLdapDao();
-        try {
-            CategoryDto dto = dao.fetchAppRole(appRoleId);
-            this.msg = "Application Role, " + appRoleId + ", was retrieved successfully";
-            logger.info(this.msg);
-            return dto;
-        } catch (Exception e) {
-            this.msg = "Unable to fetch Application Role by id, " + appRoleId;
-            logger.error(this.msg);
-            throw new AppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
+    AppRoleApiImpl(String appName) {
+        super(appName);
+        this.dao = RoleDaoFactory.createRmt2OrmDao(appName);
+        this.setSharedDao(this.dao);
+        logger.info("AppApi is initialized by application name, " + appName);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.CategoryApiModule#fetch()
-     */
-    @Override
-    public List<CategoryDto> get() throws SecurityModuleException {
-        RoleDao dao = this.daoFactory.createLdapDao();
-        try {
-            List<CategoryDto> list = dao.fetchAppRole();
-            this.msg = "Total application roles retrieved: " + (list == null ? 0 : list.size());
-            logger.info(this.msg);
-            return list;
-        } catch (Exception e) {
-            this.msg = "Unable to fetch master list of Application Roles";
-            logger.error(this.msg);
-            throw new AppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
 
-    // /* (non-Javadoc)
-    // * @see org.modules.roles.AppRoleApi#fetch(java.lang.String)
-    // */
-    // @Override
-    // public List<CategoryDto> get(String userName) throws
-    // SecurityModuleException {
-    // RoleDao dao = this.daoFactory.createRmt2OrmDao();
-    // try {
-    // List<CategoryDto> list = dao.fetchAppRole(userName);
-    // this.msg = "Total application roles retrieved by user name, " + userName
-    // + ": " + (list == null ? 0 : list.size());
-    // logger.info(this.msg);
-    // return list;
-    // }
-    // catch (Exception e) {
-    // this.msg = "Unable to fetch Application Roles by user, " + userName;
-    // logger.error(this.msg);
-    // throw new AppRoleApiException(this.msg, e);
-    // }
-    // finally {
-    // dao.close();
-    // dao = null;
-    // }
-    // }
-    //
-    // /* (non-Javadoc)
-    // * @see org.modules.roles.AppRoleApi#fetch(java.lang.String,
-    // java.lang.String)
-    // */
-    // @Override
-    // public List<CategoryDto> get(String userName, String appName) throws
-    // SecurityModuleException {
-    // RoleDao dao = this.daoFactory.createRmt2OrmDao();
-    // try {
-    // List<CategoryDto> list = dao.fetchAppRole(userName, appName);
-    // this.msg = "Total application roles retrieved by user name, " + userName
-    // + " and application, " + appName + ": " + (list == null ? 0 :
-    // list.size());
-    // logger.info(this.msg);
-    // return list;
-    // }
-    // catch (Exception e) {
-    // this.msg = "Unable to fetch Application Roles by user and application, "
-    // + userName + " and " + appName + ", respectively";
-    // logger.error(this.msg);
-    // throw new AppRoleApiException(this.msg, e);
-    // }
-    // finally {
-    // dao.close();
-    // dao = null;
-    // }
-    // }
+    @Override
+    public void init() {
+        super.init();
+    }
 
     /*
      * (non-Javadoc)
@@ -138,7 +64,12 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
      */
     @Override
     public List<CategoryDto> get(CategoryDto criteria) throws SecurityModuleException {
-        RoleDao dao = this.daoFactory.createLdapDao();
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Category criteria object is required", e);
+        }
+
         try {
             List<CategoryDto> list = dao.fetchAppRole(criteria);
             this.msg = "Total application roles retrieved using custom criteria: "
@@ -147,24 +78,11 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
             return list;
         } catch (Exception e) {
             this.msg = "Unable to fetch Application Roles using custom criteria";
-            logger.error(this.msg);
             throw new AppRoleApiException(this.msg, e);
         } finally {
             dao.close();
             dao = null;
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.CategoryApiModule#create()
-     */
-    @Override
-    public CategoryDto create() {
-        // return Rmt2OrmDtoFactory.getNewAppRoleCategoryInstance();
-        LdapAppRoles dummy = null;
-        return LdapDtoFactory.getApplicationRoleDtoInstance(dummy);
     }
 
     /*
@@ -174,9 +92,9 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
      */
     @Override
     public int update(CategoryDto appRole) throws SecurityModuleException {
-        RoleDao dao = null;
+        this.validateAppRole(appRole);
+
         try {
-            dao = this.daoFactory.createLdapDao();
             dao.setDaoUser(this.apiUser);
             int rc = dao.maintainAppRole(appRole);
             this.msg = "Application Role, " + appRole.getAppRoleName() + ", was updated successfully";
@@ -199,9 +117,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
      */
     @Override
     public int delete(int appRoleId) throws SecurityModuleException {
-        RoleDao dao = null;
         try {
-            dao = this.daoFactory.createLdapDao();
             int rc = dao.deleteAppRole(appRoleId);
             this.msg = "Application Role, " + appRoleId + ", was deleted successfully";
             logger.info(this.msg);
@@ -226,9 +142,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
      */
     @Override
     public int delete(String appRoleCode) throws SecurityModuleException {
-        RoleDao dao = null;
         try {
-            dao = this.daoFactory.createLdapDao();
             int rc = dao.deleteAppRole(appRoleCode);
             this.msg = "Application Role, " + appRoleCode + ", was deleted successfully";
             logger.info(this.msg);
@@ -243,4 +157,55 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         }
     }
 
+    /**
+     * This method is responsble for validating an application profile. The
+     * name, description, code, application id, and role id must contain valid
+     * values.
+     * 
+     * @param app
+     *            an instance of {@link AppRole}
+     * @throws InvalidDataException
+     */
+    protected void validateAppRole(CategoryDto appRole) throws InvalidDataException {
+        try {
+            Verifier.verifyNotNull(appRole);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("AppRole object is required", e);
+        }
+
+        try {
+            Verifier.verifyPositive(appRole.getApplicationId());
+        } catch (VerifyException e) {
+            this.msg = "Application Id is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+
+        try {
+            Verifier.verifyPositive(appRole.getRoleId());
+        } catch (VerifyException e) {
+            this.msg = "Role Id is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(appRole.getAppRoleCode());
+        } catch (VerifyException e) {
+            this.msg = "Application Role Code is required";
+            throw new RoleDaoException(this.msg, e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(appRole.getAppRoleName());
+        } catch (VerifyException e) {
+            this.msg = "Application Role Name is required";
+            throw new RoleDaoException(this.msg, e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(appRole.getAppRoleDescription());
+        } catch (VerifyException e) {
+            this.msg = "Application Role Description is required";
+            throw new RoleDaoException(this.msg, e);
+        }
+    }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dao.SecurityDaoException;
 import org.dto.CategoryDto;
+import org.dto.UserDto;
 
 import com.api.persistence.DaoClient;
 
@@ -72,36 +73,6 @@ public interface RoleDao extends DaoClient {
      */
     CategoryDto fetchAppRole(int uid) throws SecurityDaoException;
 
-    // /**
-    // * Fetches all roles belonging to the specified user.
-    // * <p>
-    // * The data source is the <i>VwUserAppRoles</i> table.
-    // *
-    // * @param userName
-    // * The user's login id.
-    // * @return
-    // * a List of {@link CategoryDto} objects or null if no records are found.
-    // * @throws SecurityDaoException
-    // */
-    // List<CategoryDto> fetchAppRole(String userName) throws
-    // SecurityDaoException;
-    //
-    // /**
-    // * Fetches all application-roles belonging to the specifed user and
-    // application code.
-    // * <p>
-    // * The data source is <i>VwUserAppRoles</i> table.
-    // *
-    // * @param userName
-    // * The user's login id.
-    // * @param appName
-    // * The name of the related application to retrieve roles.
-    // * @return
-    // * a List of {@link CategoryDto} objects or null if no records are found.
-    // * @throws SecurityDaoException
-    // */
-    // List<CategoryDto> fetchAppRole(String userName, String appName) throws
-    // SecurityDaoException;
 
     /**
      * Get Application Role data based on information contained in
@@ -122,8 +93,7 @@ public interface RoleDao extends DaoClient {
      *         does not return a data set.
      * @throws SecurityDaoException
      */
-    List<CategoryDto> fetchAppRole(CategoryDto criteria)
-            throws SecurityDaoException;
+    List<CategoryDto> fetchAppRole(CategoryDto criteria) throws SecurityDaoException;
 
     /**
      * Fethes a list of applications which the user can access.
@@ -136,8 +106,7 @@ public interface RoleDao extends DaoClient {
      *         does not return a data set.
      * @throws SecurityDaoException
      */
-    List<CategoryDto> fetchUserAppRole(String userName)
-            throws SecurityDaoException;
+    List<CategoryDto> fetchUserAppRole(String userName) throws SecurityDaoException;
 
     /**
      * Get all roles that are assigned to a particular user for a given
@@ -154,8 +123,7 @@ public interface RoleDao extends DaoClient {
      *         does not return a data set.
      * @throws SecurityDaoException
      */
-    List<CategoryDto> fetchUserAssignedRoles(CategoryDto criteria)
-            throws SecurityDaoException;
+    List<CategoryDto> fetchUserAssignedRoles(CategoryDto criteria) throws SecurityDaoException;
 
     /**
      * Get all roles that have been revoked or have not been assigned to a user
@@ -177,8 +145,18 @@ public interface RoleDao extends DaoClient {
      *         does not return a data set.
      * @throws SecurityDaoException
      */
-    List<CategoryDto> fetchUserRevokedRoles(CategoryDto criteria)
-            throws SecurityDaoException;
+    List<CategoryDto> fetchUserRevokedRoles(CategoryDto criteria) throws SecurityDaoException;
+
+    /**
+     * Gat a list of application role id's which the source is an array of
+     * roles.
+     * 
+     * @param roles
+     *            String array
+     * @return Array of application role id Strings
+     * @throws SecurityDaoException
+     */
+    String[] fetchAppRoleIdList(String roles[]) throws SecurityDaoException;
 
     /**
      * Create a new or modify an existing security role.
@@ -210,9 +188,8 @@ public interface RoleDao extends DaoClient {
      * <p>
      * This method will basically assign and/or revoke roles to/from a user.
      * 
-     * @param userAppRole
-     *            an instance of {@link CategoryDto} containing the login id and
-     *            the application id.
+     * @param user
+     *            an instance of {@link UserDto}
      * @param assignedRoles
      *            A String array of assigned application role codes.
      * @param revokedRoles
@@ -220,8 +197,7 @@ public interface RoleDao extends DaoClient {
      * @return Total number of rows effected.
      * @throws SecurityDaoException
      */
-    int maintainUserAppRole(CategoryDto userAppRole, String assignedRoles[],
-            String revokedRoles[]) throws SecurityDaoException;
+    int maintainUserAppRole(UserDto user, String assignedRoles[], String revokedRoles[]) throws SecurityDaoException;
 
     /**
      * Deletes a security roles from the system.
@@ -266,14 +242,13 @@ public interface RoleDao extends DaoClient {
     /**
      * Delete all roles assoicated with a particular user.
      * 
-     * @param userName
-     *            The login id of the user to associate roles
+     * @param user
+     *            an instance of {@link UserDto}
      * @param appRoles
      *            A list of user application role codes to delete
      * @return The total number of records effected
      * @throws SecurityDaoException
      */
-    int deleteUserAppRoles(String userName, String appRoles[])
-            throws SecurityDaoException;
+    int deleteUserAppRoles(UserDto user, String appRoles[]) throws SecurityDaoException;
 
 }

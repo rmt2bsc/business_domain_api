@@ -1,7 +1,5 @@
 package org.modules;
 
-import java.util.List;
-
 import org.dto.CategoryDto;
 
 import com.api.foundation.TransactionApi;
@@ -14,32 +12,6 @@ import com.api.foundation.TransactionApi;
  * 
  */
 public interface CategoryApiModule extends TransactionApi {
-
-    /**
-     * Retrieve an API record using its unique key id.
-     * 
-     * @param uid
-     *            A unique id identifying the entity targeted to be fetched.
-     * @return An instance of {@link CategoryDto}
-     * @throws SecurityModuleException
-     */
-    CategoryDto get(int uid) throws SecurityModuleException;
-
-    /**
-     * Retrieve all API records of a partcular category.
-     * 
-     * @return A List of {@link CategoryDto} objects or null if no data is
-     *         found.
-     * @throws SecurityModuleException
-     */
-    List<CategoryDto> get() throws SecurityModuleException;
-
-    /**
-     * Create a new API instance of a particular category.
-     * 
-     * @return an instance of {@link CategoryDto}
-     */
-    CategoryDto create();
 
     /**
      * Persist changes to a single API entity to the database.

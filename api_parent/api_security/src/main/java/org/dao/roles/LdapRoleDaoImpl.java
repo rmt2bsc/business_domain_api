@@ -568,7 +568,7 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
      * @return Total number of rows effected.
      * @throws SecurityDaoException
      */
-    @Override
+
     public int maintainUserAppRole(CategoryDto userAppRole,
             String[] assignedRoles, String[] revokedRoles)
             throws SecurityDaoException {
@@ -659,9 +659,9 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
      * @throws SecurityDaoException
      */
     @Override
-    public int deleteUserAppRoles(String userName, String[] appRoles)
+    public int deleteUserAppRoles(UserDto user, String[] appRoles)
             throws SecurityDaoException {
-        if (userName == null) {
+        if (user == null) {
             this.msg = "User login id is requried";
             throw new SecurityDaoException(this.msg);
         }
@@ -674,14 +674,6 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
             throw new SecurityDaoException(this.msg);
         }
 
-        // Verify user and get current list of roles
-        UserDto user = this.getUserByUsername(userName);
-        if (user == null) {
-            this.msg = "Unable to delete user application role(s) due to user, "
-                    + userName + ", does not exist";
-            throw new SecurityDaoException(this.msg);
-        }
-
         // Build a String from the list of role code names targeted for deletion
         StringBuffer roleDeleteBuf = new StringBuffer();
         for (String role : appRoles) {
@@ -691,7 +683,7 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         // Prepare the LDAP modify operation object
         LdapModifyOperation op = new LdapModifyOperation();
         // Handle the DN
-        String dn = "loginid=" + userName + ",ou=People";
+        String dn = "loginid=" + user + ",ou=People";
         op.setDn(dn);
         // Begin to remove those roles targeted for deletion from the user's
         // list of roles.
@@ -769,6 +761,19 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
     public CategoryDto fetchAppRole(int uid) throws SecurityDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
+    @Override
+    public String[] fetchAppRoleIdList(String[] roles) throws SecurityDaoException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int maintainUserAppRole(UserDto user, String[] assignedRoles, String[] revokedRoles)
+            throws SecurityDaoException {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

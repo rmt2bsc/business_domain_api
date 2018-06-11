@@ -9,10 +9,10 @@ import org.dao.SecurityDaoImpl;
 import org.dao.mapping.orm.rmt2.AppRole;
 import org.dao.mapping.orm.rmt2.Roles;
 import org.dao.mapping.orm.rmt2.UserAppRole;
-import org.dao.mapping.orm.rmt2.UserLogin;
 import org.dao.mapping.orm.rmt2.VwAppRoles;
 import org.dao.mapping.orm.rmt2.VwUserAppRoles;
 import org.dto.CategoryDto;
+import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
 import com.RMT2Constants;
@@ -28,8 +28,7 @@ import com.util.UserTimestamp;
  * 
  */
 class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
-    private static final Logger logger = Logger
-            .getLogger(Rmt2OrmRoleDaoImpl.class);
+    private static final Logger logger = Logger.getLogger(Rmt2OrmRoleDaoImpl.class);
 
     /**
      * Default constructor for creating a Rmt2OrmRoleDaoImpl.
@@ -121,8 +120,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         }
         List<CategoryDto> list = new ArrayList<CategoryDto>();
         for (VwAppRoles item : roles) {
-            CategoryDto dto = Rmt2OrmDtoFactory.getAppRoleDtoInstance(item,
-                    this.updateUserId);
+            CategoryDto dto = Rmt2OrmDtoFactory.getAppRoleDtoInstance(item, this.updateUserId);
             list.add(dto);
         }
         return list;
@@ -153,77 +151,6 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         }
     }
 
-    // /**
-    // * Queries the vw_user_app_role view for one or more records by
-    // <i>userName</i>.
-    // *
-    // * @param userName
-    // * The user's login id.
-    // * @return
-    // * a List of {@link CategoryDto} objects or null if no records are found.
-    // * @throws SecurityDaoException
-    // */
-    // @Override
-    // public List<CategoryDto> fetchAppRole(String userName) throws
-    // RoleDaoException {
-    // VwUserAppRoles obj = new VwUserAppRoles();
-    // obj.addCriteria(VwUserAppRoles.PROP_USERNAME, userName);
-    // List<VwUserAppRoles> roles = null;
-    // try {
-    // roles = this.client.retrieveList(obj);
-    // if (roles == null) {
-    // return null;
-    // }
-    // }
-    // catch (DatabaseException e) {
-    // throw new RoleDaoException(e);
-    // }
-    // List<CategoryDto> list = new ArrayList<CategoryDto>();
-    // for (VwUserAppRoles item : roles) {
-    // CategoryDto dto = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(item,
-    // this.updateUserId);
-    // list.add(dto);
-    // }
-    // return list;
-    // }
-
-    // /**
-    // * Queries the vw_user_app_role view for records related to the user's
-    // login id and an application.
-    // *
-    // * @param userName
-    // * The user's login id.
-    // * @param appName
-    // * The name of the related application to retrieve roles.
-    // * @return
-    // * a List of {@link CategoryDto} objects or null if no records are found.
-    // * @throws SecurityDaoException
-    // */
-    // @Override
-    // public List<CategoryDto> fetchAppRole(String userName, String appName)
-    // throws RoleDaoException {
-    // VwUserAppRoles obj = new VwUserAppRoles();
-    // obj.addCriteria(VwUserAppRoles.PROP_USERNAME, userName);
-    // obj.addCriteria(VwUserAppRoles.PROP_APPNAME, appName);
-    // List<VwUserAppRoles> roles = null;
-    // try {
-    // roles = this.client.retrieveList(obj);
-    // if (roles == null) {
-    // return null;
-    // }
-    // }
-    // catch (DatabaseException e) {
-    // throw new RoleDaoException(e);
-    // }
-    // List<CategoryDto> list = new ArrayList<CategoryDto>();
-    // for (VwUserAppRoles item : roles) {
-    // CategoryDto dto = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(item,
-    // this.updateUserId);
-    // list.add(dto);
-    // }
-    // return list;
-    // }
-
     /**
      * Queries the vw_app_role view for records based on the combination of
      * selection criteria contained in <i>criteria</i>.
@@ -244,31 +171,9 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @throws SecurityDaoException
      */
     @Override
-    public List<CategoryDto> fetchAppRole(CategoryDto criteria)
-            throws RoleDaoException {
-        VwAppRoles obj = new VwAppRoles();
+    public List<CategoryDto> fetchAppRole(CategoryDto criteria) throws RoleDaoException {
+        VwAppRoles obj = RoleDaoFactory.createCriteriaVwAppRoles(criteria);
         List<VwAppRoles> roles;
-        if (criteria != null) {
-            if (criteria.getApplicationId() > 0) {
-                obj.addCriteria(VwAppRoles.PROP_APPLICATIONID,
-                        criteria.getApplicationId());
-            }
-            if (criteria.getAppName() != null) {
-                obj.addLikeClause(VwAppRoles.PROP_APPNAME,
-                        criteria.getAppName());
-            }
-            if (criteria.getRoleId() > 0) {
-                obj.addCriteria(VwAppRoles.PROP_ROLEID, criteria.getRoleId());
-            }
-            if (criteria.getRoleName() != null) {
-                obj.addLikeClause(VwAppRoles.PROP_ROLENAME,
-                        criteria.getRoleName());
-            }
-            if (criteria.getAppRoleCode() != null) {
-                obj.addLikeClause(VwAppRoles.PROP_APPROLECODE,
-                        criteria.getAppRoleCode());
-            }
-        }
         try {
             roles = this.client.retrieveList(obj);
             if (roles == null) {
@@ -280,8 +185,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
 
         List<CategoryDto> list = new ArrayList<CategoryDto>();
         for (VwAppRoles item : roles) {
-            CategoryDto dto = Rmt2OrmDtoFactory.getAppRoleDtoInstance(item,
-                    this.updateUserId);
+            CategoryDto dto = Rmt2OrmDtoFactory.getAppRoleDtoInstance(item, this.updateUserId);
             list.add(dto);
         }
         return list;
@@ -311,55 +215,16 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      *             included in <i>criterai</i> or database access errors.
      */
     @Override
-    public List<CategoryDto> fetchUserAssignedRoles(CategoryDto criteria)
-            throws RoleDaoException {
-        if (criteria == null) {
-            this.msg = "User selection criteria object is invalid";
-            throw new RoleDaoException(this.msg);
-        }
-        VwUserAppRoles obj = new VwUserAppRoles();
-        if (criteria.getUsername() == null) {
-            this.msg = "The user's login id is required";
-            throw new RoleDaoException(this.msg);
-        }
-        obj.addCriteria(VwUserAppRoles.PROP_USERNAME, criteria.getUsername());
-
-        if (criteria.getLoginUid() > 0) {
-            obj.addCriteria(VwUserAppRoles.PROP_LOGINUID,
-                    criteria.getLoginUid());
-        }
-        if (criteria.getFirstname() != null) {
-            obj.addCriteria(VwUserAppRoles.PROP_FIRSTNAME,
-                    criteria.getFirstname());
-        }
-        if (criteria.getLastname() != null) {
-            obj.addCriteria(VwUserAppRoles.PROP_LASTNAME,
-                    criteria.getLastname());
-        }
-        if (criteria.getAppRoleId() > 0) {
-            obj.addCriteria(VwUserAppRoles.PROP_APPROLEID,
-                    criteria.getAppRoleId());
-        }
-        if (criteria.getApplicationId() > 0) {
-            obj.addCriteria(VwUserAppRoles.PROP_APPLICATIONID,
-                    criteria.getApplicationId());
-        }
-        if (criteria.getAppName() != null) {
-            obj.addCriteria(VwUserAppRoles.PROP_APPNAME, criteria.getAppName());
-        }
-        if (criteria.getRoleId() > 0) {
-            obj.addCriteria(VwUserAppRoles.PROP_ROLEID, criteria.getRoleId());
-        }
+    public List<CategoryDto> fetchUserAssignedRoles(CategoryDto criteria) throws RoleDaoException {
+        VwUserAppRoles obj = RoleDaoFactory.createCriteriaVwUserAppRoles(criteria);
 
         StringBuffer customSql = new StringBuffer(100);
-        customSql
-                .append("app_role_id in (select x.app_role_id from user_app_role x, app_role z ");
+        customSql.append("app_role_id in (select x.app_role_id from user_app_role x, app_role z ");
         customSql.append("where x.app_role_id = z.app_role_id and ");
         customSql.append("z.app_id = application_id and ");
         customSql.append("x.login_id = login_uid)");
         obj.addCustomCriteria(customSql.toString());
-        obj.addOrderBy(VwUserAppRoles.PROP_APPROLENAME,
-                VwUserAppRoles.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwUserAppRoles.PROP_APPROLENAME, VwUserAppRoles.ORDERBY_ASCENDING);
 
         List<VwUserAppRoles> roles;
         try {
@@ -402,37 +267,18 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      *             <i>criterai</i> or database access errors
      */
     @Override
-    public List<CategoryDto> fetchUserRevokedRoles(CategoryDto criteria)
-            throws RoleDaoException {
-        VwAppRoles obj = new VwAppRoles();
-        if (criteria != null) {
-            if (criteria.getLoginUid() <= 0) {
-                this.msg = "The user's internal unique id is required";
-                throw new RoleDaoException(this.msg);
-            }
-            if (criteria.getAppRoleId() > 0) {
-                obj.addCriteria(VwAppRoles.PROP_APPROLEID,
-                        criteria.getAppRoleId());
-            }
-            if (criteria.getApplicationId() > 0) {
-                obj.addCriteria(VwAppRoles.PROP_APPLICATIONID,
-                        criteria.getApplicationId());
-            }
-            if (criteria.getRoleId() > 0) {
-                obj.addCriteria(VwAppRoles.PROP_ROLEID, criteria.getRoleId());
-            }
-        }
+    public List<CategoryDto> fetchUserRevokedRoles(CategoryDto criteria) throws RoleDaoException {
+        VwAppRoles obj = RoleDaoFactory.createCriteriaVwAppRoles(criteria);
+
         StringBuffer customSql = new StringBuffer(100);
-        customSql
-                .append("app_role_id not in (select x.app_role_id from user_app_role x, app_role z ");
+        customSql.append("app_role_id not in (select x.app_role_id from user_app_role x, app_role z ");
         customSql.append("where x.app_role_id = z.app_role_id and ");
         customSql.append("z.app_id = application_id ");
         customSql.append(" and x.login_id = " + criteria.getLoginUid());
         customSql.append(")");
 
         obj.addCustomCriteria(customSql.toString());
-        obj.addOrderBy(VwAppRoles.PROP_APPROLENAME,
-                VwAppRoles.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwAppRoles.PROP_APPROLENAME, VwAppRoles.ORDERBY_ASCENDING);
 
         List<VwAppRoles> roles;
         try {
@@ -469,16 +315,11 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      */
     @Override
     public int maintainRole(CategoryDto role) throws RoleDaoException {
-        if (role == null) {
-            throw new RoleDaoException("The Role input parameter is required");
-        }
         Roles r = new Roles();
         r.setRoleId(role.getRoleId());
         r.setName(role.getRoleName());
         r.setDescription(role.getRoleDescription());
         r.setUserId(role.getUpdateUserId());
-
-        this.validateRole(r);
 
         int rc = 0;
         if (role.getRoleId() > 0) {
@@ -541,27 +382,6 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
     }
 
     /**
-     * This method is responsble for validating a role profile. The name and
-     * description of the application are to have values.
-     * 
-     * @param app
-     *            {@link com.bean.Application Application}
-     * @throws RoleDaoException
-     */
-    private void validateRole(Roles role) throws RoleDaoException {
-        if (role.getName() == null || role.getName().length() <= 0) {
-            this.msg = "Role name cannot be blank";
-            throw new RoleDaoException(this.msg);
-        }
-
-        if (role.getDescription() == null
-                || role.getDescription().length() <= 0) {
-            this.msg = "Role description cannot be blank";
-            throw new RoleDaoException(this.msg);
-        }
-    }
-
-    /**
      * Deletes a record from the Roles table using the specified primary key,
      * <i>roleId</i>.
      * 
@@ -603,10 +423,6 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      */
     @Override
     public int maintainAppRole(CategoryDto appRole) throws RoleDaoException {
-        if (appRole == null) {
-            throw new RoleDaoException(
-                    "The application role input parameter is required");
-        }
         AppRole ar = new AppRole();
         ar.setAppRoleId(appRole.getAppRoleId());
         ar.setAppId(appRole.getApplicationId());
@@ -615,8 +431,6 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         ar.setName(appRole.getAppRoleName());
         ar.setDescription(appRole.getAppRoleDescription());
         ar.setUserId(appRole.getUpdateUserId());
-
-        this.validateAppRole(ar);
 
         int rc = 0;
         if (ar.getAppRoleId() > 0) {
@@ -630,38 +444,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         return rc;
     }
 
-    /**
-     * This method is responsble for validating an application profile. The
-     * name, description, code, application id, and role id must contain valid
-     * values.
-     * 
-     * @param app
-     *            an instance of {@link AppRole}
-     * @throws RoleDaoException
-     */
-    private void validateAppRole(AppRole appRole) throws RoleDaoException {
-        if (appRole.getAppId() <= 0) {
-            this.msg = "Application Id is invalid";
-            throw new RoleDaoException(this.msg);
-        }
-        if (appRole.getRoleId() <= 0) {
-            this.msg = "Role Id is invalid";
-            throw new RoleDaoException(this.msg);
-        }
-        if (appRole.getCode() == null || appRole.getCode().length() <= 0) {
-            this.msg = "Code cannot be blank";
-            throw new RoleDaoException(this.msg);
-        }
-        if (appRole.getName() == null || appRole.getName().length() <= 0) {
-            this.msg = "Name cannot be blank";
-            throw new RoleDaoException(this.msg);
-        }
-        if (appRole.getDescription() == null
-                || appRole.getDescription().length() <= 0) {
-            this.msg = "Description cannot be blank";
-            throw new RoleDaoException(this.msg);
-        }
-    }
+
 
     /**
      * Adds an application role record to the database,.
@@ -671,7 +454,6 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @throws RoleDaoException
      */
     private int createAppRole(AppRole appRole) throws RoleDaoException {
-
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             appRole.setDateCreated(ut.getDateCreated());
@@ -752,78 +534,25 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @param userAppRole
      *            an instance of {@link CategoryDto} containing the login id and
      *            the application id.
-     * @param assignedRoles
-     *            A String array of assigned application-role codes.
+     * @param assignedRoleId
+     *            A String array of assigned application-role id's.
      * @param revokedRoles
      *            A String array of revoked application-role codes.
      * @return Total number of rows effected.
      * @throws SecurityDaoException
      */
     @Override
-    public int maintainUserAppRole(CategoryDto userAppRole,
-            String[] assignedRoles, String[] revokedRoles)
+    public int maintainUserAppRole(UserDto user, String[] assignedRoleId, String[] revokedRoles)
             throws RoleDaoException {
-        String userName = userAppRole.getUsername();
-        int appId = userAppRole.getApplicationId();
-
-        int rows;
-        UserLogin user = new UserLogin();
-
-        // Verify login id.
-        user.addCriteria(UserLogin.PROP_USERNAME, userName);
-        try {
-            user = (UserLogin) this.client.retrieveObject(user);
-            if (user == null) {
-                throw new RoleDaoException(
-                        "User Application Role update failed due to user login is invalid");
-            }
-        } catch (DatabaseException e) {
-            throw new RoleDaoException(e);
-        }
-
-        // Get all roles belonging to a particular application
-        String roles[] = null;
-        try {
-            AppRole ar = new AppRole();
-            ar.addCriteria(AppRole.PROP_APPID, appId);
-            List list = this.client.retrieveList(ar);
-            if (list != null || list.size() > 0) {
-                roles = new String[list.size()];
-                int ndx = 0;
-                for (Object obj : list) {
-                    roles[ndx++] = String.valueOf(((AppRole) obj)
-                            .getAppRoleId());
-                }
-            }
-        } catch (DatabaseException e) {
-            throw new RoleDaoException(e);
-        }
-
-        // Delete all roles assoicated with a particular application for the
-        // user.
-        this.deleteUserAppRoles(userName, assignedRoles);
-
-        // Verify that we have a valid list of assigned roles. An invalid list
-        // means
-        // that all user roles were revoked and there are no new roles to
-        // assign.
-        if (assignedRoles == null) {
-            return 0;
-        }
-
-        // Use the list of application role code names to build an array of
-        // equivalent role id's
-        String roleIdArray[] = this.getAppRoleIdList(assignedRoles);
 
         // Add each user role based on the new list of assigned roles.
-        rows = 0;
-        for (String roleId : roleIdArray) {
+        int rows = 0;
+        for (String roleId : assignedRoleId) {
             try {
                 UserAppRole uar = new UserAppRole();
-                uar.setLoginId(user.getLoginId());
+                uar.setLoginId(user.getLoginUid());
                 uar.setAppRoleId(Integer.parseInt(roleId));
-                UserTimestamp ut = RMT2Date.getUserTimeStamp(userAppRole
-                        .getUpdateUserId());
+                UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
                 uar.setDateCreated(ut.getDateCreated());
                 uar.setDateUpdated(ut.getDateCreated());
                 uar.setUserId(ut.getLoginId());
@@ -839,7 +568,8 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         return rows;
     }
 
-    private String[] getAppRoleIdList(String roles[]) throws RoleDaoException {
+    @Override
+    public String[] fetchAppRoleIdList(String roles[]) throws RoleDaoException {
         AppRole obj = new AppRole();
         obj.addInClause(AppRole.PROP_CODE, roles);
         List<AppRole> results = null;
@@ -876,37 +606,35 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @throws SecurityDaoException
      */
     @Override
-    public int deleteUserAppRoles(String userName, String[] appRoles)
-            throws RoleDaoException {
-        UserLogin user = new UserLogin();
+    public int deleteUserAppRoles(UserDto user, String[] appRoleId) throws RoleDaoException {
+        // UserLogin user = new UserLogin();
+        //
+        // // Verify login id.
+        // user.addCriteria(UserLogin.PROP_USERNAME, user);
+        // try {
+        // user = (UserLogin) this.client.retrieveObject(user);
+        // if (user == null) {
+        // throw new RoleDaoException(
+        // "User Application Role delete failed due to inability to obtain user profile");
+        // }
+        // } catch (DatabaseException e) {
+        // throw new RoleDaoException(e);
+        // }
 
-        // Verify login id.
-        user.addCriteria(UserLogin.PROP_USERNAME, userName);
-        try {
-            user = (UserLogin) this.client.retrieveObject(user);
-            if (user == null) {
-                throw new RoleDaoException(
-                        "User Application Role delete failed due to inability to obtain user profile");
-            }
-        } catch (DatabaseException e) {
-            throw new RoleDaoException(e);
-        }
-
-        // Use the list of application role code names to build an array of
-        // equivalent role id's
-        String roleIdArray[] = this.getAppRoleIdList(appRoles);
+        // // Use the list of application role code names to build an array of
+        // // equivalent role id's
+        // String roleIdArray[] = this.fetchAppRoleIdList(appRoleId);
 
         try {
             UserAppRole uar = new UserAppRole();
-            uar.addCriteria(UserAppRole.PROP_LOGINID, user.getLoginId());
+            uar.addCriteria(UserAppRole.PROP_LOGINID, user.getLoginUid());
             // Consider role condition only if one or more application roles
             // were found above.
-            if (appRoles != null && appRoles.length > 0) {
-                uar.addInClause(UserAppRole.PROP_APPROLEID, roleIdArray);
+            if (appRoleId != null && appRoleId.length > 0) {
+                uar.addInClause(UserAppRole.PROP_APPROLEID, appRoleId);
             }
             int rows = this.client.deleteRow(uar);
-            logger.info("Total number of user application-roles deleted for user, "
-                    + userName + ": " + rows);
+            logger.info("Total number of user application-roles deleted for user, " + user + ": " + rows);
             return rows;
         } catch (DatabaseException e) {
             throw new RoleDaoException(e);
@@ -919,8 +647,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @see org.dao.roles.RoleDao#getUserApps(java.lang.String)
      */
     @Override
-    public List<CategoryDto> fetchUserAppRole(String userName)
-            throws RoleDaoException {
+    public List<CategoryDto> fetchUserAppRole(String userName) throws RoleDaoException {
         VwUserAppRoles ua = new VwUserAppRoles();
         ua.addCriteria(VwUserAppRoles.PROP_USERNAME, userName);
         List<VwUserAppRoles> apps = null;
@@ -935,8 +662,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
 
         List<CategoryDto> list = new ArrayList<CategoryDto>();
         for (VwUserAppRoles item : apps) {
-            CategoryDto dto = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(item,
-                    this.updateUserId);
+            CategoryDto dto = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(item, this.updateUserId);
             list.add(dto);
         }
         return list;

@@ -1,17 +1,17 @@
 package org.modules.roles;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.dao.SecurityDaoException;
 import org.dao.roles.RoleDao;
 import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
-import org.dto.adapter.orm.Rmt2OrmDtoFactory;
+import org.modules.SecurityConstants;
 import org.modules.SecurityModuleException;
 
-import com.RMT2Constants;
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
  * An api implemetation of {@link RoleApi} that provides functionality for
@@ -24,21 +24,34 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
 
     private static final Logger logger = Logger.getLogger(RoleApiImpl.class);
 
-    private RoleDaoFactory daoFactory;
+    private RoleDao dao;
 
     /**
-     * Create a RoleApiImpl that initializs the DAO factory.
+     * Create an RoleApiImpl object that initializes the DAO factory.
      */
-    protected RoleApiImpl() {
-        this.daoFactory = new RoleDaoFactory();
+    RoleApiImpl() {
+        super(SecurityConstants.APP_NAME);
+        this.dao = RoleDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
+        this.setSharedDao(this.dao);
+        logger.info("RoleApi is initialized by default constructor");
     }
 
     /**
-     * Not supported
+     * Create a RoleApiImpl using the specified application name.
+     * 
+     * @param appName
+     *            the application name
      */
+    RoleApiImpl(String appName) {
+        super(appName);
+        this.dao = RoleDaoFactory.createRmt2OrmDao(appName);
+        this.setSharedDao(this.dao);
+        logger.info("RoleApi is initialized by application name, " + appName);
+    }
+
     @Override
-    public CategoryDto get(int roleId) throws SecurityModuleException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    public void init() {
+        super.init();
     }
 
     /*
@@ -48,9 +61,7 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
      */
     @Override
     public CategoryDto get(String roleName) throws SecurityModuleException {
-        RoleDao dao = null;
         try {
-            dao = this.daoFactory.createLdapDao();
             CategoryDto dto = dao.fetchRole(roleName);
             if (dto == null) {
                 this.msg = "Role, " + roleName + ", was not found";
@@ -73,48 +84,13 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.CategoryApiModule#fetch()
-     */
-    @Override
-    public List<CategoryDto> get() throws SecurityModuleException {
-        RoleDao dao = null;
-        try {
-            dao = this.daoFactory.createLdapDao();
-            List<CategoryDto> list = dao.fetchRole();
-            this.msg = "Total roles retrieved: "
-                    + (list == null ? 0 : list.size());
-            logger.info(this.msg);
-            return list;
-        } catch (Exception e) {
-            this.msg = "Unable to fetch master list of roles";
-            logger.error(this.msg);
-            throw new RoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.CategoryApiModule#create()
-     */
-    @Override
-    public CategoryDto create() {
-        return Rmt2OrmDtoFactory.getNewRoleCategoryInstance();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.modules.CategoryApiModule#update(org.dto.CategoryDto)
      */
     @Override
     public int update(CategoryDto role) throws SecurityModuleException {
-        RoleDao dao = null;
+        this.validateRole(role);
+
         try {
-            dao = this.daoFactory.createLdapDao();
             dao.setDaoUser(this.apiUser);
             int rc = dao.maintainRole(role);
             this.msg = "Role, " + role.getRoleName() + ", was updated successfully";
@@ -137,9 +113,7 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
      */
     @Override
     public int delete(int roleId) throws SecurityModuleException {
-        RoleDao dao = null;
         try {
-            dao = this.daoFactory.createLdapDao();
             int rc = dao.deleteRole(roleId);
             this.msg = "Role, " + roleId + ", was deleted successfully";
             logger.info(this.msg);
@@ -161,9 +135,7 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
      */
     @Override
     public int delete(String roleName) throws SecurityModuleException {
-        RoleDao dao = null;
         try {
-            dao = this.daoFactory.createLdapDao();
             int rc = dao.deleteRole(roleName);
             this.msg = "Role, " + roleName + ", was deleted successfully";
             logger.info(this.msg);
@@ -178,4 +150,33 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
         }
     }
 
+    /**
+     * This method is responsble for validating a role profile. The name and
+     * description of the application are to have values.
+     * 
+     * @param role
+     *            {@link CategoryDto}
+     * @throws InvalidDataException
+     */
+    protected void validateRole(CategoryDto role) throws InvalidDataException {
+        try {
+            Verifier.verifyNotNull(role);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Role object is required", e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(role.getRoleName());
+        } catch (VerifyException e) {
+            this.msg = "Role Name is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+
+        try {
+            Verifier.verifyNotEmpty(role.getRoleDescription());
+        } catch (VerifyException e) {
+            this.msg = "Role description is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+    }
 }
