@@ -30,8 +30,7 @@ class UserAppRoleExtRmt2OrmAdapter extends DefaultCategoryAdapter {
      * @param updateUserId
      *            the login id of the user accessing this adapter.
      */
-    public UserAppRoleExtRmt2OrmAdapter(VwUserAppRoles userAppRole,
-            String updateUserId) {
+    public UserAppRoleExtRmt2OrmAdapter(VwUserAppRoles userAppRole, String updateUserId) {
         this();
         this.uar = userAppRole;
         this.setUpdateUserId(updateUserId);

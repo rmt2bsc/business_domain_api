@@ -313,10 +313,8 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
      *            the id of the user accessing the DTO
      * @return an isntance of {@link CategoryDto}
      */
-    public static final CategoryDto getUserAppRoleDtoInstance(
-            VwUserAppRoles userAppRole, String updateUserId) {
-        CategoryDto dto = new UserAppRoleExtRmt2OrmAdapter(userAppRole,
-                updateUserId);
+    public static final CategoryDto getUserAppRoleDtoInstance(VwUserAppRoles userAppRole, String updateUserId) {
+        CategoryDto dto = new UserAppRoleExtRmt2OrmAdapter(userAppRole, updateUserId);
         return dto;
     }
 

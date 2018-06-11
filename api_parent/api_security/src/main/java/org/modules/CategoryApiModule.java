@@ -1,5 +1,7 @@
 package org.modules;
 
+import java.util.List;
+
 import org.dto.CategoryDto;
 
 import com.api.foundation.TransactionApi;
@@ -12,6 +14,19 @@ import com.api.foundation.TransactionApi;
  * 
  */
 public interface CategoryApiModule extends TransactionApi {
+    
+    /**
+     * Obtains a list of role based categories based on various selection properties
+     * contained in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instance of {@link CategoryDto} containing various property
+     *            values to build selection criteria.
+     * @return List of {@link CategoryDto} objects containing application role
+     *         data.
+     * @throws SecurityModuleException
+     */
+    List<CategoryDto> get(CategoryDto criteria) throws SecurityModuleException;
 
     /**
      * Persist changes to a single API entity to the database.

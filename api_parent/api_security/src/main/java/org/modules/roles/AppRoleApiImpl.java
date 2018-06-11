@@ -132,32 +132,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         }
     }
 
-    /**
-     * Delete an application role by its application role code.
-     * 
-     * @param appRoleCode
-     *            The application role code
-     * @return the total number of records deleted.
-     * @throws SecurityModuleException
-     */
-    @Override
-    public int delete(String appRoleCode) throws SecurityModuleException {
-        try {
-            int rc = dao.deleteAppRole(appRoleCode);
-            this.msg = "Application Role, " + appRoleCode + ", was deleted successfully";
-            logger.info(this.msg);
-            return rc;
-        } catch (Exception e) {
-            this.msg = "Unable to delete Application Role identitfied by id, " + appRoleCode;
-            logger.error(this.msg);
-            throw new RoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /**
+     /**
      * This method is responsble for validating an application profile. The
      * name, description, code, application id, and role id must contain valid
      * values.

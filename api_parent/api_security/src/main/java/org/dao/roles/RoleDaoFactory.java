@@ -1,5 +1,6 @@
 package org.dao.roles;
 
+import org.dao.mapping.orm.rmt2.Roles;
 import org.dao.mapping.orm.rmt2.VwAppRoles;
 import org.dao.mapping.orm.rmt2.VwUserAppRoles;
 import org.dto.CategoryDto;
@@ -56,6 +57,27 @@ public class RoleDaoFactory extends RMT2Base {
         return dao;
     }
 
+    /**
+     * 
+     * @param criteria
+     * @return
+     */
+    public static final Roles createCriteriaRoles(CategoryDto criteria) {
+        Roles obj = new Roles();
+        if (criteria != null) {
+            if (criteria.getRoleId() > 0) {
+                obj.addCriteria(Roles.PROP_ROLEID, criteria.getRoleId());
+            }
+            if (criteria.getRoleName() != null) {
+                obj.addLikeClause(Roles.PROP_NAME, criteria.getRoleName());
+            }
+            if (criteria.getRoleDescription() != null) {
+                obj.addLikeClause(Roles.PROP_DESCRIPTION, criteria.getRoleDescription());
+            }
+        }
+        return obj;
+    }
+    
     /**
      * 
      * @param criteria

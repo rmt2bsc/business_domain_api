@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.dao.SecurityDaoException;
 import org.dao.roles.RoleDao;
-import org.dao.roles.RoleDaoException;
 import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
 import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import org.modules.SecurityConstants;
+import org.modules.SecurityModuleException;
 import org.modules.users.UserApi;
 import org.modules.users.UserApiException;
 import org.modules.users.UserApiFactory;
@@ -19,7 +18,6 @@ import org.modules.users.UserApiFactory;
 import com.InvalidDataException;
 import com.RMT2Constants;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.api.persistence.DatabaseException;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
 
@@ -64,22 +62,29 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         super.init();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.roles.UserAppRoleApi#fetch(java.lang.String)
-     */
     @Override
-    public List<CategoryDto> get(String userName) throws UserAppRoleApiException {
-        List<CategoryDto> list;
+    public List<CategoryDto> get(CategoryDto criteria) throws SecurityModuleException {
         try {
-            list = dao.fetchUserAppRole(userName);
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Category criteria object is required", e);
+        }
+
+        try {
+            List<CategoryDto> list = dao.fetchUserAppRole(criteria);
+            this.msg = "Total user application roles retrieved using custom criteria: "
+                    + (list == null ? 0 : list.size());
+            logger.info(this.msg);
             return list;
-        } catch (SecurityDaoException e) {
-            throw new UserAppRoleApiException(e);
+        } catch (Exception e) {
+            this.msg = "Unable to fetch User Application Roles using custom criteria";
+            throw new AppRoleApiException(this.msg, e);
+        } finally {
+            dao.close();
+            dao = null;
         }
     }
-
+  
     /*
      * (non-Javadoc)
      * 
@@ -170,55 +175,31 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
             throw new InvalidDataException("UserAppRole object is required");
         }
 
-        try {
-            Verifier.verifyNotNull(roles);
-        } catch (VerifyException e) {
-            throw new InvalidDataException("Role list is required");
-        }
-
         // Verify that we have a valid list of assigned roles. An invalid list
         // means that all user roles were revoked and there are no new roles to
         // assign.
-        if (roles == null) {
+        try {
+            Verifier.verifyNotEmpty(roles);
+        } catch (VerifyException e) {
+            logger.warn("All roles for user, " + userAppDetails.getUsername() + ", appear to be revoked and there are no new roles to assign");
             return 0;
         }
 
         // Get UserLogin object
         UserDto userDto = this.getUserDto(userAppDetails.getUsername());
 
-        // TODO: Don't think there is a need to fetch appRole object
-        // here...delete if necessary
-        // Get all roles belonging to a particular application
-        int appId = userAppDetails.getApplicationId();
-        String appRoleArray[] = null;
-        try {
-            CategoryDto appRoleCritieria = Rmt2OrmDtoFactory.getAppRoleDtoInstance(null);
-            appRoleCritieria.setApplicationId(appId);
-            List<CategoryDto> catgList = dao.fetchAppRole(appRoleCritieria);
-            if (catgList != null && catgList.size() > 0) {
-                appRoleArray = new String[catgList.size()];
-                int ndx = 0;
-                for (CategoryDto obj : catgList) {
-                    appRoleArray[ndx++] = String.valueOf(obj.getAppRoleId());
-                }
-            }
-        } catch (DatabaseException e) {
-            throw new RoleDaoException(e);
-        }
-
-        // Delete all roles assoicated with a particular application for the
-        // user.
-        ArrayList<String> roleList = new ArrayList<String>(roles);
-        String assignedRoles[] = roleList.toArray(new String[roles.size()]);
-        dao.deleteUserAppRoles(userDto, assignedRoles);
+        // Delete all roles assoicated with a particular application for the user.
+        dao.deleteUserAppRoles(userDto, null);
 
         // Use the list of application role code names to build an array of
         // equivalent role id's
-        String assignedRoleIdArray[] = dao.fetchAppRoleIdList(assignedRoles);
+        ArrayList<String> roleList = new ArrayList<String>(roles);
+        String rolesToAssign[] = roleList.toArray(new String[roles.size()]);
+        String roleIdsToAssign[] = dao.fetchAppRoleIdList(rolesToAssign);
 
         int rc = 0;
         try {
-            rc = dao.maintainUserAppRole(userDto, assignedRoleIdArray, null);
+            rc = dao.maintainUserAppRole(userDto, roleIdsToAssign, null);
             this.msg = "Total number of roles created user, "
                     + userAppDetails.getUsername() + ", for application, "
                     + userAppDetails.getApplicationId() + ": " + rc;
@@ -235,14 +216,20 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Delete a specified list or all application roles belonging to a user.
      * 
-     * @see org.modules.roles.UserAppRoleApi#delete(java.lang.String,
-     * java.util.List)
+     * @param userName
+     *            The login id of the user to associate roles
+     * @param appRoles
+     *            A List of Strings representing the roles to removed. Set to
+     *            null when all application roles are desired to be removed.
+     * @return The total number of roles deleted.
+     * @throws SecurityModuleException
      */
     @Override
     public int delete(String userName, List<String> appRoles) throws UserAppRoleApiException {
+        boolean deleteSelectedRoles = true;
         try {
             Verifier.verifyNotEmpty(userName);
         } catch (VerifyException e) {
@@ -252,27 +239,31 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         try {
             Verifier.verifyNotEmpty(appRoles);
         } catch (VerifyException e) {
-            throw new InvalidDataException("List of application roles is required");
+            logger.warn("All application roles for user, " + userName + ", will be deleted!");
+            deleteSelectedRoles = false;
         }
 
         // Get UserLogin object
         UserDto userDto = this.getUserDto(userName);
 
         // Use the list of application role code names to build an array of
-        // equivalent role id's
-        ArrayList<String> roleList = new ArrayList<String>(appRoles);
-        String roleArray[] = roleList.toArray(new String[appRoles.size()]);
-        String roleIdArray[] = dao.fetchAppRoleIdList(roleArray);
+        // equivalent role id's, if available
+        String appRoleIdArray[] = null;
+        if (deleteSelectedRoles) {
+            ArrayList<String> roleList = new ArrayList<String>(appRoles);
+            String appRoleArray[] = roleList.toArray(new String[appRoles.size()]);
+            appRoleIdArray = dao.fetchAppRoleIdList(appRoleArray);    
+        }
 
         // Delete user app roles
         int rc = 0;
         try {
-            rc = dao.deleteUserAppRoles(userDto, roleIdArray);
+            rc = dao.deleteUserAppRoles(userDto, appRoleIdArray);
             this.msg = "Total number of roles removed from user, " + userName + ": " + rc;
             logger.info(this.msg);
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to remove application roles for user, " + userName + ": " + roleIdArray;
+            this.msg = "Unable to remove application roles for user, " + userName + ": " + appRoleIdArray;
             logger.error(this.msg);
             throw new UserAppRoleApiException(this.msg, e);
         } finally {

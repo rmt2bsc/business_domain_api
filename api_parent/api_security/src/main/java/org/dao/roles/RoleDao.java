@@ -18,6 +18,20 @@ import com.api.persistence.DaoClient;
 public interface RoleDao extends DaoClient {
 
     /**
+     * Fetch list of roles based on selection criteria.
+     * <p>
+     * The data source is the <i>Roles</i> table.
+     * 
+     * @param criteria
+     *            an instance of {@link CategoryDto}
+     *            
+     * @return a List of {@link CategoryDto} objects or null if no records are
+     *         found.
+     * @throws SecurityDaoException
+     */
+    List<CategoryDto> fetchRole(CategoryDto criteria) throws SecurityDaoException;
+    
+    /**
      * Fetch the master list of roles.
      * <p>
      * The data source is the <i>Roles</i> table.
@@ -95,6 +109,17 @@ public interface RoleDao extends DaoClient {
      */
     List<CategoryDto> fetchAppRole(CategoryDto criteria) throws SecurityDaoException;
 
+    /**
+     * Fethes a list of user application roles based on selection criteria.
+     * 
+     * @param criteria
+     *            an instance of {@link CategoryDto}
+     * @return a List of {@link CategoryDto} objects or null if the criteria
+     *         does not return a data set.
+     * @throws SecurityDaoException
+     */
+    List<CategoryDto> fetchUserAppRole(CategoryDto criteria) throws SecurityDaoException;
+    
     /**
      * Fethes a list of applications which the user can access.
      * <p>

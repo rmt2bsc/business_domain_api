@@ -13,19 +13,7 @@ import org.modules.SecurityModuleException;
  * 
  */
 public interface UserAppRoleApi extends CategoryApiModule {
-
-    /**
-     * Obtains a list of applications in which the user, <i>userName</i>, has
-     * access.
-     * 
-     * @param userName
-     *            the user's login id.
-     * @return List of {@link CategoryDto} objects containing application role
-     *         data pertaining to the specified user.
-     * @throws SecurityModuleException
-     */
-    List<CategoryDto> get(String userName) throws SecurityModuleException;
-
+ 
     /**
      * Obtains a list of application-roles that are assigned to the user
      * specified in <i>criteria</i>.

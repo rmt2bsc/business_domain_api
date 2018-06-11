@@ -9,6 +9,7 @@ import org.dao.SecurityDaoException;
 import org.dao.authentication.AuthenticationDao;
 import org.dao.authentication.AuthenticationDaoFactory;
 import org.dto.CategoryDto;
+import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import org.modules.SecurityModuleException;
 import org.modules.roles.RoleSecurityApiFactory;
 import org.modules.roles.UserAppRoleApi;
@@ -266,7 +267,9 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
         try {
             RoleSecurityApiFactory roleFactory = new RoleSecurityApiFactory();
             rolesApi = roleFactory.createUserAppRoleApi();
-            roleList = rolesApi.get(userName);
+            CategoryDto criteria = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(null, null);
+            criteria.setUsername(userName);
+            roleList = rolesApi.get(criteria);
         } catch (SecurityModuleException e) {
             throw new CannotRetrieveException("Unable to retrieve user application roles for " + userName, e);
         }

@@ -1,5 +1,7 @@
 package org.modules.roles;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.dao.SecurityDaoException;
 import org.dao.roles.RoleDao;
@@ -54,33 +56,35 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
         super.init();
     }
 
+    
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.roles.RoleApi#get(java.lang.String)
+     * @see org.modules.roles.AppRoleApi#fetch(org.dto.CategoryDto)
      */
     @Override
-    public CategoryDto get(String roleName) throws SecurityModuleException {
+    public List<CategoryDto> get(CategoryDto criteria) throws SecurityModuleException {
         try {
-            CategoryDto dto = dao.fetchRole(roleName);
-            if (dto == null) {
-                this.msg = "Role, " + roleName + ", was not found";
-            }
-            else {
-                this.msg = "Role, " + roleName + ", was retrieved successfully";
-            }
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Category criteria object is required", e);
+        }
+
+        try {
+            List<CategoryDto> list = dao.fetchRole(criteria);
+            this.msg = "Total application roles retrieved using custom criteria: "
+                    + (list == null ? 0 : list.size());
             logger.info(this.msg);
-            return dto;
+            return list;
         } catch (Exception e) {
-            this.msg = "Unable to fetch Role by id, " + roleName;
-            logger.error(this.msg);
-            throw new RoleApiException(this.msg, e);
+            this.msg = "Unable to fetch Application Roles using custom criteria";
+            throw new AppRoleApiException(this.msg, e);
         } finally {
             dao.close();
             dao = null;
         }
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -128,29 +132,7 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.roles.RoleApi#delete(java.lang.String)
-     */
-    @Override
-    public int delete(String roleName) throws SecurityModuleException {
-        try {
-            int rc = dao.deleteRole(roleName);
-            this.msg = "Role, " + roleName + ", was deleted successfully";
-            logger.info(this.msg);
-            return rc;
-        } catch (Exception e) {
-            this.msg = "Unable to delete Role identitfied by id, " + roleName;
-            logger.error(this.msg);
-            throw new RoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
-        }
-    }
-
-    /**
+     /**
      * This method is responsble for validating a role profile. The name and
      * description of the application are to have values.
      * 
