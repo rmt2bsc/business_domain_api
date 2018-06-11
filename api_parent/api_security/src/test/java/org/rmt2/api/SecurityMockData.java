@@ -199,20 +199,15 @@ public class SecurityMockData extends BaseSecurityDaoTest {
     private List<Roles> createRolesMockData() {
         List<Roles> list = new ArrayList<>();
         int roleId = SecurityMockDataFactory.TEST_ROLE_ID;
-        Roles o = SecurityMockDataFactory.createOrmRoles(roleId,
-                "RoleName_" + roleId, "RoleDescription_" + roleId);
+        Roles o = SecurityMockDataFactory.createOrmRoles(roleId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmRoles(++roleId,
-                "RoleName_" + roleId, "RoleDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmRoles(++roleId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmRoles(++roleId,
-                "RoleName_" + roleId, "RoleDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmRoles(++roleId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmRoles(++roleId,
-                "RoleName_" + roleId, "RoleDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmRoles(++roleId);
         list.add(o);
-        o = SecurityMockDataFactory.createOrmRoles(++roleId,
-                "RoleName_" + roleId, "RoleDescription_" + roleId);
+        o = SecurityMockDataFactory.createOrmRoles(++roleId);
         list.add(o);
         
         return list;

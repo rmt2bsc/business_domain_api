@@ -107,15 +107,13 @@ public class SecurityMockDataFactory {
     /**
      * 
      * @param id
-     * @param name
-     * @param description
      * @return
      */
-    public static final Roles createOrmRoles(int id, String name, String description) {
+    public static final Roles createOrmRoles(int id) {
         Roles o = new Roles();
         o.setRoleId(id);
-        o.setName(name);
-        o.setDescription(description);
+        o.setName("RoleName_" + id);
+        o.setDescription("RoleDescription_" + id);
         return o;
     }
  

@@ -26,6 +26,9 @@ class RolesRmt2OrmAdapter extends DefaultCategoryAdapter {
      */
     public RolesRmt2OrmAdapter(Roles role) {
         this();
+        if (role == null) {
+            role = new Roles();
+        }
         this.r = role;
         this.setUpdateUserId(role.getUserId());
     }
