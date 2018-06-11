@@ -776,4 +776,18 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         return 0;
     }
 
+    @Override
+    public List<CategoryDto> fetchRole(CategoryDto criteria)
+            throws SecurityDaoException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<CategoryDto> fetchUserAppRole(CategoryDto criteria)
+            throws SecurityDaoException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
