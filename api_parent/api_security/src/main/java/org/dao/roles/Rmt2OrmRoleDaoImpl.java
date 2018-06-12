@@ -410,10 +410,6 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      */
     @Override
     public int deleteRole(int roleId) throws RoleDaoException {
-        if (roleId <= 0) {
-            this.msg = "Role id is invalid: " + roleId;
-            throw new RoleDaoException(this.msg);
-        }
         try {
             Roles role = new Roles();
             role.addCriteria(Roles.PROP_ROLEID, roleId);
@@ -529,10 +525,6 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      */
     @Override
     public int deleteAppRole(int appRoleId) throws RoleDaoException {
-        if (appRoleId <= 0) {
-            this.msg = "Application Role id is invalid: " + appRoleId;
-            throw new RoleDaoException(this.msg);
-        }
         try {
             AppRole ar = new AppRole();
             ar.addCriteria(AppRole.PROP_APPROLEID, appRoleId);
