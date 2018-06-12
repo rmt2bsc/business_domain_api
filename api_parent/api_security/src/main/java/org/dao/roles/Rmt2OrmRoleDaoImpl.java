@@ -552,8 +552,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @throws SecurityDaoException
      */
     @Override
-    public int maintainUserAppRole(UserDto user, String[] assignedRoleId, String[] revokedRoles)
-            throws RoleDaoException {
+    public int maintainUserAppRole(UserDto user, String[] assignedRoleId, String[] revokedRoles) throws RoleDaoException {
 
         // Add each user role based on the new list of assigned roles.
         int rows = 0;
