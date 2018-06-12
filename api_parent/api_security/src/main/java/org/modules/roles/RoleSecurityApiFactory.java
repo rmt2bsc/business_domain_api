@@ -28,6 +28,17 @@ public class RoleSecurityApiFactory extends RMT2Base {
     }
 
     /**
+     * Creates an instance of AppApi using a role api implementation.
+     *
+     * @param appName
+     * @return an instance of {@link RoleApi}
+     */
+    public RoleApi createRoleApi(String appName) {
+        RoleApi api = new RoleApiImpl(appName);
+        return api;
+    }
+    
+    /**
      * Creates an instance of AppRoleApi using a application role
      * implementation.
      * 
@@ -39,6 +50,18 @@ public class RoleSecurityApiFactory extends RMT2Base {
     }
 
     /**
+     * Creates an instance of AppRoleApi using a application role
+     * implementation.
+     * 
+     * @param appName
+     * @return an instance of {@link AppRoleApi}
+     */
+    public AppRoleApi createAppRoleApi(String appName) {
+        AppRoleApi api = new AppRoleApiImpl(appName);
+        return api;
+    }
+    
+    /**
      * Creates an instance of UserAppRoleApi using an user application role
      * implementation.
      * 
@@ -46,6 +69,18 @@ public class RoleSecurityApiFactory extends RMT2Base {
      */
     public UserAppRoleApi createUserAppRoleApi() {
         UserAppRoleApi api = new UserAppRoleApiImpl();
+        return api;
+    }
+    
+    /**
+     * Creates an instance of UserAppRoleApi using an user application role
+     * implementation.
+     * 
+     * @param appName
+     * @return an instance of {@link UserAppRoleApi}
+     */
+    public UserAppRoleApi createUserAppRoleApi(String appName) {
+        UserAppRoleApi api = new UserAppRoleApiImpl(appName);
         return api;
     }
 }
