@@ -6,10 +6,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.UserLogin;
-import org.dao.mapping.orm.rmt2.VwUser;
-import org.dao.user.UserDaoException;
-import org.dto.UserDto;
+import javax.management.relation.Role;
+
+import org.dao.mapping.orm.rmt2.Roles;
+import org.dao.roles.RoleDaoException;
+import org.dto.CategoryDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -17,9 +18,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modules.SecurityConstants;
-import org.modules.users.UserApi;
-import org.modules.users.UserApiException;
-import org.modules.users.UserApiFactory;
+import org.modules.SecurityModuleException;
+import org.modules.roles.RoleApi;
+import org.modules.roles.RoleApiException;
+import org.modules.roles.RoleSecurityApiFactory;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.SecurityMockData;
@@ -31,7 +33,7 @@ import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
 /**
- * Tests User module of the Security API.
+ * Tests Role module of the Security API.
  * 
  * @author rterrell
  * 
@@ -49,13 +51,13 @@ public class RolesApiTest extends SecurityMockData {
     public void setUp() throws Exception {
         super.setUp();
 
-        when(this.mockPersistenceClient.retrieveList(any(VwUser.class)))
-             .thenReturn(this.mockVwUserData);
-        when(this.mockPersistenceClient.insertRow(any(UserLogin.class), eq(true)))
-             .thenReturn(SecurityMockDataFactory.TEST_USER_ID);
-        when(this.mockPersistenceClient.updateRow(any(UserLogin.class)))
+        when(this.mockPersistenceClient.retrieveList(any(Role.class)))
+             .thenReturn(this.mockRolesData);
+        when(this.mockPersistenceClient.insertRow(any(Role.class), eq(true)))
+             .thenReturn(SecurityMockDataFactory.TEST_ROLE_ID);
+        when(this.mockPersistenceClient.updateRow(any(Role.class)))
              .thenReturn(1);
-        when(this.mockPersistenceClient.deleteRow(any(UserLogin.class)))
+        when(this.mockPersistenceClient.deleteRow(any(Role.class)))
              .thenReturn(1);
     }
 
@@ -70,37 +72,37 @@ public class RolesApiTest extends SecurityMockData {
 
     @Test
     public void testSuccess_Fetch() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserDto criteria = Rmt2OrmDtoFactory.getNewUserInstance();
-        List<UserDto> results = null;
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        CategoryDto criteria = Rmt2OrmDtoFactory.getRoleDtoInstance(null);
+        List<CategoryDto> results = null;
         try {
-            results = api.getUser(criteria);
-        } catch (UserApiException e) {
+            results = api.get(criteria);
+        } catch (SecurityModuleException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
-            UserDto item = results.get(ndx);
-            int currentAppId = SecurityMockDataFactory.TEST_USER_ID + ndx;
-            Assert.assertEquals(currentAppId, item.getLoginUid());
-            Assert.assertEquals(SecurityMockDataFactory.TEST_GROUP_ID, item.getGroupId());
-            Assert.assertEquals("UserName_" + currentAppId, item.getUsername());
+            CategoryDto item = results.get(ndx);
+            int currentUid = SecurityMockDataFactory.TEST_ROLE_ID + ndx;
+            Assert.assertEquals(currentUid, item.getRoleId());
+            Assert.assertEquals("RoleName_" + currentUid, item.getRoleName());
+            Assert.assertEquals("RoleDescription_" + currentUid, item.getRoleDescription());
         }
     }
 
     
     @Test
     public void testSuccess_Fetch_NotFound() {
-        when(this.mockPersistenceClient.retrieveList(any(VwUser.class)))
+        when(this.mockPersistenceClient.retrieveList(any(Role.class)))
               .thenReturn(null);
         
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserDto criteria = Rmt2OrmDtoFactory.getNewUserInstance();
-        List<UserDto> results = null;
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        CategoryDto criteria = Rmt2OrmDtoFactory.getRoleDtoInstance(null);
+        List<CategoryDto> results = null;
         try {
-            results = api.getUser(criteria);
-        } catch (UserApiException e) {
+            results = api.get(criteria);
+        } catch (SecurityModuleException e) {
             e.printStackTrace();
         }
         Assert.assertNull(results);
@@ -108,87 +110,83 @@ public class RolesApiTest extends SecurityMockData {
  
     @Test
     public void testError_Fetch_DB_Access_Fault() {
-        when(this.mockPersistenceClient.retrieveList(any(VwUser.class)))
-            .thenThrow(new DatabaseException("Error fetching user data"));
+        when(this.mockPersistenceClient.retrieveList(any(Role.class)))
+            .thenThrow(new DatabaseException("Error fetching role data"));
         
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserDto criteria = Rmt2OrmDtoFactory.getNewUserInstance();
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        CategoryDto criteria = Rmt2OrmDtoFactory.getRoleDtoInstance(null);
         try {
-            api.getUser(criteria);
+            api.get(criteria);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof UserApiException);
-            Assert.assertTrue(e.getCause() instanceof UserDaoException);
+            Assert.assertTrue(e instanceof SecurityModuleException);
+            Assert.assertTrue(e instanceof RoleApiException);
+            Assert.assertTrue(e.getCause() instanceof RoleDaoException);
             Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
     
     @Test
     public void testValidation_Fetch_Null_Criteria_Parameter() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
         try {
-            api.getUser(null);
+            api.get(null);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof InvalidDataException);
-            Assert.assertEquals("User crtieria object is required", e.getMessage());
+            Assert.assertEquals("Role Category criteria object is required", e.getMessage());
         }
     }
     
     @Test
     public void testSuccess_Create() {
-        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class)))
-             .thenReturn(null);
+        when(this.mockPersistenceClient.retrieveObject(any(Role.class))).thenReturn(null);
         
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(0, 500, "user_name", "test1234", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(0);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         int results = 0;
         try {
-            results = api.updateUser(dto);
-        } catch (UserApiException e) {
+            results = api.update(dto);
+        } catch (SecurityModuleException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(SecurityMockDataFactory.TEST_USER_ID, results);
+        Assert.assertEquals(SecurityMockDataFactory.TEST_ROLE_ID, results);
     }
 
     @Test
     public void testError_Create_DB_Access_Fault() {
-        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class)))
-             .thenReturn(null);
-        when(this.mockPersistenceClient.insertRow(any(UserLogin.class), eq(true)))
-             .thenThrow(new DatabaseException("Error inserting User data"));
+        when(this.mockPersistenceClient.insertRow(any(Role.class), eq(true)))
+             .thenThrow(new DatabaseException("Error inserting Role data"));
         
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(0, 500, "user_name", "test1234", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(0);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         try {
-            api.updateUser(dto);;
+            api.update(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof UserApiException);
-            Assert.assertTrue(e.getCause() instanceof UserDaoException);
+            Assert.assertTrue(e instanceof SecurityModuleException);
+            Assert.assertTrue(e instanceof RoleApiException);
+            Assert.assertTrue(e.getCause() instanceof RoleDaoException);
             Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
     
     @Test
     public void testSuccess_Modify() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
-        
-        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class)))
-               .thenReturn(obj);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         
         int results = 0;
         try {
-            results = api.updateUser(dto);
-        } catch (UserApiException e) {
+            results = api.update(dto);
+        } catch (SecurityModuleException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
@@ -197,30 +195,29 @@ public class RolesApiTest extends SecurityMockData {
     
     @Test
     public void testError_Modify_DB_Access_Fault() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         
-        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class)))
-               .thenReturn(obj);
-        when(this.mockPersistenceClient.updateRow(any(UserLogin.class)))
-               .thenThrow(new DatabaseException("Error updating user data"));
+        when(this.mockPersistenceClient.updateRow(any(Role.class)))
+               .thenThrow(new DatabaseException("Error updating role data"));
         try {
-            api.updateUser(dto);
+            api.update(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof UserApiException);
-            Assert.assertTrue(e.getCause() instanceof UserDaoException);
+            Assert.assertTrue(e instanceof SecurityModuleException);
+            Assert.assertTrue(e instanceof RoleApiException);
+            Assert.assertTrue(e.getCause() instanceof RoleDaoException);
             Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
     
     @Test
     public void testValidation_Update_Data_Object_Null() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
         try {
-            api.updateUser(null);
+            api.update(null);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,12 +226,13 @@ public class RolesApiTest extends SecurityMockData {
     }
     
     @Test
-    public void testValidation_Update_UserName_Null() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, null, "test1234", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+    public void testValidation_Update_RoleName_Null() {
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        obj.setName(null);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         try {
-            api.updateUser(dto);
+            api.update(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -243,12 +241,13 @@ public class RolesApiTest extends SecurityMockData {
     }
     
     @Test
-    public void testValidation_Update_UserName_Empty() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "", "test1234", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+    public void testValidation_Update_RoleName_Empty() {
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        obj.setName("");
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         try {
-            api.updateUser(dto);
+            api.update(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,13 +256,13 @@ public class RolesApiTest extends SecurityMockData {
     }
     
     @Test
-    public void testValidation_Update_FirstName_Null() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
-        obj.setFirstname(null);
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+    public void testValidation_Update_RoleDescription_Null() {
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        obj.setDescription(null);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         try {
-            api.updateUser(dto);
+            api.update(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,13 +271,13 @@ public class RolesApiTest extends SecurityMockData {
     }
     
     @Test
-    public void testValidation_Update_FirstName_Empty() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
-        obj.setFirstname("");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+    public void testValidation_Update_RoleDescription_Empty() {
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        obj.setDescription("");
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
         try {
-            api.updateUser(dto);
+            api.update(dto);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -286,98 +285,13 @@ public class RolesApiTest extends SecurityMockData {
         }
     }
     
-    @Test
-    public void testValidation_Update_LastName_Null() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
-        obj.setLastname(null);
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
-        try {
-            api.updateUser(dto);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void testValidation_Update_LastName_Empty() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
-        obj.setLastname("");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
-        try {
-            api.updateUser(dto);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void testValidation_Update_Password_Null() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", null, "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
-        try {
-            api.updateUser(dto);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void testValidation_Update_Password_Empty() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
-        try {
-            api.updateUser(dto);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void testValidation_Update_GroupId_Negative() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, -500, "user_name", "", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
-        try {
-            api.updateUser(dto);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void testValidation_Update_GroupId_Zero() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 0, "user_name", "", "2018-01-01");
-        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
-        try {
-            api.updateUser(dto);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
     @Test
     public void testSuccess_Delete() {
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
         int results = 0;
         try {
-            results = api.deleteUser(1350);
-        } catch (UserApiException e) {
+            results = api.delete(SecurityMockDataFactory.TEST_ROLE_ID);
+        } catch (SecurityModuleException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
@@ -386,17 +300,18 @@ public class RolesApiTest extends SecurityMockData {
     
     @Test
     public void testError_Delete_DB_Access_Fault() {
-        when(this.mockPersistenceClient.deleteRow(any(UserLogin.class)))
-             .thenThrow(new DatabaseException("Error deleting user data"));
+        when(this.mockPersistenceClient.deleteRow(any(Role.class)))
+             .thenThrow(new DatabaseException("Error deleting role data"));
         
-        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
         try {
-            api.deleteUser(1350);
+            api.delete(SecurityMockDataFactory.TEST_ROLE_ID);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof UserApiException);
-            Assert.assertTrue(e.getCause() instanceof UserDaoException);
+            Assert.assertTrue(e instanceof SecurityModuleException);
+            Assert.assertTrue(e instanceof RoleApiException);
+            Assert.assertTrue(e.getCause() instanceof RoleDaoException);
             Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
