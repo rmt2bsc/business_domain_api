@@ -67,17 +67,16 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
         try {
             Verifier.verifyNotNull(criteria);
         } catch (VerifyException e) {
-            throw new InvalidDataException("Category criteria object is required", e);
+            throw new InvalidDataException("Role Category criteria object is required", e);
         }
 
         try {
             List<CategoryDto> list = dao.fetchRole(criteria);
-            this.msg = "Total application roles retrieved using custom criteria: "
-                    + (list == null ? 0 : list.size());
+            this.msg = "Total roles retrieved using custom criteria: " + (list == null ? 0 : list.size());
             logger.info(this.msg);
             return list;
         } catch (Exception e) {
-            this.msg = "Unable to fetch Application Roles using custom criteria";
+            this.msg = "Unable to fetch Roles using custom criteria";
             throw new RoleApiException(this.msg, e);
         } finally {
             dao.close();
