@@ -22,7 +22,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link RoleApi}
      */
-    public RoleApi createRoleApi() {
+    public static final RoleApi createRoleApi() {
         RoleApi api = new RoleApiImpl();
         return api;
     }
@@ -33,7 +33,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link RoleApi}
      */
-    public RoleApi createRoleApi(String appName) {
+    public static final RoleApi createRoleApi(String appName) {
         RoleApi api = new RoleApiImpl(appName);
         return api;
     }
@@ -44,7 +44,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link AppRoleApi}
      */
-    public AppRoleApi createAppRoleApi() {
+    public static final AppRoleApi createAppRoleApi() {
         AppRoleApi api = new AppRoleApiImpl();
         return api;
     }
@@ -56,7 +56,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link AppRoleApi}
      */
-    public AppRoleApi createAppRoleApi(String appName) {
+    public static final AppRoleApi createAppRoleApi(String appName) {
         AppRoleApi api = new AppRoleApiImpl(appName);
         return api;
     }
@@ -67,7 +67,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link UserAppRoleApi}
      */
-    public UserAppRoleApi createUserAppRoleApi() {
+    public static final UserAppRoleApi createUserAppRoleApi() {
         UserAppRoleApi api = new UserAppRoleApiImpl();
         return api;
     }
@@ -79,7 +79,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link UserAppRoleApi}
      */
-    public UserAppRoleApi createUserAppRoleApi(String appName) {
+    public static final UserAppRoleApi createUserAppRoleApi(String appName) {
         UserAppRoleApi api = new UserAppRoleApiImpl(appName);
         return api;
     }
