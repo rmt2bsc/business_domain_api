@@ -78,7 +78,7 @@ class RoleApiImpl extends AbstractTransactionApiImpl implements RoleApi {
             return list;
         } catch (Exception e) {
             this.msg = "Unable to fetch Application Roles using custom criteria";
-            throw new AppRoleApiException(this.msg, e);
+            throw new RoleApiException(this.msg, e);
         } finally {
             dao.close();
             dao = null;
