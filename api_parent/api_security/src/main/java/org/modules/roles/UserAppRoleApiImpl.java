@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dao.roles.RoleDao;
+import org.dao.roles.RoleDaoException;
 import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
 import org.dto.UserDto;
@@ -76,7 +77,7 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
                     + (list == null ? 0 : list.size());
             logger.info(this.msg);
             return list;
-        } catch (Exception e) {
+        } catch (RoleDaoException e) {
             this.msg = "Unable to fetch User Application Roles using custom criteria";
             throw new AppRoleApiException(this.msg, e);
         } finally {
