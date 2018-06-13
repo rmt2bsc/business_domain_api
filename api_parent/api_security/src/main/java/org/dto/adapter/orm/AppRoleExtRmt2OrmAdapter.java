@@ -33,6 +33,9 @@ class AppRoleExtRmt2OrmAdapter extends DefaultCategoryAdapter {
      */
     protected AppRoleExtRmt2OrmAdapter(VwAppRoles appRole, String userName) {
         this();
+        if (appRole == null) {
+            appRole = new VwAppRoles();
+        }
         this.ar = appRole;
         this.setUpdateUserId(userName);
     }

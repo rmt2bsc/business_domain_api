@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dao.roles.RoleDao;
-import org.dao.roles.RoleDaoException;
 import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
 import org.modules.SecurityConstants;
@@ -67,13 +66,12 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         try {
             Verifier.verifyNotNull(criteria);
         } catch (VerifyException e) {
-            throw new InvalidDataException("Category criteria object is required", e);
+            throw new InvalidDataException("AppRole Category criteria object is required", e);
         }
 
         try {
             List<CategoryDto> list = dao.fetchAppRole(criteria);
-            this.msg = "Total application roles retrieved using custom criteria: "
-                    + (list == null ? 0 : list.size());
+            this.msg = "Total application roles retrieved using custom criteria: " + (list == null ? 0 : list.size());
             logger.info(this.msg);
             return list;
         } catch (Exception e) {
@@ -102,8 +100,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
             return rc;
         } catch (Exception e) {
             this.msg = "Unable to update Application Role identitfied as " + appRole.getAppRoleName();
-            logger.error(this.msg);
-            throw new RoleApiException(this.msg, e);
+            throw new AppRoleApiException(this.msg, e);
         } finally {
             dao.close();
             dao = null;
@@ -124,8 +121,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
             return rc;
         } catch (Exception e) {
             this.msg = "Unable to delete Application Role identitfied by id, " + appRoleId;
-            logger.error(this.msg);
-            throw new RoleApiException(this.msg, e);
+            throw new AppRoleApiException(this.msg, e);
         } finally {
             dao.close();
             dao = null;
@@ -166,21 +162,21 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
             Verifier.verifyNotEmpty(appRole.getAppRoleCode());
         } catch (VerifyException e) {
             this.msg = "Application Role Code is required";
-            throw new RoleDaoException(this.msg, e);
+            throw new InvalidDataException(this.msg, e);
         }
 
         try {
             Verifier.verifyNotEmpty(appRole.getAppRoleName());
         } catch (VerifyException e) {
             this.msg = "Application Role Name is required";
-            throw new RoleDaoException(this.msg, e);
+            throw new InvalidDataException(this.msg, e);
         }
 
         try {
             Verifier.verifyNotEmpty(appRole.getAppRoleDescription());
         } catch (VerifyException e) {
             this.msg = "Application Role Description is required";
-            throw new RoleDaoException(this.msg, e);
+            throw new InvalidDataException(this.msg, e);
         }
     }
 }

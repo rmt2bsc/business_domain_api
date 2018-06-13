@@ -26,6 +26,9 @@ class AppRoleRmt2OrmAdapter extends DefaultCategoryAdapter {
      */
     protected AppRoleRmt2OrmAdapter(AppRole appRole) {
         this();
+        if (appRole == null) {
+            appRole = new AppRole();
+        }
         this.ar = appRole;
         this.setUpdateUserId(appRole.getUserId());
     }

@@ -98,29 +98,19 @@ public class SecurityMockData extends BaseSecurityDaoTest {
         int appRoleId = SecurityMockDataFactory.TEST_APP_ROLE_ID;
         int roleId = SecurityMockDataFactory.TEST_ROLE_ID;
         AppRole o = SecurityMockDataFactory.createOrmAppRole(appRoleId,
-                SecurityMockDataFactory.TEST_APP_ID, roleId,
-                "AppRoleCode_" + appRoleId, "AppRoleName_" + appRoleId,
-                "AppRoleDescription" + appRoleId);
+                SecurityMockDataFactory.TEST_APP_ID, roleId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmAppRole(++appRoleId,
-                SecurityMockDataFactory.TEST_APP_ID, ++roleId,
-                "AppRoleCode_" + appRoleId, "AppRoleName_" + appRoleId,
-                "AppRoleDescription" + appRoleId);
+                SecurityMockDataFactory.TEST_APP_ID, ++roleId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmAppRole(++appRoleId,
-                SecurityMockDataFactory.TEST_APP_ID, ++roleId,
-                "AppRoleCode_" + appRoleId, "AppRoleName_" + appRoleId,
-                "AppRoleDescription" + appRoleId);
+                SecurityMockDataFactory.TEST_APP_ID, ++roleId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmAppRole(++appRoleId,
-                SecurityMockDataFactory.TEST_APP_ID, ++roleId,
-                "AppRoleCode_" + appRoleId, "AppRoleName_" + appRoleId,
-                "AppRoleDescription" + appRoleId);
+                SecurityMockDataFactory.TEST_APP_ID, ++roleId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmAppRole(++appRoleId,
-                SecurityMockDataFactory.TEST_APP_ID, ++roleId,
-                "AppRoleCode_" + appRoleId, "AppRoleName_" + appRoleId,
-                "AppRoleDescription" + appRoleId);
+                SecurityMockDataFactory.TEST_APP_ID, ++roleId);
         list.add(o);
         
         return list;

@@ -72,8 +72,7 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
      *            The id of the user manipulating this DTO.
      * @return an instance of {@link CategoryDto}
      */
-    public static final CategoryDto getNewExtAppRoleCategoryInstance(
-            String UpdateUserName) {
+    public static final CategoryDto getNewExtAppRoleCategoryInstance(String UpdateUserName) {
         VwAppRoles ar = new VwAppRoles();
         return Rmt2OrmDtoFactory.getAppRoleDtoInstance(ar, UpdateUserName);
     }
@@ -86,8 +85,7 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
      *            The id of the user manipulating this DTO.
      * @return an instance of {@link CategoryDto}
      */
-    public static final CategoryDto getNewExtUserAppRoleCategoryInstance(
-            String UpdateUserName) {
+    public static final CategoryDto getNewExtUserAppRoleCategoryInstance(String UpdateUserName) {
         VwUserAppRoles ar = new VwUserAppRoles();
         return Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(ar, UpdateUserName);
     }
@@ -298,8 +296,7 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
      *            The login id of the user accessign this adapter
      * @return an isntance of {@link CategoryDto}
      */
-    public static final CategoryDto getAppRoleDtoInstance(VwAppRoles appRole,
-            String userName) {
+    public static final CategoryDto getAppRoleDtoInstance(VwAppRoles appRole, String userName) {
         CategoryDto dto = new AppRoleExtRmt2OrmAdapter(appRole, userName);
         return dto;
     }

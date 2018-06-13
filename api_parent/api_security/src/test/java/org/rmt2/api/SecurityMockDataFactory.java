@@ -72,20 +72,16 @@ public class SecurityMockDataFactory {
      * @param id
      * @param appId
      * @param roleid
-     * @param code
-     * @param name
-     * @param description
      * @return
      */
-    public static final AppRole createOrmAppRole(int id, int appId, int roleid, String code, 
-            String name, String description) {
+    public static final AppRole createOrmAppRole(int id, int appId, int roleid) {
         AppRole o = new AppRole();
         o.setAppRoleId(id);
         o.setAppId(appId);
         o.setRoleId(roleid);
-        o.setCode(code);
-        o.setName(name);
-        o.setDescription(description);
+        o.setCode("Code_" + id);
+        o.setName("Name_" + id);
+        o.setDescription("Description_" + id);
         return o;
     }
     
