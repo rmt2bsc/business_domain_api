@@ -99,23 +99,11 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
      */
     @Override
     public int update(ApplicationDto app) throws AppApiException {
-        try {
-            Verifier.verifyNotNull(app);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Application object is required", e);
-        }
-        try {
-            Verifier.verifyNotEmpty(app.getAppName());
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Application name property is required", e);
-        }
-        
+        this.validate(app);
         try {
             return dao.maintainApp(app);
         } catch (AppDaoException e) {
-            throw new AppApiException("Unable to execute API update for Application module", e);
+            throw new AppApiException("Unable to add/modify Application object", e);
         }
     }
 
@@ -130,6 +118,38 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
             return dao.deleteApp(appId);
         } catch (AppDaoException e) {
             throw new AppApiException("Application record delete failed", e);
+        }
+    }
+    
+    /**
+     * This method is responsble for validating an application profile.
+     * <p>
+     * The name and description of the application are to have values.
+     * 
+     * @param app
+     *            {@link org.dao.bean.Application Application}
+     * @throws InvalidDataException
+     */
+    private void validate(ApplicationDto app) throws InvalidDataException {
+        try {
+            Verifier.verifyNotNull(app);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Application object is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(app.getAppName());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Application name property is required", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(app.getAppDescription());
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Application description property is required", e);
         }
     }
 }

@@ -11,7 +11,6 @@ import org.dao.mapping.orm.rmt2.Application;
 import org.dto.ApplicationDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
-import com.InvalidDataException;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
 import com.util.RMT2Date;
@@ -135,10 +134,8 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
      * @throws DatabaseException
      */
     private int insert(Application app) throws DatabaseException {
-
         UserTimestamp ut = null;
         try {
-            this.validate(app);
             ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             app.setDateCreated(ut.getDateCreated());
             app.setDateUpdated(ut.getDateCreated());
@@ -163,7 +160,6 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
     private int update(Application app) throws DatabaseException {
         UserTimestamp ut = null;
         try {
-            this.validate(app);
             ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             app.setDateUpdated(ut.getDateCreated());
             app.setUserId(ut.getLoginId());
@@ -178,29 +174,6 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
     }
 
     /**
-     * This method is responsble for validating an application profile.
-     * <p>
-     * The name and description of the application are to have values.
-     * 
-     * @param app
-     *            {@link org.dao.bean.Application Application}
-     * @throws InvalidDataException
-     */
-    private void validate(Application app) throws InvalidDataException {
-        if (app.getName() == null || app.getName().length() <= 0) {
-            this.msg = "Application name cannot be blank";
-            logger.log(Level.ERROR, this.msg);
-            throw new InvalidDataException(this.msg);
-        }
-
-        if (app.getDescription() == null || app.getDescription().length() <= 0) {
-            this.msg = "User Maintenance: Description cannot be blank";
-            logger.log(Level.ERROR, this.msg);
-            throw new InvalidDataException(this.msg);
-        }
-    }
-
-    /**
      * Delete a record from the application table using the application id
      * 
      * @param appId
@@ -210,12 +183,6 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
      */
     @Override
     public int deleteApp(int appId) throws AppDaoException {
-        if (appId <= 0) {
-            this.msg = "Application object delete failure.  Application id is invalid: "
-                    + appId;
-            throw new AppDaoException(this.msg);
-        }
-
         // Start transaction
         int rc = 0;
         this.client.beginTrans();

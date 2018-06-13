@@ -248,6 +248,36 @@ public class ApplicationApiTest extends SecurityMockData {
     }
     
     @Test
+    public void testValidation_Update_Application_Description_Null() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(1350);
+        obj.setDescription(null);
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
+    public void testValidation_Update_Application_Description_Empty() {
+        AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        Application obj = SecurityMockDataFactory.createOrmApplication(1350);
+        obj.setDescription("");
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(obj);
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+    
+    @Test
     public void testSuccess_Delete() {
         AppApi api = AppApiFactory.createApiInstance(SecurityConstants.APP_NAME);
         int results = 0;
