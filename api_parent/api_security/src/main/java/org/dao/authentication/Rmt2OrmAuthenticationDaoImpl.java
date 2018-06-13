@@ -137,7 +137,7 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
             dao.setDaoUser(this.getDaoUser());
             UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
             userCriteria.setUsername(userName);
-            userList = dao.fetchUser(userCriteria);
+            userList = dao.fetchUserProfile(userCriteria);
             if (userList != null && userList.size() == 1) {
                 return userList.get(0);
             }

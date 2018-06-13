@@ -25,6 +25,7 @@ import org.rmt2.api.SecurityMockData;
 import org.rmt2.api.SecurityMockDataFactory;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -202,6 +203,41 @@ public class UserGroupApiTest extends SecurityMockData {
         when(this.mockPersistenceClient.retrieveObject(any(UserGroup.class))).thenReturn(obj);
         when(this.mockPersistenceClient.updateRow(any(UserGroup.class)))
                .thenThrow(new DatabaseException("Error updating user data"));
+        try {
+            api.updateGroup(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UserApiException);
+            Assert.assertTrue(e.getCause() instanceof UserDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testError_Modify_NotFound_Fault() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        UserGroup obj = SecurityMockDataFactory.createOrmUserGroup(1350);
+        UserDto dto = Rmt2OrmDtoFactory.getGroupDtoInstance(obj);
+        
+        when(this.mockPersistenceClient.retrieveObject(any(UserGroup.class))).thenReturn(null);
+        try {
+            api.updateGroup(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof NotFoundException);
+            Assert.assertEquals("User Group does not exists [group id=" + dto.getGroupId() + "]", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testError_Modify_DB_Access_Fetch_Fault() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        UserGroup obj = SecurityMockDataFactory.createOrmUserGroup(1350);
+        UserDto dto = Rmt2OrmDtoFactory.getGroupDtoInstance(obj);
+        
+        when(this.mockPersistenceClient.retrieveObject(any(UserGroup.class))).thenThrow(DatabaseException.class);
         try {
             api.updateGroup(dto);
             Assert.fail("Expected an exception to be thrown");

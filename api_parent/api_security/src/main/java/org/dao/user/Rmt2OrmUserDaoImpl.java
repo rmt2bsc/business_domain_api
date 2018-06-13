@@ -3,7 +3,6 @@ package org.dao.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.SecurityHelper;
 import org.apache.log4j.Logger;
 import org.dao.SecurityDaoImpl;
 import org.dao.mapping.orm.rmt2.UserGroup;
@@ -12,7 +11,6 @@ import org.dao.mapping.orm.rmt2.VwUser;
 import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
-import com.NotFoundException;
 import com.api.persistence.DatabaseException;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
@@ -73,7 +71,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      *             database access error
      */
     @Override
-    public List<UserDto> fetchUser(UserDto criteria) throws UserDaoException {
+    public List<UserDto> fetchUserProfile(UserDto criteria) throws UserDaoException {
         VwUser user = UserDaoFactory.buildUserCriteria(criteria);
         user.addOrderBy(VwUser.PROP_LASTNAME, VwUser.ORDERBY_ASCENDING);
         user.addOrderBy(VwUser.PROP_FIRSTNAME, VwUser.ORDERBY_ASCENDING);
@@ -173,24 +171,6 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      * @throws DatabaseException
      */
     private int createUser(UserLogin usr) throws DatabaseException {
-        // Verify that user does not exist.
-        boolean userExists = false;
-        try {
-            this.getUserProfile(usr.getUsername());
-            userExists = true;
-        } catch (Exception e) {
-            // Continue processing
-        }
-
-        if (userExists) {
-            throw new DatabaseException("User already exists");
-        }
-
-        // Encrypt password
-        SecurityHelper helper = new SecurityHelper();
-        String encryptPw = helper.encryptPassword(usr.getPassword());
-        usr.setPassword(encryptPw);
-
         // Add record to database
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
@@ -215,20 +195,8 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      * @throws DatabaseException
      */
     private int updateUser(UserLogin usr) throws DatabaseException {
-        UserLogin origUser = this.getUserProfile(usr.getUsername());
-
-        // Encrypt password in the event the user has changed it.
-        SecurityHelper helper = new SecurityHelper();
-        String encryptPw = helper.encryptPassword(usr.getPassword());
-        if (origUser.getPassword().equalsIgnoreCase(encryptPw)) {
-            usr.setPassword(origUser.getPassword());
-        }
-        else {
-            // Password has changed
-            usr.setPassword(encryptPw);
-        }
         // Perform updates
-        usr.addCriteria("LoginId", usr.getLoginId());
+        usr.addCriteria(UserLogin.PROP_LOGINID, usr.getLoginId());
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             usr.setDateUpdated(ut.getDateCreated());
@@ -241,23 +209,56 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
     }
 
     /**
-     * Obtains the user's profile as an instance of UserLogin from the database
-     * using login id.
+     * Obtains the user's profile using the unique identifier.
      * 
      * @param login
      *            the user login id
-     * @return An instance of {@link UserLogin}
-     * @throws DatabaseException
-     * @throws NotFoundException
+     * @return An instance of {@link UserDto}
+     * @throws UserDaoException
      */
-    private UserLogin getUserProfile(String userName) throws DatabaseException {
+    @Override
+    public UserDto fetchUserProfile(int uid) throws UserDaoException {
+        UserLogin user = new UserLogin();
+        user.addCriteria(UserLogin.PROP_LOGINID, uid);
+        
+        try {
+            user = (UserLogin) this.client.retrieveObject(user);
+            if (user == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new UserDaoException(e);
+        }
+        
+        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(user);
+        return dto;
+    }
+    
+    /**
+     * Obtains the user's profile as an instance of UserLogin from the database
+     * using user name.
+     * 
+     * @param login
+     *            the user login id
+     * @return An instance of {@link UserDto}
+     * @throws UserDaoException
+     */
+    @Override
+    public UserDto fetchUserProfile(String userName) throws UserDaoException {
         UserLogin user = new UserLogin();
         user.addCriteria(UserLogin.PROP_USERNAME, userName);
-        user = (UserLogin) this.client.retrieveObject(user);
-        if (user == null) {
-            throw new NotFoundException("User profile not found for " + userName);
+        
+        try {
+            user = (UserLogin) this.client.retrieveObject(user);
+            if (user == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new UserDaoException(e);
         }
-        return user;
+        
+        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(user);
+        return dto;
     }
 
     /**
@@ -285,64 +286,6 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
     }
 
     /**
-     * Set the activate flag of a user to true. Results should be persisted via
-     * an external data source.
-     * 
-     * @param userName
-     *            UserLogin
-     * @return int
-     * @throws UserDaoException
-     */
-    @Override
-    public int activateUser(String userName) throws UserDaoException {
-        this.client.beginTrans();
-        try {
-            UserLogin user = this.getUserProfile(userName);
-            user.setActive(1);
-            user.addCriteria("LoginId", user.getLoginId());
-
-            UserTimestamp ut = RMT2Date.getUserTimeStamp("mgr");
-            user.setDateUpdated(ut.getDateCreated());
-            user.setUserId(ut.getLoginId());
-            int rows = this.client.updateRow(user);
-            this.client.commitTrans();
-            return rows;
-        } catch (Exception e) {
-            this.client.rollbackTrans();
-            throw new DatabaseException(e);
-        }
-    }
-
-    /**
-     * Set the activate flag of a user to false. Results should be persisted via
-     * an external data source.
-     * 
-     * @param userName
-     *            UserLogin
-     * @return int
-     * @throws UserDaoException
-     */
-    @Override
-    public int inActivateUser(String userName) throws UserDaoException {
-        this.client.beginTrans();
-        try {
-            UserLogin user = this.getUserProfile(userName);
-            user.setActive(0);
-            user.addCriteria("LoginId", user.getLoginId());
-
-            UserTimestamp ut = RMT2Date.getUserTimeStamp("mgr");
-            user.setDateUpdated(ut.getDateCreated());
-            user.setUserId(ut.getLoginId());
-            int rows = this.client.updateRow(user);
-            this.client.commitTrans();
-            return rows;
-        } catch (Exception e) {
-            this.client.rollbackTrans();
-            throw new DatabaseException(e);
-        }
-    }
-
-    /**
      * Query the user_group table for all records.
      * 
      * @param group
@@ -353,7 +296,7 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      *             database access errors.
      */
     @Override
-    public List<UserDto> fetchGroup(UserDto group) throws UserDaoException {
+    public List<UserDto> fetchUserGroup(UserDto group) throws UserDaoException {
         UserGroup grp = UserDaoFactory.buildGroupCriteria(group);
         grp.addOrderBy(UserGroup.PROP_DESCRIPTION, UserGroup.ORDERBY_ASCENDING);
         List<UserGroup> results = null;
@@ -380,7 +323,8 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      * @return
      * @throws UserDaoException
      */
-    private UserGroup getUserGroup(int grpId) throws UserDaoException {
+    @Override
+    public UserDto fetchUserGroup(int grpId) throws UserDaoException {
         UserGroup grp = new UserGroup();
         grp.addCriteria(UserGroup.PROP_GRPID, grpId);
         UserGroup results = null;
@@ -389,10 +333,12 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
             if (results == null) {
                 return null;
             }
-            return results;
         } catch (DatabaseException e) {
             throw new UserDaoException(e);
         }
+        
+        UserDto dto = Rmt2OrmDtoFactory.getGroupDtoInstance(results);
+        return dto;
     }
 
     /**
@@ -470,11 +416,9 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      *             for database and system errors.
      */
     private int updateGroup(UserGroup grp) throws DatabaseException {
-        UserGroup origGrp = this.getUserGroup(grp.getGrpId());
         UserTimestamp ut = null;
         ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
         grp.setDateUpdated(ut.getDateCreated());
-        grp.setDateCreated(origGrp.getDateCreated());
         grp.setUserId(ut.getLoginId());
         grp.addCriteria(UserGroup.PROP_GRPID, grp.getGrpId());
         int rc = this.client.updateRow(grp);

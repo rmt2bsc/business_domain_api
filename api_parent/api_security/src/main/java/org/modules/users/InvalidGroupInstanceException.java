@@ -1,4 +1,6 @@
-package org.dao.user;
+package org.modules.users;
+
+import org.dao.user.UserDaoException;
 
 /**
  * Used for the handling validation errors regarding the Group.

@@ -20,12 +20,14 @@ import org.modules.SecurityConstants;
 import org.modules.users.UserApi;
 import org.modules.users.UserApiException;
 import org.modules.users.UserApiFactory;
+import org.modules.users.UsernameAleadyExistsException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.SecurityMockData;
 import org.rmt2.api.SecurityMockDataFactory;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -205,6 +207,64 @@ public class UserApiTest extends SecurityMockData {
                .thenReturn(obj);
         when(this.mockPersistenceClient.updateRow(any(UserLogin.class)))
                .thenThrow(new DatabaseException("Error updating user data"));
+        try {
+            api.updateUser(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UserApiException);
+            Assert.assertTrue(e.getCause() instanceof UserDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testError_Modify_NotFound_Fault() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
+        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+        
+        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class)))
+               .thenReturn(null);
+        try {
+            api.updateUser(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof NotFoundException);
+            Assert.assertEquals("User Profile does not exists [user id=" + dto.getLoginUid() + "]", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Modify_Username_Already_Exists() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name_changed", "test1234", "2018-01-01");
+        UserLogin origRec = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
+        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+        
+        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class))).thenReturn(origRec);
+        
+        try {
+            api.updateUser(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UsernameAleadyExistsException);
+            String msg =  "User Profile cannot be created or modified due to username, "
+                    + dto.getUsername() + ",  already exists!";
+            Assert.assertEquals(msg, e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testError_Modify_DB_Access_Fetch_Fault() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "test1234", "2018-01-01");
+        UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
+        
+        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class)))
+              .thenThrow(new DatabaseException("Error fetching user data"));
         try {
             api.updateUser(dto);
             Assert.fail("Expected an exception to be thrown");

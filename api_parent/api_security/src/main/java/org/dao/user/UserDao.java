@@ -16,6 +16,26 @@ import com.api.persistence.DaoClient;
 public interface UserDao extends DaoClient {
 
     /**
+     * Find user by UID
+     * 
+     * @param uid
+     *            the unique identifier of the user
+     * @return An instance of {@link UserDto}
+     * @throws UserDaoException
+     */
+    UserDto fetchUserProfile(int uid) throws UserDaoException;
+    
+    /**
+     * Find user by user name
+     * 
+     * @param userName
+     *            the user name
+     * @return An instance of {@link UserDto}
+     * @throws UserDaoException
+     */
+    UserDto fetchUserProfile(String userName) throws UserDaoException;
+    
+    /**
      * Find user using custom criteria.
      * 
      * @param user
@@ -24,7 +44,7 @@ public interface UserDao extends DaoClient {
      * @return a List of {@link UserDto} objects or null when no data is found.
      * @throws UserDaoException
      */
-    List<UserDto> fetchUser(UserDto user) throws UserDaoException;
+    List<UserDto> fetchUserProfile(UserDto user) throws UserDaoException;
 
     /**
      * Create or update a User object. Changes should persist to a specific
@@ -48,29 +68,16 @@ public interface UserDao extends DaoClient {
     int deleteUser(int uid) throws UserDaoException;
 
     /**
-     * Set the activate flag of a user to true. Results should be persisted via
-     * an external data source.
+     * Fetch a single user group
      * 
-     * @param userName
-     *            UserLogin
-     * @return int
+     * @param grpId
+     * @return An instance of {@link UserDto}
      * @throws UserDaoException
      */
-    int activateUser(String userName) throws UserDaoException;
-
+    UserDto fetchUserGroup(int grpId) throws UserDaoException;
+    
     /**
-     * Set the activate flag of a user to false. Results should be persisted via
-     * an external data source.
-     * 
-     * @param userName
-     *            UserLogin
-     * @return int
-     * @throws UserDaoException
-     */
-    int inActivateUser(String userName) throws UserDaoException;
-
-    /**
-     * Return all user groups.
+     * Fetch user groups using custom selection criteria
      * 
      * @param group
      *            an instance of {@link UserDto} containing the group data.
@@ -79,7 +86,7 @@ public interface UserDao extends DaoClient {
      * 
      * @throws UserDaoException
      */
-    List<UserDto> fetchGroup(UserDto group) throws UserDaoException;
+    List<UserDto> fetchUserGroup(UserDto group) throws UserDaoException;
 
     /**
      * Create or update a User Group object.

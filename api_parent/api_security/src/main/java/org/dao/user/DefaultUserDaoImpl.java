@@ -53,7 +53,7 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
      * @see org.dao.user.UserDao#fetchUser(org.dto.UserDto)
      */
     @Override
-    public List<UserDto> fetchUser(UserDto user) throws UserDaoException {
+    public List<UserDto> fetchUserProfile(UserDto user) throws UserDaoException {
         return null;
     }
 
@@ -80,26 +80,6 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
     /*
      * (non-Javadoc)
      * 
-     * @see org.dao.user.UserDao#activateUser(java.lang.String)
-     */
-    @Override
-    public int activateUser(String userName) throws UserDaoException {
-        return 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dao.user.UserDao#inActivateUser(java.lang.String)
-     */
-    @Override
-    public int inActivateUser(String userName) throws UserDaoException {
-        return 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.dao.user.UserDao#maintainGroup(org.dto.UserDto)
      */
     @Override
@@ -118,7 +98,22 @@ public class DefaultUserDaoImpl extends SecurityDaoImpl implements UserDao {
     }
 
     @Override
-    public List<UserDto> fetchGroup(UserDto group) throws UserDaoException {
+    public List<UserDto> fetchUserGroup(UserDto group) throws UserDaoException {
+        return null;
+    }
+
+    @Override
+    public UserDto fetchUserProfile(int uid) throws UserDaoException {
+        return null;
+    }
+
+    @Override
+    public UserDto fetchUserProfile(String userName) throws UserDaoException {
+        return null;
+    }
+
+    @Override
+    public UserDto fetchUserGroup(int grpId) throws UserDaoException {
         return null;
     }
 }

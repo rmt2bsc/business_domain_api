@@ -12,6 +12,7 @@ import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
 import org.dto.UserDto;
 import org.dto.adapter.ldap.LdapDtoFactory;
+import org.modules.users.InvalidUserInstanceException;
 
 import com.RMT2Constants;
 import com.api.ldap.AbstractLdapDaoClient;
@@ -123,7 +124,7 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
      * @throws UserDaoException
      */
     @Override
-    public List<UserDto> fetchUser(UserDto criteria) throws UserDaoException {
+    public List<UserDto> fetchUserProfile(UserDto criteria) throws UserDaoException {
         List<LdapUser> userList = null;
         try {
             LdapSearchOperation op = new LdapSearchOperation();
@@ -774,24 +775,6 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
     /**
      * Not supported.
      */
-    @Override
-    public int activateUser(String userName) throws UserDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-    /**
-     * Not supported.
-     */
-    @Override
-    public int inActivateUser(String userName) throws UserDaoException {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-    /**
-     * Not supported.
-     */
     public UserDto fetchGroup(int grpId) throws UserDaoException {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
@@ -807,8 +790,22 @@ class LdapUserDaoImpl extends AbstractLdapDaoClient implements UserDao {
     }
 
     @Override
-    public List<UserDto> fetchGroup(UserDto group) throws UserDaoException {
-        // TODO Auto-generated method stub
+    public List<UserDto> fetchUserGroup(UserDto group) throws UserDaoException {
+        return null;
+    }
+
+    @Override
+    public UserDto fetchUserProfile(int uid) throws UserDaoException {
+        return null;
+    }
+
+    @Override
+    public UserDto fetchUserProfile(String userName) throws UserDaoException {
+        return null;
+    }
+
+    @Override
+    public UserDto fetchUserGroup(int grpId) throws UserDaoException {
         return null;
     }
 }

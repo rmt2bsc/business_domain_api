@@ -75,4 +75,22 @@ public interface UserApi extends TransactionApi {
      * @throws UserApiException
      */
     int deleteGroup(int grpId) throws UserApiException;
+    
+    /**
+     * Activate user
+     * 
+     * @param userName
+     *            the user name
+     * @throws UserApiException
+     */
+    void activate(String userName) throws UserApiException;
+    
+    /**
+     * Deactivate user
+     * 
+     * @param userName
+     *            the user name
+     * @throws UserApiException
+     */
+    void inActivate(String userName) throws UserApiException;
 }

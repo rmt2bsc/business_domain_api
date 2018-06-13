@@ -2,8 +2,8 @@ package org.modules.users;
 
 import java.util.List;
 
+import org.SecurityHelper;
 import org.apache.log4j.Logger;
-import org.dao.user.InvalidUserInstanceException;
 import org.dao.user.UserDao;
 import org.dao.user.UserDaoException;
 import org.dao.user.UserDaoFactory;
@@ -11,6 +11,7 @@ import org.dto.UserDto;
 import org.modules.SecurityConstants;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
@@ -73,7 +74,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         }
         
         try {
-            List<UserDto> list = dao.fetchUser(criteria);
+            List<UserDto> list = dao.fetchUserProfile(criteria);
             this.msg = "User was retrieved successfully using custom criteria";
             logger.info(this.msg);
             return list;
@@ -95,6 +96,8 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
     @Override
     public int updateUser(UserDto user) throws UserApiException {
         this.validateUser(user);
+        this.verifyUserFoUpdate(user);
+        
         dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainUser(user);
@@ -170,9 +173,75 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             throw new InvalidUserInstanceException("User password is required", e);
         }
 
+        
+        
         return;
     }
 
+    /**
+     * Verifies the state of the user object is acceptable based on the proposed
+     * update operation.
+     * <p>
+     * The following conditions must pass:
+     * <ul>
+     * </ul>
+     * 
+     * @param user
+     * @throws UsernameAleadyExistsException
+     * @throws NotFoundException
+     * @throws UserApiException
+     */
+    protected void verifyUserFoUpdate(UserDto user) throws UsernameAleadyExistsException, NotFoundException,
+            UserApiException {
+        
+        UserDto origRec = null;
+        if (user.getLoginUid() > 0) {
+            // Ensure the user exists prior to applying modifications
+            try {
+                origRec = dao.fetchUserProfile(user.getLoginUid());
+                Verifier.verifyNotNull(origRec);
+                user.setDateCreated(origRec.getDateCreated());
+            } catch (VerifyException e) {
+                this.msg = "User Profile does not exists [user id=" + user.getLoginUid() + "]";
+                throw new NotFoundException(this.msg, e);
+            } catch (UserDaoException e) {
+                this.msg = "Unable to verify the existence of User Profile";
+                throw new UserApiException(this.msg, e);
+            }
+        }
+
+        // If changing the username of an existing profile or the profile is
+        // new, verify that username delta does not exists.
+        boolean userNameChanged = (user.getLoginUid() > 0 && origRec != null
+                && !user.getUsername().equals(origRec.getUsername()));
+        if (userNameChanged || user.getLoginUid() == 0) {
+            try {
+                Object results = dao.fetchUserProfile(user.getUsername());
+                Verifier.verifyNull(results);
+            } catch (VerifyException e) {
+                this.msg = "User Profile cannot be created or modified due to username, "
+                        + user.getUsername() + ",  already exists!";
+                throw new UsernameAleadyExistsException(this.msg, e);
+            } catch (UserDaoException e) {
+                this.msg = "Unable to verify the uniqueness of the username";
+                throw new UserApiException(this.msg, e);
+            }
+        }
+        
+        // Check password
+        // Encrypt password in cases where the password is new or is being changed.
+        SecurityHelper helper = new SecurityHelper();
+        String encryptPw = helper.encryptPassword(user.getPassword());
+        if (origRec != null && origRec.getPassword().equalsIgnoreCase(encryptPw)) {
+            user.setPassword(origRec.getPassword());
+        }
+        else {
+            // Password has changed
+            user.setPassword(encryptPw);
+        }
+    }
+    
+        
     /**
      * Validates a UserDto object based on UserGroup.
      * 
@@ -239,7 +308,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         }
         
         try {
-            List<UserDto> list = dao.fetchGroup(criteria);
+            List<UserDto> list = dao.fetchUserGroup(criteria);
             this.msg = "master list of groups were retrieved successfully";
             logger.info(this.msg);
             return list;
@@ -261,6 +330,22 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
     @Override
     public int updateGroup(UserDto grp) throws UserApiException {
         this.validateGroup(grp);
+        
+        if (grp.getGroupId() > 0) {
+            try {
+                UserDto origRec = dao.fetchUserGroup(grp.getGroupId());
+                Verifier.verifyNotNull(origRec);
+                grp.setDateCreated(origRec.getDateCreated());
+            }
+            catch (VerifyException e) {
+                this.msg = "User Group does not exists [group id=" + grp.getGroupId() + "]";
+                throw new NotFoundException(this.msg, e);
+            }
+            catch (UserDaoException e) {
+                this.msg = "Unable to verify the existence of User Group";
+                throw new UserApiException(this.msg, e);
+            }
+        }
         
         dao.setDaoUser(this.apiUser);
         try {
@@ -297,6 +382,40 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         } finally {
             dao.close();
             dao = null;
+        }
+    }
+
+    @Override
+    public void activate(String userName) throws UserApiException {
+        UserDto user = null;
+        try {
+            user = dao.fetchUserProfile(userName);
+            Verifier.verifyNotNull(user);
+            user.setActive(1);
+            dao.maintainUser(user);
+        } catch (VerifyException e) {
+            this.msg = "User cannot be activated due to profile cannot be found";
+            throw new NotFoundException(this.msg, e);
+        } catch (UserDaoException e) {
+            this.msg = "Unable to activate user profile";
+            throw new UserApiException(this.msg, e);
+        }
+    }
+
+    @Override
+    public void inActivate(String userName) throws UserApiException {
+        UserDto user = null;
+        try {
+            user = dao.fetchUserProfile(userName);
+            Verifier.verifyNotNull(user);
+            user.setActive(1);
+            dao.maintainUser(user);
+        } catch (VerifyException e) {
+            this.msg = "User cannot be deactivated due to profile cannot be found";
+            throw new NotFoundException(this.msg, e);
+        } catch (UserDaoException e) {
+            this.msg = "Unable to deactivate user profile";
+            throw new UserApiException(this.msg, e);
         }
     }
 }

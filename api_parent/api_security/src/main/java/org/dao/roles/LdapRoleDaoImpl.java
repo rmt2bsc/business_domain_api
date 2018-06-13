@@ -214,7 +214,7 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         try {
             UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
             userCriteria.setUsername(criteria.getUsername());
-            userList = uDao.fetchUser(userCriteria);
+            userList = uDao.fetchUserProfile(userCriteria);
             if (userList != null && userList.size() == 1) {
                 userDto = userList.get(0);
             }
@@ -705,7 +705,7 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         try {
             UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
             userCriteria.setUsername(userName);
-            userList = uDao.fetchUser(userCriteria);
+            userList = uDao.fetchUserProfile(userCriteria);
             if (userList != null && userList.size() == 1) {
                 return userList.get(0);
             }

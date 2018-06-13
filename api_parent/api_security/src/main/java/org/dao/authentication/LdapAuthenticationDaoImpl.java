@@ -106,7 +106,7 @@ class LdapAuthenticationDaoImpl extends AbstractLdapDaoClient implements
         try {
             UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
             userCriteria.setUsername(userName);
-            userList = uDao.fetchUser(userCriteria);
+            userList = uDao.fetchUserProfile(userCriteria);
             if (userList != null && userList.size() == 1) {
                 return userList.get(0);
             }

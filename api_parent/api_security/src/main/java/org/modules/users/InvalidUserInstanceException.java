@@ -1,4 +1,4 @@
-package org.dao.user;
+package org.modules.users;
 
 import com.InvalidDataException;
 
