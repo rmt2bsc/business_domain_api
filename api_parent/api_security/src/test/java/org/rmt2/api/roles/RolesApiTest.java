@@ -53,6 +53,8 @@ public class RolesApiTest extends SecurityMockData {
 
         when(this.mockPersistenceClient.retrieveList(any(Role.class)))
              .thenReturn(this.mockRolesData);
+        when(this.mockPersistenceClient.retrieveObject(any(Role.class)))
+        .thenReturn(this.mockRolesData.get(0));
         when(this.mockPersistenceClient.insertRow(any(Role.class), eq(true)))
              .thenReturn(SecurityMockDataFactory.TEST_ROLE_ID);
         when(this.mockPersistenceClient.updateRow(any(Role.class)))
