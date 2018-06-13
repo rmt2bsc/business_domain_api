@@ -483,35 +483,35 @@ public class SecurityMockData extends BaseSecurityDaoTest {
                 SecurityMockDataFactory.TEST_ROLE_ID,
                 SecurityMockDataFactory.TEST_APP_ROLE_ID,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "2018-01-01", "ShortName_" + loginId);
+                "2018-01-01");
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
                 SecurityMockDataFactory.TEST_APP_ROLE_ID,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "2018-01-01", "ShortName_" + loginId);
+                "2018-01-01");
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
                 SecurityMockDataFactory.TEST_APP_ROLE_ID,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "2018-01-01", "ShortName_" + loginId);
+                "2018-01-01");
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
                 SecurityMockDataFactory.TEST_APP_ROLE_ID,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "2018-01-01", "ShortName_" + loginId);
+                "2018-01-01");
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
                 SecurityMockDataFactory.TEST_APP_ROLE_ID,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "2018-01-01", "ShortName_" + loginId);
+                "2018-01-01");
         list.add(o);
         
         return list;

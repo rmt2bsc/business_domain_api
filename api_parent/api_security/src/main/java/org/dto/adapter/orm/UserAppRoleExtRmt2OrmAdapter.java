@@ -32,6 +32,9 @@ class UserAppRoleExtRmt2OrmAdapter extends DefaultCategoryAdapter {
      */
     public UserAppRoleExtRmt2OrmAdapter(VwUserAppRoles userAppRole, String updateUserId) {
         this();
+        if (userAppRole == null) {
+            userAppRole = new VwUserAppRoles();
+        }
         this.uar = userAppRole;
         this.setUpdateUserId(updateUserId);
     }
@@ -463,6 +466,16 @@ class UserAppRoleExtRmt2OrmAdapter extends DefaultCategoryAdapter {
     @Override
     public String getAppName() {
         return this.uar.getAppName();
+    }
+
+    @Override
+    public String getGrpDescription() {
+        return this.uar.getGroupDescription();
+    }
+
+    @Override
+    public void setGrpDescription(String value) {
+        this.uar.setGroupDescription(value);
     }
 
 }

@@ -339,11 +339,10 @@ public class SecurityMockDataFactory {
      * @param grpId
      * @param userName
      * @param startDate
-     * @param shortName
      * @return
      */
     public static final VwUserAppRoles createOrmVwUserAppRoles(int loginId, int appId, int roleId, 
-            int appRoleId, int grpId, String userName, String startDate, String shortName) {
+            int appRoleId, int grpId, String userName, String startDate) {
         VwUserAppRoles o = new VwUserAppRoles();
         o.setLoginUid(loginId);
         o.setApplicationId(appId);
