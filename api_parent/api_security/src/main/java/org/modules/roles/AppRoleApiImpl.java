@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dao.roles.RoleDao;
+import org.dao.roles.RoleDaoException;
 import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
 import org.modules.SecurityConstants;
 import org.modules.SecurityModuleException;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
@@ -83,15 +85,42 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Persist changes to a single AppRole entity to the database.
+     * <p>
+     * This method will handle SQL inserts and updates where applicable. When
+     * the entity's unique id is equal to zero, an insert is performed. When the
+     * unique id is greater than zero, an update is performed.
      * 
-     * @see org.modules.CategoryApiModule#update(org.dto.CategoryDto)
+     * @param dto
+     *            An instance of {@link CategoryDto} representing the AppRole data
+     *            to be applied to the database.
+     * @return the total number of rows effecting existing records, or the
+     *         unique identifier for a new record.
+     * @throws SecurityModuleException
+     * @throws {@link NotFoundException} 
+     *         <i>appRole</i> is not found in the database
      */
     @Override
     public int update(CategoryDto appRole) throws SecurityModuleException {
         this.validateAppRole(appRole);
 
+        if (appRole.getAppRoleId() > 0) {
+            try {
+                CategoryDto origRec = dao.fetchAppRole(appRole.getAppRoleId());
+                Verifier.verifyNotNull(origRec);
+                appRole.setDateCreated(origRec.getDateCreated());
+            }
+            catch (VerifyException e) {
+                this.msg = "AppRole does not exists [app role id=" + appRole.getAppRoleId() + "]";
+                throw new NotFoundException(this.msg, e);
+            }
+            catch (RoleDaoException e) {
+                this.msg = "Unable to verify the existence of AppRole";
+                throw new AppRoleApiException(this.msg, e);
+            }
+        }
+        
         try {
             dao.setDaoUser(this.apiUser);
             int rc = dao.maintainAppRole(appRole);

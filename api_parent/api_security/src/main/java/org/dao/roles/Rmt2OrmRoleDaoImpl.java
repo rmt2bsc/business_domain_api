@@ -381,15 +381,9 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      */
     private int updateRole(Roles role) throws RoleDaoException {
         try {
-            // Get original record
-            Roles origRole = new Roles();
-            origRole.addCriteria(Roles.PROP_ROLEID, role.getRoleId());
-            origRole = (Roles) this.client.retrieveObject(origRole);
-
             // Update record
             role.addCriteria(Roles.PROP_ROLEID, role.getRoleId());
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
-            role.setDateCreated(origRole.getDateCreated());
             role.setDateUpdated(ut.getDateCreated());
             role.setUserId(ut.getLoginId());
             return this.client.updateRow(role);
@@ -493,14 +487,8 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      */
     private int updateAppRole(AppRole appRole) throws RoleDaoException {
         try {
-            // Get original record
-            AppRole origRec = new AppRole();
-            origRec.addCriteria(AppRole.PROP_APPROLEID, appRole.getAppRoleId());
-            origRec = (AppRole) this.client.retrieveObject(origRec);
-
             // Update application role
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
-            appRole.setDateCreated(origRec.getDateCreated());
             appRole.setDateUpdated(ut.getDateCreated());
             appRole.setUserId(ut.getLoginId());
             appRole.addCriteria(AppRole.PROP_APPROLEID, appRole.getAppRoleId());

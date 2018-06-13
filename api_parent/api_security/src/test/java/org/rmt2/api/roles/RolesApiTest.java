@@ -28,6 +28,7 @@ import org.rmt2.api.SecurityMockData;
 import org.rmt2.api.SecurityMockDataFactory;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -54,7 +55,7 @@ public class RolesApiTest extends SecurityMockData {
         when(this.mockPersistenceClient.retrieveList(any(Role.class)))
              .thenReturn(this.mockRolesData);
         when(this.mockPersistenceClient.retrieveObject(any(Role.class)))
-        .thenReturn(this.mockRolesData.get(0));
+             .thenReturn(this.mockRolesData.get(0));
         when(this.mockPersistenceClient.insertRow(any(Role.class), eq(true)))
              .thenReturn(SecurityMockDataFactory.TEST_ROLE_ID);
         when(this.mockPersistenceClient.updateRow(any(Role.class)))
@@ -203,6 +204,44 @@ public class RolesApiTest extends SecurityMockData {
         
         when(this.mockPersistenceClient.updateRow(any(Role.class)))
                .thenThrow(new DatabaseException("Error updating role data"));
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SecurityModuleException);
+            Assert.assertTrue(e instanceof RoleApiException);
+            Assert.assertTrue(e.getCause() instanceof RoleDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+    
+    @Test
+    public void testError_Modify_NotFound_Fault() {
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
+        
+        when(this.mockPersistenceClient.retrieveObject(any(Role.class)))
+               .thenReturn(null);
+        try {
+            api.update(dto);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof NotFoundException);
+            Assert.assertEquals("Role does not exists [role id=" + dto.getRoleId() + "]", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testError_Modify_Fetch_Fault() {
+        RoleApi api = RoleSecurityApiFactory.createRoleApi(SecurityConstants.APP_NAME);
+        Roles obj = SecurityMockDataFactory.createOrmRoles(SecurityMockDataFactory.TEST_ROLE_ID);
+        CategoryDto dto = Rmt2OrmDtoFactory.getRoleDtoInstance(obj);
+        
+        when(this.mockPersistenceClient.retrieveObject(any(Role.class)))
+               .thenThrow(new DatabaseException("Error fetching role data"));
         try {
             api.update(dto);
             Assert.fail("Expected an exception to be thrown");
