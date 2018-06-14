@@ -13,9 +13,11 @@ import org.dao.user.UserDaoFactory;
 import org.dto.CategoryDto;
 import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
+import org.modules.authentication.UsernameInvalidException;
 
 import com.RMT2Constants;
 import com.api.persistence.CannotPersistException;
+import com.api.persistence.PersistenceClient;
 import com.api.security.User;
 
 /**
@@ -24,6 +26,7 @@ import com.api.security.User;
  * lookup data.
  * 
  * @author roy.terrell
+ * @deprecated not needed any more
  * 
  */
 class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
@@ -53,6 +56,15 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
     }
 
     /**
+     * Creates a Rmt2OrmAuthenticationDaoImpl object with a shared persistent client.
+     * 
+     * @param client
+     */
+    protected Rmt2OrmAuthenticationDaoImpl(PersistenceClient client) {
+        super(client);
+    }
+    
+    /**
      * Verifies the user exists and that the <i>userId</i> and <i>password</i>
      * matches the credentials stored as part of the user's profile.
      * <p>
@@ -71,13 +83,12 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
      */
     public User loginUser(String userName, String password) throws SecurityDaoException {
         if (userName == null) {
-            throw new UsernameInvalidDaoException("User is invalid");
+            throw new UsernameInvalidException("User is invalid");
         }
 
         UserDto user = this.getUserByUsername(userName);
         if (user == null) {
-            throw new UsernameInvalidDaoException(
-                    "User profile does not exist for user, " + userName);
+            throw new UsernameInvalidException("User profile does not exist for user, " + userName);
         }
 
         // Get decrypted password
@@ -92,15 +103,13 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
         // Associate application roles with user
         RoleDao roleDao = null;
         try {
-            RoleDaoFactory roleFactory = new RoleDaoFactory();
-            roleDao = roleFactory.createRmt2OrmDao();
+            roleDao = RoleDaoFactory.createRmt2OrmDao();
             List<CategoryDto> roleList = roleDao.fetchUserAppRole(userName);
             for (CategoryDto role : roleList) {
                 u.addRole(role.getAppRoleCode());
             }
         } catch (SecurityDaoException e) {
-            throw new SecurityDaoException(
-                    "Unable to retrieve user's application roles during authentication",
+            throw new SecurityDaoException("Unable to retrieve user's application roles during authentication",
                     e);
         }
 

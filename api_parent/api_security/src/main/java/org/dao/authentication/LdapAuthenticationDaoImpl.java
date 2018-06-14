@@ -25,6 +25,7 @@ import com.api.security.User;
  * replaced with user's login id.
  * 
  * @author Roy Terrell
+ * @deprecated add as an API module
  * 
  */
 class LdapAuthenticationDaoImpl extends AbstractLdapDaoClient implements

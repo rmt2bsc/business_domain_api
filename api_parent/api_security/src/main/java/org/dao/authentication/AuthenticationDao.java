@@ -3,13 +3,13 @@ package org.dao.authentication;
 import org.dao.SecurityDaoException;
 
 import com.api.persistence.DaoClient;
-
 import com.api.security.User;
 
 /**
  * Contract for performing user authentication operations.
  * 
  * @author rterrell
+ * @deprecated not needed anymore
  * 
  */
 public interface AuthenticationDao extends DaoClient {
