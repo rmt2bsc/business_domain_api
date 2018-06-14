@@ -6,6 +6,7 @@ import org.dao.mapping.orm.rmt2.VwUserAppRoles;
 import org.dto.CategoryDto;
 
 import com.RMT2Base;
+import com.api.persistence.DaoClient;
 
 /**
  * A factory for DAO instances that manage role related entities.
@@ -45,6 +46,18 @@ public class RoleDaoFactory extends RMT2Base {
         RoleDao dao = new Rmt2OrmRoleDaoImpl(appName);
         return dao;
     }
+    
+    /**
+     * 
+     * @param dao
+     * @return
+     */
+    public static final RoleDao createRmt2OrmDao(DaoClient dao) {
+        Rmt2OrmRoleDaoImpl d = new Rmt2OrmRoleDaoImpl(dao.getClient());
+        d.setDaoUser(dao.getDaoUser());
+        return d;
+    }
+    
 
     /**
      * Creates a LDAp implementataion of RoleDao interface which is capable of

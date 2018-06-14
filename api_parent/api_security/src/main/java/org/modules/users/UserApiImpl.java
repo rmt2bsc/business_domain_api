@@ -1,14 +1,15 @@
 package org.modules.users;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.SecurityHelper;
 import org.apache.log4j.Logger;
 import org.dao.user.UserDao;
 import org.dao.user.UserDaoException;
 import org.dao.user.UserDaoFactory;
 import org.dto.UserDto;
 import org.modules.SecurityConstants;
+import org.modules.authentication.CryptoUtils;
 
 import com.InvalidDataException;
 import com.NotFoundException;
@@ -27,7 +28,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
 
     private static final Logger logger = Logger.getLogger(UserApiImpl.class);
 
-    private UserDaoFactory daoFact;
     private UserDao dao;
 
     /**
@@ -35,7 +35,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     UserApiImpl() {
         super(SecurityConstants.APP_NAME);
-        this.dao = this.daoFact.createRmt2OrmDao(SecurityConstants.APP_NAME);
+        this.dao = UserDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
         this.setSharedDao(this.dao);
         logger.info("User Api is initialized by default constructor");
     }
@@ -48,7 +48,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      */
     UserApiImpl(String appName) {
         super(appName);
-        this.dao = this.daoFact.createRmt2OrmDao(appName);
+        this.dao = UserDaoFactory.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
         logger.info("User Api is initialized by application name, " + appName);
     }
@@ -56,7 +56,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
     @Override
     public void init() {
         super.init();
-        this.daoFact = new UserDaoFactory();
     }
     
     /*
@@ -172,9 +171,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         catch (VerifyException e) {
             throw new InvalidUserInstanceException("User password is required", e);
         }
-
-        
-        
         return;
     }
 
@@ -230,14 +226,16 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         
         // Check password
         // Encrypt password in cases where the password is new or is being changed.
-        SecurityHelper helper = new SecurityHelper();
-        String encryptPw = helper.encryptPassword(user.getPassword());
-        if (origRec != null && origRec.getPassword().equalsIgnoreCase(encryptPw)) {
-            user.setPassword(origRec.getPassword());
-        }
-        else {
-            // Password has changed
-            user.setPassword(encryptPw);
+        boolean pwChanged = (origRec != null && origRec.getPassword().equalsIgnoreCase(user.getPassword()));
+        boolean pwNew = (user.getLoginUid() == 0); 
+        String hashPassPw = null;
+        if (pwChanged || pwNew) {
+            try {
+                hashPassPw = CryptoUtils.byteArrayToHexString(CryptoUtils.computeHash(user.getUsername() + user.getPassword()));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            user.setPassword(hashPassPw);
         }
     }
     

@@ -1,44 +1,97 @@
 package org.modules.authentication;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.dao.SecurityDaoException;
 import org.dao.authentication.AuthenticationDao;
 import org.dao.authentication.AuthenticationDaoFactory;
+import org.dao.authentication.PasswordInvalidDaoException;
+import org.dao.roles.RoleDao;
+import org.dao.roles.RoleDaoFactory;
+import org.dao.user.UserDao;
+import org.dao.user.UserDaoException;
+import org.dao.user.UserDaoFactory;
 import org.dto.CategoryDto;
+import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
+import org.modules.SecurityConstants;
 import org.modules.SecurityModuleException;
 import org.modules.roles.RoleSecurityApiFactory;
 import org.modules.roles.UserAppRoleApi;
 
+import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.api.persistence.CannotPersistException;
 import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DaoClient;
 import com.api.security.User;
 import com.api.security.authentication.web.LogoutException;
 import com.api.web.security.RMT2SecurityToken;
+import com.util.assistants.Verifier;
+import com.util.assistants.VerifyException;
 
 /**
- * An implementation of the {@link Authenticator} interface that .
+ * An implementation of the {@link Authenticator} interface that performs user
+ * authentication and authorization.
  * 
  * @author rterrell
  * 
  */
-class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
-        Authenticator {
+class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authenticator {
 
+    private static final Logger logger = Logger.getLogger(UserAuthenticatorImpl.class);
+    
     private static Map<String, RMT2SecurityToken> USER_TOKENS;
+    
+    private AuthenticationDao dao;
+    
 
     /**
      * Create a UserAuthenticatorDatabaseImpl object.
      */
     protected UserAuthenticatorImpl() {
+        this.dao = AuthenticationDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
+//        this.dao = AuthenticationDaoFactory.createLdapDao();
+
+        this.setSharedDao(this.dao);
         UserAuthenticatorImpl.USER_TOKENS = new Hashtable<String, RMT2SecurityToken>();
+        logger.info("Authenticator is initialized by default constructor");
+        return;
+    }
+    
+    /**
+     * Create a UserAuthenticatorImpl using the specified application name.
+     * 
+     * @param appName
+     */
+    protected UserAuthenticatorImpl(String appName) {
+        super(appName);
+        this.dao = AuthenticationDaoFactory.createRmt2OrmDao(appName);
+        this.setSharedDao(this.dao);
+        UserAuthenticatorImpl.USER_TOKENS = new Hashtable<String, RMT2SecurityToken>();
+        logger.info("Authenticator is initialized by application name, " + appName);
         return;
     }
 
+    /**
+     * Create a AppRoleApiImpl using DaoClient instance that is intended
+     * to be shared by another related application.
+     * 
+     * @param dao
+     *            instance of {@link DaoClient}
+     */
+    protected UserAuthenticatorImpl(DaoClient dao) {
+        super(SecurityConstants.APP_NAME, dao);
+        this.dao = AuthenticationDaoFactory.createRmt2OrmDao(this.getSharedDao());
+        UserAuthenticatorImpl.USER_TOKENS = new Hashtable<String, RMT2SecurityToken>();
+        logger.info("Authenticator is initialized using a shared DAO client");
+    }
+    
     /**
      * Performs authentication for a the specified user using his/her login id
      * only.
@@ -91,7 +144,8 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
      *            The user's login id.
      * @param password
      *            The user's password.
-     * @return An arbitrary object that represents the authentication results.
+     * @return An instance of {@link RMT2SecurityToken} which represents the
+     *         user's security token.
      * @throws AuthenticationException
      *             For any case where the user's login attempt fails.
      */
@@ -109,20 +163,16 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
             throw new AuthenticationException(e);
         }
 
-        User user = null;
-        AuthenticationDao dao = null;
+        // logic to encrypt password before attempting to login
+        String hashPassPw = null;
         try {
-            AuthenticationDaoFactory f = new AuthenticationDaoFactory();
-            // dao = f.createRmt2OrmDao();
-            dao = f.createLdapDao();
-            dao.setDaoUser(this.apiUser);
-            user = dao.loginUser(userName, password);
-        } catch (SecurityDaoException e) {
-            this.msg = "A data access error occurred while attempting to authenticate user";
-            throw new AuthenticationException(this.msg, e);
-        } finally {
-            dao.close();
+            hashPassPw = CryptoUtils.byteArrayToHexString(CryptoUtils.computeHash(userName + password));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
+        
+        // Perform user login
+        User user = this.loginUser(userName, hashPassPw);
 
         // Create security token and add to list of authenticated users.
         token = new RMT2SecurityToken();
@@ -134,19 +184,112 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
     }
 
     /**
+     * Verifies the user exists and that the <i>userId</i> and <i>password</i>
+     * matches the credentials stored as part of the user's profile.
+     * <p>
+     * This method returns the user's profile including any applicable roles.
+     * 
+     * @param userName
+     *            The login id of the user.
+     * @param password
+     *            The user's passowrd.
+     * @return The user's profile as an instance of {@link User}
+     * @throws DatabaseException
+     *             password is incorrect or the user's loggedIn flag could not
+     *             be applied to the database.
+     * @throws NotFoundException
+     *             <i>userName</i> is null or does not exist in the database.
+     * @throws AuthenticationException
+     * @throws CannotPersistException unable to update user's profile
+     */
+    private User loginUser(String userName, String password) throws AuthenticationException {
+        try {
+            Verifier.verifyNotEmpty(userName);
+        }
+        catch (VerifyException e) {
+            throw new UsernameInvalidException("Username is required");
+        }
+
+        UserDto user = this.getUserByUsername(userName);
+        try {
+            Verifier.verifyNotNull(user);
+        }
+        catch (VerifyException e) {
+            throw new NotFoundException("User profile does not exist for user, " + userName);
+        }
+
+        // Get decrypted password
+        String origPasswordDecrypt = user.getPassword();
+        if (!origPasswordDecrypt.equalsIgnoreCase(password)) {
+            throw new PasswordInvalidDaoException("Password is incorrect");
+        }
+
+        // At this point, the user is authenticated!
+        User u = Rmt2OrmDtoFactory.getUserInstance(user);
+
+        // Associate application roles with user
+        RoleDao roleDao = null;
+        try {
+            roleDao = RoleDaoFactory.createRmt2OrmDao(this.getSharedDao());
+            List<CategoryDto> roleList = roleDao.fetchUserAppRole(userName);
+            for (CategoryDto role : roleList) {
+                u.addRole(role.getAppRoleCode());
+            }
+        } catch (SecurityDaoException e) {
+            throw new SecurityDaoException("Unable to retrieve user's application roles during authentication", e);
+        }
+
+        // Update the authenticated user's profile
+        try {
+            // Password has to be reset each time the user logs in to prevent
+            // over encryption
+            user.setPassword(password);
+            // increment total logons
+            int logons = user.getTotalLogons();
+            user.setTotalLogons(++logons);
+            // perform update
+            UserDao dao = UserDaoFactory.createRmt2OrmDao(this.getSharedDao());
+            dao.setDaoUser(userName);
+            int rows = dao.maintainUser(user);
+            logger.info("User, " + userName + ", was successfully logged in effecting " + rows + " rows(s)");
+        } catch (UserDaoException e) {
+            throw new CannotPersistException("Unable to update user's profile durig authentication", e);
+        }
+        return u;
+    }
+
+    private UserDto getUserByUsername(String userName) throws AuthenticationException {
+        UserDao dao = null;
+        List<UserDto> userList = null;
+        try {
+            dao = UserDaoFactory.createRmt2OrmDao(this.getSharedDao());
+            dao.setDaoUser(userName);
+            UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
+            userCriteria.setUsername(userName);
+            userList = dao.fetchUserProfile(userCriteria);
+            if (userList != null && userList.size() == 1) {
+                return userList.get(0);
+            }
+            return null;
+        } catch (UserDaoException e) {
+            throw new AuthenticationException("Unable to retrieve user's profile during authentication", e);
+        }
+    }
+    
+    /**
      * Queries the in memory security token Map to determines if a user is
      * currently signed on to the system.
      * 
-     * @param loginId
+     * @param userName
      *            The user's login id.
      * @return true when user is found to be logged in and false when user is
      *         not found in the list of authenticated users or a problem
      *         occurred fetching the user
      */
     @Override
-    public boolean isAuthenticated(String loginId) {
+    public boolean isAuthenticated(String userName) {
         try {
-            return (UserAuthenticatorImpl.USER_TOKENS.get(loginId) != null);
+            return (UserAuthenticatorImpl.USER_TOKENS.get(userName) != null);
         } catch (Exception e) {
             return false;
         }
@@ -265,8 +408,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements
         UserAppRoleApi rolesApi = null;
         List<CategoryDto> roleList = null;
         try {
-            RoleSecurityApiFactory roleFactory = new RoleSecurityApiFactory();
-            rolesApi = roleFactory.createUserAppRoleApi();
+            rolesApi = RoleSecurityApiFactory.createUserAppRoleApi(this.getSharedDao());
             CategoryDto criteria = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(null, null);
             criteria.setUsername(userName);
             roleList = rolesApi.get(criteria);

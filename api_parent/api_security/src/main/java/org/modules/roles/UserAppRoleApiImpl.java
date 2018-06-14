@@ -18,6 +18,7 @@ import org.modules.users.UserApiFactory;
 import com.InvalidDataException;
 import com.RMT2Constants;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.api.persistence.DaoClient;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
 
@@ -57,6 +58,19 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         logger.info("UserAppRoleApi is initialized by application name, " + appName);
     }
 
+    /**
+     * Create a UserAppRoleApiImpl using DaoClient instance that is intended
+     * to be shared by another related application.
+     * 
+     * @param dao
+     *            instance of {@link DaoClient}
+     */
+    UserAppRoleApiImpl(DaoClient dao) {
+        super(dao);
+        this.dao = RoleDaoFactory.createRmt2OrmDao(this.getSharedDao());
+        logger.info("AppApi is initialized using a shared DAO client");
+    }
+    
     @Override
     public void init() {
         super.init();

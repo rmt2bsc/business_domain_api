@@ -12,6 +12,7 @@ import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 
 import com.api.persistence.DatabaseException;
+import com.api.persistence.PersistenceClient;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
 
@@ -44,6 +45,15 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
         return;
     }
 
+    /**
+     * Creates a Rmt2OrmUserDaoImpl object with a shared persistent client.
+     * 
+     * @param client
+     */
+    protected Rmt2OrmUserDaoImpl(PersistenceClient client) {
+        super(client);
+    }
+    
     /**
      * Query the user_login table for one or more records using a combination of
      * user related property values contained in <i>criteria</i>.

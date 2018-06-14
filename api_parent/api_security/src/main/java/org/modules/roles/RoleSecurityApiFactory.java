@@ -1,6 +1,7 @@
 package org.modules.roles;
 
 import com.RMT2Base;
+import com.api.persistence.DaoClient;
 
 /**
  * A factory for creating api instances that manage the Role module.
@@ -81,6 +82,19 @@ public class RoleSecurityApiFactory extends RMT2Base {
      */
     public static final UserAppRoleApi createUserAppRoleApi(String appName) {
         UserAppRoleApi api = new UserAppRoleApiImpl(appName);
+        return api;
+    }
+    
+    /**
+     * Creates an instance of UserAppRoleApi using an user application role
+     * implementation.
+     * 
+     * @param dao
+     *            an instance of {@link DaoClient}
+     * @return an instance of {@link UserAppRoleApi}
+     */
+    public static final UserAppRoleApi createUserAppRoleApi(DaoClient dao) {
+        UserAppRoleApi api = new UserAppRoleApiImpl(dao);
         return api;
     }
 }

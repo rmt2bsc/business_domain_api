@@ -18,6 +18,7 @@ import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import com.RMT2Constants;
 import com.SystemException;
 import com.api.persistence.DatabaseException;
+import com.api.persistence.PersistenceClient;
 import com.util.RMT2Date;
 import com.util.UserTimestamp;
 
@@ -47,6 +48,15 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         super(appName);
     }
 
+    /**
+     * Creates a Rmt2OrmRoleDaoImpl object with a shared persistent client.
+     * 
+     * @param client
+     */
+    protected Rmt2OrmRoleDaoImpl(PersistenceClient client) {
+        super(client);
+    }
+    
     @Override
     public List<CategoryDto> fetchRole(CategoryDto criteria) throws SecurityDaoException {
         Roles roles = RoleDaoFactory.createCriteriaRoles(criteria);

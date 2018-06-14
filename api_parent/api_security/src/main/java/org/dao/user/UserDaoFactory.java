@@ -5,6 +5,7 @@ import org.dao.mapping.orm.rmt2.VwUser;
 import org.dto.UserDto;
 
 import com.RMT2Base;
+import com.api.persistence.DaoClient;
 
 /**
  * A factory for DAO instances that manage user related entities.
@@ -27,7 +28,7 @@ public class UserDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link UserDao}
      */
-    public UserDao createRmt2OrmDao() {
+    public static final UserDao createRmt2OrmDao() {
         UserDao dao = new Rmt2OrmUserDaoImpl();
         return dao;
     }
@@ -40,18 +41,28 @@ public class UserDaoFactory extends RMT2Base {
      *            application name
      * @return an instance of {@link UserDao}
      */
-    public UserDao createRmt2OrmDao(String appName) {
+    public static final UserDao createRmt2OrmDao(String appName) {
         UserDao dao = new Rmt2OrmUserDaoImpl(appName);
         return dao;
     }
 
+    /**
+     * Creates a Rmt2OrmAuthenticationDaoImpl object with a shared persistent client.
+     * 
+     * @param client
+     */
+    public static final UserDao createRmt2OrmDao(DaoClient dao) {
+        UserDao d = new Rmt2OrmUserDaoImpl(dao.getClient());
+        return d;
+    }
+    
     /**
      * Creates a LDAP implementataion of UserDao interface which is capable of
      * accessing data from a directory server by using an anonymous connection.
      * 
      * @return an instance of {@link UserDao}
      */
-    public UserDao createLdapDao() {
+    public static final UserDao createLdapDao() {
         UserDao dao = new LdapUserDaoImpl();
         return dao;
     }

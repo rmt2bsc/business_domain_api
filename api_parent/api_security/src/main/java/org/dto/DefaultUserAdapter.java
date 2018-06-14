@@ -265,6 +265,9 @@ public class DefaultUserAdapter extends TransactionDtoImpl implements User, User
 
     @Override
     public List<String> getRoles() {
+        if (this.roles == null) {
+            this.roles = new ArrayList<>();
+        }
         return this.roles;
     }
 

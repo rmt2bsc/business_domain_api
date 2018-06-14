@@ -465,4 +465,14 @@ public interface UserDto extends TransactionDto {
      *            the title description
      */
     void setTitleName(String title);
+    
+    /**
+     * Increments the total number of applications a user is signed on by 1.
+     */
+    void incrementAppCount();
+
+    /**
+     * Decrements the total number of applications a user is signed on by 1.
+     */
+    void decrementAppCount();
 }

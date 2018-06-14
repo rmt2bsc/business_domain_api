@@ -13,6 +13,7 @@ import org.modules.SecurityModuleException;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.api.persistence.DaoClient;
 import com.util.assistants.Verifier;
 import com.util.assistants.VerifyException;
 
@@ -52,7 +53,20 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         logger.info("AppApi is initialized by application name, " + appName);
     }
 
-
+    /**
+     * Create a AppRoleApiImpl using DaoClient instance that is intended
+     * to be shared by another related application.
+     * 
+     * @param dao
+     *            instance of {@link DaoClient}
+     */
+    AppRoleApiImpl(DaoClient dao) {
+        super(dao);
+        this.dao = RoleDaoFactory.createRmt2OrmDao(this.getSharedDao());
+        logger.info("AppApi is initialized using a shared DAO client");
+    }
+    
+    
     @Override
     public void init() {
         super.init();

@@ -53,8 +53,7 @@ public class DisbursementsDaoFactory extends RMT2Base {
      * @return an instance of {@link DisbursementsDao}
      */
     public DisbursementsDao createRmt2OrmDao(DaoClient dao) {
-        Rmt2DisbursementsDaoImpl d = new Rmt2DisbursementsDaoImpl(
-                dao.getClient());
+        Rmt2DisbursementsDaoImpl d = new Rmt2DisbursementsDaoImpl(dao.getClient());
         d.setDaoUser(dao.getDaoUser());
         return d;
     }
