@@ -39,6 +39,7 @@ class UserAppRoleExtRmt2OrmAdapter extends DefaultCategoryAdapter {
         this.setUpdateUserId(updateUserId);
     }
 
+    
     /*
      * (non-Javadoc)
      * 

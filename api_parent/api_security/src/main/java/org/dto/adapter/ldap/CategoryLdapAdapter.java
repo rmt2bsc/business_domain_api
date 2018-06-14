@@ -310,4 +310,13 @@ class CategoryLdapAdapter extends DefaultUserAdapter implements CategoryDto {
         return this.u.getLoginid();
     }
 
+    @Override
+    public void setUserAppRoleId(int value) {
+    }
+
+    @Override
+    public int getUserAppRoleId() {
+        return 0;
+    }
+
 }

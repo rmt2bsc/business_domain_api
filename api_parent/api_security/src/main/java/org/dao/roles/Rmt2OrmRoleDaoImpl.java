@@ -535,7 +535,8 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @param assignedRoleId
      *            A String array of assigned application-role id's.
      * @param revokedRoles
-     *            A String array of revoked application-role codes.
+     *            A String array of revoked application-role codes. Currently
+     *            not used.
      * @return Total number of rows effected.
      * @throws SecurityDaoException
      */
@@ -553,26 +554,27 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
                 uar.setDateCreated(ut.getDateCreated());
                 uar.setDateUpdated(ut.getDateCreated());
                 uar.setUserId(ut.getLoginId());
-                rows += this.client.insertRow(uar, true);
+                this.client.insertRow(uar, true);
+                rows++;
             } catch (DatabaseException e) {
                 this.msg = "DatabaseException: " + e.getMessage();
-                throw new RoleDaoException(this.msg);
+                throw new RoleDaoException(this.msg, e);
             } catch (SystemException e) {
                 this.msg = "SystemException: " + e.getMessage();
-                throw new RoleDaoException(this.msg);
+                throw new RoleDaoException(this.msg, e);
             }
         }
         return rows;
     }
 
     @Override
-    public String[] fetchAppRoleIdList(String roles[]) throws RoleDaoException {
+    public String[] fetchAppRoleIdList(String appRoleCodes[]) throws RoleDaoException {
         AppRole obj = new AppRole();
-        obj.addInClause(AppRole.PROP_CODE, roles);
+        obj.addInClause(AppRole.PROP_CODE, appRoleCodes);
         List<AppRole> results = null;
         try {
             results = this.client.retrieveList(obj);
-            if (roles == null) {
+            if (appRoleCodes == null) {
                 return null;
             }
         } catch (DatabaseException e) {
@@ -616,7 +618,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
             logger.info("Total number of user application-roles deleted for user, " + user + ": " + rows);
             return rows;
         } catch (DatabaseException e) {
-            throw new RoleDaoException(e);
+            throw new RoleDaoException("DAO error occurred deleting User Application Roles", e);
         }
     }
 

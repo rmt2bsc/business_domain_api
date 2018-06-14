@@ -1,6 +1,5 @@
 package org.modules.roles;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -68,7 +67,7 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         try {
             Verifier.verifyNotNull(criteria);
         } catch (VerifyException e) {
-            throw new InvalidDataException("Category criteria object is required", e);
+            throw new InvalidDataException("UserAppRole Category criteria object is required", e);
         }
 
         try {
@@ -169,18 +168,18 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
      * java.util.List)
      */
     @Override
-    public int update(CategoryDto userAppDetails, List<String> roles) throws UserAppRoleApiException {
+    public int update(CategoryDto userAppDetails, List<String> appRoleCodes) throws UserAppRoleApiException {
         try {
             Verifier.verifyNotNull(userAppDetails);
         } catch (VerifyException e) {
             throw new InvalidDataException("UserAppRole object is required");
         }
 
-        // Verify that we have a valid list of assigned roles. An invalid list
+        // Verify that we have a valid list of assigned app role codes. An invalid list
         // means that all user roles were revoked and there are no new roles to
         // assign.
         try {
-            Verifier.verifyNotEmpty(roles);
+            Verifier.verifyNotEmpty(appRoleCodes);
         } catch (VerifyException e) {
             logger.warn("All roles for user, " + userAppDetails.getUsername() + ", appear to be revoked and there are no new roles to assign");
             return 0;
@@ -194,13 +193,12 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
 
         // Use the list of application role code names to build an array of
         // equivalent role id's
-        ArrayList<String> roleList = new ArrayList<String>(roles);
-        String rolesToAssign[] = roleList.toArray(new String[roles.size()]);
-        String roleIdsToAssign[] = dao.fetchAppRoleIdList(rolesToAssign);
+        String appRoleCodeArray[] = appRoleCodes.toArray(new String[appRoleCodes.size()]);
+        String appRoleIdArray[] = dao.fetchAppRoleIdList(appRoleCodeArray);
 
         int rc = 0;
         try {
-            rc = dao.maintainUserAppRole(userDto, roleIdsToAssign, null);
+            rc = dao.maintainUserAppRole(userDto, appRoleIdArray, null);
             this.msg = "Total number of roles created user, "
                     + userAppDetails.getUsername() + ", for application, "
                     + userAppDetails.getApplicationId() + ": " + rc;
@@ -229,7 +227,7 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
      * @throws SecurityModuleException
      */
     @Override
-    public int delete(String userName, List<String> appRoles) throws UserAppRoleApiException {
+    public int delete(String userName, List<String> appRoleCodes) throws UserAppRoleApiException {
         boolean deleteSelectedRoles = true;
         try {
             Verifier.verifyNotEmpty(userName);
@@ -238,7 +236,7 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         }
 
         try {
-            Verifier.verifyNotEmpty(appRoles);
+            Verifier.verifyNotEmpty(appRoleCodes);
         } catch (VerifyException e) {
             logger.warn("All application roles for user, " + userName + ", will be deleted!");
             deleteSelectedRoles = false;
@@ -251,9 +249,8 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         // equivalent role id's, if available
         String appRoleIdArray[] = null;
         if (deleteSelectedRoles) {
-            ArrayList<String> roleList = new ArrayList<String>(appRoles);
-            String appRoleArray[] = roleList.toArray(new String[appRoles.size()]);
-            appRoleIdArray = dao.fetchAppRoleIdList(appRoleArray);    
+            String appRoleCodesArray[] = appRoleCodes.toArray(new String[appRoleCodes.size()]);
+            appRoleIdArray = dao.fetchAppRoleIdList(appRoleCodesArray);    
         }
 
         // Delete user app roles

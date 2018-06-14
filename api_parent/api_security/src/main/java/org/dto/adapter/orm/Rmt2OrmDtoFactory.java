@@ -3,6 +3,7 @@ package org.dto.adapter.orm;
 import org.dao.mapping.orm.rmt2.AppRole;
 import org.dao.mapping.orm.rmt2.Application;
 import org.dao.mapping.orm.rmt2.Roles;
+import org.dao.mapping.orm.rmt2.UserAppRole;
 import org.dao.mapping.orm.rmt2.UserGroup;
 import org.dao.mapping.orm.rmt2.UserLogin;
 import org.dao.mapping.orm.rmt2.UserResource;
@@ -301,6 +302,20 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
         return dto;
     }
 
+    /**
+     * Creates a CategoryDto instance from an UserAppRole object.
+     * 
+     * @param userAppRole
+     *            an instance of {@link UserAppRole}
+     * @param updateUserId
+     *            the id of the user accessing the DTO
+     * @return an isntance of {@link CategoryDto}
+     */
+    public static final CategoryDto getUserAppRoleDtoInstance(UserAppRole userAppRole) {
+        CategoryDto dto = new UserAppRoleRmt2OrmAdapter(userAppRole);
+        return dto;
+    }
+    
     /**
      * Creates a CategoryDto instance from an VwUserAppRoles object.
      * 

@@ -15,8 +15,7 @@ import com.api.security.User;
  * @author rterrell
  * 
  */
-public class DefaultUserAdapter extends TransactionDtoImpl implements User,
-        UserDto {
+public class DefaultUserAdapter extends TransactionDtoImpl implements User, UserDto {
 
     private static final long serialVersionUID = 5153167471548087421L;
 

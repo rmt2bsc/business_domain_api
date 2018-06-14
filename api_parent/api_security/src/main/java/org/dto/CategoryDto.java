@@ -13,6 +13,20 @@ package org.dto;
 public interface CategoryDto extends UserDto {
 
     /**
+     * Sets the value of member variable userAppRoleId
+     * 
+     * 
+     */
+    void setUserAppRoleId(int value);
+
+    /**
+     * Gets the value of member variable userAppRoleId
+     * 
+     * 
+     */
+    int getUserAppRoleId();
+    
+    /**
      * Sets the value of member variable appRoleId
      * 
      * 

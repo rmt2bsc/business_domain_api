@@ -51,6 +51,7 @@ public class SecurityMockData extends BaseSecurityDaoTest {
     protected List<VwResource> mockVwResourceData;
     protected List<VwResourceType> mockVwResourceTypeData;
     protected List<VwUser> mockVwUserData;
+    protected List<VwUser> mockVwUserSingleData;
     protected List<VwUserAppRoles> mockVwUserAppRolesData;
     protected List<VwUserGroup> mockVwUserGroupData;
     protected List<VwUserResourceAccess> mockVwUserResourceAccessData;
@@ -78,6 +79,7 @@ public class SecurityMockData extends BaseSecurityDaoTest {
         this.mockVwResourceData = this.createVwResourceMockData();
         this.mockVwResourceTypeData = this.createVwResourceTypeMockData();
         this.mockVwUserData = this.createVwUserMockData();
+        this.mockVwUserSingleData = this.createVwUserSingleMockData();
         this.mockVwUserAppRolesData = this.createVwUserAppRolesMockData();
         this.mockVwUserGroupData = this.createVwUserGroupMockData();
         this.mockVwUserResourceAccessData = this.createVwUserResourceAccessMockData();
@@ -247,7 +249,7 @@ public class SecurityMockData extends BaseSecurityDaoTest {
         
         return list;
     }
-    
+
     private List<UserLogin> createUserLoginMockData() {
         List<UserLogin> list = new ArrayList<>();
         int loginId = SecurityMockDataFactory.TEST_USER_ID;
@@ -448,6 +450,16 @@ public class SecurityMockData extends BaseSecurityDaoTest {
         return list;
     }
     
+    private List<VwUser> createVwUserSingleMockData() {
+        List<VwUser> list = new ArrayList<>();
+        int loginId = SecurityMockDataFactory.TEST_USER_ID;
+        VwUser o = SecurityMockDataFactory.createOrmVwUser(loginId,
+                SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
+                "password", "2018-01-01", "ShortName_" + loginId);
+        list.add(o);
+        return list;
+    }
+    
     private List<VwUser> createVwUserMockData() {
         List<VwUser> list = new ArrayList<>();
         int loginId = SecurityMockDataFactory.TEST_USER_ID;
@@ -477,40 +489,40 @@ public class SecurityMockData extends BaseSecurityDaoTest {
     
     private List<VwUserAppRoles> createVwUserAppRolesMockData() {
         List<VwUserAppRoles> list = new ArrayList<>();
-        int loginId = SecurityMockDataFactory.TEST_USER_ID;
-        VwUserAppRoles o = SecurityMockDataFactory.createOrmVwUserAppRoles(
-                loginId, SecurityMockDataFactory.TEST_APP_ID,
-                SecurityMockDataFactory.TEST_ROLE_ID,
-                SecurityMockDataFactory.TEST_APP_ROLE_ID,
-                SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "2018-01-01");
-        list.add(o);
-        o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
+        int appRoleId = SecurityMockDataFactory.TEST_APP_ROLE_ID;
+        VwUserAppRoles o = SecurityMockDataFactory.createOrmVwUserAppRoles(SecurityMockDataFactory.TEST_USER_ID,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
-                SecurityMockDataFactory.TEST_APP_ROLE_ID,
-                SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
+                appRoleId,
+                SecurityMockDataFactory.TEST_GROUP_ID, "user_name",
                 "2018-01-01");
         list.add(o);
-        o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
+        o = SecurityMockDataFactory.createOrmVwUserAppRoles(SecurityMockDataFactory.TEST_USER_ID,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
-                SecurityMockDataFactory.TEST_APP_ROLE_ID,
-                SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
+                ++appRoleId,
+                SecurityMockDataFactory.TEST_GROUP_ID, "user_name",
                 "2018-01-01");
         list.add(o);
-        o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
+        o = SecurityMockDataFactory.createOrmVwUserAppRoles(SecurityMockDataFactory.TEST_USER_ID,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
-                SecurityMockDataFactory.TEST_APP_ROLE_ID,
-                SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
+                ++appRoleId,
+                SecurityMockDataFactory.TEST_GROUP_ID, "user_name",
                 "2018-01-01");
         list.add(o);
-        o = SecurityMockDataFactory.createOrmVwUserAppRoles(++loginId,
+        o = SecurityMockDataFactory.createOrmVwUserAppRoles(SecurityMockDataFactory.TEST_USER_ID,
                 SecurityMockDataFactory.TEST_APP_ID,
                 SecurityMockDataFactory.TEST_ROLE_ID,
-                SecurityMockDataFactory.TEST_APP_ROLE_ID,
-                SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
+                ++appRoleId,
+                SecurityMockDataFactory.TEST_GROUP_ID, "user_name",
+                "2018-01-01");
+        list.add(o);
+        o = SecurityMockDataFactory.createOrmVwUserAppRoles(SecurityMockDataFactory.TEST_USER_ID,
+                SecurityMockDataFactory.TEST_APP_ID,
+                SecurityMockDataFactory.TEST_ROLE_ID,
+                ++appRoleId,
+                SecurityMockDataFactory.TEST_GROUP_ID, "user_name",
                 "2018-01-01");
         list.add(o);
         

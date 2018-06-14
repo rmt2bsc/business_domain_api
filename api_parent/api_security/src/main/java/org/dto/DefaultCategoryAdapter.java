@@ -7,8 +7,7 @@ package org.dto;
  * @author rterrell
  * 
  */
-public class DefaultCategoryAdapter extends DefaultUserAdapter implements
-        CategoryDto {
+public class DefaultCategoryAdapter extends DefaultUserAdapter implements CategoryDto {
 
     /**
      * Create a DefaultCategoryAdapter containing all stub methods.
@@ -217,6 +216,16 @@ public class DefaultCategoryAdapter extends DefaultUserAdapter implements
     public String getRoleDescription() {
 
         return null;
+    }
+
+    @Override
+    public void setUserAppRoleId(int value) {
+        return;
+    }
+
+    @Override
+    public int getUserAppRoleId() {
+        return 0;
     }
 
 }
