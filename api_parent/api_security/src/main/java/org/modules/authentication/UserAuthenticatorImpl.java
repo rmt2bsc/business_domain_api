@@ -376,6 +376,12 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     @Override
     public int logout(String userName) throws LogoutException {
+        try {
+            Verifier.verifyNotEmpty(userName);
+        } catch (VerifyException e) {
+            throw new UsernameInvalidException("Username is required for logout operation");
+        }
+        
         RMT2SecurityToken token = null;
         try {
             token = this.getSecurityToken(userName);
@@ -393,9 +399,10 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             token.getUser().decrementAppCount();
             token.update();
         }
-        else if (token.getAppCount() == 0) {
+        else {
             // Remove user token
             try {
+                token.getUser().decrementAppCount();
                 token = this.invalidateUserToken(userName);
             } catch (SecurityTokenAccessException e) {
                 throw new LogoutException("An error occurred attempting to invalidate security token for user, " + userName, e);
