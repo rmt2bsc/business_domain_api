@@ -27,6 +27,7 @@ import org.rmt2.api.SecurityMockDataFactory;
 
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.api.security.authentication.web.LogoutException;
 import com.api.web.security.RMT2SecurityToken;
 
 /**
@@ -88,6 +89,7 @@ public class SingleSignOnAuthenticationApiTest extends SecurityMockData {
             results = api.authenticate(userName, password);
         } catch (SecurityModuleException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(userName, results.getLoginId());
@@ -108,6 +110,7 @@ public class SingleSignOnAuthenticationApiTest extends SecurityMockData {
             results = api.authenticate(TEST_UID);
         } catch (SecurityModuleException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(results, firstTimeToken);
@@ -119,7 +122,7 @@ public class SingleSignOnAuthenticationApiTest extends SecurityMockData {
 
     @Test
     public void testError_SingleSignOn_Authenticate_Incorrect_Username() {
-        RMT2SecurityToken firstTimeToken = this.performIntialLogin(TEST_UID, TEST_PASSWORD);
+        this.performIntialLogin(TEST_UID, TEST_PASSWORD);
         
         Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
         String userName = "bad_username";
@@ -207,6 +210,164 @@ public class SingleSignOnAuthenticationApiTest extends SecurityMockData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof UsernameInvalidException);
             Assert.assertEquals("Username is required for authentication check", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSuccess_Logout() {
+        RMT2SecurityToken firstTimeToken = this.performIntialLogin(TEST_UID, TEST_PASSWORD);
+        
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        int results = 0;
+        try {
+            results = api.logout(TEST_UID);
+        } catch (LogoutException e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(0, results);
+        Assert.assertEquals(0, firstTimeToken.getAppCount());
+        boolean isLoggedIn = api.isAuthenticated(TEST_UID);
+        Assert.assertFalse(isLoggedIn);
+    }
+    
+    @Test
+    public void testSuccess_Logout_Multiple_Times() {
+        RMT2SecurityToken firstTimeToken = this.performIntialLogin(TEST_UID, TEST_PASSWORD);
+        
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        int results = 0;
+        try {
+            api.authenticate(TEST_UID);
+            api.authenticate(TEST_UID);
+            api.authenticate(TEST_UID);
+           
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(3, results);
+            
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(2, results);
+            
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(1, results);
+            
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(0, results);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
+        }
+        
+        Assert.assertEquals(0, firstTimeToken.getAppCount());
+        boolean isLoggedIn = api.isAuthenticated(TEST_UID);
+        Assert.assertFalse(isLoggedIn);
+    }
+    
+    @Test
+    public void testSuccess_Logout_Multiple_Times_When_Multiple_Users_Exists() {
+        // add random users
+        this.performIntialLogin("user1", "test1234");
+        this.performIntialLogin("user2", "test1234");
+        this.performIntialLogin("user3", "test1234");
+        
+        // add the user that is target for this test.
+        RMT2SecurityToken firstTimeToken = this.performIntialLogin(TEST_UID, TEST_PASSWORD);
+        
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        int results = 0;
+        try {
+            api.authenticate(TEST_UID);
+            api.authenticate(TEST_UID);
+            api.authenticate(TEST_UID);
+           
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(3, results);
+            
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(2, results);
+            
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(1, results);
+            
+            results = api.logout(TEST_UID);
+            Assert.assertNotNull(results);
+            Assert.assertEquals(0, results);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
+        }
+        
+        Assert.assertEquals(0, firstTimeToken.getAppCount());
+        boolean isLoggedIn = api.isAuthenticated(TEST_UID);
+        Assert.assertFalse(isLoggedIn);
+        
+        // Check to see if random user exists.  Should be there
+        isLoggedIn = api.isAuthenticated("user1");
+        Assert.assertTrue(isLoggedIn);
+        isLoggedIn = api.isAuthenticated("user2");
+        Assert.assertTrue(isLoggedIn);
+        isLoggedIn = api.isAuthenticated("user3");
+        Assert.assertTrue(isLoggedIn);
+        
+        try {
+            results = api.logout("user1");
+            Assert.assertNotNull(results);
+            Assert.assertEquals(0, results);
+            
+            results = api.logout("user2");
+            Assert.assertNotNull(results);
+            Assert.assertEquals(0, results);
+            
+            results = api.logout("user3");
+            Assert.assertNotNull(results);
+            Assert.assertEquals(0, results);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
+        }
+        
+        // Check to see if random user were logged out.
+        isLoggedIn = api.isAuthenticated("user1");
+        Assert.assertFalse(isLoggedIn);
+        isLoggedIn = api.isAuthenticated("user2");
+        Assert.assertFalse(isLoggedIn);
+        isLoggedIn = api.isAuthenticated("user3");
+        Assert.assertFalse(isLoggedIn);
+    }
+    
+    @Test
+    public void testValidation_Logout_UserName_Null() {
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        try {
+            api.logout(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UsernameInvalidException);
+            Assert.assertEquals("Username is required for logout operation", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_Logout_UserName_Empty() {
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        try {
+            api.logout("");
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UsernameInvalidException);
+            Assert.assertEquals("Username is required for logout operation", e.getMessage());
         }
     }
 }

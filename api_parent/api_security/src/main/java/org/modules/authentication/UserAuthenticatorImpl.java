@@ -404,6 +404,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             try {
                 token.getUser().decrementAppCount();
                 token = this.invalidateUserToken(userName);
+                logger.info("User, " + userName + ", was logged out successfully!!!");
             } catch (SecurityTokenAccessException e) {
                 throw new LogoutException("An error occurred attempting to invalidate security token for user, " + userName, e);
             }    
@@ -413,47 +414,53 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
     }
 
     /**
-     * Invalidates the user's security token by removing it from the Map of valid user tokens.
+     * Invalidates the user's security token by removing it from the Map of
+     * valid user tokens.
      * <p>
-     * All properties of the returned token will be reset with the exception of the userName property 
+     * All properties of the returned token will be reset with the exception of
+     * the userName property
      * 
      * @param userName
-     * @return an instance of {@link RMT2SecurityToken} which is the token removed or null when user has already been invalidated.
+     * @return an instance of {@link RMT2SecurityToken} which is the token
+     *         removed or null when user has already been invalidated.
      * @throws SecurityTokenAccessException
      */
     @Override
     public RMT2SecurityToken invalidateUserToken(String userName) throws SecurityTokenAccessException {
+        RMT2SecurityToken token = null;
         try {
-            RMT2SecurityToken token = UserAuthenticatorImpl.USER_TOKENS.remove(userName);
-            if (token == null) {
-                return null;
-            }
-            token.getUser().setBirthDate(null);
-            token.getUser().setEmail(null);
-            token.getUser().setPassword(null);
-            token.getUser().setPersonId(0);
-            token.getUser().setRaceId(0);
-            token.getUser().setSsn(null);
-            token.getUser().setFirstname(null);
-            token.getUser().setLastname(null);
-            token.getUser().setUserDescription(null);
-            token.getUser().setUid(0);
-            token.getUser().getRoles().clear();
-            token.getUser().setRoles(null);
-            token.getUser().setShortname(null);
-            token.getUser().setMaidenname(null);
-            token.getUser().setMidname(null);
-            token.getUser().setMaritalStatus(0);
-            token.getUser().setGenderId(0);
-            token.getUser().setGeneration(null);
-            token.getUser().setAppCount(0);
-            
-            // Update token properties that were reset prior to returning the invalid token.
-            token.update();
-            return token;
+            token = UserAuthenticatorImpl.USER_TOKENS.remove(userName);
         } catch (Exception e) {
             throw new SecurityTokenAccessException(e);
         }
+        
+        // Perform updates
+        if (token == null) {
+            return null;
+        }
+        token.getUser().setBirthDate(null);
+        token.getUser().setEmail(null);
+        token.getUser().setPassword(null);
+        token.getUser().setPersonId(0);
+        token.getUser().setRaceId(0);
+        token.getUser().setSsn(null);
+        token.getUser().setFirstname(null);
+        token.getUser().setLastname(null);
+        token.getUser().setUserDescription(null);
+        token.getUser().setUid(0);
+        token.getUser().getRoles().clear();
+        token.getUser().setRoles(null);
+        token.getUser().setShortname(null);
+        token.getUser().setMaidenname(null);
+        token.getUser().setMidname(null);
+        token.getUser().setMaritalStatus(0);
+        token.getUser().setGenderId(0);
+        token.getUser().setGeneration(null);
+        token.getUser().setAppCount(0);
+        
+        // Update token properties that were reset prior to returning the invalid token.
+        token.update();
+        return token;
     }
     
     /**
