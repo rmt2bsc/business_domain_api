@@ -62,17 +62,6 @@ public interface Authenticator extends TransactionApi {
     boolean isAuthenticated(String userName);
 
     /**
-     * Returns a security token for a given user.
-     * 
-     * @param userName
-     *            The user's login id.
-     * @return an instance of {@link RMT2SecurityToken} or null when user is not
-     *         logged into system.
-     * @throws SecurityTokenAccessException
-     */
-    RMT2SecurityToken getSecurityToken(String userName) throws SecurityTokenAccessException;
-
-    /**
      * Log specified user out of the system.
      * 
      * @param userName
@@ -99,12 +88,11 @@ public interface Authenticator extends TransactionApi {
     void authorize(String userName, List<String> requiredRoles) throws AuthorizationException, AuthenticationException;
 
     /**
-     * Sets the login count of the specified user to zero.
+     * Unbinds the user from it's associated security token.
      * 
      * @param userName
-     *            the login id of the user.
-     * @return true when count is successfully reset and false otherwise.
+     * @return an instance of {@link RMT2SecurityToken} which is the token removed
      * @throws SecurityTokenAccessException
      */
-    boolean resetLoginCount(String userName) throws SecurityTokenAccessException;
+    RMT2SecurityToken invalidateUserToken(String userName) throws SecurityTokenAccessException;
 }
