@@ -9,7 +9,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.dao.SecurityDaoException;
 import org.dao.authentication.AuthenticationDao;
-import org.dao.authentication.AuthenticationDaoFactory;
 import org.dao.roles.RoleDao;
 import org.dao.roles.RoleDaoFactory;
 import org.dao.user.UserDao;
@@ -53,7 +52,6 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * Create a UserAuthenticatorDatabaseImpl object.
      */
     protected UserAuthenticatorImpl() {
-        this.dao = AuthenticationDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
 //        this.dao = AuthenticationDaoFactory.createLdapDao();
 
         this.setSharedDao(this.dao);
@@ -68,7 +66,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     protected UserAuthenticatorImpl(String appName) {
         super(appName);
-        this.dao = AuthenticationDaoFactory.createRmt2OrmDao(appName);
+//      this.dao = AuthenticationDaoFactory.createLdapDao();
         this.setSharedDao(this.dao);
         logger.info("Authenticator is initialized by application name, " + appName);
         return;
@@ -83,7 +81,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     protected UserAuthenticatorImpl(DaoClient dao) {
         super(SecurityConstants.APP_NAME, dao);
-        this.dao = AuthenticationDaoFactory.createRmt2OrmDao(this.getSharedDao());
+//      this.dao = AuthenticationDaoFactory.createLdapDao();
         logger.info("Authenticator is initialized using a shared DAO client");
     }
     
@@ -481,20 +479,47 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @param requiredRoles
      *            A List of String objects representing the roles required by
      *            the target resource the user wishes to access.
+     * @return <i>true></i> when authorized and <i>false</i> otherwise.           
      * @throws AuthorizationException
      * @throws AuthenticationException
      */
     @Override
-    public void authorize(String userName, List<String> requiredRoles) throws AuthorizationException, AuthenticationException {
-        List<String> userAppRoles = this.getUserAppRoles(userName);
+    public boolean authorize(String userName, List<String> requiredRoles) throws AuthorizationException {
+        try {
+            Verifier.verifyNotEmpty(userName);
+        }
+        catch (VerifyException e) {
+            this.msg = "Username is required for authorziation";
+            throw new AuthorizationException(this.msg, e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(requiredRoles);
+        }
+        catch (VerifyException e) {
+            this.msg = "A list of required application roles are required";
+            throw new AuthorizationException(this.msg, e);
+        }
+        
+        List<String> userAppRoles = null;
+        try {
+            userAppRoles = this.getUserAppRoleCodes(userName);
+        }
+        catch (CannotRetrieveException e) {
+            throw new AuthorizationException("Unable to authorize user, " + userName
+                            + ", due to user application roles are unavailable", e);
+        }
+        
+        try {
+            Verifier.verifyNotEmpty(userAppRoles);
+        }
+        catch (VerifyException e) {
+            this.msg = "Unable to locate any User Application Roles for user, " + userName;
+            throw new AuthorizationException(this.msg, e);
+        }
+        
         boolean authorized = this.isAuthorized(requiredRoles, userAppRoles);
-        if (authorized) {
-            return;
-        }
-        else {
-            this.msg = "User does not possess the appropriate authorization";
-            throw new AuthorizationException(this.msg);
-        }
+        return authorized;
     }
 
     /**
@@ -506,7 +531,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @throws CannotRetrieveException
      *             Error fetching the application roles.
      */
-    private List<String> getUserAppRoles(String userName) throws CannotRetrieveException {
+    private List<String> getUserAppRoleCodes(String userName) throws CannotRetrieveException {
         UserAppRoleApi rolesApi = null;
         List<CategoryDto> roleList = null;
         try {
@@ -530,8 +555,8 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
     }
 
     /**
-     * Determines user authorization by matching one or more required roles with
-     * the user's roles.
+     * Determines user authorization by matching one or more user application
+     * roles with the required roles.
      * 
      * @param userName
      *            The login id of the user that is to be authorized.
@@ -549,49 +574,14 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      *             be null or contain no elements.
      */
     private boolean isAuthorized(List<String> requiredRoles, List<String> userRoles) throws AuthorizationException {
-        try {
-            Verifier.verifyNotEmpty(requiredRoles);
-        }
-        catch (VerifyException e) {
-            this.msg = "A list of required roles are required";
-            throw new AuthorizationException(this.msg);
-        }
-
-        try {
-            Verifier.verifyNotEmpty(userRoles);
-        }
-        catch (VerifyException e) {
-            this.msg = "A list of user roles are required";
-            throw new AuthorizationException(this.msg);
-        }
-
         // Match up the roles.
-        List<String> matches = this.getAssignedRequiredRoles(userRoles, requiredRoles);
-        return (matches.size() > 0);
-    }
-
-    /**
-     * Determines if the user possesses one or more required roles and returns a
-     * list of all the required roles the user has been granted.
-     * 
-     * @param userRoles
-     *            The roles assigned to the user.
-     * @param requiredRoles
-     *            The roles the user must be authorized for.
-     * @return A List of roles in code name form that match one or more of the
-     *         required roles.
-     */
-    private List<String> getAssignedRequiredRoles(List<String> userRoles, List<String> requiredRoles) {
-        List<String> matchedRoles = new ArrayList<String>();
-        for (int ndx = 0; ndx < requiredRoles.size(); ndx++) {
-            String reqRole = (String) requiredRoles.get(ndx);
-            for (int ndx2 = 0; ndx2 < userRoles.size(); ndx2++) {
-                String userRole = (String) userRoles.get(ndx2);
-                if (userRole.trim().equalsIgnoreCase(reqRole.trim())) {
-                    matchedRoles.add(reqRole.trim());
-                }
+        int totalMatches = 0;
+        for (String userRole :  userRoles) {
+            if (requiredRoles.contains(userRole)) {
+                totalMatches++;
             }
         }
-        return matchedRoles;
+        return (totalMatches > 0);
     }
+    
 }
