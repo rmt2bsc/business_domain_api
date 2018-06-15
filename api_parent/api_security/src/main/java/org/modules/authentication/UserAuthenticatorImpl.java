@@ -175,13 +175,13 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         // Perform user login
         UserDto user = null;
         try {
-            user = this.loginUser(userName, hashPassPw);
+            user = this.doLogin(userName, hashPassPw);
         } catch (NotFoundException | LoginFailedException e) {
             throw new AuthenticationException("User authentication failed due to invalid user id and/or password", e);
         }
 
         // Create security token and add to list of authenticated users.
-        return this.doPostLoginUser(user);
+        return this.doPostLogin(user);
 
     }
 
@@ -205,8 +205,8 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @throws CannotPersistException
      *             unable to update user's profile
      */
-    private UserDto loginUser(String userName, String password) throws AuthenticationException {
-        UserDto user = this.getUserByUsername(userName);
+    private UserDto doLogin(String userName, String password) throws AuthenticationException {
+        UserDto user = this.getUser(userName);
         try {
             Verifier.verifyNotNull(user);
         }
@@ -236,7 +236,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @param userProfile
      * @return instance of {@link RMT2SecurityToken}
      */
-    private RMT2SecurityToken doPostLoginUser(UserDto userProfile) {
+    private RMT2SecurityToken doPostLogin(UserDto userProfile) {
         // At this point, the user is authenticated!
         User tokenUser = Rmt2OrmDtoFactory.getUserInstance(userProfile);
 
@@ -277,7 +277,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @return
      * @throws AuthenticationException
      */
-    private UserDto getUserByUsername(String userName) throws AuthenticationException {
+    private UserDto getUser(String userName) throws AuthenticationException {
         UserDao dao = null;
         List<UserDto> userList = null;
         try {
@@ -307,11 +307,13 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     @Override
     public boolean isAuthenticated(String userName) {
+        RMT2SecurityToken token;
         try {
-            return (UserAuthenticatorImpl.USER_TOKENS.get(userName) != null);
-        } catch (Exception e) {
-            return false;
+            token = this.getSecurityToken(userName);
+        } catch (SecurityTokenAccessException e) {
+            token = null;
         }
+        return (token != null);
     }
 
     /**
@@ -328,8 +330,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      *             when <i>loginId</i> is null or the value returned is not of
      *             type {@link RMT2SecurityToken}
      */
-    @Override
-    public RMT2SecurityToken getSecurityToken(String userName) throws SecurityTokenAccessException {
+    protected RMT2SecurityToken getSecurityToken(String userName) throws SecurityTokenAccessException {
         try {
             RMT2SecurityToken token = UserAuthenticatorImpl.USER_TOKENS.get(userName);
             return token;
@@ -375,11 +376,63 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         if (token.getAppCount() > 1) {
             token.getUser().decrementAppCount();
             token.update();
-            return token.getAppCount();
         }
-        return 0;
+        else if (token.getAppCount() == 0) {
+            // Remove user token
+            try {
+                token = this.invalidateUserToken(userName);
+            } catch (SecurityTokenAccessException e) {
+                throw new LogoutException("An error occurred attempting to invalidate security token for user, " + userName, e);
+            }    
+        }
+        
+        return token.getAppCount();
     }
 
+    /**
+     * Invalidates the user's security token by removing it from the Map of valid user tokens.
+     * <p>
+     * All properties of the returned token will be reset with the exception of the userName property 
+     * 
+     * @param userName
+     * @return an instance of {@link RMT2SecurityToken} which is the token removed or null when user has already been invalidated.
+     * @throws SecurityTokenAccessException
+     */
+    @Override
+    public RMT2SecurityToken invalidateUserToken(String userName) throws SecurityTokenAccessException {
+        try {
+            RMT2SecurityToken token = UserAuthenticatorImpl.USER_TOKENS.remove(userName);
+            if (token == null) {
+                return null;
+            }
+            token.getUser().setBirthDate(null);
+            token.getUser().setEmail(null);
+            token.getUser().setPassword(null);
+            token.getUser().setPersonId(0);
+            token.getUser().setRaceId(0);
+            token.getUser().setSsn(null);
+            token.getUser().setFirstname(null);
+            token.getUser().setLastname(null);
+            token.getUser().setUserDescription(null);
+            token.getUser().setUid(0);
+            token.getUser().getRoles().clear();
+            token.getUser().setRoles(null);
+            token.getUser().setShortname(null);
+            token.getUser().setMaidenname(null);
+            token.getUser().setMidname(null);
+            token.getUser().setMaritalStatus(0);
+            token.getUser().setGenderId(0);
+            token.getUser().setGeneration(null);
+            token.getUser().setAppCount(0);
+            
+            // Update token properties that were reset prior to returning the invalid token.
+            token.update();
+            return token;
+        } catch (Exception e) {
+            throw new SecurityTokenAccessException(e);
+        }
+    }
+    
     /**
      * Verifies if the user has authorization to access a resource based on one
      * or more of the required roles specified.
@@ -466,11 +519,18 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      *             be null or contain no elements.
      */
     private boolean isAuthorized(List<String> requiredRoles, List<String> userRoles) throws AuthorizationException {
-        if (requiredRoles == null || requiredRoles.size() == 0) {
+        try {
+            Verifier.verifyNotEmpty(requiredRoles);
+        }
+        catch (VerifyException e) {
             this.msg = "A list of required roles are required";
             throw new AuthorizationException(this.msg);
         }
-        if (userRoles == null || userRoles.size() == 0) {
+
+        try {
+            Verifier.verifyNotEmpty(userRoles);
+        }
+        catch (VerifyException e) {
             this.msg = "A list of user roles are required";
             throw new AuthorizationException(this.msg);
         }
@@ -504,26 +564,4 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         }
         return matchedRoles;
     }
-
-    /**
-     * Sets the application login count of the user's security token to zero.
-     * 
-     * @param userName
-     *            the login id of the user.
-     * @return true when count is successfully reset and false otherwise.
-     * @throws SecurityTokenAccessException
-     */
-    @Override
-    public boolean resetLoginCount(String userName) throws SecurityTokenAccessException {
-        RMT2SecurityToken token;
-        token = this.getSecurityToken(userName);
-        if (token == null) {
-            return false;
-        }
-        token.getUser().setAppCount(0);
-        // Update token properties with changes made to its User instance.
-        token.update();
-        return true;
-    }
-
 }
