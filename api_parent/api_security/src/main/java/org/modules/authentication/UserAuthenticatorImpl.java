@@ -486,8 +486,8 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     @Override
     public void authorize(String userName, List<String> requiredRoles) throws AuthorizationException, AuthenticationException {
-        List<String> userRoles = this.getUserRoles(userName);
-        boolean authorized = this.isAuthorized(requiredRoles, userRoles);
+        List<String> userAppRoles = this.getUserAppRoles(userName);
+        boolean authorized = this.isAuthorized(requiredRoles, userAppRoles);
         if (authorized) {
             return;
         }
@@ -506,7 +506,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @throws CannotRetrieveException
      *             Error fetching the application roles.
      */
-    private List<String> getUserRoles(String userName) throws CannotRetrieveException {
+    private List<String> getUserAppRoles(String userName) throws CannotRetrieveException {
         UserAppRoleApi rolesApi = null;
         List<CategoryDto> roleList = null;
         try {
