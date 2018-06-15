@@ -4,6 +4,7 @@ package org.dao.authentication;
  * Constants for the User Authentication, Authorization, and Security module.
  * 
  * @author roy.terrell
+ * @deprecated not needed anymore
  * 
  */
 public class AuthenticationConst {

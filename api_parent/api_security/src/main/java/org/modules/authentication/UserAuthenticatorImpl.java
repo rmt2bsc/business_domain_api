@@ -169,7 +169,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         try {
             hashPassPw = CryptoUtils.byteArrayToHexString(CryptoUtils.computeHash(userName + password));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new AuthenticationException("Unable to encrypt password during authentication", e);
         }
         
         // Perform user login

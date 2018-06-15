@@ -233,7 +233,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             try {
                 hashPassPw = CryptoUtils.byteArrayToHexString(CryptoUtils.computeHash(user.getUsername() + user.getPassword()));
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                throw new UserApiException("Unable to encrypt password while maintaining user profile", e);
             }
             user.setPassword(hashPassPw);
         }
