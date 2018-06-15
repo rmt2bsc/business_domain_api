@@ -79,6 +79,7 @@ public class FirstTimeAuthenticationApiTest extends SecurityMockData {
             results = api.authenticate(userName, password);
         } catch (SecurityModuleException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals("UserName_" + SecurityMockDataFactory.TEST_USER_ID, results.getLoginId());
