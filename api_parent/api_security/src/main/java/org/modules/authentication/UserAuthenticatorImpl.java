@@ -57,7 +57,6 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
 //        this.dao = AuthenticationDaoFactory.createLdapDao();
 
         this.setSharedDao(this.dao);
-        UserAuthenticatorImpl.USER_TOKENS = new Hashtable<String, RMT2SecurityToken>();
         logger.info("Authenticator is initialized by default constructor");
         return;
     }
@@ -71,7 +70,6 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         super(appName);
         this.dao = AuthenticationDaoFactory.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
-        UserAuthenticatorImpl.USER_TOKENS = new Hashtable<String, RMT2SecurityToken>();
         logger.info("Authenticator is initialized by application name, " + appName);
         return;
     }
@@ -86,9 +84,17 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
     protected UserAuthenticatorImpl(DaoClient dao) {
         super(SecurityConstants.APP_NAME, dao);
         this.dao = AuthenticationDaoFactory.createRmt2OrmDao(this.getSharedDao());
-        UserAuthenticatorImpl.USER_TOKENS = new Hashtable<String, RMT2SecurityToken>();
         logger.info("Authenticator is initialized using a shared DAO client");
     }
+    
+    @Override
+    public void init() {
+        super.init();
+        if (UserAuthenticatorImpl.USER_TOKENS == null) {
+            UserAuthenticatorImpl.USER_TOKENS = new Hashtable<String, RMT2SecurityToken>();    
+        }
+    }
+    
     
     /**
      * Performs authentication for a the specified user using his/her login id
@@ -112,6 +118,12 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     @Override
     public RMT2SecurityToken authenticate(String userName) throws AuthenticationException {
+        try {
+            Verifier.verifyNotEmpty(userName);
+        } catch (VerifyException e) {
+            throw new UsernameInvalidException("Username is required for Single Sign On authentication");
+        }
+        
         RMT2SecurityToken token;
         try {
             token = this.getSecurityToken(userName);
