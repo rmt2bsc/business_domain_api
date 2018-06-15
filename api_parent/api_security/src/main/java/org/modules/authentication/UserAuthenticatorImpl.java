@@ -25,7 +25,6 @@ import org.modules.roles.UserAppRoleApi;
 
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.api.persistence.CannotPersistException;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DaoClient;
 import com.api.security.User;
@@ -161,7 +160,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         try {
             Verifier.verifyNotEmpty(password);
         } catch (VerifyException e) {
-            throw new PasswordInvalidException("Username is required");
+            throw new PasswordInvalidException("Password is required");
         }
 
         // logic to encrypt password before attempting to login
@@ -236,7 +235,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @param userProfile
      * @return instance of {@link RMT2SecurityToken}
      */
-    private RMT2SecurityToken doPostLogin(UserDto userProfile) {
+    private RMT2SecurityToken doPostLogin(UserDto userProfile) throws AuthenticationException {
         // At this point, the user is authenticated!
         User tokenUser = Rmt2OrmDtoFactory.getUserInstance(userProfile);
 
@@ -249,7 +248,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
                 tokenUser.addRole(role.getAppRoleCode());
             }
         } catch (SecurityDaoException e) {
-            throw new SecurityDaoException("Unable to retrieve user's application roles during authentication", e);
+            throw new AuthenticationException("Unable to retrieve user's application roles during authentication", e);
         }
 
         // Update the authenticated user's profile
@@ -260,7 +259,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             logger.info("User, " + userProfile.getUsername() + ", was successfully logged in effecting " + rows
                     + " rows(s)");
         } catch (UserDaoException e) {
-            throw new CannotPersistException("Unable to update user's profile durig authentication", e);
+            throw new AuthenticationException("Unable to update user's profile durig authentication", e);
         }
 
         // Create security token and add to list of authenticated users.
