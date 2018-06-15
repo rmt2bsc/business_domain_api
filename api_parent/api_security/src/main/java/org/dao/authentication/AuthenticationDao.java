@@ -9,7 +9,6 @@ import com.api.security.User;
  * Contract for performing user authentication operations.
  * 
  * @author rterrell
- * @deprecated not needed anymore
  * 
  */
 public interface AuthenticationDao extends DaoClient {
