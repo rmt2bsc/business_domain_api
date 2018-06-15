@@ -31,15 +31,16 @@ import com.api.security.authentication.web.LogoutException;
 import com.api.web.security.RMT2SecurityToken;
 
 /**
- * Tests user authentication functioanality for single sign on login in the Security
- * API.
+ * Tests various user authentication functioanality that occurs post login in the Security API.
+ * <p>
+ * Test single sign on, authentication checks, and logging out of system. 
  * 
  * @author rterrell
  * 
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
-public class SingleSignOnAuthenticationApiTest extends SecurityMockData {
+public class PostLoginApiTest extends SecurityMockData {
 
     private static final String TEST_UID = "john.smith";
     private static final String TEST_PASSWORD = "test1234";
