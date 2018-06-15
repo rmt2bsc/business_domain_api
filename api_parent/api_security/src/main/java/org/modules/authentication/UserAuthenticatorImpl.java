@@ -251,7 +251,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         // Associate application roles with user
         RoleDao roleDao = null;
         try {
-            roleDao = RoleDaoFactory.createRmt2OrmDao(this.getSharedDao());
+            roleDao = RoleDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
             List<CategoryDto> roleList = roleDao.fetchUserAppRole(userProfile.getUsername());
             for (CategoryDto role : roleList) {
                 tokenUser.addRole(role.getAppRoleCode());
@@ -262,7 +262,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
 
         // Update the authenticated user's profile
         try {
-            UserDao dao = UserDaoFactory.createRmt2OrmDao(this.getSharedDao());
+            UserDao dao = UserDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
             dao.setDaoUser(userProfile.getUsername());
             int rows = dao.maintainUser(userProfile);
             logger.info("User, " + userProfile.getUsername() + ", was successfully logged in effecting " + rows
@@ -289,7 +289,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         UserDao dao = null;
         List<UserDto> userList = null;
         try {
-            dao = UserDaoFactory.createRmt2OrmDao(this.getSharedDao());
+            dao = UserDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
             dao.setDaoUser(userName);
             UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
             userCriteria.setUsername(userName);
@@ -535,7 +535,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         UserAppRoleApi rolesApi = null;
         List<CategoryDto> roleList = null;
         try {
-            rolesApi = RoleSecurityApiFactory.createUserAppRoleApi(this.getSharedDao());
+            rolesApi = RoleSecurityApiFactory.createUserAppRoleApi(SecurityConstants.APP_NAME);
             CategoryDto criteria = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(null, null);
             criteria.setUsername(userName);
             roleList = rolesApi.get(criteria);
