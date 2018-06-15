@@ -317,6 +317,12 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     @Override
     public boolean isAuthenticated(String userName) {
+        try {
+            Verifier.verifyNotEmpty(userName);
+        } catch (VerifyException e) {
+            throw new UsernameInvalidException("Username is required for authentication check");
+        }
+        
         RMT2SecurityToken token;
         try {
             token = this.getSecurityToken(userName);

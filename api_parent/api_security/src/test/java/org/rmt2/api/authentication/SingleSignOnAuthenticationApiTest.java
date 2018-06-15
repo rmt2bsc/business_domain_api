@@ -161,4 +161,52 @@ public class SingleSignOnAuthenticationApiTest extends SecurityMockData {
             Assert.assertEquals("Username is required for Single Sign On authentication", e.getMessage());
         }
     }
+    
+    @Test
+    public void testSuccess_User_Authentication_Check() {
+        this.performIntialLogin(TEST_UID, TEST_PASSWORD);
+        
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        boolean results = false;
+        results = api.isAuthenticated(TEST_UID);
+        Assert.assertNotNull(results);
+        Assert.assertTrue(results);
+    }
+    
+    @Test
+    public void testError_User_Authentication_Check() {
+        this.performIntialLogin(TEST_UID, TEST_PASSWORD);
+        
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        boolean results = false;
+        results = api.isAuthenticated("bad_username");
+        Assert.assertNotNull(results);
+        Assert.assertFalse(results);
+    }
+    
+    @Test
+    public void testValidation_User_Authentication_Check_Null_UserName() {
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        try {
+            api.isAuthenticated(null);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UsernameInvalidException);
+            Assert.assertEquals("Username is required for authentication check", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testValidation_User_Authentication_Check_Empty_UserName() {
+        Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
+        try {
+            api.isAuthenticated("");
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UsernameInvalidException);
+            Assert.assertEquals("Username is required for authentication check", e.getMessage());
+        }
+    }
 }
