@@ -82,10 +82,11 @@ public interface Authenticator extends TransactionApi {
      * @param requiredRoles
      *            A List of String objects representing the roles required by
      *            the target resource the user wishes to access.
+     * @return <i>true></i> when authorized and <i>false</i> otherwise.
      * @throws AuthorizationException
      * @throws AuthenticationException
      */
-    void authorize(String userName, List<String> requiredRoles) throws AuthorizationException, AuthenticationException;
+    boolean authorize(String userName, List<String> requiredRoles) throws AuthorizationException, AuthenticationException;
 
     /**
      * Unbinds the user from it's associated security token.
