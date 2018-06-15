@@ -1,5 +1,7 @@
 package org.rmt2.api;
 
+import java.security.NoSuchAlgorithmException;
+
 import org.dao.mapping.orm.rmt2.AppRole;
 import org.dao.mapping.orm.rmt2.Application;
 import org.dao.mapping.orm.rmt2.ApplicationAccess;
@@ -19,6 +21,7 @@ import org.dao.mapping.orm.rmt2.VwUser;
 import org.dao.mapping.orm.rmt2.VwUserAppRoles;
 import org.dao.mapping.orm.rmt2.VwUserGroup;
 import org.dao.mapping.orm.rmt2.VwUserResourceAccess;
+import org.modules.authentication.CryptoUtils;
 
 import com.util.RMT2Date;
 
@@ -316,7 +319,13 @@ public class SecurityMockDataFactory {
         o.setLoginId(loginId);
         o.setGrpId(grpId);
         o.setUsername(userName);
-        o.setPassword(password);
+        String hashPw = null;
+        try {
+            hashPw = CryptoUtils.byteArrayToHexString(CryptoUtils.computeHash(userName + password));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        o.setPassword(hashPw);
         o.setStartDate(RMT2Date.stringToDate(startDate));
         o.setBirthDate(RMT2Date.stringToDate("1966-01-01"));
         o.setFirstname("firstname_" + loginId);

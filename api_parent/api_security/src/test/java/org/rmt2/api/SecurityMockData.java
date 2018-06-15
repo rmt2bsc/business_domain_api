@@ -455,7 +455,7 @@ public class SecurityMockData extends BaseSecurityDaoTest {
         int loginId = SecurityMockDataFactory.TEST_USER_ID;
         VwUser o = SecurityMockDataFactory.createOrmVwUser(loginId,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "password", "2018-01-01", "ShortName_" + loginId);
+                "test1234" + loginId, "2018-01-01", "ShortName_" + loginId);
         list.add(o);
         return list;
     }
@@ -465,23 +465,23 @@ public class SecurityMockData extends BaseSecurityDaoTest {
         int loginId = SecurityMockDataFactory.TEST_USER_ID;
         VwUser o = SecurityMockDataFactory.createOrmVwUser(loginId,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "password", "2018-01-01", "ShortName_" + loginId);
+                "test1234" + loginId, "2018-01-01", "ShortName_" + loginId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUser(++loginId,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "password", "2018-01-01", "ShortName_" + loginId);
+                "test1234" + loginId, "2018-01-01", "ShortName_" + loginId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUser(++loginId,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "password", "2018-01-01", "ShortName_" + loginId);
+                "test1234" + loginId, "2018-01-01", "ShortName_" + loginId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUser(++loginId,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "password", "2018-01-01", "ShortName_" + loginId);
+                "test1234" + loginId, "2018-01-01", "ShortName_" + loginId);
         list.add(o);
         o = SecurityMockDataFactory.createOrmVwUser(++loginId,
                 SecurityMockDataFactory.TEST_GROUP_ID, "UserName_" + loginId,
-                "password", "2018-01-01", "ShortName_" + loginId);
+                "test1234" + loginId, "2018-01-01", "ShortName_" + loginId);
         list.add(o);
         
         return list;

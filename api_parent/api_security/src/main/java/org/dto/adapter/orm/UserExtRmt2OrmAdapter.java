@@ -320,4 +320,14 @@ class UserExtRmt2OrmAdapter extends DefaultUserAdapter {
         return this.u.getTerminationDate();
     }
 
+    @Override
+    public String getPassword() {
+       return this.u.getPassword();
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.u.setPassword(password);
+    }
+
 }
