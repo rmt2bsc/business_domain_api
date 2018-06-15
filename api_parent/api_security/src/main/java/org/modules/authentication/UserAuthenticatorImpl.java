@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.dao.SecurityDaoException;
 import org.dao.authentication.AuthenticationDao;
 import org.dao.authentication.AuthenticationDaoFactory;
-import org.dao.authentication.PasswordInvalidDaoException;
 import org.dao.roles.RoleDao;
 import org.dao.roles.RoleDaoFactory;
 import org.dao.user.UserDao;
@@ -136,9 +135,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * <p>
      * Upon successful authentication, a security token is created for the user
      * in which the user's application count is incremented by one and returned
-     * to the caller. If by chance the user is already logged on, then the
-     * original just security token is returned without incrementing the user's
-     * application count.
+     * to the caller.
      * 
      * @param userName
      *            The user's login id.
@@ -147,20 +144,24 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @return An instance of {@link RMT2SecurityToken} which represents the
      *         user's security token.
      * @throws AuthenticationException
-     *             For any case where the user's login attempt fails.
+     *             User login failed or the login process experienced a system
+     *             failure.
+     * @throws UsernameInvalidException
+     *             <i>userName</i> is null or invalid
+     * @throws PasswordInvalidException
+     *             <i>password</i> is null or invalid
      */
     @Override
     public RMT2SecurityToken authenticate(String userName, String password) throws AuthenticationException {
-        // If user has already signed on, just return security token without
-        // incrementing application count.
-        RMT2SecurityToken token = null;
         try {
-            token = this.getSecurityToken(userName);
-            if (token != null) {
-                return token;
-            }
-        } catch (SecurityTokenAccessException e) {
-            throw new AuthenticationException(e);
+            Verifier.verifyNotEmpty(userName);
+        } catch (VerifyException e) {
+            throw new UsernameInvalidException("Username is required");
+        }
+        try {
+            Verifier.verifyNotEmpty(password);
+        } catch (VerifyException e) {
+            throw new PasswordInvalidException("Username is required");
         }
 
         // logic to encrypt password before attempting to login
@@ -172,14 +173,15 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         }
         
         // Perform user login
-        User user = this.loginUser(userName, hashPassPw);
+        UserDto user = null;
+        try {
+            user = this.loginUser(userName, hashPassPw);
+        } catch (NotFoundException | LoginFailedException e) {
+            throw new AuthenticationException("User authentication failed due to invalid user id and/or password", e);
+        }
 
         // Create security token and add to list of authenticated users.
-        token = new RMT2SecurityToken();
-        user.incrementAppCount();
-        token.update(user);
-        UserAuthenticatorImpl.USER_TOKENS.put(user.getLoginId(), token);
-        return token;
+        return this.doPostLoginUser(user);
 
     }
 
@@ -193,23 +195,17 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      *            The login id of the user.
      * @param password
      *            The user's passowrd.
-     * @return The user's profile as an instance of {@link User}
+     * @return The user's profile as an instance of {@link UserDto}
      * @throws DatabaseException
      *             password is incorrect or the user's loggedIn flag could not
      *             be applied to the database.
      * @throws NotFoundException
      *             <i>userName</i> is null or does not exist in the database.
      * @throws AuthenticationException
-     * @throws CannotPersistException unable to update user's profile
+     * @throws CannotPersistException
+     *             unable to update user's profile
      */
-    private User loginUser(String userName, String password) throws AuthenticationException {
-        try {
-            Verifier.verifyNotEmpty(userName);
-        }
-        catch (VerifyException e) {
-            throw new UsernameInvalidException("Username is required");
-        }
-
+    private UserDto loginUser(String userName, String password) throws AuthenticationException {
         UserDto user = this.getUserByUsername(userName);
         try {
             Verifier.verifyNotNull(user);
@@ -221,19 +217,36 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         // Get decrypted password
         String origPasswordDecrypt = user.getPassword();
         if (!origPasswordDecrypt.equalsIgnoreCase(password)) {
-            throw new PasswordInvalidDaoException("Password is incorrect");
+            throw new LoginFailedException("Password is incorrect");
         }
 
+        // Password has to be reset each time the user logs in to prevent
+        // over encryption
+        user.setPassword(password);
+        // increment total logons
+        int logons = user.getTotalLogons();
+        user.setTotalLogons(++logons);
+        
+        return user;
+    }
+
+    /**
+     * Updates the user profile and returns a user security token
+     * 
+     * @param userProfile
+     * @return instance of {@link RMT2SecurityToken}
+     */
+    private RMT2SecurityToken doPostLoginUser(UserDto userProfile) {
         // At this point, the user is authenticated!
-        User u = Rmt2OrmDtoFactory.getUserInstance(user);
+        User tokenUser = Rmt2OrmDtoFactory.getUserInstance(userProfile);
 
         // Associate application roles with user
         RoleDao roleDao = null;
         try {
             roleDao = RoleDaoFactory.createRmt2OrmDao(this.getSharedDao());
-            List<CategoryDto> roleList = roleDao.fetchUserAppRole(userName);
+            List<CategoryDto> roleList = roleDao.fetchUserAppRole(userProfile.getUsername());
             for (CategoryDto role : roleList) {
-                u.addRole(role.getAppRoleCode());
+                tokenUser.addRole(role.getAppRoleCode());
             }
         } catch (SecurityDaoException e) {
             throw new SecurityDaoException("Unable to retrieve user's application roles during authentication", e);
@@ -241,23 +254,29 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
 
         // Update the authenticated user's profile
         try {
-            // Password has to be reset each time the user logs in to prevent
-            // over encryption
-            user.setPassword(password);
-            // increment total logons
-            int logons = user.getTotalLogons();
-            user.setTotalLogons(++logons);
-            // perform update
             UserDao dao = UserDaoFactory.createRmt2OrmDao(this.getSharedDao());
-            dao.setDaoUser(userName);
-            int rows = dao.maintainUser(user);
-            logger.info("User, " + userName + ", was successfully logged in effecting " + rows + " rows(s)");
+            dao.setDaoUser(userProfile.getUsername());
+            int rows = dao.maintainUser(userProfile);
+            logger.info("User, " + userProfile.getUsername() + ", was successfully logged in effecting " + rows
+                    + " rows(s)");
         } catch (UserDaoException e) {
             throw new CannotPersistException("Unable to update user's profile durig authentication", e);
         }
-        return u;
+
+        // Create security token and add to list of authenticated users.
+        RMT2SecurityToken token = new RMT2SecurityToken();
+        tokenUser.incrementAppCount();
+        token.update(tokenUser);
+        UserAuthenticatorImpl.USER_TOKENS.put(tokenUser.getLoginId(), token);
+        return token;
     }
 
+    /**
+     * 
+     * @param userName
+     * @return
+     * @throws AuthenticationException
+     */
     private UserDto getUserByUsername(String userName) throws AuthenticationException {
         UserDao dao = null;
         List<UserDto> userList = null;

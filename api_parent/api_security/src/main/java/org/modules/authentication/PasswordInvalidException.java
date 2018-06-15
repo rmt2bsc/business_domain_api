@@ -1,6 +1,6 @@
-package org.dao.authentication;
+package org.modules.authentication;
 
-import org.dao.SecurityDaoException;
+import com.InvalidDataException;
 
 /**
  * Represents invalid user password error.
@@ -8,13 +8,13 @@ import org.dao.SecurityDaoException;
  * @author RTerrell
  * 
  */
-public class PasswordInvalidDaoException extends SecurityDaoException {
+public class PasswordInvalidException extends InvalidDataException {
     private static final long serialVersionUID = 2969536074770899864L;
 
     /**
      * 
      */
-    public PasswordInvalidDaoException() {
+    public PasswordInvalidException() {
         super();
     }
 
@@ -22,7 +22,7 @@ public class PasswordInvalidDaoException extends SecurityDaoException {
      * 
      * @param msg
      */
-    public PasswordInvalidDaoException(String msg) {
+    public PasswordInvalidException(String msg) {
         super(msg);
     }
 
@@ -30,7 +30,7 @@ public class PasswordInvalidDaoException extends SecurityDaoException {
      * 
      * @param e
      */
-    public PasswordInvalidDaoException(Exception e) {
+    public PasswordInvalidException(Exception e) {
         super(e);
     }
 
@@ -39,7 +39,7 @@ public class PasswordInvalidDaoException extends SecurityDaoException {
      * @param msg
      * @param e
      */
-    public PasswordInvalidDaoException(String msg, Throwable e) {
+    public PasswordInvalidException(String msg, Throwable e) {
         super(msg, e);
     }
 }

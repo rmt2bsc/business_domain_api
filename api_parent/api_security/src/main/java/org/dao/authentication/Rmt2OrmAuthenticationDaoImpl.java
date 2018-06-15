@@ -13,6 +13,7 @@ import org.dao.user.UserDaoFactory;
 import org.dto.CategoryDto;
 import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
+import org.modules.authentication.PasswordInvalidException;
 import org.modules.authentication.UsernameInvalidException;
 
 import com.RMT2Constants;
@@ -94,7 +95,7 @@ class Rmt2OrmAuthenticationDaoImpl extends SecurityDaoImpl implements
         // Get decrypted password
         String origPasswordDecrypt = user.getPassword();
         if (!origPasswordDecrypt.equalsIgnoreCase(password)) {
-            throw new PasswordInvalidDaoException("Password is incorrect");
+            throw new PasswordInvalidException("Password is incorrect");
         }
 
         // At this point, the user is authenticated!
