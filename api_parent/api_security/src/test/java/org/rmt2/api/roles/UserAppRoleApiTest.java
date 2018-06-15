@@ -48,8 +48,6 @@ import com.util.RMT2Date;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
 public class UserAppRoleApiTest extends SecurityMockData {
 
-//  private static final String[] ROLE_IDS = { "5000", "5001", "5002", "5003",
-//  "5004" };
     private static final String[] APP_ROLE_CODES = { "Code_6000", "Code_6001",
             "Code_6002", "Code_6003", "Code_6004" };
 
