@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="UserResourceSubtypeView">
+   <Sql From="user_resource_subtype" GroupBy="" Having="" OrderBy="" Select="rsrc_subtype_id, &#xA;&#x9;&#x9;rsrc_type_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id" Where="" />
+   <TableUsage DBName="user_resource_subtype" Name="UserResourceSubtypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="rsrc_subtype_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="RsrcSubtypeId" PrimaryKey="true" SqlType="integer" TableName="UserResourceSubtypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="rsrc_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="RsrcTypeId" PrimaryKey="false" SqlType="integer" TableName="UserResourceSubtypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Name" PrimaryKey="false" SqlType="varchar" TableName="UserResourceSubtypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="UserResourceSubtypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_created" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateCreated" PrimaryKey="false" SqlType="timestamp" TableName="UserResourceSubtypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="UserResourceSubtypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="UserResourceSubtypeTable" Updateable="true" />
+</DataSource>
+

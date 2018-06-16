@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VwPurchaseOrderListView">
+   <Sql From="vw_purchase_order_list" GroupBy="" Having="" OrderBy="" Select="id, &#xA;&#x9;&#x9;vendor_id, &#xA;&#x9;&#x9;status_id, &#xA;&#x9;&#x9;ref_no, &#xA;&#x9;&#x9;total, &#xA;&#x9;&#x9;status_description, &#xA;&#x9;&#x9;status_hist_id, &#xA;&#x9;&#x9;effective_date, &#xA;&#x9;&#x9;end_date, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;creditor_id, &#xA;&#x9;&#x9;business_id, &#xA;&#x9;&#x9;account_number, &#xA;&#x9;&#x9;credit_limit, &#xA;&#x9;&#x9;credit_type_id, &#xA;&#x9;&#x9;creditor_type_descr" Where="" />
+   <TableUsage DBName="vw_purchase_order_list" Name="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="Id" PrimaryKey="false" SqlType="integer" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="vendor_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="VendorId" PrimaryKey="false" SqlType="integer" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="status_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="StatusId" PrimaryKey="false" SqlType="integer" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ref_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="RefNo" PrimaryKey="false" SqlType="varchar" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="total" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="Total" PrimaryKey="false" SqlType="numeric" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="status_description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="StatusDescription" PrimaryKey="false" SqlType="varchar" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="status_hist_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="StatusHistId" PrimaryKey="false" SqlType="integer" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="effective_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="EffectiveDate" PrimaryKey="false" SqlType="date" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="end_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="EndDate" PrimaryKey="false" SqlType="date" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="creditor_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="CreditorId" PrimaryKey="false" SqlType="integer" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="business_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="BusinessId" PrimaryKey="false" SqlType="integer" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="account_number" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AccountNumber" PrimaryKey="false" SqlType="varchar" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="credit_limit" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="CreditLimit" PrimaryKey="false" SqlType="decimal" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="credit_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="CreditTypeId" PrimaryKey="false" SqlType="integer" TableName="VwPurchaseOrderListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="creditor_type_descr" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="CreditorTypeDescr" PrimaryKey="false" SqlType="varchar" TableName="VwPurchaseOrderListTable" Updateable="true" />
+</DataSource>
+

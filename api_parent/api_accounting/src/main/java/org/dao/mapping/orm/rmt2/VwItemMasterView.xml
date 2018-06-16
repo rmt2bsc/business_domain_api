@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VwItemMasterView">
+   <Sql From="vw_item_master" GroupBy="" Having="" OrderBy="" Select="id, &#xA;&#x9;&#x9;vendor_id, &#xA;&#x9;&#x9;item_type_id, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;vendor_item_no, &#xA;&#x9;&#x9;item_serial_no, &#xA;&#x9;&#x9;qty_on_hand, &#xA;&#x9;&#x9;unit_cost, &#xA;&#x9;&#x9;markup, &#xA;&#x9;&#x9;retail_price, &#xA;&#x9;&#x9;override_retail, &#xA;&#x9;&#x9;active, &#xA;&#x9;&#x9;item_create_date, &#xA;&#x9;&#x9;item_update_date, &#xA;&#x9;&#x9;update_userid, &#xA;&#x9;&#x9;item_type_description, &#xA;&#x9;&#x9;item_status, &#xA;&#x9;&#x9;item_status_id" Where="" />
+   <TableUsage DBName="vw_item_master" Name="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="Id" PrimaryKey="false" SqlType="integer" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="vendor_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="VendorId" PrimaryKey="false" SqlType="integer" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ItemTypeId" PrimaryKey="false" SqlType="integer" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="vendor_item_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="VendorItemNo" PrimaryKey="false" SqlType="varchar" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_serial_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ItemSerialNo" PrimaryKey="false" SqlType="varchar" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="qty_on_hand" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="QtyOnHand" PrimaryKey="false" SqlType="integer" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="unit_cost" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="UnitCost" PrimaryKey="false" SqlType="decimal" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="markup" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="Markup" PrimaryKey="false" SqlType="decimal" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="retail_price" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="RetailPrice" PrimaryKey="false" SqlType="decimal" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="override_retail" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="OverrideRetail" PrimaryKey="false" SqlType="smallint" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="active" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="Active" PrimaryKey="false" SqlType="smallint" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_create_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="ItemCreateDate" PrimaryKey="false" SqlType="timestamp" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_update_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="ItemUpdateDate" PrimaryKey="false" SqlType="timestamp" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="update_userid" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UpdateUserid" PrimaryKey="false" SqlType="varchar" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_type_description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ItemTypeDescription" PrimaryKey="false" SqlType="varchar" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_status" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ItemStatus" PrimaryKey="false" SqlType="varchar" TableName="VwItemMasterTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="item_status_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ItemStatusId" PrimaryKey="false" SqlType="integer" TableName="VwItemMasterTable" Updateable="true" />
+</DataSource>
+

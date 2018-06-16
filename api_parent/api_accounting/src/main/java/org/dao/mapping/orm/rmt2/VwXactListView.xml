@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VwXactListView">
+   <Sql From="vw_xact_list" GroupBy="" Having="" OrderBy="" Select="id, &#xA;&#x9;&#x9;xact_amount, &#xA;&#x9;&#x9;xact_date, &#xA;&#x9;&#x9;posted_date, &#xA;&#x9;&#x9;confirm_no, &#xA;&#x9;&#x9;neg_instr_no, &#xA;&#x9;&#x9;tender_id, &#xA;&#x9;&#x9;tender_description, &#xA;&#x9;&#x9;xact_type_id, &#xA;&#x9;&#x9;xact_subtype_id, &#xA;&#x9;&#x9;xact_type_name, &#xA;&#x9;&#x9;reason, &#xA;&#x9;&#x9;create_date, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;document_id, &#xA;&#x9;&#x9;xact_catg_id, &#xA;&#x9;&#x9;to_multiplier, &#xA;&#x9;&#x9;from_multiplier, &#xA;&#x9;&#x9;to_acct_type_id, &#xA;&#x9;&#x9;to_acct_catg_id, &#xA;&#x9;&#x9;from_acct_type_id, &#xA;&#x9;&#x9;from_acct_catg_id, &#xA;&#x9;&#x9;has_subsidiary" Where="" />
+   <TableUsage DBName="vw_xact_list" Name="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="Id" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="xact_amount" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="XactAmount" PrimaryKey="false" SqlType="decimal" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="xact_date" DataValue="" DisplayHeader="" IsNull="false" JavaType="java.util.Date" Name="XactDate" PrimaryKey="false" SqlType="date" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="posted_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="PostedDate" PrimaryKey="false" SqlType="timestamp" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="confirm_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ConfirmNo" PrimaryKey="false" SqlType="varchar" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="neg_instr_no" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="NegInstrNo" PrimaryKey="false" SqlType="varchar" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="tender_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="TenderId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="tender_description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="TenderDescription" PrimaryKey="false" SqlType="varchar" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="xact_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="XactTypeId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="xact_subtype_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="XactSubtypeId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="xact_type_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="XactTypeName" PrimaryKey="false" SqlType="varchar" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="reason" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Reason" PrimaryKey="false" SqlType="varchar" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="create_date" DataValue="" DisplayHeader="" IsNull="true" JavaType="java.util.Date" Name="CreateDate" PrimaryKey="false" SqlType="timestamp" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="document_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="DocumentId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="xact_catg_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="XactCatgId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="to_multiplier" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ToMultiplier" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="from_multiplier" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="FromMultiplier" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="to_acct_type_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ToAcctTypeId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="to_acct_catg_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ToAcctCatgId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="from_acct_type_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="FromAcctTypeId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="from_acct_catg_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="FromAcctCatgId" PrimaryKey="false" SqlType="integer" TableName="VwXactListTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="has_subsidiary" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="HasSubsidiary" PrimaryKey="false" SqlType="smallint" TableName="VwXactListTable" Updateable="true" />
+</DataSource>
+

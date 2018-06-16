@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VwResourceView">
+   <Sql From="vw_resource" GroupBy="" Having="" OrderBy="" Select="rsrc_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;url, &#xA;&#x9;&#x9;description, &#xA;&#x9;&#x9;secured, &#xA;&#x9;&#x9;rsrc_type_id, &#xA;&#x9;&#x9;type_descr, &#xA;&#x9;&#x9;rsrc_subtype_id, &#xA;&#x9;&#x9;subtype_name, &#xA;&#x9;&#x9;subtype_desc" Where="" />
+   <TableUsage DBName="vw_resource" Name="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="rsrc_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="RsrcId" PrimaryKey="false" SqlType="integer" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Name" PrimaryKey="false" SqlType="varchar" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="url" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Url" PrimaryKey="false" SqlType="varchar" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="secured" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="Secured" PrimaryKey="false" SqlType="smallint" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="rsrc_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="RsrcTypeId" PrimaryKey="false" SqlType="integer" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="type_descr" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="TypeDescr" PrimaryKey="false" SqlType="varchar" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="rsrc_subtype_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="RsrcSubtypeId" PrimaryKey="false" SqlType="integer" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="subtype_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="SubtypeName" PrimaryKey="false" SqlType="varchar" TableName="VwResourceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="subtype_desc" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="SubtypeDesc" PrimaryKey="false" SqlType="varchar" TableName="VwResourceTable" Updateable="true" />
+</DataSource>
+

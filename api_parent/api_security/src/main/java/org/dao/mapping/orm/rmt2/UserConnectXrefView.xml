@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="UserConnectXrefView">
+   <Sql From="user_connect_xref" GroupBy="" Having="" OrderBy="" Select="id, &#xA;&#x9;&#x9;con_id, &#xA;&#x9;&#x9;con_user_id, &#xA;&#x9;&#x9;app_user_id" Where="" />
+   <TableUsage DBName="user_connect_xref" Name="UserConnectXrefTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="Id" PrimaryKey="true" SqlType="integer" TableName="UserConnectXrefTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="con_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ConId" PrimaryKey="false" SqlType="varchar" TableName="UserConnectXrefTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="con_user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ConUserId" PrimaryKey="false" SqlType="varchar" TableName="UserConnectXrefTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="app_user_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="AppUserId" PrimaryKey="false" SqlType="varchar" TableName="UserConnectXrefTable" Updateable="true" />
+</DataSource>
+

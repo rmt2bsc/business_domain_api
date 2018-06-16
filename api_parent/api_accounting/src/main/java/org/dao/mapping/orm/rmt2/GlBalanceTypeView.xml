@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="GlBalanceTypeView">
+   <Sql From="gl_balance_type" GroupBy="" Having="" OrderBy="" Select="acct_baltype_id, &#xA;&#x9;&#x9;long_desc, &#xA;&#x9;&#x9;short_desc" Where="" />
+   <TableUsage DBName="gl_balance_type" Name="GlBalanceTypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="acct_baltype_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AcctBaltypeId" PrimaryKey="true" SqlType="integer" TableName="GlBalanceTypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="long_desc" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="LongDesc" PrimaryKey="false" SqlType="varchar" TableName="GlBalanceTypeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="short_desc" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ShortDesc" PrimaryKey="false" SqlType="varchar" TableName="GlBalanceTypeTable" Updateable="true" />
+</DataSource>
+
