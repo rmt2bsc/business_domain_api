@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<DataSource Name="AvProjectTypeView">
-   <Sql From="av_project_type" GroupBy="" Having="" OrderBy="" Select="project_type_id, &#xA;&#x9;&#x9;description" Where="" />
-   <TableUsage DBName="av_project_type" Name="AvProjectTypeTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="project_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ProjectTypeId" PrimaryKey="true" SqlType="integer" TableName="AvProjectTypeTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="AvProjectTypeTable" Updateable="true" />
-</DataSource>
-

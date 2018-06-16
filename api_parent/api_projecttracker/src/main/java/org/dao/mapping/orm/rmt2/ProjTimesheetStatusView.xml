@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<DataSource Name="ProjTimesheetStatusView">
-   <Sql From="proj_timesheet_status" GroupBy="" Having="" OrderBy="" Select="timesheet_status_id, &#xA;&#x9;&#x9;name, &#xA;&#x9;&#x9;description" Where="" />
-   <TableUsage DBName="proj_timesheet_status" Name="ProjTimesheetStatusTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="timesheet_status_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="TimesheetStatusId" PrimaryKey="true" SqlType="integer" TableName="ProjTimesheetStatusTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Name" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetStatusTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="description" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Description" PrimaryKey="false" SqlType="varchar" TableName="ProjTimesheetStatusTable" Updateable="true" />
-</DataSource>
-

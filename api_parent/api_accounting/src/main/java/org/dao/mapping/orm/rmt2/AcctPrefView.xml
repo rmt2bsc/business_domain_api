@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<DataSource Name="AcctPrefView">
-   <Sql From="acct_pref" GroupBy="" Having="" OrderBy="" Select="acct_pref_id, &#xA;&#x9;&#x9;acct_period_id, &#xA;&#x9;&#x9;acct_prd_beg_month" Where="" />
-   <TableUsage DBName="acct_pref" Name="AcctPrefTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="acct_pref_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="AcctPrefId" PrimaryKey="true" SqlType="integer" TableName="AcctPrefTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="acct_period_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="AcctPeriodId" PrimaryKey="false" SqlType="integer" TableName="AcctPrefTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="acct_prd_beg_month" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="AcctPrdBegMonth" PrimaryKey="false" SqlType="smallint" TableName="AcctPrefTable" Updateable="true" />
-</DataSource>
-
