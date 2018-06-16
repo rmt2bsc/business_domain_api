@@ -1,0 +1,12 @@
+dn: cn=RMT2RootUser,cn=Root DNs,cn=config
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: top
+objectClass: ds-cfg-root-dn-user
+objectClass: organizationalPerson
+userPassword: drum7777
+cn: RMT2RootUser
+sn: RMT2RootUser
+ds-cfg-alternate-bind-dn: cn=RMT2RootUser
+ds-rlim-lookthrough-limit: 0
+givenName: Directory

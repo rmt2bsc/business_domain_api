@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="IpBlockView">
+   <Sql From="ip_block" GroupBy="" Having="" OrderBy="" Select="ip_start, &#xA;&#x9;&#x9;ip_end, &#xA;&#x9;&#x9;ip_loc" Where="" />
+   <TableUsage DBName="ip_block" Name="IpBlockTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_start" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="IpStart" PrimaryKey="false" SqlType="numeric" TableName="IpBlockTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_end" DataValue="" DisplayHeader="" IsNull="true" JavaType="double" Name="IpEnd" PrimaryKey="false" SqlType="numeric" TableName="IpBlockTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="ip_loc" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="IpLoc" PrimaryKey="false" SqlType="integer" TableName="IpBlockTable" Updateable="true" />
+</DataSource>
+
