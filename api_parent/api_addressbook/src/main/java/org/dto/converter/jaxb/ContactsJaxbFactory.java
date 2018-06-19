@@ -416,8 +416,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      */
     public ZipcodeType getZipcode(int zipId) throws PostalApiException {
         ObjectFactory f = new ObjectFactory();
-        PostalApiFactory zipFactory = new PostalApiFactory();
-        PostalApi api = zipFactory.createApi();
+        PostalApi api = PostalApiFactory.createApi();
         // ZipcodeDto zList = (ZipcodeDto) api.getZipCode(zipId);
         // if (zList == null || zList.size() == 0) {
         // return null;
