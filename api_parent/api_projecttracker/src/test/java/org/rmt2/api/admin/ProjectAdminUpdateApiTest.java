@@ -327,7 +327,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
                 isA(String.class), isA(AddressBookRequest.class))).thenReturn(mockAddressBookResponse, mockReplyStatusType);
         
         when(this.mockMessageRouterHelper.routeXmlMessage(
-                eq(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE),
+                eq(ApiTransactionCodes.CONTACTS_UPDATE),
                 isA(AddressBookRequest.class))).thenReturn(mockReplyStatusType);
     }
     
