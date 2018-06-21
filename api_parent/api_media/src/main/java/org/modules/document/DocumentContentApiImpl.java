@@ -16,9 +16,9 @@ import org.modules.services.document.directory.DirectoryInboundDocumentListener;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.RMT2File;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2File;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * A basic impelentation of {@link DocumentContentApi} that provides the user

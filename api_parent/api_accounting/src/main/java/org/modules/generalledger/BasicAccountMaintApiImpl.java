@@ -14,7 +14,7 @@ import org.modules.TooManyItemsReturnedApiException;
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.CannotProceedException;
-import com.util.RMT2String2;
+import com.api.util.RMT2String2;
 
 /**
  * 

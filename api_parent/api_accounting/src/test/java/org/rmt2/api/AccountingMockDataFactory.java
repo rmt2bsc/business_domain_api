@@ -49,7 +49,7 @@ import org.rmt2.jaxb.CodeDetailType;
 import org.rmt2.jaxb.ObjectFactory;
 
 import com.SystemException;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 public class AccountingMockDataFactory {
 

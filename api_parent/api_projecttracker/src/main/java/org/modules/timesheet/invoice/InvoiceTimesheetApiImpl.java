@@ -43,8 +43,8 @@ import com.api.foundation.TransactionApiException;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Implementation of InvoiceTimesheetApi that manages the invoicing of an

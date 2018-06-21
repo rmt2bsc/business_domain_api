@@ -29,7 +29,7 @@ import org.rmt2.api.AccountingMockDataFactory;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Tests the creation of customer activity transactions.

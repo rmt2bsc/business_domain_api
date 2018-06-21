@@ -18,10 +18,10 @@ import org.dto.SalesOrderStatusHistDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link SalesOrderDao}. It provides functionality that

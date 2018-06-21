@@ -37,8 +37,8 @@ import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2Date;
-import com.util.RMT2File;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2File;
 
 /**
  * An file loader implementation of {@link AudioVideoBatchFileProcessorApi}

@@ -14,7 +14,7 @@ import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.OrmBean;
-import com.util.RMT2Utility;
+import com.api.util.RMT2Utility;
 
 /**
  * An RMT2 ORM implementation of {@link PostalLocationDao} contract for

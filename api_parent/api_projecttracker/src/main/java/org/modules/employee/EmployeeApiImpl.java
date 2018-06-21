@@ -22,8 +22,8 @@ import org.modules.ProjectTrackerApiConst;
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Manages the creation, modifification, and querying of employee information.

@@ -17,7 +17,7 @@ import org.modules.transaction.XactConst;
 import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Base transaction testing facility that is mainly responsible for setting up

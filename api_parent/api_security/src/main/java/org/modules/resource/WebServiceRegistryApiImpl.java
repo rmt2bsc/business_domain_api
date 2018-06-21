@@ -11,8 +11,8 @@ import org.modules.SecurityConstants;
 
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * A implementation of {@link ResourceRegistryApi} interface that is

@@ -21,9 +21,9 @@ import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
-import com.util.RMT2Date;
-import com.util.RMT2File;
-import com.util.RMT2String;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2File;
+import com.api.util.RMT2String;
 
 /**
  * This is an implementation of the TimesheetTransmissionApi interface using the

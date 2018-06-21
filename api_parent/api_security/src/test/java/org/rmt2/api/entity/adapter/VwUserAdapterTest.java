@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.modules.authentication.CryptoUtils;
 import org.rmt2.api.SecurityMockDataFactory;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Test VwUser adapter as it pertains to the Security API module.

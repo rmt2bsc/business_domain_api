@@ -23,7 +23,7 @@ import org.dao.mapping.orm.rmt2.VwUserGroup;
 import org.dao.mapping.orm.rmt2.VwUserResourceAccess;
 import org.modules.authentication.CryptoUtils;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 public class SecurityMockDataFactory {
     public static final int TEST_APP_ID = 123450;

@@ -28,9 +28,9 @@ import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DaoClient;
 import com.api.security.User;
 import com.api.security.authentication.web.LogoutException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 import com.api.web.security.RMT2SecurityToken;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
 
 /**
  * An implementation of the {@link Authenticator} interface that performs user

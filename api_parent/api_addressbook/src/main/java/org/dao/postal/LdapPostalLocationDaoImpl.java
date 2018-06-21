@@ -17,8 +17,8 @@ import org.dto.adapter.ldap.LdapAddressBookDtoFactory;
 import com.RMT2Constants;
 import com.api.ldap.AbstractLdapDaoClient;
 import com.api.ldap.operation.LdapSearchOperation;
-import com.util.RMT2String;
-import com.util.RMT2Utility;
+import com.api.util.RMT2String;
+import com.api.util.RMT2Utility;
 
 /**
  * A JNDI implementation of the {@link PostalLocationDao} interface which

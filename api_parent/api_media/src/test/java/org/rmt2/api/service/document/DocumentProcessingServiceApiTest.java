@@ -33,7 +33,7 @@ import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Test the document processing service functionality of the Media API Service module.

@@ -21,9 +21,9 @@ import org.dto.VwVendorItemDto;
 import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.RMT2String;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
+import com.api.util.UserTimestamp;
 
 /**
  * An implementation of {@link VendorPurchasesDao}. It provides functionality

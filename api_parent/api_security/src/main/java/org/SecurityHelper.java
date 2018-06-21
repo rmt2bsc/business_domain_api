@@ -2,8 +2,8 @@ package org;
 
 import com.RMT2Base;
 import com.api.config.ConfigConstants;
-import com.util.RMT2Base64Decoder;
-import com.util.RMT2Base64Encoder;
+import com.api.util.RMT2Base64Decoder;
+import com.api.util.RMT2Base64Encoder;
 
 /**
  * Provides utility operations regarding security.

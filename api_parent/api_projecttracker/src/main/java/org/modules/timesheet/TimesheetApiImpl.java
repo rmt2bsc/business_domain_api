@@ -37,9 +37,9 @@ import com.api.config.AppPropertyPool;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.persistence.DaoClient;
-import com.util.RMT2String;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2String;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Implementation of TimesheetApi that manages an employee's timesheet

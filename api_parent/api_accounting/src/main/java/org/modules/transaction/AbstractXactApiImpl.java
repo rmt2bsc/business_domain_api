@@ -36,9 +36,9 @@ import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
-import com.util.RMT2Money;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Money;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * The base implementation of XactApi interface containing common transaction

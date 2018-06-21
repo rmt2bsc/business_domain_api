@@ -39,9 +39,9 @@ import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2String;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2String;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Api Implementation of {@link VendorPurchasesApi} that manages vendor purchase

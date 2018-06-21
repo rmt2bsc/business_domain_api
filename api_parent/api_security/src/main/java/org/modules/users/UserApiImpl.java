@@ -14,8 +14,8 @@ import org.modules.authentication.CryptoUtils;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An api implemetation of {@link UserApi} that provides functionality for

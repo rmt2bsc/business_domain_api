@@ -19,8 +19,8 @@ import com.InvalidDataException;
 import com.RMT2Constants;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An api implemetation of {@link UserAppRoleApi} that provides functionality

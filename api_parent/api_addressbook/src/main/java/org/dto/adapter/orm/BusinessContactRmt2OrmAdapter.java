@@ -9,8 +9,8 @@ import org.dao.mapping.orm.rmt2.Business;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dto.BusinessContactDto;
 
-import com.util.assistants.EqualityAssistant;
-import com.util.assistants.HashCodeAssistant;
+import com.api.util.assistants.EqualityAssistant;
+import com.api.util.assistants.HashCodeAssistant;
 
 /**
  * Adapts an RMT2 ORM <i>Business</i> and an <i>Address</i> object to an

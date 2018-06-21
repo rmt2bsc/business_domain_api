@@ -22,8 +22,8 @@ import org.modules.generalledger.GlAccountApi;
 
 import com.InvalidDataException;
 import com.api.persistence.DaoClient;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link CreditorApi} which provides functionality that

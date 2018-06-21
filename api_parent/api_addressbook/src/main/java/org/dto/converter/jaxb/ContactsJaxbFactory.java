@@ -40,7 +40,7 @@ import org.rmt2.jaxb.ZipcodeFullType;
 import org.rmt2.jaxb.ZipcodeType;
 
 import com.RMT2Base;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * A factory for creating JAXB objects derived from contact DTO's.

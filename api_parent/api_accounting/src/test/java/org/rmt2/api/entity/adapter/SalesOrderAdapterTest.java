@@ -24,7 +24,7 @@ import org.modules.inventory.InventoryConst;
 import org.modules.transaction.sales.SalesApiConst;
 import org.rmt2.api.AccountingMockDataFactory;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Test Sales Order adapters

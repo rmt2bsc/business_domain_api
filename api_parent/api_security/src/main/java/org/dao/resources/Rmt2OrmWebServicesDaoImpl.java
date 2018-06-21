@@ -16,8 +16,8 @@ import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import com.RMT2Constants;
 import com.SystemException;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * An RMT2 ORM database implementation of the {@link ResourceDao} interface

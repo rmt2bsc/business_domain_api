@@ -15,9 +15,9 @@ import org.modules.transaction.XactConst;
 
 import com.InvalidDataException;
 import com.api.persistence.DaoClient;
-import com.util.RMT2String2;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2String2;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Class provides an implementation for managing disbursement transactions.

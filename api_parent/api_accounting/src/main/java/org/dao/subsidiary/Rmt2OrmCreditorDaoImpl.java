@@ -17,9 +17,9 @@ import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.RMT2String;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
+import com.api.util.UserTimestamp;
 
 /**
  * An implementation of {@link CreditorDao}. It provides functionality that

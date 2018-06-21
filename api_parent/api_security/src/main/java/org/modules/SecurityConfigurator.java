@@ -8,7 +8,7 @@ import org.apache.log4j.PropertyConfigurator;
 import com.api.config.AbstractApiConfiguratorPropertiesImpl;
 import com.api.config.ConfigConstants;
 import com.api.config.ConfigException;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Configurator for initializing the Security API.

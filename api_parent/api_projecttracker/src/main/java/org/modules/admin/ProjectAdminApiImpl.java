@@ -39,9 +39,9 @@ import com.api.foundation.TransactionApiException;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
-import com.util.RMT2Date;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Date;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Api Implementation of {@link ProjectApi} that manages the creation, querying,

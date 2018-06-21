@@ -39,7 +39,7 @@ import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Test the audio/video batch file import module functionality in the Media API.

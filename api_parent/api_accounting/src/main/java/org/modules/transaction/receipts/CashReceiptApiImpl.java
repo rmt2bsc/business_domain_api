@@ -38,9 +38,9 @@ import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.DaoClient;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 import com.api.xml.RMT2XmlUtility;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
 
 /**
  * API implementation of CashReceiptApi for managing cash receipts transactions.

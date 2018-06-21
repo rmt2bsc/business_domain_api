@@ -10,7 +10,7 @@ import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
 
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.RMT2Money;
+import com.api.util.RMT2Money;
 
 /**
  * An implementation of {@link ContactsApi} for managing Contacts module

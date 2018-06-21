@@ -31,7 +31,7 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Test the audio/video meta data update functionality in the Media API.

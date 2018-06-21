@@ -14,8 +14,8 @@ import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
 import com.SystemException;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * An RMT2 ORM implementation of the {@link LookupDao} interface which accesses

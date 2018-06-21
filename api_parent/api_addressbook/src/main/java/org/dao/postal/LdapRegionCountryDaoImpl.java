@@ -17,7 +17,7 @@ import org.dto.adapter.ldap.LdapAddressBookDtoFactory;
 import com.RMT2Constants;
 import com.api.ldap.AbstractLdapDaoClient;
 import com.api.ldap.operation.LdapSearchOperation;
-import com.util.RMT2String;
+import com.api.util.RMT2String;
 
 /**
  * A JNDI implementation of {@link RegionCountryDao} interface for accessing

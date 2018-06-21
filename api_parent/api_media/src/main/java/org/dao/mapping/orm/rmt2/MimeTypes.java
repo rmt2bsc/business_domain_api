@@ -3,9 +3,10 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-import com.util.assistants.EqualityAssistant;
-import com.util.assistants.HashCodeAssistant;
+
 import com.api.persistence.db.orm.OrmBean;
+import com.api.util.assistants.EqualityAssistant;
+import com.api.util.assistants.HashCodeAssistant;
 import com.SystemException;
 
 

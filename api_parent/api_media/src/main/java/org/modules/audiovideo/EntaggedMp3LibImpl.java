@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.RMT2Base;
 import com.RMT2Constants;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 import entagged.audioformats.AudioFile;
 import entagged.audioformats.AudioFileIO;

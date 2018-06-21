@@ -42,10 +42,10 @@ import org.modules.transaction.receipts.CashReceiptApiFactory;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.persistence.DaoClient;
-import com.util.RMT2Date;
-import com.util.RMT2String;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * This class implements the functionality required for creating, maintaining,

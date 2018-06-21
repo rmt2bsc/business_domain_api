@@ -17,7 +17,7 @@ import org.dto.TimeZoneDto;
 import org.dto.ZipcodeDto;
 
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.RMT2String2;
+import com.api.util.RMT2String2;
 
 /**
  * An implementation of {@link PostalApi} for managing postal location related

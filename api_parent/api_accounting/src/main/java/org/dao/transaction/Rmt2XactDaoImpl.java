@@ -27,8 +27,8 @@ import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * An basic implementation of {@link XactDao} which accesses and manipulates

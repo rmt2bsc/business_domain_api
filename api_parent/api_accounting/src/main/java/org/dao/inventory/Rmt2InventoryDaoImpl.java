@@ -23,8 +23,8 @@ import org.modules.inventory.InventoryConst;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * A RMT2 ORM implementation of {@link InventoryDao} that queries, creates,

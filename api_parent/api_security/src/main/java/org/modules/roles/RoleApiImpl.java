@@ -14,8 +14,8 @@ import org.modules.SecurityModuleException;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An api implemetation of {@link RoleApi} that provides functionality for

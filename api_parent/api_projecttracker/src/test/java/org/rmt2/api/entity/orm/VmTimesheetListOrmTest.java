@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Test of VwTimesheetList ORM class

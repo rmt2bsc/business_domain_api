@@ -21,8 +21,8 @@ import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.timesheet.TimesheetConst;
 
-import com.util.RMT2Date;
-import com.util.RMT2String;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
 
 public class ProjectTrackerMockDataFactory {
     public static final int TEST_LOGIN_ID = 999991;
