@@ -22,12 +22,12 @@ class BusinessContactCriteriaJaxbAdapter extends DefaultAddressAdapter implement
 
     /**
      * Create a BusinessContactCriteriaJaxbAdapter using an instance of
-     * <i>VwBusinessAddress</i>, which contains both business and address
-     * contact information.
+     * <i>BusinessContactCriteria</i>, which contains business selection
+     * criteria contact information.
      * 
      * @param criteria
      *            an instance of {@link BusinessContactCriteria} or null for the
-     *            purpose of creating a new Business object
+     *            purpose of creating a new BusinessContactDto object
      */
     protected BusinessContactCriteriaJaxbAdapter(BusinessContactCriteria bus) {
         super();

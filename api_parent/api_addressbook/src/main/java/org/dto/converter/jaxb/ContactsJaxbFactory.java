@@ -28,6 +28,8 @@ import org.rmt2.jaxb.AddressType;
 import org.rmt2.jaxb.BusinessType;
 import org.rmt2.jaxb.CitytypeType;
 import org.rmt2.jaxb.CodeDetailType;
+import org.rmt2.jaxb.CommonContactType;
+import org.rmt2.jaxb.ContacttypeType;
 import org.rmt2.jaxb.CountryType;
 import org.rmt2.jaxb.GenerationType;
 import org.rmt2.jaxb.IpDetails;
@@ -50,11 +52,6 @@ import com.api.util.RMT2Date;
  */
 public class ContactsJaxbFactory extends RMT2Base {
 
-    // private static Logger logger =
-    // Logger.getLogger(ContactsJaxbFactory.class);
-
-    // private DatabaseConnectionBean con;
-
     /**
      * Creates a ContactsJaxbFactory that is capable of functioning without the
      * use of an external datasource.
@@ -62,18 +59,6 @@ public class ContactsJaxbFactory extends RMT2Base {
     public ContactsJaxbFactory() {
         super();
     }
-
-    // /**
-    // * Creates a ContactsJaxbFactory that is initialized with a database
-    // connection.
-    // *
-    // * @param con
-    // * {@link com.bean.db.DatabaseConnectionBean DatabaseConnectionBean}
-    // */
-    // public ContactsJaxbFactory(DatabaseConnectionBean con) {
-    // super();
-    // this.con = con;
-    // }
 
     /**
      * Creates a new JAXB BusinessType instance.
@@ -195,6 +180,9 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @return {@link com.xml.schema.bindings.BusinessType BusinessType}
      */
     public BusinessType createBusinessTypeInstance(ContactDto contact) {
+        if (contact instanceof BusinessContactDto) {
+            return this.createBusinessTypeInstance((BusinessContactDto) contact);
+        }
         ObjectFactory f = new ObjectFactory();
         BusinessType bt = f.createBusinessType();
         bt.setBusinessId(BigInteger.valueOf(contact.getContactId()));
@@ -245,11 +233,52 @@ public class ContactsJaxbFactory extends RMT2Base {
     }
 
     /**
-     * Creates a PersonType object from data contained in a VwPersonAddress
+     * Creates a List of PersonType objects from data contained in the list of
+     * PersonalContactDto objects.
+     * 
+     * @param contact
+     *            List of {@link PersonalContactDto}
+     * @return List of {@link com.xml.schema.bindings.BusinessType PersonType}
+     */
+    public List<PersonType> createPersonalTypeInstance(List<ContactDto> contacts) {
+        List<PersonType> list = new ArrayList<>();
+        for (ContactDto item : contacts) {
+            if (item instanceof PersonalContactDto) {
+                list.add(this.createPersonalTypeInstance((PersonalContactDto) item));
+            }
+        }
+        return list;
+    }
+    
+    /**
+     * Creates a PersonType object from data contained in a ContactDto object.
+     * 
+     * @param contact
+     *            {@link ContactDto}
+     * @return {@link com.xml.schema.bindings.PersonType PersonType}
+     */
+    public PersonType createPersonalTypeInstance(ContactDto contact) {
+        if (contact instanceof PersonalContactDto) {
+            return this.createPersonalTypeInstance((PersonalContactDto) contact);
+        }
+        ObjectFactory f = new ObjectFactory();
+        PersonType pt = f.createPersonType();
+        pt.setPersonId(BigInteger.valueOf(contact.getContactId()));
+
+        pt.setShortName(contact.getContactName());
+        pt.setEmail(contact.getContactEmail());
+
+        AddressType at = this.getAddress(contact);
+        pt.setAddress(at);
+        return pt;
+    }
+    
+    /**
+     * Creates a PersonType object from data contained in a PersonalContactDto
      * object.
      * 
      * @param contact
-     *            {@link com.bean.VwPersonAddress VwPersonAddress}
+     *            {@link PersonalContactDto}
      * @return {@link com.xml.schema.bindings.PersonType PersonType}
      */
     public PersonType createPersonalTypeInstance(PersonalContactDto contact) {
@@ -299,6 +328,47 @@ public class ContactsJaxbFactory extends RMT2Base {
         return pt;
     }
 
+    /**
+     * Creates a List of CommonContactType objects from data contained in the list of
+     * ContactDto objects.
+     * 
+     * @param contact
+     *            List of {@link ContactDto}
+     * @return List of {@link com.xml.schema.bindings.CommonContactType CommonContactType}
+     */
+    public List<CommonContactType> createCommonContactTypeInstance(List<ContactDto> contacts) {
+        List<CommonContactType> list = new ArrayList<>();
+        for (ContactDto item : contacts) {
+            if (item instanceof PersonalContactDto) {
+                list.add(this.createCommonContactTypeInstance(item));
+            }
+        }
+        return list;
+    }
+    
+    /**
+     * Creates a CommonContactType object from data contained in a ContactDto
+     * object.
+     * 
+     * @param contact
+     *            {@link ContactDto}
+     * @return {@link com.xml.schema.bindings.CommonContactType CommonContactType}
+     */
+    public CommonContactType createCommonContactTypeInstance(ContactDto contact) {
+        ObjectFactory f = new ObjectFactory();
+        CommonContactType cct = f.createCommonContactType();
+
+        // Bind primary key
+        cct.setContactId(BigInteger.valueOf(contact.getContactId()));
+        cct.setContactEmail(contact.getContactEmail());
+        cct.setContactName(contact.getContactName());
+        cct.setContactType(ContacttypeType.valueOf(contact.getContactType()));
+        
+        AddressType at = this.getAddress(contact);
+        cct.setAddress(at);
+        return cct;
+    }
+    
     /**
      * Creates a CodeDetailType instance usning a GeneralCodes id, <i>code</i>.
      * The parameter, <i>code</i>, is used to fetch the record from the database
@@ -367,42 +437,7 @@ public class ContactsJaxbFactory extends RMT2Base {
         return at;
     }
 
-    // /**
-    // * Creates a JAXB PersonType instance that is initialized by
-    // * <i>VwPersonAddress</i> data.
-    // *
-    // * @param addr
-    // * {@link com.bean.VwPersonAddress VwPersonAddress}
-    // * @return {@link com.xml.schema.bindings.AddressType AddressType}
-    // */
-    // public AddressType getAddress(VwPersonAddress addr) {
-    // ObjectFactory f = new ObjectFactory();
-    // AddressType at = f.createAddressType();
-    // at.setAddrId(BigInteger.valueOf(addr.getAddrId()));
-    // at.setPersonId(BigInteger.valueOf(addr.getAddrPersonId()));
-    // at.setBusinessId(BigInteger.valueOf(addr.getAddrBusinessId()));
-    // at.setAddr1(addr.getAddr1());
-    // at.setAddr2(addr.getAddr2());
-    // at.setAddr3(addr.getAddr3());
-    // at.setAddr4(addr.getAddr4());
-    // try {
-    // ZipcodeType z = this.getZipcode(addr.getAddrZip());
-    // at.setZip(z);
-    // } catch (ZipcodeException e) {
-    // // Do nothing...
-    // }
-    // at.setZipExt(BigInteger.valueOf(addr.getAddrZipext()));
-    // at.setPhoneCell(addr.getAddrPhoneCell());
-    // at.setPhoneFax(addr.getAddrPhoneFax());
-    // at.setPhoneHome(addr.getAddrPhoneHome());
-    // at.setPhoneMain(addr.getAddrPhoneMain());
-    // at.setPhonePager(addr.getAddrPhonePager());
-    // at.setPhoneWork(addr.getAddrPhoneWork());
-    // at.setPhoneWorkExt(addr.getAddrPhoneExt());
-    // return at;
-    // }
-
-    /**
+      /**
      * Creates a ZipcodeType instance from data obtained from the zipcode table
      * using <i>zipId</i> as the primary key. The parameter, <i>zipId</i>, is
      * used to fetch the record from the database and migrate the data to an
