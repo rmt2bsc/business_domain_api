@@ -833,6 +833,20 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
     }
 
     @Test
+    public void testUpdate_Validation_Contact_Data_Object_Null() {
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.updateContact(null);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals("A Contact data object is required as an input parameter for update operation", e.getMessage());
+        }
+    }
+    
+    @Test
     public void testInsert_With_Business_DTO() {
         // Chose to test common functionality with a person type contact.
         ContactDto mockCommonContactDto = this.createMockBusinessContactDto(0, 0);
