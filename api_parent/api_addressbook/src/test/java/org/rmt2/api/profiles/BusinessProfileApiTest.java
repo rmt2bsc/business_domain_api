@@ -31,6 +31,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -319,6 +320,7 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(busDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(3, results.size());
@@ -385,6 +387,7 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(busDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -422,6 +425,7 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(busDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -460,6 +464,7 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(busDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(2, results.size());
@@ -498,6 +503,7 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(busDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(2, results.size());
@@ -535,6 +541,7 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(busDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertNull(results);
     }
@@ -574,8 +581,8 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         try {
             rc = api.updateContact(mockUpdateBusinessDto);
         } catch (Exception e) {
-            Assert.fail("Business contact update test case failed");
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertEquals(1, rc);
     }
@@ -596,8 +603,8 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         try {
             rc = api.updateContact(mockUpdateBusinessDto);
         } catch (Exception e) {
-            Assert.fail("Business contact insert test case failed");
             e.printStackTrace();
+            Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertEquals(1351, rc);
         Assert.assertEquals(1351, mockUpdateBusinessDto.getContactId());
@@ -620,8 +627,8 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         try {
             rc = api.deleteContact(mockUpdateBusinessDto);
         } catch (Exception e) {
-            Assert.fail("Business contact delete test case failed");
             e.printStackTrace();
+            Assert.fail("Business contact delete test case failed");
         }
         Assert.assertEquals(2, rc);
     }
@@ -641,10 +648,11 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.getContact(busDto);
+            Assert.fail("An exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof ContactsApiException);
             Assert.assertTrue(e.getCause() instanceof BusinessContactQueryDaoException);
-            e.printStackTrace();
         }
     }
     
@@ -662,10 +670,11 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateContact(mockUpdateBusinessDto);
+            Assert.fail("An exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof ContactsApiException);
             Assert.assertTrue(e.getCause() instanceof BusinessContactUpdateDaoException);
-            e.printStackTrace();
         }
     }
     
@@ -690,15 +699,16 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.updateContact(mockUpdateBusinessDto);
+            Assert.fail("An exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof ContactsApiException);
             Assert.assertTrue(e.getCause() instanceof BusinessContactUpdateDaoException);
-            e.printStackTrace();
         }
     }
 
     @Test
-    public void testDeleteDaoException() {
+    public void testDeleteDBException() {
         BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
@@ -711,10 +721,76 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
             api.deleteContact(mockUpdateBusinessDto);
+            Assert.fail("An exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof ContactsApiException);
             Assert.assertTrue(e.getCause() instanceof ContactUpdateDaoException);
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_Null() {
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.deleteContact(null);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
             e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A Contact crtieria instance is required as an input parameter when deleting a contact",
+                    e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_ContactId_Negative() {
+        BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
+                  .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            mockUpdateBusinessDto.setContactId(-1234);
+            api.deleteContact(mockUpdateBusinessDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A valid Contact Id is required when deleting a contact from the database",
+                    e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_ContactId_Zero() {
+        BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
+                  .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            mockUpdateBusinessDto.setContactId(0);
+            api.deleteContact(mockUpdateBusinessDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A valid Contact Id is required when deleting a contact from the database",
+                    e.getMessage());
         }
     }
 }

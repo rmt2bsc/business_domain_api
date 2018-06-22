@@ -12,8 +12,8 @@ import java.util.List;
 import org.dao.contacts.ContactDaoException;
 import org.dao.contacts.ContactsConst;
 import org.dao.mapping.orm.rmt2.Address;
+import org.dao.mapping.orm.rmt2.Business;
 import org.dao.mapping.orm.rmt2.Person;
-import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
@@ -30,6 +30,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
+import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -211,13 +212,49 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         return list;
     }
 
-    private PersonalContactDto createMockContactDto(int contactId, int addressId) {
+    private PersonalContactDto createMockPersonalContactDto(int contactId, int addressId) {
         Person p = this.createSingleMockOrmObject();
         Address a = this.createAddressMockObject();
         p.setPersonId(contactId);
         a.setAddrId(addressId);
         PersonalContactDto perDto = Rmt2AddressBookDtoFactory.getPersonInstance(p, a);
         return perDto;
+    }
+    
+    private Business createBusinessMockObject() {
+        Business b = new Business();
+        b.setBusinessId(1351);
+        b.setLongname("Ticket Master");
+        b.setContactFirstname("roy");
+        b.setContactLastname("terrell");
+        b.setContactPhone("9728882222");
+        b.setContactEmail("royterrell@gte.net");
+        b.setServTypeId(130);
+        b.setEntityTypeId(100);
+        b.setTaxId("75-9847382");
+        b.setWebsite("ticketmaster.com");
+        return b;
+    }
+    
+    private BusinessContactDto createMockBusinessContactDto(int contactId, int addressId) {
+        Business b = this.createBusinessMockObject();
+        b.setBusinessId(contactId);
+        b.setContactFirstname("Dennis");
+        b.setContactLastname("Chambers");
+        b.setContactPhone("8159999999");
+        b.setContactEmail("dennischambers@gmail.com");
+
+        Address a = this.createAddressMockObject();
+        a.setAddrId(addressId);
+        a.setBusinessId(contactId);
+        a.setAddr1("2300 Flora Dr");
+        a.setAddr2("Suite 100");
+        a.setAddr3("P.O. Box 100");
+        a.setZip(75232);
+        a.setZipext(9999);
+
+        BusinessContactDto busDto = Rmt2AddressBookDtoFactory.getBusinessInstance(b, a);
+        return busDto;
     }
 
     private Person createSingleMockOrmObject() {
@@ -277,6 +314,7 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(3, results.size());
@@ -338,6 +376,7 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -376,6 +415,7 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(2, results.size());
@@ -416,6 +456,7 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -453,6 +494,7 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
             results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(2, results.size());
@@ -475,23 +517,48 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
     }
 
     @Test
-    public void testNotFoundlFetch() {
-        PersonalContactDto busDto = Rmt2AddressBookDtoFactory.getNewPersonInstance();
+    public void testFetchDaoException() {
+        ContactDto criteria = Rmt2AddressBookDtoFactory.getNewContactInstance();
         try {
-            when(this.mockPersistenceClient.retrieveList(any(VwBusinessAddress.class)))
-                    .thenReturn(this.mockNotFoundFetchResponse);
+            when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
+                  .thenThrow(DatabaseException.class);
         } catch (ContactDaoException e) {
             e.printStackTrace();
-            Assert.fail("Not Found: person contact fetch test case failed");
+            Assert.fail("All personal contact fetch test case failed");
+        }
+
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.getContact(criteria);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof ContactsApiException);
+            Assert.assertTrue(e.getCause() instanceof ContactDaoException);
+        }
+    }
+    
+    @Test
+    public void testNotFoundlFetch() {
+        ContactDto criteria = Rmt2AddressBookDtoFactory.getNewContactInstance();
+        criteria.setContactName("M");
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
+                    .thenReturn(null);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("common contact fetch using specific selection criteria test case failed");
         }
 
         ContactsApiFactory f = new ContactsApiFactory();
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
-            results = api.getContact(busDto);
+            results = api.getContact(criteria);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertNull(results);
     }
@@ -504,14 +571,15 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
             api.getContact(null);
             Assert.fail("Expected test case to throw an exception");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof ContactsApiException);
             e.printStackTrace();
+            Assert.assertTrue(e instanceof ContactsApiException);
         }
     }
 
     @Test
     public void testUpdate() {
-        PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(1351, 2222);
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.retrieveObject(any(Object.class))).thenReturn(this.mockPersonObject,
                     this.mockAddressObject);
@@ -529,17 +597,18 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
-            rc = api.updateContact(mockUpdatePersonDto);
+            rc = api.updateContact(mockCommonContactDto);
         } catch (Exception e) {
-            Assert.fail("Business contact update test case failed");
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertEquals(1, rc);
     }
 
     @Test
     public void testInsert() {
-        PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(0, 0);
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(0, 0);
         try {
             when(this.mockPersistenceClient.insertRow(any(PersonalContactDto.class), any(Boolean.class)))
                     .thenReturn(1351);
@@ -551,20 +620,21 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
-            rc = api.updateContact(mockUpdatePersonDto);
+            rc = api.updateContact(mockCommonContactDto);
         } catch (Exception e) {
-            Assert.fail("Person contact insert test case failed");
             e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
         }
         Assert.assertEquals(1351, rc);
-        Assert.assertEquals(1351, mockUpdatePersonDto.getContactId());
-        Assert.assertEquals(1351, mockUpdatePersonDto.getAddrId());
+        Assert.assertEquals(1351, mockCommonContactDto.getContactId());
+        Assert.assertEquals(1351, mockCommonContactDto.getAddrId());
 
     }
 
     @Test
     public void testDelete() {
-        PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(1351, 2222);
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class))).thenReturn(1);
         } catch (ContactDaoException e) {
@@ -575,39 +645,20 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         try {
-            rc = api.deleteContact(mockUpdatePersonDto);
+            rc = api.deleteContact(mockCommonContactDto);
         } catch (Exception e) {
-            Assert.fail("Person contact delete test case failed");
             e.printStackTrace();
+            Assert.fail("Common contact delete test case failed");
         }
         Assert.assertEquals(2, rc);
     }
     
-    @Test
-    public void testFetchDaoException() {
-        ContactDto criteria = Rmt2AddressBookDtoFactory.getNewContactInstance();
-        try {
-            when(this.mockPersistenceClient.retrieveList(any(VwCommonContact.class)))
-                  .thenThrow(DatabaseException.class);
-        } catch (ContactDaoException e) {
-            e.printStackTrace();
-            Assert.fail("All personal contact fetch test case failed");
-        }
-
-        ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
-        try {
-            api.getContact(criteria);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof ContactsApiException);
-            Assert.assertTrue(e.getCause() instanceof ContactDaoException);
-            e.printStackTrace();
-        }
-    }
+   
     
     @Test
     public void testInsertDaoException() {
-        PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(0, 0);
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(0, 0);
         try {
             when(this.mockPersistenceClient.insertRow(any(PersonalContactDto.class), any(Boolean.class)))
                  .thenThrow(DatabaseException.class);
@@ -618,17 +669,20 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApiFactory f = new ContactsApiFactory();
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
-            api.updateContact(mockUpdatePersonDto);
+            api.updateContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof ContactsApiException);
             Assert.assertTrue(e.getCause() instanceof ContactDaoException);
-            e.printStackTrace();
+            
         }
     }
     
     @Test
     public void testUpdateDaoException() {
-        PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(1351, 2222);
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.retrieveObject(any(Object.class))).thenReturn(this.mockPersonObject,
                     this.mockAddressObject);
@@ -646,17 +700,19 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApiFactory f = new ContactsApiFactory();
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
-            api.updateContact(mockUpdatePersonDto);
+            api.updateContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof ContactsApiException);
             Assert.assertTrue(e.getCause() instanceof ContactDaoException);
-            e.printStackTrace();
         }
     }
     
     @Test
     public void testDeleteDaoException() {
-        PersonalContactDto mockUpdatePersonDto = this.createMockContactDto(1351, 2222);
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(1351, 2222);
         try {
             when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
                 .thenThrow(DatabaseException.class);
@@ -667,11 +723,290 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         ContactsApiFactory f = new ContactsApiFactory();
         ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
         try {
-            api.deleteContact(mockUpdatePersonDto);
+            api.deleteContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
         } catch (Exception e) {
+            e.printStackTrace();
             Assert.assertTrue(e instanceof ContactsApiException);
             Assert.assertTrue(e.getCause() instanceof ContactDaoException);
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_Null() {
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.deleteContact(null);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
             e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A Contact crtieria instance is required as an input parameter when deleting a contact",
+                    e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_ContactId_Negative() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
+                  .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Common contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            mockCommonContactDto.setContactId(-1234);
+            api.deleteContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A valid Contact Id is required when deleting a contact from the database",
+                    e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_ContactId_Zero() {
+        ContactDto mockCommonContactDto = this.createMockPersonalContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
+                  .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Personal contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            mockCommonContactDto.setContactId(0);
+            api.deleteContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A valid Contact Id is required when deleting a contact from the database",
+                    e.getMessage());
+        }
+    }
+    
+    
+    // TEst business DTO
+    BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(1351, 2222);
+    @Test
+    public void testUpdate_With_Business_DTO() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            Business mockBusinessObject = this.createBusinessMockObject();
+            when(this.mockPersistenceClient.retrieveObject(any(Object.class))).thenReturn(mockBusinessObject,
+                    this.mockAddressObject);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact update test case failed setting up business and address object calls");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(Object.class))).thenReturn(1);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact update test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateContact(mockCommonContactDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Business contact update test case failed");
+        }
+        Assert.assertEquals(1, rc);
+    }
+
+    @Test
+    public void testInsert_With_Business_DTO() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(0, 0);
+        try {
+            when(this.mockPersistenceClient.insertRow(any(PersonalContactDto.class), any(Boolean.class)))
+                    .thenReturn(1351);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Person contact insert test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.updateContact(mockCommonContactDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("An unexpected exception was thrown");
+        }
+        Assert.assertEquals(1351, rc);
+        Assert.assertEquals(1351, mockCommonContactDto.getContactId());
+        Assert.assertEquals(1351, mockCommonContactDto.getAddrId());
+
+    }
+
+    @Test
+    public void testDelete_With_Business_DTO() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class))).thenReturn(1);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Person contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.deleteContact(mockCommonContactDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Common contact delete test case failed");
+        }
+        Assert.assertEquals(2, rc);
+    }
+    
+   
+    
+    @Test
+    public void testInsertDaoException_With_Business_DTO() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(0, 0);
+        try {
+            when(this.mockPersistenceClient.insertRow(any(PersonalContactDto.class), any(Boolean.class)))
+                 .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Person contact insert test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.updateContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof ContactsApiException);
+            Assert.assertTrue(e.getCause() instanceof ContactDaoException);
+        }
+    }
+    
+    @Test
+    public void testUpdateDaoException_With_Business_DTO() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            Business mockBusinessObject = this.createBusinessMockObject();
+            when(this.mockPersistenceClient.retrieveObject(any(Object.class))).thenReturn(mockBusinessObject,
+                    this.mockAddressObject);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact update test case failed setting up business and address object calls");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(any(Object.class)))
+                .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Business contact update test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.updateContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof ContactsApiException);
+            Assert.assertTrue(e.getCause() instanceof ContactDaoException);
+        }
+    }
+    
+    @Test
+    public void testDeleteDaoException_With_Business_DTO() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
+                .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Person contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.deleteContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof ContactsApiException);
+            Assert.assertTrue(e.getCause() instanceof ContactDaoException);
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_ContactId_Negative_With_Business_DTO() {
+        // Chose to test common functionality with a person type contact.
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
+                  .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Common contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            mockCommonContactDto.setContactId(-1234);
+            api.deleteContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A valid Contact Id is required when deleting a contact from the database",
+                    e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDelete_ValidationError_ContactDto_ContactId_Zero_With_Business_DTO() {
+        ContactDto mockCommonContactDto = this.createMockBusinessContactDto(1351, 2222);
+        try {
+            when(this.mockPersistenceClient.deleteRow(any(BusinessContactDto.class)))
+                  .thenThrow(DatabaseException.class);
+        } catch (ContactDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Personal contact delete test case failed setting up update call");
+        }
+        ContactsApiFactory f = new ContactsApiFactory();
+        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            mockCommonContactDto.setContactId(0);
+            api.deleteContact(mockCommonContactDto);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(
+                    "A valid Contact Id is required when deleting a contact from the database",
+                    e.getMessage());
         }
     }
 }
