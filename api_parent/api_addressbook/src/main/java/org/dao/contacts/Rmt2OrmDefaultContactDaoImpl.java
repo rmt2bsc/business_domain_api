@@ -448,9 +448,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
     public int maintainContact(ContactDto contact) throws ContactUpdateDaoException {
         this.validateContactBasicInfo(contact);
 
-//        this.client.beginTrans();
         int rc = 0;
-        boolean error = false;
         try {
             if (contact instanceof PersonalContactDto) {
                 rc = this.maintainPersonalContact((PersonalContactDto) contact);
@@ -462,23 +460,13 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
                 rc = this.maintainCommonContact(contact);
             }
             else {
-                error = false;
                 throw new ContactUpdateDaoException(
                         "The Contact input parameter for update operation is of an invalid runtime type.  Must be an instance of ContactDto, PersonalContactDto or BusinessContactDto");
             }
             return rc;
         } catch (ContactUpdateDaoException e) {
-            error = true;
             throw e;
         } 
-//        finally {
-//            if (error) {
-//                this.client.rollbackTrans();
-//            }
-//            else {
-//                this.client.commitTrans();
-//            }
-//        }
     }
 
     /**
