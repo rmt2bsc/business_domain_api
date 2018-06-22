@@ -9,8 +9,11 @@ import org.dao.contacts.ContactsDaoFactory;
 import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
 
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.util.RMT2Money;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link ContactsApi} for managing Contacts module
@@ -251,9 +254,26 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      * 
      * @throws ContactsApiException
      *             general data access error
+     * @throws InvalidDataException <i>contact</i> is null or <i>contact.contactId</i> is not greater than zero
      */
     @Override
     public int deleteContact(ContactDto contact) throws ContactsApiException {
+        try {
+            Verifier.verifyNotNull(contact);
+        }
+        catch (VerifyException e) {
+            this.msg = "A Contact crtieria instance is required as an input parameter when deleting a contact";
+            throw new InvalidDataException(this.msg);
+        }
+        
+        try {
+           Verifier.verifyPositive(contact.getContactId());
+        }
+        catch (VerifyException e) {
+            this.msg = "A valid Contact Id is required when deleting a contact from the database";
+            throw new InvalidDataException(this.msg);
+        }
+        
         ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
