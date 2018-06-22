@@ -219,6 +219,14 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      */
     @Override
     public int updateContact(ContactDto contact) throws ContactsApiException {
+        try {
+            Verifier.verifyNotNull(contact);
+        }
+        catch (VerifyException e) {
+            this.msg = "A Contact data object is required as an input parameter for update operation";
+            throw new InvalidDataException(this.msg);
+        }
+        
         ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
         dao.setDaoUser(this.apiUser);
         try {
