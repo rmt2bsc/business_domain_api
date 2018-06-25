@@ -447,6 +447,9 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     private int updateCode(GeneralCodes obj) throws LookupUpdateDaoException {
         try {
             GeneralCodes origRec = this.getRmt2Code(obj.getCodeId());
+            if (origRec == null) {
+                throw new NotFoundException("Lookup code targeted for update does not exist [code id=" + obj.getCodeId() + "]");
+            }
             obj.addCriteria(GeneralCodes.PROP_CODEID, obj.getCodeId());
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateCreated(origRec.getDateCreated());
