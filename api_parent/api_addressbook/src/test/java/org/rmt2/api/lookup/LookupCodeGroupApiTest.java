@@ -24,6 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.BaseAddressBookDaoTest;
 
+import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -462,6 +463,33 @@ public class LookupCodeGroupApiTest extends BaseAddressBookDaoTest {
         } catch (Exception e) {
             Assert.assertTrue(e instanceof LookupDataApiException);
             Assert.assertTrue(e.getCause() instanceof LookupDaoException);
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testUpdate_With_NotFoundException() {
+        GeneralCodesGroup mockGeneralCodesGroup = new GeneralCodesGroup();
+        mockGeneralCodesGroup.setCodeGrpId(555);
+        mockGeneralCodesGroup.setDescription("Test Group 3");
+        GeneralCodesGroup mockSelectCriteria = new GeneralCodesGroup();
+        mockSelectCriteria.setCodeGrpId(555);
+        LookupGroupDto mockUpdateDto = this.createMockDto(555, "Modified Group 3");
+        try {
+            when(this.mockPersistenceClient.retrieveObject(eq(mockSelectCriteria))).thenReturn(null);
+        } catch (LookupDaoException e) {
+            e.printStackTrace();
+            Assert.fail("Lookup Code Group update test case failed setting up mock retrieve call");
+        }
+     
+        LookupDataApiFactory f = new LookupDataApiFactory();
+        LookupDataApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.updateGroup(mockUpdateDto);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof NotFoundException);
+            Assert.assertEquals("Lookup group targeted for update does not exist [group id="
+                            + mockUpdateDto.getGrpId() + "]", e.getMessage());
             e.printStackTrace();
         }
     }
