@@ -12,6 +12,7 @@ import org.dto.LookupExtDto;
 import org.dto.LookupGroupDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
+import com.NotFoundException;
 import com.SystemException;
 import com.api.persistence.DatabaseException;
 import com.api.util.RMT2Date;
@@ -330,6 +331,9 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     private int updateGroup(GeneralCodesGroup obj) throws LookupUpdateDaoException {
         try {
             GeneralCodesGroup origRec = this.getRmt2Group(obj.getCodeGrpId());
+            if (origRec ==  null) {
+                throw new NotFoundException("Lookup group targeted for update does not exist [group id=" + obj.getCodeGrpId() + "]");
+            }
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.addCriteria(GeneralCodesGroup.PROP_CODEGRPID, obj.getCodeGrpId());
             obj.setDateCreated(origRec.getDateCreated());
