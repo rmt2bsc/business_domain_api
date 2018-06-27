@@ -573,7 +573,10 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
      */
     @Override
     public String getCityTypDescr() {
-        return this.ct.getDescr();
+        if (this.ct != null) {
+            return this.ct.getDescr();
+        }
+        return null;
     }
 
     /*
