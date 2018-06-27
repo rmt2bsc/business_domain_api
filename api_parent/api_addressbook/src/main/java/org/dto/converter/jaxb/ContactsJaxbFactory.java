@@ -11,6 +11,7 @@ import org.dao.mapping.orm.rmt2.GeneralCodesGroup;
 import org.dao.mapping.orm.rmt2.VwCodes;
 import org.dao.mapping.orm.rmt2.VwStateCountry;
 import org.dao.mapping.orm.rmt2.VwZipcode;
+import org.dao.mapping.orm.rmt2.Zipcode;
 import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
 import org.dto.IpLocationDto;
@@ -836,10 +837,54 @@ public class ContactsJaxbFactory extends RMT2Base {
     // }
 
     /**
+     * Converts a single instance of ZipcodeDto to an instance of ZipcodeType.
+     * 
+     * @param item
+     *            an instance of {@link ZipcodeDto}
+     * @return an instance of {@link ZipcodeType}
+     */
+    public static ZipcodeType getZipShortInstance(ZipcodeDto item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeType z = f.createZipcodeType();
+        z.setZipId(BigInteger.valueOf(item.getId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setAreaCode(item.getAreaCode());
+        z.setCity(item.getCity());
+        z.setState(item.getStateCode());
+        z.setCountyName(item.getCountyName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        z.setCityAliasName(item.getCityAliasName());
+        return z;
+    }
+    
+    
+    /**
+     * Converts a single instance of Zipcode to an instance of ZipcodeType.
+     * 
+     * @param item
+     *            an instance of {@link Zipcode}
+     * @return an instance of {@link ZipcodeType}
+     */
+    public static ZipcodeType getZipShortInstance(Zipcode item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeType z = f.createZipcodeType();
+        z.setZipId(BigInteger.valueOf(item.getZipId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setAreaCode(item.getAreaCode());
+        z.setCity(item.getCity());
+        z.setState(item.getState());
+        z.setCountyName(item.getCountyName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        z.setCityAliasName(item.getCityAliasName());
+        return z;
+    }
+    
+    /**
      * Converts a single instance of VwZipcode to an instance of ZipcodeType.
      * 
      * @param item
-     * @return
+     *            an instance of {@link VwZipcode}
+     * @return an instance of {@link ZipcodeType}
      */
     public static ZipcodeType getZipShortInstance(VwZipcode item) {
         ObjectFactory f = new ObjectFactory();
@@ -886,9 +931,108 @@ public class ContactsJaxbFactory extends RMT2Base {
     }
 
     /**
+     * Converts a single instance of ZipcodeDto to an instance of ZipcodeType in
+     * full format.
      * 
      * @param item
-     * @return
+     *            an instance of {@link ZipcodeDto}
+     * @return an instance of {@link ZipcodeFullType}
+     */
+    public static ZipcodeFullType getZipFullTypeInstance(ZipcodeDto item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeFullType z = f.createZipcodeFullType();
+        z.setZipId(BigInteger.valueOf(item.getId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setCity(item.getCity());
+        z.setState(item.getStateCode());
+        z.setAreaCode(item.getAreaCode());
+        z.setCityAliasName(item.getCityAliasName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        CitytypeType ctt = f.createCitytypeType();
+        ctt.setCityTypeId(item.getCityTypeId());
+        ctt.setCityTypeDesc(item.getCityTypDescr());
+        z.setCityTypeId(ctt);
+        z.setCountyName(item.getCountyName());
+        z.setCountyFips(item.getCountyFips());
+        TimezoneType tt = f.createTimezoneType();
+        tt.setTimezoneId(BigInteger.valueOf(item.getTimeZoneId()));
+        tt.setTimeszoneDesc(null);
+        z.setTimeZoneId(tt);
+        z.setDayLightSaving(item.getDayLightSaving());
+        z.setLatitude(Double.valueOf(item.getLatitude()));
+        z.setLongitude(Double.valueOf(item.getLongitude()));
+        z.setElevation(Double.valueOf(item.getElevation()));
+        z.setMsa(Double.valueOf(item.getMsa()));
+        z.setPmsa(Double.valueOf(item.getPmsa()));
+        z.setCbsa(Double.valueOf(item.getCbsa()));
+        z.setCbsaDiv(Double.valueOf(item.getCbsaDiv()));
+        z.setPersonsPerHousehold(Double.valueOf(item.getPersonsPerHousehold()));
+        z.setZipcodePopulation(Double.valueOf(item.getZipPopulation()));
+        z.setCountiesArea(Double.valueOf(item.getCountiesArea()));
+        z.setHouseholdsPerZipcode(Double.valueOf(item.getHouseholdsPerZipcode()));
+        z.setWhitePopulation(Double.valueOf(item.getWhitePopulation()));
+        z.setBlackPopulation(Double.valueOf(item.getBlackPopulation()));
+        z.setHispanicPopulation(Double.valueOf(item.getHispanicPopulation()));
+        z.setIncomePerHousehold(Double.valueOf(item.getIncomePerHousehold()));
+        z.setAverageHouseValue(Double.valueOf(item.getAverageHouseValue()));
+        return z;
+    }
+    
+    /**
+     * Converts a single instance of Zipcode to an instance of ZipcodeType in
+     * full format.
+     * 
+     * @param item
+     *            an instance of {@link Zipcode}
+     * @return an instance of {@link ZipcodeFullType}
+     */
+    public static ZipcodeFullType getZipFullTypeInstance(Zipcode item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeFullType z = f.createZipcodeFullType();
+        z.setZipId(BigInteger.valueOf(item.getZipId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setCity(item.getCity());
+        z.setState(item.getState());
+        z.setAreaCode(item.getAreaCode());
+        z.setCityAliasName(item.getCityAliasName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        CitytypeType ctt = f.createCitytypeType();
+        ctt.setCityTypeId(item.getCityTypeId());
+        ctt.setCityTypeDesc("Unknown");
+        z.setCityTypeId(ctt);
+        z.setCountyName(item.getCountyName());
+        z.setCountyFips(item.getCountyFips());
+        TimezoneType tt = f.createTimezoneType();
+        tt.setTimezoneId(BigInteger.valueOf(item.getTimeZoneId()));
+        tt.setTimeszoneDesc("Unknown");
+        z.setTimeZoneId(tt);
+        z.setDayLightSaving(item.getDayLightSaving());
+        z.setLatitude(Double.valueOf(item.getLatitude()));
+        z.setLongitude(Double.valueOf(item.getLongitude()));
+        z.setElevation(Double.valueOf(item.getElevation()));
+        z.setMsa(Double.valueOf(item.getMsa()));
+        z.setPmsa(Double.valueOf(item.getPmsa()));
+        z.setCbsa(Double.valueOf(item.getCbsa()));
+        z.setCbsaDiv(Double.valueOf(item.getCbsaDiv()));
+        z.setPersonsPerHousehold(Double.valueOf(item.getPersonsPerHousehold()));
+        z.setZipcodePopulation(Double.valueOf(item.getZipcodePopulation()));
+        z.setCountiesArea(Double.valueOf(item.getCountiesArea()));
+        z.setHouseholdsPerZipcode(Double.valueOf(item.getHouseholdsPerZipcode()));
+        z.setWhitePopulation(Double.valueOf(item.getWhitePopulation()));
+        z.setBlackPopulation(Double.valueOf(item.getBlackPopulation()));
+        z.setHispanicPopulation(Double.valueOf(item.getHispanicPopulation()));
+        z.setIncomePerHousehold(Double.valueOf(item.getIncomePerHousehold()));
+        z.setAverageHouseValue(Double.valueOf(item.getAverageHouseValue()));
+        return z;
+    }
+    
+    /**
+     * Converts a single instance of VwZipcode to an instance of ZipcodeFullType
+     * in full format.
+     * 
+     * @param item
+     *            an instance of {@link VwZipcode}
+     * @return an instance of {@link ZipcodeFullType}
      */
     public static ZipcodeFullType getZipFullTypeInstance(VwZipcode item) {
         ObjectFactory f = new ObjectFactory();
