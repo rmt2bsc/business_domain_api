@@ -524,7 +524,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param countryCode
      * @return
      */
-    public CountryType createCountryTypeInstance(int id, String countryName, String countryCode) {
+    public static final CountryType createCountryTypeInstance(int id, String countryName, String countryCode) {
         ObjectFactory f = new ObjectFactory();
         CountryType c = f.createCountryType();
         c.setCountryCode(countryCode);
@@ -532,19 +532,39 @@ public class ContactsJaxbFactory extends RMT2Base {
         c.setCountryId(BigInteger.valueOf(id));
         return c;
     }
+    
+    /**
+     * 
+     * @param stateId
+     * @param stateName
+     * @param stateCode
+     * @param countryId
+     * @param countryName
+     * @return
+     */
+    public static final StateType createStateTypeInstance(int stateId, String stateName, 
+            String stateCode, int countryId, String countryName) {
+        StateType o = createStateTypeInstance();
+        o.setStateId(BigInteger.valueOf(stateId));
+        o.setCountryId(BigInteger.valueOf(countryId));
+        o.setStateCode(stateCode);
+        o.setStateName(stateName);
+        o.setCountryName(countryName);
+        return o;
+    }
 
     /**
      * 
      * @param dto
      * @return
      */
-    public List<StateType> getStateType(List<VwStateCountry> dto) {
+    public static final List<StateType> getStateType(List<VwStateCountry> dto) {
         if (dto == null) {
             return null;
         }
         List<StateType> stateList = new ArrayList<StateType>();
         for (VwStateCountry item : dto) {
-            StateType state = this.getStateType(item);
+            StateType state = getStateType(item);
             stateList.add(state);
         }
         return stateList;
@@ -555,11 +575,11 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param dto
      * @return
      */
-    public StateType getStateType(VwStateCountry dto) {
+    public static final StateType getStateType(VwStateCountry dto) {
         if (dto == null) {
             return null;
         }
-        StateType state = this.getStateType();
+        StateType state = createStateTypeInstance();
         state.setCountryId(BigInteger.valueOf(dto.getCountryId()));
         state.setCountryName(dto.getCountryName());
         state.setStateCode(dto.getStateCode());
@@ -572,7 +592,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * 
      * @return
      */
-    public StateType getStateType() {
+    public static final StateType createStateTypeInstance() {
         ObjectFactory f = new ObjectFactory();
         StateType state = f.createStateType();
         return state;
@@ -696,7 +716,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param item
      * @return
      */
-    public static StateType getStateTypeInstance(VwStateCountry item) {
+    public static StateType createStateTypeInstance(VwStateCountry item) {
         ObjectFactory f = new ObjectFactory();
         StateType st = f.createStateType();
         st.setCountryId(BigInteger.valueOf(item.getCountryId()));
@@ -711,10 +731,10 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param items
      * @return
      */
-    public static List<StateType> getStateTypeInstance(List<VwStateCountry> items) {
+    public static List<StateType> createStateTypeInstance(List<VwStateCountry> items) {
         List<StateType> list = new ArrayList<StateType>();
         for (VwStateCountry item : items) {
-            StateType st = ContactsJaxbFactory.getStateTypeInstance(item);
+            StateType st = ContactsJaxbFactory.createStateTypeInstance(item);
             list.add(st);
         }
         return list;
