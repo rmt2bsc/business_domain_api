@@ -606,19 +606,15 @@ public class ContactsJaxbFactory extends RMT2Base {
     public static IpDetails getIpDetailsInstance(IpLocationDto loc) {
         ObjectFactory f = new ObjectFactory();
         IpDetails ip = f.createIpDetails();
-        // TODO: Correct DAO to where DTO and LDAP data structures are in sync
-
-        // ip.setIpId(String.valueOf(loc.getLocId()));
-        // ip.setIpFrom(String.valueOf(loc.get));
-        // ip.setIpTo(String.valueOf(loc.getIpTo()));
-        // ip.setCountryCode(loc.getCountryCode());
-        // ip.setCountryName(loc.getCountryName());
-        // ip.setRegion(loc.getRegion());
-        // ip.setCity(loc.getCity());
-        // ip.setLatitude(String.valueOf(loc.getLatitude()));
-        // ip.setLongitude(String.valueOf(loc.getLongitude()));
-        // ip.setZip(loc.getZipcode());
-        // ip.setTimezone(loc.getTimezone());
+        ip.setIpId(String.valueOf(loc.getIpRangeId()));
+        ip.setIpFrom(String.valueOf(loc.getIpFrom()));
+        ip.setIpTo(String.valueOf(loc.getIpTo()));
+        ip.setCountryName(loc.getCountry());
+        ip.setRegion(loc.getRegion());
+        ip.setCity(loc.getCity());
+        ip.setLatitude(String.valueOf(loc.getLatitude()));
+        ip.setLongitude(String.valueOf(loc.getLongitude()));
+        ip.setZip(loc.getPostalCode());
         return ip;
     }
 

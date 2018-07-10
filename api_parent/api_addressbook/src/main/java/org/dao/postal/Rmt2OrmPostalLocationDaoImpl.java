@@ -282,26 +282,4 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements PostalL
         IpLocationDto dto = Rmt2AddressBookDtoFactory.getIpLocationInstance(loc);
         return dto;
     }
-    // public IpLocationDto fetchIpInfo(long ip) throws PostalDaoException {
-    // IpLocation loc = null;
-    // try {
-    // IpBlock blk = new IpBlock();
-    // blk.addCustomCriteria(ip + ">= ip_start and " + ip + " <= ip_end");
-    // blk = (IpBlock) this.client.retrieveObject(blk);
-    // if (blk == null) {
-    // return null;
-    // }
-    // loc = new IpLocation();
-    // loc.addCriteria(IpLocation.PROP_LOCID, blk.getIpLoc());
-    // loc = (IpLocation) this.client.retrieveObject(loc);
-    // } catch (DatabaseException e) {
-    // this.msg = "Database access error occurred while fetching IP Location
-    // record by IP number: " + ip;
-    // throw new IpDaoException(this.msg, e);
-    // }
-    //
-    // IpLocationDto dto = Rmt2AddressBookDtoFactory.getIpLocationInstance(loc);
-    // return dto;
-    // }
-
 }
