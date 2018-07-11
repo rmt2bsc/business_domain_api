@@ -320,7 +320,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
         mockAddressBookResponse.getProfile().getBusinessContacts().add(profile);
 
         // Mock business type web service update response data
-        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder.create().withStatus(true)
+        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder.create().withStatus("200")
                 .withReturnCode(1).withMessage("SUCCESS").withDetailMessage("Business Type update complete").build();
 
         when(this.mockMessageRouterHelper.routeXmlMessage(

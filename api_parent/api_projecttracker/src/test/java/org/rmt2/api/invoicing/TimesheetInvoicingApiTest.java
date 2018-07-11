@@ -94,7 +94,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
     private AccountingTransactionResponse createResponse(int invoiceId) {
         ObjectFactory jaxbObjFactory = new ObjectFactory();
         AccountingTransactionResponse mockResponse = jaxbObjFactory.createAccountingTransactionResponse();
-        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder.create().withStatus(true)
+        ReplyStatusType mockReplyStatusType = ReplyStatusTypeBuilder.Builder.create().withStatus("200")
                 .withReturnCode(invoiceId)
                 .withMessage("SUCCESS")
                 .withDetailMessage("Timesheet Invoice operation completed successfully " + invoiceId)
