@@ -48,19 +48,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
 
     private InventoryDao dao;
 
-    /**
-     * Creates a InventoryApiImpl object assoicated with the default
-     * InventoryDaoFactory object.
-     */
-    public InventoryApiImpl() {
-        super();
-        this.dao = this.factory.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-    }
 
     /**
-     * Creates a InventoryApiImpl object assoicated with the default
-     * InventoryDaoFactory object.
+     * Creates a InventoryApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      */
@@ -68,6 +59,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         super();
         this.dao = this.factory.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
     }
 
     /**
@@ -101,7 +93,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Criteria object is required", e);
         }
-        dao.setDaoUser(this.apiUser);
         List<ItemMasterDto> results;
         try {
             results = dao.fetch(criteria);
@@ -314,8 +305,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * org.modules.inventory.InventoryApi#getItemBySerialNo(java.lang.String)
      */
     @Override
-    public List<ItemMasterDto> getItemBySerialNo(String serialNo)
-            throws InventoryApiException {
+    public List<ItemMasterDto> getItemBySerialNo(String serialNo) throws InventoryApiException {
         if (RMT2String2.isEmpty(serialNo)) {
             throw new InvalidDataException("Item Serial No. is required");
         }
@@ -780,8 +770,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getVendorAssignItems(int)
      */
     @Override
-    public List<VendorItemDto> getVendorAssignItems(Integer vendorId)
-            throws InventoryApiException {
+    public List<VendorItemDto> getVendorAssignItems(Integer vendorId) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
         }
@@ -823,8 +812,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getVendorUnassignItems(int)
      */
     @Override
-    public List<ItemMasterDto> getVendorUnassignItems(Integer vendorId)
-            throws InventoryApiException {
+    public List<ItemMasterDto> getVendorUnassignItems(Integer vendorId) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
         }
@@ -867,8 +855,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getItemAssociations(int)
      */
     @Override
-    public List<ItemAssociationDto> getItemAssociations(Integer itemId)
-            throws InventoryApiException {
+    public List<ItemAssociationDto> getItemAssociations(Integer itemId) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(itemId);    
         }
@@ -897,10 +884,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg, e);
             throw new InventoryApiException(e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null) {
             msgBuf.append("Item associations were not found by item id, ");
@@ -1025,243 +1008,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         }
     }
 
-    // public int updateItemMaster(ItemMasterDto item) throws InventoryException
-    // {
-    // // Perform updates
-    // InventoryDao dao = this.factory.createRmt2OrmDao();
-    // dao.setDaoUser(this.apiUser);
-    // int rc = 0;
-    // try {
-    // dao.beginTrans();
-    // rc = this.updateItemMaster(item, dao);
-    // dao.commitTrans();
-    // return rc;
-    // } catch (Exception e) {
-    // dao.rollbackTrans();
-    // this.msg = "Unable to process inventory item master updates.";
-    // logger.error(this.msg, e);
-    // throw new InventoryException(this.msg, e);
-    // } finally {
-    // dao.close();
-    // dao = null;
-    // }
-
-    // this.validateItemMaster(item);
-    // this.computeItemRetail(item);
-    // boolean newItem = (item.getItemId() == 0);
-    // ItemMaster newITem = null;
-    // ItemMasterDto imDto = Rmt2InventoryDtoFactory
-    // .createItemMasterInstance(newITem);
-    //
-    // // Get old version of item record and apply changes
-    // if (!newItem) {
-    // imDto = this.getItemById(item.getItemId());
-    // if (imDto == null) {
-    // this.msg = "Inventory item update error: Item id, "
-    // + item.getItemId() + ", does not exist in the system";
-    // logger.error(this.msg);
-    // throw new InventoryException(this.msg);
-    // }
-    // }
-    //
-    // // Capute the original override flag
-    // int oldOverrideRetailFlag = imDto.getOverrideRetail();
-    //
-    // // add delta to old inventory item master version
-    // imDto.setItemTypeId(item.getItemTypeId());
-    // imDto.setVendorId(item.getVendorId());
-    // imDto.setItemName(item.getItemName());
-    // imDto.setVendorItemNo(item.getVendorItemNo());
-    // imDto.setItemSerialNo(item.getItemSerialNo());
-    // imDto.setQtyOnHand(item.getQtyOnHand());
-    // imDto.setUnitCost(item.getUnitCost());
-    // imDto.setMarkup(item.getMarkup());
-    // imDto.setRetailPrice(item.getRetailPrice());
-    // imDto.setOverrideRetail(item.getOverrideRetail());
-    // imDto.setActive(item.getActive());
-    //
-    // // Perform updates
-    // InventoryDao dao = this.factory.createRmt2OrmDao();
-    // dao.setDaoUser(this.apiUser);
-    // int rc;
-    // try {
-    // dao.beginTrans();
-    // // Update Item master
-    // rc = dao.maintain(imDto);
-    //
-    // // Update statuses
-    // ItemMasterStatusHistDto imsh = null;
-    // if (newItem) {
-    // // Indicate that item is in service
-    // this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_INSRVC);
-    // }
-    // else {
-    // // Get item master's current status
-    // imsh = dao.fetchCurrentItemStatusHistory(imDto.getItemId());
-    // if (imsh == null) {
-    // this.msg = "Unable to find status history for inventory item id, "
-    // + imDto.getItemId() + ".   History not available.";
-    // logger.error(this.msg);
-    // throw new RMT2Exception(this.msg);
-    // }
-    // // Change the most recent item status, which should be
-    // // 'Replaced'
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_REPLACE);
-    //
-    // // User has requested system to activate vendor item override.
-    // if (imDto.getOverrideRetail() == InventoryConst.ITEM_OVERRIDE_YES
-    // && oldOverrideRetailFlag == InventoryConst.ITEM_OVERRIDE_NO) {
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_OVERRIDE_ACTIVE);
-    // }
-    //
-    // // User has requested system to deactivate vendor item override.
-    // if (imDto.getOverrideRetail() == InventoryConst.ITEM_OVERRIDE_NO
-    // && oldOverrideRetailFlag == InventoryConst.ITEM_OVERRIDE_YES) {
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_OVERRIDE_INACTIVE);
-    // }
-    // }
-    //
-    // // Place Item in "Available" if quantity is greater than zero.
-    // // Otherwise, 'Out of Stock'.
-    // int itemStatusId = imDto.getQtyOnHand() <= 0 ?
-    // InventoryConst.ITEM_STATUS_OUTSTOCK
-    // : InventoryConst.ITEM_STATUS_AVAIL;
-    // imsh = this.changeItemStatus(dao, imDto, itemStatusId);
-    //
-    // // If item is no longer active, then put in out servive status
-    // if (!newItem) {
-    // if (imDto.getActive() == 0) {
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_OUTSRVC);
-    // }
-    // }
-    // dao.commitTrans();
-    // return rc;
-    // } catch (Exception e) {
-    // dao.rollbackTrans();
-    // this.msg = "Unable to process inventory item master updates.";
-    // logger.error(this.msg, e);
-    // throw new InventoryException(this.msg, e);
-    // } finally {
-    // dao.close();
-    // dao = null;
-    // }
-    // }
-
-    // private int updateItemMaster(ItemMasterDto item, InventoryDao dao)
-    // throws InventoryException {
-    // this.computeItemRetail(item);
-    // boolean newItem = (item.getItemId() == 0);
-    // ItemMaster newITem = null;
-    // ItemMasterDto imDto = Rmt2InventoryDtoFactory
-    // .createItemMasterInstance(newITem);
-    //
-    // // Try to use shared connection if DAO is null
-    // if (dao == null) {
-    // if (this.getSharedDao().getClient() == null) {
-    // this.msg = "Inventory item update error: DAO object is invalid";
-    // logger.error(this.msg);
-    // throw new InventoryException(this.msg);
-    // }
-    // dao = this.factory.createRmt2OrmDao(this.getSharedDao());
-    // dao.setDaoUser(this.apiUser);
-    // }
-    //
-    // // Get old version of item record and apply changes
-    // if (!newItem) {
-    // imDto = this.getItemById(item.getItemId());
-    // if (imDto == null) {
-    // this.msg = "Inventory item update error: Item id, "
-    // + item.getItemId() + ", does not exist in the system";
-    // logger.error(this.msg);
-    // throw new InventoryException(this.msg);
-    // }
-    // }
-    //
-    // // Capute the original override flag
-    // int oldOverrideRetailFlag = imDto.getOverrideRetail();
-    //
-    // // add delta to old inventory item master version
-    // imDto.setItemTypeId(item.getItemTypeId());
-    // imDto.setVendorId(item.getVendorId());
-    // imDto.setItemName(item.getItemName());
-    // imDto.setVendorItemNo(item.getVendorItemNo());
-    // imDto.setItemSerialNo(item.getItemSerialNo());
-    // imDto.setQtyOnHand(item.getQtyOnHand());
-    // imDto.setUnitCost(item.getUnitCost());
-    // imDto.setMarkup(item.getMarkup());
-    // imDto.setRetailPrice(item.getRetailPrice());
-    // imDto.setOverrideRetail(item.getOverrideRetail());
-    // imDto.setActive(item.getActive());
-    //
-    // // Perform updates
-    // int rc;
-    // try {
-    // // Update Item master
-    // rc = dao.maintain(imDto);
-    //
-    // // Update statuses
-    // ItemMasterStatusHistDto imsh = null;
-    // if (newItem) {
-    // // Indicate that item is in service
-    // this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_INSRVC);
-    // }
-    // else {
-    // // Get item master's current status
-    // imsh = dao.fetchCurrentItemStatusHistory(imDto.getItemId());
-    // if (imsh == null) {
-    // this.msg = "Unable to find status history for inventory item id, "
-    // + imDto.getItemId() + ".   History not available.";
-    // logger.error(this.msg);
-    // throw new RMT2Exception(this.msg);
-    // }
-    // // Change the most recent item status, which should be
-    // // 'Replaced'
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_REPLACE);
-    //
-    // // User has requested system to activate vendor item override.
-    // if (imDto.getOverrideRetail() == InventoryConst.ITEM_OVERRIDE_YES
-    // && oldOverrideRetailFlag == InventoryConst.ITEM_OVERRIDE_NO) {
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_OVERRIDE_ACTIVE);
-    // }
-    //
-    // // User has requested system to deactivate vendor item override.
-    // if (imDto.getOverrideRetail() == InventoryConst.ITEM_OVERRIDE_NO
-    // && oldOverrideRetailFlag == InventoryConst.ITEM_OVERRIDE_YES) {
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_OVERRIDE_INACTIVE);
-    // }
-    // }
-    //
-    // // Place Item in "Available" if quantity is greater than zero.
-    // // Otherwise, 'Out of Stock'.
-    // int itemStatusId = imDto.getQtyOnHand() <= 0 ?
-    // InventoryConst.ITEM_STATUS_OUTSTOCK
-    // : InventoryConst.ITEM_STATUS_AVAIL;
-    // imsh = this.changeItemStatus(dao, imDto, itemStatusId);
-    //
-    // // If item is no longer active, then put in out servive status
-    // if (!newItem) {
-    // if (imDto.getActive() == 0) {
-    // imsh = this.changeItemStatus(dao, imDto,
-    // InventoryConst.ITEM_STATUS_OUTSRVC);
-    // }
-    // }
-    // return rc;
-    // } catch (Exception e) {
-    // this.msg = "Unable to process inventory item master updates.";
-    // logger.error(this.msg, e);
-    // throw new InventoryException(this.msg, e);
-    // }
-    // }
-
     /**
      * Validates an inventory item master object.
      * 
@@ -1281,8 +1027,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *            an instance of {@link ItemMasterDto}
      * @throws InventoryException
      */
-    protected void validateItemMaster(ItemMasterDto item)
-            throws InventoryApiException {
+    protected void validateItemMaster(ItemMasterDto item) throws InventoryApiException {
         if (item == null) {
             this.msg = "Item Master DTO cannot be null";
             logger.error(this.msg);
@@ -1367,8 +1112,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *            an instance of {@link ItemMasterDto}
      * @throws InventoryException
      */
-    private void computeItemRetail(ItemMasterDto item)
-            throws InventoryApiException {
+    private void computeItemRetail(ItemMasterDto item) throws InventoryApiException {
         double retailPrice = 0;
 
         // Determine if user requests us to override retail calculations.
@@ -1405,10 +1149,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -1470,6 +1210,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         } catch (CreditorApiException e) {
             throw new InventoryApiException(e);
         } finally {
+            api.close();
             api = null;
         }
         if (cred == null) {
@@ -1538,10 +1279,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -1675,10 +1412,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -1730,10 +1463,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -1818,10 +1547,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -1947,7 +1672,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         int count = 0;
         // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
-        // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
                 ItemMasterDto imDto = this.getItemById(items[ndx]);
@@ -1976,18 +1700,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     throw new InventoryApiException(this.msg, e);
                 }
             }
-            // dao.commitTrans();
             return count;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Unable to persist vendor id/item master association to table, vendor_items.  The assignment of items to vendor is aborted";
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -2008,8 +1726,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @throws ItemMasterException
      */
     @Override
-    public int removeInventoryOverride(Integer vendorId, Integer[] items)
-            throws InventoryApiException {
+    public int removeInventoryOverride(Integer vendorId, Integer[] items) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
         }
@@ -2070,40 +1787,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     throw new InventoryApiException(this.msg, e);
                 }
             }
-            // dao.commitTrans();
             return count;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Unable to persist vendor id/item master association to table, vendor_items.  The assignment of items to vendor is aborted";
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
-    // /**
-    // * Changes the status of an inventory item.
-    // *
-    // * @param item
-    // * An instance of {@link ItemMasterDto} which is the item master
-    // * object targeted for the satus change.
-    // * @param newItemStatusId
-    // * The id of the item status.
-    // * @return The {@link ItemMasterStatusHistDto} object which represents
-    // * newItemStatusId
-    // * @throws InventoryException
-    // * If newItemStatusId is out of sequence, if a database error
-    // * occurs, or a system error occurs.
-    // */
-    // private ItemMasterStatusHistDto changeItemStatus(ItemMasterDto item,
-    // int newItemStatusId) throws InventoryException {
-    // InventoryDao dao = this.factory.createRmt2OrmDao();
-    // dao.setDaoUser(this.apiUser);
-    // return this.changeItemStatus(dao, item, newItemStatusId);
-    // }
 
     /**
      * Changes the status of an inventory item which the database transaction
@@ -2122,16 +1813,15 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *             If newItemStatusId is out of sequence, if a database error
      *             occurs, or a system error occurs.
      */
-    protected ItemMasterStatusHistDto changeItemStatus(ItemMasterDto item,
-            int newItemStatusId) throws InventoryApiException {
+    protected ItemMasterStatusHistDto changeItemStatus(ItemMasterDto item, int newItemStatusId)
+            throws InventoryApiException {
         ItemMasterStatusHistDto imsh = null;
 
         dao.setDaoUser(this.apiUser);
         // Validate newItemStatusId
         List<ItemMasterStatusDto> imsList;
         try {
-            ItemMasterStatusDto imsCriteria = Rmt2InventoryDtoFactory
-                    .createItemStatusInstance(null);
+            ItemMasterStatusDto imsCriteria = Rmt2InventoryDtoFactory.createItemStatusInstance(null);
             imsCriteria.setEntityId(newItemStatusId);
             imsList = dao.fetch(imsCriteria);
         } catch (InventoryDaoException e) {
@@ -2173,58 +1863,4 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             throw new InventoryApiException(this.msg, e);
         }
     }
-
-    // protected ItemMasterStatusHistDto changeItemStatus(InventoryDao dao,
-    // ItemMasterDto item, int newItemStatusId) throws InventoryException {
-    // ItemMasterStatusHistDto imsh = null;
-    //
-    // // Validate newItemStatusId
-    // List<ItemMasterStatusDto> imsList;
-    // try {
-    // ItemMasterStatusDto imsCriteria = Rmt2InventoryDtoFactory
-    // .createItemStatusInstance(null);
-    // imsCriteria.setEntityId(newItemStatusId);
-    // imsList = dao.fetch(imsCriteria);
-    // } catch (InventoryDaoException e) {
-    // this.msg = "Problem querying for new Item status";
-    // logger.error(this.msg);
-    // throw new InventoryException(this.msg);
-    // }
-    // if (imsList == null) {
-    // this.msg = "New item status id does not exist in the system: "
-    // + newItemStatusId;
-    // logger.error(this.msg);
-    // throw new InventoryException(this.msg);
-    // }
-    // if (imsList.size() > 1) {
-    // this.msg =
-    // "New item status id query return multiple items in the result set.  Should only be one element";
-    // logger.error(this.msg);
-    // throw new InventoryException(this.msg);
-    // }
-    //
-    // try {
-    // // End current item status
-    // imsh = dao.fetchCurrentItemStatusHistory(item.getItemId());
-    // if (imsh != null) {
-    // dao.maintain(imsh);
-    // }
-    //
-    // // Create new item status
-    // imsh = Rmt2InventoryDtoFactory
-    // .createItemStatusHistoryInstance(null);
-    // imsh.setItemId(item.getItemId());
-    // imsh.setItemStatusId(newItemStatusId);
-    // imsh.setUnitCost(item.getUnitCost());
-    // imsh.setMarkup(item.getMarkup());
-    // dao.maintain(imsh);
-    // return imsh;
-    // } catch (Exception e) {
-    // this.msg =
-    // "Inventory item status history change failed due to a Database or System error";
-    // logger.error(this.msg, e);
-    // throw new InventoryException(this.msg, e);
-    // }
-    // }
-
 }
