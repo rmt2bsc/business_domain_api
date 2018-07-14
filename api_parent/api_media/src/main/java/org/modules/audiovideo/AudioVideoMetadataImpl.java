@@ -8,7 +8,6 @@ import org.dao.audiovideo.AudioVideoDaoFactory;
 import org.dto.ArtistDto;
 import org.dto.ProjectDto;
 import org.dto.TracksDto;
-import org.modules.MediaConstants;
 
 import com.InvalidDataException;
 import com.RMT2Constants;
@@ -31,19 +30,10 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
     private AudioVideoDaoFactory daoFact;
     private AudioVideoDao dao;
 
-    /**
-     * Create a AudioVideoMetadataImpl using the default application name,
-     * {@link MediaConstants#APP_NAME}
-     */
-    AudioVideoMetadataImpl() {
-        super(MediaConstants.APP_NAME);
-        this.dao = this.daoFact.createRmt2OrmDaoInstance(MediaConstants.APP_NAME);
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Create a AudioVideoMetadataImpl using the specified application name.
+     * Creates a AudioVideoMetadataImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      *            the application name
@@ -52,6 +42,7 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         super(appName);
         this.dao = this.daoFact.createRmt2OrmDaoInstance(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
     }
 
     /**

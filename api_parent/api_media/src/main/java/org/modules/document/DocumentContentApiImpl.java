@@ -9,7 +9,6 @@ import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.MimeTypeDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
-import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.services.document.directory.DirectoryInboundDocumentListener;
 
@@ -37,13 +36,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
 
     private static DirectoryInboundDocumentListener MEDIA_DIR_LISTENER;
 
-    /**
-     * Creates an DocumentContentApiImpl which defaults to saving media to the
-     * database.
-     */
-    protected DocumentContentApiImpl() {
-        this(MediaConstants.DEFAULT_CONTEXT_NAME);
-    }
+
 
     /**
      * Creates an DocumentContentApiImpl identified application and defaults to
