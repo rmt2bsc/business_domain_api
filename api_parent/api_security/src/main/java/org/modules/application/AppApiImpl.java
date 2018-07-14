@@ -7,7 +7,6 @@ import org.dao.application.AppDao;
 import org.dao.application.AppDaoException;
 import org.dao.application.AppDaoFactory;
 import org.dto.ApplicationDto;
-import org.modules.SecurityConstants;
 
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
@@ -28,19 +27,10 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
     private AppDaoFactory daoFact;
     private AppDao dao;
 
-    /**
-     * Create a AppApiImpl using the default application name,
-     * {@link MediaConstants#APP_NAME}
-     */
-    AppApiImpl() {
-        super(SecurityConstants.APP_NAME);
-        this.dao = this.daoFact.createRmt2OrmDao(SecurityConstants.APP_NAME);
-        this.setSharedDao(this.dao);
-        logger.info("AppApi is initialized by default constructor");
-    }
 
     /**
-     * Create a AudioVideoMetadataImpl using the specified application name.
+     * Creates a AppApiImpl object in which the configuration is identified by
+     * the name of a given application.
      * 
      * @param appName
      *            the application name
@@ -49,6 +39,7 @@ class AppApiImpl extends AbstractTransactionApiImpl implements AppApi {
         super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
         logger.info("AppApi is initialized by application name, " + appName);
     }
 

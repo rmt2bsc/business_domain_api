@@ -9,7 +9,6 @@ import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
 import org.dto.UserDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
-import org.modules.SecurityConstants;
 import org.modules.SecurityModuleException;
 import org.modules.users.UserApi;
 import org.modules.users.UserApiException;
@@ -35,18 +34,10 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
 
     private RoleDao dao;
 
-    /**
-     * Create an AppRoleApiImpl object that initializes the DAO factory.
-     */
-    UserAppRoleApiImpl() {
-        super(SecurityConstants.APP_NAME);
-        this.dao = RoleDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
-        this.setSharedDao(this.dao);
-        logger.info("UserAppRoleApi is initialized by default constructor");
-    }
 
     /**
-     * Create a AppRoleApiImpl using the specified application name.
+     * Creates a UserAppRoleApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      *            the application name
@@ -93,9 +84,6 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         } catch (RoleDaoException e) {
             this.msg = "Unable to fetch User Application Roles using custom criteria";
             throw new AppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
   
@@ -131,9 +119,6 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
             this.msg = "Unable to fetch assinged Application Roles for user, " + criteria.getUsername();
             logger.error(this.msg);
             throw new UserAppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -169,9 +154,6 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
             this.msg = "Unable to fetch revoked application roles for user loginId, " + criteria.getLoginUid();
             logger.error(this.msg);
             throw new UserAppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -223,9 +205,6 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
                     + ", with new set of roles for application, "
                     + userAppDetails.getApplicationId();
             throw new UserAppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -278,9 +257,6 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
             this.msg = "Unable to remove application roles for user, " + userName + ": " + appRoleIdArray;
             logger.error(this.msg);
             throw new UserAppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 

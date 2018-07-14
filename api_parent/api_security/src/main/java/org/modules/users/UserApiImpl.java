@@ -8,7 +8,6 @@ import org.dao.user.UserDao;
 import org.dao.user.UserDaoException;
 import org.dao.user.UserDaoFactory;
 import org.dto.UserDto;
-import org.modules.SecurityConstants;
 import org.modules.authentication.CryptoUtils;
 
 import com.InvalidDataException;
@@ -30,18 +29,10 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
 
     private UserDao dao;
 
-    /**
-     * Create an UserApiImpl object that initializes the DAO factory.
-     */
-    UserApiImpl() {
-        super(SecurityConstants.APP_NAME);
-        this.dao = UserDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
-        this.setSharedDao(this.dao);
-        logger.info("User Api is initialized by default constructor");
-    }
 
     /**
-     * Create a UserApiImpl using the specified application name.
+     * Creates a UserApiImpl object in which the configuration is identified by
+     * the name of a given application.
      * 
      * @param appName
      *            the user name
@@ -50,6 +41,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         super(appName);
         this.dao = UserDaoFactory.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
         logger.info("User Api is initialized by application name, " + appName);
     }
     
@@ -81,9 +73,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             this.msg = "Unable to fetch user by login id, " + criteria;
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -107,9 +96,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             this.msg = "Unable to save changes to user, " + user.getUsername();
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -285,9 +271,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             this.msg = "Unable to delete user, " + uid;
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -314,9 +297,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             this.msg = "Unable to fetch master list of groups";
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -355,9 +335,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             this.msg = "Unable to save changes to group, " + grp.getGrp();
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -377,9 +354,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             this.msg = "Unable to delete group, " + grpId;
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 

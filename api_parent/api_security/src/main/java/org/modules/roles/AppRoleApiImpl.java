@@ -7,7 +7,6 @@ import org.dao.roles.RoleDao;
 import org.dao.roles.RoleDaoException;
 import org.dao.roles.RoleDaoFactory;
 import org.dto.CategoryDto;
-import org.modules.SecurityConstants;
 import org.modules.SecurityModuleException;
 
 import com.InvalidDataException;
@@ -30,18 +29,10 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
 
     private RoleDao dao;
 
-    /**
-     * Create an AppRoleApiImpl object that initializes the DAO factory.
-     */
-    AppRoleApiImpl() {
-        super(SecurityConstants.APP_NAME);
-        this.dao = RoleDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
-        this.setSharedDao(this.dao);
-        logger.info("AppRoleApi is initialized by default constructor");
-    }
 
     /**
-     * Create a AppRoleApiImpl using the specified application name.
+     * Creates a AppRoleApiImpl object in which the configuration is identified
+     * by the name of a given application.
      * 
      * @param appName
      *            the application name
@@ -50,6 +41,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         super(appName);
         this.dao = RoleDaoFactory.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
         logger.info("AppApi is initialized by application name, " + appName);
     }
 
@@ -93,9 +85,6 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         } catch (Exception e) {
             this.msg = "Unable to fetch Application Roles using custom criteria";
             throw new AppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -144,9 +133,6 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         } catch (Exception e) {
             this.msg = "Unable to update Application Role identitfied as " + appRole.getAppRoleName();
             throw new AppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -165,9 +151,6 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
         } catch (Exception e) {
             this.msg = "Unable to delete Application Role identitfied by id, " + appRoleId;
             throw new AppRoleApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 

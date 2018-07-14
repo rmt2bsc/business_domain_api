@@ -1,5 +1,7 @@
 package org.modules.roles;
 
+import org.modules.SecurityConstants;
+
 import com.RMT2Base;
 import com.api.persistence.DaoClient;
 
@@ -24,8 +26,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * @return an instance of {@link RoleApi}
      */
     public static final RoleApi createRoleApi() {
-        RoleApi api = new RoleApiImpl();
-        return api;
+        return createRoleApi(SecurityConstants.APP_NAME);
     }
 
     /**
@@ -46,8 +47,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * @return an instance of {@link AppRoleApi}
      */
     public static final AppRoleApi createAppRoleApi() {
-        AppRoleApi api = new AppRoleApiImpl();
-        return api;
+        return createAppRoleApi(SecurityConstants.APP_NAME);
     }
 
     /**
@@ -69,8 +69,7 @@ public class RoleSecurityApiFactory extends RMT2Base {
      * @return an instance of {@link UserAppRoleApi}
      */
     public static final UserAppRoleApi createUserAppRoleApi() {
-        UserAppRoleApi api = new UserAppRoleApiImpl();
-        return api;
+        return createUserAppRoleApi(SecurityConstants.APP_NAME);
     }
     
     /**
