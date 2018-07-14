@@ -28,8 +28,6 @@ public class CreditorPurchasesApiFactory extends RMT2Base {
      * @return an instance of {@link CreditorPurchasesApi}
      */
     public CreditorPurchasesApi createApi() {
-        // CreditorPurchasesApiImpl api = new CreditorPurchasesApiImpl();
-        // return api;
         return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 

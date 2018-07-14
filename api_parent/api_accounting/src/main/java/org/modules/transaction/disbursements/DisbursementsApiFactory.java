@@ -28,8 +28,6 @@ public class DisbursementsApiFactory extends RMT2Base {
      * @return an instance of {@link DisbursementsApi}
      */
     public DisbursementsApi createApi() {
-        // DisbursementsApiImpl api = new DisbursementsApiImpl();
-        // return api;
         return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 

@@ -53,20 +53,10 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
 
     private CreditorPurchasesDao dao;
 
-    /**
-     * Creates an CreditorPurchasesApiImpl which creates a stand alone
-     * connection.
-     */
-    public CreditorPurchasesApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Creates an CreditorPurchasesApiImpl which creates a stand alone
-     * connection.
+     * Creates a CreditorPurchasesApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      */
@@ -74,6 +64,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
@@ -581,6 +572,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             logger.error(this.msg);
             throw new DatabaseException(this.msg, e);
         } finally {
+            credApi.close();
             credApi = null;
         }
     }

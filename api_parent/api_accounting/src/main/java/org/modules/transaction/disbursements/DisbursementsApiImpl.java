@@ -8,7 +8,6 @@ import org.dao.transaction.disbursements.DisbursementsDaoException;
 import org.dao.transaction.disbursements.DisbursementsDaoFactory;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
-import org.modules.CommonAccountingConst;
 import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
@@ -35,18 +34,10 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
 
     private boolean creditorDisb;
 
-    /**
-     * Creates an DisbursementsApiImpl which creates a stand alone connection.
-     */
-    DisbursementsApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Creates an DisbursementsApiImpl which creates a stand alone connection.
+     * Creates a DisbursementsApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      *            the application name which should also translate to the JDBC
@@ -56,12 +47,13 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
     /**
-     * Creates an DisbursementsApiImpl initialized with a shared connection,
-     * <i>dao</i>. object.
+     * Creates a DisbursementsApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param connection
      */

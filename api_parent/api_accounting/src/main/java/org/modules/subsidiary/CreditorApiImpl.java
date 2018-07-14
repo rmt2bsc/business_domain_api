@@ -40,17 +40,8 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
     private CreditorDao dao;
 
     /**
-     * Creates a CreditorApiImpl object.
-     */
-    public CreditorApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmCreditorDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
-
-    /**
-     * Creates a CreditorApiImpl object.
+     * Creates a CreditorApiImpl object in which the configuration is identified
+     * by the name of a given application.
      * 
      * @param appName
      */
@@ -58,6 +49,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         super();
         this.dao = this.daoFact.createRmt2OrmCreditorDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 

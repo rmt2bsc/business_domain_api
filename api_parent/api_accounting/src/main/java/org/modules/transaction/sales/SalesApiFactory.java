@@ -28,8 +28,6 @@ public class SalesApiFactory extends RMT2Base {
      * @return an instance of {@link SalesApi}
      */
     public SalesApi createApi() {
-        // SalesApiImpl api = new SalesApiImpl();
-        // return api;
         return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 

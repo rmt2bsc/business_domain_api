@@ -38,18 +38,10 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
     private SubsidiaryDaoFactory daoFact;
     private CustomerDao dao;
 
-    /**
-     * Creates a CustomerApiImp object.
-     */
-    public CustomerApiImp() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmCustomerDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Creates a CustomerApiImp object.
+     * Creates a CustomerApiImp object in which the configuration is identified
+     * by the name of a given application.
      * 
      * @param appName
      */
@@ -57,6 +49,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         super();
         this.dao = this.daoFact.createRmt2OrmCustomerDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
@@ -267,11 +260,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
     }
 
 
@@ -476,11 +464,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -520,12 +503,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
-
         // TODO: In the future, add logic to update address book contact profile
         // with data changes assoicated with this customer
     }
@@ -649,11 +626,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -693,10 +665,5 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // finally {
-        // f = null;
-        // dao.close();
-        // dao = null;
-        // }
     }
 }

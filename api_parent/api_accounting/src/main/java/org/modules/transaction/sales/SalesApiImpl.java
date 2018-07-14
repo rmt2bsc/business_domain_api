@@ -76,18 +76,10 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     
     private CustomerDto customer;
 
-    /**
-     * Creates an SalesApiImpl which creates a stand alone connection.
-     */
-    SalesApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Creates an SalesApiImpl which creates a stand alone connection.
+     * Creates a SalesApiImpl object in which the configuration is identified by
+     * the name of a given application.
      * 
      * @param appName
      *            application name
@@ -96,6 +88,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
@@ -952,7 +945,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             logger.info(this.msg);
             return invoiceId;
         } catch (Exception e) {
-            dao.rollbackTrans();
             this.msg = "Sales order API update failed";
             logger.error(this.msg, e);
             throw new SalesApiException(this.msg, e);

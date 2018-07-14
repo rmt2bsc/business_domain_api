@@ -70,8 +70,7 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * @return an instance of {@link CreditorApi}
      */
     public CreditorApi createCreditorApi() {
-        CreditorApi api = new CreditorApiImpl();
-        return api;
+        return this.createCreditorApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**

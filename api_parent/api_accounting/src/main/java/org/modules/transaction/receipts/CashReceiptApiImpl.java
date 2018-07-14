@@ -65,23 +65,18 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
 
     private SalesOrderDao dao;
 
-    /**
-     * Creates an CashReceiptApiImpl which creates a stand alone connection.
-     */
-    CashReceiptApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Creates an CashReceiptApiImpl which creates a stand alone connection.
+     * Creates a CashReceiptApiImpl object in which the configuration is
+     * identified by the name of a given application.
+     * 
+     * @param appName
      */
     protected CashReceiptApiImpl(String appName) {
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 

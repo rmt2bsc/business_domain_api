@@ -61,17 +61,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     private int vendorId;
 
     /**
-     * Creates an VendorPurchasesApiImpl which creates a stand alone connection.
-     */
-    public VendorPurchasesApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
-
-    /**
-     * Creates an VendorPurchasesApiImpl which creates a stand alone connection.
+     * Creates a VendorPurchasesApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      *            Application Name
@@ -80,6 +71,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
@@ -613,6 +605,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             throw new VendorPurchasesApiException(e);
         } finally {
             f = null;
+            credApi.close();
             credApi = null;
         }
     }

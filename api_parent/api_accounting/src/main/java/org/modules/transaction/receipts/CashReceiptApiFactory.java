@@ -28,8 +28,6 @@ public class CashReceiptApiFactory extends RMT2Base {
      * @return an instance of {@link CashReceiptApi}
      */
     public CashReceiptApi createApi() {
-        // CashReceiptApiImpl api = new CashReceiptApiImpl();
-        // return api;
         return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 

@@ -28,8 +28,6 @@ public class VendorPurchasesApiFactory extends RMT2Base {
      * @return an instance of {@link VendorPurchasesApi}
      */
     public VendorPurchasesApi createApi() {
-        // VendorPurchasesApiImpl api = new VendorPurchasesApiImpl();
-        // return api;
         return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 

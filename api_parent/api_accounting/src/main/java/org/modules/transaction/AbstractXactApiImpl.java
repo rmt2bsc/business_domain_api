@@ -187,10 +187,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction category by category id: " + catgId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null || results.size() <= 0) {
             return null;
@@ -278,10 +274,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve all transaction codes";
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -311,10 +303,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction code by code id: " + codeId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null || results.size() <= 0) {
             return null;
@@ -474,10 +462,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction item type activity objects by xact id: " + xactId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -539,10 +523,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction type item objects by xact type id: " + xactTypeId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -596,10 +576,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -1348,10 +1324,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
 }
