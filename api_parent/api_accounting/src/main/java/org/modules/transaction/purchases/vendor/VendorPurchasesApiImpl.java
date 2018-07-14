@@ -605,7 +605,6 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             throw new VendorPurchasesApiException(e);
         } finally {
             f = null;
-            credApi.close();
             credApi = null;
         }
     }

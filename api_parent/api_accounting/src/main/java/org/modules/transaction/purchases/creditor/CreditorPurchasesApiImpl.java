@@ -572,7 +572,6 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             logger.error(this.msg);
             throw new DatabaseException(this.msg, e);
         } finally {
-            credApi.close();
             credApi = null;
         }
     }

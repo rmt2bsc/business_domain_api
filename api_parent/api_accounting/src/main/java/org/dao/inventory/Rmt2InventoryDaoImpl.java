@@ -581,7 +581,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      * @throws InventoryDaoException
      */
     private int updateVendorItem(VendorItems item) throws InventoryDaoException {
-        int rows;
+        int rows = 0;
         try {
             item.addCriteria(VendorItems.PROP_ITEMID, item.getItemId());
             item.addCriteria(VendorItems.PROP_CREDITORID, item.getCreditorId());

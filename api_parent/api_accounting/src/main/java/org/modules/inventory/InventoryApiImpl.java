@@ -1210,7 +1210,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         } catch (CreditorApiException e) {
             throw new InventoryApiException(e);
         } finally {
-            api.close();
             api = null;
         }
         if (cred == null) {

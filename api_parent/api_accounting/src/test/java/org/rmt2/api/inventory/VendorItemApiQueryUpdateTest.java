@@ -2,6 +2,7 @@ package org.rmt2.api.inventory;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -327,7 +328,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
         }
 
         try {
-            when(this.mockPersistenceClient.updateRow(any(VendorItems.class)))
+            when(this.mockPersistenceClient.updateRow(isA(VendorItems.class)))
                     .thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
