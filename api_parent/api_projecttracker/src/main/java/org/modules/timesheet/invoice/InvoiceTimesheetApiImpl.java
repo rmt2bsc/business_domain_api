@@ -81,6 +81,8 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
     }
 
     /**
+     * Creates a InvoiceTimesheetApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      */
@@ -88,6 +90,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
         this.createOtherResources(this.dao);
         return;
     }

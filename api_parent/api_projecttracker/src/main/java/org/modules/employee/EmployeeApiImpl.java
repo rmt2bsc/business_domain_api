@@ -40,17 +40,10 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
     private ProjectAdminDao dao;
 
     /**
-     * Creates an EmployeeApiImpl which creates a stand alone connection.
-     */
-    protected EmployeeApiImpl() {
-        this(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
-    }
-
-    /**
-     * Creates an EmployeeApiImpl which creates a stand alone connection.
+     * Creates a EmployeeApiImpl object in which the configuration is identified
+     * by the name of a given application.
      * 
-     * @param application
-     *            name
+     * @param appName
      */
     protected EmployeeApiImpl(String appName) {
         super();

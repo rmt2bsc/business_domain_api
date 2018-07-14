@@ -62,14 +62,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
 
     private Map<ProjectTaskDto, List<EventDto>> timeSheetHours;
 
-    /**
-     * 
-     */
-    protected TimesheetApiImpl() {
-        this(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
-    }
 
     /**
+     * Creates a TimesheetApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      */
@@ -77,6 +73,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
         return;
     }
 

@@ -58,21 +58,18 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
 
     private ProjectAdminDao dao;
 
-    /**
-     * Creates an ProjectApiImpl which creates a stand alone connection.
-     */
-    protected ProjectAdminApiImpl() {
-        this(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
-    }
 
     /**
-     * Creates an ProjectApiImpl which creates based on the identified
-     * application.
+     * Creates a ProjectAdminApiImpl object in which the configuration is
+     * identified by the name of a given application.
+     * 
+     * @param appName
      */
     protected ProjectAdminApiImpl(String appName) {
         super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         logger.info("ProjectAdminApiImpl created with DAO, " + this.dao.getClass().getSimpleName() + ", for application, " + appName);
         return;
     }

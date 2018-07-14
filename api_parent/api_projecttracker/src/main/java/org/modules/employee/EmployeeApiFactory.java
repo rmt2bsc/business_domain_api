@@ -28,8 +28,6 @@ public class EmployeeApiFactory extends RMT2Base {
      * @return an instance of {@link EmployeeApi}
      */
     public EmployeeApi createApi() {
-        // EmployeeApiImpl api = new EmployeeApiImpl();
-        // return api;
         return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 

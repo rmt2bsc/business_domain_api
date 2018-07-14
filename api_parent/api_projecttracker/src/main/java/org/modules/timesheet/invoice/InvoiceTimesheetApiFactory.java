@@ -3,6 +3,7 @@ package org.modules.timesheet.invoice;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.modules.ProjectTrackerApiConst;
 import org.rmt2.jaxb.CustomerType;
 import org.rmt2.jaxb.ItemMasterType;
 import org.rmt2.jaxb.ObjectFactory;
@@ -36,9 +37,7 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
      * @return an instance of {@link InvoiceTimesheetApi}
      */
     public InvoiceTimesheetApi createApi() {
-        // InvoiceTimesheetApiImpl api = new InvoiceTimesheetApiImpl();
-        // return api;
-        return this.createApi();
+        return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**

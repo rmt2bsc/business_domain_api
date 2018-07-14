@@ -28,8 +28,6 @@ public class TimesheetApiFactory extends RMT2Base {
      * @return an instance of {@link TimesheetApi}
      */
     public TimesheetApi createApi() {
-        // TimesheetApiImpl api = new TimesheetApiImpl();
-        // return api;
         return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
