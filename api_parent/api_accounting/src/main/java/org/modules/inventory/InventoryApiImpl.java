@@ -1135,16 +1135,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         this.validateVendorItem(item);
 
         // Update Vendor Item
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
         int rc;
         try {
-            // dao.beginTrans();
             rc = dao.maintain(item);
-            // dao.commitTrans();
             return rc;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Unable to process inventory vendor item updates.";
             logger.error(this.msg, e);
             throw new InventoryApiException(this.msg, e);
