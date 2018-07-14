@@ -29,21 +29,21 @@ import com.api.util.RMT2String2;
 class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
 
     private PostalDaoFactory factory;
-
+    private RegionCountryDao dao;
     private String appName;
 
     /**
-     * Default Cnstructor
+     * Creates a PostalApiImpl object in which the configuration is identified
+     * by the name of a given application.
+     * 
+     * @param appName
      */
-    public PostalApiImpl() {
-        super();
-        this.factory = new PostalDaoFactory();
-        this.appName = null;
-    }
-
     public PostalApiImpl(String appName) {
         super();
         this.factory = new PostalDaoFactory();
+        dao = this.factory.createRmt2OrmRegionCountryDao(appName);
+        this.setSharedDao(dao);
+        dao.setDaoUser(this.apiUser);
         this.appName = appName;
     }
 
@@ -54,15 +54,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public CountryDto getCountry(int uid) throws PostalApiException {
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountry(uid);
         } catch (PostalDaoException e) {
             this.msg = "Unable to fetch country object by internal unique id, " + uid;
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -77,15 +73,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "Country criteia instance cannot be null for fetch operations";
             throw new PostalApiException(this.msg);
         }
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountry(criteria);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to fetch country object by DTO criteria";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -101,15 +93,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "Country/Region criteia instance cannot be null for fetch operations";
             throw new PostalApiException(this.msg);
         }
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchCountryRegion(criteria);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to fetch country/region combination object(s) by DTO criteria";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -120,15 +108,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
      */
     @Override
     public RegionDto getRegion(int uid) throws PostalApiException {
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchRegion(uid);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to fetch region (state/province) object by internal unique id, " + uid;
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -143,15 +127,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "Region criteia instance cannot be null for fetch operations";
             throw new PostalApiException(this.msg);
         }
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.fetchRegion(criteria);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to fetch region object(s) by DTO criteria";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -175,9 +155,6 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (ZipcodeDaoException e) {
             this.msg = "Unable to fetch zip code object by internal unique id, " + zipCode;
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
         return results;
     }
@@ -226,9 +203,6 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (ZipcodeDaoException e) {
             this.msg = "Unable to fetch zip code object(s) using DTO criteria";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
     
@@ -271,9 +245,6 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (PostalDaoException e) {
             this.msg = "Unable to fetch time zone object by internal unique id, " + uid;
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -294,9 +265,6 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (ZipcodeDaoException e) {
             this.msg = "Unable to fetch time zone object(s) using DTO criteria";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -313,9 +281,6 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (IpDaoException e) {
             this.msg = "Unable to fetch IP address object by " + ip;
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -332,9 +297,6 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (IpDaoException e) {
             this.msg = "Unable to fetch IP address object by " + ip;
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -346,15 +308,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
     @Override
     public int updateRegion(RegionDto obj) throws PostalApiException {
         this.validateRegion(obj);
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.maintainRegion(obj);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to update region (State/Province) object";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -398,15 +356,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "State id is invalid...must be greater than zero";
             throw new PostalApiException(this.msg);
         }
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.deleteRegion(stateId);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to delete region (State/Province) object";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -418,15 +372,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
     @Override
     public int updateCountry(CountryDto obj) throws PostalApiException {
         this.validate(obj);
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.maintainCountry(obj);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to update country object";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -461,15 +411,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "Country id is invalid...must be greater than zero";
             throw new PostalApiException(this.msg);
         }
-        RegionCountryDao dao = this.factory.createRmt2OrmRegionCountryDao(this.appName);
         try {
             return dao.deleteCountry(countryId);
         } catch (RegionCountryDaoException e) {
             this.msg = "Unable to delete country object";
             throw new PostalApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 

@@ -23,22 +23,21 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
     private static final Logger logger = Logger.getLogger(LookupDataApiImpl.class);
 
     private LookupDaoFactory factory;
-
+    private LookupDao dao;
     private String appName;
 
     /**
-     * Default constructor
+     * Creates a LookupDataApiImpl object in which the configuration is
+     * identified by the name of a given application.
+     * 
+     * @param appName
      */
-    protected LookupDataApiImpl() {
-        super();
-        this.factory = new LookupDaoFactory();
-        this.appName = null;
-        logger.info("Code API is initialized...");
-    }
-
     protected LookupDataApiImpl(String appName) {
         super();
         this.factory = new LookupDaoFactory();
+        dao = this.factory.createRmt2OrmDao(appName);
+        this.setSharedDao(dao);
+        dao.setDaoUser(this.apiUser);
         this.appName = appName;
         logger.info("Code API is initialized...");
     }
@@ -55,7 +54,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      */
     @Override
     public LookupCodeDto getCode(int codeId) throws LookupDataApiException {
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             LookupCodeDto dto = dao.fetchCode(codeId);
             return dto;
@@ -86,7 +84,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      */
     @Override
     public List<LookupCodeDto> getCode(LookupCodeDto criteria) throws LookupDataApiException {
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             List<LookupCodeDto> list = dao.fetchCode(criteria);
             return list;
@@ -111,7 +108,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      */
     @Override
     public LookupGroupDto getGroup(int grpId) throws LookupDataApiException {
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             LookupGroupDto dto = dao.fetchGroup(grpId);
             return dto;
@@ -141,7 +137,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      */
     @Override
     public List<LookupGroupDto> getGroup(LookupGroupDto criteria) throws LookupDataApiException {
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             List<LookupGroupDto> list = dao.fetchGroup(criteria);
             return list;
@@ -174,7 +169,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
      */
     @Override
     public List<LookupExtDto> getCodeExt(LookupExtDto criteria) throws LookupDataApiException {
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             List<LookupExtDto> list = dao.fetchCodeExt(criteria);
             return list;
@@ -201,8 +195,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
     @Override
     public int updateGroup(LookupGroupDto group) throws LookupDataApiException {
         this.validateGroup(group);
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainGroup(group);
             return rc;
@@ -231,7 +223,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
             this.msg = "Group id is required and must greater than zero";
             throw new LookupDataApiException(this.msg);
         }
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             int rc = dao.deleteGroup(groupId);
             return rc;
@@ -257,8 +248,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
     @Override
     public int updateCode(LookupCodeDto code) throws LookupDataApiException {
         this.validateCode(code);
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             int rc = dao.maintainCode(code);
             return rc;
@@ -287,7 +276,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
             this.msg = "Code id is required and must greater than zero";
             throw new LookupDataApiException(this.msg);
         }
-        LookupDao dao = this.factory.createRmt2OrmDao(this.appName);
         try {
             int rc = dao.deleteCode(codeId);
             return rc;
