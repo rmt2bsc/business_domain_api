@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 import org.modules.ProjectTrackerApiConst;
 import org.rmt2.jaxb.CustomerType;
-import org.rmt2.jaxb.ItemMasterType;
+import org.rmt2.jaxb.InventoryItemType;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.jaxb.SalesInvoiceType;
 import org.rmt2.jaxb.SalesOrderItemType;
@@ -119,7 +119,7 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
     public static SalesOrderItemType createJaxbSalesOrderItemInstance(InvoiceDetailsBean soi) {
         ObjectFactory f = new ObjectFactory();
         SalesOrderItemType soit = f.createSalesOrderItemType();
-        ItemMasterType imt = f.createItemMasterType();
+        InventoryItemType imt = f.createInventoryItemType();
         SalesOrderType sot = f.createSalesOrderType();
         soit.setItem(imt);
         soit.setSalesOrder(sot);
