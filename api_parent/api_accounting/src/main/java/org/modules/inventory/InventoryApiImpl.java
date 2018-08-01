@@ -1387,7 +1387,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg);
             throw new InventoryApiException(this.msg);
         }
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+        
+        // Throw exception if alread deactivated.
+        if (im.getActive() == 0) {
+            throw new InventoryApiException("Inventory item, " + itemId + ", is already deactivated");
+        }
+        
         dao.setDaoUser(this.apiUser);
 
         try {
@@ -1435,10 +1440,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.error(this.msg);
             throw new InventoryApiException(this.msg);
         }
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
+        
+        // Throw exception if alread activated.
+        if (im.getActive() == 1) {
+            throw new InventoryApiException("Inventory item, " + itemId + ", is already activated");
+        }
+        
         dao.setDaoUser(this.apiUser);
         try {
-            // dao.beginTrans();
             // Set item active
             im.setActive(InventoryConst.ITEM_ACTIVE_YES);
             // Update Item master
@@ -1449,10 +1458,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             int itemStatusId = im.getQtyOnHand() <= 0 ? InventoryConst.ITEM_STATUS_OUTSTOCK
                     : InventoryConst.ITEM_STATUS_AVAIL;
             this.changeItemStatus(im, itemStatusId);
-            // dao.commitTrans();
             return RMT2Base.SUCCESS;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Unable to activate item master , " + itemId
                     + ", due to a database error";
             logger.error(this.msg, e);

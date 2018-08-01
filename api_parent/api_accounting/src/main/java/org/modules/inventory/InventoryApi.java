@@ -356,8 +356,8 @@ public interface InventoryApi extends TransactionApi {
      *            The id of an inventory item.
      * @return 1 for success.
      * @throws InventoryApiException
-     *             itemId does not exist in the system or a database error
-     *             occurred.
+     *             <i>itemId</i> does not exist in the system or a database error
+     *             occurred or is already deactivated.
      */
     int deactivateItemMaster(Integer itemId) throws InventoryApiException;
 
@@ -368,8 +368,8 @@ public interface InventoryApi extends TransactionApi {
      *            The id of an inventory item.
      * @return 1 for success.
      * @throws InventoryApiException
-     *             itemId does not exist in the system or a database error
-     *             occurred.
+     *             <i>itemId</i> does not exist in the system or a database error
+     *             occurred or is already activated.
      */
     int activateItemMaster(Integer itemId) throws InventoryApiException;
 
