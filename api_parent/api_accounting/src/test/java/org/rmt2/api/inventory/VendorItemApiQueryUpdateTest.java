@@ -167,13 +167,15 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
-        VendorItemDto dto = null;
+        List<VendorItemDto> results = null;
         try {
-            dto = api.getVendorItem(1234, 100);
+            results = api.getVendorItem(1234, 100);
         } catch (InventoryApiException e) {
             e.printStackTrace();
         }
-        Assert.assertNotNull(dto);
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        VendorItemDto dto = results.get(0);
         Assert.assertEquals(100, dto.getItemId());
         Assert.assertEquals(100, dto.getEntityId());
         Assert.assertEquals(1234, dto.getVendorId());
@@ -195,7 +197,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
 
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
-        VendorItemDto dto = null;
+        List<VendorItemDto> dto = null;
         try {
             dto = api.getVendorItem(9999, 99);
         } catch (InventoryApiException e) {
@@ -212,19 +214,6 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
             api.getVendorItem(null, 100);
             Assert.fail(
                     "Expected exception to be thrown due to null vendor id");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-
-    @Test
-    public void testFetchSingleWithNullItemId() {
-        InventoryApiFactory f = new InventoryApiFactory();
-        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
-        try {
-            api.getVendorItem(1234, null);
-            Assert.fail("Expected exception to be thrown due to null item id");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof InvalidDataException);

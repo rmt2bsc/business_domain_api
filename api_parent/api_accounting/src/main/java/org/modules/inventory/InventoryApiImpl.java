@@ -715,7 +715,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getVendorItem(int, int)
      */
     @Override
-    public VendorItemDto getVendorItem(Integer vendorId, Integer itemId)
+    public List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId)
             throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
@@ -723,20 +723,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         catch (VerifyException e) {
             throw new InvalidDataException("Vendor/Creditor Id is required", e);
         }
-        try {
-            Verifier.verifyNotNull(itemId);    
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Vendor Item Id is required", e);
-        }
-        
         dao.setDaoUser(this.apiUser);
         List<VendorItemDto> results;
         StringBuffer msgBuf = new StringBuffer();
         try {
             VwVendorItems imt = null;
-            VendorItemDto criteria = Rmt2InventoryDtoFactory
-                    .createVendorItemInstance(imt);
+            VendorItemDto criteria = Rmt2InventoryDtoFactory.createVendorItemInstance(imt);
             criteria.setItemId(itemId);
             criteria.setVendorId(vendorId);
             results = dao.fetch(criteria);
@@ -747,7 +739,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             throw new InventoryApiException(e);
         }
 
-        if (results == null) {
+        if (results == null && itemId != null) {
             msgBuf.append(" inventory vendor item was not found by item id and vendor id, ");
             msgBuf.append(itemId);
             msgBuf.append(" ");
@@ -756,12 +748,12 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             return null;
         }
         msgBuf.append(results.size());
-        msgBuf.append(" Vendor inventory item object(s) were retrieved by item id and vendor id, ");
-        msgBuf.append(itemId);
-        msgBuf.append(" ");
+        msgBuf.append(" Vendor inventory item object(s) were retrieved by vendor id and item id, ");
         msgBuf.append(vendorId);
+        msgBuf.append(" ");
+        msgBuf.append(itemId);
         logger.info(msgBuf);
-        return results.get(0);
+        return results;
     }
 
     /*
