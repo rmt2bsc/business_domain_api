@@ -1130,7 +1130,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         dao.setDaoUser(this.apiUser);
         int rc;
         try {
-            rc = dao.maintain(item);
+            rc = dao.maintain(item, false);
             return rc;
         } catch (Exception e) {
             this.msg = "Unable to process inventory vendor item updates.";
@@ -1524,7 +1524,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                 VendorItemDto viDto = Rmt2InventoryDtoFactory
                         .createVendorItemInstance(vendorId, imDto);
                 try {
-                    count += dao.maintain(viDto);
+                    count += dao.maintain(viDto, true);
                 } catch (Exception e) {
                     this.msg = "Error creating vendor id [" + vendorId
                             + "] and item id {" + imDto.getItemId()

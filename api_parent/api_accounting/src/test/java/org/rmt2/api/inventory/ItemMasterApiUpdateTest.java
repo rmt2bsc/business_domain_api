@@ -2,6 +2,7 @@ package org.rmt2.api.inventory;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -747,18 +748,17 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         im3.setItemId(300);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(im)))
-                    .thenReturn(this.mockSingleFetchResponse);
+                 .thenReturn(this.mockSingleFetchResponse);
             when(this.mockPersistenceClient.retrieveList(eq(im2)))
-            .thenReturn(mockSingleFetchResponse2);
+                 .thenReturn(mockSingleFetchResponse2);
             when(this.mockPersistenceClient.retrieveList(eq(im3)))
-            .thenReturn(mockSingleFetchResponse3);
+                 .thenReturn(mockSingleFetchResponse3);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Fetch original Item Master for assign vendor items test case setup failed");
+            Assert.fail("Fetch original Item Master for assign vendor items test case setup failed");
         }
         try {
-            when(this.mockPersistenceClient.updateRow(any(VendorItems.class)))
+            when(this.mockPersistenceClient.insertRow(isA(VendorItems.class), isA(Boolean.class)))
                     .thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
