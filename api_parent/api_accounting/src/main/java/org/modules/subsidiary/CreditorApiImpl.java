@@ -279,6 +279,22 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         }
     }
 
+    @Override
+    public List<CreditorDto> getExt(CreditorDto criteria) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(criteria);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor selection criteria is required", e);
+        }
+        try {
+            return this.getSubsidiaryInfo(criteria);
+        } catch (Exception e) {
+            this.msg = "Error retrieving creditor data using multi property selection criteria";
+            logger.error(this.msg, e);
+            throw new CreditorApiException(e);
+        }
+    }
     
     /*
      * (non-Javadoc)

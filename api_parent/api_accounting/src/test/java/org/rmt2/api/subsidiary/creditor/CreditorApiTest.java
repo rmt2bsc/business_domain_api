@@ -107,6 +107,38 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
     }
 
     @Test
+    public void testFetchAllWithContactData() {
+        Creditor mockCredCriteria = new Creditor();
+        mockCredCriteria.setAccountNumber("C1234589");
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCredCriteria);
+
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+        criteria.setAccountNo("C1234589");
+        List<CreditorDto> results = null;
+        try {
+            results = api.getExt(criteria);
+        } catch (CreditorApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            CreditorDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (200 + ndx));
+            Assert.assertEquals(obj.getCreditorId(), (200 + ndx));
+            Assert.assertEquals(obj.getContactId(), (1351 + ndx));
+            Assert.assertEquals(obj.getAccountNo(), "C123458" + ndx);
+            Assert.assertEquals(obj.getExtAccountNumber(), "7437437JDJD848" + ndx);
+            Assert.assertNull(obj.getEntityName());
+            Assert.assertNotNull(obj.getContactName());
+            Assert.assertEquals(obj.getContactName(), "Company" + (ndx + 1));
+        }
+    }
+    
+    @Test
     public void testFetchSingleNoContactData() {
         Creditor mockCriteria = new Creditor();
         mockCriteria.setCreditorId(200);
