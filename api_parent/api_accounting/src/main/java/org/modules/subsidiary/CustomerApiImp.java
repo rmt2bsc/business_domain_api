@@ -465,6 +465,28 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             throw new CustomerApiException(e);
         }
     }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.subsidiary.CustomerApi#getExt(org.dto.CustomerDto)
+     */
+    @Override
+    public List<CustomerDto> getExt(CustomerDto criteria) throws CustomerApiException {
+        try {
+            Verifier.verifyNotNull(criteria);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Customer selection criteria is required", e);
+        }
+        try {
+            return this.getSubsidiaryInfo(criteria);
+        } catch (Exception e) {
+            this.msg = "Error retrieving customer data using multi property selection criteria";
+            logger.error(this.msg, e);
+            throw new CustomerApiException(e);
+        }
+    }
 
     /*
      * (non-Javadoc)

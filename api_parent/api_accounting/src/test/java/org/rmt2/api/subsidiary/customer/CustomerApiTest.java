@@ -108,6 +108,39 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     }
 
     @Test
+    public void testFetchAllWithContactInfo() {
+        Customer mockCustCriteria = new Customer();
+        mockCustCriteria.setAccountNo("C1234589");
+        VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
+        this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
+        
+        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
+        criteria.setAccountNo("C1234589");
+        List<CustomerDto> results = null;
+        try {
+            results = api.getExt(criteria);
+        } catch (CustomerApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            CustomerDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getEntityId(), (200 + ndx));
+            Assert.assertEquals(obj.getCustomerId(), (200 + ndx));
+            Assert.assertEquals(obj.getContactId(), (1351 + ndx));
+            Assert.assertEquals(obj.getPersonId(), 0);
+            Assert.assertEquals(obj.getAccountNo(), "C123458" + ndx);
+            Assert.assertEquals(obj.getDescription(), "Customer " + (ndx + 1));
+            Assert.assertEquals(obj.getEntityName(), "Customer " + (ndx + 1));
+            Assert.assertNotNull(obj.getContactName());
+            Assert.assertEquals(obj.getContactName(), "Company" + (ndx + 1));
+        }
+    }
+    
+    @Test
     public void testFetchSingleNoContactData() {
         Customer mockCriteria = new Customer();
         mockCriteria.setCustomerId(200);
