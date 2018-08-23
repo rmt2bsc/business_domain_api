@@ -108,6 +108,9 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     /**
      * Fetches the customer's transaction history from the
      * <i>customer_activitiy</i> table.
+     * <p>
+     * The returned dataset is ordered by transaction date and transaction id in
+     * descending order.
      * 
      * @param customerId
      *            An integer representing the customer id.
