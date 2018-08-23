@@ -236,8 +236,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      */
     @Override
     public double getBalance(Integer customerId) throws SubsidiaryException {
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CustomerDao dao = f.createRmt2OrmCustomerDao();
         try {
             Verifier.verifyNotNull(customerId);    
         }
@@ -449,8 +447,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      */
     @Override
     public List<CustomerDto> get(CustomerDto criteria) throws CustomerApiException {
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CustomerDao dao = f.createRmt2OrmCustomerDao();
         try {
             Verifier.verifyNotNull(criteria);    
         }
@@ -511,16 +507,11 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         this.validate(customer);
 
         // Perform the actual update
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CustomerDao dao = f.createRmt2OrmCustomerDao();
         dao.setDaoUser(this.getApiUser());
         try {
-            // dao.beginTrans();
             int rc = dao.maintain(customer);
-            // dao.commitTrans();
             return rc;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Error persiting customer profile changes";
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
@@ -635,15 +626,10 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
     @Override
     public int delete(CustomerDto customer) throws CustomerApiException {
         // Perform the actual delete
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CustomerDao dao = f.createRmt2OrmCustomerDao();
         try {
-            // dao.beginTrans();
             int rc = dao.delete(customer.getCustomerId());
-            // dao.commitTrans();
             return rc;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Error persiting customer profile changes";
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
@@ -660,8 +646,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      * @throws SubsidiaryException
      */
     @Override
-    public List<CustomerXactHistoryDto> getTransactionHistory(Integer customerId)
-            throws CustomerApiException {
+    public List<CustomerXactHistoryDto> getTransactionHistory(Integer customerId) throws CustomerApiException {
         try {
             Verifier.verifyNotNull(customerId);    
         }
@@ -674,15 +659,11 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         catch (VerifyException e) {
             throw new InvalidDataException("Creditor Id must be greater than zero", e);
         }
-        // SubsidiaryDaoFactory f = new SubsidiaryDaoFactory();
-        // CustomerDao dao = f.createRmt2OrmCustomerDao();
         List<CustomerXactHistoryDto> results;
         try {
             results = dao.fetchTransactionHistory(customerId);
-            // dao.commitTrans();
             return results;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Error persiting customer profile changes";
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
