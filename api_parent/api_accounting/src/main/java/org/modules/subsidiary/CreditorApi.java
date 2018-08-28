@@ -96,24 +96,15 @@ public interface CreditorApi extends SubsidiaryApi {
     List<CreditorDto> getExt(CreditorDto criteria) throws CreditorApiException;
 
     /**
-     * Fetch all creditor type records.
+     * Fetch one or more creditor type records.
      * 
+     * @param criteria
+     *            instance of {@link CreditorTypeDto}
      * @return A List of {@link CreditorTypeDto} or null when no data is found.
      * @throws CreditorApiException
      */
-    List<CreditorTypeDto> getCreditorType() throws CreditorApiException;
+    List<CreditorTypeDto> getCreditorType(CreditorTypeDto criteria) throws CreditorApiException;
 
-    /**
-     * Fetch a creditor type record using its id.
-     * 
-     * @param creditorTypeId
-     *            internal unique id of the creditor type.
-     * @return An instance of {@link CreditorTypeDto} or null when no data is
-     *         found.
-     * @throws CreditorApiException
-     */
-    CreditorTypeDto getCreditorType(Integer creditorTypeId) throws CreditorApiException;
-    
     /**
      * Get transacton history for a particular subsidiary account.
      * 

@@ -22,6 +22,7 @@ import org.dto.VendorItemDto;
 import org.dto.VwVendorItemDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
+import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 import org.modules.inventory.InventoryApi;
@@ -597,10 +598,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         CreditorApi credApi = f.createCreditorApi(this.getSharedDao());
         // Get creditor data to used as validating metric
         try {
-            CreditorTypeDto ct = null;
+            List<CreditorTypeDto> results = null;
+            CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
+            criteria.setEntityId(AccountingConst.CREDITORTYPE_VENDOR);
             // Vendor type must exist in the database.
-            ct = credApi.getCreditorType(AccountingConst.CREDITORTYPE_VENDOR);
-            return ct;
+            results = credApi.getCreditorType(criteria);
+            return results.get(0);
         } catch (CreditorApiException e) {
             throw new VendorPurchasesApiException(e);
         } finally {

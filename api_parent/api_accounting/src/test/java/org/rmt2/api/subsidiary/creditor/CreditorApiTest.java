@@ -754,8 +754,9 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         List<CreditorTypeDto> results = null;
+        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
         try {
-            results = api.getCreditorType();
+            results = api.getCreditorType(criteria);
         } catch (CreditorApiException e) {
             e.printStackTrace();
         }
@@ -769,8 +770,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         CreditorType mockCredCriteria = new CreditorType();
         mockCredCriteria.setCreditorTypeId(100);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria))).thenReturn(
-                            this.mockCreditorTypeFetchSingleResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria)))
+                  .thenReturn(this.mockCreditorTypeFetchSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Single creditor type fetch test case setup failed");
@@ -778,14 +779,16 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        CreditorTypeDto results = null;
+        List<CreditorTypeDto> results = null;
+        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
+        criteria.setEntityId(100);
         try {
-            results = api.getCreditorType(100);
+            results = api.getCreditorType(criteria);
         } catch (CreditorApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals("Creditor Type 1", results.getEntityName());
+        Assert.assertEquals("Creditor Type 1", results.get(0).getEntityName());
     }
     
     @Test
@@ -793,8 +796,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         CreditorType mockCredCriteria = new CreditorType();
         mockCredCriteria.setCreditorTypeId(100);
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria))).thenReturn(
-                            this.mockCreditorTypeNotFoundResponse);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria)))
+                 .thenReturn(this.mockCreditorTypeNotFoundResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Single creditor type fetch test case setup failed");
@@ -802,76 +805,17 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        CreditorTypeDto results = null;
+        List<CreditorTypeDto> results = null;
+        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
+        criteria.setEntityId(100);
         try {
-            results = api.getCreditorType(100);
+            results = api.getCreditorType(criteria);
         } catch (CreditorApiException e) {
             e.printStackTrace();
         }
         Assert.assertNull(results);
     }
     
-    @Test
-    public void testFetchSingleCreditorTypeTooManyReturned() {
-        CreditorType mockCredCriteria = new CreditorType();
-        mockCredCriteria.setCreditorTypeId(100);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCredCriteria))).thenReturn(
-                            this.mockCreditorTypeFetchAllResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Too many returned creditor type fetch test case setup failed");
-        }
-        
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        try {
-            api.getCreditorType(100);
-            Assert.fail("Expected exception due to too many creditor type records returned");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof CreditorApiException);
-            e.printStackTrace();
-        }
-    }
-    
-    @Test
-    public void testFetchSingleCreditorTypeWithNullId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        try {
-            api.getCreditorType(null);
-            Assert.fail("Expected exception due to creditor type id argument is null");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
-    
-    @Test
-    public void testFetchSingleCreditorTypeWithZeroId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        try {
-            api.getCreditorType(0);
-            Assert.fail("Expected exception due to creditor type id argument is zero");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
-    
-    @Test
-    public void testFetchSingleCreditorTypeWithNegativeId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        try {
-            api.getCreditorType(-444);
-            Assert.fail("Expected exception due to creditor type id argument is negative");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
     
     @Test
     public void testFetchTransactionHistory() {
@@ -1291,9 +1235,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
-        List<CreditorDto> results = null;
         try {
-            results = api.get(criteria);
+            api.get(criteria);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorApiException);
             Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
@@ -1321,9 +1264,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(updateCreditor, null);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        int rc = 0;
         try {
-            rc = api.update(criteria);
+            api.update(criteria);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorApiException);
             Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
@@ -1347,7 +1289,6 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         BusinessType bus = AccountingMockDataFactory.createMockJaxbBusiness(4000, "ABC Company", "roy", "terrell",
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
-        int newCreditorId = 1350;
         try {
             when(this.mockPersistenceClient.insertRow(any(Creditor.class), eq(true)))
             .thenThrow(CreditorDaoException.class);
@@ -1359,9 +1300,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         CreditorDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorInstance(cred, bus);
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        int rc = 0;
         try {
-            rc = api.update(criteria);
+            api.update(criteria);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorApiException);
             Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
@@ -1370,7 +1310,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
     }
     
     @Test
-    public void testFetchSingleCreditorTypeWithException() {
+    public void testFetchCreditorTypeWithException() {
         CreditorType mockCredCriteria = new CreditorType();
         mockCredCriteria.setCreditorTypeId(100);
         try {
@@ -1383,9 +1323,10 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        CreditorTypeDto results = null;
+        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
+        criteria.setEntityId(100);
         try {
-            results = api.getCreditorType(100);
+            api.getCreditorType(criteria);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorApiException);
             Assert.assertTrue(e.getCause() instanceof CreditorDaoException);
@@ -1405,9 +1346,8 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         
         SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
-        List<CreditorXactHistoryDto> results = null;
         try {
-            results = api.getTransactionHistory(100);
+            api.getTransactionHistory(100);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorApiException);
             Assert.assertTrue(e.getCause() instanceof CreditorDaoException);

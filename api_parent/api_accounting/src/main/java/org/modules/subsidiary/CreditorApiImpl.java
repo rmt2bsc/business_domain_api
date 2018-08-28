@@ -526,8 +526,13 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
      * @see org.modules.subsidiary.CreditorApi#getCreditorType()
      */
     @Override
-    public List<CreditorTypeDto> getCreditorType() throws CreditorApiException {
-        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
+    public List<CreditorTypeDto> getCreditorType(CreditorTypeDto criteria) throws CreditorApiException {
+        try {
+            Verifier.verifyNotNull(criteria);    
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Type criteria object is required", e);
+        }
         List<CreditorTypeDto> results = null;
         try {
             results = dao.fetch(criteria);
@@ -549,54 +554,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         return results;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.subsidiary.CreditorApi#getCreditorType(int)
-     */
-    @Override
-    public CreditorTypeDto getCreditorType(Integer creditorTypeId) throws CreditorApiException {
-        try {
-            Verifier.verifyNotNull(creditorTypeId);    
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Creditor Type Id is required", e);
-        }
-        try {
-            Verifier.verifyPositive(creditorTypeId);    
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Creditor Type Id must be greater than zero", e);
-        }
-        
-        CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
-        criteria.setEntityId(creditorTypeId);
-        List<CreditorTypeDto> results = null;
-        try {
-            results = dao.fetch(criteria);
-        } catch (Exception e) {
-            this.msg = "Error retrieving creditor type data using multi property selection criteria";
-            logger.error(this.msg, e);
-            throw new CreditorApiException(e);
-        }
-        StringBuffer msgBuf = new StringBuffer();
-        if (results == null) {
-            msgBuf.append("Creditor type record by creditor type id, ");
-            msgBuf.append(creditorTypeId);
-            msgBuf.append(", was not found ");
-            logger.warn(msgBuf);
-            return null;
-        }
-        if (results.size() > 1) {
-            msgBuf.append("Too many creditor type entities returned for creditor type id, ");
-            msgBuf.append(creditorTypeId);
-            msgBuf.append(" Count: ");
-            msgBuf.append(results.size());
-            logger.error(msgBuf);
-            throw new CreditorApiException(msgBuf.toString());
-        }
-        return results.get(0);
-    }
 
     /**
      * Get transacton history for a particular creditor account.
