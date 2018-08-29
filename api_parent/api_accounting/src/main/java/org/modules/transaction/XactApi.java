@@ -36,10 +36,12 @@ public interface XactApi extends TransactionApi {
     /**
      * Retrieves a transaction category object using category id.
      * 
+     * @param criteria
+     *            instance of {@link XactCategoryDto}
      * @return {@link XactCategoryView} object
      * @throws XactApiException
      */
-    List<XactCategoryDto> getAllCategory() throws XactApiException;
+    List<XactCategoryDto> getCategory(XactCategoryDto criteria) throws XactApiException;
 
     /**
      * Retrieves a transaction category object using category id.

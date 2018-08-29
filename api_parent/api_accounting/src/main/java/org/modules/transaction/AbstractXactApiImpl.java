@@ -146,11 +146,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllCategory()
      */
     @Override
-    public List<XactCategoryDto> getAllCategory() throws XactApiException {
+    public List<XactCategoryDto> getCategory(XactCategoryDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
-            XactCategoryDto criteria = Rmt2XactDtoFactory.createXactCategoryInstance(null);
             results = dao.fetchCategory(criteria);
             return results;
         } catch (Exception e) {

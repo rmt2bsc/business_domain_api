@@ -69,7 +69,7 @@ public class TransactionCategoryApiTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
         List<XactCategoryDto> results = null;
         try {
-            results = api.getAllCategory();
+            results = api.getCategory(null);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -188,7 +188,7 @@ public class TransactionCategoryApiTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
         List<XactCategoryDto> results = null;
         try {
-            results = api.getAllCategory();
+            results = api.getCategory(null);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);
             Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
