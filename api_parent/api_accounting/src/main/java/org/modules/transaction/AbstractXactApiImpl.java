@@ -153,7 +153,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             results = dao.fetchCategory(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction categories";
+            this.msg = "Unable to retrieve transaction categories";
             throw new XactApiException(this.msg, e);
         }
     }
@@ -204,15 +204,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllGroups()
      */
     @Override
-    public List<XactCodeGroupDto> getAllGroups() throws XactApiException {
+    public List<XactCodeGroupDto> getGroup(XactCodeGroupDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeGroupDto> results = null;
-        XactCodeGroupDto criteria = Rmt2XactDtoFactory.createXactCodeGroupInstance(null);
         try {
             results = dao.fetchGroup(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction groups";
+            this.msg = "Unable to retrieve transaction groups";
             throw new XactApiException(this.msg, e);
         }
     }
