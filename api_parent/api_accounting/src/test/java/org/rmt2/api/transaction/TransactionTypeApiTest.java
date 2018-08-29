@@ -73,7 +73,7 @@ public class TransactionTypeApiTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         List<XactTypeDto> results = null;
         try {
-            results = api.getAllXactType();
+            results = api.getXactTypes(null);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -112,7 +112,7 @@ public class TransactionTypeApiTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         List<XactTypeDto> results = null;
         try {
-            results = api.getAllXactType();
+            results = api.getXactTypes(null);
         } catch (XactApiException e) {
             e.printStackTrace();
         }

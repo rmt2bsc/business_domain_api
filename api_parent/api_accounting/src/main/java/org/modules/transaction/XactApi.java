@@ -116,10 +116,12 @@ public interface XactApi extends TransactionApi {
      * Retrieves an ArrayList of transaction type objects based custom criteria
      * supplied by the user.
      * 
+     * @param criteria
+     *            instance of {@link XactTypeDto}
      * @return ArrayList of {@link XactType}
      * @throws XactApiException
      */
-    List<XactTypeDto> getAllXactType() throws XactApiException;
+    List<XactTypeDto> getXactTypes(XactTypeDto criteria) throws XactApiException;
 
     /**
      * Retrieves a specific transaction type object using its primary key.

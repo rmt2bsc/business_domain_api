@@ -350,14 +350,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllXactType()
      */
     @Override
-    public List<XactTypeDto> getAllXactType() throws XactApiException {
+    public List<XactTypeDto> getXactTypes(XactTypeDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
-            results = dao.fetchType(null);
+            results = dao.fetchType(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction type objects";
+            this.msg = "Unable to retrieve  transaction type objects";
             throw new XactApiException(this.msg, e);
         }
     }
