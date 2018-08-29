@@ -262,14 +262,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllCode()
      */
     @Override
-    public List<XactCodeDto> getAllCode() throws XactApiException {
+    public List<XactCodeDto> getCodes(XactCodeDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
-            results = dao.fetchCode(null);
+            results = dao.fetchCode(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction codes";
+            this.msg = "Unable to retrieve transaction codes";
             throw new XactApiException(this.msg, e);
         }
     }

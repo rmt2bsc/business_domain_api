@@ -82,12 +82,14 @@ public interface XactApi extends TransactionApi {
      * by the user. User is responsible for setting the base view and class so
      * that the API will know what data to retrieve.
      * 
+     * @param criteria
+     *            instance of {@link XactCodeDto}
      * @return ArrayList of unknown objects. The implementer of this method is
      *         responsible for applying the proper casting of each element
      *         contained in the returned results.
      * @throws XactApiException
      */
-    List<XactCodeDto> getAllCode() throws XactApiException;
+    List<XactCodeDto> getCodes(XactCodeDto criteria) throws XactApiException;
 
     /**
      * Retrieves a specific transaction code object using the primary key value.
