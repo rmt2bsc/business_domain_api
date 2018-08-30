@@ -38,6 +38,8 @@ public interface DisbursementsApi extends XactApi {
      * 
      * @param criteria
      * @param customCriteria
+     *            String containing custom selection criteria which conforms to
+     *            the underlying data source.
      * @return
      * @throws DisbursementsApiException
      */
