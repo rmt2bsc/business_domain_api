@@ -13,6 +13,7 @@ import org.dao.transaction.purchases.creditor.CreditorPurchasesDaoFactory;
 import org.dto.CreditorDto;
 import org.dto.SubsidiaryContactInfoDto;
 import org.dto.XactCreditChargeDto;
+import org.dto.XactCustomCriteriaDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
@@ -109,7 +110,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
 
         XactCreditChargeDto criteria = Rmt2CreditChargeDtoFactory.createCreditChargeInstance(null, null);
         criteria.setXactId(xactId);
-        List<XactCreditChargeDto> results = this.get(criteria);
+        List<XactCreditChargeDto> results = this.get(criteria, null);
         if (results == null) {
             return null;
         }
@@ -147,7 +148,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         criteria.setXactDate(xactDate);
         StringBuilder msgBuf = new StringBuilder();
         try {
-            return this.get(criteria);
+            return this.get(criteria, null);
         } catch (Exception e) {
             msgBuf.append("Error retrieving creditor purchases by transaction date, ");
             msgBuf.append(RMT2Date.formatDate(xactDate, "MM-dd-yyyy"));
@@ -205,7 +206,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         criteria.setCreditorId(creditorId);
         StringBuilder msgBuf = new StringBuilder();
         try {
-            return this.get(criteria);
+            return this.get(criteria, null);
         } catch (Exception e) {
             msgBuf.append("Error retrieving creditor purchases using creditor id: ");
             msgBuf.append(creditorId);
@@ -234,7 +235,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         criteria.setAccountNumber(accountNo);
         StringBuilder msgBuf = new StringBuilder();
         try {
-            return this.get(criteria);
+            return this.get(criteria, null);
         } catch (Exception e) {
             msgBuf.append("Error retrieving creditor purchases using creditor account number: ");
             msgBuf.append(accountNo);
@@ -262,7 +263,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         criteria.setXactConfirmNo(confirmNo);
         StringBuilder msgBuf = new StringBuilder();
         try {
-            return this.get(criteria);
+            return this.get(criteria, null);
         } catch (Exception e) {
             msgBuf.append("Error retrieving creditor purchases using creditor transaction confirmation number: ");
             msgBuf.append(confirmNo);
@@ -291,7 +292,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         criteria.setXactReason(reason);
         StringBuilder msgBuf = new StringBuilder();
         try {
-            return this.get(criteria);
+            return this.get(criteria, null);
         } catch (Exception e) {
             msgBuf.append("Error retrieving creditor purchases using creditor transaction reason/source description: ");
             msgBuf.append(reason);
@@ -311,16 +312,19 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      * @throws CreditorPurchasesApiException
      */
     @Override
-    public List<XactCreditChargeDto> get(XactCreditChargeDto criteria) throws CreditorPurchasesApiException {
+    public List<XactCreditChargeDto> get(XactCreditChargeDto criteria, XactCustomCriteriaDto customCriteria) throws CreditorPurchasesApiException {
         try {
             Verifier.verifyNotNull(criteria);
         } catch (VerifyException e) {
             this.msg = "Creditor criteria object is required";
             throw new InvalidDataException(this.msg, e);
         }
+        
+        String sqlCriteria = this.parseCriteria(customCriteria);
         StringBuilder msgBuf = new StringBuilder();
         List<XactCreditChargeDto> credXactResults;
         try {
+            criteria.setCriteria(sqlCriteria);
             credXactResults = this.dao.fetch(criteria);
             if (credXactResults == null) {
                 msgBuf.append("Creditor purchase data was not found using criteria object");
@@ -371,6 +375,20 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         return credXactResults;
     }
 
+    /**
+     * Interprets the incoming criteria, which can be in any format, and creates
+     * meaningful selection criteria that is usable by the target DAO
+     * implementation.
+     * 
+     * @param criteria
+     *            Instance of {@link XactCustomCriteriaDto} that is to be interpreted
+     * @return
+     */
+    @Override
+    protected String parseCriteria(XactCustomCriteriaDto criteria) {
+        return null;
+    }
+    
     /**
      * Combines contact data to the list of creditor purchase transaction.
      * 

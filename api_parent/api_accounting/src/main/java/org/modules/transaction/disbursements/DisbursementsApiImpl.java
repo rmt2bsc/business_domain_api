@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.dao.transaction.disbursements.DisbursementsDao;
 import org.dao.transaction.disbursements.DisbursementsDaoException;
 import org.dao.transaction.disbursements.DisbursementsDaoFactory;
+import org.dto.XactCustomCriteriaDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
 import org.modules.transaction.AbstractXactApiImpl;
@@ -81,7 +82,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (java.lang.String)
      */
     @Override
-    public List<XactDto> get(XactDto criteria, String customCriteria) throws DisbursementsApiException {
+    public List<XactDto> get(XactDto criteria, XactCustomCriteriaDto customCriteria) throws DisbursementsApiException {
         try {
             Verifier.verifyNotNull(criteria);
         }
@@ -127,7 +128,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (java.lang.String)
      */
     @Override
-    public List<XactTypeItemActivityDto> getItems(XactTypeItemActivityDto criteria, String customCriteria)
+    public List<XactTypeItemActivityDto> getItems(XactTypeItemActivityDto criteria, XactCustomCriteriaDto customCriteria)
             throws DisbursementsApiException {
         try {
             Verifier.verifyNotNull(criteria);
@@ -169,11 +170,12 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * implementation.
      * 
      * @param criteria
-     *            String of the criteria tat is to be interpreted
+     *            Instance of {@link XactCustomCriteriaDto} that is to be interpreted
      * @return
      */
-    private String parseCriteria(String criteria) {
-        return criteria;
+    @Override
+    protected String parseCriteria(XactCustomCriteriaDto criteria) {
+        return null;
     }
 
     private boolean isXactCriteriaPropertySet(XactDto criteria) {

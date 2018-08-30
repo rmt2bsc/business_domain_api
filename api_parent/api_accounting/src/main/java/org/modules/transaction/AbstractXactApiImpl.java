@@ -21,6 +21,7 @@ import org.dto.SubsidiaryDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
+import org.dto.XactCustomCriteriaDto;
 import org.dto.XactDto;
 import org.dto.XactTypeDto;
 import org.dto.XactTypeItemActivityDto;
@@ -100,6 +101,19 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         return dao;
     }
 
+    /**
+     * Interprets the incoming criteria, which can be in any format, and creates
+     * meaningful selection criteria that is usable by the target DAO
+     * implementation.
+     * 
+     * @param criteria
+     *            An instance of {@link XactCustomCriteriaDto}
+     * @return null
+     */
+    protected String parseCriteria(XactCustomCriteriaDto criteria) {
+        return null;
+    }
+    
     /*
      * (non-Javadoc)
      * 

@@ -1,5 +1,7 @@
 package org.modules.transaction;
 
+import org.dto.XactCustomCriteriaDto;
+
 import com.RMT2Base;
 import com.api.persistence.DaoClient;
 
@@ -30,7 +32,7 @@ public class XactApiFactory extends RMT2Base {
      * @return an instance of {@link XactApi} or null if <i>connection</i> is
      *         null.
      */
-    public XactApi createDefaultXactApi(DaoClient connection) {
+    public static final XactApi createDefaultXactApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }
@@ -39,4 +41,13 @@ public class XactApiFactory extends RMT2Base {
         return api;
     }
 
+    /**
+     * Create a transaction custom criteria object
+     * 
+     * @return {@link XactCustomCriteriaDto}
+     */
+    public static final XactCustomCriteriaDto createCustomCriteriaInstance() {
+        XactCustomCriteriaDto dto = new XactCustomCriteriaImpl();
+        return dto;
+    }
 }
