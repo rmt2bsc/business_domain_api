@@ -295,8 +295,9 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
 
         // Setup customer's sales order that will be invoiced
         TransactionDetailGroup details = f.createTransactionDetailGroup();
+        details.setSalesOrders(f.createSalesOrderListType());
         SalesOrderType sot = InvoiceTimesheetApiFactory.createJaxbSalesOrderInstance(invBean);
-        details.getSalesOrder().add(sot);
+        details.getSalesOrders().getSalesOrder().add(sot);
         request.setProfile(details);
 
         // Send time sheet deatils to Accounting systsem to create and invoice sales order

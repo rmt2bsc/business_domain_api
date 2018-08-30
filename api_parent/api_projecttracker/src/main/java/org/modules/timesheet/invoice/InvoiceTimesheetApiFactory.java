@@ -83,6 +83,7 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
     public static SalesOrderType createJaxbSalesOrderInstance(InvoiceBean so) {
         ObjectFactory f = new ObjectFactory();
         SalesOrderType sot = f.createSalesOrderType();
+        sot.setSalesOrderItems(f.createSalesOrderItemListType());
         CustomerType cust = f.createCustomerType();
         sot.setCustomer(cust);
         sot.getCustomer().setAccountNo(so.getAccountNo());
@@ -101,7 +102,7 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
             int count = 0;
             for (InvoiceDetailsBean item : so.getItems()) {
                 SalesOrderItemType soit = InvoiceTimesheetApiFactory.createJaxbSalesOrderItemInstance(item);
-                sot.getItems().add(soit);
+                sot.getSalesOrderItems().getSalesOrderItem().add(soit);
                 count++;
             }
             sit.setItemCount(BigInteger.valueOf(count));
