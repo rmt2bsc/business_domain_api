@@ -14,12 +14,12 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
 
     private String targetLevel;
     private String xactReasonFilterOption;
-    private double fromItemAmount;
-    private double toItemAmount;
+    private Double fromItemAmount;
+    private Double toItemAmount;
     private String fromItemAmountRelOp;
     private String toItemAmountRelOp;
-    private double fromXactAmount;
-    private double toXactAmount;
+    private Double fromXactAmount;
+    private Double toXactAmount;
     private String fromXactAmountRelOp;
     private String toXactAmountRelOp;
     private Date fromXactDate;
@@ -76,7 +76,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @return the fromItemAmount
      */
     @Override
-    public double getFromItemAmount() {
+    public Double getFromItemAmount() {
         return fromItemAmount;
     }
 
@@ -85,7 +85,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @param fromItemAmount the fromItemAmount to set
      */
     @Override
-    public void setFromItemAmount(double fromItemAmount) {
+    public void setFromItemAmount(Double fromItemAmount) {
         this.fromItemAmount = fromItemAmount;
     }
 
@@ -94,7 +94,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @return the toItemAmount
      */
     @Override
-    public double getToItemAmount() {
+    public Double getToItemAmount() {
         return toItemAmount;
     }
 
@@ -103,7 +103,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @param toItemAmount the toItemAmount to set
      */
     @Override
-    public void setToItemAmount(double toItemAmount) {
+    public void setToItemAmount(Double toItemAmount) {
         this.toItemAmount = toItemAmount;
     }
 
@@ -148,7 +148,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @return the fromXactAmount
      */
     @Override
-    public double getFromXactAmount() {
+    public Double getFromXactAmount() {
         return fromXactAmount;
     }
 
@@ -157,7 +157,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @param fromXactAmount the fromXactAmount to set
      */
     @Override
-    public void setFromXactAmount(double fromXactAmount) {
+    public void setFromXactAmount(Double fromXactAmount) {
         this.fromXactAmount = fromXactAmount;
     }
 
@@ -166,7 +166,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @return the toXactAmount
      */
     @Override
-    public double getToXactAmount() {
+    public Double getToXactAmount() {
         return toXactAmount;
     }
 
@@ -175,7 +175,7 @@ class XactCustomCriteriaImpl implements XactCustomCriteriaDto {
      * @param toXactAmount the toXactAmount to set
      */
     @Override
-    public void setToXactAmount(double toXactAmount) {
+    public void setToXactAmount(Double toXactAmount) {
         this.toXactAmount = toXactAmount;
     }
 

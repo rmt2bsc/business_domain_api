@@ -10,6 +10,14 @@ import java.util.Date;
  * 
  */
 public interface XactCustomCriteriaDto {
+    
+    public static final String ADV_SRCH_BEGIN = "BEGIN";
+    
+    public static final String ADV_SRCH_END = "END";
+
+    public static final String ADV_SRCH_CONTATIN = "CONTAIN";
+
+    public static final String ADV_SRCH_EXACT = "EXACT";
 
     /**
      * Sets the value of target level
@@ -35,12 +43,12 @@ public interface XactCustomCriteriaDto {
      * Set to xact amount
      * @param value
      */
-    void setToXactAmount(double value);
+    void setToXactAmount(Double value);
     
     /**
      * @return to xact amount
      */
-    double getToXactAmount();
+    Double getToXactAmount();
     
     /**
      * Sets the relational operator for to xact amount
@@ -56,12 +64,12 @@ public interface XactCustomCriteriaDto {
      * Set from xact amount
      * @param value
      */
-    void setFromXactAmount(double value);
+    void setFromXactAmount(Double value);
     
     /**
      * @return from xact amount
      */
-    double getFromXactAmount();
+    Double getFromXactAmount();
     
     /**
      * Sets the relational operator for from xact amount
@@ -117,12 +125,12 @@ public interface XactCustomCriteriaDto {
      * Set to item amount
      * @param value
      */
-    void setToItemAmount(double value);
+    void setToItemAmount(Double value);
     
     /**
      * @return to item amount
      */
-    double getToItemAmount();
+    Double getToItemAmount();
     
     /**
      * Sets the relational operator for to item amount
@@ -138,12 +146,12 @@ public interface XactCustomCriteriaDto {
      * Set from item amount
      * @param value
      */
-    void setFromItemAmount(double value);
+    void setFromItemAmount(Double value);
     
     /**
      * @return from item amount
      */
-    double getFromItemAmount();
+    Double getFromItemAmount();
     
     /**
      * Sets the relational operator for from item amount
