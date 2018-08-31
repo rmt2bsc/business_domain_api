@@ -1,5 +1,7 @@
 package org.modules.transaction.disbursements;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,6 +17,7 @@ import org.modules.transaction.XactConst;
 
 import com.InvalidDataException;
 import com.api.persistence.DaoClient;
+import com.api.util.RMT2Date;
 import com.api.util.RMT2String2;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
@@ -99,6 +102,42 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         }
         
         String sqlCriteria = this.parseCriteria(customCriteria);
+        
+        // Handle the transaction reason
+        if (!RMT2String2.isEmpty(criteria.getXactReason())) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("xact_reason ");
+            switch (customCriteria.getXactReasonFilterOption()) {
+                case XactCustomCriteriaDto.ADV_SRCH_BEGIN:
+                    buf.append("like \'");
+                    buf.append(customCriteria.getXactReasonFilterOption());
+                    buf.append("%\' ");
+                    break;
+                case XactCustomCriteriaDto.ADV_SRCH_CONTATIN:
+                    buf.append("like \'%");
+                    buf.append(customCriteria.getXactReasonFilterOption());
+                    buf.append("%\' ");
+                    break;
+                case XactCustomCriteriaDto.ADV_SRCH_END:
+                    buf.append("like \'%");
+                    buf.append(customCriteria.getXactReasonFilterOption());
+                    buf.append("like \'");
+                    break;
+                case XactCustomCriteriaDto.ADV_SRCH_EXACT:
+                    buf.append("= \'");
+                    buf.append(customCriteria.getXactReasonFilterOption());
+                    buf.append("\'");
+                    break;
+                default:
+            }
+            if (!RMT2String2.isEmpty(sqlCriteria)) {
+                sqlCriteria += " and " + buf.toString();
+            }
+            else {
+                sqlCriteria = buf.toString();
+            }
+        }
+        
         List<XactDto> results;
         try {
             criteria.setCriteria(sqlCriteria);
@@ -172,10 +211,116 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * @param criteria
      *            Instance of {@link XactCustomCriteriaDto} that is to be interpreted
      * @return
+     * @throws {@link SystemException}
      */
     @Override
-    protected String parseCriteria(XactCustomCriteriaDto criteria) {
-        return null;
+    protected String parseCriteria(XactCustomCriteriaDto criteriaObj) {
+        if (criteriaObj == null) {
+            return null;
+        }
+        StringBuilder criteria = new StringBuilder(100);
+
+        // Get selection criteria
+        Date xactDate1Val = criteriaObj.getFromXactDate();
+        String xactDate1Op = criteriaObj.getFromXactDateRelOp();
+        Date xactDate2Val = criteriaObj.getToXactDate();
+        String xactDate2Op = criteriaObj.getToXactDateRelOp();
+        Double xactAmt1Val = criteriaObj.getFromXactAmount();
+        String xactAmt1Op = criteriaObj.getFromXactAmountRelOp();
+        Double xactAmt2Val = criteriaObj.getToXactAmount();
+        String xactAmt2Op = criteriaObj.getToXactAmountRelOp();
+        Double itemAmt1Val = criteriaObj.getFromItemAmount();
+        String itemAmt1Op = criteriaObj.getFromItemAmountRelOp();
+        Double itemAmt2Val = criteriaObj.getToItemAmount();
+        String itemAmt2Op = criteriaObj.getToItemAmountRelOp();
+        String reason = criteriaObj.getXactReasonFilterOption();
+
+        // Apply default selection criteria if none was entered
+        if (xactDate1Val == null && xactDate1Val == null && xactAmt1Val == null
+                && xactAmt2Val == null && RMT2String2.isEmpty(reason)) {
+            Date curDate = new Date();
+            long begDateTime = RMT2Date.decrementDate(curDate, Calendar.DATE, -30);
+            Date begDateNet30 = new Date(begDateTime);
+            String begDate = RMT2Date.formatDate(begDateNet30, "MM/dd/yyyy");
+            String endDate = RMT2Date.formatDate(curDate, "MM/dd/yyyy");
+            if (criteria.length() > 0) {
+            criteria.append(" and ");
+            }
+            criteria.append(" xact_date >= ");
+            criteria.append(" \'" + begDate + "\'");
+            criteria.append(" and xact_date <= ");
+            criteria.append(" \'" + endDate + "\'");
+            return criteria.toString();
+        }
+
+        //  Add transaction date #1 criteria
+        if (xactDate1Val != null && !RMT2String2.isEmpty(xactDate1Op)) {
+            String dateStr = RMT2Date.formatDate(xactDate1Val, "yyyy-MM-dd");
+            
+            if (criteria.length() > 0) {
+            criteria.append(" and ");
+            }
+            criteria.append("xact_date ");
+            criteria.append(xactDate1Op);
+            criteria.append(" \'" + dateStr + "\'");
+        }
+
+        //  Add transaction date #2 criteria
+        if (xactDate2Val != null && !RMT2String2.isEmpty(xactDate2Op)) {
+            String dateStr = RMT2Date.formatDate(xactDate2Val, "yyyy-MM-dd");
+            if (criteria.length() > 0) {
+            criteria.append(" and ");
+            }
+            criteria.append("xact_date ");
+            criteria.append(xactDate2Op);
+            criteria.append(" \'" + dateStr + "\'");
+        }
+
+        //  Add transaction amount #1 criteria
+        if (xactAmt1Val != null && !RMT2String2.isEmpty(xactAmt1Op)) {
+            if (criteria.length() > 0) {
+            criteria.append(" and ");
+            }
+            criteria.append("xact_amount ");
+            criteria.append(xactAmt1Op);
+            criteria.append(" " + xactAmt1Val);
+        }
+
+        //  Add transaction amount #2 criteria
+        if (xactAmt2Val != null && !RMT2String2.isEmpty(xactAmt2Op)) {
+            if (criteria.length() > 0) {
+            criteria.append(" and ");
+            }
+            criteria.append("xact_amount ");
+            criteria.append(xactAmt2Op);
+            criteria.append(" " + xactAmt2Val);
+        }
+        
+    //  Add item amount #1 criteria
+        if (itemAmt1Val != null && !RMT2String2.isEmpty(itemAmt1Op)) {
+            if (criteria.length() > 0) {
+            criteria.append(" and ");
+            }
+            criteria.append("abs(item_amount) ");
+            criteria.append(itemAmt1Op);
+            criteria.append(" " + itemAmt1Val);
+        }
+
+        //  Add item amount #2 criteria
+        if (itemAmt2Val != null && !RMT2String2.isEmpty(itemAmt2Op)) {
+            if (criteria.length() > 0) {
+            criteria.append(" and ");
+            }
+            criteria.append("abs(item_amount) ");
+            criteria.append(itemAmt2Op);
+            criteria.append(" " + itemAmt2Val);
+    }
+        
+        if (RMT2String2.isEmpty(reason)) {
+            criteriaObj.setXactReasonFilterOption(XactCustomCriteriaDto.ADV_SRCH_BEGIN);
+        }
+       
+    return criteria.length() <= 0 ? null : criteria.toString();
     }
 
     private boolean isXactCriteriaPropertySet(XactDto criteria) {
