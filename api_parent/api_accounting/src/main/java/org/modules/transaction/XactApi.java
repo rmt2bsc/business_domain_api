@@ -25,6 +25,16 @@ import com.api.foundation.TransactionApi;
 public interface XactApi extends TransactionApi {
 
     /**
+     * Retrieves a list transaction objects
+     * 
+     * @param criteria
+     *            instnce of {@link Xact}
+     * @return List<{@link Xact}>
+     * @throws XactApiException
+     */
+    List<XactDto> getXact(XactDto criteria) throws XactApiException;
+
+    /**
      * Retrieves transaction data using transaction id
      * 
      * @param xactId

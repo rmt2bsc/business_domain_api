@@ -1167,8 +1167,9 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             Assert.assertTrue(e instanceof SalesApiException);
             Assert.assertTrue(e.getCause() instanceof SalesApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof CannotRetrieveException);
-            Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof DatabaseException);
+            Assert.assertTrue(e.getCause().getCause().getCause() instanceof XactApiException);
+            Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof CannotRetrieveException);
+            Assert.assertTrue(e.getCause().getCause().getCause().getCause().getCause() instanceof DatabaseException);
         }
     }
     

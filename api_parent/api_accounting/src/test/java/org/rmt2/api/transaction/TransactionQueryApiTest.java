@@ -194,16 +194,15 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
             Assert.fail("Fetch single xact with exception test case setup failed");
         }
 
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-        XactDto results = null;
         criteria.setXactId(111111);
         try {
-            results = api.getXactById(111111);
+            api.getXactById(111111);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);
-            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            Assert.assertTrue(e.getCause() instanceof XactApiException);
+            Assert.assertTrue(e.getCause().getCause() instanceof CannotRetrieveException);
             e.printStackTrace();
         }
     }
