@@ -114,7 +114,7 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
                 .createMockXactTypeItemActivitySingleFetchResponse();
         this.mockXactTypeItemActivityNotFoundFetchResponse = this
                 .createMockXactTypeItemActivityNotFoundResponse();
-        
+
         this.mockVwXactTypeItemActivityFetchAllResponse = this
                 .createMockVwXactTypeItemActivityFetchAllsponse();
         this.mockVwXactTypeItemActivityFetchSingleResponse = this
@@ -147,7 +147,7 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         list.add(o);
 
         o = AccountingMockDataFactory.createMockOrmVwXactTypeItemActivity(7001, 1111111, 21.00,
-                        "2017-01-01", 20.00, 101, 1001, "XT-1", 201, "XC-1");
+                "2017-01-01", 20.00, 101, 1001, "XT-1", 201, "XC-1");
         list.add(o);
 
         o = AccountingMockDataFactory.createMockOrmVwXactTypeItemActivity(7002, 1111111, 22.00,
@@ -256,25 +256,25 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
 
     private List<VwXactList> createMockXactFetchAllsponse() {
         List<VwXactList> list = new ArrayList<VwXactList>();
-        VwXactList o = AccountingMockDataFactory.createMockOrmXact(111111, 301,
-                3333, RMT2Date.stringToDate("2017-01-13"), 111.11, 200, "1111-1111-1111-1111");
+        VwXactList o = AccountingMockDataFactory.createMockOrmXact(111111, XactConst.XACT_TYPE_CREDITOR_PURCHASE,
+                XactConst.XACT_SUBTYPE_NOT_ASSIGNED, RMT2Date.stringToDate("2017-01-13"), 100.00, 200, "1111-1111-1111-1111");
         list.add(o);
 
-        o = AccountingMockDataFactory.createMockOrmXact(222222, 302, 4444,
-                RMT2Date.stringToDate("2017-02-14"), 222.11, 200,
+        o = AccountingMockDataFactory.createMockOrmXact(222222, XactConst.XACT_TYPE_CREDITOR_PURCHASE, XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                RMT2Date.stringToDate("2017-01-14"), 101.00, 200,
                 "2222-2222-2222-2222");
         list.add(o);
 
-        o = AccountingMockDataFactory.createMockOrmXact(333333, 301, 3333,
-                RMT2Date.stringToDate("2017-03-15"), 333.11, 200, "3333-3333-3333-3333");
+        o = AccountingMockDataFactory.createMockOrmXact(333333, XactConst.XACT_TYPE_CREDITOR_PURCHASE, XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                RMT2Date.stringToDate("2017-01-15"), 102.00, 200, "3333-3333-3333-3333");
         list.add(o);
 
-        o = AccountingMockDataFactory.createMockOrmXact(444444, 301, 3333,
-                RMT2Date.stringToDate("2017-04-16"), 444.11, 200, "4444-4444-4444-4444");
+        o = AccountingMockDataFactory.createMockOrmXact(444444, XactConst.XACT_TYPE_CREDITOR_PURCHASE, XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                RMT2Date.stringToDate("2017-01-16"), 103.00, 200, "4444-4444-4444-4444");
         list.add(o);
 
-        o = AccountingMockDataFactory.createMockOrmXact(555555, 302, 3333,
-                RMT2Date.stringToDate("2017-05-17"), 555.11, 200,
+        o = AccountingMockDataFactory.createMockOrmXact(555555, XactConst.XACT_TYPE_CREDITOR_PURCHASE, XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                RMT2Date.stringToDate("2017-01-17"), 104.00, 200,
                 "5555-5555-5555-5555");
         list.add(o);
         return list;

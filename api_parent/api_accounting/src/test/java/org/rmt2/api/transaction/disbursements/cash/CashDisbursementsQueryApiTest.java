@@ -113,12 +113,10 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
             String month = "0" + (ndx + monthSeed);
             String day = String.valueOf(ndx + daySeed);
             String dt = "2017-" + month + "-" + day;
-            Assert.assertEquals(dt,
-                    RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
+            Assert.assertEquals("2017-01-" + (13 + ndx), RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
 
             // Calcuate acutal transaction amount
-            double dollarAmt = (amountSeed * (ndx + 1)) + 0.11;
-            Assert.assertEquals(dollarAmt, item.getXactAmount(), 0);
+            Assert.assertEquals(100.00 + ndx, item.getXactAmount(), 0);
 
             Assert.assertEquals(200, item.getXactTenderId());
             Assert.assertNotNull(item.getXactNegInstrNo());

@@ -4,6 +4,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
@@ -24,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.CannotRetrieveException;
+import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.api.util.RMT2Date;
 
@@ -58,6 +60,75 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
     }
 
     @Test
+    public void testFetchMultipleData() {
+        VwXactList mockCriteria = new VwXactList();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenReturn(this.mockXactFetchAllResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple xact test case setup failed");
+        }
+
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
+        List<XactDto> results = null;
+        try {
+            results = api.getXact(criteria);
+        } catch (XactApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        int ndx = 0;
+        for (XactDto item : results) {
+            Assert.assertEquals("reason for transaction id " + item.getXactId(), item.getXactReason());
+            Assert.assertEquals(XactConst.XACT_TYPE_CREDITOR_PURCHASE, item.getXactTypeId());
+            Assert.assertEquals(XactConst.XACT_SUBTYPE_NOT_ASSIGNED, item.getXactSubtypeId());
+            Assert.assertEquals("2017-01-" + (13 + ndx), RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
+            Assert.assertEquals(100.00 + ndx, item.getXactAmount(), 0);
+            ndx++;
+        }
+    }
+
+    @Test
+    public void testError_FetchMultiple_API_DB_Fault() {
+        VwXactList mockCriteria = new VwXactList();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria)))
+                    .thenThrow(new DatabaseException("API Database exception occurred"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple xact test case setup failed");
+        }
+
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
+        try {
+            api.getXact(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof XactApiException);
+            Assert.assertTrue(e.getCause() instanceof CannotRetrieveException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+
+    @Test
+    public void testValidation_FetchMultiple_NoCriteria() {
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        XactDto criteria = null;
+        try {
+            api.getXact(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+
+    @Test
     public void testFetchSingleData() {
         VwXactList mockCriteria = new VwXactList();
         mockCriteria.setId(111111);
@@ -69,8 +140,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
             Assert.fail("Fetch single xact test case setup failed");
         }
 
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         XactDto results = null;
         criteria.setXactId(111111);
