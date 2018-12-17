@@ -83,13 +83,11 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
         ObjectFactory f = new ObjectFactory();
         SalesOrderType sot = f.createSalesOrderType();
         sot.setSalesOrderItems(f.createSalesOrderItemListType());
-        SalesOrderType.SalesOrderId soIdObj = f.createSalesOrderTypeSalesOrderId();
-        soIdObj.setValue(BigInteger.valueOf(so.getSalesOrderId()));
-        soIdObj.setCustomerAccountNo(so.getAccountNo());
-        soIdObj.setCustomerId(BigInteger.valueOf(so.getCustomerId()));
-        soIdObj.setCustomerName(null);
-        soIdObj.setInvoiced(so.getInvoiced() == 1);
-        sot.setSalesOrderId(soIdObj);
+        sot.setSalesOrderId(BigInteger.valueOf(so.getSalesOrderId()));
+        sot.setCustomerAccountNo(so.getAccountNo());
+        sot.setCustomerId(BigInteger.valueOf(so.getCustomerId()));
+        sot.setCustomerName(null);
+        sot.setInvoiced(so.getInvoiced() == 1);
         
         sot.setOrderTotal(BigDecimal.valueOf(so.getOrderTotal()));
         
@@ -122,9 +120,8 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
         ObjectFactory f = new ObjectFactory();
         SalesOrderItemType soit = f.createSalesOrderItemType();
         InventoryItemType imt = f.createInventoryItemType();
-        SalesOrderItemType.SalesOrderItemId soItemIdObj = f.createSalesOrderItemTypeSalesOrderItemId();
-        soItemIdObj.setValue(BigInteger.valueOf(soi.getSoItemId()));
-        soItemIdObj.setSalesOrderId(BigInteger.valueOf(soi.getSoId()));
+        soit.setSalesOrderItemId(BigInteger.valueOf(soi.getSoItemId()));
+        soit.setSalesOrderId(BigInteger.valueOf(soi.getSoId()));
         soit.setItem(imt);
         imt.setItemId(BigInteger.valueOf(soi.getItemId()));
         soit.setItemNameOverride(soi.getItemNameOverride());
