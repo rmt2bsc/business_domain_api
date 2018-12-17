@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.modules.ProjectTrackerApiConst;
-import org.rmt2.jaxb.CustomerType;
 import org.rmt2.jaxb.InventoryItemType;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.jaxb.SalesInvoiceType;
@@ -84,12 +83,14 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
         ObjectFactory f = new ObjectFactory();
         SalesOrderType sot = f.createSalesOrderType();
         sot.setSalesOrderItems(f.createSalesOrderItemListType());
-        CustomerType cust = f.createCustomerType();
-        sot.setCustomer(cust);
-        sot.getCustomer().setAccountNo(so.getAccountNo());
-        sot.setSalesOrderId(BigInteger.valueOf(so.getSalesOrderId()));
-        sot.getCustomer().setCustomerId(BigInteger.valueOf(so.getCustomerId()));
-        sot.setInvoiced(so.getInvoiced() == 1);
+        SalesOrderType.SalesOrderId soIdObj = f.createSalesOrderTypeSalesOrderId();
+        soIdObj.setValue(BigInteger.valueOf(so.getSalesOrderId()));
+        soIdObj.setCustomerAccountNo(so.getAccountNo());
+        soIdObj.setCustomerId(BigInteger.valueOf(so.getCustomerId()));
+        soIdObj.setCustomerName(null);
+        soIdObj.setInvoiced(so.getInvoiced() == 1);
+        sot.setSalesOrderId(soIdObj);
+        
         sot.setOrderTotal(BigDecimal.valueOf(so.getOrderTotal()));
         
         SalesInvoiceType sit = f.createSalesInvoiceType();
@@ -121,12 +122,11 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
         ObjectFactory f = new ObjectFactory();
         SalesOrderItemType soit = f.createSalesOrderItemType();
         InventoryItemType imt = f.createInventoryItemType();
-        SalesOrderType sot = f.createSalesOrderType();
+        SalesOrderItemType.SalesOrderItemId soItemIdObj = f.createSalesOrderItemTypeSalesOrderItemId();
+        soItemIdObj.setValue(BigInteger.valueOf(soi.getSoItemId()));
+        soItemIdObj.setSalesOrderId(BigInteger.valueOf(soi.getSoId()));
         soit.setItem(imt);
-        soit.setSalesOrder(sot);
         imt.setItemId(BigInteger.valueOf(soi.getItemId()));
-        soit.setSalesOrderItemId(BigInteger.valueOf(soi.getSoItemId()));
-        sot.setSalesOrderId(BigInteger.valueOf(soi.getSoId()));
         soit.setItemNameOverride(soi.getItemNameOverride());
         soit.setOrderQty(BigInteger.valueOf(Double.valueOf(soi.getOrderQty()).longValue()));
         soit.setBackOrderQty(BigDecimal.valueOf(soi.getBackOrderQty()));
