@@ -27,8 +27,8 @@ public class CreditorPurchasesApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link CreditorPurchasesApi}
      */
-    public CreditorPurchasesApi createApi() {
-        return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
+    public static final CreditorPurchasesApi createApi() {
+        return createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -38,7 +38,7 @@ public class CreditorPurchasesApiFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link CreditorPurchasesApi}
      */
-    public CreditorPurchasesApi createApi(String appName) {
+    public static final CreditorPurchasesApi createApi(String appName) {
         CreditorPurchasesApiImpl api = new CreditorPurchasesApiImpl(appName);
         return api;
     }
@@ -54,7 +54,7 @@ public class CreditorPurchasesApiFactory extends RMT2Base {
      * @return an instance of {@link CreditorPurchasesApi} or null if
      *         <i>connection</i> is null.
      */
-    public CreditorPurchasesApi createApi(DaoClient connection) {
+    public static final CreditorPurchasesApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }
