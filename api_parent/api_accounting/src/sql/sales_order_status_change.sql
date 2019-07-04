@@ -51,4 +51,3 @@ delete from customer_activity where customer_actv_id in (2358, 2359)
 select * from xact order by xact_id desc
 -- Delete the invoiced and/or cash receipt entries from transaction table
 delete from xact where xact_id in (xact_id, xact_id)
-
