@@ -145,7 +145,7 @@ public class XactConst {
      ****************************************************************/
     public final static int XACT_TYPE_CASHSALES = 1;
 
-    public final static int XACT_TYPE_CASHPAY = 2;
+    public final static int XACT_TYPE_CASHRECEIPT = 2;
 
     public final static int XACT_TYPE_SALESONACCTOUNT = 10;
 

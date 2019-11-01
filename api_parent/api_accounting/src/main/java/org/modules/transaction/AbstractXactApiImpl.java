@@ -1184,7 +1184,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             rc = custDao.maintain(xactHist);
             // Update transaction with confirmation number
             switch (xactDto.getXactTypeId()) {
-                case XactConst.XACT_TYPE_CASHPAY:
+                case XactConst.XACT_TYPE_CASHRECEIPT:
                 case XactConst.XACT_TYPE_CASHSALES:
                     xactDto.setXactConfirmNo(this.createGenericConfirmNo());
                     xactDao.maintain(xactDto);

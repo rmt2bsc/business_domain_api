@@ -136,7 +136,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         xact.setXactAmount(cashPaymentAmount);
         xact.setXactReason("Full payment received for sales order #" + salesOrder.getSalesOrderId());
-        xact.setXactTypeId(XactConst.XACT_TYPE_CASHPAY);
+        xact.setXactTypeId(XactConst.XACT_TYPE_CASHRECEIPT);
 
         // Create cash receipt transaction for the given sales order.
         try {
@@ -230,7 +230,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         int xactId = 0;
         double xactAmount = 0;
 
-        xact.setXactTypeId(XactConst.XACT_TYPE_CASHPAY);
+        xact.setXactTypeId(XactConst.XACT_TYPE_CASHRECEIPT);
         try {
             xactId = this.update(xact, null);
             // Ensure that the customer activity is posted as a negative amount.
