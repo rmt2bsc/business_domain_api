@@ -16,8 +16,7 @@ import com.RMT2Constants;
  * @author rterrell
  * 
  */
-class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
-        SalesOrderDto {
+class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements SalesOrderDto {
 
     private SalesOrder so;
 
@@ -198,8 +197,7 @@ class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
      */
     @Override
     public void setCustomerName(String value) {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -209,8 +207,7 @@ class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
      */
     @Override
     public String getCustomerName() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
 
     /*
@@ -331,6 +328,16 @@ class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
     @Override
     public Date getSaleOrderDate() {
         return this.so.getEffectiveDate();
+    }
+
+    @Override
+    public Date getEffectiveDate() {
+        return this.so.getEffectiveDate();
+    }
+
+    @Override
+    public void setEffectiveDate(Date value) {
+        this.so.setEffectiveDate(value);
     }
 
 }
