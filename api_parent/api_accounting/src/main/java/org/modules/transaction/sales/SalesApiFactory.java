@@ -27,8 +27,8 @@ public class SalesApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link SalesApi}
      */
-    public SalesApi createApi() {
-        return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
+    public static final SalesApi createApi() {
+        return SalesApiFactory.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -37,7 +37,7 @@ public class SalesApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link SalesApi}
      */
-    public SalesApi createApi(String appName) {
+    public static final SalesApi createApi(String appName) {
         SalesApiImpl api = new SalesApiImpl(appName);
         return api;
     }
@@ -53,7 +53,7 @@ public class SalesApiFactory extends RMT2Base {
      * @return an instance of {@link SalesApi} or null if <i>connection</i> is
      *         null.
      */
-    public SalesApi createApi(DaoClient connection) {
+    public static final SalesApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }
