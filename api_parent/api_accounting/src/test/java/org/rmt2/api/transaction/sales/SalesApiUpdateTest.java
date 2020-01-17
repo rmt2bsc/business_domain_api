@@ -249,8 +249,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Create_SalesOrder_Success() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         int results = 0;
         try {
             results = api.updateSalesOrder(this.newSalesOrderDto, this.newLineItemListDto);
@@ -269,8 +268,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         lineItem.setOrderQty(5);
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         int results = 0;
         try {
             results = api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
@@ -293,8 +291,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         lineItem.setInitUnitCost(0);
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         int results = 0;
         try {
             results = api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
@@ -311,8 +308,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Update_SalesOrder_Success() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         int results = 0;
         try {
             results = api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
@@ -335,8 +331,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             Assert.fail("Sales order validation DB Exception test case setup failed");
         }
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -358,8 +353,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             Assert.fail("Sales order validation DB Exception test case setup failed");
         }
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -383,8 +377,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -409,8 +402,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -433,8 +425,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -457,8 +448,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -481,8 +471,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -507,8 +496,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -533,8 +521,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -557,8 +544,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -573,8 +559,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_Null_SalesOrder_Object() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(null, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -598,8 +583,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -613,8 +597,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_SalesOrder_CustomerId_Negative() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.newSalesOrderDto.setCustomerId(-111);
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
@@ -629,8 +612,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_SalesOrder_CustomerId_Zero() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.newSalesOrderDto.setCustomerId(0);
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
@@ -655,8 +637,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -670,8 +651,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_SalesOrder_LineItemList_Null() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, null);
             Assert.fail("Test failed due to exception was expected");
@@ -685,8 +665,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_SalesOrder_LineItemList_Empty() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.newSingleLineItemListDto.clear();
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
@@ -701,8 +680,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_SalesOrder_LineItemList_Negative_ItemId() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.newSingleLineItemListDto.get(0).setItemId(-100);
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
@@ -717,8 +695,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_SalesOrder_LineItemList_Zero_ItemId() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.newSingleLineItemListDto.get(0).setItemId(0);
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
@@ -741,8 +718,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -764,8 +740,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -789,8 +764,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.updateSalesOrder(this.newSalesOrderDto, this.newSingleLineItemListDto);
             Assert.fail("Test failed due to exception was expected");
@@ -985,8 +959,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         int results = 0;
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
@@ -1002,8 +975,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_Invoicing_SalesOrder_Null() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             api.invoiceSalesOrder(null, this.existingLineItemListDto, true);
             Assert.fail("Test failed due to exception was expected to be thrown");
@@ -1016,8 +988,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     @Test
     public void test_Validation_Invoicing_SalesOrderItemList_Null() {
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
             api.invoiceSalesOrder(this.existingSalesOrderDto, null, true);
@@ -1041,8 +1012,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
             api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
@@ -1067,8 +1037,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
             api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
@@ -1099,8 +1068,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
             api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
@@ -1127,8 +1095,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
             api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
@@ -1171,8 +1138,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
             api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
@@ -1257,12 +1223,10 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
-        int results = 0;
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
-            results = api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, false);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, false);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -1343,12 +1307,10 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
-        int results = 0;
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
-            results = api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
@@ -1459,12 +1421,10 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         }
 
         // Perform test
-        SalesApiFactory f = new SalesApiFactory();
-        SalesApi api = f.createApi(mockDaoClient);
-        int results = 0;
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         try {
             this.existingSalesOrderDto.setSoStatusId(SalesApiConst.STATUS_CODE_QUOTE);
-            results = api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
+            api.invoiceSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto, true);
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
