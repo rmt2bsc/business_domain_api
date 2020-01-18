@@ -402,6 +402,15 @@ public class SalesApiTestData extends TransactionApiTestData {
         return list;
     }
     
+    
+    public static final SalesOrderStatusHist createMockSalesOrderStatusHistoryInvoicedResponse() {
+        SalesOrderStatusHist o = AccountingMockDataFactory.createMockOrmSalesOrderStatusHist(72,
+                1000, SalesApiConst.STATUS_CODE_INVOICED, "2017-03-10",
+                null);
+        return o;
+    }
+    
+    
     public static final List<ItemMaster> createMockItemMasterNotFoundResponse() {
         List<ItemMaster> list = null;
         return list;

@@ -25,6 +25,8 @@ import org.dao.transaction.sales.SalesInvoiceDaoException;
 import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dto.SalesOrderDto;
 import org.dto.SalesOrderItemDto;
+import org.dto.XactDto;
+import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -1432,5 +1434,85 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             Assert.assertTrue(e.getCause() instanceof SalesApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof CashReceiptApiException);
         }
+    }
+
+    @Test
+    public void test_Close_SIngle_SalesOrder_For_Payment_Success() {
+        // Setup new mock sales order
+        List<SalesOrder> soList = SalesApiTestData.createMockSalesOrderSingleResponse();
+        List<SalesOrderDto> soDtoList = new ArrayList<>();
+
+        // Five sales orders
+        for (SalesOrder item : soList) {
+            item.setOrderTotal(100.00);
+            item.setInvoiced(1);
+            SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(item);
+            soDtoList.add(dto);
+        }
+
+        // Setup mock for validating "Closed" sales order status verification
+        SalesOrderStatus mockNextSalesOrderStatusFetchCriteria = new SalesOrderStatus();
+        mockNextSalesOrderStatusFetchCriteria.setSoStatusId(SalesApiConst.STATUS_CODE_CLOSED);
+        List<SalesOrderStatus> mockNextSalesOrderStatusFetchResponse = SalesApiTestData.createMockSingleSalesOrderStatus(
+                SalesApiConst.STATUS_CODE_CLOSED, "Closed");
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockNextSalesOrderStatusFetchCriteria)))
+                    .thenReturn(mockNextSalesOrderStatusFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single slaes order fetch test case setup failed");
+        }
+        
+        // Setup mock to get the current status of the sales order
+        SalesOrderStatusHist mockStatusHistoryInvoiced = createMockSalesOrderStatusHistoryInvoicedResponse();
+        SalesOrderStatusHist mockCurrentSalesOrderStatus = new SalesOrderStatusHist();
+        mockCurrentSalesOrderStatus.setSoId(1000);
+        try {
+            // Ensure that current status returned is "Invoiced"
+            when(this.mockPersistenceClient.retrieveObject(eq(mockCurrentSalesOrderStatus))).thenReturn(mockStatusHistoryInvoiced);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("All Sales order current status fetch test case setup failed");
+        }
+
+        // Setup mock transaction
+        List<VwXactList> xactList = this.createMockXactSingleFetchResponse();
+        VwXactList vwXact = xactList.get(0);
+        vwXact.setXactAmount(100.00);
+        XactDto xactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
+
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
+        int results = 0;
+        try {
+            results = api.closeSalesOrderForPayment(soDtoList, xactDto);
+        } catch (SalesApiException e) {
+            e.printStackTrace();
+            Assert.fail("Test failed due to unexpected exception thrown");
+        }
+        Assert.assertEquals(1, results);
+
+    }
+
+    // @Test
+    public void test_Close_Multiple_SalesOrder_For_Payment_Success() {
+        // Setup new mock sales orders
+        List<SalesOrder> so = SalesApiTestData.createMockSalesOrderAllsponse();
+        List<SalesOrderDto> soDto = new ArrayList<>();
+
+        // Five sales orders
+        for (SalesOrder item : so) {
+            item.setOrderTotal(100.00);
+            SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(item);
+            soDto.add(dto);
+        }
+
+        // Setup mock transaction
+        List<VwXactList> xactList = this.createMockXactSingleFetchResponse();
+        VwXactList vwXact = xactList.get(0);
+        vwXact.setXactAmount(500.00);
+        XactDto xact = Rmt2XactDtoFactory.createXactInstance(vwXact);
+
+
+
     }
 }

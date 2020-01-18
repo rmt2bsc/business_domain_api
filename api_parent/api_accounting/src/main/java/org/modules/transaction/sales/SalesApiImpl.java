@@ -659,8 +659,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * Updates the status of one or more invoiced sales orders to "Closed" when
      * a payment is received.
      * <p>
-     * The total amount of selected invoices must equal the amount of
-     * payment transaction received for the account.
+     * The total amount of selected invoices must equal the amount of payment
+     * transaction received for the account.
      * 
      * @param order
      *            a List of orders covering the payment.
@@ -670,8 +670,10 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      *             <i>orders</i> and/or <i>xaact</i> is null or the sum of all
      *             order totals belonging to <i>orders</i> does not equal
-     *             transaction amount of <i>paymentXact</i>.
-     * @throws InvalidDataException <i>orders</i> or <i>paymentXact</i> are null.
+     *             transaction amount of <i>paymentXact</i> or one or more
+     *             <i>orders</i> were found to not in invoice status.
+     * @throws InvalidDataException
+     *             <i>orders</i> or <i>paymentXact</i> are null.
      */
     public int closeSalesOrderForPayment(List<SalesOrderDto> orders, XactDto paymentXact) throws SalesApiException {
         try {
@@ -690,6 +692,17 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             Verifier.verifyNotNull(paymentXact);
         } catch (VerifyException e) {
             this.msg = "Payment transaction is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+
+        int soId = 0;
+        try {
+            for (SalesOrderDto order : orders) {
+                soId = order.getSalesOrderId();
+                Verifier.verifyTrue(order.isInvoiced());
+            }
+        } catch (VerifyException e) {
+            this.msg = "Close of sales order(s) aborted due sales order is not invoiced: [sales order id=" + soId + "]";
             throw new InvalidDataException(this.msg, e);
         }
 

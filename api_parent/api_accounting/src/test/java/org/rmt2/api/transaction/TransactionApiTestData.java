@@ -280,7 +280,7 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         return list;
     }
 
-    private List<VwXactList> createMockXactSingleFetchResponse() {
+    protected List<VwXactList> createMockXactSingleFetchResponse() {
         List<VwXactList> list = new ArrayList<VwXactList>();
         VwXactList o = AccountingMockDataFactory.createMockOrmXact(111111,
                 XactConst.XACT_TYPE_CREDITOR_PURCHASE,
