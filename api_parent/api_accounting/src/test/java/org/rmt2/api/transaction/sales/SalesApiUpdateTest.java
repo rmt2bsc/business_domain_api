@@ -1437,7 +1437,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     }
 
     @Test
-    public void test_Close_SIngle_SalesOrder_For_Payment_Success() {
+    public void testSuccess_Close_SalesOrder_For_Payment_Single() {
         // Setup new mock sales order
         List<SalesOrder> soList = SalesApiTestData.createMockSalesOrderSingleResponse();
         List<SalesOrderDto> soDtoList = new ArrayList<>();
@@ -1493,26 +1493,141 @@ public class SalesApiUpdateTest extends SalesApiTestData {
 
     }
 
-    // @Test
-    public void test_Close_Multiple_SalesOrder_For_Payment_Success() {
-        // Setup new mock sales orders
-        List<SalesOrder> so = SalesApiTestData.createMockSalesOrderAllsponse();
-        List<SalesOrderDto> soDto = new ArrayList<>();
+    @Test
+    public void testValidation_Close_SalesOrder_For_Payment_Null_Order() {
+        // Setup new mock sales order
+        List<SalesOrderDto> soDtoList = new ArrayList<>();
+
+        SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(null);
+        soDtoList.add(dto);
+
+        // Setup mock transaction
+        List<VwXactList> xactList = this.createMockXactSingleFetchResponse();
+        VwXactList vwXact = xactList.get(0);
+        vwXact.setXactAmount(100.00);
+        XactDto xactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
+
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
+        try {
+            api.closeSalesOrderForPayment(null, xactDto);
+            Assert.fail("Test failed: expected an exception to be thrown as a result of a validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertEquals("A list of sales orders is required", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testValidation_Close_SalesOrder_For_Payment_Empty_Order_List() {
+        // Setup new mock sales order
+        List<SalesOrderDto> soDtoList = new ArrayList<>();
+
+        // Setup mock transaction
+        List<VwXactList> xactList = this.createMockXactSingleFetchResponse();
+        VwXactList vwXact = xactList.get(0);
+        vwXact.setXactAmount(100.00);
+        XactDto xactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
+
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
+        try {
+            api.closeSalesOrderForPayment(soDtoList, xactDto);
+            Assert.fail("Test failed: expected an exception to be thrown as a result of a validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertEquals("There are no sales orders to close out", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testValidation_Close_SalesOrder_For_Payment_Transaction_Null() {
+        // Setup new mock sales order
+        List<SalesOrder> soList = SalesApiTestData.createMockSalesOrderSingleResponse();
+        List<SalesOrderDto> soDtoList = new ArrayList<>();
 
         // Five sales orders
-        for (SalesOrder item : so) {
+        for (SalesOrder item : soList) {
             item.setOrderTotal(100.00);
+            item.setInvoiced(1);
             SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(item);
-            soDto.add(dto);
+            soDtoList.add(dto);
+        }
+
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
+        try {
+            api.closeSalesOrderForPayment(soDtoList, null);
+            Assert.fail("Test failed: expected an exception to be thrown as a result of a validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertEquals("Payment transaction is required", e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testValidation_Close_SalesOrder_For_Payment_All_SalesOrders_Not_invoiced() {
+        // Setup new mock sales order
+        List<SalesOrder> soList = SalesApiTestData.createMockSalesOrderSingleResponse();
+        List<SalesOrderDto> soDtoList = new ArrayList<>();
+
+        // Five sales orders
+        for (SalesOrder item : soList) {
+            item.setOrderTotal(100.00);
+            item.setInvoiced(0);
+            SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(item);
+            soDtoList.add(dto);
         }
 
         // Setup mock transaction
         List<VwXactList> xactList = this.createMockXactSingleFetchResponse();
         VwXactList vwXact = xactList.get(0);
-        vwXact.setXactAmount(500.00);
-        XactDto xact = Rmt2XactDtoFactory.createXactInstance(vwXact);
+        vwXact.setXactAmount(100.00);
+        XactDto xactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
 
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
+        try {
+            api.closeSalesOrderForPayment(soDtoList, xactDto);
+            Assert.fail("Test failed: expected an exception to be thrown as a result of a validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertEquals(
+                    "Close of sales order for payment operation aborted due sales order is not invoiced: [sales order id=1000]",
+                    e.getMessage());
+        }
 
+    }
+
+    @Test
+    public void testValidation_Close_SalesOrder_For_Payment_Order_Total_Not_Equal_Sum_of_Items() {
+        // Setup new mock sales order
+        List<SalesOrder> soList = SalesApiTestData.createMockSalesOrderSingleResponse();
+        List<SalesOrderDto> soDtoList = new ArrayList<>();
+
+        // Five sales orders
+        for (SalesOrder item : soList) {
+            item.setOrderTotal(999.00);
+            item.setInvoiced(1);
+            SalesOrderDto dto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(item);
+            soDtoList.add(dto);
+        }
+
+        // Setup mock transaction
+        List<VwXactList> xactList = this.createMockXactSingleFetchResponse();
+        VwXactList vwXact = xactList.get(0);
+        vwXact.setXactAmount(100.00);
+        XactDto xactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
+
+        SalesApi api = SalesApiFactory.createApi(mockDaoClient);
+        try {
+            api.closeSalesOrderForPayment(soDtoList, xactDto);
+            Assert.fail("Test failed: expected an exception to be thrown as a result of a validation error");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertEquals(
+                    "The total dollar amount of selected invoices must be equal to the payment amount received",
+                    e.getMessage());
+        }
 
     }
 }

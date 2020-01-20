@@ -679,14 +679,14 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             Verifier.verifyNotNull(orders);
         } catch (VerifyException e) {
-            this.msg = "The list of sales orders is required";
+            this.msg = "A list of sales orders is required";
             throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyPositive(orders.size());
         } catch (VerifyException e) {
             this.msg = "There are no sales orders to close out";
-            return 0;
+            throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyNotNull(paymentXact);
@@ -702,7 +702,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 Verifier.verifyTrue(order.isInvoiced());
             }
         } catch (VerifyException e) {
-            this.msg = "Close of sales order(s) aborted due sales order is not invoiced: [sales order id=" + soId + "]";
+            this.msg = "Close of sales order for payment operation aborted due sales order is not invoiced: [sales order id="
+                    + soId + "]";
             throw new InvalidDataException(this.msg, e);
         }
 
