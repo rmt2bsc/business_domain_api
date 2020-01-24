@@ -7,8 +7,6 @@ import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dto.SalesOrderDto;
 
-import com.RMT2Constants;
-
 /**
  * An RMT2 ORM to DTO implementation that adapts data pertaining to the database
  * object <i>sales_order</i> table.
@@ -197,7 +195,9 @@ class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
      */
     @Override
     public void setCustomerName(String value) {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        // throw new
+        // UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        return;
     }
 
     /*
@@ -207,7 +207,9 @@ class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
      */
     @Override
     public String getCustomerName() {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        // throw new
+        // UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        return null;
     }
 
     /*
