@@ -107,8 +107,8 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
     }
 
     /**
-     * Retrieves sales invoice data from the <i>sales_invoice</i> table based on
-     * selection criteria contained in <i>criteria</i>.
+     * Retrieves extended sales order data from the <i>VwSalesOrderInvoice</i>
+     * view based on selection criteria contained in <i>criteria</i>.
      * 
      * @param criteria
      *            an instance of {@link SalesInvoiceDto}
