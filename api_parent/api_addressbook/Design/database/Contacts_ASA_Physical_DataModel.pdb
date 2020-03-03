@@ -6691,7 +6691,7 @@ DAT 1345674187</a:History>
 <a:Code>IP_LOCATION</a:Code>
 <a:CreationDate>1345674193</a:CreationDate>
 <a:Creator>rterrell</a:Creator>
-<a:ModificationDate>1345675472</a:ModificationDate>
+<a:ModificationDate>1345676008</a:ModificationDate>
 <a:Modifier>rterrell</a:Modifier>
 <a:Comment>Houses the geographical location details of IP address block. The source of data to populate this table comes from www.maxmind.com (GeoLite IPv6 City Database).</a:Comment>
 <a:History>ORG {A1B6D1BF-BF9F-45FA-8B3E-D9D41B20E267}
@@ -6835,7 +6835,7 @@ DAT 1345674187</a:History>
 <a:Code>IP_LOC_NDX1</a:Code>
 <a:CreationDate>1345674573</a:CreationDate>
 <a:Creator>rterrell</a:Creator>
-<a:ModificationDate>1345674589</a:ModificationDate>
+<a:ModificationDate>1345676008</a:ModificationDate>
 <a:Modifier>rterrell</a:Modifier>
 <c:IndexColumns>
 <o:IndexColumn Id="o264">
@@ -6851,6 +6851,9 @@ DAT 1345674187</a:History>
 </c:IndexColumns>
 </o:Index>
 </c:Indexes>
+<c:ClusterObject>
+<o:Index Ref="o263"/>
+</c:ClusterObject>
 </o:Table>
 <o:Table Id="o68">
 <a:ObjectID>3697FB2D-9956-4583-8056-62980AE7A020</a:ObjectID>
