@@ -203,6 +203,14 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             throw new InvalidDataException(this.msg, e);
         }
 
+        // Verify tender is provided
+        try {
+            Verifier.verifyPositive(xact.getXactTenderId());
+        } catch (VerifyException e) {
+            this.msg = "Transaction tender is required for cash receipt operation";
+            throw new InvalidDataException(this.msg, e);
+        }
+
         // Determine if we are creating or reversing the customer payment.
         int xactId = 0;
         try {

@@ -213,6 +213,29 @@ public class CashReceiptApiTest extends SalesApiTestData {
     } 
     
     @Test
+    public void test_Validation_Receive_Payment_Missing_Tender() {
+        // Perform test
+        CashReceiptApiFactory f = new CashReceiptApiFactory();
+        CashReceiptApi api = f.createApi(mockDaoClient);
+
+        // Build mock transaction object to be updated
+        VwXactList vwXact = this.mockXactFetchSingleResponse.get(0);
+        vwXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        vwXact.setId(0);
+        vwXact.setTenderId(0);
+        XactDto mockXact = Rmt2XactDtoFactory.createXactInstance(vwXact);
+        mockXact.setXactAmount(300.00);
+        Integer customerId = 1000;
+        try {
+            api.receivePayment(mockXact, customerId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+
+    @Test
     public void test_Validation_Receive_Payment_Negative_CustomerId() {
         // Perform test
         CashReceiptApiFactory f = new CashReceiptApiFactory();
