@@ -137,6 +137,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         xact.setXactAmount(cashPaymentAmount);
         xact.setXactReason("Full payment received for sales order #" + salesOrder.getSalesOrderId());
         xact.setXactTypeId(XactConst.XACT_TYPE_CASHRECEIPT);
+        xact.setXactTenderId(XactConst.TENDER_CASH);
 
         // Create cash receipt transaction for the given sales order.
         try {
