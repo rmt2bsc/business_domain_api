@@ -13,6 +13,7 @@ import org.dao.subsidiary.CustomerDao;
 import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dao.transaction.XactDao;
 import org.dao.transaction.XactDaoFactory;
+import org.dto.CommonXactDto;
 import org.dto.CreditorDto;
 import org.dto.CreditorXactHistoryDto;
 import org.dto.CustomerDto;
@@ -114,6 +115,30 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         return null;
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.transaction.XactApi#getXact(org.dto.CommonXactDto)
+     */
+    @Override
+    public List<CommonXactDto> getXact(CommonXactDto criteria) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Common transaction criteria object is required", e);
+        }
+
+        XactDao dao = this.getXactDao();
+        List<CommonXactDto> results = null;
+        try {
+            results = dao.fetchXact(criteria);
+        } catch (Exception e) {
+            this.msg = "DAO error retreiving list of common transaction objects";
+            throw new XactApiException(this.msg, e);
+        }
+        return results;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -1360,5 +1385,4 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new XactApiException(this.msg, e);
         }
     }
-
 }

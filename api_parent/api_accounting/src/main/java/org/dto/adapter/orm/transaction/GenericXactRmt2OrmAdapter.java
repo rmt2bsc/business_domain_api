@@ -398,7 +398,7 @@ class GenericXactRmt2OrmAdapter extends RMT2Base implements CommonXactDto {
      */
     @Override
     public String getBusinessName() {
-        return this.getBusinessName();
+        return this.x.getBusinessName();
     }
 
     /*

@@ -1,13 +1,16 @@
 package org.rmt2.api.transaction;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.util.List;
 
+import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
+import org.dto.CommonXactDto;
 import org.dto.XactDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.junit.After;
@@ -57,6 +60,41 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
     public void tearDown() throws Exception {
         super.tearDown();
         return;
+    }
+
+    @Test
+    public void testFetchGenericTransactionData() {
+        VwGenericXactList mockCriteria = new VwGenericXactList();
+        mockCriteria.setXactDate(RMT2Date.stringToDate("2020-01-01"));
+        mockCriteria.setBusinessName("XYZ");
+
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwGenericXactList.class))).thenReturn(
+                    this.mockXactFetchAllGenericResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch multiple xact test case setup failed");
+        }
+
+        XactApi api = XactApiFactory.createDefaultXactApi(this.mockDaoClient);
+        CommonXactDto criteria = Rmt2XactDtoFactory.createGenericXactInstance(mockCriteria);
+        List<CommonXactDto> results = null;
+        try {
+            results = api.getXact(criteria);
+        } catch (XactApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        int ndx = 0;
+        for (CommonXactDto item : results) {
+            Assert.assertEquals("reason for transaction id " + item.getXactId(), item.getReason());
+            Assert.assertTrue(item.getXactTypeId() > 0);
+            Assert.assertTrue(item.getXactSubtypeId() == 0);
+            Assert.assertEquals("2020-01-01", RMT2Date.formatDate(item.getXactDate(), "yyyy-MM-dd"));
+            Assert.assertEquals(100.00 * (ndx + 1), item.getXactAmount(), 0);
+            ndx++;
+        }
     }
 
     @Test

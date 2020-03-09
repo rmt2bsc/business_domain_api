@@ -3,6 +3,7 @@ package org.modules.transaction;
 import java.util.List;
 
 import org.AccountingConst.SubsidiaryType;
+import org.dto.CommonXactDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -33,6 +34,16 @@ public interface XactApi extends TransactionApi {
      * @throws XactApiException
      */
     List<XactDto> getXact(XactDto criteria) throws XactApiException;
+
+    /**
+     * Retrieves a list of common transaction objects
+     * 
+     * @param criteria
+     *            instnce of {@link CommonXactDto}
+     * @return List<{@link CommonXactDto}>
+     * @throws XactApiException
+     */
+    List<CommonXactDto> getXact(CommonXactDto criteria) throws XactApiException;
 
     /**
      * Retrieves transaction data using transaction id

@@ -297,8 +297,7 @@ public class Rmt2XactDtoFactory extends RMT2Base {
      *            an instance of {@link VwGenericXactList}
      * @return an instance of {@link CommonXactDto}.
      */
-    public static final CommonXactDto createGenericXactInstance(
-            VwGenericXactList ormBean) {
+    public static final CommonXactDto createGenericXactInstance(VwGenericXactList ormBean) {
         return new GenericXactRmt2OrmAdapter(ormBean);
     }
 
