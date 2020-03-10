@@ -213,8 +213,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
             Assert.fail("Fetch single xact test case setup failed");
         }
 
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         criteria.setXactId(111111);
         try {
@@ -238,8 +237,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
             Assert.fail("Fetch single xact not found test case setup failed");
         }
 
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         XactDto results = null;
         criteria.setXactId(111111);
@@ -253,8 +251,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
 
     @Test
     public void testFetchSingleWithNullInput() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         try {
             api.getXactById(null);
             Assert.fail("Expected exception due to input value is null");
@@ -266,8 +263,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
     
     @Test
     public void testFetchSingleWithZeroInputValue() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         try {
             api.getXactById(0);
             Assert.fail("Expected exception due to input value is zero");
@@ -279,8 +275,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
    
     @Test
     public void testFetchSingleWithNegativeInputValue() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         try {
             api.getXactById(-1234);
             Assert.fail("Expected exception due to input value is negative");
