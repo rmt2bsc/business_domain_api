@@ -12,12 +12,12 @@ public interface CommonXactDto {
     /**
      * Sets the value of the subsidiary id
      */
-    void setSubsidiaryId(int value);
+    void setParentEntityId(int value);
 
     /**
      * Gets the value of the subsidiary id
      */
-    int getSubsidiaryId();
+    int getParentEntityId();
 
     /**
      * Sets the value of specific transaction level 1 id
