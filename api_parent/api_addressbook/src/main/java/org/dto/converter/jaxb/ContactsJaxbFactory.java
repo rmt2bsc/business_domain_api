@@ -11,6 +11,7 @@ import org.dao.mapping.orm.rmt2.GeneralCodesGroup;
 import org.dao.mapping.orm.rmt2.VwCodes;
 import org.dao.mapping.orm.rmt2.VwStateCountry;
 import org.dao.mapping.orm.rmt2.VwZipcode;
+import org.dao.mapping.orm.rmt2.Zipcode;
 import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
 import org.dto.IpLocationDto;
@@ -28,6 +29,8 @@ import org.rmt2.jaxb.AddressType;
 import org.rmt2.jaxb.BusinessType;
 import org.rmt2.jaxb.CitytypeType;
 import org.rmt2.jaxb.CodeDetailType;
+import org.rmt2.jaxb.CommonContactType;
+import org.rmt2.jaxb.ContacttypeType;
 import org.rmt2.jaxb.CountryType;
 import org.rmt2.jaxb.GenerationType;
 import org.rmt2.jaxb.IpDetails;
@@ -40,7 +43,7 @@ import org.rmt2.jaxb.ZipcodeFullType;
 import org.rmt2.jaxb.ZipcodeType;
 
 import com.RMT2Base;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * A factory for creating JAXB objects derived from contact DTO's.
@@ -50,11 +53,6 @@ import com.util.RMT2Date;
  */
 public class ContactsJaxbFactory extends RMT2Base {
 
-    // private static Logger logger =
-    // Logger.getLogger(ContactsJaxbFactory.class);
-
-    // private DatabaseConnectionBean con;
-
     /**
      * Creates a ContactsJaxbFactory that is capable of functioning without the
      * use of an external datasource.
@@ -62,18 +60,6 @@ public class ContactsJaxbFactory extends RMT2Base {
     public ContactsJaxbFactory() {
         super();
     }
-
-    // /**
-    // * Creates a ContactsJaxbFactory that is initialized with a database
-    // connection.
-    // *
-    // * @param con
-    // * {@link com.bean.db.DatabaseConnectionBean DatabaseConnectionBean}
-    // */
-    // public ContactsJaxbFactory(DatabaseConnectionBean con) {
-    // super();
-    // this.con = con;
-    // }
 
     /**
      * Creates a new JAXB BusinessType instance.
@@ -195,6 +181,9 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @return {@link com.xml.schema.bindings.BusinessType BusinessType}
      */
     public BusinessType createBusinessTypeInstance(ContactDto contact) {
+        if (contact instanceof BusinessContactDto) {
+            return this.createBusinessTypeInstance((BusinessContactDto) contact);
+        }
         ObjectFactory f = new ObjectFactory();
         BusinessType bt = f.createBusinessType();
         bt.setBusinessId(BigInteger.valueOf(contact.getContactId()));
@@ -245,11 +234,52 @@ public class ContactsJaxbFactory extends RMT2Base {
     }
 
     /**
-     * Creates a PersonType object from data contained in a VwPersonAddress
+     * Creates a List of PersonType objects from data contained in the list of
+     * PersonalContactDto objects.
+     * 
+     * @param contact
+     *            List of {@link PersonalContactDto}
+     * @return List of {@link com.xml.schema.bindings.BusinessType PersonType}
+     */
+    public List<PersonType> createPersonalTypeInstance(List<ContactDto> contacts) {
+        List<PersonType> list = new ArrayList<>();
+        for (ContactDto item : contacts) {
+            if (item instanceof PersonalContactDto) {
+                list.add(this.createPersonalTypeInstance((PersonalContactDto) item));
+            }
+        }
+        return list;
+    }
+    
+    /**
+     * Creates a PersonType object from data contained in a ContactDto object.
+     * 
+     * @param contact
+     *            {@link ContactDto}
+     * @return {@link com.xml.schema.bindings.PersonType PersonType}
+     */
+    public PersonType createPersonalTypeInstance(ContactDto contact) {
+        if (contact instanceof PersonalContactDto) {
+            return this.createPersonalTypeInstance((PersonalContactDto) contact);
+        }
+        ObjectFactory f = new ObjectFactory();
+        PersonType pt = f.createPersonType();
+        pt.setPersonId(BigInteger.valueOf(contact.getContactId()));
+
+        pt.setShortName(contact.getContactName());
+        pt.setEmail(contact.getContactEmail());
+
+        AddressType at = this.getAddress(contact);
+        pt.setAddress(at);
+        return pt;
+    }
+    
+    /**
+     * Creates a PersonType object from data contained in a PersonalContactDto
      * object.
      * 
      * @param contact
-     *            {@link com.bean.VwPersonAddress VwPersonAddress}
+     *            {@link PersonalContactDto}
      * @return {@link com.xml.schema.bindings.PersonType PersonType}
      */
     public PersonType createPersonalTypeInstance(PersonalContactDto contact) {
@@ -299,6 +329,47 @@ public class ContactsJaxbFactory extends RMT2Base {
         return pt;
     }
 
+    /**
+     * Creates a List of CommonContactType objects from data contained in the list of
+     * ContactDto objects.
+     * 
+     * @param contact
+     *            List of {@link ContactDto}
+     * @return List of {@link com.xml.schema.bindings.CommonContactType CommonContactType}
+     */
+    public List<CommonContactType> createCommonContactTypeInstance(List<ContactDto> contacts) {
+        List<CommonContactType> list = new ArrayList<>();
+        for (ContactDto item : contacts) {
+            if (item instanceof PersonalContactDto) {
+                list.add(this.createCommonContactTypeInstance(item));
+            }
+        }
+        return list;
+    }
+    
+    /**
+     * Creates a CommonContactType object from data contained in a ContactDto
+     * object.
+     * 
+     * @param contact
+     *            {@link ContactDto}
+     * @return {@link com.xml.schema.bindings.CommonContactType CommonContactType}
+     */
+    public CommonContactType createCommonContactTypeInstance(ContactDto contact) {
+        ObjectFactory f = new ObjectFactory();
+        CommonContactType cct = f.createCommonContactType();
+
+        // Bind primary key
+        cct.setContactId(BigInteger.valueOf(contact.getContactId()));
+        cct.setContactEmail(contact.getContactEmail());
+        cct.setContactName(contact.getContactName());
+        cct.setContactType(ContacttypeType.valueOf(contact.getContactType()));
+        
+        AddressType at = this.getAddress(contact);
+        cct.setAddress(at);
+        return cct;
+    }
+    
     /**
      * Creates a CodeDetailType instance usning a GeneralCodes id, <i>code</i>.
      * The parameter, <i>code</i>, is used to fetch the record from the database
@@ -367,42 +438,7 @@ public class ContactsJaxbFactory extends RMT2Base {
         return at;
     }
 
-    // /**
-    // * Creates a JAXB PersonType instance that is initialized by
-    // * <i>VwPersonAddress</i> data.
-    // *
-    // * @param addr
-    // * {@link com.bean.VwPersonAddress VwPersonAddress}
-    // * @return {@link com.xml.schema.bindings.AddressType AddressType}
-    // */
-    // public AddressType getAddress(VwPersonAddress addr) {
-    // ObjectFactory f = new ObjectFactory();
-    // AddressType at = f.createAddressType();
-    // at.setAddrId(BigInteger.valueOf(addr.getAddrId()));
-    // at.setPersonId(BigInteger.valueOf(addr.getAddrPersonId()));
-    // at.setBusinessId(BigInteger.valueOf(addr.getAddrBusinessId()));
-    // at.setAddr1(addr.getAddr1());
-    // at.setAddr2(addr.getAddr2());
-    // at.setAddr3(addr.getAddr3());
-    // at.setAddr4(addr.getAddr4());
-    // try {
-    // ZipcodeType z = this.getZipcode(addr.getAddrZip());
-    // at.setZip(z);
-    // } catch (ZipcodeException e) {
-    // // Do nothing...
-    // }
-    // at.setZipExt(BigInteger.valueOf(addr.getAddrZipext()));
-    // at.setPhoneCell(addr.getAddrPhoneCell());
-    // at.setPhoneFax(addr.getAddrPhoneFax());
-    // at.setPhoneHome(addr.getAddrPhoneHome());
-    // at.setPhoneMain(addr.getAddrPhoneMain());
-    // at.setPhonePager(addr.getAddrPhonePager());
-    // at.setPhoneWork(addr.getAddrPhoneWork());
-    // at.setPhoneWorkExt(addr.getAddrPhoneExt());
-    // return at;
-    // }
-
-    /**
+      /**
      * Creates a ZipcodeType instance from data obtained from the zipcode table
      * using <i>zipId</i> as the primary key. The parameter, <i>zipId</i>, is
      * used to fetch the record from the database and migrate the data to an
@@ -416,8 +452,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      */
     public ZipcodeType getZipcode(int zipId) throws PostalApiException {
         ObjectFactory f = new ObjectFactory();
-        PostalApiFactory zipFactory = new PostalApiFactory();
-        PostalApi api = zipFactory.createApi();
+        PostalApi api = PostalApiFactory.createApi();
         // ZipcodeDto zList = (ZipcodeDto) api.getZipCode(zipId);
         // if (zList == null || zList.size() == 0) {
         // return null;
@@ -489,7 +524,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param countryCode
      * @return
      */
-    public CountryType createCountryTypeInstance(int id, String countryName, String countryCode) {
+    public static final CountryType createCountryTypeInstance(int id, String countryName, String countryCode) {
         ObjectFactory f = new ObjectFactory();
         CountryType c = f.createCountryType();
         c.setCountryCode(countryCode);
@@ -497,19 +532,39 @@ public class ContactsJaxbFactory extends RMT2Base {
         c.setCountryId(BigInteger.valueOf(id));
         return c;
     }
+    
+    /**
+     * 
+     * @param stateId
+     * @param stateName
+     * @param stateCode
+     * @param countryId
+     * @param countryName
+     * @return
+     */
+    public static final StateType createStateTypeInstance(int stateId, String stateName, 
+            String stateCode, int countryId, String countryName) {
+        StateType o = createStateTypeInstance();
+        o.setStateId(BigInteger.valueOf(stateId));
+        o.setCountryId(BigInteger.valueOf(countryId));
+        o.setStateCode(stateCode);
+        o.setStateName(stateName);
+        o.setCountryName(countryName);
+        return o;
+    }
 
     /**
      * 
      * @param dto
      * @return
      */
-    public List<StateType> getStateType(List<VwStateCountry> dto) {
+    public static final List<StateType> getStateType(List<VwStateCountry> dto) {
         if (dto == null) {
             return null;
         }
         List<StateType> stateList = new ArrayList<StateType>();
         for (VwStateCountry item : dto) {
-            StateType state = this.getStateType(item);
+            StateType state = getStateType(item);
             stateList.add(state);
         }
         return stateList;
@@ -520,11 +575,11 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param dto
      * @return
      */
-    public StateType getStateType(VwStateCountry dto) {
+    public static final StateType getStateType(VwStateCountry dto) {
         if (dto == null) {
             return null;
         }
-        StateType state = this.getStateType();
+        StateType state = createStateTypeInstance();
         state.setCountryId(BigInteger.valueOf(dto.getCountryId()));
         state.setCountryName(dto.getCountryName());
         state.setStateCode(dto.getStateCode());
@@ -537,7 +592,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * 
      * @return
      */
-    public StateType getStateType() {
+    public static final StateType createStateTypeInstance() {
         ObjectFactory f = new ObjectFactory();
         StateType state = f.createStateType();
         return state;
@@ -551,19 +606,15 @@ public class ContactsJaxbFactory extends RMT2Base {
     public static IpDetails getIpDetailsInstance(IpLocationDto loc) {
         ObjectFactory f = new ObjectFactory();
         IpDetails ip = f.createIpDetails();
-        // TODO: Correct DAO to where DTO and LDAP data structures are in sync
-
-        // ip.setIpId(String.valueOf(loc.getLocId()));
-        // ip.setIpFrom(String.valueOf(loc.get));
-        // ip.setIpTo(String.valueOf(loc.getIpTo()));
-        // ip.setCountryCode(loc.getCountryCode());
-        // ip.setCountryName(loc.getCountryName());
-        // ip.setRegion(loc.getRegion());
-        // ip.setCity(loc.getCity());
-        // ip.setLatitude(String.valueOf(loc.getLatitude()));
-        // ip.setLongitude(String.valueOf(loc.getLongitude()));
-        // ip.setZip(loc.getZipcode());
-        // ip.setTimezone(loc.getTimezone());
+        ip.setIpId(String.valueOf(loc.getIpRangeId()));
+        ip.setIpFrom(String.valueOf(loc.getIpFrom()));
+        ip.setIpTo(String.valueOf(loc.getIpTo()));
+        ip.setCountryName(loc.getCountry());
+        ip.setRegion(loc.getRegion());
+        ip.setCity(loc.getCity());
+        ip.setLatitude(String.valueOf(loc.getLatitude()));
+        ip.setLongitude(String.valueOf(loc.getLongitude()));
+        ip.setZip(loc.getPostalCode());
         return ip;
     }
 
@@ -661,7 +712,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param item
      * @return
      */
-    public static StateType getStateTypeInstance(VwStateCountry item) {
+    public static StateType createStateTypeInstance(VwStateCountry item) {
         ObjectFactory f = new ObjectFactory();
         StateType st = f.createStateType();
         st.setCountryId(BigInteger.valueOf(item.getCountryId()));
@@ -676,10 +727,10 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @param items
      * @return
      */
-    public static List<StateType> getStateTypeInstance(List<VwStateCountry> items) {
+    public static List<StateType> createStateTypeInstance(List<VwStateCountry> items) {
         List<StateType> list = new ArrayList<StateType>();
         for (VwStateCountry item : items) {
-            StateType st = ContactsJaxbFactory.getStateTypeInstance(item);
+            StateType st = ContactsJaxbFactory.createStateTypeInstance(item);
             list.add(st);
         }
         return list;
@@ -802,10 +853,54 @@ public class ContactsJaxbFactory extends RMT2Base {
     // }
 
     /**
+     * Converts a single instance of ZipcodeDto to an instance of ZipcodeType.
+     * 
+     * @param item
+     *            an instance of {@link ZipcodeDto}
+     * @return an instance of {@link ZipcodeType}
+     */
+    public static ZipcodeType getZipShortInstance(ZipcodeDto item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeType z = f.createZipcodeType();
+        z.setZipId(BigInteger.valueOf(item.getId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setAreaCode(item.getAreaCode());
+        z.setCity(item.getCity());
+        z.setState(item.getStateCode());
+        z.setCountyName(item.getCountyName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        z.setCityAliasName(item.getCityAliasName());
+        return z;
+    }
+    
+    
+    /**
+     * Converts a single instance of Zipcode to an instance of ZipcodeType.
+     * 
+     * @param item
+     *            an instance of {@link Zipcode}
+     * @return an instance of {@link ZipcodeType}
+     */
+    public static ZipcodeType getZipShortInstance(Zipcode item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeType z = f.createZipcodeType();
+        z.setZipId(BigInteger.valueOf(item.getZipId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setAreaCode(item.getAreaCode());
+        z.setCity(item.getCity());
+        z.setState(item.getState());
+        z.setCountyName(item.getCountyName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        z.setCityAliasName(item.getCityAliasName());
+        return z;
+    }
+    
+    /**
      * Converts a single instance of VwZipcode to an instance of ZipcodeType.
      * 
      * @param item
-     * @return
+     *            an instance of {@link VwZipcode}
+     * @return an instance of {@link ZipcodeType}
      */
     public static ZipcodeType getZipShortInstance(VwZipcode item) {
         ObjectFactory f = new ObjectFactory();
@@ -852,9 +947,108 @@ public class ContactsJaxbFactory extends RMT2Base {
     }
 
     /**
+     * Converts a single instance of ZipcodeDto to an instance of ZipcodeType in
+     * full format.
      * 
      * @param item
-     * @return
+     *            an instance of {@link ZipcodeDto}
+     * @return an instance of {@link ZipcodeFullType}
+     */
+    public static ZipcodeFullType getZipFullTypeInstance(ZipcodeDto item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeFullType z = f.createZipcodeFullType();
+        z.setZipId(BigInteger.valueOf(item.getId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setCity(item.getCity());
+        z.setState(item.getStateCode());
+        z.setAreaCode(item.getAreaCode());
+        z.setCityAliasName(item.getCityAliasName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        CitytypeType ctt = f.createCitytypeType();
+        ctt.setCityTypeId(item.getCityTypeId());
+        ctt.setCityTypeDesc(item.getCityTypDescr());
+        z.setCityTypeId(ctt);
+        z.setCountyName(item.getCountyName());
+        z.setCountyFips(item.getCountyFips());
+        TimezoneType tt = f.createTimezoneType();
+        tt.setTimezoneId(BigInteger.valueOf(item.getTimeZoneId()));
+        tt.setTimeszoneDesc(null);
+        z.setTimeZoneId(tt);
+        z.setDayLightSaving(item.getDayLightSaving());
+        z.setLatitude(Double.valueOf(item.getLatitude()));
+        z.setLongitude(Double.valueOf(item.getLongitude()));
+        z.setElevation(Double.valueOf(item.getElevation()));
+        z.setMsa(Double.valueOf(item.getMsa()));
+        z.setPmsa(Double.valueOf(item.getPmsa()));
+        z.setCbsa(Double.valueOf(item.getCbsa()));
+        z.setCbsaDiv(Double.valueOf(item.getCbsaDiv()));
+        z.setPersonsPerHousehold(Double.valueOf(item.getPersonsPerHousehold()));
+        z.setZipcodePopulation(Double.valueOf(item.getZipPopulation()));
+        z.setCountiesArea(Double.valueOf(item.getCountiesArea()));
+        z.setHouseholdsPerZipcode(Double.valueOf(item.getHouseholdsPerZipcode()));
+        z.setWhitePopulation(Double.valueOf(item.getWhitePopulation()));
+        z.setBlackPopulation(Double.valueOf(item.getBlackPopulation()));
+        z.setHispanicPopulation(Double.valueOf(item.getHispanicPopulation()));
+        z.setIncomePerHousehold(Double.valueOf(item.getIncomePerHousehold()));
+        z.setAverageHouseValue(Double.valueOf(item.getAverageHouseValue()));
+        return z;
+    }
+    
+    /**
+     * Converts a single instance of Zipcode to an instance of ZipcodeType in
+     * full format.
+     * 
+     * @param item
+     *            an instance of {@link Zipcode}
+     * @return an instance of {@link ZipcodeFullType}
+     */
+    public static ZipcodeFullType getZipFullTypeInstance(Zipcode item) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeFullType z = f.createZipcodeFullType();
+        z.setZipId(BigInteger.valueOf(item.getZipId()));
+        z.setZipcode(BigInteger.valueOf(item.getZip()));
+        z.setCity(item.getCity());
+        z.setState(item.getState());
+        z.setAreaCode(item.getAreaCode());
+        z.setCityAliasName(item.getCityAliasName());
+        z.setCityAliasAbbr(item.getCityAliasAbbr());
+        CitytypeType ctt = f.createCitytypeType();
+        ctt.setCityTypeId(item.getCityTypeId());
+        ctt.setCityTypeDesc("Unknown");
+        z.setCityTypeId(ctt);
+        z.setCountyName(item.getCountyName());
+        z.setCountyFips(item.getCountyFips());
+        TimezoneType tt = f.createTimezoneType();
+        tt.setTimezoneId(BigInteger.valueOf(item.getTimeZoneId()));
+        tt.setTimeszoneDesc("Unknown");
+        z.setTimeZoneId(tt);
+        z.setDayLightSaving(item.getDayLightSaving());
+        z.setLatitude(Double.valueOf(item.getLatitude()));
+        z.setLongitude(Double.valueOf(item.getLongitude()));
+        z.setElevation(Double.valueOf(item.getElevation()));
+        z.setMsa(Double.valueOf(item.getMsa()));
+        z.setPmsa(Double.valueOf(item.getPmsa()));
+        z.setCbsa(Double.valueOf(item.getCbsa()));
+        z.setCbsaDiv(Double.valueOf(item.getCbsaDiv()));
+        z.setPersonsPerHousehold(Double.valueOf(item.getPersonsPerHousehold()));
+        z.setZipcodePopulation(Double.valueOf(item.getZipcodePopulation()));
+        z.setCountiesArea(Double.valueOf(item.getCountiesArea()));
+        z.setHouseholdsPerZipcode(Double.valueOf(item.getHouseholdsPerZipcode()));
+        z.setWhitePopulation(Double.valueOf(item.getWhitePopulation()));
+        z.setBlackPopulation(Double.valueOf(item.getBlackPopulation()));
+        z.setHispanicPopulation(Double.valueOf(item.getHispanicPopulation()));
+        z.setIncomePerHousehold(Double.valueOf(item.getIncomePerHousehold()));
+        z.setAverageHouseValue(Double.valueOf(item.getAverageHouseValue()));
+        return z;
+    }
+    
+    /**
+     * Converts a single instance of VwZipcode to an instance of ZipcodeFullType
+     * in full format.
+     * 
+     * @param item
+     *            an instance of {@link VwZipcode}
+     * @return an instance of {@link ZipcodeFullType}
      */
     public static ZipcodeFullType getZipFullTypeInstance(VwZipcode item) {
         ObjectFactory f = new ObjectFactory();

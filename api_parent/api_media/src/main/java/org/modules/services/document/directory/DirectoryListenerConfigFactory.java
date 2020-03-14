@@ -5,7 +5,7 @@ import org.modules.MediaConstants;
 
 import com.RMT2Base;
 import com.api.config.ConfigConstants;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Factory class for creating entities related to configuring the

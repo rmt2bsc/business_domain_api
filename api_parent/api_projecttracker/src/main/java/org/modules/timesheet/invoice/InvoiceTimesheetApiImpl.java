@@ -43,8 +43,8 @@ import com.api.foundation.TransactionApiException;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Implementation of InvoiceTimesheetApi that manages the invoicing of an
@@ -81,6 +81,8 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
     }
 
     /**
+     * Creates a InvoiceTimesheetApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      */
@@ -88,6 +90,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
         this.createOtherResources(this.dao);
         return;
     }
@@ -292,8 +295,9 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
 
         // Setup customer's sales order that will be invoiced
         TransactionDetailGroup details = f.createTransactionDetailGroup();
+        details.setSalesOrders(f.createSalesOrderListType());
         SalesOrderType sot = InvoiceTimesheetApiFactory.createJaxbSalesOrderInstance(invBean);
-        details.getSalesOrder().add(sot);
+        details.getSalesOrders().getSalesOrder().add(sot);
         request.setProfile(details);
 
         // Send time sheet deatils to Accounting systsem to create and invoice sales order

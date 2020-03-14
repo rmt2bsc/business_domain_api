@@ -15,9 +15,9 @@ import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.RMT2String;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
+import com.api.util.UserTimestamp;
 
 /**
  * An implementation of {@link CustomerDao}. It provides functionality that
@@ -78,16 +78,13 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         if (criteria != null) {
             ormCust = new Customer();
             if (criteria.getCustomerId() > 0) {
-                ormCust.addCriteria(Customer.PROP_CUSTOMERID,
-                        criteria.getCustomerId());
+                ormCust.addCriteria(Customer.PROP_CUSTOMERID, criteria.getCustomerId());
             }
             if (criteria.getContactId() > 0) {
-                ormCust.addCriteria(Customer.PROP_BUSINESSID,
-                        criteria.getContactId());
+                ormCust.addCriteria(Customer.PROP_BUSINESSID, criteria.getContactId());
             }
             if (criteria.getAccountNo() != null) {
-                ormCust.addCriteria(Customer.PROP_ACCOUNTNO,
-                        criteria.getAccountNo());
+                ormCust.addCriteria(Customer.PROP_ACCOUNTNO, criteria.getAccountNo());
             }
         }
 
@@ -108,6 +105,9 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     /**
      * Fetches the customer's transaction history from the
      * <i>customer_activitiy</i> table.
+     * <p>
+     * The returned dataset is ordered by transaction date and transaction id in
+     * descending order.
      * 
      * @param customerId
      *            An integer representing the customer id.
@@ -116,14 +116,11 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      * @throws CustomerDaoException
      */
     @Override
-    public List<CustomerXactHistoryDto> fetchTransactionHistory(int customerId)
-            throws CustomerDaoException {
+    public List<CustomerXactHistoryDto> fetchTransactionHistory(int customerId) throws CustomerDaoException {
         VwCustomerXactHist obj = new VwCustomerXactHist();
         obj.addCriteria(VwCustomerXactHist.PROP_CUSTOMERID, customerId);
-        obj.addOrderBy(VwCustomerXactHist.PROP_XACTDATE,
-                VwCustomerXactHist.ORDERBY_DESCENDING);
-        obj.addOrderBy(VwCustomerXactHist.PROP_XACTID,
-                VwCustomerXactHist.ORDERBY_DESCENDING);
+        obj.addOrderBy(VwCustomerXactHist.PROP_XACTDATE, VwCustomerXactHist.ORDERBY_DESCENDING);
+        obj.addOrderBy(VwCustomerXactHist.PROP_XACTID, VwCustomerXactHist.ORDERBY_DESCENDING);
 
         List<VwCustomerXactHist> results = null;
         try {
@@ -165,15 +162,12 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      * @throws CustomerDaoException
      */
     @Override
-    public int maintain(SubsidiaryXactHistoryDto customerXact)
-            throws SubsidiaryDaoException {
+    public int maintain(SubsidiaryXactHistoryDto customerXact) throws SubsidiaryDaoException {
         if (customerXact == null) {
-            throw new CustomerDaoException(
-                    "Input customer subsidiary transaction item object is invalid or null");
+            throw new CustomerDaoException("Input customer subsidiary transaction item object is invalid or null");
         }
-        CustomerActivity ca = SubsidiaryDaoFactory.createCustomerActivity(
-                customerXact.getSubsidiaryId(), customerXact.getXactId(),
-                customerXact.getActivityAmount());
+        CustomerActivity ca = SubsidiaryDaoFactory.createCustomerActivity(customerXact.getSubsidiaryId(), 
+                customerXact.getXactId(), customerXact.getActivityAmount());
         UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
         ca.setDateCreated(ut.getDateCreated());
         ca.setDateUpdated(ut.getDateCreated());
@@ -291,7 +285,4 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             throw new CustomerDaoException(e);
         }
     }
-
-    
-
 }

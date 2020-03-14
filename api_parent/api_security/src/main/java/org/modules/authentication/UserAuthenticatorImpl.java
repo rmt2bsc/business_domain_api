@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.dao.SecurityDaoException;
-import org.dao.authentication.AuthenticationDao;
 import org.dao.roles.RoleDao;
 import org.dao.roles.RoleDaoFactory;
 import org.dao.user.UserDao;
@@ -28,9 +27,9 @@ import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DaoClient;
 import com.api.security.User;
 import com.api.security.authentication.web.LogoutException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 import com.api.web.security.RMT2SecurityToken;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
 
 /**
  * An implementation of the {@link Authenticator} interface that performs user
@@ -45,20 +44,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
     
     private static Map<String, RMT2SecurityToken> USER_TOKENS;
     
-    private AuthenticationDao dao;
-    
 
-    /**
-     * Create a UserAuthenticatorDatabaseImpl object.
-     */
-    protected UserAuthenticatorImpl() {
-//        this.dao = AuthenticationDaoFactory.createLdapDao();
-
-        this.setSharedDao(this.dao);
-        logger.info("Authenticator is initialized by default constructor");
-        return;
-    }
-    
     /**
      * Create a UserAuthenticatorImpl using the specified application name.
      * 
@@ -66,8 +52,6 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     protected UserAuthenticatorImpl(String appName) {
         super(appName);
-//      this.dao = AuthenticationDaoFactory.createLdapDao();
-        this.setSharedDao(this.dao);
         logger.info("Authenticator is initialized by application name, " + appName);
         return;
     }
@@ -81,7 +65,6 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      */
     protected UserAuthenticatorImpl(DaoClient dao) {
         super(SecurityConstants.APP_NAME, dao);
-//      this.dao = AuthenticationDaoFactory.createLdapDao();
         logger.info("Authenticator is initialized using a shared DAO client");
     }
     

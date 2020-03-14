@@ -42,10 +42,10 @@ import org.modules.transaction.receipts.CashReceiptApiFactory;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.persistence.DaoClient;
-import com.util.RMT2Date;
-import com.util.RMT2String;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * This class implements the functionality required for creating, maintaining,
@@ -76,18 +76,10 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
     
     private CustomerDto customer;
 
-    /**
-     * Creates an SalesApiImpl which creates a stand alone connection.
-     */
-    SalesApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Creates an SalesApiImpl which creates a stand alone connection.
+     * Creates a SalesApiImpl object in which the configuration is identified by
+     * the name of a given application.
      * 
      * @param appName
      *            application name
@@ -96,6 +88,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
@@ -666,8 +659,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * Updates the status of one or more invoiced sales orders to "Closed" when
      * a payment is received.
      * <p>
-     * The total amount of selected invoices must equal the amount of
-     * payment transaction received for the account.
+     * The total amount of selected invoices must equal the amount of payment
+     * transaction received for the account.
      * 
      * @param order
      *            a List of orders covering the payment.
@@ -677,26 +670,40 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      *             <i>orders</i> and/or <i>xaact</i> is null or the sum of all
      *             order totals belonging to <i>orders</i> does not equal
-     *             transaction amount of <i>paymentXact</i>.
-     * @throws InvalidDataException <i>orders</i> or <i>paymentXact</i> are null.
+     *             transaction amount of <i>paymentXact</i> or one or more
+     *             <i>orders</i> were found to not in invoice status.
+     * @throws InvalidDataException
+     *             <i>orders</i> or <i>paymentXact</i> are null.
      */
     public int closeSalesOrderForPayment(List<SalesOrderDto> orders, XactDto paymentXact) throws SalesApiException {
         try {
             Verifier.verifyNotNull(orders);
         } catch (VerifyException e) {
-            this.msg = "The list of sales orders is required";
+            this.msg = "A list of sales orders is required";
             throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyPositive(orders.size());
         } catch (VerifyException e) {
             this.msg = "There are no sales orders to close out";
-            return 0;
+            throw new InvalidDataException(this.msg, e);
         }
         try {
             Verifier.verifyNotNull(paymentXact);
         } catch (VerifyException e) {
             this.msg = "Payment transaction is required";
+            throw new InvalidDataException(this.msg, e);
+        }
+
+        int soId = 0;
+        try {
+            for (SalesOrderDto order : orders) {
+                soId = order.getSalesOrderId();
+                Verifier.verifyTrue(order.isInvoiced());
+            }
+        } catch (VerifyException e) {
+            this.msg = "Close of sales order for payment operation aborted due sales order is not invoiced: [sales order id="
+                    + soId + "]";
             throw new InvalidDataException(this.msg, e);
         }
 
@@ -952,7 +959,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             logger.info(this.msg);
             return invoiceId;
         } catch (Exception e) {
-            dao.rollbackTrans();
             this.msg = "Sales order API update failed";
             logger.error(this.msg, e);
             throw new SalesApiException(this.msg, e);
@@ -1587,8 +1593,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             // sales order being reversed. This will offset the original cash
             // receipt transaction that was originally created along with sales
             // order that is currently being reversed.
-            CashReceiptApiFactory crFact = new CashReceiptApiFactory();
-            CashReceiptApi crApi = crFact.createApi(this.dao);
+            CashReceiptApi crApi = CashReceiptApiFactory.createApi(this.dao);
             try {
                 crApi.receivePayment(rc, so.getCustomerId());
             } catch (CashReceiptApiException e) {

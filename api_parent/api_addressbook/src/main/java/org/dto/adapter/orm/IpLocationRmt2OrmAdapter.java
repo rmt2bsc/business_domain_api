@@ -14,6 +14,7 @@ import com.api.foundation.TransactionDtoImpl;
 class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationDto {
 
     private IpLocation ip;
+    private String standardIp;
 
     /**
      * Create a IpLocationRmt2OrmAdapter using an instance of <i>IpLocation</i>.
@@ -214,7 +215,11 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      * Not supported
      */
     @Override
-    public void setIpRangeId(int value) {
+    public void setIpRangeId(Integer value) {
+        if (value == null) {
+            this.ip.setIpId(0);
+            return;
+        }
         this.ip.setIpId(value);
     }
 
@@ -222,8 +227,37 @@ class IpLocationRmt2OrmAdapter extends TransactionDtoImpl implements IpLocationD
      * Not supported
      */
     @Override
-    public int getIpRangeId() {
+    public Integer getIpRangeId() {
         return this.ip.getIpId();
     }
 
+    @Override
+    public String getStandardIp() {
+        return this.standardIp;
+    }
+
+    @Override
+    public void setStandardIp(String ip) {
+        this.standardIp = ip;
+    }
+
+    @Override
+    public void setIpFrom(double value) {
+        this.ip.setIpFrom(value);            
+   }
+
+    @Override
+    public double getIpFrom() {
+        return this.ip.getIpFrom();
+    }
+
+    @Override
+    public void setIpTo(double value) {
+        this.ip.setIpTo(value);
+    }
+
+    @Override
+    public double getIpTo() {
+        return this.ip.getIpTo();
+    }
 }

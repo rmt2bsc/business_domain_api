@@ -13,6 +13,7 @@ import org.dao.subsidiary.CustomerDao;
 import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dao.transaction.XactDao;
 import org.dao.transaction.XactDaoFactory;
+import org.dto.CommonXactDto;
 import org.dto.CreditorDto;
 import org.dto.CreditorXactHistoryDto;
 import org.dto.CustomerDto;
@@ -21,6 +22,7 @@ import org.dto.SubsidiaryDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
+import org.dto.XactCustomCriteriaDto;
 import org.dto.XactDto;
 import org.dto.XactTypeDto;
 import org.dto.XactTypeItemActivityDto;
@@ -36,9 +38,9 @@ import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DaoClient;
-import com.util.RMT2Money;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Money;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * The base implementation of XactApi interface containing common transaction
@@ -100,6 +102,67 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         return dao;
     }
 
+    /**
+     * Interprets the incoming criteria, which can be in any format, and creates
+     * meaningful selection criteria that is usable by the target DAO
+     * implementation.
+     * 
+     * @param criteria
+     *            An instance of {@link XactCustomCriteriaDto}
+     * @return null
+     */
+    protected String parseCriteria(XactCustomCriteriaDto criteria) {
+        return null;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.transaction.XactApi#getXact(org.dto.CommonXactDto)
+     */
+    @Override
+    public List<CommonXactDto> getXact(CommonXactDto criteria) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Common transaction criteria object is required", e);
+        }
+
+        XactDao dao = this.getXactDao();
+        List<CommonXactDto> results = null;
+        try {
+            results = dao.fetchXact(criteria);
+        } catch (Exception e) {
+            this.msg = "DAO error retreiving list of common transaction objects";
+            throw new XactApiException(this.msg, e);
+        }
+        return results;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.transaction.XactApi#getXact(org.dto.XactDto)
+     */
+    @Override
+    public List<XactDto> getXact(XactDto criteria) throws XactApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Transaction criteria object is required", e);
+        }
+
+        XactDao dao = this.getXactDao();
+        List<XactDto> results = null;
+        try {
+            results = dao.fetchXact(criteria);
+        } catch (Exception e) {
+            this.msg = "DAO error retreiving list of transaction objects";
+            throw new XactApiException(this.msg, e);
+        }
+        return results;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -118,12 +181,11 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new InvalidDataException("Transaction id must be greater than zero", e);
         }
 
-        XactDao dao = this.getXactDao();
         List<XactDto> results = null;
         try {
             XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
             criteria.setXactId(xactId);
-            results = dao.fetchXact(criteria);
+            results = this.getXact(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve common transaction object by xact id: " + xactId;
             throw new XactApiException(this.msg, e);
@@ -146,15 +208,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllCategory()
      */
     @Override
-    public List<XactCategoryDto> getAllCategory() throws XactApiException {
+    public List<XactCategoryDto> getCategory(XactCategoryDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
-            XactCategoryDto criteria = Rmt2XactDtoFactory.createXactCategoryInstance(null);
             results = dao.fetchCategory(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction categories";
+            this.msg = "Unable to retrieve transaction categories";
             throw new XactApiException(this.msg, e);
         }
     }
@@ -187,10 +248,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction category by category id: " + catgId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null || results.size() <= 0) {
             return null;
@@ -209,15 +266,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllGroups()
      */
     @Override
-    public List<XactCodeGroupDto> getAllGroups() throws XactApiException {
+    public List<XactCodeGroupDto> getGroup(XactCodeGroupDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeGroupDto> results = null;
-        XactCodeGroupDto criteria = Rmt2XactDtoFactory.createXactCodeGroupInstance(null);
         try {
             results = dao.fetchGroup(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction groups";
+            this.msg = "Unable to retrieve transaction groups";
             throw new XactApiException(this.msg, e);
         }
     }
@@ -268,20 +324,16 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllCode()
      */
     @Override
-    public List<XactCodeDto> getAllCode() throws XactApiException {
+    public List<XactCodeDto> getCodes(XactCodeDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
-            results = dao.fetchCode(null);
+            results = dao.fetchCode(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction codes";
+            this.msg = "Unable to retrieve transaction codes";
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -311,10 +363,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction code by code id: " + codeId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
 
         if (results == null || results.size() <= 0) {
             return null;
@@ -364,14 +412,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @see org.modules.transaction.XactApi#getAllXactType()
      */
     @Override
-    public List<XactTypeDto> getAllXactType() throws XactApiException {
+    public List<XactTypeDto> getXactTypes(XactTypeDto criteria) throws XactApiException {
         XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
-            results = dao.fetchType(null);
+            results = dao.fetchType(criteria);
             return results;
         } catch (Exception e) {
-            this.msg = "Unable to retrieve all transaction type objects";
+            this.msg = "Unable to retrieve  transaction type objects";
             throw new XactApiException(this.msg, e);
         }
     }
@@ -474,10 +522,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction item type activity objects by xact id: " + xactId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -539,10 +583,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.msg = "Unable to retrieve transaction type item objects by xact type id: " + xactTypeId;
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /*
@@ -596,10 +636,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
 
     /**
@@ -1173,7 +1209,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             rc = custDao.maintain(xactHist);
             // Update transaction with confirmation number
             switch (xactDto.getXactTypeId()) {
-                case XactConst.XACT_TYPE_CASHPAY:
+                case XactConst.XACT_TYPE_CASHRECEIPT:
                 case XactConst.XACT_TYPE_CASHSALES:
                     xactDto.setXactConfirmNo(this.createGenericConfirmNo());
                     xactDao.maintain(xactDto);
@@ -1348,10 +1384,5 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             logger.error(this.msg, e);
             throw new XactApiException(this.msg, e);
         }
-        // finally {
-        // dao.close();
-        // dao = null;
-        // }
     }
-
 }

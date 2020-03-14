@@ -26,7 +26,7 @@ import org.dto.TracksDto;
 import org.dto.VwPhotoDto;
 
 import com.RMT2Base;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * A factory for creating Multi Media module DTO instances using various adapter

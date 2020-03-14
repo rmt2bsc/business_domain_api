@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rmt2.api.AccountingMockDataFactory;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 public class ItemMasterStatusHistOrmTest {
 

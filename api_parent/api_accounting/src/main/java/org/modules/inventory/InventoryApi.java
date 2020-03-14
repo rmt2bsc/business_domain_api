@@ -244,10 +244,10 @@ public interface InventoryApi extends TransactionApi {
      *            The id of the vendor
      * @param itemId
      *            The id of the inventory item
-     * @return An arbitrary object representing a vendor items item.
+     * @return List of arbitrary objects representing one or more vendor items.
      * @throws InventoryApiException
      */
-    VendorItemDto getVendorItem(Integer vendorId, Integer itemId)
+    List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId)
             throws InventoryApiException;
 
     /**
@@ -356,8 +356,8 @@ public interface InventoryApi extends TransactionApi {
      *            The id of an inventory item.
      * @return 1 for success.
      * @throws InventoryApiException
-     *             itemId does not exist in the system or a database error
-     *             occurred.
+     *             <i>itemId</i> does not exist in the system or a database error
+     *             occurred or is already deactivated.
      */
     int deactivateItemMaster(Integer itemId) throws InventoryApiException;
 
@@ -368,8 +368,8 @@ public interface InventoryApi extends TransactionApi {
      *            The id of an inventory item.
      * @return 1 for success.
      * @throws InventoryApiException
-     *             itemId does not exist in the system or a database error
-     *             occurred.
+     *             <i>itemId</i> does not exist in the system or a database error
+     *             occurred or is already activated.
      */
     int activateItemMaster(Integer itemId) throws InventoryApiException;
 

@@ -12,10 +12,11 @@ import org.dto.LookupExtDto;
 import org.dto.LookupGroupDto;
 import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
+import com.NotFoundException;
 import com.SystemException;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * An RMT2 ORM implementation of the {@link LookupDao} interface which accesses
@@ -330,6 +331,9 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     private int updateGroup(GeneralCodesGroup obj) throws LookupUpdateDaoException {
         try {
             GeneralCodesGroup origRec = this.getRmt2Group(obj.getCodeGrpId());
+            if (origRec ==  null) {
+                throw new NotFoundException("Lookup group targeted for update does not exist [group id=" + obj.getCodeGrpId() + "]");
+            }
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.addCriteria(GeneralCodesGroup.PROP_CODEGRPID, obj.getCodeGrpId());
             obj.setDateCreated(origRec.getDateCreated());
@@ -443,6 +447,9 @@ public class Rmt2OrmLookupDaoImpl extends AddressBookDaoImpl implements LookupDa
     private int updateCode(GeneralCodes obj) throws LookupUpdateDaoException {
         try {
             GeneralCodes origRec = this.getRmt2Code(obj.getCodeId());
+            if (origRec == null) {
+                throw new NotFoundException("Lookup code targeted for update does not exist [code id=" + obj.getCodeId() + "]");
+            }
             obj.addCriteria(GeneralCodes.PROP_CODEID, obj.getCodeId());
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateCreated(origRec.getDateCreated());

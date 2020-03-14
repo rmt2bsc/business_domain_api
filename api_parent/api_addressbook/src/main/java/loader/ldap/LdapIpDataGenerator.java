@@ -19,9 +19,9 @@ import org.dao.mapping.orm.ldap.LdapIp;
 
 import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2File;
-import com.util.RMT2String;
-import com.util.RMT2String2;
+import com.api.util.RMT2File;
+import com.api.util.RMT2String;
+import com.api.util.RMT2String2;
 
 /**
  * Generates multiple .ldif files containing IP Address entries to be imported

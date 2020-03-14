@@ -2,6 +2,7 @@ package org.modules.transaction.disbursements;
 
 import java.util.List;
 
+import org.dto.XactCustomCriteriaDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
 import org.modules.transaction.XactApi;
@@ -38,10 +39,12 @@ public interface DisbursementsApi extends XactApi {
      * 
      * @param criteria
      * @param customCriteria
+     *            String containing custom selection criteria which conforms to
+     *            the underlying data source.
      * @return
      * @throws DisbursementsApiException
      */
-    List<XactDto> get(XactDto criteria, String customCriteria)
+    List<XactDto> get(XactDto criteria, XactCustomCriteriaDto customCriteria)
             throws DisbursementsApiException;
 
     /**
@@ -52,7 +55,7 @@ public interface DisbursementsApi extends XactApi {
      * @return
      * @throws DisbursementsDaoException
      */
-    List<XactTypeItemActivityDto> getItems(XactTypeItemActivityDto criteria, String customCriteria)
+    List<XactTypeItemActivityDto> getItems(XactTypeItemActivityDto criteria, XactCustomCriteriaDto customCriteria)
             throws DisbursementsApiException;
 
     /**

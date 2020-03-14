@@ -22,6 +22,7 @@ import org.dto.VendorItemDto;
 import org.dto.VwVendorItemDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
+import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.purchaseorder.Rmt2PurchaseOrderDtoFactory;
 import org.modules.inventory.InventoryApi;
@@ -39,9 +40,9 @@ import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2String;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2String;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Api Implementation of {@link VendorPurchasesApi} that manages vendor purchase
@@ -61,17 +62,8 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
     private int vendorId;
 
     /**
-     * Creates an VendorPurchasesApiImpl which creates a stand alone connection.
-     */
-    public VendorPurchasesApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
-
-    /**
-     * Creates an VendorPurchasesApiImpl which creates a stand alone connection.
+     * Creates a VendorPurchasesApiImpl object in which the configuration is
+     * identified by the name of a given application.
      * 
      * @param appName
      *            Application Name
@@ -80,6 +72,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
@@ -605,10 +598,12 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
         CreditorApi credApi = f.createCreditorApi(this.getSharedDao());
         // Get creditor data to used as validating metric
         try {
-            CreditorTypeDto ct = null;
+            List<CreditorTypeDto> results = null;
+            CreditorTypeDto criteria = Rmt2SubsidiaryDtoFactory.createCreditorTypeInstance(null);
+            criteria.setEntityId(AccountingConst.CREDITORTYPE_VENDOR);
             // Vendor type must exist in the database.
-            ct = credApi.getCreditorType(AccountingConst.CREDITORTYPE_VENDOR);
-            return ct;
+            results = credApi.getCreditorType(criteria);
+            return results.get(0);
         } catch (CreditorApiException e) {
             throw new VendorPurchasesApiException(e);
         } finally {

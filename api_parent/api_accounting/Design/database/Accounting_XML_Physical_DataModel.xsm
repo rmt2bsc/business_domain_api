@@ -22110,7 +22110,7 @@ LABL 0 Arial,8,N</a:FontList>
 <o:ElementSymbol Id="o892">
 <a:CreationDate>1243829485</a:CreationDate>
 <a:ModificationDate>1243864862</a:ModificationDate>
-<a:Rect>((-30481,10932), (-18935,12504))</a:Rect>
+<a:Rect>((-30408,10932), (-19008,12504))</a:Rect>
 <a:LineColor>32768</a:LineColor>
 <a:FillColor>12648384</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -22185,7 +22185,7 @@ LABL 0 Arial,8,N</a:FontList>
 <o:ElementSymbol Id="o900">
 <a:CreationDate>1243829485</a:CreationDate>
 <a:ModificationDate>1243864514</a:ModificationDate>
-<a:Rect>((-30481,-4055), (-16686,-2483))</a:Rect>
+<a:Rect>((-30408,-4055), (-16759,-2483))</a:Rect>
 <a:LineColor>32768</a:LineColor>
 <a:FillColor>12648384</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>

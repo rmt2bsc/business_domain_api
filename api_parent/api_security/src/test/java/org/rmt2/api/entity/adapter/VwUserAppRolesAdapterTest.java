@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.rmt2.api.SecurityMockDataFactory;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Test VwUserAppRoles adapter as it pertains to the Security API module.

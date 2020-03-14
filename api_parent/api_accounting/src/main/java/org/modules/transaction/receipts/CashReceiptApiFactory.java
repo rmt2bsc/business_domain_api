@@ -27,10 +27,8 @@ public class CashReceiptApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link CashReceiptApi}
      */
-    public CashReceiptApi createApi() {
-        // CashReceiptApiImpl api = new CashReceiptApiImpl();
-        // return api;
-        return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
+    public static final CashReceiptApi createApi() {
+        return createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -41,7 +39,7 @@ public class CashReceiptApiFactory extends RMT2Base {
      *            application name
      * @return an instance of {@link CashReceiptApi}
      */
-    public CashReceiptApi createApi(String appName) {
+    public static final CashReceiptApi createApi(String appName) {
         CashReceiptApiImpl api = new CashReceiptApiImpl(appName);
         return api;
     }
@@ -57,7 +55,7 @@ public class CashReceiptApiFactory extends RMT2Base {
      * @return an instance of {@link CashReceiptApi} or null if
      *         <i>connection</i> is null.
      */
-    public CashReceiptApi createApi(DaoClient connection) {
+    public static final CashReceiptApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }

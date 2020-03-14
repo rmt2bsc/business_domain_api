@@ -26,7 +26,7 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Tests cash disbursement transaction type item activity query Api.

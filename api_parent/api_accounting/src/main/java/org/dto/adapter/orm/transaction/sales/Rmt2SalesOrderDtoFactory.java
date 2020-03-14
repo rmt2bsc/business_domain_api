@@ -56,6 +56,16 @@ public class Rmt2SalesOrderDtoFactory extends RMT2Base {
 
     /**
      * Create an instance of <i>SalesOrderDto</i>.
+     * 
+     * @return an instance of {@link SalesOrderDto}.
+     */
+    public static final SalesOrderDto createSalesOrderInstance() {
+        SalesOrder so = new SalesOrder();
+        return new SalesOrderRmt2OrmAdapter(so);
+    }
+
+    /**
+     * Create an instance of <i>SalesOrderDto</i>.
      * <p>
      * A brand new instance of SalesOrderDto is created when <i>ormBean</i> is
      * null. Otherwise, <i>ormBean</i> is adapted to an instance of

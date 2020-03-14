@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.modules.transaction.sales.SalesApiConst;
 import org.rmt2.api.AccountingMockDataFactory;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 public class VwSalesOrderInvoiceOrmTest {
     

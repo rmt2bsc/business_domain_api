@@ -7,12 +7,11 @@ import org.dao.resources.ResourceDao;
 import org.dao.resources.ResourcesDaoFactory;
 import org.dto.ResourceDto;
 import org.dto.WebServiceDto;
-import org.modules.SecurityConstants;
 
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * A implementation of {@link ResourceRegistryApi} interface that is
@@ -32,19 +31,16 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
     private ResourceDao dao;
 
     /**
-     * Create a WebServiceRegistryApiImpl which initializes the DAO factory.
+     * Creates a WebServiceRegistryApiImpl object in which the configuration is
+     * identified by the name of a given application.
+     * 
+     * @param appName
      */
-    WebServiceRegistryApiImpl() {
-        super(SecurityConstants.APP_NAME);
-        this.dao = ResourcesDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
-        this.setSharedDao(this.dao);
-        logger.info("Resource Api is initialized by default constructor");
-    }
-    
     WebServiceRegistryApiImpl(String appName) {
         super(appName);
         this.dao = ResourcesDaoFactory.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.setApiUser(this.apiUser);
         logger.info("Resource Api is initialized by application name, " + appName);
     }
 
@@ -77,9 +73,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
             this.msg = "Unable to fetch master list of resource type objects";
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -107,9 +100,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
             this.msg = "Unable to fetch master list of resource sub type objects";
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -167,9 +157,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
             this.msg = "Unable to successfully fetch list of extended resource objects using resource DTO criteria";
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -194,9 +181,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         } catch (Exception e) {
             this.msg = "Unable to update UserResource object:  " + obj.toString();
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -221,9 +205,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         } catch (Exception e) {
             this.msg = "Unable to update resource type object:  " + obj.getTypeDescription();
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -250,9 +231,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
             this.msg = "Unable to update resource sub type object:  " + obj.getSubTypeDescription();
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -274,9 +252,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
                     + criteria.getName();
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -296,9 +271,6 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
             this.msg = "Unable to delete resource sub type object identified by id:  "  + criteria.getSubTypeId();
             logger.error(this.msg);
             throw new ResourceRegistryApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 

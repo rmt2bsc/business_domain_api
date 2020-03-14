@@ -11,7 +11,7 @@ import org.cmc.music.myid3.MyID3;
 
 import com.InvalidDataException;
 import com.RMT2Base;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * A MyMp3 implementaion of {@link MP3Reader}

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.XactCodeGroup;
 import org.dto.XactCodeGroupDto;
+import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,8 +69,9 @@ public class TransactionGroupApiTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
         List<XactCodeGroupDto> results = null;
+        XactCodeGroupDto criteria = null;
         try {
-            results = api.getAllGroups();
+            results = api.getGroup(criteria);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -95,14 +97,15 @@ public class TransactionGroupApiTest extends TransactionApiTestData {
 
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
-        XactCodeGroupDto results = null;
+        List<XactCodeGroupDto> results = null;
+        XactCodeGroupDto criteria = Rmt2XactDtoFactory.createXactCodeGroupInstance(null);
         try {
-            results = api.getGroup(10);
+            results = api.getGroup(criteria);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
         Assert.assertNotNull(results);
-        Assert.assertEquals(results.getEntityName(), "Code Group 10");
+        Assert.assertEquals(results.get(0).getEntityName(), "Code Group 10");
     }
     
     @Test
@@ -131,8 +134,9 @@ public class TransactionGroupApiTest extends TransactionApiTestData {
     public void testFetchWithNullGroupId() {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
+        Integer grpIdParm = null;
         try {
-            api.getGroup(null);
+            api.getGroup(grpIdParm);
             Assert.fail("Expected exception due to null input value");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -145,7 +149,8 @@ public class TransactionGroupApiTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
         try {
-            api.getGroup(0);
+            Integer grpIdParm = 0;
+            api.getGroup(grpIdParm);
             Assert.fail("Expected exception due to zero input value");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -158,7 +163,8 @@ public class TransactionGroupApiTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
         try {
-            api.getGroup(-100);
+            Integer grpIdParm = -100;
+            api.getGroup(grpIdParm);
             Assert.fail("Expected exception due to negative input value");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -179,9 +185,9 @@ public class TransactionGroupApiTest extends TransactionApiTestData {
 
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
-        List<XactCodeGroupDto> results = null;
         try {
-            results = api.getAllGroups();
+            XactCodeGroupDto criteria = Rmt2XactDtoFactory.createXactCodeGroupInstance(null);
+            api.getGroup(criteria);
             Assert.fail("Expected exception due to DAO exception");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);

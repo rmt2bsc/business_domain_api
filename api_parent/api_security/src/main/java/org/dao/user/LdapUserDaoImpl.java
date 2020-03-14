@@ -22,7 +22,7 @@ import com.api.ldap.operation.LdapDeleteOperation;
 import com.api.ldap.operation.LdapModifyOperation;
 import com.api.ldap.operation.LdapSearchOperation;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * A JNDI implementation for the {@link UserDao} interface which accesses and

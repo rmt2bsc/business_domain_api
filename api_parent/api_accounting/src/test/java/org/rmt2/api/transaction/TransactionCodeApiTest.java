@@ -67,7 +67,7 @@ public class TransactionCodeApiTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
         List<XactCodeDto> results = null;
         try {
-            results = api.getAllCode();
+            results = api.getCodes(null);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -272,7 +272,7 @@ public class TransactionCodeApiTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(this.mockDaoClient);
         List<XactCodeDto> results = null;
         try {
-            results = api.getAllCode();
+            results = api.getCodes(null);
             Assert.fail("Expected exception due to DAO exception");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);

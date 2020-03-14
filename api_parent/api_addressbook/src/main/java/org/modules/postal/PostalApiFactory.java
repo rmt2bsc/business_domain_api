@@ -25,10 +25,8 @@ public class PostalApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link PostalApi}
      */
-    public PostalApi createApi() {
-        // PostalApi api = new PostalApiImpl();
-        // return api;
-        return this.createApi(AddressBookConstants.DEFAULT_CONTEXT_NAME);
+    public static final PostalApi createApi() {
+        return createApi(AddressBookConstants.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -39,7 +37,7 @@ public class PostalApiFactory extends RMT2Base {
      *            application name
      * @return an instance of {@link PostalApi}
      */
-    public PostalApi createApi(String appName) {
+    public static final PostalApi createApi(String appName) {
         PostalApi api = new PostalApiImpl(appName);
         return api;
     }

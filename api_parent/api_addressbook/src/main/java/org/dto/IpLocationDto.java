@@ -16,16 +16,30 @@ public interface IpLocationDto extends TransactionDto {
      * Set the internal IP range id which is synonymous to location id.
      * 
      * @param value
-     *            int
+     *            Integer
      */
-    void setIpRangeId(int value);
+    void setIpRangeId(Integer value);
 
     /**
      * Get the internal IP range id which is synonymous to location id.
      * 
      * @return int
      */
-    int getIpRangeId();
+    Integer getIpRangeId();
+    
+    /**
+     * Get the IP address in its standard form such as: xxx.xxx.xxx.xxx
+     * 
+     * @return
+     */
+    String getStandardIp();
+    
+    /**
+     * Set the IP address in its standard form such as: xxx.xxx.xxx.xxx
+     * 
+     * @param ip
+     */
+    void setStandardIp(String ip);
 
     /**
      * Set the area code.
@@ -146,5 +160,35 @@ public interface IpLocationDto extends TransactionDto {
      * @return String
      */
     String getMetroCode();
+    
+    /**
+     * Set the From IP.
+     * 
+     * @param value
+     *            double
+     */
+    void setIpFrom(double value);
+
+    /**
+     * Get the From IP.
+     * 
+     * @return String
+     */
+    double getIpFrom();
+    
+    /**
+     * Set the To IP.
+     * 
+     * @param value
+     *            double
+     */
+    void setIpTo(double value);
+
+    /**
+     * Get the To IP.
+     * 
+     * @return double
+     */
+    double getIpTo();
 
 }

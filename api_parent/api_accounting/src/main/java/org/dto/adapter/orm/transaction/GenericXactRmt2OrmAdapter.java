@@ -47,7 +47,7 @@ class GenericXactRmt2OrmAdapter extends RMT2Base implements CommonXactDto {
      * @see org.dto.CommonXactDto#setSubsidiaryId(int)
      */
     @Override
-    public void setSubsidiaryId(int value) {
+    public void setParentEntityId(int value) {
         this.x.setParentEntityId(value);
     }
 
@@ -57,7 +57,7 @@ class GenericXactRmt2OrmAdapter extends RMT2Base implements CommonXactDto {
      * @see org.dto.CommonXactDto#getSubsidiaryId()
      */
     @Override
-    public int getSubsidiaryId() {
+    public int getParentEntityId() {
         return this.x.getParentEntityId();
     }
 
@@ -398,7 +398,7 @@ class GenericXactRmt2OrmAdapter extends RMT2Base implements CommonXactDto {
      */
     @Override
     public String getBusinessName() {
-        return this.getBusinessName();
+        return this.x.getBusinessName();
     }
 
     /*

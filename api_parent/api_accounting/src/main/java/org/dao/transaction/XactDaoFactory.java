@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.dao.mapping.orm.rmt2.CreditorActivity;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
+import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.Xact;
@@ -14,6 +15,7 @@ import org.dao.mapping.orm.rmt2.XactCodes;
 import org.dao.mapping.orm.rmt2.XactType;
 import org.dao.mapping.orm.rmt2.XactTypeItem;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
+import org.dto.CommonXactDto;
 import org.dto.SubsidiaryActivityDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
@@ -78,6 +80,56 @@ public class XactDaoFactory extends RMT2Base {
     public XactDao createRmt2OrmXactDao(DaoClient dao) {
         XactDao d = new Rmt2XactDaoImpl(dao.getClient());
         return d;
+    }
+
+    /**
+     * Creates and returns an <i>VwGenericXactList</i> object containing
+     * selection criteria obtained from an instance of <i>CommonXactDto</i>.
+     * 
+     * @param criteria
+     *            an instance of {@link CommonXactDto} which the following
+     *            properties are recognized:
+     *            <ul>
+     *            <li>xactId</li>
+     *            <li>xactDate</li>
+     *            <li>xactTypeId</li>
+     *            <li>xactBusinessId</li>
+     *            <li>xactBusinessName</li>
+     *            <li>confirmNo</li>
+     *            <li>invoiceNo</li>
+     *            <li>xactReason</li>
+     *            </ul>
+     * @return an instance of {@link VwGenericXactList}
+     */
+    public static final VwGenericXactList createCriteria(CommonXactDto criteria) {
+        VwGenericXactList obj = new VwGenericXactList();
+        if (criteria != null) {
+            if (criteria.getXactId() > 0) {
+                obj.addCriteria(VwGenericXactList.PROP_XACTID, criteria.getXactId());
+            }
+            if (criteria.getXactDate() != null) {
+                obj.addCriteria(VwGenericXactList.PROP_XACTDATE, criteria.getXactDate());
+            }
+            if (criteria.getXactTypeId() > 0) {
+                obj.addCriteria(VwGenericXactList.PROP_XACTTYPEID, criteria.getXactTypeId());
+            }
+            if (criteria.getBusinessId() > 0) {
+                obj.addCriteria(VwGenericXactList.PROP_BUSINESSID, criteria.getBusinessId());
+            }
+            if (criteria.getBusinessName() != null) {
+                obj.addLikeClause(VwGenericXactList.PROP_BUSINESSNAME, criteria.getBusinessName());
+            }
+            if (criteria.getConfirmNo() != null) {
+                obj.addLikeClause(VwGenericXactList.PROP_CONFIRMNO, criteria.getConfirmNo());
+            }
+            if (criteria.getInvoiceNo() != null) {
+                obj.addLikeClause(VwGenericXactList.PROP_INVOICENO, criteria.getInvoiceNo());
+            }
+            if (criteria.getReason() != null) {
+                obj.addLikeClause(VwGenericXactList.PROP_XACTREASON, criteria.getReason(), VwGenericXactList.LIKE_CONTAINS);
+            }
+        }
+        return obj;
     }
 
     /**

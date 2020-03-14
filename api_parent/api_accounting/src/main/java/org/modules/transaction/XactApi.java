@@ -3,6 +3,7 @@ package org.modules.transaction;
 import java.util.List;
 
 import org.AccountingConst.SubsidiaryType;
+import org.dto.CommonXactDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -25,6 +26,26 @@ import com.api.foundation.TransactionApi;
 public interface XactApi extends TransactionApi {
 
     /**
+     * Retrieves a list transaction objects
+     * 
+     * @param criteria
+     *            instnce of {@link Xact}
+     * @return List<{@link Xact}>
+     * @throws XactApiException
+     */
+    List<XactDto> getXact(XactDto criteria) throws XactApiException;
+
+    /**
+     * Retrieves a list of common transaction objects
+     * 
+     * @param criteria
+     *            instnce of {@link CommonXactDto}
+     * @return List<{@link CommonXactDto}>
+     * @throws XactApiException
+     */
+    List<CommonXactDto> getXact(CommonXactDto criteria) throws XactApiException;
+
+    /**
      * Retrieves transaction data using transaction id
      * 
      * @param xactId
@@ -36,10 +57,12 @@ public interface XactApi extends TransactionApi {
     /**
      * Retrieves a transaction category object using category id.
      * 
+     * @param criteria
+     *            instance of {@link XactCategoryDto}
      * @return {@link XactCategoryView} object
      * @throws XactApiException
      */
-    List<XactCategoryDto> getAllCategory() throws XactApiException;
+    List<XactCategoryDto> getCategory(XactCategoryDto criteria) throws XactApiException;
 
     /**
      * Retrieves a transaction category object using category id.
@@ -56,12 +79,14 @@ public interface XactApi extends TransactionApi {
      * supplied by the user. User is responsible for setting the base view and
      * class so that the API will know what data to retrieve.
      * 
+     * @param criteria
+     *            instance of {@link XactCodeGroupDto}
      * @return ArrayList of unknown objects. The implementer of this method is
      *         responsible for applying the proper casting of each element
      *         contained in the returned results.
      * @throws XactApiException
      */
-    List<XactCodeGroupDto> getAllGroups() throws XactApiException;
+    List<XactCodeGroupDto> getGroup(XactCodeGroupDto criteria) throws XactApiException;
 
     /**
      * Retrieves a transaction code group record using its primary key value.
@@ -78,12 +103,14 @@ public interface XactApi extends TransactionApi {
      * by the user. User is responsible for setting the base view and class so
      * that the API will know what data to retrieve.
      * 
+     * @param criteria
+     *            instance of {@link XactCodeDto}
      * @return ArrayList of unknown objects. The implementer of this method is
      *         responsible for applying the proper casting of each element
      *         contained in the returned results.
      * @throws XactApiException
      */
-    List<XactCodeDto> getAllCode() throws XactApiException;
+    List<XactCodeDto> getCodes(XactCodeDto criteria) throws XactApiException;
 
     /**
      * Retrieves a specific transaction code object using the primary key value.
@@ -110,10 +137,12 @@ public interface XactApi extends TransactionApi {
      * Retrieves an ArrayList of transaction type objects based custom criteria
      * supplied by the user.
      * 
+     * @param criteria
+     *            instance of {@link XactTypeDto}
      * @return ArrayList of {@link XactType}
      * @throws XactApiException
      */
-    List<XactTypeDto> getAllXactType() throws XactApiException;
+    List<XactTypeDto> getXactTypes(XactTypeDto criteria) throws XactApiException;
 
     /**
      * Retrieves a specific transaction type object using its primary key.

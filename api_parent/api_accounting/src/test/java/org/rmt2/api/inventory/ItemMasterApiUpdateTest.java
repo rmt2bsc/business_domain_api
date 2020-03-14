@@ -2,6 +2,7 @@ package org.rmt2.api.inventory;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -307,6 +308,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         ItemMaster im = new ItemMaster();
         im.setItemId(100);
         try {
+            this.mockSingleFetchResponse.get(0).setActive(0);
             when(this.mockPersistenceClient.retrieveList(eq(im)))
                     .thenReturn(this.mockSingleFetchResponse);
         } catch (Exception e) {
@@ -315,8 +317,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Fetch original Item Master for activation test case setup failed");
         }
         try {
-            when(this.mockPersistenceClient.updateRow(eq(im)))
-                    .thenReturn(1);
+            when(this.mockPersistenceClient.updateRow(eq(im))).thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Item master update row test case setup failed");
@@ -326,8 +327,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             ItemMasterStatus ims = new ItemMasterStatus();
             ims.setItemStatusId(InventoryConst.ITEM_STATUS_INSRVC);
             List<ItemMasterStatus> mockItemStatusHistResp = this
-                    .createMockSingleItemStatusFetchResponse(
-                            InventoryConst.ITEM_STATUS_INSRVC);
+                    .createMockSingleItemStatusFetchResponse(InventoryConst.ITEM_STATUS_INSRVC);
             when(this.mockPersistenceClient.retrieveList(eq(ims)))
                     .thenReturn(mockItemStatusHistResp);
         } catch (Exception e) {
@@ -373,6 +373,30 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             e.printStackTrace();
         }
         Assert.assertEquals(1, rc);
+    }
+    
+    @Test
+    public void testError_ActivateItemMaster_When_Already_Active() {
+        ItemMaster im = new ItemMaster();
+        im.setItemId(100);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(im)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Fetch original Item Master for activation test case setup failed");
+        }
+        
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.activateItemMaster(100);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InventoryApiException);
+        }
     }
     
     @Test
@@ -724,18 +748,17 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         im3.setItemId(300);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(im)))
-                    .thenReturn(this.mockSingleFetchResponse);
+                 .thenReturn(this.mockSingleFetchResponse);
             when(this.mockPersistenceClient.retrieveList(eq(im2)))
-            .thenReturn(mockSingleFetchResponse2);
+                 .thenReturn(mockSingleFetchResponse2);
             when(this.mockPersistenceClient.retrieveList(eq(im3)))
-            .thenReturn(mockSingleFetchResponse3);
+                 .thenReturn(mockSingleFetchResponse3);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Fetch original Item Master for assign vendor items test case setup failed");
+            Assert.fail("Fetch original Item Master for assign vendor items test case setup failed");
         }
         try {
-            when(this.mockPersistenceClient.updateRow(any(VendorItems.class)))
+            when(this.mockPersistenceClient.insertRow(isA(VendorItems.class), isA(Boolean.class)))
                     .thenReturn(1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -880,8 +903,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             ItemMasterStatus ims = new ItemMasterStatus();
             ims.setItemStatusId(InventoryConst.ITEM_STATUS_OUTSRVC);
             List<ItemMasterStatus> mockItemStatusHistResp = this
-                    .createMockSingleItemStatusFetchResponse(
-                            InventoryConst.ITEM_STATUS_OUTSRVC);
+                    .createMockSingleItemStatusFetchResponse(InventoryConst.ITEM_STATUS_OUTSRVC);
             when(this.mockPersistenceClient.retrieveList(eq(ims)))
                     .thenReturn(mockItemStatusHistResp);
         } catch (Exception e) {
@@ -927,6 +949,30 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             e.printStackTrace();
         }
         Assert.assertEquals(1, rc);
+    }
+    
+    @Test
+    public void testError_DeactivateItemMaster_When_Already_Deactivated() {
+        ItemMaster im = new ItemMaster();
+        im.setItemId(100);
+        try {
+            this.mockSingleFetchResponse.get(0).setActive(0);
+            when(this.mockPersistenceClient.retrieveList(eq(im)))
+                    .thenReturn(this.mockSingleFetchResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch original Item Master for activation test case setup failed");
+        }
+
+        InventoryApiFactory f = new InventoryApiFactory();
+        InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
+        try {
+            api.deactivateItemMaster(100);
+            Assert.fail("Expected to throw an exception");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InventoryApiException);
+        }
     }
     
     @Test

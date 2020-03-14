@@ -13,7 +13,7 @@ import javax.activation.FileTypeMap;
 
 import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Provides an interface for data typing files by their file extension.

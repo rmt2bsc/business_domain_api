@@ -25,8 +25,8 @@ import com.api.persistence.db.DatabaseConnectionBean;
 import com.api.persistence.db.DynamicSqlApi;
 import com.api.persistence.db.DynamicSqlFactory;
 import com.api.persistence.db.orm.OrmBean;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * An RMT2 ORM implemetation of {@link AudioVideoDao} interface which the data

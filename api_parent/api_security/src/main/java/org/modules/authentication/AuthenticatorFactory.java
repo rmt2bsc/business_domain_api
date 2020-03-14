@@ -1,5 +1,7 @@
 package org.modules.authentication;
 
+import org.modules.SecurityConstants;
+
 import com.RMT2Base;
 import com.api.persistence.DaoClient;
 
@@ -18,8 +20,7 @@ public class AuthenticatorFactory extends RMT2Base {
      * @return an instance of {@link Authenticator}
      */
     public static final Authenticator createApi() {
-        Authenticator a = new UserAuthenticatorImpl();
-        return a;
+        return createApi(SecurityConstants.APP_NAME);
     }
 
     /**

@@ -29,7 +29,7 @@ import org.rmt2.api.AccountingMockDataFactory;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Tests the creation of customer activity transactions.
@@ -122,7 +122,7 @@ public class CustomerSubsidiaryActivityTest extends TransactionApiTestData {
         mockXactCriteria.setId(111111);
         try {
             List<VwXactList> list = new ArrayList<VwXactList>();
-            VwXactList o = AccountingMockDataFactory.createMockOrmXact(111111, XactConst.XACT_TYPE_CASHPAY, 3333,
+            VwXactList o = AccountingMockDataFactory.createMockOrmXact(111111, XactConst.XACT_TYPE_CASHRECEIPT, 3333,
                     RMT2Date.stringToDate("2017-01-13"), 111.11, 200, null);
             list.add(o);
             when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))

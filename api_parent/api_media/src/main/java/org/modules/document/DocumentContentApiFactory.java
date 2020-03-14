@@ -1,5 +1,7 @@
 package org.modules.document;
 
+import org.modules.MediaConstants;
+
 import com.RMT2Base;
 
 /**
@@ -24,8 +26,7 @@ public class DocumentContentApiFactory extends RMT2Base {
      * @return an instance of {@link DocumentContentApi}
      */
     public DocumentContentApi createMediaContentApi() {
-        DocumentContentApi api = new DocumentContentApiImpl();
-        return api;
+        return createMediaContentApi(MediaConstants.APP_NAME);
     }
 
     /**

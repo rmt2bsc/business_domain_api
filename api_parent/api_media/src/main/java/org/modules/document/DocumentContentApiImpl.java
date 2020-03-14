@@ -9,16 +9,15 @@ import org.dao.document.ContentDaoFactory;
 import org.dto.ContentDto;
 import org.dto.MimeTypeDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
-import org.modules.MediaConstants;
 import org.modules.MediaModuleException;
 import org.modules.services.document.directory.DirectoryInboundDocumentListener;
 
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.RMT2File;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2File;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * A basic impelentation of {@link DocumentContentApi} that provides the user
@@ -37,13 +36,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
 
     private static DirectoryInboundDocumentListener MEDIA_DIR_LISTENER;
 
-    /**
-     * Creates an DocumentContentApiImpl which defaults to saving media to the
-     * database.
-     */
-    protected DocumentContentApiImpl() {
-        this(MediaConstants.DEFAULT_CONTEXT_NAME);
-    }
+
 
     /**
      * Creates an DocumentContentApiImpl identified application and defaults to

@@ -159,11 +159,14 @@ public interface InventoryDao extends DaoClient {
      * 
      * @param vendorItem
      *            An instance of {@link VendorItems} object
+     * @param add
+     *            indicates if <i>vendorItem</i> will be added (true) or updated
+     *            (false).
      * @return The total number of items effected by the transaction
      * @throws InventoryDaoException
      *             General data access errors
      */
-    int maintain(VendorItemDto vendorItem) throws InventoryDaoException;
+    int maintain(VendorItemDto vendorItem, boolean add) throws InventoryDaoException;
 
     /**
      * Initiates the maintenance of an Item Type Entity. If the id property of

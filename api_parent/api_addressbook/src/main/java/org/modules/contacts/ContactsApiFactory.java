@@ -25,8 +25,8 @@ public class ContactsApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link ContactsApi}
      */
-    public ContactsApi createApi() {
-        return this.createApi(AddressBookConstants.DEFAULT_CONTEXT_NAME);
+    public static final ContactsApi createApi() {
+        return ContactsApiFactory.createApi(AddressBookConstants.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -37,7 +37,7 @@ public class ContactsApiFactory extends RMT2Base {
      *            application name
      * @return an instance of {@link ContactsApi}
      */
-    public ContactsApi createApi(String appName) {
+    public static final ContactsApi createApi(String appName) {
         ContactsApi api = new ContactsApiImpl(appName);
         return api;
     }

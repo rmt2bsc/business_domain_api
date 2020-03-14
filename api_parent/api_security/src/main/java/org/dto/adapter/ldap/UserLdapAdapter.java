@@ -7,7 +7,7 @@ import java.util.List;
 import org.dao.mapping.orm.ldap.LdapUser;
 import org.dto.DefaultUserAdapter;
 
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Adapts a LDAP <i>LdapUser</i> object to an <i>UserDto</i> and an <i>User</i>.

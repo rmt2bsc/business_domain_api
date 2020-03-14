@@ -103,6 +103,20 @@ public class Rmt2XactDtoFactory extends RMT2Base {
      *            an instance of {@link Xact}
      * @return an instance of {@link XactDto}.
      */
+    public static final XactDto createXactBaseInstance(Xact ormBean) {
+        return new XactRmt2OrmAdapter(ormBean);
+    }
+    
+    /**
+     * Create an instance of <i>XactDto</i>.
+     * <p>
+     * A brand new instance of XactDto is created when <i>ormBean</i> is null.
+     * Otherwise, <i>ormBean</i> is adapted to an instance of XactDto.
+     * 
+     * @param ormBean
+     *            an instance of {@link Xact}
+     * @return an instance of {@link XactDto}.
+     */
     public static final XactDto createXactInstance(Xact ormBean) {
         return new XactRmt2OrmAdapter(ormBean);
     }
@@ -283,8 +297,7 @@ public class Rmt2XactDtoFactory extends RMT2Base {
      *            an instance of {@link VwGenericXactList}
      * @return an instance of {@link CommonXactDto}.
      */
-    public static final CommonXactDto createGenericXactInstance(
-            VwGenericXactList ormBean) {
+    public static final CommonXactDto createGenericXactInstance(VwGenericXactList ormBean) {
         return new GenericXactRmt2OrmAdapter(ormBean);
     }
 

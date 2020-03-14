@@ -48,17 +48,20 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
     }
 
     private IpLocation createMockSingleFetchResponse() {
-        IpLocation p = this.createMockOrm(200, 123456789, 987654321, 90333.333, 29393.392838, "United States", "USA", "Dallas", "75240", "6");
+        IpLocation p = this.createMockOrm(200, 123456789, 987654321, 90333.333,
+                29393.392838, "United States", "USA", "Dallas", "75240", "6");
         return p;
     }
-
    
 
-    private IpLocationDto createMockDto(int id, double longitude, double latitude, String countyName, String state, String city, String zip, String areaCode) {
-        IpLocationDto dto = Rmt2AddressBookDtoFactory.getNewIpLocationInstance();
+    private IpLocationDto createMockDto(int id, double longitude,
+            double latitude, String countyName, String state, String city,
+            String zip, String areaCode) {
+        IpLocationDto dto = Rmt2AddressBookDtoFactory
+                .getNewIpLocationInstance();
         dto.setIpRangeId(id);
         dto.setCity(city);
-        dto.setPostalCode(zip);;
+        dto.setPostalCode(zip);
         dto.setCountry(countyName);
         dto.setRegion(state);
         dto.setAreaCode(areaCode);
@@ -67,7 +70,9 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
         return dto;
     }
     
-    private IpLocation createMockOrm(int id, double ipFrom, double ipTo, double longitude, double latitude, String countyName, String countyCode, String city, String zip, String timeZoneId) {
+    private IpLocation createMockOrm(int id, double ipFrom, double ipTo,
+            double longitude, double latitude, String countyName,
+            String countyCode, String city, String zip, String timeZoneId) {
         IpLocation dto = new IpLocation();
         dto.setIpId(id);
         dto.setIpFrom(ipFrom);
@@ -99,7 +104,8 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
             e.printStackTrace();
         }
         Assert.assertNotNull(rec);
-        Assert.assertEquals(200, rec.getIpRangeId());
+        Assert.assertNotNull(rec.getIpRangeId());
+        Assert.assertEquals(200, rec.getIpRangeId(), 0);
         Assert.assertEquals(90333.333, rec.getLongitude(), 0);
         Assert.assertEquals(29393.392838, rec.getLatitude(), 0);
         Assert.assertEquals("Dallas", rec.getCity());
@@ -124,7 +130,8 @@ public class IpInfoApiTest extends BaseAddressBookDaoTest {
             e.printStackTrace();
         }
         Assert.assertNotNull(rec);
-        Assert.assertEquals(200, rec.getIpRangeId());
+        Assert.assertNotNull(rec.getIpRangeId());
+        Assert.assertEquals(200, rec.getIpRangeId(), 0);
         Assert.assertEquals(90333.333, rec.getLongitude(), 0);
         Assert.assertEquals(29393.392838, rec.getLatitude(), 0);
         Assert.assertEquals("Dallas", rec.getCity());

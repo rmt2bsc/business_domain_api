@@ -66,7 +66,7 @@ public interface CustomerApi extends SubsidiaryApi {
     CustomerDto get(Integer customerId) throws CustomerApiException;
     
     /**
-     * Fetch the customer information using customer idcriteria
+     * Fetch the customer information using customer criteria
      * instance as the source of selection criteria.
      * 
      * @param criteria
@@ -74,6 +74,16 @@ public interface CustomerApi extends SubsidiaryApi {
      * @throws CustomerApiException
      */
     List<CustomerDto> get(CustomerDto criteria) throws CustomerApiException;
+    
+    /**
+     * Fetch the customer/business information using customer criteria instance
+     * as the source of selection criteria.
+     * 
+     * @param criteria
+     * @return A List {@link CustomerDto} or null when no data is found.
+     * @throws CustomerApiException
+     */
+    List<CustomerDto> getExt(CustomerDto criteria) throws CustomerApiException;
 
     /**
      * Get transacton history for a particular customer account.

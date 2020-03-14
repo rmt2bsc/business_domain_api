@@ -9,8 +9,11 @@ import org.dao.contacts.ContactsDaoFactory;
 import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
 
+import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.util.RMT2Money;
+import com.api.util.RMT2Money;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link ContactsApi} for managing Contacts module
@@ -24,25 +27,23 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
     private static final Logger logger = Logger.getLogger(ContactsApiImpl.class);
 
     private ContactsDaoFactory factory;
+    private ContactsDao dao;
 
     private String appName;
 
     /**
-     * Default Constructor
+     * Creates a ContactsApiImpl object in which the configuration is identified
+     * by the name of a given application.
+     * 
+     * @param appName
      */
-    protected ContactsApiImpl() {
-        super();
-        this.factory = new ContactsDaoFactory();
-        this.appName = null;
-        logger.info("logger initialized");
-    }
-
     protected ContactsApiImpl(String appName) {
         super();
         this.factory = new ContactsDaoFactory();
         this.appName = appName;
-        // this.dao = this.factory.createRmt2OrmDao(appName);
-        // this.setSharedDao(this.dao);
+        dao = this.factory.createRmt2OrmDao(appName);
+        this.setSharedDao(dao);
+        dao.setDaoUser(this.apiUser);
         logger.info("logger initialized");
     }
 
@@ -61,8 +62,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      */
     @Override
     public List<ContactDto> getContact() throws ContactsApiException {
-        ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             List<ContactDto> results = dao.fetchContact();
             this.msg = "Successfully retrieved " + (results == null ? 0 : results.size()) + " generic contacts";
@@ -94,8 +93,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      */
     @Override
     public ContactDto getontact(int contactId) throws ContactsApiException {
-        ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             ContactDto results = dao.fetchContact(contactId);
             this.msg = "Successfully retrieved contact details for contact, " + contactId;
@@ -145,8 +142,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             }
         }
 
-        ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             List<BusinessContactDto> results = dao.fetchBusinessContact(busIdList);
             this.msg = "Successfully retrieved list of contacts by one or more business id's";
@@ -181,8 +176,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      */
     @Override
     public List<ContactDto> getContact(ContactDto criteria) throws ContactsApiException {
-        ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             List<ContactDto> results = dao.fetchContact(criteria);
             this.msg = "Successfully retrieved list of contacts using DTO as criteria";
@@ -216,8 +209,13 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      */
     @Override
     public int updateContact(ContactDto contact) throws ContactsApiException {
-        ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
+        try {
+            Verifier.verifyNotNull(contact);
+        }
+        catch (VerifyException e) {
+            this.msg = "A Contact data object is required as an input parameter for update operation";
+            throw new InvalidDataException(this.msg);
+        }
         try {
             int rc = dao.maintainContact(contact);
             this.msg = "Update was successfully performed for contact, " + contact.getContactId();
@@ -251,11 +249,26 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      * 
      * @throws ContactsApiException
      *             general data access error
+     * @throws InvalidDataException <i>contact</i> is null or <i>contact.contactId</i> is not greater than zero
      */
     @Override
     public int deleteContact(ContactDto contact) throws ContactsApiException {
-        ContactsDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
+        try {
+            Verifier.verifyNotNull(contact);
+        }
+        catch (VerifyException e) {
+            this.msg = "A Contact crtieria instance is required as an input parameter when deleting a contact";
+            throw new InvalidDataException(this.msg);
+        }
+        
+        try {
+           Verifier.verifyPositive(contact.getContactId());
+        }
+        catch (VerifyException e) {
+            this.msg = "A valid Contact Id is required when deleting a contact from the database";
+            throw new InvalidDataException(this.msg);
+        }
+        
         try {
             int rc = dao.deleteContact(contact);
             this.msg = "Delete was successfully performed for contact, " + contact.getContactId();
@@ -270,5 +283,4 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             dao = null;
         }
     }
-
 }

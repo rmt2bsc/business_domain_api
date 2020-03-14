@@ -39,9 +39,9 @@ import com.api.foundation.TransactionApiException;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
-import com.util.RMT2Date;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Date;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * Api Implementation of {@link ProjectApi} that manages the creation, querying,
@@ -58,21 +58,18 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
 
     private ProjectAdminDao dao;
 
-    /**
-     * Creates an ProjectApiImpl which creates a stand alone connection.
-     */
-    protected ProjectAdminApiImpl() {
-        this(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
-    }
 
     /**
-     * Creates an ProjectApiImpl which creates based on the identified
-     * application.
+     * Creates a ProjectAdminApiImpl object in which the configuration is
+     * identified by the name of a given application.
+     * 
+     * @param appName
      */
     protected ProjectAdminApiImpl(String appName) {
         super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         logger.info("ProjectAdminApiImpl created with DAO, " + this.dao.getClass().getSimpleName() + ", for application, " + appName);
         return;
     }
@@ -383,7 +380,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
 
             // Route message to business server
             AddressBookResponse r = f.createAddressBookResponse();
-            Object response = this.sendMessage(ApiTransactionCodes.CONTACTS_BUSINESS_GET, req);
+            Object response = this.sendMessage(ApiTransactionCodes.CONTACTS_GET, req);
             if (response != null && response instanceof AddressBookResponse) {
                 r = (AddressBookResponse) response;
             }
@@ -406,7 +403,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
             req.setProfile(contactGrp);
 
             // Send the modified BusinessType to the AddressBook application to be updated.
-            ReplyStatusType reply = (ReplyStatusType) this.sendMessage(ApiTransactionCodes.CONTACTS_BUSINESS_UPDATE, req);
+            ReplyStatusType reply = (ReplyStatusType) this.sendMessage(ApiTransactionCodes.CONTACTS_UPDATE, req);
             return rc;
         }
         catch (ProjectAdminDaoException e) {

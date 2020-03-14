@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.dao.AccountingDaoImpl;
 import org.dao.mapping.orm.rmt2.ItemMaster;
+import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.Xact;
@@ -15,6 +16,7 @@ import org.dao.mapping.orm.rmt2.XactCodes;
 import org.dao.mapping.orm.rmt2.XactType;
 import org.dao.mapping.orm.rmt2.XactTypeItem;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
+import org.dto.CommonXactDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -27,8 +29,8 @@ import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * An basic implementation of {@link XactDao} which accesses and manipulates
@@ -79,8 +81,51 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
     }
 
     /**
-     * Retrieves a list of common transaction items from the vw_xact_list
-     * database view.
+     * Retrieves a list of common transaction items from the
+     * vw_generic_xact_list database view.
+     * <p>
+     * The selection criteria is built from <i>criteria</i> which the following
+     * properties are recognized: xactId, xactTypeId, xactBusinessId,
+     * xactBusinessName, xactDate, confirmNo, invoiceNo, and xactReason.
+     * <p>
+     * The result set is ordered by transaction date and transaction id in
+     * descending order.
+     * 
+     * @param criteria
+     *            The selection criteria to apply to the query of data source.
+     *            When null, all rows are fetched.
+     * @returnA List of {@link CommonXactDto} objects.
+     * @throws XactDaoException
+     *             general data access errors
+     */
+    @Override
+    public List<CommonXactDto> fetchXact(CommonXactDto criteria) throws XactDaoException {
+        VwGenericXactList ormCriteria = XactDaoFactory.createCriteria(criteria);
+        ormCriteria.addOrderBy(VwGenericXactList.PROP_XACTDATE, VwGenericXactList.ORDERBY_DESCENDING);
+        ormCriteria.addOrderBy(VwGenericXactList.PROP_XACTID, VwGenericXactList.ORDERBY_DESCENDING);
+
+        // Retrieve Data
+        List<VwGenericXactList> results = null;
+        try {
+            results = this.client.retrieveList(ormCriteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new CannotRetrieveException("General transaction query failed", e);
+        }
+
+        List<CommonXactDto> list = new ArrayList<CommonXactDto>();
+        for (VwGenericXactList item : results) {
+            CommonXactDto dto = Rmt2XactDtoFactory.createGenericXactInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+
+    /**
+     * Retrieves a list of transaction items from the vw_xact_list database
+     * view.
      * <p>
      * The selection criteria is built from <i>criteria</i> which the following
      * properties are recognized: xactId, xactTypeId, xactCatgId, xactDate,
@@ -551,5 +596,4 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             throw new DatabaseException(this.msg, e);
         }
     }
-
 }

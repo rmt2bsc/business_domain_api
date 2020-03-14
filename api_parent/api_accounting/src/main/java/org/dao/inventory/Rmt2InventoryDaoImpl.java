@@ -23,8 +23,8 @@ import org.modules.inventory.InventoryConst;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * A RMT2 ORM implementation of {@link InventoryDao} that queries, creates,
@@ -560,14 +560,19 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      * 
      * @param vendorItem
      *            An instance of {@link VendorItems} object
+     * @param add
+     *            indicates if <i>vendorItem</i> will be added (true) or updated
+     *            (false).
      * @return The total number of items effected by the transaction
      * @throws InventoryDaoException
      *             <i>vendorItem</i> is null or general database access error
      */
     @Override
-    public int maintain(VendorItemDto vendorItem) throws InventoryDaoException {
+    public int maintain(VendorItemDto vendorItem, boolean add) throws InventoryDaoException {
         VendorItems vi = InventoryDaoFactory.createVendorItemRmt2Orm(vendorItem);
-        // Perform the actual update
+        if (add) {
+            return this.insertVendorItem(vi);
+        }
         return this.updateVendorItem(vi);
     }
 
@@ -581,7 +586,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      * @throws InventoryDaoException
      */
     private int updateVendorItem(VendorItems item) throws InventoryDaoException {
-        int rows;
+        int rows = 0;
         try {
             item.addCriteria(VendorItems.PROP_ITEMID, item.getItemId());
             item.addCriteria(VendorItems.PROP_CREDITORID, item.getCreditorId());
@@ -592,6 +597,23 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
         }
     }
 
+    /**
+     * Creates an entry in the vendor_items table.
+     * 
+     * @param item
+     *            intance of {@link VendorItems}.
+     * @return 1
+     * @throws InventoryDaoException
+     */
+    private int insertVendorItem(VendorItems item) throws InventoryDaoException {
+        try {
+            this.client.insertRow(item, false);
+            return 1;
+        } catch (Exception e) {
+            throw new InventoryDaoException(e);
+        }
+    }
+    
     /**
      * Maintains an item type record by persisting changes as either a database
      * insert or update operation.

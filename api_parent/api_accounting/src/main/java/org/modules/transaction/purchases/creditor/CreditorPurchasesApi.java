@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.dto.XactCreditChargeDto;
+import org.dto.XactCustomCriteriaDto;
 import org.dto.XactTypeItemActivityDto;
 import org.modules.transaction.XactApi;
 
@@ -119,12 +120,15 @@ public interface CreditorPurchasesApi extends XactApi {
      * 
      * @param criteria
      *            an instance of {@link XactCreditChargeDto}
+     * @param customCriteria
+     *            String containing custom selection criteria which conforms to
+     *            the underlying data source.
      * @return A List of {@link XactCreditChargeDto} objects
      * @throws CreditorPurchasesApiException
      *             TODO
      * @throws CreditorPurchasesApiException
      */
-    List<XactCreditChargeDto> get(XactCreditChargeDto criteria) throws CreditorPurchasesApiException;
+    List<XactCreditChargeDto> get(XactCreditChargeDto criteria, XactCustomCriteriaDto customCriteria) throws CreditorPurchasesApiException;
 
     /**
      * Retrieves all related detail items of a credit purchase transaction.

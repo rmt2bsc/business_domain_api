@@ -17,8 +17,8 @@ import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
 import com.NotFoundException;
 import com.api.persistence.DatabaseException;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
 
 /**
  * An RMT2 ORM implementation of the {@link ContactsDao} interface which
@@ -448,9 +448,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
     public int maintainContact(ContactDto contact) throws ContactUpdateDaoException {
         this.validateContactBasicInfo(contact);
 
-//        this.client.beginTrans();
         int rc = 0;
-        boolean error = false;
         try {
             if (contact instanceof PersonalContactDto) {
                 rc = this.maintainPersonalContact((PersonalContactDto) contact);
@@ -462,23 +460,13 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
                 rc = this.maintainCommonContact(contact);
             }
             else {
-                error = false;
                 throw new ContactUpdateDaoException(
                         "The Contact input parameter for update operation is of an invalid runtime type.  Must be an instance of ContactDto, PersonalContactDto or BusinessContactDto");
             }
             return rc;
         } catch (ContactUpdateDaoException e) {
-            error = true;
             throw e;
         } 
-//        finally {
-//            if (error) {
-//                this.client.rollbackTrans();
-//            }
-//            else {
-//                this.client.commitTrans();
-//            }
-//        }
     }
 
     /**
@@ -1054,18 +1042,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
      */
     @Override
     public int deleteContact(ContactDto contact) throws ContactUpdateDaoException {
-        if (contact == null) {
-            this.msg = "A Contact instance is required as an input parameter when deleting a contact";
-            throw new ContactUpdateDaoException(this.msg);
-        }
-        if (contact.getContactId() <= 0) {
-            this.msg = "Contact Id is required when deleting a contact from the database";
-            throw new ContactUpdateDaoException(this.msg);
-        }
-
-//        this.client.beginTrans();
         int rc = 0;
-        boolean error = false;
         try {
             if (contact instanceof PersonalContactDto) {
                 rc = this.deletePersonalContact(contact.getContactId());
@@ -1077,23 +1054,13 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
                 rc = this.deleteCommonContact(contact);
             }
             else {
-                error = false;
                 throw new ContactUpdateDaoException(
                         "The Contact input parameter delete operation is of an invalid runtime type.  Must be an instance of ContactDto, PersonalContactDto or BusinessContactDto");
             }
             return rc;
         } catch (ContactUpdateDaoException e) {
-            error = true;
             throw e;
         } 
-//        finally {
-//            if (error) {
-//                this.client.rollbackTrans();
-//            }
-//            else {
-//                this.client.commitTrans();
-//            }
-//        }
     }
 
     /**

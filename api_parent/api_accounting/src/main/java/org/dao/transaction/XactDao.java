@@ -2,6 +2,7 @@ package org.dao.transaction;
 
 import java.util.List;
 
+import org.dto.CommonXactDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -26,10 +27,22 @@ public interface XactDao extends DaoClient {
      * Retrieves common transaction data using selection criteria
      * 
      * @param criteria
+     *            An instance of {@link CommonXactDto} representing the
+     *            selection criteria to limit result set
+     * @return {@link Xact} A List of {@link CommonXactDto} objects or null if
+     *         no data is found
+     * @throws XactDaoException
+     */
+    List<CommonXactDto> fetchXact(CommonXactDto criteria) throws XactDaoException;
+
+    /**
+     * Retrieves transaction data using selection criteria
+     * 
+     * @param criteria
      *            An instance of {@link XactDto} representing the selection
      *            criteria to limit result set
-     * @return {@link Xact} A List of {@link XactCategoryDto} objects or null if
-     *         no data is found
+     * @return {@link Xact} A List of {@link XactDto} objects or null if no data
+     *         is found
      * @throws XactDaoException
      */
     List<XactDto> fetchXact(XactDto criteria) throws XactDaoException;

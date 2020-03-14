@@ -38,9 +38,9 @@ import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.DaoClient;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 import com.api.xml.RMT2XmlUtility;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
 
 /**
  * API implementation of CashReceiptApi for managing cash receipts transactions.
@@ -65,23 +65,18 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
 
     private SalesOrderDao dao;
 
-    /**
-     * Creates an CashReceiptApiImpl which creates a stand alone connection.
-     */
-    CashReceiptApiImpl() {
-        super();
-        this.dao = this.daoFact.createRmt2OrmDao();
-        this.setSharedDao(this.dao);
-        return;
-    }
 
     /**
-     * Creates an CashReceiptApiImpl which creates a stand alone connection.
+     * Creates a CashReceiptApiImpl object in which the configuration is
+     * identified by the name of a given application.
+     * 
+     * @param appName
      */
     protected CashReceiptApiImpl(String appName) {
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
         return;
     }
 
@@ -141,7 +136,8 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
         xact.setXactAmount(cashPaymentAmount);
         xact.setXactReason("Full payment received for sales order #" + salesOrder.getSalesOrderId());
-        xact.setXactTypeId(XactConst.XACT_TYPE_CASHPAY);
+        xact.setXactTypeId(XactConst.XACT_TYPE_CASHRECEIPT);
+        xact.setXactTenderId(XactConst.TENDER_CASH);
 
         // Create cash receipt transaction for the given sales order.
         try {
@@ -207,6 +203,14 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             throw new InvalidDataException(this.msg, e);
         }
 
+        // Verify tender is provided
+        try {
+            Verifier.verifyPositive(xact.getXactTenderId());
+        } catch (VerifyException e) {
+            this.msg = "Transaction tender is required for cash receipt operation";
+            throw new InvalidDataException(this.msg, e);
+        }
+
         // Determine if we are creating or reversing the customer payment.
         int xactId = 0;
         try {
@@ -235,7 +239,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         int xactId = 0;
         double xactAmount = 0;
 
-        xact.setXactTypeId(XactConst.XACT_TYPE_CASHPAY);
+        xact.setXactTypeId(XactConst.XACT_TYPE_CASHRECEIPT);
         try {
             xactId = this.update(xact, null);
             // Ensure that the customer activity is posted as a negative amount.

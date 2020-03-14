@@ -7,7 +7,7 @@ import com.InvalidDataException;
 import com.NotFoundException;
 import com.RMT2RuntimeException;
 import com.SystemException;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * File system database implementation of the {@link ContentDao} interface to

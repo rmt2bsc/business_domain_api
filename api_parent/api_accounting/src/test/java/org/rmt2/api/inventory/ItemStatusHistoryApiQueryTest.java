@@ -109,27 +109,27 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
         ItemMasterStatusHist p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
-                        "2107-01-01", "2017-02-15",
+                        "2017-01-01", "2017-02-15",
                         "Item Status History Description 1");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(11,
-                101, 1001, 12.50, 3, "2107-02-16", "2017-03-15",
+                101, 1001, 12.50, 3, "2017-02-16", "2017-03-15",
                 "Item Status History Description 2");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(12,
-                102, 1000, 3.50, 3, "2107-01-01", "2017-02-15",
+                102, 1000, 3.50, 3, "2017-01-01", "2017-02-15",
                 "Item Status History Description 3");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(13,
-                103, 1001, 3.50, 3, "2107-02-15", "2017-03-15",
+                103, 1001, 3.50, 3, "2017-02-15", "2017-03-15",
                 "Item Status History Description 4");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(14,
-                104, 1003, 93.50, 3, "2107-02-15", "2017-03-15",
+                104, 1003, 93.50, 3, "2017-02-15", "2017-03-15",
                 "Item Status History Description 5");
         list.add(p);
         return list;

@@ -42,7 +42,7 @@ import com.api.messaging.email.EmailMessageBean;
 import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Test the timesheet transmission functionality of the Timesheet module of the

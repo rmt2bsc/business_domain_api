@@ -30,11 +30,11 @@ import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
-import com.util.RMT2Date;
-import com.util.RMT2File;
-import com.util.RMT2String;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2File;
+import com.api.util.RMT2String;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link MediaFileDaoProcessor} for processing multiple

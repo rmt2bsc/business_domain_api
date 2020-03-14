@@ -17,7 +17,7 @@ import com.SystemException;
 import com.api.config.ConfigConstants;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Test the Document Listener Configuration Factory functionality of the Media API service module.

@@ -27,10 +27,8 @@ public class DisbursementsApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link DisbursementsApi}
      */
-    public DisbursementsApi createApi() {
-        // DisbursementsApiImpl api = new DisbursementsApiImpl();
-        // return api;
-        return this.createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
+    public static final DisbursementsApi createApi() {
+        return createApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -40,7 +38,7 @@ public class DisbursementsApiFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link DisbursementsApi}
      */
-    public DisbursementsApi createApi(String appName) {
+    public static final DisbursementsApi createApi(String appName) {
         DisbursementsApiImpl api = new DisbursementsApiImpl(appName);
         return api;
     }
@@ -56,7 +54,7 @@ public class DisbursementsApiFactory extends RMT2Base {
      * @return an instance of {@link DisbursementsApi} or null if
      *         <i>connection</i> is null.
      */
-    public DisbursementsApi createApi(DaoClient connection) {
+    public static final DisbursementsApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }

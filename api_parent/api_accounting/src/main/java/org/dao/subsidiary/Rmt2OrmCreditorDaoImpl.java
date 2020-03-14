@@ -17,9 +17,9 @@ import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.RMT2String;
-import com.util.UserTimestamp;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
+import com.api.util.UserTimestamp;
 
 /**
  * An implementation of {@link CreditorDao}. It provides functionality that
@@ -178,20 +178,19 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
                 ormCred.addInClause(Creditor.PROP_CREDITORID, intArray);
             }
             if (criteria.getCreditorId() > 0) {
-                ormCred.addCriteria(Creditor.PROP_CREDITORID,
-                        criteria.getCreditorId());
+                ormCred.addCriteria(Creditor.PROP_CREDITORID, criteria.getCreditorId());
             }
             if (criteria.getContactId() > 0) {
-                ormCred.addCriteria(Creditor.PROP_BUSINESSID,
-                        criteria.getContactId());
+                ormCred.addCriteria(Creditor.PROP_BUSINESSID, criteria.getContactId());
             }
             if (criteria.getAccountNo() != null) {
-                ormCred.addCriteria(Creditor.PROP_ACCOUNTNUMBER,
-                        criteria.getAccountNo());
+                ormCred.addCriteria(Creditor.PROP_ACCOUNTNUMBER, criteria.getAccountNo());
+            }
+            if (criteria.getExtAccountNumber() != null) {
+                ormCred.addCriteria(Creditor.PROP_EXTACCOUNTNUMBER, criteria.getExtAccountNumber());
             }
             if (criteria.getCreditorTypeId() > 0) {
-                ormCred.addCriteria(Creditor.PROP_CREDITORTYPEID,
-                        criteria.getCreditorTypeId());
+                ormCred.addCriteria(Creditor.PROP_CREDITORTYPEID, criteria.getCreditorTypeId());
             }
         }
         // Retrieve creditor data from the database

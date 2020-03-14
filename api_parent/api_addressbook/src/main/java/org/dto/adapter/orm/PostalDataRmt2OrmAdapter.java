@@ -287,7 +287,9 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
      */
     @Override
     public void setCountryCode(String value) {
-        this.country.setCode(value);
+        if (this.country != null) {
+            this.country.setCode(value);
+        }
     }
 
     /*
@@ -297,7 +299,10 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
      */
     @Override
     public String getCountryCode() {
-        return this.country.getCode();
+        if (this.country != null) {
+            return this.country.getCode();
+        }
+        return null;
     }
 
     /*
@@ -573,7 +578,10 @@ class PostalDataRmt2OrmAdapter extends TransactionDtoImpl
      */
     @Override
     public String getCityTypDescr() {
-        return this.ct.getDescr();
+        if (this.ct != null) {
+            return this.ct.getDescr();
+        }
+        return null;
     }
 
     /*

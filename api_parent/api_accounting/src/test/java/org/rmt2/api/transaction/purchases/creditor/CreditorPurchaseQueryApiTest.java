@@ -29,7 +29,7 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Tests creditor purchases transaction query Api.
@@ -89,7 +89,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         List<XactCreditChargeDto> results = null;
         try {
             criteria.setAccountNumber(TEST_ACCOUNT_NO);
-            results = api.get(criteria);
+            results = api.get(criteria, null);
         } catch (CreditorPurchasesApiException e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
@@ -155,7 +155,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         List<XactCreditChargeDto> results = null;
         try {
             criteria.setCreditorId(TEST_CREDITOR_ID);
-            results = api.get(criteria);
+            results = api.get(criteria, null);
         } catch (CreditorPurchasesApiException e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
@@ -205,7 +205,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         List<XactCreditChargeDto> results = null;
         try {
             criteria.setCreditorId(TEST_CREDITOR_ID);
-            results = api.get(criteria);
+            results = api.get(criteria, null);
         } catch (CreditorPurchasesApiException e) {
             e.printStackTrace();
         }
@@ -218,7 +218,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         CreditorPurchasesApi api = f.createApi(mockDaoClient);
         XactCreditChargeDto criteria = null;
         try {
-            api.get(criteria);
+            api.get(criteria, null);
             Assert.fail("Expected exception due to input value is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
@@ -245,7 +245,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
                 .createCreditChargeInstance();
         try {
             criteria.setCreditorId(TEST_CREDITOR_ID);
-            api.get(criteria);
+            api.get(criteria, null);
             Assert.fail("Expected a database exception to be thrown");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
@@ -279,7 +279,7 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         List<XactCreditChargeDto> results = null;
         try {
             criteria.setAccountNumber(TEST_ACCOUNT_NO);
-            results = api.get(criteria);
+            results = api.get(criteria, null);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");

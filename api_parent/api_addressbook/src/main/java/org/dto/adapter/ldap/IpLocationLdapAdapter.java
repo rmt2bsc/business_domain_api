@@ -65,7 +65,7 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
      * @see org.dto.IpLocationDto#setIpRangeId(int)
      */
     @Override
-    public void setIpRangeId(int value) {
+    public void setIpRangeId(Integer value) {
         this.ip.setIpRangeId(String.valueOf(value));
     }
 
@@ -75,7 +75,7 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
      * @see org.dto.IpLocationDto#getIpRangeId()
      */
     @Override
-    public int getIpRangeId() {
+    public Integer getIpRangeId() {
         int value = 0;
         if (this.ip.getIpRangeId() != null) {
             try {
@@ -261,5 +261,34 @@ class IpLocationLdapAdapter extends TransactionDtoImpl implements IpLocationDto 
     @Override
     public String getMetroCode() {
         return this.ip.getIpMetroCode();
+    }
+
+    @Override
+    public String getStandardIp() {
+        return null;
+    }
+
+    @Override
+    public void setStandardIp(String ip) {
+    }
+
+    @Override
+    public void setIpFrom(double value) {
+        
+    }
+
+    @Override
+    public double getIpFrom() {
+        return 0;
+    }
+
+    @Override
+    public void setIpTo(double value) {
+        
+    }
+
+    @Override
+    public double getIpTo() {
+        return 0;
     }
 }

@@ -9,6 +9,7 @@ import org.dao.mapping.orm.rmt2.AvTracks;
 import org.dto.ArtistDto;
 import org.dto.ProjectDto;
 import org.dto.TracksDto;
+import org.modules.MediaConstants;
 
 import com.NotFoundException;
 import com.RMT2Base;
@@ -38,8 +39,7 @@ public class AudioVideoFactory extends RMT2Base {
      * @return an instance of {@link DocumentContentApi}
      */
     public static final AudioVideoApi createApi() {
-        AudioVideoApi api = new AudioVideoMetadataImpl();
-        return api;
+        return createApi(MediaConstants.APP_NAME);
     }
 
     /**

@@ -119,4 +119,18 @@ public interface SalesOrderDto extends SalesOrderStatusDto {
      * Gets the value of member variable businessId
      */
     int getBusinessId();
+
+    /**
+     * Get Effective date
+     * 
+     * @return
+     */
+    Date getEffectiveDate();
+
+    /**
+     * Set Effective Date
+     * 
+     * @param value
+     */
+    void setEffectiveDate(Date value);
 }

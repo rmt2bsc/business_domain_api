@@ -44,7 +44,7 @@ import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
+import com.api.util.RMT2Date;
 
 /**
  * Tests cash receipts transaction query Api.
@@ -58,7 +58,11 @@ public class CashReceiptApiTest extends SalesApiTestData {
     private static final int TEST_SALES_ORDER_ID = 1000;
     private static final int TEST_NEW_XACT_ID = 1234567890;
     private static final int TEST_EXISTING_XACT_ID = 54321;
-    private static final String CUSTOMER_CONFIRMATION_DATA = "<Customer>Customer confirnatio</Customer>";
+    private static final String CUSTOMER_CONFIRMATION_DATA = "<CustomerExt><beanClassName>org.dto.adapter.orm.account.subsidiary.CustomerExt</beanClassName><accountNo>C1234589</accountNo><active>1</active><addr1 /><addr2 /><addr3 /><addr4 /><addrBusinessId>0</addrBusinessId><addrId>0</addrId><addrPersonId>0</addrPersonId><addrPhoneCell /><addrPhoneExt /><addrPhoneFax /><addrPhoneHome /><addrPhoneMain /><addrPhonePager /><addrPhoneWork /><addrZip>0</addrZip><addrZipext>0</addrZipext><balance>300.0</balance><busType>0</busType><businessId>1351</businessId><contactEmail /><contactExt /><contactFirstname /><contactLastname /><contactPhone /><creditLimit>10000.0</creditLimit><customerId>200</customerId><dateCreated>Wed Mar 04 22:05:53 CST 2020</dateCreated><dateUpdated>Wed Mar 04 22:05:53 CST 2020</dateUpdated><description /><glAccountId>333</glAccountId><name /><servType>0</servType><shortname /><taxId /><userId>testuser</userId><website /><zipCity /><zipState /></CustomerExt>"
+            +
+            "<SalesOrder><beanClassName>org.dao.mapping.orm.rmt2.SalesOrder</beanClassName><criteriaAvailable>false</criteriaAvailable><customCriteriaAvailable>false</customCriteriaAvailable><customerId>2000</customerId><dataSourceClassName>org.dao.mapping.orm.rmt2.SalesOrder</dataSourceClassName><dataSourceName>SalesOrderView</dataSourceName><dataSourcePackage>org.dao.mapping.orm.rmt2</dataSourcePackage><dataSourceRoot>SalesOrder</dataSourceRoot><dateCreated /><dateUpdated /><effectiveDate>Sun Jan 01 00:00:00 CST 2017</effectiveDate><fileName /><inClauseAvailable>false</inClauseAvailable><invoiced>0</invoiced><ipCreated>111.222.101.100</ipCreated><ipUpdated>111.222.101.100</ipUpdated><null /><orderByAvailable>false</orderByAvailable><orderTotal>100.0</orderTotal><resultsetType>0</resultsetType><rowLimitClause /><serializeXml>false</serializeXml><soId>1000</soId><userId /></SalesOrder>"
+            +
+            "<Xact><beanClassName>org.dao.mapping.orm.rmt2.Xact</beanClassName><bankTransInd /><confirmNo>1484287200000</confirmNo><criteriaAvailable>false</criteriaAvailable><customCriteriaAvailable>false</customCriteriaAvailable><dataSourceClassName>org.dao.mapping.orm.rmt2.Xact</dataSourceClassName><dataSourceName>XactView</dataSourceName><dataSourcePackage>org.dao.mapping.orm.rmt2</dataSourcePackage><dataSourceRoot>Xact</dataSourceRoot><dateCreated /><dateUpdated /><documentId>54521</documentId><entityRefNo /><fileName /><inClauseAvailable>false</inClauseAvailable><ipCreated /><ipUpdated /><negInstrNo>1111-1111-1111-1111</negInstrNo><null /><orderByAvailable>false</orderByAvailable><postedDate>Fri Jan 13 00:00:00 CST 2017</postedDate><reason>reason for transaction id 54321</reason><resultsetType>0</resultsetType><rowLimitClause /><serializeXml>false</serializeXml><tenderId>200</tenderId><userId /><xactAmount>300.0</xactAmount><xactDate>Fri Jan 13 00:00:00 CST 2017</xactDate><xactId>54321</xactId><xactSubtypeId>0</xactSubtypeId><xactTypeId>10</xactTypeId></Xact>";
     
     private List<VwXactList> mockSingleXact;
     private SalesOrder salesOrderOrm;
@@ -208,6 +212,29 @@ public class CashReceiptApiTest extends SalesApiTestData {
         }
     } 
     
+    @Test
+    public void test_Validation_Receive_Payment_Missing_Tender() {
+        // Perform test
+        CashReceiptApiFactory f = new CashReceiptApiFactory();
+        CashReceiptApi api = f.createApi(mockDaoClient);
+
+        // Build mock transaction object to be updated
+        VwXactList vwXact = this.mockXactFetchSingleResponse.get(0);
+        vwXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        vwXact.setId(0);
+        vwXact.setTenderId(0);
+        XactDto mockXact = Rmt2XactDtoFactory.createXactInstance(vwXact);
+        mockXact.setXactAmount(300.00);
+        Integer customerId = 1000;
+        try {
+            api.receivePayment(mockXact, customerId);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+        }
+    }
+
     @Test
     public void test_Validation_Receive_Payment_Negative_CustomerId() {
         // Perform test
@@ -492,7 +519,8 @@ public class CashReceiptApiTest extends SalesApiTestData {
         boolean rc = false;
         try {
             CashReceiptApi apiSpy = Mockito.spy(api);
-            Mockito.doReturn(CUSTOMER_CONFIRMATION_DATA).when(apiSpy).buildPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
+            Mockito.doReturn(CUSTOMER_CONFIRMATION_DATA).when(apiSpy)
+                    .buildPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
             rc = apiSpy.emailPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
         } catch (Exception e) {
             Assert.fail("An unexcpected exception was thrown");

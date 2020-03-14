@@ -10,7 +10,7 @@ import org.modules.services.document.directory.file.MediaFileFactory;
 import org.modules.services.document.directory.file.MediaFileProcessor;
 
 import com.RMT2Base;
-import com.util.RMT2File;
+import com.api.util.RMT2File;
 
 /**
  * Servcie for processing media documents.

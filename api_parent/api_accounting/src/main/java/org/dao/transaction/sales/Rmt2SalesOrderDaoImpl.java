@@ -18,10 +18,10 @@ import org.dto.SalesOrderStatusHistDto;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
 
 import com.api.persistence.PersistenceClient;
-import com.util.RMT2Date;
-import com.util.UserTimestamp;
-import com.util.assistants.Verifier;
-import com.util.assistants.VerifyException;
+import com.api.util.RMT2Date;
+import com.api.util.UserTimestamp;
+import com.api.util.assistants.Verifier;
+import com.api.util.assistants.VerifyException;
 
 /**
  * An implementation of {@link SalesOrderDao}. It provides functionality that
@@ -107,8 +107,8 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
     }
 
     /**
-     * Retrieves sales invoice data from the <i>sales_invoice</i> table based on
-     * selection criteria contained in <i>criteria</i>.
+     * Retrieves extended sales order data from the <i>VwSalesOrderInvoice</i>
+     * view based on selection criteria contained in <i>criteria</i>.
      * 
      * @param criteria
      *            an instance of {@link SalesInvoiceDto}

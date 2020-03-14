@@ -2,7 +2,7 @@ package org.dao.document;
 
 import com.RMT2Base;
 import com.SystemException;
-import com.util.RMT2BeanUtility;
+import com.api.util.RMT2BeanUtility;
 
 /**
  * A factory for creating multi media DAO related instances in regards to the

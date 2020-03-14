@@ -38,8 +38,8 @@ import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
-import com.util.RMT2Date;
-import com.util.RMT2String;
+import com.api.util.RMT2Date;
+import com.api.util.RMT2String;
 
 /**
  * Tests sales order / sales invoice transaction query Api.

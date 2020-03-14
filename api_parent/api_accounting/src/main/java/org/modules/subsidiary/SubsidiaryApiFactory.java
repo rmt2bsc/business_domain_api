@@ -27,8 +27,8 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link CustomerApi}
      */
-    public CustomerApi createCustomerApi() {
-        return this.createCustomerApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
+    public static final CustomerApi createCustomerApi() {
+        return SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -38,7 +38,7 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link CustomerApi}
      */
-    public CustomerApi createCustomerApi(String appName) {
+    public static final CustomerApi createCustomerApi(String appName) {
         CustomerApi api = new CustomerApiImp(appName);
         return api;
     }
@@ -54,7 +54,7 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * @return an instance of {@link CustomerApi} or null if <i>connection</i>
      *         is null.
      */
-    public CustomerApi createCustomerApi(DaoClient connection) {
+    public static final CustomerApi createCustomerApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }
@@ -69,9 +69,8 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link CreditorApi}
      */
-    public CreditorApi createCreditorApi() {
-        CreditorApi api = new CreditorApiImpl();
-        return api;
+    public static final CreditorApi createCreditorApi() {
+        return SubsidiaryApiFactory.createCreditorApi(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -81,7 +80,7 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link CreditorApi}
      */
-    public CreditorApi createCreditorApi(String appName) {
+    public static final CreditorApi createCreditorApi(String appName) {
         CreditorApi api = new CreditorApiImpl(appName);
         return api;
     }
@@ -97,7 +96,7 @@ public class SubsidiaryApiFactory extends RMT2Base {
      * @return an instance of {@link CreditorApi} or null if <i>connection</i>
      *         is null.
      */
-    public CreditorApi createCreditorApi(DaoClient connection) {
+    public static final CreditorApi createCreditorApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }

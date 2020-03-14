@@ -38,8 +38,7 @@ class DefaultXactApiImpl extends AbstractXactApiImpl {
      * , java.util.List)
      */
     @Override
-    public int update(XactDto xact, List<XactTypeItemActivityDto> xactItems)
-            throws XactApiException {
+    public int update(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
         XactDao dao = this.getXactDao();
         return super.update(xact, xactItems);
     }

@@ -14,38 +14,34 @@ import org.modules.TooManyItemsReturnedApiException;
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.CannotProceedException;
-import com.util.RMT2String2;
+import com.api.util.RMT2String2;
 
 /**
+ * An implementation of GlAccountApi which manages GL Account, GL AccountType,
+ * and GL AccountCatg data.
  * 
  * @author Roy Terrell
  * 
  */
-class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
-        GlAccountApi {
+class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements GlAccountApi {
 
-    private static final Logger logger = Logger
-            .getLogger(BasicAccountMaintApiImpl.class);
+    private static final Logger logger = Logger.getLogger(BasicAccountMaintApiImpl.class);
 
     private GeneralLedgerDaoFactory factory;
+    private GeneralLedgerDao dao;
 
     private String appName;
 
     /**
-     * Creates a BasicAccountMaintApiImpl object assoicated with the default
-     * GeneralLedgerDaoFactory object.
-     */
-    protected BasicAccountMaintApiImpl() {
-        this.factory = new GeneralLedgerDaoFactory();
-        this.appName = null;
-    }
-
-    /**
-     * Creates a BasicAccountMaintApiImpl object assoicated with the default
-     * GeneralLedgerDaoFactory object.
+     * Creates a BasicAccountMaintApiImpl object in which the configuration is
+     * identified by the name of a given application.
      */
     protected BasicAccountMaintApiImpl(String appName) {
+        super();
         this.factory = new GeneralLedgerDaoFactory();
+        this.dao = this.factory.createRmt2OrmDao(this.appName);
+        this.setSharedDao(dao);
+        this.dao.setDaoUser(this.apiUser);
         this.appName = appName;
     }
 
@@ -56,10 +52,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * org.modules.generalledger.GlAccountApi#getAccount(org.dto.AccountDto)
      */
     @Override
-    public List<AccountDto> getAccount(AccountDto criteria)
-            throws GeneralLedgerApiException {
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
+    public List<AccountDto> getAccount(AccountDto criteria) throws GeneralLedgerApiException {
         try {
             List<AccountDto> results = dao.fetchAccount(criteria);
             int count = (results ==  null ? 0 : results.size());
@@ -69,9 +62,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Error occurred retrieving GL Account objects";
             logger.error(this.msg, e);
             throw new GeneralLedgerApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -81,14 +71,10 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.generalledger.GlAccountApi#getAccount(int)
      */
     @Override
-    public AccountDto getAccount(int accountId)
-            throws GeneralLedgerApiException {
+    public AccountDto getAccount(int accountId) throws GeneralLedgerApiException {
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
-            AccountDto criteria = Rmt2AccountDtoFactory
-                    .createAccountInstance(null);
+            AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
             criteria.setAcctId(accountId);
             List<AccountDto> results = dao.fetchAccount(criteria);
             if (results == null) {
@@ -114,9 +100,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Error occurred retrieving GL Account objects";
             logger.error(this.msg, e);
             throw new GeneralLedgerApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -128,11 +111,8 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * .String)
      */
     @Override
-    public AccountDto getAccountByExactName(String accountName)
-            throws GeneralLedgerApiException {
+    public AccountDto getAccountByExactName(String accountName) throws GeneralLedgerApiException {
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             AccountDto criteria = Rmt2AccountDtoFactory.createAccountInstance(null);
             criteria.setAcctName(accountName);
@@ -160,9 +140,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Error occurred retrieving GL Account objects";
             logger.error(this.msg, e);
             throw new GeneralLedgerApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -174,22 +151,15 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * )
      */
     @Override
-    public List<AccountTypeDto> getAccountType(AccountTypeDto criteria)
-            throws GeneralLedgerApiException {
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
+    public List<AccountTypeDto> getAccountType(AccountTypeDto criteria) throws GeneralLedgerApiException {
         try {
             List<AccountTypeDto> results = dao.fetchType(criteria);
-            logger.info("Total number of GL Account Type objects obtained: "
-                    + results.size());
+            logger.info("Total number of GL Account Type objects obtained: " + results.size());
             return results;
         } catch (Exception e) {
             this.msg = "Error occurred retrieving GL Account Type objects";
             logger.error(this.msg, e);
             throw new GeneralLedgerApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -201,8 +171,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
     @Override
     public AccountTypeDto getAccountType(int accountTypeId) throws GeneralLedgerApiException {
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             AccountTypeDto criteria = Rmt2AccountDtoFactory.createAccountTypeInstance(null);
             criteria.setAcctTypeId(accountTypeId);
@@ -230,9 +198,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Error occurred retrieving GL Account Type objects";
             logger.error(this.msg, e);
             throw new GeneralLedgerApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -243,10 +208,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * AccountCategoryDto)
      */
     @Override
-    public List<AccountCategoryDto> getAccountCategory(AccountCategoryDto criteria) 
-            throws GeneralLedgerApiException {
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
+    public List<AccountCategoryDto> getAccountCategory(AccountCategoryDto criteria) throws GeneralLedgerApiException {
         try {
             List<AccountCategoryDto> results = dao.fetchCategory(criteria);
             logger.info("Total number of GL Account Category objects obtained: "
@@ -256,9 +218,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Error occurred retrieving GL Account Category objects";
             logger.error(this.msg, e);
             throw new GeneralLedgerApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -268,11 +227,8 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * @see org.modules.generalledger.GlAccountApi#getAccountCategory(int)
      */
     @Override
-    public AccountCategoryDto getAccountCategory(int accountCategoryId)
-            throws GeneralLedgerApiException {
+    public AccountCategoryDto getAccountCategory(int accountCategoryId) throws GeneralLedgerApiException {
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             AccountCategoryDto criteria = Rmt2AccountDtoFactory
                     .createAccountCategoryInstance(null);
@@ -301,9 +257,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             this.msg = "Error occurred retrieving GL Account Category objects";
             logger.error(this.msg, e);
             throw new GeneralLedgerApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -318,8 +271,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
         this.validateAccount(account);
         int rc = 0;
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             dao.beginTrans();
             // Handle prerequisites for new accounts.
@@ -344,9 +295,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             msgBuf.append(account.getAcctName());
             logger.error(msgBuf, e);
             throw new GeneralLedgerApiException(msgBuf.toString(), e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -361,8 +309,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
         this.validateCategory(category);
         int rc = 0;
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             dao.beginTrans();
             rc = dao.maintainCategory(category);
@@ -378,9 +324,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             msgBuf.append(category.getAcctCatgDescription());
             logger.error(msgBuf, e);
             throw new GeneralLedgerApiException(msgBuf.toString(), e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -393,8 +336,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
     public int deleteAccount(int acctId) throws GeneralLedgerApiException {
         int rc = 0;
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             dao.beginTrans();
             rc = dao.deleteAccount(acctId);
@@ -410,9 +351,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             msgBuf.append(acctId);
             logger.error(msgBuf, e);
             throw new GeneralLedgerApiException(msgBuf.toString(), e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -425,8 +363,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
     public int deleteCategory(int catgId) throws GeneralLedgerApiException {
         int rc = 0;
         StringBuffer msgBuf = new StringBuffer();
-        GeneralLedgerDao dao = this.factory.createRmt2OrmDao(this.appName);
-        dao.setDaoUser(this.apiUser);
         try {
             dao.beginTrans();
             rc = dao.deleteCategory(catgId);
@@ -442,9 +378,6 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
             msgBuf.append(catgId);
             logger.error(msgBuf, e);
             throw new GeneralLedgerApiException(msgBuf.toString(), e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -522,8 +455,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * @throws InvalidDataException
      *          Typical validation errors such as required data missing in <i>acct</i>.
      */
-    protected void validateAccount(AccountDto acct)
-            throws CannotProceedException, GeneralLedgerApiException {
+    protected void validateAccount(AccountDto acct) throws CannotProceedException, GeneralLedgerApiException {
         if (acct == null) {
             this.msg = "Account object cannot be null";
             throw new CannotProceedException(this.msg);
@@ -618,8 +550,8 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * @throws GeneralLedgerApiException
      *             category does not exists.
      */
-    protected void validateCategory(AccountCategoryDto acctCatg)
-            throws CannotProceedException, GeneralLedgerApiException {
+    protected void validateCategory(AccountCategoryDto acctCatg) throws CannotProceedException,
+            GeneralLedgerApiException {
         if (acctCatg == null) {
             this.msg = "Account Category cannot be null";
             throw new CannotProceedException(this.msg); 
@@ -659,8 +591,8 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements
      * @throws GeneralLedgerApiException
      *             General API access errors
      */
-    protected void validateAccountType(AccountTypeDto acctType)
-            throws CannotProceedException, GeneralLedgerApiException {
+    protected void validateAccountType(AccountTypeDto acctType) throws CannotProceedException,
+            GeneralLedgerApiException {
         List<AccountTypeDto> old = null;
         AccountTypeDto criteria = Rmt2AccountDtoFactory
                 .createAccountTypeInstance(null);
