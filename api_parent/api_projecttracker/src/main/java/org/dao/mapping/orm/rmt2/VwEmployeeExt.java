@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -56,6 +55,8 @@ public class VwEmployeeExt extends OrmBean {
   public static final String PROP_EMPLOYEETITLE = "EmployeeTitle";
 /** The property name constant equivalent to property, EmployeeType, of respective DataSource view. */
   public static final String PROP_EMPLOYEETYPE = "EmployeeType";
+/** The property name constant equivalent to property, ProjCount, of respective DataSource view. */
+  public static final String PROP_PROJCOUNT = "ProjCount";
 
 
 
@@ -93,6 +94,8 @@ public class VwEmployeeExt extends OrmBean {
   private String employeeTitle;
 /** The javabean property equivalent of database column vw_employee_ext.employee_type */
   private String employeeType;
+/** The javabean property equivalent of database column vw_employee_ext.proj_count */
+  private int projCount;
 
 
 
@@ -308,6 +311,18 @@ public class VwEmployeeExt extends OrmBean {
   public String getEmployeeType() {
     return this.employeeType;
   }
+/**
+ * Sets the value of member variable projCount
+ */
+  public void setProjCount(int value) {
+    this.projCount = value;
+  }
+/**
+ * Gets the value of member variable projCount
+ */
+  public int getProjCount() {
+    return this.projCount;
+  }
 
 @Override
 public boolean equals(Object obj) {
@@ -372,6 +387,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.employeeType, other.employeeType)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.projCount, other.projCount)) {
+      return false;
+   }
    return true; 
 } 
 
@@ -393,7 +411,8 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.isManager),
                HashCodeAssistant.hashObject(this.email),
                HashCodeAssistant.hashObject(this.employeeTitle),
-               HashCodeAssistant.hashObject(this.employeeType));
+               HashCodeAssistant.hashObject(this.employeeType),
+               HashCodeAssistant.hashObject(this.projCount));
 } 
 
 @Override
@@ -414,7 +433,8 @@ public String toString() {
           ", isManager=" + isManager + 
           ", email=" + email + 
           ", employeeTitle=" + employeeTitle + 
-          ", employeeType=" + employeeType  + "]";
+          ", employeeType=" + employeeType + 
+          ", projCount=" + projCount  + "]";
 }
 
 /**

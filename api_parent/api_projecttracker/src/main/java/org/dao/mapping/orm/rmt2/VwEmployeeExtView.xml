@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataSource Name="VwEmployeeExtView">
-   <Sql From="vw_employee_ext" GroupBy="" Having="" OrderBy="" Select="employee_id, &#xA;&#x9;&#x9;login_id, &#xA;&#x9;&#x9;login_name, &#xA;&#x9;&#x9;start_date, &#xA;&#x9;&#x9;termination_date, &#xA;&#x9;&#x9;title_id, &#xA;&#x9;&#x9;type_id, &#xA;&#x9;&#x9;manager_id, &#xA;&#x9;&#x9;firstname, &#xA;&#x9;&#x9;lastname, &#xA;&#x9;&#x9;shortname, &#xA;&#x9;&#x9;company_name, &#xA;&#x9;&#x9;ssn, &#xA;&#x9;&#x9;is_manager, &#xA;&#x9;&#x9;email, &#xA;&#x9;&#x9;employee_title, &#xA;&#x9;&#x9;employee_type" Where="" />
+   <Sql From="vw_employee_ext" GroupBy="" Having="" OrderBy="" Select="employee_id, &#xA;&#x9;&#x9;login_id, &#xA;&#x9;&#x9;login_name, &#xA;&#x9;&#x9;start_date, &#xA;&#x9;&#x9;termination_date, &#xA;&#x9;&#x9;title_id, &#xA;&#x9;&#x9;type_id, &#xA;&#x9;&#x9;manager_id, &#xA;&#x9;&#x9;firstname, &#xA;&#x9;&#x9;lastname, &#xA;&#x9;&#x9;shortname, &#xA;&#x9;&#x9;company_name, &#xA;&#x9;&#x9;ssn, &#xA;&#x9;&#x9;is_manager, &#xA;&#x9;&#x9;email, &#xA;&#x9;&#x9;employee_title, &#xA;&#x9;&#x9;employee_type, &#xA;&#x9;&#x9;proj_count" Where="" />
    <TableUsage DBName="vw_employee_ext" Name="VwEmployeeExtTable" Updateable="true" />
    <ColAttr Computed="false" DBName="employee_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="EmployeeId" PrimaryKey="false" SqlType="integer" TableName="VwEmployeeExtTable" Updateable="true" />
    <ColAttr Computed="false" DBName="login_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="LoginId" PrimaryKey="false" SqlType="integer" TableName="VwEmployeeExtTable" Updateable="true" />
@@ -19,5 +19,6 @@
    <ColAttr Computed="false" DBName="email" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Email" PrimaryKey="false" SqlType="varchar" TableName="VwEmployeeExtTable" Updateable="true" />
    <ColAttr Computed="false" DBName="employee_title" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="EmployeeTitle" PrimaryKey="false" SqlType="varchar" TableName="VwEmployeeExtTable" Updateable="true" />
    <ColAttr Computed="false" DBName="employee_type" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="EmployeeType" PrimaryKey="false" SqlType="varchar" TableName="VwEmployeeExtTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="proj_count" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ProjCount" PrimaryKey="false" SqlType="integer" TableName="VwEmployeeExtTable" Updateable="true" />
 </DataSource>
 
