@@ -49,6 +49,8 @@ import com.api.util.RMT2Date;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class EmployeeQueryApiTest extends ProjectTrackerMockData {
 
+    private static final int EXT_EMP_PROJ_COUNT = 10;
+    private static final int EMP_PROJ_COUNT = 0;
     /**
      * @throws java.lang.Exception
      */
@@ -211,6 +213,7 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
             Assert.assertEquals(obj.getEmployeeLastname(), "last_name_" + nameSeed);
             Assert.assertEquals(("111-11-500" + ndx), obj.getSsn());
             Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_COMPANY_NAME, obj.getEmployeeCompanyName());
+            Assert.assertEquals(EMP_PROJ_COUNT, obj.getProjectCount());
         }
     }
     
@@ -249,6 +252,8 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
         Assert.assertEquals(results.getEmployeeLastname(), "last_name_1");
         Assert.assertEquals("111-11-5000", results.getSsn());
         Assert.assertEquals("ABC Company", results.getEmployeeCompanyName());
+        Assert.assertEquals(EMP_PROJ_COUNT, results.getProjectCount());
+
     }
     
     @Test
@@ -262,8 +267,7 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
             Assert.fail("Fetch single extended employee case setup failed");
         }
         
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto criteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
         criteria.setEmployeeId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
         List<EmployeeDto> results = null;
@@ -287,6 +291,7 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
         Assert.assertEquals(dto.getEmployeeLastname(), "last_name_1");
         Assert.assertEquals("111-11-5000", dto.getSsn());
         Assert.assertEquals("ABC Company", dto.getEmployeeCompanyName());
+        Assert.assertEquals(EXT_EMP_PROJ_COUNT, dto.getProjectCount());
     }
     
     @Test
@@ -587,6 +592,7 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
             Assert.assertEquals(obj.getEmployeeLastname(), "last_name_" + nameSeed);
             Assert.assertEquals(("111-11-500" + ndx), obj.getSsn());
             Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_COMPANY_NAME, obj.getEmployeeCompanyName());
+            Assert.assertEquals(EMP_PROJ_COUNT, obj.getProjectCount());
         }
     }
     

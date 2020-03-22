@@ -544,4 +544,19 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
         return null;
     }
 
+    @Override
+    public void setProjectCount(int value) {
+        if (this.empExt != null) {
+            this.empExt.setProjCount(value);
+        }
+    }
+
+    @Override
+    public int getProjectCount() {
+        if (this.empExt != null) {
+            return this.empExt.getProjCount();
+        }
+        return 0;
+    }
+
 }

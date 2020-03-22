@@ -181,4 +181,18 @@ public interface EmployeeDto extends TransactionDto {
      * Gets the value of member variable employeeType
      */
     String getEmployeeType();
+
+    /**
+     * Set the total number of projects the employee is associated
+     * 
+     * @param value
+     */
+    void setProjectCount(int value);
+
+    /**
+     * Get the total number of projects the employee is associated
+     * 
+     * @return
+     */
+    int getProjectCount();
 }
