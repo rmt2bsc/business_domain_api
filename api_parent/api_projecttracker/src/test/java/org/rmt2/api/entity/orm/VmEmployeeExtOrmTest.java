@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
+import org.rmt2.api.employee.EmployeeQueryApiTest;
 
 import com.api.util.RMT2Date;
 
@@ -104,6 +105,10 @@ public class VmEmployeeExtOrmTest {
         Assert.assertFalse(result);
         
         o2.setCompanyName("ABC Company");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setProjCount(EmployeeQueryApiTest.EXT_EMP_PROJ_COUNT);
         result = o1.equals(o2);
         Assert.assertTrue(result);
     }
