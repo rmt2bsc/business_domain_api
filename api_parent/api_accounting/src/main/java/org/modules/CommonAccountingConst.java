@@ -2,7 +2,7 @@ package org.modules;
 
 public class CommonAccountingConst {
 
-    public static final String APP_NAME = "accounting";
+    public static final String APP_NAME = "Accounting";
     
     public static final String DEFAULT_CONTEXT_NAME = "Accounting";
 

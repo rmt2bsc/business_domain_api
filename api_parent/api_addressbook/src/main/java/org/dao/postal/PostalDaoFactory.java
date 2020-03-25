@@ -78,7 +78,7 @@ public class PostalDaoFactory extends RMT2Base {
      * @return an instance of {@link RegionCountryDao}
      */
     public RegionCountryDao createRmt2OrmRegionCountryDao(String appName) {
-        RegionCountryDao dao = new Rmt2OrmRegionCountryDaoImpl();
+        RegionCountryDao dao = new Rmt2OrmRegionCountryDaoImpl(appName);
         return dao;
     }
 
