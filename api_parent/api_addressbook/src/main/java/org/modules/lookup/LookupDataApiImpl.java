@@ -60,9 +60,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to fetch Code by lookup id, " + codeId;
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -90,9 +87,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to fetch List of Codes using selection criteria contained in DTO";
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -114,9 +108,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to fetch Code Group by group id, " + grpId;
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -143,9 +134,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to fetch List of Code Groups using selection criteria contained in DTO";
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -175,9 +163,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to fetch List of Code Extention objects using selection criteria contained in DTO";
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -201,9 +186,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to update Code Group object";
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -229,9 +211,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to delete Code Group: " + groupId;
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -254,9 +233,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to update Code bject";
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -282,9 +258,6 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
         } catch (LookupDaoException e) {
             this.msg = "Unable to delete Code: " + codeId;
             throw new LookupDataApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
