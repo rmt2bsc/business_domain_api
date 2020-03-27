@@ -97,6 +97,12 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
                 ormCriteria.addLikeClause(GlAccounts.PROP_NAME,
                         criteria.getAcctName());
             }
+            if (criteria.getAcctDescription() != null) {
+                ormCriteria.addLikeClause(GlAccounts.PROP_DESCRIPTION, criteria.getAcctDescription());
+            }
+            if (criteria.getBalanceTypeId() > 0) {
+                ormCriteria.addCriteria(GlAccounts.PROP_ACCTBALTYPEID, criteria.getBalanceTypeId());
+            }
         }
 
         // Retrieve data
@@ -336,6 +342,9 @@ class BasicGeneralLedgerMaintDaoImpl extends AccountingDaoImpl implements
             if (criteria.getAcctTypeDescription() != null) {
                 ormCriteria.addLikeClause(GlAccountTypes.PROP_DESCRIPTION,
                         criteria.getAcctTypeDescription());
+            }
+            if (criteria.getBalanceTypeId() > 0) {
+                ormCriteria.addCriteria(GlAccountTypes.PROP_ACCTBALTYPEID, criteria.getBalanceTypeId());
             }
         }
 
