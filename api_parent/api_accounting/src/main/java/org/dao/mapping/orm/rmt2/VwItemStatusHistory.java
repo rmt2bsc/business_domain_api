@@ -10,16 +10,16 @@ import com.SystemException;
 
 
 /**
- * Peer object that maps to the item_master_status_hist database table/view.
+ * Peer object that maps to the vw_item_status_history database table/view.
  *
  * @author auto generated.
  */
-public class ItemMasterStatusHist extends OrmBean {
+public class VwItemStatusHistory extends OrmBean {
 
 
 
 
-	// Property name constants that belong to respective DataSource, ItemMasterStatusHistView
+	// Property name constants that belong to respective DataSource, VwItemStatusHistoryView
 
 /** The property name constant equivalent to property, ItemStatusHistId, of respective DataSource view. */
   public static final String PROP_ITEMSTATUSHISTID = "ItemStatusHistId";
@@ -27,6 +27,8 @@ public class ItemMasterStatusHist extends OrmBean {
   public static final String PROP_ITEMID = "ItemId";
 /** The property name constant equivalent to property, ItemStatusId, of respective DataSource view. */
   public static final String PROP_ITEMSTATUSID = "ItemStatusId";
+/** The property name constant equivalent to property, Description, of respective DataSource view. */
+  public static final String PROP_DESCRIPTION = "Description";
 /** The property name constant equivalent to property, UnitCost, of respective DataSource view. */
   public static final String PROP_UNITCOST = "UnitCost";
 /** The property name constant equivalent to property, Markup, of respective DataSource view. */
@@ -48,29 +50,31 @@ public class ItemMasterStatusHist extends OrmBean {
 
 
 
-	/** The javabean property equivalent of database column item_master_status_hist.item_status_hist_id */
+	/** The javabean property equivalent of database column vw_item_status_history.item_status_hist_id */
   private int itemStatusHistId;
-/** The javabean property equivalent of database column item_master_status_hist.item_id */
+/** The javabean property equivalent of database column vw_item_status_history.item_id */
   private int itemId;
-/** The javabean property equivalent of database column item_master_status_hist.item_status_id */
+/** The javabean property equivalent of database column vw_item_status_history.item_status_id */
   private int itemStatusId;
-/** The javabean property equivalent of database column item_master_status_hist.unit_cost */
+/** The javabean property equivalent of database column vw_item_status_history.description */
+  private String description;
+/** The javabean property equivalent of database column vw_item_status_history.unit_cost */
   private double unitCost;
-/** The javabean property equivalent of database column item_master_status_hist.markup */
+/** The javabean property equivalent of database column vw_item_status_history.markup */
   private double markup;
-/** The javabean property equivalent of database column item_master_status_hist.effective_date */
+/** The javabean property equivalent of database column vw_item_status_history.effective_date */
   private java.util.Date effectiveDate;
-/** The javabean property equivalent of database column item_master_status_hist.end_date */
+/** The javabean property equivalent of database column vw_item_status_history.end_date */
   private java.util.Date endDate;
-/** The javabean property equivalent of database column item_master_status_hist.reason */
+/** The javabean property equivalent of database column vw_item_status_history.reason */
   private String reason;
-/** The javabean property equivalent of database column item_master_status_hist.date_created */
+/** The javabean property equivalent of database column vw_item_status_history.date_created */
   private java.util.Date dateCreated;
-/** The javabean property equivalent of database column item_master_status_hist.user_id */
+/** The javabean property equivalent of database column vw_item_status_history.user_id */
   private String userId;
-/** The javabean property equivalent of database column item_master_status_hist.ip_created */
+/** The javabean property equivalent of database column vw_item_status_history.ip_created */
   private String ipCreated;
-/** The javabean property equivalent of database column item_master_status_hist.ip_updated */
+/** The javabean property equivalent of database column vw_item_status_history.ip_updated */
   private String ipUpdated;
 
 
@@ -80,7 +84,7 @@ public class ItemMasterStatusHist extends OrmBean {
 /**
  * Default constructor.
  */
-  public ItemMasterStatusHist() throws SystemException {
+  public VwItemStatusHistory() throws SystemException {
 	super();
  }
 /**
@@ -118,6 +122,18 @@ public class ItemMasterStatusHist extends OrmBean {
  */
   public int getItemStatusId() {
     return this.itemStatusId;
+  }
+/**
+ * Sets the value of member variable description
+ */
+  public void setDescription(String value) {
+    this.description = value;
+  }
+/**
+ * Gets the value of member variable description
+ */
+  public String getDescription() {
+    return this.description;
   }
 /**
  * Sets the value of member variable unitCost
@@ -239,7 +255,7 @@ public boolean equals(Object obj) {
    if (getClass() != obj.getClass()) {
       return false;
    }
-   final ItemMasterStatusHist other = (ItemMasterStatusHist) obj; 
+   final VwItemStatusHistory other = (VwItemStatusHistory) obj; 
    if (EqualityAssistant.notEqual(this.itemStatusHistId, other.itemStatusHistId)) {
       return false;
    }
@@ -247,6 +263,9 @@ public boolean equals(Object obj) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.itemStatusId, other.itemStatusId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.description, other.description)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.unitCost, other.unitCost)) {
@@ -272,6 +291,7 @@ public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.itemStatusHistId),
                HashCodeAssistant.hashObject(this.itemId),
                HashCodeAssistant.hashObject(this.itemStatusId),
+               HashCodeAssistant.hashObject(this.description),
                HashCodeAssistant.hashObject(this.unitCost),
                HashCodeAssistant.hashObject(this.markup),
                HashCodeAssistant.hashObject(this.effectiveDate),
@@ -281,9 +301,10 @@ public int hashCode() {
 
 @Override
 public String toString() {
-   return "ItemMasterStatusHist [itemStatusHistId=" + itemStatusHistId + 
+   return "VwItemStatusHistory [itemStatusHistId=" + itemStatusHistId + 
           ", itemId=" + itemId + 
           ", itemStatusId=" + itemStatusId + 
+          ", description=" + description + 
           ", unitCost=" + unitCost + 
           ", markup=" + markup + 
           ", effectiveDate=" + effectiveDate + 
