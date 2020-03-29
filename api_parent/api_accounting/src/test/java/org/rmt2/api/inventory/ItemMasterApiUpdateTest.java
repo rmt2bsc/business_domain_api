@@ -15,6 +15,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
 import org.dto.ItemMasterStatusDto;
@@ -147,13 +148,13 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         return list;
     }
 
-    private List<ItemMasterStatusHist> createMockSingleItemStatusHistFetchResponse(
+    private List<VwItemStatusHistory> createMockSingleItemStatusHistFetchResponse(
             int statusId) {
-        List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataFactory
+        List<VwItemStatusHistory> list = new ArrayList<>();
+        VwItemStatusHistory p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, statusId, 12.50,
                         3, "2107-01-01", null,
-                        "Item Status History Description " + statusId);
+                        "Item Status History Description " + statusId, "Status " + statusId + " Name");
         list.add(p);
         return list;
     }
@@ -194,7 +195,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
 
         try {
-            ItemMasterStatusHist mockItemMasterStatusHist = this
+            VwItemStatusHistory mockItemMasterStatusHist = this
                     .createMockSingleItemStatusHistFetchResponse(100).get(0);
             when(this.mockPersistenceClient
                     .retrieveObject(any(ItemMasterStatusHist.class)))
@@ -252,7 +253,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
 
         try {
-            ItemMasterStatusHist mockItemMasterStatusHist = this
+            VwItemStatusHistory mockItemMasterStatusHist = this
                     .createMockSingleItemStatusHistFetchResponse(100).get(0);
             when(this.mockPersistenceClient
                     .retrieveObject(any(ItemMasterStatusHist.class)))
@@ -336,7 +337,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Verify item status history fetch for Item Master activation test case setup failed");
         }
         
-        ItemMasterStatusHist mockItemMasterStatusHist = this
+        VwItemStatusHistory mockItemMasterStatusHist = this
                 .createMockSingleItemStatusHistFetchResponse(100).get(0);
         try {
             List<ItemMasterStatus> mockItemStatusHistResp = this
@@ -498,7 +499,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Verify item status history fetch for Item Master activation test case setup failed");
         }
         
-        ItemMasterStatusHist mockItemMasterStatusHist = this
+        VwItemStatusHistory mockItemMasterStatusHist = this
                 .createMockSingleItemStatusHistFetchResponse(100).get(0);
         try {
             List<ItemMasterStatus> mockItemStatusHistResp = this
@@ -593,7 +594,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Verify item status history fetch for Item Master activation test case setup failed");
         }
         
-        ItemMasterStatusHist mockItemMasterStatusHist = this
+        VwItemStatusHistory mockItemMasterStatusHist = this
                 .createMockSingleItemStatusHistFetchResponse(100).get(0);
         try {
             List<ItemMasterStatus> mockItemStatusHistResp = this
@@ -912,7 +913,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
                     "Verify item status fetch for Item Master activation test case setup failed");
         }
         
-        ItemMasterStatusHist mockItemMasterStatusHist = this
+        VwItemStatusHistory mockItemMasterStatusHist = this
                 .createMockSingleItemStatusHistFetchResponse(100).get(0);
         try {
             List<ItemMasterStatus> mockItemStatusHistResp = this
@@ -1224,7 +1225,7 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Update Item Master test case setup failed");
         }
         
-        ItemMasterStatusHist mockItemStatusHist = 
+        VwItemStatusHistory mockItemStatusHist =
                 this.createMockSingleItemStatusHistFetchResponse(InventoryConst.ITEM_STATUS_INSRVC).get(0);
         try {
             when(this.mockPersistenceClient.retrieveObject(any(ItemMasterStatusHist.class))).thenReturn(mockItemStatusHist);
@@ -1340,7 +1341,8 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             Assert.fail("Update Item Master test case setup failed");
         }
         
-        ItemMasterStatusHist mockItemStatusHist = this.createMockSingleItemStatusHistFetchResponse(InventoryConst.ITEM_STATUS_INSRVC).get(0);
+        VwItemStatusHistory mockItemStatusHist = this.createMockSingleItemStatusHistFetchResponse(
+                InventoryConst.ITEM_STATUS_INSRVC).get(0);
         try {
             when(this.mockPersistenceClient.retrieveObject(any(ItemMasterStatusHist.class))).thenReturn(mockItemStatusHist);
         } catch (Exception e) {

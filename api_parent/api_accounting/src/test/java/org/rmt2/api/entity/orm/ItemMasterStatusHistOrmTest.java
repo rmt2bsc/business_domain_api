@@ -1,6 +1,6 @@
 package org.rmt2.api.entity.orm;
 
-import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,10 +21,10 @@ public class ItemMasterStatusHistOrmTest {
 
     @Test
     public void testToString() {
-        ItemMasterStatusHist o = AccountingMockDataFactory
+        VwItemStatusHistory o = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
-                        "Item Status History Description 1");
+                        "Item Status History Description 1", "Status Name 1");
         String val = o.toString();
         System.out.println(val);
         Assert.assertNotNull(val);
@@ -33,16 +33,16 @@ public class ItemMasterStatusHistOrmTest {
     @Test
     public void testEquality() {
         boolean result = false;
-        ItemMasterStatusHist o1 = new ItemMasterStatusHist();
-        ItemMasterStatusHist o2 = null;
+        VwItemStatusHistory o1 = new VwItemStatusHistory();
+        VwItemStatusHistory o2 = null;
 
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
         o1 = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(10,
                 100, 1000, 12.50, 3, "2107-01-01", "2017-02-15",
-                "Item Status History Description 1");
-        o2 = new ItemMasterStatusHist();
+                "Item Status History Description 1", "Status Name 1");
+        o2 = new VwItemStatusHistory();
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
@@ -76,20 +76,24 @@ public class ItemMasterStatusHistOrmTest {
 
         o2.setReason("Item Status History Description 1");
         result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setDescription("Status Name 1");
+        result = o1.equals(o2);
         Assert.assertTrue(result);
     }
 
     @Test
     public void testHashCode() {
-        ItemMasterStatusHist o1 = AccountingMockDataFactory
+        VwItemStatusHistory o1 = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
-                        "Item Status History Description 1");
+                        "Item Status History Description 1", "Status Name 1");
 
-        ItemMasterStatusHist o2 = AccountingMockDataFactory
+        VwItemStatusHistory o2 = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
-                        "Item Status History Description 1");
+                        "Item Status History Description 1", "Status Name 1");
         Assert.assertTrue(o1.equals(o2) && o2.equals(o1));
         Assert.assertEquals(o1.hashCode(), o2.hashCode());
     }

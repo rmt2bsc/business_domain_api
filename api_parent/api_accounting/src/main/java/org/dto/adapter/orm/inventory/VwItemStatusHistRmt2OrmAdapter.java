@@ -2,28 +2,27 @@ package org.dto.adapter.orm.inventory;
 
 import java.util.Date;
 
-import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dto.ItemMasterStatusHistDto;
 
 import com.api.foundation.TransactionDtoImpl;
 
 /**
  * An RMT2 ORM to DTO implementation that adapts data pertaining to the database
- * table <i>item_master_status_hist</i>.
+ * view <i>item_master_status_hist</i>.
  * 
  * @author rterrell
  * 
  */
-class ItemStatusHistRmt2OrmAdapter extends TransactionDtoImpl implements
-        ItemMasterStatusHistDto {
+class VwItemStatusHistRmt2OrmAdapter extends TransactionDtoImpl implements ItemMasterStatusHistDto {
 
-    private ItemMasterStatusHist i;
+    private VwItemStatusHistory i;
 
     /**
      * Create a ItemStatusHistRmt2OrmAdapter without performing any data
      * adaptations
      */
-    protected ItemStatusHistRmt2OrmAdapter() {
+    protected VwItemStatusHistRmt2OrmAdapter() {
         return;
     }
 
@@ -35,9 +34,10 @@ class ItemStatusHistRmt2OrmAdapter extends TransactionDtoImpl implements
      *            an instance of {@link ItemMasterStatusHist} or null when the
      *            desired arises to create a newly instantiated instance.
      */
-    protected ItemStatusHistRmt2OrmAdapter(ItemMasterStatusHist item) {
+
+    protected VwItemStatusHistRmt2OrmAdapter(VwItemStatusHistory item) {
         if (item == null) {
-            item = new ItemMasterStatusHist();
+            item = new VwItemStatusHistory();
         }
         this.i = item;
         this.dateCreated = item.getDateCreated();
@@ -223,12 +223,13 @@ class ItemStatusHistRmt2OrmAdapter extends TransactionDtoImpl implements
 
     @Override
     public void setItemStatusName(String value) {
-        return;
+        this.i.setDescription(value);
 
     }
 
     @Override
     public String getItemStatusName() {
-        return null;
+        return this.i.getDescription();
     }
+
 }

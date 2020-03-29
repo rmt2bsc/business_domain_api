@@ -1240,7 +1240,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.beginTrans();
             // Remove all items from item master status history
             ItemMasterStatusHistDto imshCriteria = Rmt2InventoryDtoFactory
-                    .createItemStatusHistoryInstance(null);
+                    .createItemStatusHistoryInstance((ItemMasterStatusHist) null);
             imshCriteria.setItemId(itemId);
             rc = dao.delete(imshCriteria);
             this.msg = "Total item status history entries removed for item id, "
@@ -1843,8 +1843,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             }
 
             // Create new item status
-            imsh = Rmt2InventoryDtoFactory
-                    .createItemStatusHistoryInstance(null);
+            imsh = Rmt2InventoryDtoFactory.createItemStatusHistoryInstance((ItemMasterStatusHist) null);
             imsh.setItemId(item.getItemId());
             imsh.setItemStatusId(newItemStatusId);
             imsh.setUnitCost(item.getUnitCost());

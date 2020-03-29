@@ -30,6 +30,16 @@ public interface ItemMasterStatusHistDto extends CommonAccountingDto {
     int getItemStatusId();
 
     /**
+     * Sets the item Status description
+     */
+    void setItemStatusName(String value);
+
+    /**
+     * Gets the item Status description
+     */
+    String getItemStatusName();
+
+    /**
      * Sets the value of member variable unitCost
      */
     void setUnitCost(double value);
