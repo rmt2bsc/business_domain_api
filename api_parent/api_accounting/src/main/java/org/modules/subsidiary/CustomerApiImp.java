@@ -120,13 +120,14 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         
         boolean useCustomerParms = false;
         boolean useContactParms = false;
-        useContactParms = (criteria.getTaxId() != null || 
-                           criteria.getContactName() != null || 
-                           criteria.getPhoneCompany() != null);
+        useContactParms = (criteria.getTaxId() != null ||
+                criteria.getContactName() != null ||
+                criteria.getContactId() > 0 ||
+                criteria.getPhoneCompany() != null);
 
-        useCustomerParms = (criteria.getAccountNo() != null || 
-                            criteria.getCustomerId() > 0 || 
-                            criteria.getContactId() > 0);
+        useCustomerParms = (criteria.getAccountNo() != null ||
+                criteria.getDescription() != null ||
+                criteria.getCustomerId() > 0);
         
         Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
         List<CustomerDto> customerResults = null;

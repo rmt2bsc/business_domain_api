@@ -84,7 +84,18 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
                 ormCust.addCriteria(Customer.PROP_BUSINESSID, criteria.getContactId());
             }
             if (criteria.getAccountNo() != null) {
-                ormCust.addCriteria(Customer.PROP_ACCOUNTNO, criteria.getAccountNo());
+                ormCust.addLikeClause(Customer.PROP_ACCOUNTNO, criteria.getAccountNo());
+            }
+            if (criteria.getContactName() != null) {
+                ormCust.addInClause(Customer.PROP_BUSINESSID,
+                        criteria.getContactIdList().toArray(new Integer[criteria.getContactIdList().size()]));
+            }
+            if (criteria.getDescription() != null) {
+                ormCust.addLikeClause(Customer.PROP_DESCRIPTION, criteria.getDescription());
+            }
+            if (criteria.getContactIdList() != null) {
+                ormCust.addInClause(Customer.PROP_BUSINESSID,
+                        criteria.getContactIdList().toArray(new Integer[criteria.getContactIdList().size()]));
             }
         }
 

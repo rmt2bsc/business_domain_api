@@ -125,10 +125,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
                            criteria.getContactName() != null || 
                            criteria.getPhoneCompany() != null);
 
-        useCreditorParms = (criteria.getAccountNo() != null || 
-                            criteria.getCreditorId() > 0 || 
-                            criteria.getContactId() > 0 || 
-                            criteria.getCreditorTypeId() > 0);
+        useCreditorParms = (criteria.getAccountNo() != null ||
+                criteria.getCreditorId() > 0 ||
+                criteria.getContactId() > 0 ||
+                criteria.getAcctId() > 0 ||
+                criteria.getExtAccountNumber() != null ||
+                criteria.getCreditorTypeId() > 0);
         
         Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
         List<CreditorDto> creditorResults = null;
