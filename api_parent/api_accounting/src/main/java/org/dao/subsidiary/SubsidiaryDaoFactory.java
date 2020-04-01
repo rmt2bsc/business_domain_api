@@ -139,6 +139,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
         c.setActive(dto.getActive());
         c.setBusinessId(dto.getContactId());
         c.setCreditLimit(dto.getCreditLimit());
+        c.setDescription(dto.getDescription());
         c.setCustomerId(dto.getCustomerId());
         c.setDateCreated(dto.getDateCreated());
         c.setDateUpdated(dto.getDateUpdated());

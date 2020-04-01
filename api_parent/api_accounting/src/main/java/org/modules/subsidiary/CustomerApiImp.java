@@ -558,16 +558,14 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         if (oldCust == null) {
             throw new CustomerNotFoundException("Customer was not found by creditor id: " + deltaCust.getCustomerId());
         }
-        // Set modifyable fields
+        // Set modifyable fields. Ignore fields customer id, account no, acct
+        // id, gate created, and ip created in which these fields should never
+        // be modified post initial creation.
         deltaCust.setCustomerId(oldCust.getCustomerId());
         deltaCust.setAccountNo(oldCust.getAccountNo());
         deltaCust.setAcctId(oldCust.getAcctId());
-        deltaCust.setContactId(oldCust.getContactId());
         deltaCust.setDateCreated(oldCust.getDateCreated());
-        deltaCust.setDateUpdated(oldCust.getDateUpdated());
-        deltaCust.setUpdateUserId(oldCust.getUpdateUserId());
         deltaCust.setIpCreated(oldCust.getIpCreated());
-        deltaCust.setIpUpdated(oldCust.getIpUpdated());
         return;
     }
 
