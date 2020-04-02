@@ -229,7 +229,7 @@ public class CashDisbursementsQueryApiTest extends TransactionApiTestData {
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-        criteria.setXactReason("Reason is not a valid selection criteria property");
+        criteria.setXactNegInstrNo("Negotiable instrument is not a valid selection criteria property");
         try {
             api.get(criteria, null);
             Assert.fail("Expected exception due to an unexpected property was set as selection criteria");

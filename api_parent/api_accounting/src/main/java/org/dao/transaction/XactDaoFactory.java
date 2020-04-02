@@ -176,6 +176,9 @@ public class XactDaoFactory extends RMT2Base {
                 obj.addCriteria(VwXactList.PROP_TENDERID,
                         criteria.getXactTenderId());
             }
+            if (criteria.getXactReason() != null) {
+                obj.addLikeClause(VwXactList.PROP_REASON, criteria.getXactReason(), VwXactList.LIKE_CONTAINS);
+            }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
             }

@@ -86,8 +86,13 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      */
     @Override
     public List<XactDto> get(XactDto criteria, XactCustomCriteriaDto customCriteria) throws DisbursementsApiException {
+        String sqlCriteria = null;
         try {
             Verifier.verifyNotNull(criteria);
+            sqlCriteria = this.parseCriteria(customCriteria);
+            if (sqlCriteria != null) {
+                criteria.setCriteria(sqlCriteria);
+            }
         }
         catch (VerifyException e) {
             throw new InvalidDataException("Base Transaction criteria object cannot be null", e);
@@ -100,47 +105,9 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         catch (VerifyException e) {
             throw new InvalidDataException("Cannot return all cash disbursements transactions.  At least one transaction criteria property must be set to filter data", e);
         }
-        
-        String sqlCriteria = this.parseCriteria(customCriteria);
-        
-        // Handle the transaction reason
-        if (!RMT2String2.isEmpty(criteria.getXactReason())) {
-            StringBuilder buf = new StringBuilder();
-            buf.append("xact_reason ");
-            switch (customCriteria.getXactReasonFilterOption()) {
-                case XactCustomCriteriaDto.ADV_SRCH_BEGIN:
-                    buf.append("like \'");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("%\' ");
-                    break;
-                case XactCustomCriteriaDto.ADV_SRCH_CONTATIN:
-                    buf.append("like \'%");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("%\' ");
-                    break;
-                case XactCustomCriteriaDto.ADV_SRCH_END:
-                    buf.append("like \'%");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("like \'");
-                    break;
-                case XactCustomCriteriaDto.ADV_SRCH_EXACT:
-                    buf.append("= \'");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("\'");
-                    break;
-                default:
-            }
-            if (!RMT2String2.isEmpty(sqlCriteria)) {
-                sqlCriteria += " and " + buf.toString();
-            }
-            else {
-                sqlCriteria = buf.toString();
-            }
-        }
-        
+
         List<XactDto> results;
         try {
-            criteria.setCriteria(sqlCriteria);
             results = dao.fetchDisbursmentByXact(criteria);
             if (results == null) {
                 return null;
@@ -344,6 +311,9 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             criteriaCount++;
         }
         if (RMT2String2.isNotEmpty(criteria.getCriteria())) {
+            criteriaCount++;
+        }
+        if (RMT2String2.isNotEmpty(criteria.getXactReason())) {
             criteriaCount++;
         }
         return (criteriaCount > 0);
