@@ -421,7 +421,6 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
                     + xact.getXactAmount());
         } catch (Exception e) {
             this.msg = "A database error prevented the creation of base transaction";
-            logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
         }
         // Handle transaction items
@@ -433,7 +432,6 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
         } catch (Exception e) {
             this.msg = "Error occurred creating a transaction detail item for base transaction id, "
                     + xactId;
-            logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
         }
         return xactId;
@@ -457,7 +455,6 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             logger.info("Transaction, " + xactId + ", was updated");
         } catch (Exception e) {
             this.msg = "Unable to persist base transaction";
-            logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
         }
         return xactId;
