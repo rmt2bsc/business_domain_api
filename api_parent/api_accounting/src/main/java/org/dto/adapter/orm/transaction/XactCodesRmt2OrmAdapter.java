@@ -79,7 +79,7 @@ class XactCodesRmt2OrmAdapter extends TransactionDtoImpl implements
             this.g.setXactCodeGrpId(value);
         }
         if (this.c != null) {
-            this.c.setXactCodeGrpId(value);
+            this.c.setXactCodeId(value);
         }
     }
 
