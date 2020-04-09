@@ -1267,7 +1267,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
     public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws XactApiException {
         SubsidiaryDto result = null;
         try {
-            result = this.getCreditor(subsidiaryId);
+            result = this.verifyCreditor(subsidiaryId);
             if (result != null) {
                 return SubsidiaryType.CREDITOR;
             }
@@ -1276,7 +1276,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         }
 
         try {
-            result = this.getCustomer(subsidiaryId);
+            result = this.verifyCustomer(subsidiaryId);
             if (result != null) {
                 return SubsidiaryType.CUSTOMER;
             }
@@ -1286,28 +1286,40 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         return null;
     }
 
-    private CreditorDto getCreditor(int creditorId) throws SubsidiaryException {
+    /**
+     * Verifies the existence of the creditor
+     * 
+     * @param creditorId
+     * @return {@link CreditorDto} if found. Otherwise null is retunred.
+     * @throws SubsidiaryException
+     */
+    protected CreditorDto verifyCreditor(int creditorId) throws SubsidiaryException {
         XactDao xactDao;
         try {
             xactDao = this.getXactDao();
         } catch (XactApiException e) {
             throw new SubsidiaryException("Unable to retrieve creditor profile due to bad XactDao", e);
         }
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(xactDao);
+        CreditorApi api = SubsidiaryApiFactory.createCreditorApi(xactDao);
         CreditorDto dto = api.get(creditorId);
         return dto;
     }
 
-    private CustomerDto getCustomer(int customerId) throws SubsidiaryException {
+    /**
+     * Verifies the existence of the customer
+     * 
+     * @param customerId
+     * @return {@link CustomerDto} if found. Otherwise null is retunred.
+     * @throws SubsidiaryException
+     */
+    protected CustomerDto verifyCustomer(int customerId) throws SubsidiaryException {
         XactDao xactDao;
         try {
             xactDao = this.getXactDao();
         } catch (XactApiException e) {
             throw new SubsidiaryException("Unable to retrieve customer profile due to bad XactDao", e);
         }
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(xactDao);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(xactDao);
         CustomerDto dto = api.get(customerId);
         return dto;
     }
