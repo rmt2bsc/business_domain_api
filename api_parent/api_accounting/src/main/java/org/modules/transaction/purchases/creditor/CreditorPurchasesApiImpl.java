@@ -567,8 +567,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         }
 
         // Assign last four digits of credit card number
-        SubsidiaryApiFactory subFact = new SubsidiaryApiFactory();
-        CreditorApi credApi = subFact.createCreditorApi(this.getSharedDao());
+        CreditorApi credApi = SubsidiaryApiFactory.createCreditorApi(this.getSharedDao());
         try {
             CreditorDto creditor = credApi.getByCreditorId(creditorId);
             if (creditor == null) {
