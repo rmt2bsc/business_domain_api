@@ -617,8 +617,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         try {
             this.validate(xact, xactItems);
         } catch (Exception e) {
-            this.msg = "Common transaction update failed validation checks";
-            throw new XactApiException(this.msg, e);
+            throw new XactApiException(e);
         }
 
         int rc = 0;
@@ -699,7 +698,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.validate(xact);    
         }
         catch (Exception e) {
-            throw new InvalidDataException("base transaction failed validation", e);
+            throw new InvalidDataException(e);
         }
 
         // Validate transaction items.
