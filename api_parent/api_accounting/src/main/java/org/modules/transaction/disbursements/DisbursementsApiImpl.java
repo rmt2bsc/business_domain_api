@@ -494,14 +494,6 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         } catch (XactApiException e) {
             throw new DisbursementsApiException("Error reversing Cash Disbursement transaction", e);
         }
-        
-        // Finalize Transaction
-        try {
-            this.finalizeXact(xact);
-        } catch (XactApiException e) {
-            throw new DisbursementsApiException("Error finalizing Cash Disbursement transaction after reversal", e);
-        }
-        
         return newXactId;
     }
 

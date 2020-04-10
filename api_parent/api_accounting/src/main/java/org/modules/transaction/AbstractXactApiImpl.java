@@ -760,22 +760,27 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * Verifies that the said transaction is a proper candidate for
      * finailization.
      * <p>
-     * Aplplicable sub transaction types are:
+     * Aplplicable sub transaction type values are:
      * <ul>
-     * <li>cancellations</li>
-     * <li>reversals</li>
+     * <li>{@link XactConst.XACT_SUBTYPE_REVERSE}</li>
+     * <li>{@link XactConst.XACT_SUBTYPE_CANCEL}</li>
+     * <li>{@link XactConst.XACT_SUBTYPE_NOT_ASSIGNED}</li>
      * </ul>
      * 
      * @param xact
      * @throws XactApiException
      */
     private void validateFinalization(XactDto xact) throws XactApiException {
-        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_REVERSE
-                || xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_CANCEL) {
-            // This is valid
-        }
-        else {
-            throw new InvalidFinalizationAttemptException("Transaction sub type must be reversed or cancelled");
+        switch (xact.getXactSubtypeId()) {
+            case XactConst.XACT_SUBTYPE_REVERSE:
+            case XactConst.XACT_SUBTYPE_CANCEL:
+            case XactConst.XACT_SUBTYPE_NOT_ASSIGNED:
+                // This is valid
+                break;
+
+            default:
+                throw new InvalidFinalizationAttemptException(
+                        "Unable to finalize target transaction.  The Sub type must be unassigned, reversed or cancelled");
         }
     }
 
@@ -979,6 +984,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
+        // Finalize Transaction
+        this.finalizeXact(xact);
+
         int rc = 0;
         this.preReverse(xact, xactItems);
         this.reverse(xact);
@@ -1347,6 +1355,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * This method flags the transaction, <i>xact</i>, as finalized by setting
      * the transaction sub type property to XactConst.XACT_TYPE_FINAL.
      * <p>
+     * We assuming that the transaction has undergone basic validations. If not,
+     * then this.validate(XactDto) will need to be called.
+     * <p>
      * Once the transaction is finalized, the transaction cannot be changed
      * anymore. Transactions that involve finalization are: sales order
      * cancellation, cash disbursement reversal, credit charge reversal, and
@@ -1360,15 +1371,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public void finalizeXact(XactDto xact) throws XactApiException {
-        // Do basic transaction validations
-        try {
-            this.validate(xact);
-        } catch (Exception e) {
-            this.msg = "Finalization of transaction failed due to common validation error";
-            logger.error(this.msg, e);
-            throw new XactApiException(this.msg, e);
-        }
-
         // Check if okay to finailze.
         try {
             this.validateFinalization(xact);
@@ -1385,15 +1387,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
 
         // Apply transaction changes
         try {
-            // dao.beginTrans();
             dao.maintain(xact);
-            // dao.commitTrans();
             return;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Error occurred finalizing transaction: " + xact.getXactId();
             logger.error(this.msg, e);
-            throw new XactApiException(this.msg, e);
+            throw new XactApiException(e);
         }
     }
 }

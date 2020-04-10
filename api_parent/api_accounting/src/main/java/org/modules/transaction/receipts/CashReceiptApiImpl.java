@@ -275,7 +275,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
                 throw new CashReceiptApiException(msg);
             }
 
-            this.finalizeXact(xact);
+            // reverse transaction
             xactId = this.reverse(xact, null);
 
             // Apply a reversal multiplier on the revised base transaction

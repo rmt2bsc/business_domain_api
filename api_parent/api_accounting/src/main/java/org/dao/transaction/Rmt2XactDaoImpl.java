@@ -25,6 +25,7 @@ import org.dto.XactTypeDto;
 import org.dto.XactTypeItemActivityDto;
 import org.dto.XactTypeItemDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
+import org.modules.transaction.XactConst;
 
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
@@ -470,7 +471,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      */
     private int insert(Xact xact)  {
         int newXactId = 0;
-        if (xact.getXactSubtypeId() <= 0) {
+        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_NOT_ASSIGNED) {
             xact.setNull("xactSubtypeId");
         }
         if (xact.getTenderId() == 0) {

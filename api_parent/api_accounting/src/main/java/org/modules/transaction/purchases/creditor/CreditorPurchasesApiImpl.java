@@ -625,13 +625,6 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         } catch (XactApiException e) {
             throw new CreditorPurchasesApiException("Error reversing Creditor Purchases transaction", e);
         }
-
-        // Finalize Transaction
-        try {
-            this.finalizeXact(xact);
-        } catch (XactApiException e) {
-            throw new CreditorPurchasesApiException("Error finalizing Creditor Purchase transaction after reversal", e);
-        }
         return newXactId;
     }
 
