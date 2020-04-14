@@ -1621,7 +1621,11 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * Changes the override flag to true for one or more of a vendor's items.
      * <p>
      * Activates a vendor-item override for all item id's stored in items
-     * collection.
+     * collection. This method enables a vendor-item override targeting the
+     * inventory item, itemId. Also, the creditor id of the inventory item
+     * master is set to the vendor's id. An override instructs the system to
+     * obtain pricing information for an inventory item from the vendor_items
+     * table instead of the item_master table .
      * 
      * @param vendorId
      *            The id of the vendor that will be assoicated with each item
