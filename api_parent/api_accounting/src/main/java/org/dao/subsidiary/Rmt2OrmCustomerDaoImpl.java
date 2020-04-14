@@ -51,7 +51,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     public CustomerDto fetch(int customerId) throws CustomerDaoException {
         // Retrieve customer data
         Customer criteria = new Customer();
-        criteria.setCustomerId(customerId);
+        criteria.addCriteria(Customer.PROP_CUSTOMERID, customerId);
         try {
             Customer results = (Customer) this.client.retrieveObject(criteria);
             if (results == null) {
