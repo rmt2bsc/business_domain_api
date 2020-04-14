@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modules.inventory.InventoryApiException;
+import org.modules.inventory.InventoryConst;
 import org.modules.subsidiary.CustomerApiException;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
@@ -254,6 +255,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         int results = 0;
         try {
+            this.newSalesOrderDto.setOrderTotal(630.00);
             results = api.updateSalesOrder(this.newSalesOrderDto, this.newLineItemListDto);
         } catch (SalesApiException e) {
             e.printStackTrace();
@@ -268,6 +270,10 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         SalesOrderItemDto lineItem = this.newSingleLineItemListDto.get(0);
         lineItem.setBackOrderQty(0);
         lineItem.setOrderQty(5);
+
+        this.newSalesOrderDto.setOrderTotal(300.00);
+
+        this.mockSingleItemMasterFetchResponse.get(0).setItemTypeId(InventoryConst.ITEM_TYPE_MERCH);
 
         // Perform test
         SalesApi api = SalesApiFactory.createApi(mockDaoClient);
@@ -313,6 +319,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         SalesApi api = SalesApiFactory.createApi(mockDaoClient);
         int results = 0;
         try {
+            this.existingSalesOrderDto.setOrderTotal(630.00);
             results = api.updateSalesOrder(this.existingSalesOrderDto, this.existingLineItemListDto);
         } catch (SalesApiException e) {
             e.printStackTrace();
@@ -411,8 +418,6 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof SalesApiException);
-            Assert.assertTrue(e.getCause() instanceof SalesOrderDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
 
@@ -434,8 +439,6 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof SalesApiException);
-            Assert.assertTrue(e.getCause() instanceof SalesOrderDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
 
@@ -457,8 +460,6 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof SalesApiException);
-            Assert.assertTrue(e.getCause() instanceof SalesOrderDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
         }
     }
 

@@ -365,7 +365,7 @@ public class SalesApiQueryTest extends SalesApiTestData {
             Assert.assertEquals(1000, item.getSalesOrderId());
             totalAmt += item.getOrderQty() * (item.getInitUnitCost() * item.getInitMarkup());
         }
-        Assert.assertEquals(300.00, totalAmt, 0);
+        Assert.assertEquals(630.00, totalAmt, 0);
     }
     
     @Test
