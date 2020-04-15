@@ -333,6 +333,14 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
      * @throws SalesOrderDaoException
      */
     private int updateSalesOrder(SalesOrder so) throws SalesOrderDaoException {
+        // Maintain initial create tracking information for sales order record
+        SalesOrderDto criteria = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(null);
+        criteria.setSalesOrderId(so.getSoId());
+        List<SalesOrderDto> orig = this.fetchSalesOrder(criteria);
+        if (orig != null && orig.size() == 1) {
+            so.setDateCreated(orig.get(0).getDateCreated());
+            so.setIpCreated(orig.get(0).getIpCreated());
+        }
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());

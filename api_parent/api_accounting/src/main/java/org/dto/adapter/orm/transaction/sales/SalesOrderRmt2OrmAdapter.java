@@ -38,12 +38,13 @@ class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
      */
     protected SalesOrderRmt2OrmAdapter(SalesOrder so) {
         this();
-        // Initialize sales order object
-        this.updateObjHeirarchy(so);
 
         // Initialize sales order status object
         SalesOrderStatus sos = new SalesOrderStatus();
         super.updateObjHeirarchy(sos);
+
+        // Initialize sales order object
+        this.updateObjHeirarchy(so);
         return;
     }
 
