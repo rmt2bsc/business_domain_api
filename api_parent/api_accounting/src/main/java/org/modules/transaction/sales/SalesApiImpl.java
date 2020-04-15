@@ -436,7 +436,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 throw new MissingCurrentStatusException(
                         "Unable to obtain current status of sales order [sales order id="
                                 + salesOrderId
-                                + "].  Either the sales order id is invalid or there is a database anomaly");
+                                + "].  Either the sales order id is invalid or its status history is out of sequence");
             }
             return results;
         } catch (SalesOrderDaoException e) {
