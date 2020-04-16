@@ -30,10 +30,10 @@ public interface CashReceiptApi extends XactApi {
      * 
      * @param order
      * @param amount
-     * @return boolean true when transaction succeeded, false otherwise.
+     * @return transaction id
      * @throws CashReceiptApiException
      */
-    boolean applyPaymentToInvoice(SalesOrderDto order, Double amount) throws CashReceiptApiException;
+    int applyPaymentToInvoice(SalesOrderDto order, Double amount) throws CashReceiptApiException;
 
     /**
      * Emails the payment confirmation to the customer.
@@ -44,6 +44,7 @@ public interface CashReceiptApi extends XactApi {
      *            the transaction id
      * @return true upon success and false otherwise.
      * @throws CashReceiptApiException
+     * @throws PaymentEmailConfirmationException
      */
     boolean emailPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException;
     

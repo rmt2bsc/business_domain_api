@@ -1433,7 +1433,6 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof SalesApiException);
             Assert.assertTrue(e.getCause() instanceof SalesApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof CashReceiptApiException);
         }
     }
 

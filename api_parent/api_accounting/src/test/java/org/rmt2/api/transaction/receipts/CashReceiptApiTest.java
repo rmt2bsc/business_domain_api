@@ -29,6 +29,7 @@ import org.modules.transaction.XactConst;
 import org.modules.transaction.receipts.CashReceiptApi;
 import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.receipts.CashReceiptApiFactory;
+import org.modules.transaction.receipts.PaymentEmailConfirmationException;
 import org.modules.transaction.sales.SalesApiException;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -627,8 +628,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
         }
 
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         
         try {
             CashReceiptApi apiSpy = Mockito.spy(api);
@@ -637,34 +637,31 @@ public class CashReceiptApiTest extends SalesApiTestData {
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof CashReceiptApiException);
-            Assert.assertTrue(e.getCause() instanceof MessageException);
+            Assert.assertTrue(e instanceof PaymentEmailConfirmationException);
         }
     }
     
     @Test
     public void test_Apply_Payment_To_Invoice_Success() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        boolean rc = false;
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
+        int xactId = 0;
         try {
             CashReceiptApi apiSpy = Mockito.spy(api);
             Mockito.doReturn(TEST_NEW_XACT_ID).when(apiSpy).receivePayment(isA(XactDto.class), isA(Integer.class));
             Mockito.doReturn(true).when(apiSpy).emailPaymentConfirmation(isA(Integer.class), isA(Integer.class));
-            rc = apiSpy.applyPaymentToInvoice(this.salesOrderDto, 300.00);
+            xactId = apiSpy.applyPaymentToInvoice(this.salesOrderDto, 300.00);
         } catch (Exception e) {
             Assert.fail("An unexcpected exception was thrown");
             e.printStackTrace();
         }
-        Assert.assertTrue(rc);
+        Assert.assertEquals(TEST_NEW_XACT_ID, xactId);
     }
     
     @Test
     public void test_Validation_Apply_Payment_To_Invoice_Null_SalesOrder() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         try {
             api.applyPaymentToInvoice(null, 300.00);
             Assert.fail("Expected an exception to be thrown");

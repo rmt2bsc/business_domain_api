@@ -38,6 +38,7 @@ import org.modules.transaction.XactConst;
 import org.modules.transaction.receipts.CashReceiptApi;
 import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.receipts.CashReceiptApiFactory;
+import org.modules.transaction.receipts.PaymentEmailConfirmationException;
 
 import com.InvalidDataException;
 import com.NotFoundException;
@@ -987,8 +988,8 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             return invoiceId;
         } catch (Exception e) {
             this.msg = "Sales order API update failed";
-            logger.error(this.msg, e);
-            throw new SalesApiException(this.msg, e);
+            logger.error(this.msg);
+            throw new SalesApiException(e);
         }
     }
 
@@ -1197,12 +1198,28 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         // receipt transaction that was created along with sales order that
         // is currently being reversed.
         CashReceiptApiFactory crFact = new CashReceiptApiFactory();
-        CashReceiptApi crApi = crFact.createApi(this.dao);
+        CashReceiptApi crApi = CashReceiptApiFactory.createApi(this.dao);
+        int xactId = 0;
         try {
-            crApi.applyPaymentToInvoice(order, amount);
+            xactId = crApi.applyPaymentToInvoice(order, amount);
         } catch (CashReceiptApiException e) {
-            this.msg = "Unable to apply customer payment sales order, " + order.getSalesOrderId();
+            this.msg = "Unable to apply customer payment for sales order, " + order.getSalesOrderId();
+            crApi = null;
             throw new SalesApiException(this.msg, e);
+        }
+
+        // Send email confirmation
+        try {
+            crApi.emailPaymentConfirmation(order.getSalesOrderId(), xactId);
+        } catch (PaymentEmailConfirmationException e) {
+            this.msg = "Error occurred attempting to format and/or send the payment email confirmation for sales order, "
+                    + order.getSalesOrderId();
+            logger.error(this.msg, e);
+        } catch (CashReceiptApiException e) {
+            this.msg = "Error notifying customer of payment confirmation via SMTP for sales order id, "
+                    + order.getSalesOrderId();
+            logger.error(this.msg);
+            throw new CashReceiptApiException(e);
         } finally {
             crApi = null;
         }
