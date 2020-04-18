@@ -77,9 +77,9 @@ public class CashReceiptApiTest extends SalesApiTestData {
     public void setUp() throws Exception {
         super.setUp();
         this.mockSingleXact = this.createMockSingleXactData();
-        
         this.salesOrderOrm = SalesApiTestData.createMockSalesOrderSingleResponse().get(0);
         this.salesOrderDto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(this.salesOrderOrm);
+        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
     }
 
     /**
@@ -506,35 +506,44 @@ public class CashReceiptApiTest extends SalesApiTestData {
         // Setup mock for SMTP Api usage
         PowerMockito.mockStatic(SmtpFactory.class);
         SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
+        CashReceiptApi mockCashReceiptApi = Mockito.mock(CashReceiptApi.class);
         try {
             when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
-            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenReturn(Boolean.class);
+            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenReturn(Integer.class);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up mock for SMTP Api instance");
         }
 
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        boolean rc = false;
         try {
-            CashReceiptApi apiSpy = Mockito.spy(api);
-            Mockito.doReturn(CUSTOMER_CONFIRMATION_DATA).when(apiSpy)
-                    .buildPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
-            rc = apiSpy.emailPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
+            when(mockCashReceiptApi.buildPaymentConfirmation(isA(Integer.class), isA(Integer.class))).thenReturn(
+                    CUSTOMER_CONFIRMATION_DATA);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up mock for buildPaymentConfirmation method");
+        }
+
+        // Perform test
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
+        int rc = 0;
+        try {
+            // CashReceiptApi apiSpy = Mockito.spy(api);
+            // Mockito.doReturn(CUSTOMER_CONFIRMATION_DATA).when(apiSpy)
+            // .buildPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
+            // rc = apiSpy.emailPaymentConfirmation(TEST_SALES_ORDER_ID,
+            // TEST_NEW_XACT_ID);
+            rc = api.emailPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
         } catch (Exception e) {
             Assert.fail("An unexcpected exception was thrown");
             e.printStackTrace();
         }
-        Assert.assertTrue(rc);
+        Assert.assertTrue(rc > 200 && rc < 225);
     }
     
     @Test
     public void test_Validation_Email_Confirmation_Null_SalesOrderId() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         try {
             api.emailPaymentConfirmation(null, TEST_NEW_XACT_ID);
             Assert.fail("Expected an exception to be thrown");

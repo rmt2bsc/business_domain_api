@@ -131,7 +131,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         String subject = "Time Sheet Submission for " + " " + "John" + " " + "Smith" + " for period ending  " + "01-07-2018";
         Assert.assertEquals(subject, results.getSubject());
         try {
-            Object content = results.getBody().getContent();
+            Object content = results.getBody();
             Assert.assertTrue(content.toString().contains("<h3><strong>Timesheet Submital for Manager Approval</strong></h3>"));
         }
         catch (Exception e) {
@@ -241,7 +241,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         String subject = "Time Sheet Approved (Period ending 01-07-2018)";
         Assert.assertEquals(subject, results.getSubject());
         try {
-            Object content = results.getBody().getContent();
+            Object content = results.getBody();
             Assert.assertTrue(content.toString().contains("Your time sheet, 0000000111, for the period ending on 01-07-2018<br>has been Approved at"));
             Assert.assertTrue(content.toString().contains("for ClientName1110 - 40.0 hours"));
         }
