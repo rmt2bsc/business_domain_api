@@ -44,7 +44,7 @@ public interface CashReceiptApi extends XactApi {
      *            the transaction id
      * @return int
      * @throws CashReceiptApiException
-     * @throws PaymentEmailConfirmationException
+     * @throws PaymentEmailConfirmationExceptionOld
      */
     int emailPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException;
     

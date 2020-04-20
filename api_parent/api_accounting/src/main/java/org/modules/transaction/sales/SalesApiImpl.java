@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.dao.mapping.orm.rmt2.SalesInvoice;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.subsidiary.SubsidiaryDaoException;
-import org.dao.transaction.XactDao;
 import org.dao.transaction.sales.SalesInvoiceDaoException;
 import org.dao.transaction.sales.SalesOrderDao;
 import org.dao.transaction.sales.SalesOrderDaoException;
@@ -38,13 +37,11 @@ import org.modules.transaction.XactConst;
 import org.modules.transaction.receipts.CashReceiptApi;
 import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.receipts.CashReceiptApiFactory;
-import org.modules.transaction.receipts.PaymentEmailConfirmationException;
 
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.persistence.DaoClient;
 import com.api.util.RMT2Date;
-import com.api.util.RMT2String;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
 
@@ -967,7 +964,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @param receivePayment
      *            indicates whether or not a full payment transaction should be
      *            performed.
-     * @return invoice id
+     * @return transaction id
      * @throws SalesApiException
      */
     @Override
@@ -985,7 +982,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             }
             this.msg = "The invoicing of sales order, " + order.getSalesOrderId() + ", was successful!!!!";
             logger.info(this.msg);
-            return invoiceId;
+            return xactId;
         } catch (Exception e) {
             this.msg = "Sales order API update failed";
             logger.error(this.msg);
@@ -1000,8 +997,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             logger.info("Creating transaction entry for sales order.");
             xact.setXactAmount(order.getOrderTotal());
-            xact.setXactReason("Transaction created for the invoicing of sales order, "
-                            + order.getSalesOrderId());
+            xact.setXactReason("Transaction created for the invoicing of sales order, " + order.getSalesOrderId());
             xact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
             int xactId = 0;
             xactId = super.update(xact, null);
@@ -1067,84 +1063,93 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         return invoiceId;
     }
     
-    /**
-     * The old version responsible for invoicing a sales order.
-     * @param order
-     * @return
-     * @throws SalesApiException
-     * @deprecated Remove this version once method, createSalesOrderTransaction, is 
-     *             implemented correctly.
-     */
-    private int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items) throws SalesApiException {
-        logger.info("Began invoicing sales order " + order.getSalesOrderId() + "...");
-        // Create Transaction
-        XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-        try {
-            logger.info("Creating transaction entry for sales order.");
-            xact.setXactAmount(order.getOrderTotal());
-            xact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
-            int xactId = 0;
-            xactId = super.update(xact, null);
-            // Verify change
-            xact = super.getXactById(xactId);
-            if (xact == null) {
-                this.msg = "Unable to verify the invoicing of sales order " + order.getSalesOrderId() + ".";
-                throw new SalesApiException(this.msg);
-            }
-
-            // Take care of any single quote literals.
-            String reason = RMT2String.replaceAll(xact.getXactReason(), "''", "'");
-            xact.setXactReason(reason);
-            // Revise transaction amount in the event other charges were
-            // included.
-            double revisedXactAmount = this.calculateTotal(order, items);
-            XactDao xactDao = this.getXactDao();
-            xactDao.maintain(xact);
-
-            // Create customer activity (transaction history) regarding sale
-            // order transaction.
-            logger.info("Creating customer subsidiary activity entries.");
-            super.createSubsidiaryActivity(order.getCustomerId(), xactId, revisedXactAmount);
-        } catch (Exception e) {
-            this.msg = "Sales order transaction creation failed";
-            throw new SalesApiException(this.msg, e);
-        } finally {
-            logger.info("Invoicing of sales order " + order.getSalesOrderId() + " complete!");
-        }
-
-        // Setup invoice
-        int rc = 0;
-        String invoiceNumber = this.createInvoiceNumber(order);
-        SalesInvoiceDto si = Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance((SalesInvoice) null);
-        si.setInvoiceNo(invoiceNumber);
-        si.setSalesOrderId(order.getSalesOrderId());
-        si.setXactId(xact.getXactId());
-        try {
-            rc = dao.maintainInvoice(si);
-        } catch (SalesInvoiceDaoException e) {
-            this.msg = "Sales order invoice creation failed";
-            throw new SalesApiException(this.msg, e);
-        }
-
-        // Flag Sales order base as invoiced and update sales order total with
-        // transaction amount
-        try {
-            order.setOrderTotal(xact.getXactAmount());
-            order.setInvoiced(true);
-            dao.maintain(order);
-        } catch (SalesOrderDaoException e) {
-            this.msg = "Switching sales order invoiced flag to true failed";
-            throw new SalesApiException(this.msg, e);
-        }
-
-        // Change the order status to "invoiced"
-        this.changeSalesOrderStatus(order.getSalesOrderId(), SalesApiConst.STATUS_CODE_INVOICED);
-
-        // Deallocate inventory based on order quantity of each sales order item
-        this.updateInventory(order.getSalesOrderId(), SalesApiConst.UPDATE_INV_ADD);
-
-        return rc;
-    }
+    // /**
+    // * The old version responsible for invoicing a sales order.
+    // * @param order
+    // * @return
+    // * @throws SalesApiException
+    // * @deprecated Remove this version once method,
+    // createSalesOrderTransaction, is
+    // * implemented correctly.
+    // */
+    // private int invoiceSalesOrder(SalesOrderDto order,
+    // List<SalesOrderItemDto> items) throws SalesApiException {
+    // logger.info("Began invoicing sales order " + order.getSalesOrderId() +
+    // "...");
+    // // Create Transaction
+    // XactDto xact = Rmt2XactDtoFactory.createXactInstance((Xact) null);
+    // try {
+    // logger.info("Creating transaction entry for sales order.");
+    // xact.setXactAmount(order.getOrderTotal());
+    // xact.setXactTypeId(XactConst.XACT_TYPE_SALESONACCTOUNT);
+    // int xactId = 0;
+    // xactId = super.update(xact, null);
+    // // Verify change
+    // xact = super.getXactById(xactId);
+    // if (xact == null) {
+    // this.msg = "Unable to verify the invoicing of sales order " +
+    // order.getSalesOrderId() + ".";
+    // throw new SalesApiException(this.msg);
+    // }
+    //
+    // // Take care of any single quote literals.
+    // String reason = RMT2String.replaceAll(xact.getXactReason(), "''", "'");
+    // xact.setXactReason(reason);
+    // // Revise transaction amount in the event other charges were
+    // // included.
+    // double revisedXactAmount = this.calculateTotal(order, items);
+    // XactDao xactDao = this.getXactDao();
+    // xactDao.maintain(xact);
+    //
+    // // Create customer activity (transaction history) regarding sale
+    // // order transaction.
+    // logger.info("Creating customer subsidiary activity entries.");
+    // super.createSubsidiaryActivity(order.getCustomerId(), xactId,
+    // revisedXactAmount);
+    // } catch (Exception e) {
+    // this.msg = "Sales order transaction creation failed";
+    // throw new SalesApiException(this.msg, e);
+    // } finally {
+    // logger.info("Invoicing of sales order " + order.getSalesOrderId() +
+    // " complete!");
+    // }
+    //
+    // // Setup invoice
+    // int rc = 0;
+    // String invoiceNumber = this.createInvoiceNumber(order);
+    // SalesInvoiceDto si =
+    // Rmt2SalesOrderDtoFactory.createSalesIvoiceInstance((SalesInvoice) null);
+    // si.setInvoiceNo(invoiceNumber);
+    // si.setSalesOrderId(order.getSalesOrderId());
+    // si.setXactId(xact.getXactId());
+    // try {
+    // rc = dao.maintainInvoice(si);
+    // } catch (SalesInvoiceDaoException e) {
+    // this.msg = "Sales order invoice creation failed";
+    // throw new SalesApiException(this.msg, e);
+    // }
+    //
+    // // Flag Sales order base as invoiced and update sales order total with
+    // // transaction amount
+    // try {
+    // order.setOrderTotal(xact.getXactAmount());
+    // order.setInvoiced(true);
+    // dao.maintain(order);
+    // } catch (SalesOrderDaoException e) {
+    // this.msg = "Switching sales order invoiced flag to true failed";
+    // throw new SalesApiException(this.msg, e);
+    // }
+    //
+    // // Change the order status to "invoiced"
+    // this.changeSalesOrderStatus(order.getSalesOrderId(),
+    // SalesApiConst.STATUS_CODE_INVOICED);
+    //
+    // // Deallocate inventory based on order quantity of each sales order item
+    // this.updateInventory(order.getSalesOrderId(),
+    // SalesApiConst.UPDATE_INV_ADD);
+    //
+    // return rc;
+    // }
 
     /**
      * Create cash receipt transaction of the entire amount of sales order.
@@ -1208,21 +1213,23 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             throw new SalesApiException(this.msg, e);
         }
 
-        // Send email confirmation
-        try {
-            crApi.emailPaymentConfirmation(order.getSalesOrderId(), xactId);
-        } catch (PaymentEmailConfirmationException e) {
-            this.msg = "Error occurred attempting to format and/or send the payment email confirmation for sales order, "
-                    + order.getSalesOrderId();
-            logger.error(this.msg, e);
-        } catch (CashReceiptApiException e) {
-            this.msg = "Error notifying customer of payment confirmation via SMTP for sales order id, "
-                    + order.getSalesOrderId();
-            logger.error(this.msg);
-            throw new CashReceiptApiException(e);
-        } finally {
-            crApi = null;
-        }
+        // // Send email confirmation
+        // try {
+        // crApi.emailPaymentConfirmation(order.getSalesOrderId(), xactId);
+        // } catch (PaymentEmailConfirmationExceptionOld e) {
+        // this.msg =
+        // "Error occurred attempting to format and/or send the payment email confirmation for sales order, "
+        // + order.getSalesOrderId();
+        // logger.error(this.msg, e);
+        // } catch (CashReceiptApiException e) {
+        // this.msg =
+        // "Error notifying customer of payment confirmation via SMTP for sales order id, "
+        // + order.getSalesOrderId();
+        // logger.error(this.msg);
+        // throw new CashReceiptApiException(e);
+        // } finally {
+        // crApi = null;
+        // }
     }
 
     /**

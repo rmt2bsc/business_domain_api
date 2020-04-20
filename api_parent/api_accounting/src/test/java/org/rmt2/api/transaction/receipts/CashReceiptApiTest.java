@@ -30,7 +30,7 @@ import org.modules.transaction.XactConst;
 import org.modules.transaction.receipts.CashReceiptApi;
 import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.receipts.CashReceiptApiFactory;
-import org.modules.transaction.receipts.PaymentEmailConfirmationException;
+import org.modules.transaction.receipts.PaymentEmailConfirmationExceptionOld;
 import org.modules.transaction.sales.SalesApiException;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -752,7 +752,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
             Assert.fail("Test failed due to exception was expected to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof PaymentEmailConfirmationException);
+            Assert.assertTrue(e instanceof PaymentEmailConfirmationExceptionOld);
         }
     }
     

@@ -348,7 +348,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
      * @return true upon success and false in the event the transport service
      *         could not be initialized.
      * @throws CashReceiptApiException
-     * @throws PaymentEmailConfirmationException
+     * @throws PaymentEmailConfirmationExceptionOld
      */
     public int emailPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException {
         //  Customer id cannot be null
@@ -422,7 +422,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             this.msg = "XSL Customer Payment Email transformation failed for resource, " + xslFile + " due to a System error.  "
                     + e.getMessage();
             logger.error(this.msg);
-            throw new PaymentEmailConfirmationException(this.msg, e);
+            throw new PaymentEmailConfirmationExceptionOld(this.msg, e);
         } finally {
             xsl = null;
         }
@@ -459,7 +459,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             return rc;
         } catch (MessageException e) {
             this.msg = "Customer payment confirmation error.  " + e.getMessage();
-            throw new PaymentEmailConfirmationException(this.msg, e);
+            throw new PaymentEmailConfirmationExceptionOld(this.msg, e);
         }
     }
 
