@@ -17,6 +17,7 @@ import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.SalesOrderItems;
 import org.dao.mapping.orm.rmt2.SalesOrderStatus;
 import org.dao.mapping.orm.rmt2.SalesOrderStatusHist;
+import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.subsidiary.CustomerDaoException;
@@ -39,6 +40,7 @@ import org.modules.inventory.InventoryConst;
 import org.modules.subsidiary.CustomerApiException;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
+import org.modules.transaction.receipts.CashReceiptApi;
 import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.sales.OutOfSyncSalesOrderStatusesException;
 import org.modules.transaction.sales.SalesApi;
@@ -80,6 +82,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
     private static final int TEST_NEW_XACT_ID = 1234567890;
     private static final int TEST_EXISTING_XACT_ID = 54321;
     private static final int TEST_NEW_INVOICE_ID = 700000;
+    private static final int TEST_BUSINESS_ID = 1351;
 
     private SalesOrder existingSalesOrderOrm;
     private SalesOrderDto existingSalesOrderDto;
@@ -246,6 +249,95 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up sales order status history insert case failed");
+        }
+    }
+
+    private List<VwXactList> createMockSingleXactDataForPaymentEmail() {
+        List<VwXactList> list = new ArrayList<VwXactList>();
+        VwXactList o = AccountingMockDataFactory.createMockOrmXact(TEST_NEW_XACT_ID,
+                XactConst.XACT_TYPE_CASHRECEIPT,
+                XactConst.XACT_SUBTYPE_NOT_ASSIGNED,
+                RMT2Date.stringToDate("2020-04-19"), 755.94, 11, "1111-1111-1111-1111");
+        list.add(o);
+        return list;
+    }
+
+    private List<Customer> createMockSingleCustomer() {
+        List<Customer> list = new ArrayList<Customer>();
+        Customer o = AccountingMockDataFactory.createMockOrmCustomer(TEST_CUSTOMER_ID, TEST_BUSINESS_ID, 0, 333, "C1234589",
+                "Customer 1");
+        list.add(o);
+        return list;
+    }
+
+    private List<VwBusinessAddress> createMockSingleVwBusinessAddress() {
+        List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
+        VwBusinessAddress p = AccountingMockDataFactory.createMockOrmBusinessContact(TEST_BUSINESS_ID, "ABC Company", 2222,
+                "94393 Hall Ave.", "Building 123", "Suite 300",
+                "Room 45", "Dallas", "TX", 75232);
+        p.setContactEmail("johndoe@testemail.com");
+        list.add(p);
+        return list;
+    }
+
+    private void setupMocksForEmailConfirmation() {
+
+        // Transaction mocking
+        VwXactList mockXactCriteria = new VwXactList();
+        mockXactCriteria.setId(TEST_NEW_XACT_ID);
+        try {
+            List<VwXactList> mockXactList = createMockSingleXactDataForPaymentEmail();
+            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria))).thenReturn(mockXactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+        // Sales Order mocking
+        SalesOrder mockSalesOrderCriteria = new SalesOrder();
+        mockSalesOrderCriteria.setSoId(TEST_SALES_ORDER_ID);
+        try {
+            List<SalesOrder> mockSalesOrderList = createMockSalesOrderSingleResponse();
+            mockSalesOrderList.get(0).setOrderTotal(755.94);
+            mockSalesOrderList.get(0).setSoId(TEST_SALES_ORDER_ID);
+            mockSalesOrderList.get(0).setCustomerId(TEST_CUSTOMER_ID);
+            when(this.mockPersistenceClient.retrieveList(eq(mockSalesOrderCriteria))).thenReturn(mockSalesOrderList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single sales order test case setup failed");
+        }
+
+        // Custmer mocking
+        Customer mockCustomerCriteria = new Customer();
+        mockCustomerCriteria.setCustomerId(TEST_CUSTOMER_ID);
+        try {
+            List<Customer> mockCustomerList = this.createMockSingleCustomer();
+            when(this.mockPersistenceClient.retrieveList(eq(mockCustomerCriteria))).thenReturn(mockCustomerList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Customer List fetch test case setup failed");
+        }
+
+        // Mock Customer balance SQL query stub in Cash Receipts API.
+        ResultSet mockResultSet = Mockito.mock(ResultSet.class);
+        try {
+            when(this.mockPersistenceClient.executeSql(isA(String.class))).thenReturn(mockResultSet);
+            when(mockResultSet.next()).thenReturn(true);
+            when(mockResultSet.getDouble("balance")).thenReturn(755.94);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch fetch custome balance test case setup failed");
+        }
+
+        // VwBusinessAddress mocking
+        VwBusinessAddress mockBusinessContactcriteria = new VwBusinessAddress();
+        mockBusinessContactcriteria.setBusinessId(TEST_BUSINESS_ID);
+        try {
+            List<VwBusinessAddress> mockVwBusinessAddressList = this.createMockSingleVwBusinessAddress();
+            when(this.mockPersistenceClient.retrieveList(eq(mockBusinessContactcriteria))).thenReturn(mockVwBusinessAddressList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single VwBusinessAddress fetch test case setup failed");
         }
     }
 
@@ -954,12 +1046,17 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         // Setup mock for SMTP Api usage
         PowerMockito.mockStatic(SmtpFactory.class);
         SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
+        CashReceiptApi mockCashReceiptApi = Mockito.mock(CashReceiptApi.class);
         try {
             when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
+            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenReturn(221);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Setting up mock for SMTP Api instance");
         }
+
+        // Setup mocks for email confirmation.
+        this.setupMocksForEmailConfirmation();
 
         // Perform test
         SalesApi api = SalesApiFactory.createApi(mockDaoClient);

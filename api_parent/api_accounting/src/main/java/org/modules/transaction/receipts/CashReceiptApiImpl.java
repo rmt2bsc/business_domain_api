@@ -533,15 +533,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         SalesOrder so = this.getSalesOrder(salesOrderId);
 
         // Get Customer data
-        CustomerExt cust = null;
-        CustomerDto custDto = this.getCustomer(so.getCustomerId());
-        if (custDto != null) {
-            cust = SubsidiaryDaoFactory.createCustomerExtBean(custDto);
-            SubsidiaryDaoFactory subDaoFact = new SubsidiaryDaoFactory();
-            CustomerDao custDao = subDaoFact.createRmt2OrmCustomerDao(this.getSharedDao());
-            double bal = custDao.calculateBalance(cust.getCustomerId());
-            cust.setBalance(bal);
-        }
+        CustomerExt cust = this.getCustomer(so.getCustomerId());
 
         StringBuffer xmlBuf = new StringBuffer();
         xmlBuf.append(cust.toXml());
@@ -569,15 +561,19 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         }
     }
 
-    private CustomerDto getCustomer(int customerId) throws CashReceiptApiException {
+    private CustomerExt getCustomer(int customerId) throws CashReceiptApiException {
         SubsidiaryDaoFactory subDaoFact = new SubsidiaryDaoFactory();
         CustomerDao custDao = subDaoFact.createRmt2OrmCustomerDao(this.getSharedDao());
         CustomerDto custCriteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         custCriteria.setCustomerId(customerId);
+        CustomerExt cust = null;
         try {
             List<CustomerDto> custList = custDao.fetch(custCriteria);
             if (custList != null && custList.size() == 1) {
-                return custList.get(0);
+                cust = SubsidiaryDaoFactory.createCustomerExtBean(custList.get(0));
+                double bal = custDao.calculateBalance(cust.getCustomerId());
+                cust.setBalance(bal);
+                return cust;
             }
             else {
                 this.msg = "Unable to fetch customer details to perform cash receipts confirmation due to customer, "
@@ -591,10 +587,10 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
 
     private BusinessContactDto getBusinessContact(int salesOrderId) throws CashReceiptApiException {
         SalesOrder so = this.getSalesOrder(salesOrderId);
-        CustomerDto customer = this.getCustomer(so.getCustomerId());
+        CustomerExt customer = this.getCustomer(so.getCustomerId());
         ContactsApi contactsApi = ContactsApiFactory.createApi();
         BusinessContactDto criteria = Rmt2AddressBookDtoFactory.getBusinessInstance(null);
-        criteria.setContactId(customer.getContactId());
+        criteria.setContactId(customer.getBusinessId());
         try {
             List<ContactDto> contacts = contactsApi.getContact(criteria);
             if (contacts != null && contacts.size() == 1 && contacts.get(0) instanceof BusinessContactDto) {

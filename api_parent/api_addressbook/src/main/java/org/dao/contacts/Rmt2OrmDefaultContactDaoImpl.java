@@ -294,8 +294,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         return list;
     }
 
-    private List<ContactDto> getBusinessContact(BusinessContactDto criteriaDto)
-            throws PersonalContactQueryDaoException {
+    private List<ContactDto> getBusinessContact(BusinessContactDto criteriaDto) throws PersonalContactQueryDaoException {
         VwBusinessAddress criteria = new VwBusinessAddress();
         if (criteriaDto.getContactIdList() != null && criteriaDto.getContactIdList().size() > 0) {
             Integer[] intArray = criteriaDto.getContactIdList().toArray(new Integer[criteriaDto.getContactIdList().size()]);

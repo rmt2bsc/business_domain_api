@@ -283,8 +283,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      */
     @Override
     public double calculateBalance(int customerId) throws SubsidiaryDaoException {
-        String sql = RMT2String.replace(AccountingSqlConst.SQL_CUSTOMER_BALANCE,
-                String.valueOf(customerId), "$1");
+        String sql = RMT2String.replace(AccountingSqlConst.SQL_CUSTOMER_BALANCE, String.valueOf(customerId), "$1");
         double bal = 0;
         try {
             ResultSet rs = this.client.executeSql(sql);
