@@ -1068,7 +1068,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             e.printStackTrace();
             Assert.fail("Test failed due to unexpected exception thrown");
         }
-        Assert.assertEquals(TEST_NEW_XACT_ID, results);
+        Assert.assertEquals((TEST_NEW_XACT_ID + 111111111), results);
         Assert.assertEquals(true, this.existingSalesOrderDto.isInvoiced());
     }
 

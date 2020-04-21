@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.transaction.purchases.creditor.CreditorPurchasesDao;
 import org.dao.transaction.purchases.creditor.CreditorPurchasesDaoException;
@@ -504,7 +505,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
 
         // Create the subsidiary entry for the creditor purchase transaction.
         try {
-            super.createSubsidiaryActivity(xact.getCreditorId(), xact.getXactId(), xact.getXactAmount());
+            super.createSubsidiaryActivity(xact.getCreditorId(), SubsidiaryType.CREDITOR, xact.getXactId(), xact.getXactAmount());
             return xactId;
         } catch (XactApiException e) {
             msg = "Unable to create subsiary entry for creditor purchase transacton";

@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.transaction.disbursements.DisbursementsDao;
 import org.dao.transaction.disbursements.DisbursementsDaoException;
@@ -426,7 +427,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         try {
             // Create creditor activity (transaction history) regarding
             // the disbursement.  The usual valdiations will take place in this call.
-            super.createSubsidiaryActivity(creditorId, newXctId, xactAmount);
+            super.createSubsidiaryActivity(creditorId, SubsidiaryType.CREDITOR, newXctId, xactAmount);
         } catch (XactApiException e) {
             throw new DisbursementsApiException("Unable to process cash disbursement transaction", e);
         }

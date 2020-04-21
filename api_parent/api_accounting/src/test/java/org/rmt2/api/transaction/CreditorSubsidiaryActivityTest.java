@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 
+import org.AccountingConst.SubsidiaryType;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorActivity;
 import org.dao.mapping.orm.rmt2.VwXactList;
@@ -92,7 +93,7 @@ public class CreditorSubsidiaryActivityTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         int rc = 0;
         try {
-            rc = api.createSubsidiaryActivity(200, 111111, 111.11);
+            rc = api.createSubsidiaryActivity(200, SubsidiaryType.CREDITOR, 111111, 111.11);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -135,7 +136,7 @@ public class CreditorSubsidiaryActivityTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryActivity(200, 111111, 111.11);
+            api.createSubsidiaryActivity(200, SubsidiaryType.CREDITOR, 111111, 111.11);
             Assert.fail("Expected excpetion due to Creditor Activity DAO insert method failed");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);

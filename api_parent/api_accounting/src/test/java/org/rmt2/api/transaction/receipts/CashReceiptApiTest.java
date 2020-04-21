@@ -30,18 +30,13 @@ import org.modules.transaction.XactConst;
 import org.modules.transaction.receipts.CashReceiptApi;
 import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.receipts.CashReceiptApiFactory;
-import org.modules.transaction.receipts.PaymentEmailConfirmationExceptionOld;
 import org.modules.transaction.sales.SalesApiException;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.AccountingMockDataFactory;
 import org.rmt2.api.transaction.sales.SalesApiTestData;
 
 import com.InvalidDataException;
-import com.api.messaging.MessageException;
-import com.api.messaging.email.EmailMessageBean;
-import com.api.messaging.email.smtp.SmtpApi;
 import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
@@ -260,8 +255,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
         }
         
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         int results = 0;
         
         // Build mock transaction object to be updated
@@ -284,8 +278,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
     @Test
     public void test_Validation_Receive_Payment_Null_Xact() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         
         // Build mock transaction object to be updated
         Integer customerId = 200;
@@ -301,8 +294,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
     @Test
     public void test_Validation_Receive_Payment_Null_CustomerId() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -323,8 +315,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
     @Test
     public void test_Validation_Receive_Payment_Missing_Tender() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
 
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0);
@@ -346,8 +337,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
     @Test
     public void test_Validation_Receive_Payment_Negative_CustomerId() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -368,8 +358,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
     @Test
     public void test_Validation_Receive_Payment_Zero_CustomerId() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -399,8 +388,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
         }
 
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -420,341 +408,6 @@ public class CashReceiptApiTest extends SalesApiTestData {
         }
     }
     
-    @Test
-    public void test_Build_Confirmation_Success() {
-        // Mock base transaction query verification stub.
-        VwXactList mockCriteria = new VwXactList();
-        mockCriteria.setId(TEST_NEW_XACT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockSingleXact);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-
-        // Setup mock for validating sales order object
-        SalesOrder so = new SalesOrder();
-        so.setSoId(TEST_SALES_ORDER_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(so)))
-            .thenReturn(this.mockSalesOrderSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Single sales order fetch test case setup failed");
-        }
-
-        // Mock Customer query stub.
-        try {
-            when(this.mockPersistenceClient.retrieveList(isA(Customer.class)))
-                    .thenReturn(this.mockCustomerFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-
-        // Mock Customer balance SQL query stub in Cash Receipts API.
-        ResultSet mockResultSet = Mockito.mock(ResultSet.class);
-        try {
-            when(this.mockPersistenceClient.executeSql(isA(String.class))).thenReturn(mockResultSet);
-            when(mockResultSet.next()).thenReturn(true);
-            when(mockResultSet.getDouble("balance")).thenReturn(300.00);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        String results = null;
-        try {
-            results = api.buildPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
-        } catch (Exception e) {
-            Assert.fail("An unexcpected exception was thrown");
-            e.printStackTrace();
-        }
-        Assert.assertNotNull(results);
-        Assert.assertTrue(results.length() > 10);
-    }
-    
-    @Test
-    public void test_Validation_Build_Confirmation_Xact_NotFound() {
-        // Mock base transaction query verification stub.
-        VwXactList mockCriteria = new VwXactList();
-        mockCriteria.setId(TEST_NEW_XACT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-        
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof CashReceiptApiException);
-        }
-    }
-    
-    @Test
-    public void test_Build_Confirmation_Db_Exception() {
-        // Mock base transaction query verification stub.
-        VwXactList mockCriteria = new VwXactList();
-        mockCriteria.setId(TEST_NEW_XACT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(XactDaoException.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-        
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof CashReceiptApiException);
-            Assert.assertTrue(e.getCause() instanceof XactDaoException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Build_Confirmation_Null_SalesOrderId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(null, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Build_Confirmation_Negative_SalesOrderId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(-111, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Build_Confirmation_Zero_SalesOrderId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(0, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Build_Confirmation_Null_XactId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(TEST_SALES_ORDER_ID, null);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Build_Confirmation_Negative_XactId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(TEST_SALES_ORDER_ID, -111);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Build_Confirmation_Zero_XactId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.buildPaymentConfirmation(TEST_SALES_ORDER_ID, 0);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Email_Confirmation_Success() {
-        // Setup mock for SMTP Api usage
-        PowerMockito.mockStatic(SmtpFactory.class);
-        SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
-        CashReceiptApi mockCashReceiptApi = Mockito.mock(CashReceiptApi.class);
-        try {
-            when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
-            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenReturn(221);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up mock for SMTP Api instance");
-        }
-
-        try {
-            when(mockCashReceiptApi.buildPaymentConfirmation(isA(Integer.class), isA(Integer.class))).thenReturn(
-                    CUSTOMER_CONFIRMATION_DATA);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up mock for buildPaymentConfirmation method");
-        }
-
-        // Setup general mocks needed for building email confirmation
-        this.setupMocksForEmailConfirmation();
-
-        // Perform test
-        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
-        int rc = 0;
-        try {
-            rc = api.emailPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
-        } catch (Exception e) {
-            Assert.fail("An unexcpected exception was thrown");
-            e.printStackTrace();
-        }
-        Assert.assertEquals(SMTP_SUCCESS_RETURN_CODE, rc);
-    }
-    
-    @Test
-    public void test_Validation_Email_Confirmation_Null_SalesOrderId() {
-        // Perform test
-        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
-        try {
-            api.emailPaymentConfirmation(null, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Email_Confirmation_Negative_SalesOrderId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.emailPaymentConfirmation(-111, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Email_Confirmation_Zero_SalesOrderId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.emailPaymentConfirmation(0, TEST_NEW_XACT_ID);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Email_Confirmation_Null_XactId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.emailPaymentConfirmation(TEST_SALES_ORDER_ID, null);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Email_Confirmation_Negative_XactId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.emailPaymentConfirmation(TEST_SALES_ORDER_ID, -111);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-    
-    @Test
-    public void test_Validation_Email_Confirmation_Zero_XactId() {
-        // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
-        try {
-            api.emailPaymentConfirmation(TEST_SALES_ORDER_ID, 0);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof InvalidDataException);
-        }
-    }
-        
-    @Test
-    public void test_Email_Confirmation_Message_Exception() {
-        // Setup mock for SMTP Api usage
-        PowerMockito.mockStatic(SmtpFactory.class);
-        SmtpApi mockSmtpApi = Mockito.mock(SmtpApi.class);
-        try {
-            when(SmtpFactory.getSmtpInstance()).thenReturn(mockSmtpApi);
-            when(mockSmtpApi.sendMessage(isA(EmailMessageBean.class))).thenThrow(MessageException.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up mock for SMTP Api instance");
-        }
-
-        // Setup general mocks needed for building email confirmation
-        this.setupMocksForEmailConfirmation();
-
-        // Perform test
-        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
-        
-        try {
-            api.emailPaymentConfirmation(TEST_SALES_ORDER_ID, TEST_NEW_XACT_ID);
-            Assert.fail("Test failed due to exception was expected to be thrown");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.assertTrue(e instanceof PaymentEmailConfirmationExceptionOld);
-        }
-    }
     
     @Test
     public void test_Apply_Payment_To_Invoice_Success() {
@@ -799,8 +452,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
     @Test
     public void test_Validation_Apply_Payment_To_Invoice_Null_Amount() {
         // Perform test
-        CashReceiptApiFactory f = new CashReceiptApiFactory();
-        CashReceiptApi api = f.createApi(mockDaoClient);
+        CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         try {
             api.applyPaymentToInvoice(this.salesOrderDto, null);
             Assert.fail("Expected an exception to be thrown");

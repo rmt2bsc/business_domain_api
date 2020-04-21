@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.AccountingConst.SubsidiaryType;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.VwXactList;
@@ -97,7 +98,7 @@ public class CustomerSubsidiaryActivityTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         int rc = 0;
         try {
-            rc = api.createSubsidiaryActivity(200, 111111, 111.11);
+            rc = api.createSubsidiaryActivity(200, SubsidiaryType.CUSTOMER, 111111, 111.11);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -153,7 +154,7 @@ public class CustomerSubsidiaryActivityTest extends TransactionApiTestData {
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         int rc = 0;
         try {
-            rc = api.createSubsidiaryActivity(200, 111111, 111.11);
+            rc = api.createSubsidiaryActivity(200, SubsidiaryType.CUSTOMER, 111111, 111.11);
         } catch (XactApiException e) {
             e.printStackTrace();
         }
@@ -195,7 +196,7 @@ public class CustomerSubsidiaryActivityTest extends TransactionApiTestData {
         XactApiFactory f = new XactApiFactory();
         XactApi api = f.createDefaultXactApi(mockDaoClient);
         try {
-            api.createSubsidiaryActivity(200, 111111, 111.11);
+            api.createSubsidiaryActivity(200, SubsidiaryType.CUSTOMER, 111111, 111.11);
             Assert.fail("Expected excpetion due to Customer Activity DAO insert method failed");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof XactApiException);
