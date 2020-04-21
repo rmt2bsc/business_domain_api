@@ -77,7 +77,7 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     public CreditorDto fetch(int creditorId) throws CustomerDaoException {
         // Retrieve Creditor data
         Creditor criteria = new Creditor();
-        criteria.setCreditorId(creditorId);
+        criteria.addCriteria(Creditor.PROP_CREDITORID, creditorId);
         try {
             Creditor results = (Creditor) this.client.retrieveObject(criteria);
             if (results == null) {
