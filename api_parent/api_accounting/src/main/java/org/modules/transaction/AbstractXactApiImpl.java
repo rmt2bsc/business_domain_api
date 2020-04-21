@@ -18,7 +18,6 @@ import org.dto.CreditorDto;
 import org.dto.CreditorXactHistoryDto;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
-import org.dto.SubsidiaryDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -1129,7 +1128,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @throws XactApiException
      */
     @Override
-    public int createSubsidiaryActivity(Integer subsidiaryId, Integer xactId, Double amount) throws XactApiException {
+    public int createSubsidiaryActivity(Integer subsidiaryId, SubsidiaryType subsidiaryType, Integer xactId, Double amount) throws XactApiException {
         try {
             Verifier.verifyNotNull(subsidiaryId);
         } catch (VerifyException e) {
@@ -1141,6 +1140,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             Verifier.verifyPositive(subsidiaryId);
         } catch (VerifyException e) {
             this.msg = "Subsidiary id must be a value greater than zero";
+            logger.error(this.msg);
+            throw new InvalidDataException(this.msg, e);
+        }
+        try {
+            Verifier.verifyNotNull(subsidiaryType);
+        } catch (VerifyException e) {
+            this.msg = "Subsidiary Type is required.  Must be SubsidiaryType.CREDITOR or SubsidiaryType.CUSTOMER";
             logger.error(this.msg);
             throw new InvalidDataException(this.msg, e);
         }
@@ -1166,19 +1172,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new InvalidDataException(this.msg, e);
         }
 
-        int rc = 0;
-        // Determine the type of subsidiary we are dealing with
-        SubsidiaryType subType = this.evaluateSubsidiaryType(subsidiaryId);
-
-        // Verify that we were able to identify the subsidiary type
-        try {
-            Verifier.verifyNotNull(subType);
-        } catch (VerifyException e) {
-            this.msg = "Subsidiary id passed is invalid.  Must be SubsidiaryType.CREDITOR or SubsidiaryType.CUSTOMER";
-            logger.error(this.msg);
-            throw new NotFoundException(this.msg, e);
-        }
         // validate transaction id
+        int rc = 0;
         XactDto xactDto = this.getXactById(xactId);
         try {
             Verifier.verifyNotNull(xactDto);
@@ -1191,12 +1186,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
 
         XactDao xactDao = this.getXactDao();
         // Create transaction for creditor
-        if (subType == SubsidiaryType.CREDITOR) {
-            rc = this.createTransactionHistoryForCreditor(xactDao, subsidiaryId, xactId, amount);
-        }
-        // Create transaction for customer
-        if (subType == SubsidiaryType.CUSTOMER) {
-            rc = this.createTransactionHistoryForCustomer(xactDao, xactDto, subsidiaryId, xactId, amount);
+        switch (subsidiaryType) {
+            case CREDITOR:
+                rc = this.createTransactionHistoryForCreditor(xactDao, subsidiaryId, xactId, amount);
+                break;
+            case CUSTOMER:
+                rc = this.createTransactionHistoryForCustomer(xactDao, xactDto, subsidiaryId, xactId, amount);
+                break;
         }
         return rc;
     }
@@ -1260,37 +1256,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         java.util.Date today = new java.util.Date();
         String confirmNo = String.valueOf(today.getTime());
         return confirmNo;
-    }
-
-    /**
-     * Determine if the subsidiary id represents a creditor or a customer.
-     * 
-     * @param subsidiaryId
-     *            the id of the subsidiary
-     * @return {@link SubsidiaryType} when the creditor or customer is found.
-     *         Otherwise, null is returned.
-     * @throws XactApiException
-     */
-    public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws XactApiException {
-        SubsidiaryDto result = null;
-        try {
-            result = this.verifyCreditor(subsidiaryId);
-            if (result != null) {
-                return SubsidiaryType.CREDITOR;
-            }
-        } catch (Exception e) {
-            throw new XactApiException("Error evaluating creditor [creditor id=" + subsidiaryId + "]", e);
-        }
-
-        try {
-            result = this.verifyCustomer(subsidiaryId);
-            if (result != null) {
-                return SubsidiaryType.CUSTOMER;
-            }
-        } catch (Exception e) {
-            throw new XactApiException("Error evaluating customer [customer id=" + subsidiaryId + "]", e);
-        }
-        return null;
     }
 
     /**

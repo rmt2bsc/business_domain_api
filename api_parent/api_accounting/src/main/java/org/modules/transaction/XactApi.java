@@ -242,6 +242,8 @@ public interface XactApi extends TransactionApi {
      * 
      * @param subsidiaryId
      *            The id of the subsidiary account
+     * @param subsidiaryType
+     *            {@link SubsidiaryType}
      * @param xactId
      *            The id of the transaction
      * @param amount
@@ -249,8 +251,7 @@ public interface XactApi extends TransactionApi {
      * @return The new unique identifier of the subsidiary transaction.
      * @throws XactApiException
      */
-    int createSubsidiaryActivity(Integer subsidiaryId, Integer xactId, Double amount)
-            throws XactApiException;
+    int createSubsidiaryActivity(Integer subsidiaryId, SubsidiaryType subsidiaryType, Integer xactId, Double amount) throws XactApiException;
 
     /**
      * Determines if <i>xact</i> can be modified or adjusted.
@@ -274,14 +275,4 @@ public interface XactApi extends TransactionApi {
      *             a database error occurs.
      */
     void finalizeXact(XactDto xact) throws XactApiException;
-
-    /**
-     * Determine the type of subsidiary account being managed.
-     * 
-     * @param subsidiaryId
-     *            the unique id to use to lookup the subsidiary
-     * @return an instance of {@link SubsidiaryType}
-     * @throws XactApiException
-     */
-    SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws XactApiException;
 }
