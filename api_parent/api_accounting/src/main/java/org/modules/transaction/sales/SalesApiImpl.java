@@ -1127,24 +1127,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             crApi = null;
             throw new SalesApiException(this.msg, e);
         }
-
-        // // Send email confirmation
-        // try {
-        // crApi.emailPaymentConfirmation(order.getSalesOrderId(), xactId);
-        // } catch (PaymentEmailConfirmationExceptionOld e) {
-        // this.msg =
-        // "Error occurred attempting to format and/or send the payment email confirmation for sales order, "
-        // + order.getSalesOrderId();
-        // logger.error(this.msg, e);
-        // } catch (CashReceiptApiException e) {
-        // this.msg =
-        // "Error notifying customer of payment confirmation via SMTP for sales order id, "
-        // + order.getSalesOrderId();
-        // logger.error(this.msg);
-        // throw new CashReceiptApiException(e);
-        // } finally {
-        // crApi = null;
-        // }
     }
 
     /**
@@ -1443,16 +1425,6 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
      * @throws SalesApiException
      */
     private double calcSalesOrderItemTotal(List<SalesOrderItemDto> items) throws SalesApiException {
-//        List<SalesOrderItemDto> items = null;
-//        double amt = 0;
-//
-//        try {
-//            items = dao.fetchSalesOrderItem(salesOrderId);
-//        } catch (SalesOrderDaoException e) {
-//            this.msg = "Error fetching items for sales order, " + salesOrderId;
-//            logger.info(this.msg, e);
-//            throw new SalesApiException(this.msg, e);
-//        }
         if (items == null) {
             return 0;
         }
