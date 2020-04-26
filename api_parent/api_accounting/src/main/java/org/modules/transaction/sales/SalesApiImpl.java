@@ -1267,6 +1267,14 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
     }
 
+    /**
+     * Cancels a sales order without effecting the sales order history.
+     * 
+     * @param so
+     * @param xactTypeId
+     * @return
+     * @throws SalesApiException
+     */
     private XactDto cancelSalesOrder(SalesOrderDto so, int xactTypeId) throws SalesApiException {
         // Verify that sales order is invoiced
         try {
@@ -1524,12 +1532,14 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         try {
-            XactDto rc = this.cancelSalesOrder(so, XactConst.XACT_TYPE_SALESRETURNS);
+            // Cancel existing invoiced sales order only. Do not change sales
+            // order status here...
+            XactDto cancelledXact = this.cancelSalesOrder(so, XactConst.XACT_TYPE_SALESRETURNS);
             // The amount should not require any changes since it is expected to
             // have a negative value.
-            rc.setXactId(0);
-            rc.setXactSubtypeId(XactConst.XACT_TYPE_SALESRETURNS);
-            rc.setXactReason("Reversed trans amount related to the refunding of sales order " + salesOrderId);
+            cancelledXact.setXactId(0);
+            cancelledXact.setXactSubtypeId(XactConst.XACT_TYPE_SALESRETURNS);
+            cancelledXact.setXactReason("Reversed trans amount related to the refunding of sales order " + salesOrderId);
 
             // Create cash receipt transaction of the entire amount of
             // sales order being reversed. This will offset the original cash
@@ -1537,7 +1547,9 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             // order that is currently being reversed.
             CashReceiptApi crApi = CashReceiptApiFactory.createApi(this.dao);
             try {
-                crApi.receivePayment(rc, so.getCustomerId());
+                // IS-41: Default tender to cash for now.
+                cancelledXact.setXactTenderId(XactConst.TENDER_CASH);
+                crApi.receivePayment(cancelledXact, so.getCustomerId());
             } catch (CashReceiptApiException e) {
                 this.msg = "Unable to apply cash receipt reversal for the refunding of sales order, " + salesOrderId;
                 throw new SalesApiException(this.msg, e);
@@ -1549,7 +1561,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             this.changeSalesOrderStatus(salesOrderId, SalesApiConst.STATUS_CODE_REFUNDED);
             this.msg = "Sales order API refund succeeded for sales order, " + salesOrderId;
             logger.info(this.msg);
-            return rc.getXactId();
+            return cancelledXact.getXactId();
         } catch (Exception e) {
             this.msg = "Sales order API refund failed";
             logger.error(this.msg, e);
