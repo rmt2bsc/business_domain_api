@@ -12,6 +12,7 @@ import org.dao.admin.ProjectAdminDaoException;
 import org.dao.admin.ProjectAdminDaoFactory;
 import org.dto.ClientDto;
 import org.dto.EventDto;
+import org.dto.ProjectClientDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -159,6 +160,36 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
             buf.append(criteria.toString());
             this.msg = buf.toString();
             throw new ProjectAdminApiException(this.msg, e);
+        }
+        return results;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.admin.ProjectAdminApi#getProjectExt(org.dto.ProjectDto)
+     */
+    @Override
+    public List<ProjectClientDto> getProjectExt(ProjectClientDto criteria) throws ProjectAdminApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Project/Client criteria is required");
+        }
+
+        List<ProjectClientDto> results;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = dao.fetchProjectClient(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (ProjecttrackerDaoException e) {
+            buf.append("Database error occurred retrieving project/client(s) by selection criteria: ");
+            buf.append(criteria.toString());
+            this.msg = buf.toString();
+            logger.error(this.msg);
+            throw new ProjectAdminApiException(e);
         }
         return results;
     }

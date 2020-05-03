@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.dto.ClientDto;
 import org.dto.EventDto;
+import org.dto.ProjectClientDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -45,6 +46,18 @@ public interface ProjectAdminApi extends TransactionApi {
      * @throws ProjectAdminApiException
      */
     List<ProjectDto> getProject(ProjectDto criteria) throws ProjectAdminApiException;
+
+    /**
+     * Find list of project/client data based on selection criteria provided.
+     * 
+     * @param criteria
+     *            an instance of {@link ProjectClientDto} representing selection
+     *            criteria.
+     * @return A List of {@link ProjectClientDto} objects or null if nothing is
+     *         found.
+     * @throws ProjectAdminApiException
+     */
+    List<ProjectClientDto> getProjectExt(ProjectClientDto criteria) throws ProjectAdminApiException;
 
     /**
      * Find list of tasks based on selection criteria provided.
