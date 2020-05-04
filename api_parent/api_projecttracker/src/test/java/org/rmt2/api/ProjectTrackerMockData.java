@@ -12,6 +12,7 @@ import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
+import org.dao.mapping.orm.rmt2.VwProjectClient;
 import org.junit.After;
 import org.junit.Before;
 
@@ -30,6 +31,7 @@ public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
     protected List<ProjClient> mockClientFetchSingle;
     protected List<ProjProject> mockProjectFetchSingle;
     protected List<ProjProject> mockProjectFetchMultiple;
+    protected List<VwProjectClient> mockVwProjectClient;
     protected List<ProjEmployee> mockEmployeeFetchMultiple;
     protected List<ProjEmployee> mockEmployeeFetchSingle;
     protected List<ProjEmployee> mockManagerFetchSingle;
@@ -70,6 +72,7 @@ public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
         this.mockProjEventFetchSingle = this.createMockSingleEvent();
         this.mockProjTaskFetchMultiple = this.createMockMultipleTask();
         this.mockProjTaskFetchSingle = this.createMockSingleTask();
+        this.mockVwProjectClient = this.createMockVwProjectClient();
         return;
     }
 
@@ -152,6 +155,30 @@ public class ProjectTrackerMockData extends BaseProjectTrackerDaoTest {
         return list;
     }
     
+    public static final List<VwProjectClient> createMockVwProjectClient() {
+        List<VwProjectClient> list = new ArrayList<>();
+        VwProjectClient o = ProjectTrackerMockDataFactory.createMockOrmVwProjectClient(
+                2220, 1110, "Project 2220", "2018-01-01", "2018-02-01", "Client 1110", 1440);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwProjectClient(2221, 1110,
+                "Project 2221", "2018-02-01", "2018-03-01", "Client 1110", 1440);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwProjectClient(2222, 1110,
+                "Project 2222", "2018-03-01", "2018-04-01", "Client 1110", 1440);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwProjectClient(2223, 1110,
+                "Project 2223", "2018-04-01", "2018-05-01", "Client 1110", 1440);
+        list.add(o);
+
+        o = ProjectTrackerMockDataFactory.createMockOrmVwProjectClient(2224, 1110,
+                "Project 2224", "2018-05-01", "2018-06-01", "Client 1110", 1440);
+        list.add(o);
+        return list;
+    }
+
     private List<ProjEmployeeTitle> createMockSingleEmployeeTitle() {
         List<ProjEmployeeTitle> list = new ArrayList<ProjEmployeeTitle>();
         ProjEmployeeTitle o = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeTitle(101, "Employee Title 1");

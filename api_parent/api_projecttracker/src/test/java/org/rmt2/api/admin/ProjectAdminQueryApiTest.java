@@ -10,10 +10,12 @@ import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEvent;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
+import org.dao.mapping.orm.rmt2.VwProjectClient;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
+import org.dto.ProjectClientDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -324,6 +326,85 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof InvalidDataException);
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testFetch_ProjectClient_All_Success() {
+        // Stub all projects fetch.
+        VwProjectClient mockCriteria = new VwProjectClient();
+        List<VwProjectClient> mockProjectClientData = ProjectTrackerMockData.createMockVwProjectClient();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(mockProjectClientData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all VwProjectClient case setup failed");
+        }
+
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
+        ProjectClientDto criteria = ProjectObjectFactory.createProjectClientDtoInstance(null);
+        List<ProjectClientDto> results = null;
+        try {
+            results = api.getProjectExt(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            ProjectClientDto obj = results.get(ndx);
+            Assert.assertEquals(obj.getProjId(), (2220 + ndx));
+            Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
+            Assert.assertEquals(obj.getProjectDescription(), ("Project 222" + ndx));
+            Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-0" + (ndx + 1) + "-01"));
+            Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-0" + (ndx + 2) + "-01"));
+            Assert.assertEquals(obj.getClientName(), "Client 1110");
+            Assert.assertEquals(obj.getBusinessId(), 1440);
+
+        }
+    }
+
+    @Test
+    public void testFetch_ProjectClient_NotFound() {
+        // Stub all projects fetch.
+        VwProjectClient mockCriteria = new VwProjectClient();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all VwProjectClient case setup failed");
+        }
+
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
+        ProjectClientDto criteria = ProjectObjectFactory.createProjectClientDtoInstance(null);
+        List<ProjectClientDto> results = null;
+        try {
+            results = api.getProjectExt(criteria);
+        } catch (ProjectAdminApiException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNull(results);
+    }
+
+    @Test
+    public void testFetch_ProjectClient_DB_Error() {
+        // Stub single project fetch.
+        VwProjectClient mockCriteria = new VwProjectClient();
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch all projects case setup failed");
+        }
+
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
+        ProjectClientDto criteria = ProjectObjectFactory.createProjectClientDtoInstance(null);
+        try {
+            api.getProjectExt(criteria);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (ProjectAdminApiException e) {
+            Assert.assertTrue(e instanceof ProjectAdminApiException);
             e.printStackTrace();
         }
     }
