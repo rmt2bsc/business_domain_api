@@ -23,8 +23,8 @@ import org.dto.EmployeeDto;
 import org.dto.EmployeeTitleDto;
 import org.dto.EmployeeTypeDto;
 import org.dto.EventDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -107,10 +107,10 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
     /*
      * (non-Javadoc)
      * 
-     * @see org.dao.ProjectAdminDao#fetchProject(org.dto.ProjectDto)
+     * @see org.dao.ProjectAdminDao#fetchProject(org.dto.Project2Dto)
      */
     @Override
-    public List<ProjectDto> fetchProject(ProjectDto criteria) throws ProjectAdminDaoException {
+    public List<Project2Dto> fetchProject(Project2Dto criteria) throws ProjectAdminDaoException {
         ProjProject obj = ProjectAdminDaoFactory.createCriteria(criteria);
         obj.addOrderBy(ProjProject.PROP_DESCRIPTION, ProjProject.ORDERBY_ASCENDING);
         obj.addOrderBy(ProjProject.PROP_PROJID, ProjProject.ORDERBY_ASCENDING);
@@ -125,9 +125,9 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
             throw new ProjectAdminDaoException(e);
         }
 
-        List<ProjectDto> list = new ArrayList<ProjectDto>();
+        List<Project2Dto> list = new ArrayList<Project2Dto>();
         for (ProjProject item : results) {
-            ProjectDto dto = ProjectObjectFactory.createProjectDtoInstance(item);
+            Project2Dto dto = ProjectObjectFactory.createProjectDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -473,10 +473,10 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
     /*
      * (non-Javadoc)
      * 
-     * @see org.dao.ProjectAdminDao#maintainProject(org.dto.ProjectDto)
+     * @see org.dao.ProjectAdminDao#maintainProject(org.dto.Project2Dto)
      */
     @Override
-    public int maintainProject(ProjectDto obj) throws ProjectAdminDaoException {
+    public int maintainProject(Project2Dto obj) throws ProjectAdminDaoException {
         if (obj == null) {
             throw new ProjectAdminDaoException("Project DTO cannot be null during add/update operation");
         }
@@ -529,6 +529,12 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
      *             when a validation or database access error occurs.
      */
     private int updateProject(ProjProject proj) throws ProjectAdminDaoException {
+        Project2Dto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        criteria.setProjId(proj.getProjId());
+        List<Project2Dto> projects = this.fetchProject(criteria);
+        if (projects != null && projects.size() == 1) {
+            proj.setDateCreated(projects.get(0).getDateCreated());
+        }
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             proj.setDateUpdated(ut.getDateCreated());
@@ -929,10 +935,10 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
     /*
      * (non-Javadoc)
      * 
-     * @see org.dao.ProjectAdminDao#deleteProject(org.dto.ProjectDto)
+     * @see org.dao.ProjectAdminDao#deleteProject(org.dto.Project2Dto)
      */
     @Override
-    public int deleteProject(ProjectDto criteria) throws ProjectAdminDaoException {
+    public int deleteProject(Project2Dto criteria) throws ProjectAdminDaoException {
         ProjProject obj = ProjectAdminDaoFactory.createCriteria(criteria);
         return this.deleteObject(obj);
     }

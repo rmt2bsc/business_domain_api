@@ -6,7 +6,7 @@ import java.util.List;
 import org.dto.ClientDto;
 import org.dto.EventDto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
@@ -40,12 +40,12 @@ public interface ProjectAdminApi extends TransactionApi {
      * Find list of projects based on selection criteria provided.
      * 
      * @param criteria
-     *            an instance of {@link ProjectDto} representing selection
+     *            an instance of {@link Project2Dto} representing selection
      *            criteria.
-     * @return A List of {@link ProjectDto} objects or null if nothing is found.
+     * @return A List of {@link Project2Dto} objects or null if nothing is found.
      * @throws ProjectAdminApiException
      */
-    List<ProjectDto> getProject(ProjectDto criteria) throws ProjectAdminApiException;
+    List<Project2Dto> getProject(Project2Dto criteria) throws ProjectAdminApiException;
 
     /**
      * Find list of project/client data based on selection criteria provided.
@@ -122,12 +122,12 @@ public interface ProjectAdminApi extends TransactionApi {
      * Creates new or updates an existing project.
      * 
      * @param project
-     *            An instance of {@link ProjectDto}
+     *            An instance of {@link Project2Dto}
      * @return The id of the new project created or the total number of existing
      *         projects modified.
      * @throws ProjectApiException
      */
-    int updateProject(ProjectDto project) throws ProjectAdminApiException;
+    int updateProject(Project2Dto project) throws ProjectAdminApiException;
 
     /**
      * Creates new or updates an existing project task
@@ -155,12 +155,12 @@ public interface ProjectAdminApi extends TransactionApi {
      * Deletes one or more projects from a persistent data source based on criteria selected.
      * 
      * @param project
-     *            an instance of {@link ProjectDto} representing selection
+     *            an instance of {@link Project2Dto} representing selection
      *            criteria.
      * @return the number of instances deleted
      * @throws ProjectApiException
      */
-    int deleteProject(ProjectDto project) throws ProjectAdminApiException;
+    int deleteProject(Project2Dto project) throws ProjectAdminApiException;
     
     /**
      * Deletes one or more tasks from a persistent data source based on criteria

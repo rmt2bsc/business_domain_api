@@ -16,7 +16,7 @@ import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
@@ -216,8 +216,8 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
 
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
-        List<ProjectDto> results = null;
+        Project2Dto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        List<Project2Dto> results = null;
         try {
             results = api.getProject(criteria);
         } catch (ProjectAdminApiException e) {
@@ -226,7 +226,7 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
-            ProjectDto obj = results.get(ndx);
+            Project2Dto obj = results.get(ndx);
             Assert.assertEquals(obj.getProjId(), (2220 + ndx));
             Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
             Assert.assertEquals(obj.getProjectDescription(), ("Project 222" + ndx));
@@ -249,9 +249,9 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
 
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        Project2Dto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
         criteria.setProjId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
-        List<ProjectDto> results = null;
+        List<Project2Dto> results = null;
         try {
             results = api.getProject(criteria);
         } catch (ProjectAdminApiException e) {
@@ -259,7 +259,7 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
         }
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
-        ProjectDto obj = results.get(0);
+        Project2Dto obj = results.get(0);
         Assert.assertEquals(obj.getProjId(), 2220);
         Assert.assertEquals(obj.getClientId(), ProjectTrackerMockDataFactory.TEST_CLIENT_ID);
         Assert.assertEquals(obj.getProjectDescription(), "Project 2220");
@@ -281,9 +281,9 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
 
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        Project2Dto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
         criteria.setProjId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
-        List<ProjectDto> results = null;
+        List<Project2Dto> results = null;
         try {
             results = api.getProject(criteria);
         } catch (ProjectAdminApiException e) {
@@ -306,7 +306,7 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
 
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
+        Project2Dto criteria = ProjectObjectFactory.createProjectDtoInstance(null);
         criteria.setProjId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
         try {
             api.getProject(criteria);

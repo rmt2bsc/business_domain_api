@@ -8,7 +8,7 @@ import com.api.foundation.TransactionDto;
  * @author Roy Terrell
  * 
  */
-public interface ProjectDto extends TransactionDto {
+public interface Project2Dto extends TransactionDto {
     /**
      * Sets the value of member variable projId
      */

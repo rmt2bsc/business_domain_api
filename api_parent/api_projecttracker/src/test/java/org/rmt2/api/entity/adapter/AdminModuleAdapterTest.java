@@ -4,7 +4,7 @@ import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dto.ClientDto;
-import org.dto.ProjectDto;
+import org.dto.Project2Dto;
 import org.dto.TaskDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.junit.After;
@@ -83,7 +83,7 @@ public class AdminModuleAdapterTest {
     public void testOrmProjProject() {
         ProjProject o1 = ProjectTrackerMockDataFactory.createMockOrmProjProject(1000, 2000, 
                 "ProjectDescription", "2018-01-01", "2018-02-02");
-        ProjectDto dto = ProjectObjectFactory.createProjectDtoInstance(o1);
+        Project2Dto dto = ProjectObjectFactory.createProjectDtoInstance(o1);
         
         Assert.assertEquals(1000, dto.getProjId());
         Assert.assertEquals(2000, dto.getClientId());

@@ -13,7 +13,7 @@ import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -43,14 +43,14 @@ public class ProjectObjectFactory extends RMT2Base {
     }
 
     /**
-     * Create an instance of <i>ProjectDto</i>.
+     * Create an instance of <i>Project2Dto</i>.
      * 
      * @param ormBean
      *            an instance of {@link ProjProject}
      * 
-     * @return an instance of {@link ProjectDto}.
+     * @return an instance of {@link Project2Dto}.
      */
-    public static final ProjectDto createProjectDtoInstance(ProjProject ormBean) {
+    public static final Project2Dto createProjectDtoInstance(ProjProject ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 

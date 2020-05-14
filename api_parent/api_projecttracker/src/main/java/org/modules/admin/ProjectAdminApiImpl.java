@@ -13,7 +13,7 @@ import org.dao.admin.ProjectAdminDaoFactory;
 import org.dto.ClientDto;
 import org.dto.EventDto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
@@ -138,17 +138,17 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.admin.ProjectAdminApi#getProject(org.dto.ProjectDto)
+     * @see org.modules.admin.ProjectAdminApi#getProject(org.dto.Project2Dto)
      */
     @Override
-    public List<ProjectDto> getProject(ProjectDto criteria) throws ProjectAdminApiException {
+    public List<Project2Dto> getProject(Project2Dto criteria) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(criteria);
         } catch (VerifyException e) {
             throw new InvalidDataException("Project criteria is required");
         }
 
-        List<ProjectDto> results;
+        List<Project2Dto> results;
         StringBuilder buf = new StringBuilder();
         try {
             results = dao.fetchProject(criteria);
@@ -167,7 +167,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.admin.ProjectAdminApi#getProjectExt(org.dto.ProjectDto)
+     * @see org.modules.admin.ProjectAdminApi#getProjectExt(org.dto.Project2Dto)
      */
     @Override
     public List<ProjectClientDto> getProjectExt(ProjectClientDto criteria) throws ProjectAdminApiException {
@@ -451,10 +451,10 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
     /*
      * (non-Javadoc)
      * 
-     * @see org.modules.admin.ProjectApi#updateProject(org.dto.ProjectDto)
+     * @see org.modules.admin.ProjectApi#updateProject(org.dto.Project2Dto)
      */
     @Override
-    public int updateProject(ProjectDto project) throws ProjectAdminApiException {
+    public int updateProject(Project2Dto project) throws ProjectAdminApiException {
         // Validate project object
         try {
             this.validateProject(project);    
@@ -482,7 +482,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
      *             <i>proj</i> is null or no data values are provided for
      *             <i>proj</i>'s properties, description and/or effective date.
      */
-    protected void validateProject(ProjectDto proj) throws InvalidProjectException {
+    protected void validateProject(Project2Dto proj) throws InvalidProjectException {
         try {
             Verifier.verifyNotNull(proj);
         }
@@ -582,7 +582,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
     }
 
     @Override
-    public int deleteProject(ProjectDto project) throws ProjectAdminApiException {
+    public int deleteProject(Project2Dto project) throws ProjectAdminApiException {
         try {
             Verifier.verifyNotNull(project);
         } catch (VerifyException e) {
