@@ -802,7 +802,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
             Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
-            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+            Assert.assertEquals(obj.getTaskBillable().intValue(), (ndx <= 3 ? 1 : 0));
         }
     }
   
@@ -909,7 +909,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
             Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
-            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+            Assert.assertEquals(obj.getTaskBillable().intValue(), (ndx <= 3 ? 1 : 0));
         }
     }
     
@@ -947,7 +947,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
         Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
         Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[0]);
-        Assert.assertEquals(obj.getTaskBillable(), 1);
+        Assert.assertEquals(obj.getTaskBillable().intValue(), 1);
     }
     
     @Test
@@ -983,7 +983,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
             Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
-            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+            Assert.assertEquals(obj.getTaskBillable().intValue(), (ndx <= 3 ? 1 : 0));
         }
     }
     

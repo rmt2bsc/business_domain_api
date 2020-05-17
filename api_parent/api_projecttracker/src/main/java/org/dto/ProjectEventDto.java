@@ -139,5 +139,5 @@ public interface ProjectEventDto extends TransactionDto {
     /**
      * Gets the value of member variable billable
      */
-    int getTaskBillable();
+    Integer getTaskBillable();
 }

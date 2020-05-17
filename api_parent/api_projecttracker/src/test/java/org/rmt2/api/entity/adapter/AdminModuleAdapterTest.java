@@ -118,7 +118,7 @@ public class AdminModuleAdapterTest {
         
         Assert.assertEquals(1000, dto.getTaskId());
         Assert.assertEquals("TaskDescription", dto.getTaskDescription());
-        Assert.assertEquals(1, dto.getTaskBillable());
+        Assert.assertEquals(1, dto.getTaskBillable().intValue());
         
         try {
             dto = ProjectObjectFactory.createTaskDtoInstance(null);
@@ -128,7 +128,7 @@ public class AdminModuleAdapterTest {
             
             Assert.assertEquals(1000, dto.getTaskId());
             Assert.assertEquals("TaskDescription", dto.getTaskDescription());
-            Assert.assertEquals(1, dto.getTaskBillable());
+            Assert.assertEquals(1, dto.getTaskBillable().intValue());
         }
         catch (Exception e) {
             e.printStackTrace();

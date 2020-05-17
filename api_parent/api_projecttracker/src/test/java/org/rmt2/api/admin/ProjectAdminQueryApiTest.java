@@ -15,8 +15,8 @@ import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
-import org.dto.ProjectClientDto;
 import org.dto.Project2Dto;
+import org.dto.ProjectClientDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
@@ -464,7 +464,7 @@ public class ProjectAdminQueryApiTest extends ProjectTrackerMockData {
         Assert.assertEquals(1, results.size());
         TaskDto obj = results.get(0);
         Assert.assertEquals(obj.getTaskId(), ProjectTrackerMockDataFactory.TEST_TASK_ID);
-        Assert.assertEquals(obj.getTaskBillable(), 1);
+        Assert.assertEquals(obj.getTaskBillable().intValue(), 1);
         Assert.assertEquals(obj.getTaskDescription(), "Design and Analysis");
     }
     

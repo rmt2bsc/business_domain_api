@@ -14,8 +14,8 @@ import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
-import org.dto.ProjectClientDto;
 import org.dto.Project2Dto;
+import org.dto.ProjectClientDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -347,15 +347,15 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      * @see org.dto.TaskDto#getTaskBillable()
      */
     @Override
-    public int getTaskBillable() {
+    public Integer getTaskBillable() {
         if (this.pt != null) {
-            return this.pt.getBillable();
+            return Integer.valueOf(this.pt.getBillable());
         }
         if (this.vtpt != null) {
-            return this.vtpt.getBillable();
+            return Integer.valueOf(this.vtpt.getBillable());
         }
         if (this.vtel != null) {
-            return this.vtel.getBillable();
+            return Integer.valueOf(this.vtel.getBillable());
         }
         return 0;
     }

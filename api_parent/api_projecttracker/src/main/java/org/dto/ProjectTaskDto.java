@@ -110,7 +110,7 @@ public interface ProjectTaskDto extends TransactionDto {
     /**
      * Gets the value of member variable billable
      */
-    int getTaskBillable();
+    Integer getTaskBillable();
 
     /**
      * Sets the delete indicator
