@@ -818,6 +818,12 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
      *             if a general database error occurs.
      */
     private int updateTask(ProjTask task) throws ProjectAdminDaoException {
+        TaskDto criteria = ProjectObjectFactory.createTaskDtoInstance(null);
+        criteria.setTaskId(task.getTaskId());
+        List<TaskDto> origTask = this.fetchTask(criteria);
+        if (origTask != null && origTask.size() == 1) {
+            task.setDateCreated(origTask.get(0).getDateCreated());
+        }
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             task.setDateUpdated(ut.getDateCreated());
