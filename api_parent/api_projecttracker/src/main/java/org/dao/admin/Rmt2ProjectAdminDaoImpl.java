@@ -74,6 +74,29 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
         super(client);
     }
 
+    /**
+     * 
+     * @param clientId
+     * @return
+     * @throws ProjectAdminDaoException
+     */
+    private ClientDto fetchClient(int clientId) throws ProjectAdminDaoException {
+        ProjClient obj = new ProjClient();
+        obj.addCriteria(ProjClient.PROP_CLIENTID, clientId);
+
+        ProjClient results = null;
+        try {
+            results = (ProjClient) this.client.retrieveObject(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new ProjectAdminDaoException(e);
+        }
+        ClientDto dto = ProjectObjectFactory.createClientDtoInstance(results);
+        return dto;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -433,9 +456,10 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
             throw new EmployeeDaoException("Client DTO cannot be null during add/update operation");
         }
         ProjClient client = ProjectAdminDaoFactory.createOrm(obj);
+        Object fetchResult = this.fetchClient(client.getClientId());
         int rc = 0;
         try {
-            Verifier.verifyPositive(client.getClientId());
+            Verifier.verifyNotNull(fetchResult);
             rc = this.updateClient(client);
         }
         catch (VerifyException e) {
@@ -450,7 +474,7 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
             client.setDateCreated(ut.getDateCreated());
             client.setDateUpdated(ut.getDateCreated());
             client.setUserId(ut.getLoginId());
-            int rc = this.client.insertRow(client, true);
+            int rc = this.client.insertRow(client, false);
             return rc;
         } catch (Exception e) {
             throw new ProjectAdminDaoException("Client database add operation failed", e);
@@ -458,6 +482,11 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
     }
 
     private int updateClient(ProjClient client) throws ProjectAdminDaoException {
+        ClientDto origClient = this.fetchClient(client.getClientId());
+        if (origClient != null) {
+            client.setDateCreated(origClient.getDateCreated());
+        }
+
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             client.setDateUpdated(ut.getDateCreated());

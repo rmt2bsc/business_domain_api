@@ -12,12 +12,11 @@ import org.dao.admin.ProjectAdminDaoException;
 import org.dao.admin.ProjectAdminDaoFactory;
 import org.dto.ClientDto;
 import org.dto.EventDto;
-import org.dto.ProjectClientDto;
 import org.dto.Project2Dto;
+import org.dto.ProjectClientDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
-import org.dto.adapter.orm.ProjectObjectFactory;
 import org.modules.ProjectTrackerApiConst;
 import org.rmt2.constants.ApiHeaderNames;
 import org.rmt2.constants.ApiTransactionCodes;
@@ -352,40 +351,13 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
         if (client.getClientId() == 0) {
             return;
         }
-
-        // When updating and existing client, make API call to determine
-        // client's existence. In order to setup a project, the client must
-        // already exists in the project tracker system. Otherwise, produce an
-        // error indicating tha project/client association is incorrect.
-        List<ClientDto> results;
-        try {
-            // Check if client exists locally
-            ClientDto criteria = ProjectObjectFactory.createClientDtoInstance(null);
-            criteria.setClientId(client.getClientId());
-            results = this.getClient(criteria);
-        } catch (ProjectAdminApiException e) {
-            this.msg = "Error fetching client: " + client.getClientId();
-            throw new ProjectAdminApiException(this.msg, e);
-        }
-        if (results == null) {
-            this.msg = "Project is assoicated with a client id that does not have a profile in the Project Tracker system.  Client Id is "
-                    + client.getClientId();
-            throw new NotFoundException(this.msg);
-        }
         return;
     }
 
     @Override
     public int updateClient(ClientDto client) throws ProjectAdminApiException {
+        int rc = this.updateClientWithoutNotification(client);
         try {
-            this.validateClient(client);  
-        }
-        catch (Exception e) {
-            throw new ProjectAdminApiException("Client validation error occurred", e);
-        }
-        try {
-            int rc = this.dao.maintainClient(client);
-            
             // Logic to call web service that will send client updates to
             // the AddressBook application. This is in case that changes occurred
             // for client name, contact firstname, contact lastname, contact email,
@@ -448,6 +420,21 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
         }
     }
     
+    @Override
+    public int updateClientWithoutNotification(ClientDto client) throws ProjectAdminApiException {
+        try {
+            this.validateClient(client);
+        } catch (Exception e) {
+            throw new ProjectAdminApiException("Client validation error occurred", e);
+        }
+        try {
+            int rc = this.dao.maintainClient(client);
+            return rc;
+        } catch (ProjectAdminDaoException e) {
+            throw new ProjectAdminApiException("Unable to update Client data", e);
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 

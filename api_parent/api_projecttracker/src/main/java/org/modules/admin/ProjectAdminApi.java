@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.dto.ClientDto;
 import org.dto.EventDto;
-import org.dto.ProjectClientDto;
 import org.dto.Project2Dto;
+import org.dto.ProjectClientDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
@@ -118,6 +118,18 @@ public interface ProjectAdminApi extends TransactionApi {
      */
     int updateClient(ClientDto client) throws ProjectAdminApiException;
     
+    /**
+     * Creates new or updates an existing client without sending notification to
+     * other systems
+     * 
+     * @param client
+     *            An instance of {@link ClientDto}
+     * @return The id of the new client created or the total number of existing
+     *         clients modified.
+     * @throws ProjectApiException
+     */
+    int updateClientWithoutNotification(ClientDto client) throws ProjectAdminApiException;
+
     /**
      * Creates new or updates an existing project.
      * 
