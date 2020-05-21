@@ -37,6 +37,8 @@ public class VwEmployeeExt extends OrmBean {
   public static final String PROP_TYPEID = "TypeId";
 /** The property name constant equivalent to property, ManagerId, of respective DataSource view. */
   public static final String PROP_MANAGERID = "ManagerId";
+/** The property name constant equivalent to property, PersonId, of respective DataSource view. */
+  public static final String PROP_PERSONID = "PersonId";
 /** The property name constant equivalent to property, Firstname, of respective DataSource view. */
   public static final String PROP_FIRSTNAME = "Firstname";
 /** The property name constant equivalent to property, Lastname, of respective DataSource view. */
@@ -76,6 +78,8 @@ public class VwEmployeeExt extends OrmBean {
   private int typeId;
 /** The javabean property equivalent of database column vw_employee_ext.manager_id */
   private int managerId;
+/** The javabean property equivalent of database column vw_employee_ext.person_id */
+  private int personId;
 /** The javabean property equivalent of database column vw_employee_ext.firstname */
   private String firstname;
 /** The javabean property equivalent of database column vw_employee_ext.lastname */
@@ -202,6 +206,18 @@ public class VwEmployeeExt extends OrmBean {
  */
   public int getManagerId() {
     return this.managerId;
+  }
+/**
+ * Sets the value of member variable personId
+ */
+  public void setPersonId(int value) {
+    this.personId = value;
+  }
+/**
+ * Gets the value of member variable personId
+ */
+  public int getPersonId() {
+    return this.personId;
   }
 /**
  * Sets the value of member variable firstname
@@ -360,6 +376,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.managerId, other.managerId)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.personId, other.personId)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.firstname, other.firstname)) {
       return false;
    }
@@ -403,6 +422,7 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.titleId),
                HashCodeAssistant.hashObject(this.typeId),
                HashCodeAssistant.hashObject(this.managerId),
+               HashCodeAssistant.hashObject(this.personId),
                HashCodeAssistant.hashObject(this.firstname),
                HashCodeAssistant.hashObject(this.lastname),
                HashCodeAssistant.hashObject(this.shortname),
@@ -425,6 +445,7 @@ public String toString() {
           ", titleId=" + titleId + 
           ", typeId=" + typeId + 
           ", managerId=" + managerId + 
+          ", personId=" + personId + 
           ", firstname=" + firstname + 
           ", lastname=" + lastname + 
           ", shortname=" + shortname + 

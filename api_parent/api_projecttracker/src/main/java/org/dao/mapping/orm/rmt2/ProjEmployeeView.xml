@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataSource Name="ProjEmployeeView">
-   <Sql From="proj_employee" GroupBy="" Having="" OrderBy="" Select="emp_id, &#xA;&#x9;&#x9;emp_type_id, &#xA;&#x9;&#x9;manager_id, &#xA;&#x9;&#x9;emp_title_id, &#xA;&#x9;&#x9;login_id, &#xA;&#x9;&#x9;start_date, &#xA;&#x9;&#x9;termination_date, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;firstname, &#xA;&#x9;&#x9;lastname, &#xA;&#x9;&#x9;ssn, &#xA;&#x9;&#x9;email, &#xA;&#x9;&#x9;login_name, &#xA;&#x9;&#x9;company_name, &#xA;&#x9;&#x9;is_manager" Where="" />
+   <Sql From="proj_employee" GroupBy="" Having="" OrderBy="" Select="emp_id, &#xA;&#x9;&#x9;emp_type_id, &#xA;&#x9;&#x9;manager_id, &#xA;&#x9;&#x9;emp_title_id, &#xA;&#x9;&#x9;login_id, &#xA;&#x9;&#x9;start_date, &#xA;&#x9;&#x9;termination_date, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;firstname, &#xA;&#x9;&#x9;lastname, &#xA;&#x9;&#x9;ssn, &#xA;&#x9;&#x9;email, &#xA;&#x9;&#x9;login_name, &#xA;&#x9;&#x9;company_name, &#xA;&#x9;&#x9;is_manager, &#xA;&#x9;&#x9;person_id" Where="" />
    <TableUsage DBName="proj_employee" Name="ProjEmployeeTable" Updateable="true" />
    <ColAttr Computed="false" DBName="emp_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="EmpId" PrimaryKey="true" SqlType="integer" TableName="ProjEmployeeTable" Updateable="true" />
    <ColAttr Computed="false" DBName="emp_type_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="EmpTypeId" PrimaryKey="false" SqlType="integer" TableName="ProjEmployeeTable" Updateable="true" />
@@ -19,5 +19,6 @@
    <ColAttr Computed="false" DBName="login_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="LoginName" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeTable" Updateable="true" />
    <ColAttr Computed="false" DBName="company_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="CompanyName" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeTable" Updateable="true" />
    <ColAttr Computed="false" DBName="is_manager" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="IsManager" PrimaryKey="false" SqlType="integer" TableName="ProjEmployeeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="person_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="PersonId" PrimaryKey="false" SqlType="integer" TableName="ProjEmployeeTable" Updateable="true" />
 </DataSource>
 
