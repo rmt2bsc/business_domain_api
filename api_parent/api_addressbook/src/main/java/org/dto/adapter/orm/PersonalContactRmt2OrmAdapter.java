@@ -217,7 +217,10 @@ class PersonalContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Per
      */
     @Override
     public String getContactName() {
-        return this.per.getFirstname() + " " + this.per.getLastname();
+        if (this.per.getFirstname() != null && this.per.getLastname() != null) {
+            return this.per.getFirstname() + " " + this.per.getLastname();
+        }
+        return null;
     }
 
     /*

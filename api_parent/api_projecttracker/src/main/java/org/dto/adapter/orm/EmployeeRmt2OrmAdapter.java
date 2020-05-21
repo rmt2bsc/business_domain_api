@@ -559,4 +559,25 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
         return 0;
     }
 
+    @Override
+    public void setPersonId(int value) {
+        if (this.emp != null) {
+            this.emp.setPersonId(value);
+        }
+        if (this.empExt != null) {
+            this.empExt.setPersonId(value);
+        }
+    }
+
+    @Override
+    public int getPersonId() {
+        if (this.emp != null) {
+            return this.emp.getPersonId();
+        }
+        if (this.empExt != null) {
+            return this.empExt.getPersonId();
+        }
+        return 0;
+    }
+
 }

@@ -195,4 +195,18 @@ public interface EmployeeDto extends TransactionDto {
      * @return
      */
     int getProjectCount();
+
+    /**
+     * Set the person id
+     * 
+     * @param value
+     */
+    void setPersonId(int value);
+
+    /**
+     * Get Person id.
+     * 
+     * @return
+     */
+    int getPersonId();
 }
