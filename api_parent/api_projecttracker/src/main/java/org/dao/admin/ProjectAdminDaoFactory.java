@@ -804,6 +804,7 @@ public class ProjectAdminDaoFactory extends RMT2Base {
     public static final ProjEmployee createOrm(EmployeeDto dto) {
         ProjEmployee obj = new ProjEmployee();
         obj.setEmpId(dto.getEmployeeId());
+        obj.setPersonId(dto.getPersonId());
         obj.setEmpTitleId(dto.getEmployeeTitleId());
         obj.setEmpTypeId(dto.getEmployeeTypeId());
         obj.setManagerId(dto.getManagerId());
