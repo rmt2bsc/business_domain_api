@@ -386,8 +386,8 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         try {
             try {
                 Verifier.verifyPositive(employee.getEmployeeId());
-                EmployeeDto delta = this.applyDelta(employee);
-                rc = this.dao.maintainEmployee(delta);
+                // EmployeeDto delta = this.applyDelta(employee);
+                rc = this.dao.maintainEmployee(employee);
             }
             catch (VerifyException e) {
                 rc = this.dao.maintainEmployee(employee);
@@ -526,24 +526,6 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             }            
         }
         return;
-    }
-
-    private EmployeeDto applyDelta(EmployeeDto employee) throws EmployeeApiException {
-        EmployeeDto delta = this.getEmployee(employee.getEmployeeId());
-        if (delta == null) {
-            this.msg = "Employee API update failed for employee.  The employee does not exist by employee id: "
-                    + employee.getEmployeeId();
-            throw new InvalidEmployeeException(this.msg);
-        }
-        // Update employee object obtained from data store with changes.
-        delta.setManagerId(employee.getManagerId());
-        delta.setEmployeeTitleId(employee.getEmployeeTitleId());
-        delta.setEmployeeTypeId(employee.getEmployeeTypeId());
-        delta.setSsn(employee.getSsn());
-        delta.setStartDate(employee.getStartDate());
-        delta.setTerminationDate(employee.getTerminationDate());
-        delta.setEmployeeEmail(employee.getEmployeeEmail());
-        return delta;
     }
 
     private ProjectEmployeeDto applyDelta(ProjectEmployeeDto projEmployee) throws EmployeeApiException {

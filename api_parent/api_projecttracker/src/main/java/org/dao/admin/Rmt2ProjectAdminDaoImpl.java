@@ -156,6 +156,30 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
         return list;
     }
 
+    /**
+     * Retireve a single instance of employee
+     * 
+     * @param employeeId
+     * @return
+     * @throws EmployeeDaoException
+     */
+    protected EmployeeDto fetchEmployee(int employeeId) throws EmployeeDaoException {
+        ProjEmployee obj = new ProjEmployee();
+        obj.addCriteria(ProjEmployee.PROP_EMPID, employeeId);
+
+        ProjEmployee results = null;
+        try {
+            results = (ProjEmployee) this.client.retrieveObject(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new EmployeeDaoException(e);
+        }
+        EmployeeDto dto = EmployeeObjectFactory.createEmployeeDtoInstance(results);
+        return dto;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -636,9 +660,15 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
      *             employee title, or if a general database error occurs.
      */
     private int updateEmployee(ProjEmployee emp) throws EmployeeDaoException {
+        EmployeeDto origObj = this.fetchEmployee(emp.getEmpId());
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
-            emp.setDateCreated(ut.getDateCreated());
+            if (origObj != null) {
+                emp.setDateCreated(origObj.getDateCreated());
+            }
+            else {
+                emp.setDateCreated(ut.getDateCreated());
+            }
             emp.setDateUpdated(ut.getDateCreated());
             emp.setUserId(ut.getLoginId());
             if (emp.getManagerId() == 0) {

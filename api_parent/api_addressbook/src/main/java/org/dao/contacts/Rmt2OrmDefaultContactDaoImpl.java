@@ -1321,9 +1321,6 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         dest.setPhoneMain(src.getPhoneMain());
         dest.setPhonePager(src.getPhonePager());
         dest.setPhoneWork(src.getPhoneWork());
-        dest.setDateCreated(src.getDateCreated());
-        dest.setDateUpdated(src.getDateUpdated());
-        dest.setUserId(src.getUserId());
     }
 
     /**
