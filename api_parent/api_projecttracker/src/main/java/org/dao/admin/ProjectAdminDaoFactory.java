@@ -590,6 +590,14 @@ public class ProjectAdminDaoFactory extends RMT2Base {
                 obj.addCriteria(VwEmployeeProjects.PROP_PROJENDDATE,
                         criteria.getProjectEndDate());
             }
+            if (criteria.getHourlyRate() > 0) {
+                obj.addCriteria(VwEmployeeProjects.PROP_PAYRATE,
+                        criteria.getHourlyRate());
+            }
+            if (criteria.getHourlyOverRate() > 0) {
+                obj.addCriteria(VwEmployeeProjects.PROP_OTPAYRATE,
+                        criteria.getHourlyOverRate());
+            }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
             }
