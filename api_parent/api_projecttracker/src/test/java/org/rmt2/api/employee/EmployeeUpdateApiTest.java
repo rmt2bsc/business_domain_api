@@ -350,7 +350,16 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwEmployeeProjectsFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch single employee projects case setup failed");
+            Assert.fail("Fetch single VwEmployeeProjects case setup failed");
+        }
+
+        ProjEmployeeProject mockEmployeeProject = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeProject(55551, 4440,
+                2220, "2018-01-01", "2018-02-01", 80.00, 80.00, 15000.00);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(isA(ProjEmployeeProject.class))).thenReturn(mockEmployeeProject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single ProjEmployeeProject case setup failed");
         }
         
         try {

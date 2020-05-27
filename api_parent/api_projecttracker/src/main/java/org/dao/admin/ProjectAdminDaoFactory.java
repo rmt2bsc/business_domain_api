@@ -889,15 +889,10 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         obj.setProjId(dto.getProjId());
         obj.setEffectiveDate(dto.getProjEmpEffectiveDate());
         obj.setEndDate(dto.getProjEmpEndDate());
-        obj.setHourlyRate(dto.getClientBillRate());
-        obj.setHourlyOverRate(dto.getClientOtBillRate());
+        obj.setHourlyRate(dto.getHourlyRate());
+        obj.setHourlyOverRate(dto.getHourlyOverRate());
         obj.setFlatRate(dto.getFlatRate());
         obj.setComments(dto.getComments());
-        obj.setDateCreated(dto.getDateCreated());
-        obj.setDateUpdated(dto.getDateUpdated());
-        obj.setUserId(dto.getUpdateUserId());
-        obj.setIpCreated(dto.getIpCreated());
-        obj.setIpUpdated(dto.getIpUpdated());
         return obj;
     }
 

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.timesheet.TimesheetConst;
 import org.dao.timesheet.TimesheetDao;
 import org.dao.timesheet.TimesheetDaoException;
@@ -493,7 +494,8 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
             if (ndx == 0) {
                 try {
                     // Get employee bill rates for target project
-                    ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+                    VwEmployeeProjects vep = new VwEmployeeProjects();
+                    ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
                     criteria.setEmpId(hoursEvent.getEmpId());
                     criteria.setProjId(hoursEvent.getProjId());
                     List<ProjectEmployeeDto> peps = this.empApi.getProjectEmployee(criteria);

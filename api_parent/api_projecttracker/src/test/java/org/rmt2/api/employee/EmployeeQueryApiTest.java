@@ -99,7 +99,8 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
     @Test
     public void testValidation_Fetch_All_Clients_Null_Input_EmployeeId() {
         EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        VwEmployeeProjects vep = new VwEmployeeProjects();
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
         criteria.setEmpId(ProjectTrackerMockDataFactory.TEST_EMPLOYEE_ID);
         try {
             api.getClients(null);
@@ -113,7 +114,8 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
     @Test
     public void testValidation_Fetch_All_Clients_Negative_Input_EmployeeId() {
         EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        VwEmployeeProjects vep = new VwEmployeeProjects();
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
         criteria.setEmpId(-1000);
         try {
             api.getClients(null);
@@ -127,7 +129,8 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
     @Test
     public void testValidation_Fetch_All_Clients_Zero_Input_EmployeeId() {
         EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        VwEmployeeProjects vep = new VwEmployeeProjects();
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
         criteria.setEmpId(0);
         try {
             api.getClients(null);
@@ -612,7 +615,8 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
         }
         
         EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        VwEmployeeProjects vep = new VwEmployeeProjects();
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
         criteria.setBusinessId(ProjectTrackerMockDataFactory.TEST_BUSINESS_ID);
         List<ProjectEmployeeDto> results = null;
         try {
@@ -651,7 +655,8 @@ public class EmployeeQueryApiTest extends ProjectTrackerMockData {
         }
         
         EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        VwEmployeeProjects vep = new VwEmployeeProjects();
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
         criteria.setBusinessId(ProjectTrackerMockDataFactory.TEST_BUSINESS_ID);
         try {
             api.getProjectEmployee(criteria);

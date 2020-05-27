@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
+import org.dao.mapping.orm.rmt2.ProjEmployeeProject;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.ProjEvent;
@@ -279,6 +280,33 @@ public class ProjectTrackerMockDataFactory {
         return o;
     }
     
+    /**
+     * 
+     * @param empProjId
+     * @param projId
+     * @param empId
+     * @param projEmpEffectiveDate
+     * @param projEmpEndDate
+     * @param payRate
+     * @param otPayRate
+     * @param flatRate
+     * @return
+     */
+    public static final ProjEmployeeProject createMockOrmProjEmployeeProject(int empProjId, int projId, int empId,
+            String projEmpEffectiveDate, String projEmpEndDate, double payRate, double otPayRate, double flatRate) {
+        ProjEmployeeProject o = new ProjEmployeeProject();
+        o.setEmpProjId(empProjId);
+        o.setProjId(projId);
+        o.setEmpId(empId);
+        o.setEffectiveDate(RMT2Date.stringToDate(projEmpEffectiveDate));
+        o.setEndDate(RMT2Date.stringToDate(projEmpEndDate));
+        o.setHourlyRate(payRate);
+        o.setHourlyOverRate(otPayRate);
+        o.setFlatRate(flatRate);
+        o.setComments("Comments for Employee Project Id: " + empProjId);
+        return o;
+    }
+
     /**
      * 
      * @param timesheetId

@@ -414,6 +414,30 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
         return list;
     }
 
+    /**
+     * 
+     * @param empProjId
+     * @return
+     * @throws EmployeeDaoException
+     */
+    protected ProjectEmployeeDto fetchProjectEmployee(int empProjId) throws EmployeeDaoException {
+        ProjEmployeeProject obj = new ProjEmployeeProject();
+        obj.addCriteria(ProjEmployeeProject.PROP_EMPPROJID, empProjId);
+
+        ProjEmployeeProject results = null;
+        try {
+            results = (ProjEmployeeProject) this.client.retrieveObject(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new EmployeeDaoException(e);
+        }
+
+        ProjectEmployeeDto dto = ProjectObjectFactory.createEmployeeProjectDtoInstance(results);
+        return dto;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -952,8 +976,10 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
      *             a general database error occurs.
      */
     private int updateProjectEmployee(ProjEmployeeProject projEmp) throws EmployeeDaoException {
+        ProjectEmployeeDto dto = this.fetchProjectEmployee(projEmp.getEmpProjId());
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
+            projEmp.setDateCreated(dto.getDateCreated());
             projEmp.setDateUpdated(ut.getDateCreated());
             projEmp.setUserId(ut.getLoginId());
             projEmp.setIpUpdated(ut.getIpAddr());
