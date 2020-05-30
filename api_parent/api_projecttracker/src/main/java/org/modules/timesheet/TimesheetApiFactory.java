@@ -27,8 +27,8 @@ public class TimesheetApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link TimesheetApi}
      */
-    public TimesheetApi createApi() {
-        return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
+    public static final TimesheetApi createApi() {
+        return TimesheetApiFactory.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -39,7 +39,7 @@ public class TimesheetApiFactory extends RMT2Base {
      *            the application name
      * @return an instance of {@link TimesheetApi}
      */
-    public TimesheetApi createApi(String appName) {
+    public static final TimesheetApi createApi(String appName) {
         TimesheetApiImpl api = new TimesheetApiImpl(appName);
         return api;
     }
@@ -55,7 +55,7 @@ public class TimesheetApiFactory extends RMT2Base {
      * @return an instance of {@link TimesheetApi} or null when
      *         <i>connection</i> is null.
      */
-    public TimesheetApi createApi(DaoClient connection) {
+    public static final TimesheetApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }
