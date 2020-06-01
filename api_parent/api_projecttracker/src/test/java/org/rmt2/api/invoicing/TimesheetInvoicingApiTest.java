@@ -33,6 +33,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
+import org.rmt2.api.timesheet.TimesheetMockData;
 import org.rmt2.jaxb.AccountingTransactionRequest;
 import org.rmt2.jaxb.AccountingTransactionResponse;
 import org.rmt2.jaxb.ObjectFactory;
@@ -381,6 +382,17 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
             Assert.fail("Fetch single employee projects case setup failed");
         }
         
+        try {
+            TimesheetMockData.createMockSingleTimesheetList();
+            // For the sake of simplicity when calculating timesheet hours,
+            // using mock data from ancestor
+            when(this.mockPersistenceClient.retrieveObject(isA(Integer.class)))
+                    .thenReturn(this.mockVwEmployeeProjectsFetchSingle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single employee projects case setup failed");
+        }
+
         // Stub Approved Timehseet Current Status Fetch
         ProjTimesheetHist mockCriteria = new ProjTimesheetHist();
         mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);

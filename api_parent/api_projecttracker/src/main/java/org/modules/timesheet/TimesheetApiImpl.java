@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.dao.timesheet.TimesheetConst;
@@ -33,10 +34,10 @@ import org.modules.timesheet.invoice.InvoiceTimesheetApiException;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.SystemException;
-import com.api.config.AppPropertyPool;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.persistence.DaoClient;
+import com.api.util.RMT2File;
 import com.api.util.RMT2String;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
@@ -548,15 +549,16 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     private int getMaxDisplayValueDigits() throws InvoiceTimesheetApiException {
         int sheetIdSize = 0;
-        String temp = null;
+        String idSize = null;
         try {
-            temp = AppPropertyPool.getProperty("sheet_id_size");
-            sheetIdSize = Integer.parseInt(temp);
+            Properties prop = RMT2File.loadPropertiesFromClasspath(ProjectTrackerApiConst.LOCAL_CONFIG);
+            idSize = prop.getProperty("sheet_id_size");
+            sheetIdSize = Integer.parseInt(idSize);
             return sheetIdSize;
         } catch (NumberFormatException e) {
             StringBuffer buf = new StringBuffer();
             buf.append("An invalid value was found to be assoication with properties value, sheet_id_size.  Unable to convert ");
-            buf.append(temp);
+            buf.append(idSize);
             buf.append(" to a number.  Defaulting to 5");
             logger.info(buf);
             return 10;

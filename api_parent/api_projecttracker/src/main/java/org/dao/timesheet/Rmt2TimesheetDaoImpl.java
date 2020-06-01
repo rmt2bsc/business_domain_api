@@ -68,6 +68,28 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         super(client);
     }
 
+    /**
+     * 
+     * @param timesheetId
+     * @return
+     * @throws TimesheetDaoException
+     */
+    private TimesheetDto fetch(int timesheetId) throws TimesheetDaoException {
+        ProjTimesheet obj = new ProjTimesheet();
+        obj.addCriteria(ProjTimesheet.PROP_TIMESHEETID, timesheetId);
+        ProjTimesheet results = null;
+        try {
+            results = (ProjTimesheet) this.client.retrieveObject(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new TimesheetDaoException(e);
+        }
+        TimesheetDto dto = TimesheetObjectFactory.createTimesheetDtoInstance(results);
+        return dto;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -417,6 +439,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      *             a database access error.
      */
     private int updateTimesheet(ProjTimesheet ts) throws TimesheetDaoException {
+        TimesheetDto origTs = this.fetch(ts.getTimesheetId());
         int rc = 0;
         UserTimestamp ut = null;
         try {
@@ -428,6 +451,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
             else {
                 ts.removeNull(ProjTimesheet.PROP_PROJID);
             }
+            ts.setDateCreated(origTs.getDateCreated());
             ts.setDateUpdated(ut.getDateCreated());
             ts.setUserId(ut.getLoginId());
             ts.setIpUpdated(ut.getIpAddr());

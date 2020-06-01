@@ -604,14 +604,10 @@ public class TimesheetDaoFactory extends RMT2Base {
         obj.setBeginPeriod(ts.getBeginPeriod());
         obj.setEndPeriod(ts.getEndPeriod());
         obj.setComments(ts.getComments());
+        obj.setInvoiceRefNo(ts.getInvoiceRefNo());
         obj.setExtRef(ts.getExtRef());
         obj.setDocumentId(ts.getDocumentId());
         obj.setProjId(ts.getProjId());
-        obj.setDateCreated(ts.getDateCreated());
-        obj.setDateUpdated(ts.getDateUpdated());
-        obj.setUserId(ts.getUpdateUserId());
-        obj.setIpCreated(ts.getIpCreated());
-        obj.setIpUpdated(ts.getIpUpdated());
         return obj;
     }
 
