@@ -364,6 +364,31 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         return list;
     }
 
+    /**
+     * Retrieve a single instance of EventDto
+     * 
+     * @param eventId
+     *            event id
+     * @return instance of {@link EventDto}
+     * @throws TimesheetDaoException
+     */
+    protected EventDto fetchEvent(int eventId) throws TimesheetDaoException {
+        ProjEvent obj = new ProjEvent();
+        obj.addCriteria(ProjEvent.PROP_EVENTID, eventId);
+
+        ProjEvent results = null;
+        try {
+            results = (ProjEvent) this.client.retrieveObject(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new TimesheetDaoException(e);
+        }
+        EventDto dto = ProjectObjectFactory.createEventDtoInstance(results);
+        return dto;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -643,6 +668,12 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      *             a database access error.
      */
     private int updateEvent(ProjEvent evt) throws TimesheetDaoException {
+        EventDto origEvent = this.fetchEvent(evt.getEventId());
+        if (origEvent == null) {
+            this.msg = "Error updatinging timesheet - Project Event, " + evt.getEventId()
+                    + ", does not exist.  Update operation aborted.";
+            throw new TimesheetDaoException(this.msg);
+        }
         int rc = 0;
         UserTimestamp ut = null;
         try {
@@ -650,6 +681,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
             if (evt.getHours() <= 0) {
                 evt.setNull("hours");
             }
+            evt.setDateCreated(origEvent.getDateCreated());
             evt.setDateUpdated(ut.getDateCreated());
             evt.setUserId(ut.getLoginId());
             evt.addCriteria(ProjEvent.PROP_EVENTID, evt.getEventId());
