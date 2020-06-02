@@ -88,6 +88,17 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             e.printStackTrace();
             Assert.fail("Fetch single timesheet case setup failed");
         }
+
+        try {
+            // IS-43: Included mock due to adding method call,
+            // Rmt2TimesheetDaoImpl.fetchEvent(int), to
+            // Rmt2TimesheetDaoImpl.updateEvent(ProjEvent).
+            when(this.mockPersistenceClient.retrieveObject(isA(ProjEvent.class)))
+                    .thenReturn(TimesheetMockData.createMockEventDataSingle().get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single event case setup failed");
+        }
     }
 
     /**

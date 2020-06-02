@@ -327,6 +327,19 @@ public class TimesheetMockData extends ProjectTrackerMockData {
      * @param day
      * @return
      */
+    public static final List<ProjEvent> createMockEventDataSingle() {
+        List<ProjEvent> list = new ArrayList<ProjEvent>();
+        ProjEvent o = ProjectTrackerMockDataFactory.createMockOrmProjEvent(ProjectTrackerMockDataFactory.TEST_EVENT_ID, 1234,
+                "2018-01-01", 0);
+        list.add(o);
+        return list;
+    }
+
+    /**
+     * 
+     * @param day
+     * @return
+     */
     public static final List<ProjEvent> createMockMultiple_Day_Task_Events(int projectTaskId) {
         List<ProjEvent> list = new ArrayList<ProjEvent>();
         int eventId = ProjectTrackerMockDataFactory.TEST_EVENT_ID;
