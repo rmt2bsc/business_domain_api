@@ -68,8 +68,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
-        ResultSet.class, TimesheetApiFactory.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class, TimesheetApiFactory.class })
 public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     /**
@@ -78,6 +77,17 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+
+        try {
+            // IS-43: Included mock due to adding method call,
+            // Rmt2TimesheetDaoImpl.fetch(int), to
+            // Rmt2TimesheetDaoImpl.updateTimesheet(ProjTimesheet).
+            when(this.mockPersistenceClient.retrieveObject(isA(ProjTimesheet.class)))
+                    .thenReturn(this.mockProjTimesheetSingle.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
     }
 
     /**
