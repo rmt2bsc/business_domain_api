@@ -732,8 +732,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
 
         // Verify that project task exists
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi projApi = f.createApi(this.getSharedDao());
+        // IS-43: Changed logic to utilize the static approach when invoking
+        // createApi method.
+        ProjectAdminApi projApi = ProjectAdminApiFactory.createApi(this.getSharedDao());
         try {
             ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
             criteria.setProjectTaskId(projectTaskId);
@@ -747,7 +748,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         } catch (ProjectAdminApiException e) {
             throw new SystemException("A DAO error occurred validating project task entity existence", e);
         } finally {
-            f = null;
             projApi = null;
         }
 
@@ -1015,8 +1015,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         TimesheetTransmissionApi xmitApi = null;
         try {
             // Get employee profile
-            EmployeeApiFactory empFact = new EmployeeApiFactory();
-            EmployeeApi empApi = empFact.createApi(this.getSharedDao());
+            // IS-43: Changed logic to utilize the static approach when invoking
+            // createApi method.
+            EmployeeApi empApi = EmployeeApiFactory.createApi(this.getSharedDao());
             
             EmployeeDto empCriteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
             empCriteria.setEmployeeId(this.timeSheet.getEmpId());
@@ -1029,8 +1030,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             EmployeeDto manager = empApi.getEmployee(employee.getManagerId());
 
             // get client profile
-            ProjectAdminApiFactory projFact = new ProjectAdminApiFactory();
-            ProjectAdminApi projApi = projFact.createApi(this.getSharedDao());
+            // IS-43: Changed logic to utilize the static approach when invoking
+            // createApi method.
+            ProjectAdminApi projApi = ProjectAdminApiFactory.createApi(this.getSharedDao());
             ClientDto clientCriteria = ProjectObjectFactory.createClientDtoInstance(null);
             clientCriteria.setClientId(this.timeSheet.getClientId());
             List<ClientDto> clients = projApi.getClient(clientCriteria);
@@ -1229,8 +1231,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         // allow us to build the object graph.
         Map<ProjectTaskDto, List<EventDto>> timesheetGraph = new LinkedHashMap<ProjectTaskDto, List<EventDto>>();
 
-        ProjectAdminApiFactory projApiFact = new ProjectAdminApiFactory();
-        ProjectAdminApi api = projApiFact.createApi(this.getSharedDao());
+        // IS-43: Changed logic to utilize the static approach when invoking
+        // createApi method.
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.getSharedDao());
         try {
             for (ProjectTaskDto pt : ptList) {
                 try {
@@ -1257,7 +1260,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                 }
             }
         } finally {
-            projApiFact = null;
             api = null;
         }
 
@@ -1290,8 +1292,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         try {
             // Get employee profile
-            EmployeeApiFactory empFact = new EmployeeApiFactory();
-            EmployeeApi empApi = empFact.createApi(this.getSharedDao());
+            // IS-43: Changed logic to utilize the static approach when invoking
+            // createApi method.
+            EmployeeApi empApi = EmployeeApiFactory.createApi(this.getSharedDao());
             
             EmployeeDto empCriteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
             empCriteria.setEmployeeId(ts.getEmpId());
