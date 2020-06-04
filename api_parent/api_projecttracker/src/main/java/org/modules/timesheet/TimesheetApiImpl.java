@@ -1069,10 +1069,21 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         // Delete all project/tasks belonging to the timesheet
         this.deleteProjectTasks(timesheetId);
-        // Now delete the timesheet
-        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
-        criteria.setTimesheetId(timesheetId);
+
+        // Delete timesheet status history
         try {
+            TimesheetHistDto criteria = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
+            criteria.setTimesheetId(timesheetId);
+            this.dao.deleteTimesheetStatus(criteria);
+        } catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("DAO error occurred deleting timesheet status history by timesheet id: "
+                    + timesheetId, e);
+        }
+
+        // Now delete the timesheet
+        try {
+            TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
+            criteria.setTimesheetId(timesheetId);
             int rc = this.dao.deleteTimesheet(criteria);
             return rc;
         } catch (TimesheetDaoException e) {
@@ -1115,6 +1126,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         List<ProjectTaskDto> ptList = this.getProjectTaskByTimesheet(timesheetId);
         int count = 0;
+        if (ptList == null) {
+            return count;
+        }
         for (ProjectTaskDto item : ptList) {
             this.deleteProjectTask(item.getProjectTaskId());
             count++;

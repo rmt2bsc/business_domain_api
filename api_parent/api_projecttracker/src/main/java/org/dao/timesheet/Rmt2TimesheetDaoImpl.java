@@ -41,8 +41,7 @@ import com.api.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
-        TimesheetDao {
+class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements TimesheetDao {
 
     /**
      * Creates a Rmt2ProjectAdminDaoImpl object with its own persistent client.
@@ -716,8 +715,13 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * TimesheetStatusDto)
      */
     @Override
-    public int deleteTimesheetStatus(TimesheetStatusDto criteria) throws TimesheetDaoException {
-        return 0;
+    public int deleteTimesheetStatus(TimesheetHistDto criteria) throws TimesheetDaoException {
+        ProjTimesheetHist obj = TimesheetDaoFactory.createCriteria(criteria);
+        try {
+            return this.deleteObject(obj);
+        } catch (DatabaseException e) {
+            throw new TimesheetDaoException("Unable to delete timesheet status history", e);
+        }
     }
 
     /*

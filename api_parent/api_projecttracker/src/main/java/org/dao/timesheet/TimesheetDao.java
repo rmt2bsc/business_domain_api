@@ -282,13 +282,13 @@ public interface TimesheetDao extends DaoClient {
      * as a null value.
      * 
      * @param criteria
-     *            an instance of {@link TimesheetStatusDto} used as a filter to
+     *            an instance of {@link TimesheetHistDto} used as a filter to
      *            target a particular set of timesheet statuses to delete.
      * @return total number of timesheet statuses deleted.
      * @throws TimesheetDaoException
      *             general data access errors
      */
-    int deleteTimesheetStatus(TimesheetStatusDto criteria) throws TimesheetDaoException;
+    int deleteTimesheetStatus(TimesheetHistDto criteria) throws TimesheetDaoException;
 
     /**
      * Deletes one or more timesheet roject/tasks using selection criteria.
