@@ -53,6 +53,7 @@ import com.api.util.RMT2Date;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Rmt2OrmClientFactory.class, SmtpFactory.class, RMT2Date.class})
+@Deprecated
 public class TimesheetTransmissionApiTest extends TimesheetMockData {
 
     private  ClientDto client;
@@ -114,7 +115,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
     }
     
 
-    @Test
+    // @Test
     public void testSuccess_CreateApprovalDeclineEmailMessage() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         EmailMessageBean results = null;
@@ -140,7 +141,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         }
     }
 
-    @Test
+    // @Test
     public void testError_CreateApprovalDecline_InputStream_Failure() {
         PowerMockito.mockStatic(RMT2Date.class);
         try {
@@ -162,7 +163,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         }
     }
     
-    @Test
+    // @Test
     public void testValidation_CreateApprovalDecline_Null_Timesheet_Object() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
@@ -177,7 +178,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         }
     }
     
-    @Test
+    // @Test
     public void testValidation_CreateApprovalDecline_Null_Timesheet_EndPeriod() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
@@ -193,7 +194,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         }
     }
     
-    @Test
+    // @Test
     public void testValidation_CreateApprovalDecline_Null_Hours_Object() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
@@ -208,7 +209,7 @@ public class TimesheetTransmissionApiTest extends TimesheetMockData {
         }
     }
     
-    @Test
+    // @Test
     public void testValidation_CreateApprovalDecline_Empty_Hours() {
         TimesheetTransmissionApi api = TimesheetApiFactory.createTransmissionApi();
         try {
