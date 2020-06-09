@@ -32,6 +32,7 @@ import com.api.util.RMT2String;
  * @author Roy Terrell
  * 
  */
+@Deprecated
 class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implements TimesheetTransmissionApi {
 
     private static final Logger logger = Logger.getLogger(SmtpTimesheetTransmissionApiImpl.class);
@@ -81,6 +82,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      *             recipient via the SMTP protocol.
      */
     @Override
+    @Deprecated
     public Object send(EmailMessageBean email) throws TimesheetApiException, TimesheetTransmissionException {
 
         if (email == null) {
@@ -132,6 +134,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      *             <i>timesheet hours</i> structure is exists but is empty.
      */
     @Override
+    @Deprecated
     public EmailMessageBean createSubmitMessage(TimesheetDto timesheet, EmployeeDto employee, 
             EmployeeDto manager, ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours)
             throws TimesheetTransmissionException {
@@ -224,6 +227,7 @@ class SmtpTimesheetTransmissionApiImpl extends AbstractTransactionApiImpl implem
      *             Unable to get the contents of the HTML template file used to
      *             build project/task details.
      */
+    @Deprecated
     private String setupTimesheetEmailHours(Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetTransmissionException {
         String origHtmlContents = null;
         String htmlContents = null;
