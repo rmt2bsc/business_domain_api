@@ -1010,52 +1010,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         this.load(timesheetId);
         // Set timesheet status to SUBMITTED.
         this.changeTimesheetStatus(this.timeSheet.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
-
-        // Email timesheet
-        TimesheetTransmissionApi xmitApi = null;
-        try {
-            // Get employee profile
-            // IS-43: Changed logic to utilize the static approach when invoking
-            // createApi method.
-            EmployeeApi empApi = EmployeeApiFactory.createApi(this.getSharedDao());
-            
-            EmployeeDto empCriteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
-            empCriteria.setEmployeeId(this.timeSheet.getEmpId());
-            
-            // TODO: Might need to eliminate the assumption that the employee
-            // exists and handle for the "Not Found" possibility
-            List<EmployeeDto> employees = empApi.getEmployeeExt(empCriteria);
-            EmployeeDto employee = employees.get(0);
-            
-            EmployeeDto manager = empApi.getEmployee(employee.getManagerId());
-
-            // get client profile
-            // IS-43: Changed logic to utilize the static approach when invoking
-            // createApi method.
-            ProjectAdminApi projApi = ProjectAdminApiFactory.createApi(this.getSharedDao());
-            ClientDto clientCriteria = ProjectObjectFactory.createClientDtoInstance(null);
-            clientCriteria.setClientId(this.timeSheet.getClientId());
-            List<ClientDto> clients = projApi.getClient(clientCriteria);
-
-            // send timesheet via email
-            xmitApi = TimesheetApiFactory.createTransmissionApi();
-            EmailMessageBean msg = xmitApi.createSubmitMessage(this.timeSheet, employee, manager, 
-                    clients.get(0), this.timeSheetHours);
-            Integer rc = (Integer) xmitApi.send(msg);
-            return rc;
-        } catch (TimesheetTransmissionException e) {
-            this.msg = "SMTP error occurred attempting to send timesheet: " + this.timeSheet.getDisplayValue();
-            throw new TimesheetApiException(this.msg, e);
-        } catch (EmployeeApiException e) {
-            this.msg = "Data access error fetching timesheet's employee profile: " + this.timeSheet.getEmpId();
-            throw new TimesheetApiException(this.msg, e);
-        } catch (ProjectAdminApiException e) {
-            this.msg = "Data access error fetching timesheet's client profile: " + this.timeSheet.getClientId();
-            throw new TimesheetApiException(this.msg, e);
-        } finally {
-            xmitApi = null;
-        }
-
+        return 1;
     }
 
     /*
@@ -1332,5 +1287,15 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         catch (TimesheetTransmissionException e) {
             throw new TimesheetApiException("Error occurred sending time sheet email confirmation", e);
         }
+    }
+
+    @Override
+    public TimesheetDto getTimesheet() {
+        return this.timeSheet;
+    }
+
+    @Override
+    public Map<ProjectTaskDto, List<EventDto>> getTimesheetHours() {
+        return this.timeSheetHours;
     }
 }

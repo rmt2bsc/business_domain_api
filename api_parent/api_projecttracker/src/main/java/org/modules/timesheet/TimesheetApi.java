@@ -63,6 +63,20 @@ public interface TimesheetApi extends TransactionApi {
     int getCurrentProjectId();
 
     /**
+     * Get in-memory timeheet object
+     * 
+     * @return {@link TimesheetDto}
+     */
+    TimesheetDto getTimesheet();
+
+    /**
+     * Get in-memory timesheet hours
+     * 
+     * @return Map<{@link ProjectTaskDto}, List<{@link EventDto}>>
+     */
+    Map<ProjectTaskDto, List<EventDto>> getTimesheetHours();
+
+    /**
      * Retrieve a single TimesheetDto object by timesheet id.
      * 
      * @param timesheetId
