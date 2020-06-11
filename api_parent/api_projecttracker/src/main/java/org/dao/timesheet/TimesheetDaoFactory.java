@@ -426,7 +426,7 @@ public class TimesheetDaoFactory extends RMT2Base {
                 obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETID, criteria.getTimesheetId());
             }
             if (criteria.getStatusHistId() > 0) {
-                obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETHISTID, criteria.getStatusId());
+                obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETHISTID, criteria.getStatusHistId());
             }
             if (criteria.getStatusId() > 0) {
                 obj.addCriteria(ProjTimesheetHist.PROP_TIMESHEETSTATUSID, criteria.getStatusId());
