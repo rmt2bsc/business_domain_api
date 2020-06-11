@@ -971,12 +971,15 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     @Override
     public int approve(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
-        
+
+        this.load(timesheetId);
+
         // Set timesheet status to Approved.
         TimesheetHistDto currentStatus = this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
-        
-        // Send confirmation
-        return this.transmitConfirmation(timesheetId, currentStatus);
+        this.timeSheet.setStatusId(currentStatus.getStatusId());
+        this.timeSheet.setStatusName("Approve");
+
+        return currentStatus.getStatusId();
     }
 
     /*
@@ -987,12 +990,14 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     @Override
     public int decline(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
-        
+
+        this.load(timesheetId);
+
         // Set timesheet status to Declined
         TimesheetHistDto currentStatus =  this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
-        
-        // Send confirmation
-        return this.transmitConfirmation(timesheetId, currentStatus);
+        this.timeSheet.setStatusId(currentStatus.getStatusId());
+        this.timeSheet.setStatusName("Decline");
+        return currentStatus.getStatusId();
     }
 
     /**
@@ -1180,9 +1185,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         if (ts == null) {
             this.timeSheet = null;
             this.timeSheetHours = null;
-            logger.warn("Failed to build timesheet object graph due to Timesheet ["
-                            + timesheetId + "] could not be found");
-            return null;
+            throw new NotFoundException("Failed to build timesheet object graph due to Timesheet ["
+                    + timesheetId + "] could not be found");
         }
 
         // Fetch project/tasks which should be ordered by project name, task
@@ -1253,7 +1257,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
     }
     
-    
+    @Deprecated
     private int transmitConfirmation(int timesheetId, TimesheetHistDto currentStatus) throws TimesheetApiException {
         // Obtain timesheet's current status
         TimesheetDto ts = this.getExt(timesheetId);;

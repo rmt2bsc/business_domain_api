@@ -274,7 +274,7 @@ public interface TimesheetApi extends TransactionApi {
      * Approves an employee's timesheet.
      * 
      * @param timesheetId
-     * @return the id of the previous timesheet status.
+     * @return the id of the timesheet's new status.
      * @throws TimesheetApiException
      */
     int approve(Integer timesheetId) throws TimesheetApiException;
@@ -283,7 +283,7 @@ public interface TimesheetApi extends TransactionApi {
      * Declines an employee's timesheet.
      * 
      * @param timesheetId
-     * @return the id of the previous timesheet status.
+     * @return the id of the timesheet's new status.
      * @throws TimesheetApiException
      */
     int decline(Integer timesheetId) throws TimesheetApiException;
