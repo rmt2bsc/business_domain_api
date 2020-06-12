@@ -44,6 +44,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -1499,10 +1500,9 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         try {
             api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e instanceof NotFoundException);
             Assert.assertTrue(e.getMessage().contains("Failed to build timesheet object graph due to Timesheet ["
                             + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID + "] could not be found"));
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }
