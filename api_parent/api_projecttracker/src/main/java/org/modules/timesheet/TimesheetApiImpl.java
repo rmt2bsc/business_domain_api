@@ -1005,9 +1005,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     public int submit(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
-        this.load(timesheetId);
         // Set timesheet status to SUBMITTED.
-        this.changeTimesheetStatus(this.timeSheet.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
+        this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_SUBMITTED);
+        this.load(timesheetId);
         return 1;
     }
 
