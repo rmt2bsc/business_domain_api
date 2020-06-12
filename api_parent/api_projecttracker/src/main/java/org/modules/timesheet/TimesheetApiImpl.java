@@ -972,13 +972,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     public int approve(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
 
-        this.load(timesheetId);
-
         // Set timesheet status to Approved.
         TimesheetHistDto currentStatus = this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
-        this.timeSheet.setStatusId(currentStatus.getStatusId());
-        this.timeSheet.setStatusName("Approve");
-
+        this.load(timesheetId);
         return currentStatus.getStatusId();
     }
 
@@ -991,12 +987,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     public int decline(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
 
-        this.load(timesheetId);
-
         // Set timesheet status to Declined
         TimesheetHistDto currentStatus =  this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
-        this.timeSheet.setStatusId(currentStatus.getStatusId());
-        this.timeSheet.setStatusName("Decline");
+        this.load(timesheetId);
         return currentStatus.getStatusId();
     }
 
@@ -1188,6 +1181,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             throw new NotFoundException("Failed to build timesheet object graph due to Timesheet ["
                     + timesheetId + "] could not be found");
         }
+        this.timeSheet = ts;
 
         // Fetch project/tasks which should be ordered by project name, task
         // name, and timesheet id.
@@ -1236,8 +1230,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
             api = null;
         }
 
-        // Set member variables
-        this.timeSheet = ts;
         this.timeSheetHours = timesheetGraph;
         return timesheetGraph;
     }
