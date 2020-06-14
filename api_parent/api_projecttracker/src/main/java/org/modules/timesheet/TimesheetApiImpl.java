@@ -19,6 +19,7 @@ import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
+import org.dto.TimesheetHoursSummaryDto;
 import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
@@ -60,6 +61,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     private int currentProjectId;
 
     private TimesheetDto timeSheet;
+
+    private TimesheetHoursSummaryDto timesheetSummary;
 
     private Map<ProjectTaskDto, List<EventDto>> timeSheetHours;
 
@@ -240,6 +243,30 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         return results;
     }
     
+    @Override
+    public List<TimesheetHoursSummaryDto> getTimesheetSummary(TimesheetHoursSummaryDto criteria) throws TimesheetApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            this.msg = "Timesheet summary selection criteria is required";
+            throw new InvalidTimesheetException(this.msg, e);
+        }
+
+        List<TimesheetHoursSummaryDto> results = null;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = this.dao.fetchHourSummary(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (TimesheetDaoException e) {
+            buf.append("Database error occurred retrieving summary timesheet(s) using selection criteria object");
+            this.msg = buf.toString();
+            throw new TimesheetApiException(this.msg, e);
+        }
+        return results;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -1183,6 +1210,12 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
         this.timeSheet = ts;
 
+        // Get timesheet summary
+        TimesheetHoursSummaryDto summaryCriteria = TimesheetObjectFactory.createTimesheetSummaryDtoInstance(null);
+        summaryCriteria.setTimesheetId(timesheetId);
+        List<TimesheetHoursSummaryDto> hoursSummary = this.getTimesheetSummary(summaryCriteria);
+        this.timesheetSummary = hoursSummary.get(0);
+
         // Fetch project/tasks which should be ordered by project name, task
         // name, and timesheet id.
         List<ProjectTaskDto> ptList = this.getProjectTaskExtByTimesheet(timesheetId);
@@ -1293,5 +1326,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     @Override
     public Map<ProjectTaskDto, List<EventDto>> getTimesheetHours() {
         return this.timeSheetHours;
+    }
+
+    @Override
+    public TimesheetHoursSummaryDto getTimesheetSummary() {
+        return this.timesheetSummary;
     }
 }

@@ -11,6 +11,7 @@ import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
+import org.dto.TimesheetHoursSummaryDto;
 
 import com.api.foundation.TransactionApi;
 
@@ -70,6 +71,13 @@ public interface TimesheetApi extends TransactionApi {
     TimesheetDto getTimesheet();
 
     /**
+     * Get in-memory timeheet summary object
+     * 
+     * @return {@link TimesheetDto}
+     */
+    TimesheetHoursSummaryDto getTimesheetSummary();
+
+    /**
      * Get in-memory timesheet hours
      * 
      * @return Map<{@link ProjectTaskDto}, List<{@link EventDto}>>
@@ -106,7 +114,17 @@ public interface TimesheetApi extends TransactionApi {
     List<TimesheetDto> get(TimesheetDto criteria) throws TimesheetApiException;
     
     /**
-     * Retrieve TimesheetDto objects, which will contain extended timesheet data, based on selection criteria.
+     * Retrieve TimesheetHoursSummaryDto objects based on selection criteria.
+     * 
+     * @param criteria
+     * @return a List of {@link TimesheetHoursSummaryDto}
+     * @throws TimesheetApiException
+     */
+    List<TimesheetHoursSummaryDto> getTimesheetSummary(TimesheetHoursSummaryDto criteria) throws TimesheetApiException;
+
+    /**
+     * Retrieve TimesheetDto objects, which will contain extended timesheet
+     * data, based on selection criteria.
      * 
      * @param criteria
      * @return a List of {@link TimesheetDto} containing extended timesheet data
