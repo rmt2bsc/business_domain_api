@@ -28,9 +28,8 @@ import com.api.foundation.TransactionDtoImpl;
  * @author Roy Terrell
  * 
  */
-class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
-        TimesheetDto, TimesheetStatusDto, TimesheetHistDto, TimesheetHoursDto,
-        TimesheetClientDto, TimesheetHoursSummaryDto {
+class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements TimesheetDto, TimesheetStatusDto, TimesheetHistDto,
+        TimesheetHoursDto, TimesheetClientDto, TimesheetHoursSummaryDto {
 
     // private ProjTimesheet ts;
     private ProjTimesheetStatus tss;
@@ -179,6 +178,9 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
         if (this.tsh != null) {
             this.tsh.setTimesheetId(value);
         }
+        if (this.vts != null) {
+            this.vts.setTimesheetId(value);
+        }
     }
 
     /*
@@ -196,6 +198,9 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
         }
         if (this.tsh != null) {
             return this.tsh.getTimesheetId();
+        }
+        if (this.vts != null) {
+            return this.vts.getTimesheetId();
         }
         return 0;
     }

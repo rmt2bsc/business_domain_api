@@ -20,6 +20,7 @@ import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
+import org.dao.mapping.orm.rmt2.VwTimesheetSummary;
 import org.dao.timesheet.TimesheetConst;
 import org.dao.timesheet.TimesheetDaoException;
 import org.dto.ClientDto;
@@ -101,6 +102,15 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single event case setup failed");
+        }
+
+        VwTimesheetSummary mockCriteria = new VwTimesheetSummary();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockTimesheetSummary);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
         }
     }
 
@@ -1168,6 +1178,34 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testError_Submit_DB_Access_Fault_For_Timesheet_Load() {
+        String errorMsg = "Database error occurred retrieving single extended timesheet by id, "
+                + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID;
+
+        // Setup stubs for change timesheet status
+        ProjTimesheetHist mockCurrentStatusCriteria = new ProjTimesheetHist();
+        mockCurrentStatusCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            this.mockCurrentProjTimesheetHist.get(0).setTimesheetStatusId(TimesheetConst.STATUS_DRAFT);
+            when(this.mockPersistenceClient.retrieveList(eq(mockCurrentStatusCriteria))).thenReturn(
+                    this.mockCurrentProjTimesheetHist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch timesheet current history case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.updateRow(isA(ProjTimesheetHist.class))).thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Update timesheet current history case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(ProjTimesheetHist.class), eq(true))).thenReturn(
+                    ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert timesheet current history case setup failed");
+        }
+
         // Setup timesheet load stub
         VwTimesheetList mockTimesheetCriteria = new VwTimesheetList();
         mockTimesheetCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -1184,10 +1222,10 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         try {
             api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof TimesheetApiException);
-            Assert.assertEquals("Database error occurred retrieving single extended timesheet by id, " + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
             e.printStackTrace();
+            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertEquals(errorMsg, e.getMessage());
+            Assert.assertTrue(e.getCause() instanceof TimesheetDaoException);
         }
     }
     

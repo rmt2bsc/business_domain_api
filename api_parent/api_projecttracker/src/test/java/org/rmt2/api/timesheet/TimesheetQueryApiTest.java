@@ -17,6 +17,7 @@ import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
+import org.dao.mapping.orm.rmt2.VwTimesheetSummary;
 import org.dao.timesheet.TimesheetConst;
 import org.dto.EventDto;
 import org.dto.ProjectEventDto;
@@ -66,6 +67,15 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+
+        VwTimesheetSummary mockCriteria = new VwTimesheetSummary();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockTimesheetSummary);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
     }
 
     /**

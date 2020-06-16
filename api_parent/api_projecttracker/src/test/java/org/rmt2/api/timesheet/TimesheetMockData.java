@@ -11,6 +11,7 @@ import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
+import org.dao.mapping.orm.rmt2.VwTimesheetSummary;
 import org.dao.timesheet.TimesheetConst;
 import org.junit.After;
 import org.junit.Before;
@@ -41,6 +42,7 @@ public class TimesheetMockData extends ProjectTrackerMockData {
     protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchMultiple;
     protected List<VwTimesheetProjectTask> mockVwTimesheetProjectTaskFetchSingle;
     protected List<VwTimesheetHours> mockTimesheetHours;
+    protected List<VwTimesheetSummary> mockTimesheetSummary;
 
     /**
      * @throws java.lang.Exception
@@ -61,6 +63,7 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         this.mockProjTimesheetHistMultiple = this.createMockTimesheetStatusHistory();
         this.mockCurrentProjTimesheetHist = this.createMockTimesheetCurrentStatus();
         this.mockTimesheetHours = this.createMockTimesheetHours();
+        this.mockTimesheetSummary = this.createMockTimesheetSummaryList();
         
         return;
     }
@@ -322,6 +325,17 @@ public class TimesheetMockData extends ProjectTrackerMockData {
         return list;
     }
     
+    /**
+     * 
+     * @return
+     */
+    private List<VwTimesheetSummary> createMockTimesheetSummaryList() {
+        List<VwTimesheetSummary> list = new ArrayList<>();
+        VwTimesheetSummary o = ProjectTrackerMockDataFactory.createMockOrmVwTimesheetSummary(111, "john", "doe", "2020-5-15", 8);
+        list.add(o);
+        return list;
+    }
+
     /**
      * 
      * @param day
