@@ -6,6 +6,8 @@ import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
 import org.dao.mapping.orm.rmt2.Xact;
+import org.dao.mapping.orm.rmt2.XactCategory;
+import org.dao.mapping.orm.rmt2.XactType;
 import org.dto.XactDto;
 
 /**
@@ -38,12 +40,17 @@ public class XactRmt2OrmAdapter extends XactTypeRmt2OrmAdapter implements XactDt
     protected XactRmt2OrmAdapter(Xact xact) {
         this.updateObjHeirarchy(xact);
 
-        // if (xact != null) {
-        // // Setup XactType instance at the ancestor level.
-        // XactType xt = new XactType();
-        // xt.setXactTypeId(xact.getXactTypeId());
-        // this.updateObjHeirarchy(xt);
-        // }
+        if (xact != null) {
+            // Setup XactType instance at the ancestor level.
+            XactType xt = new XactType();
+            xt.setXactTypeId(xact.getXactTypeId());
+            this.updateObjHeirarchy(xt);
+
+            // Setup XactCategory instance at the ancestor level.
+            XactCategory xc = new XactCategory();
+            xc.setXactCatgId(xt.getXactCatgId());
+            this.updateObjHeirarchy(xc);
+        }
         return;
     }
 
