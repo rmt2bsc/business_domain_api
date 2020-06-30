@@ -35,12 +35,13 @@ import org.rmt2.jaxb.HeaderType;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.jaxb.SalesOrderType;
 import org.rmt2.jaxb.TransactionDetailGroup;
-import org.rmt2.util.JaxbPayloadFactory;
+import org.rmt2.util.HeaderTypeBuilder;
 
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.foundation.TransactionApiException;
+import com.api.messaging.webservice.WebServiceConstants;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
@@ -290,8 +291,15 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
     private int submitBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
         ObjectFactory f = new ObjectFactory();
         AccountingTransactionRequest request = f.createAccountingTransactionRequest();
-        HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
-                "module", ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, "SYNC", "REQUEST", this.getApiUser());
+        HeaderType header = HeaderTypeBuilder.Builder.create()
+                .withRouting(ApiTransactionCodes.ROUTE_ACCOUNTING)
+                .withApplication(ApiTransactionCodes.APP_ACCOUNTING)
+                .withModule("timesheet")
+                .withTransaction(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE)
+                .withDeliveryMode(WebServiceConstants.MSG_TRANSPORT_MODE_SYNC)
+                .withMessageMode(WebServiceConstants.MSG_MODE_REQUEST)
+                .withUserId(this.getApiUser())
+                .build();
         request.setHeader(header);
 
         // Setup customer's sales order that will be invoiced
