@@ -206,8 +206,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         this.setupClientWebServiceInvoiceStub();
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -324,8 +323,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         this.setupClientWebServiceInvoiceStub();
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         List<Integer> results = null;
         try {
             results = api.invoice(InvoicingMockData.TEST_CLIENT_ID_LIST);
@@ -433,8 +431,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         this.setupClientWebServiceInvoiceStub();
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -523,8 +520,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         this.setupClientWebServiceInvoiceStub();
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -602,8 +598,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
                 isA(AccountingTransactionRequest.class))).thenReturn(this.createResponse(0));
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -683,8 +678,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
                 isA(AccountingTransactionRequest.class))).thenReturn(null);
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -764,8 +758,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
                         "Message Router error submiting timesheet billing"));
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -849,8 +842,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         this.setupClientWebServiceInvoiceStub();
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -929,8 +921,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         this.setupClientWebServiceInvoiceStub();
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1012,8 +1003,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         this.setupClientWebServiceInvoiceStub();
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1073,8 +1063,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1131,8 +1120,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1189,8 +1177,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1227,8 +1214,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(InvoicingMockData.TEST_CLIENT_ID_LIST);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1262,8 +1248,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1298,8 +1283,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1324,8 +1308,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1349,8 +1332,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
         }
         
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1364,8 +1346,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
     
     @Test
     public void testValidation_Invoice_Multiple_Null_ClientId_Element() {
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.invoice(InvoicingMockData.TEST_NULL_CLIENT_ID_LIST);
             Assert.fail("Expected an exception to be thrown for this test");
@@ -1378,8 +1359,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
     
     @Test
     public void testValidation_Invoice_Multiple_ClientId_List() {
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             List<Integer> nullList = null;
             api.invoice(nullList);
@@ -1394,8 +1374,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
     @Test
     public void testValidation_Invoice_Timesheet_TimesheetId_Null() {
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             Integer nullParm = null;
             api.invoice(nullParm);
@@ -1410,8 +1389,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
     @Test
     public void testValidation_Invoice_Timesheet_TimesheetId_Negative() {
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             Integer parm = -1234;
             api.invoice(parm);
@@ -1426,8 +1404,7 @@ public class TimesheetInvoicingApiTest extends InvoicingMockData {
     @Test
     public void testValidation_Invoice_Timesheet_TimesheetId_Zero() {
         // Perform test
-        InvoiceTimesheetApiFactory f = new InvoiceTimesheetApiFactory();
-        InvoiceTimesheetApi api = f.createApi(this.mockDaoClient);
+        InvoiceTimesheetApi api = InvoiceTimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             Integer parm = 0;
             api.invoice(parm);
