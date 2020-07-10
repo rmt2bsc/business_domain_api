@@ -39,6 +39,8 @@ import org.rmt2.util.HeaderTypeBuilder;
 
 import com.InvalidDataException;
 import com.NotFoundException;
+import com.api.config.ConfigConstants;
+import com.api.config.SystemConfigurator;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.foundation.TransactionApiException;
 import com.api.messaging.webservice.WebServiceConstants;
@@ -47,6 +49,7 @@ import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
+import com.api.xml.jaxb.JaxbUtil;
 
 /**
  * Implementation of InvoiceTimesheetApi that manages the invoicing of an
@@ -89,7 +92,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      * @param appName
      */
     protected InvoiceTimesheetApiImpl(String appName) {
-        super();
+        super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
         this.setApiUser(this.apiUser);
@@ -294,10 +297,11 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
         HeaderType header = HeaderTypeBuilder.Builder.create()
                 .withRouting(ApiTransactionCodes.ROUTE_ACCOUNTING)
                 .withApplication(ApiTransactionCodes.APP_ACCOUNTING)
-                .withModule("timesheet")
-                .withTransaction(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE)
+                .withModule("transaction")
+                .withTransaction(ApiTransactionCodes.ACCOUNTING_SALESORDER_INVOICE_CREATE)
                 .withDeliveryMode(WebServiceConstants.MSG_TRANSPORT_MODE_SYNC)
                 .withMessageMode(WebServiceConstants.MSG_MODE_REQUEST)
+                .withDeliveryDate(new Date())
                 .withUserId(this.getApiUser())
                 .build();
         request.setHeader(header);
@@ -311,14 +315,24 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
 
         // Send time sheet deatils to Accounting systsem to create and invoice sales order
         try {
-            Object response = this.sendMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, request);
-            if (response != null && response instanceof AccountingTransactionResponse) {
-                AccountingTransactionResponse r = (AccountingTransactionResponse) response;
-                return r.getReplyStatus().getReturnCode().intValue();
+            Object response = this.sendMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_INVOICE_CREATE, request);
+            if (response == null) {
+                throw new TransactionApiException("Create sales order and invoice for Timesheet web service response is null");
+            }
+            Object msg = null;
+            try {
+                JaxbUtil util = SystemConfigurator.getJaxb(ConfigConstants.JAXB_CONTEXNAME_DEFAULT);
+                msg = util.unMarshalMessage(response.toString());
+            } catch (Exception e) {
+                throw new InvoiceTimesheetApiException("Unable to convert payload to XML String");
+            }
+            if (msg instanceof AccountingTransactionResponse) {
+                AccountingTransactionResponse r = (AccountingTransactionResponse) msg;
+                return r.getProfile().getSalesOrders().getSalesOrder().get(0).getInvoiceDetails().getInvoiceId().intValue();
             }
             else {
                 throw new InvoiceTimesheetApiException(
-                        "An invalid response was returned from the Timesheet-to-sales order web service operation");
+                        "An invalid response was returned from the Timesheet-to-sales order web service operation. Expected response type of AccountingTransactionResponse");
             }
         } catch (TransactionApiException e) {
             this.msg = "A web service problem occurred sending time sheet(s) to accounting for the purpose of creating a sales order: timesheet id's "
