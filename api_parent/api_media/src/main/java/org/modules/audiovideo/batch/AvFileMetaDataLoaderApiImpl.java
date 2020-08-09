@@ -909,4 +909,53 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             throws BatchFileException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
+
+    /**
+     * @return the startTime
+     */
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * @return the endTime
+     */
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * @return the successCnt
+     */
+    public int getSuccessCnt() {
+        return successCnt;
+    }
+
+    /**
+     * @return the errorCnt
+     */
+    public int getErrorCnt() {
+        return errorCnt;
+    }
+
+    /**
+     * @return the nonAvFileCnt
+     */
+    public int getNonAvFileCnt() {
+        return nonAvFileCnt;
+    }
+
+    /**
+     * @return the totCnt
+     */
+    public int getTotCnt() {
+        return totCnt;
+    }
+
+    /**
+     * @return the fileErrorMsg
+     */
+    public List<String> getFileErrorMsg() {
+        return fileErrorMsg;
+    }
 }
