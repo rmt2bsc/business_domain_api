@@ -8,11 +8,13 @@ import org.apache.log4j.Logger;
 import org.dao.MediaDaoImpl;
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
+import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
+import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
@@ -306,6 +308,50 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         List<ProjectTypeDto> list = new ArrayList<ProjectTypeDto>();
         for (AvProjectType item : results) {
             ProjectTypeDto dto = Rmt2MediaDtoFactory.getAvProjectTypeInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+
+    /**
+     * Fetches media type information from the <i>av_media_type</i> table based
+     * on the selection criteria contained in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instnace of {@link MediaTypeDto} containing values for
+     *            selection criteria.
+     * @return a List of {@link MediaTypeDto} objects or null if no data was
+     *         found.
+     * @throws AudioVideoDaoException
+     */
+    @Override
+    public List<MediaTypeDto> fetchMediaType(MediaTypeDto criteria) throws AudioVideoDaoException {
+        // Setup criteria
+        AvMediaType queryObj = new AvMediaType();
+        if (criteria != null) {
+            if (criteria.getUid() > 0) {
+                queryObj.addCriteria(AvMediaType.PROP_MEDIATYPEID, criteria.getUid());
+            }
+            if (criteria.getDescritpion() != null) {
+                queryObj.addCriteria(AvMediaType.PROP_DESCRIPTION, criteria.getDescritpion());
+            }
+        }
+
+        // Query data
+        List<AvMediaType> results = null;
+        try {
+            results = this.client.retrieveList(queryObj);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new AudioVideoDaoException(e);
+        }
+
+        // Package results
+        List<MediaTypeDto> list = new ArrayList<>();
+        for (AvMediaType item : results) {
+            MediaTypeDto dto = Rmt2MediaDtoFactory.getAvMediaTypeInstance(item);
             list.add(dto);
         }
         return list;

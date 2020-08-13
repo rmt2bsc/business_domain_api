@@ -6,7 +6,10 @@ import org.dao.audiovideo.AudioVideoDao;
 import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.audiovideo.AudioVideoDaoFactory;
 import org.dto.ArtistDto;
+import org.dto.GenreDto;
+import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
+import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
 
 import com.InvalidDataException;
@@ -63,6 +66,38 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         this.daoFact = new AudioVideoDaoFactory();
     }
 
+    @Override
+    public List<GenreDto> getGenre(GenreDto criteria) throws AudioVideoApiException {
+        List<GenreDto> results = null;
+        try {
+            results = this.dao.fetchGenre(criteria);
+            return results;
+        } catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve genre(s)", e);
+        }
+    }
+
+    @Override
+    public List<MediaTypeDto> getMediaType(MediaTypeDto criteria) throws AudioVideoApiException {
+        List<MediaTypeDto> results = null;
+        try {
+            results = this.dao.fetchMediaType(criteria);
+            return results;
+        } catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve media type(s)", e);
+        }
+    }
+
+    @Override
+    public List<ProjectTypeDto> getProjectType(ProjectTypeDto criteria) throws AudioVideoApiException {
+        List<ProjectTypeDto> results = null;
+        try {
+            results = this.dao.fetchProjectType(criteria);
+            return results;
+        } catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve project type(s)", e);
+        }
+    }
     
     /* (non-Javadoc)
      * @see org.modules.audiovideo.AudioVideoApi#getArtist(org.dto.ArtistDto)

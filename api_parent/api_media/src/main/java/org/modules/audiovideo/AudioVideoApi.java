@@ -3,7 +3,10 @@ package org.modules.audiovideo;
 import java.util.List;
 
 import org.dto.ArtistDto;
+import org.dto.GenreDto;
+import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
+import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
 
 import com.api.foundation.TransactionApi;
@@ -16,6 +19,36 @@ import com.api.foundation.TransactionApi;
  * 
  */
 public interface AudioVideoApi extends TransactionApi {
+
+    /**
+     * Retrieve a list of genre types
+     * 
+     * @param criteria
+     *            instance of {@link GenreDto}
+     * @return List of {@link GenreDto} objects
+     * @throws AudioVideoApiException
+     */
+    List<GenreDto> getGenre(GenreDto criteria) throws AudioVideoApiException;
+
+    /**
+     * Retrieve a list of media types
+     * 
+     * @param criteria
+     *            instance of {@link MediaTypeDto}
+     * @return List of {@link MediaTypeDto} objects
+     * @throws AudioVideoApiException
+     */
+    List<MediaTypeDto> getMediaType(MediaTypeDto criteria) throws AudioVideoApiException;
+
+    /**
+     * Retrieve a list of project types
+     * 
+     * @param criteria
+     *            instance of {@link ProjectTypeDto}
+     * @return List of {@link ProjectTypeDto} objects
+     * @throws AudioVideoApiException
+     */
+    List<ProjectTypeDto> getProjectType(ProjectTypeDto criteria) throws AudioVideoApiException;
 
     /**
      * Retrieve list of artists based on selection criteria contained in
