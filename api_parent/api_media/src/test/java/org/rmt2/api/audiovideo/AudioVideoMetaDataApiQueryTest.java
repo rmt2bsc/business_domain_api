@@ -8,10 +8,15 @@ import java.util.List;
 import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
+import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
+import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
 import org.dto.ArtistDto;
+import org.dto.GenreDto;
+import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
+import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.junit.After;
@@ -51,6 +56,10 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
         
         when(this.mockPersistenceClient.retrieveList(isA(AvGenre.class)))
                 .thenReturn(this.mockAvGenreData);
+        when(this.mockPersistenceClient.retrieveList(isA(AvProjectType.class)))
+                .thenReturn(this.mockAvProjectTypeData);
+        when(this.mockPersistenceClient.retrieveList(isA(AvMediaType.class)))
+                .thenReturn(this.mockAvMediaTypeData);
         when(this.mockPersistenceClient.retrieveList(isA(AvArtist.class)))
                 .thenReturn(this.mockAvArtistData);
         when(this.mockPersistenceClient.retrieveList(isA(AvProject.class)))
@@ -66,6 +75,75 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
     public void tearDown() throws Exception {
         super.tearDown();
         return;
+    }
+
+    @Test
+    public void testSuccess_Fetch_Genre() {
+        GenreDto criteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
+        List<GenreDto> results = null;
+        AudioVideoApi api = null;
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            results = api.getGenre(criteria);
+        } catch (AudioVideoApiException e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            int key = (AvMediaMockDataFactory.TEST_GENRE_ID + ndx);
+            Assert.assertEquals(key, results.get(ndx).getUid());
+            String name = "Genre" + key;
+            Assert.assertEquals(name, results.get(ndx).getDescritpion());
+        }
+    }
+
+    @Test
+    public void testSuccess_Fetch_ProjectType() {
+        ProjectTypeDto criteria = Rmt2MediaDtoFactory.getAvProjectTypeInstance(null);
+        List<ProjectTypeDto> results = null;
+        AudioVideoApi api = null;
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            results = api.getProjectType(criteria);
+        } catch (AudioVideoApiException e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            int key = (AvMediaMockDataFactory.TEST_PROJECTTYPE_ID + ndx);
+            Assert.assertEquals(key, results.get(ndx).getUid());
+            String name = "ProjectType" + key;
+            Assert.assertEquals(name, results.get(ndx).getDescritpion());
+        }
+    }
+
+    @Test
+    public void testSuccess_Fetch_MediaType() {
+        MediaTypeDto criteria = Rmt2MediaDtoFactory.getAvMediaTypeInstance(null);
+        List<MediaTypeDto> results = null;
+        AudioVideoApi api = null;
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            results = api.getMediaType(criteria);
+        } catch (AudioVideoApiException e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+        for (int ndx = 0; ndx < results.size(); ndx++) {
+            int key = (AvMediaMockDataFactory.TEST_MEDIA_TYPE_ID + ndx);
+            Assert.assertEquals(key, results.get(ndx).getUid());
+            String name = "MediaType" + key;
+            Assert.assertEquals(name, results.get(ndx).getDescritpion());
+        }
     }
 
     @Test
@@ -236,4 +314,5 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
             Assert.assertEquals(errMsg, e.getMessage());
         }
     }
+
 }
