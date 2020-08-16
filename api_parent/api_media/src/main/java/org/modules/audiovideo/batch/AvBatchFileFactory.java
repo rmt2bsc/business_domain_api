@@ -28,7 +28,7 @@ public class AvBatchFileFactory extends RMT2Base {
      * @return an instance of {@link AvBatchFileProcessorApi}
      * @throws BatchFileProcessException Unable to create AvBatchFileProcessorApi
      */
-    public AvBatchFileProcessorApi createApiInstance(String srcDir) throws BatchFileProcessException {
+    public static final AvBatchFileProcessorApi createApiInstance(String srcDir) throws BatchFileProcessException {
         AvBatchFileProcessorApi api;
         try {
             api = new AvFileMetaDataLoaderApiImpl(srcDir);
