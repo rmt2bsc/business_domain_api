@@ -558,4 +558,46 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new TransactionApiException(msg, e);
         }
     }
+
+    @Override
+    public Date getStartTime() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Date getEndTime() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int getSuccessCnt() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getErrorCnt() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getNonAvFileCnt() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getTotCnt() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public List<String> getFileErrorMsg() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
