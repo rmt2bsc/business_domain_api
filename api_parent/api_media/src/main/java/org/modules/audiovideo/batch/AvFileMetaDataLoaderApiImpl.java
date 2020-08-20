@@ -273,7 +273,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 this.addAudioVideoFileData(avb, parentDirectory);
             }
             this.successCnt++;
-        } catch (AvInvalidSourceFileException e) {
+        } catch (MP3ApiInstantiationException e) {
             this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Invalid Source File", e.getMessage()));
             this.errorCnt++;
         } catch (AvProjectDataValidationException e) {

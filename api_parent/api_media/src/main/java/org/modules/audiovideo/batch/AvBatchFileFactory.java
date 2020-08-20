@@ -30,11 +30,7 @@ public class AvBatchFileFactory extends RMT2Base {
      */
     public static final AvBatchFileProcessorApi createApiInstance(String srcDir) throws BatchFileProcessException {
         AvBatchFileProcessorApi api;
-        try {
-            api = new AvFileMetaDataLoaderApiImpl(srcDir);
-            return api;
-        } catch (BatchFileProcessException e) {
-            throw new BatchFileProcessException("Could not instantiate Audio/Video batch file loader class", e);
-        }
+        api = new AvFileMetaDataLoaderApiImpl(srcDir);
+        return api;
     }
 }

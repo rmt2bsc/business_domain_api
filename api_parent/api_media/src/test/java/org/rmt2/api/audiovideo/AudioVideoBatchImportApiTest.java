@@ -25,9 +25,7 @@ import org.modules.MediaConstants;
 import org.modules.audiovideo.Mp3ReaderIdentityNotConfiguredException;
 import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
-import org.modules.audiovideo.batch.AvSourceNotADirectoryException;
 import org.modules.audiovideo.batch.BatchFileProcessException;
-import org.modules.audiovideo.batch.InvalidBatchRootDirectoryException;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -186,10 +184,6 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof BatchFileProcessException);
-            Assert.assertEquals("Could not instantiate Audio/Video batch file loader class", e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof InvalidBatchRootDirectoryException);
-            Assert.assertEquals("The root directory path is invalid or null", e.getCause().getMessage());
-
         }
     }
     
@@ -206,11 +200,6 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof BatchFileProcessException);
-            Assert.assertEquals("Could not instantiate Audio/Video batch file loader class", e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof AvSourceNotADirectoryException);
-            String msg = " is required to be a directory for Audio Video Batch process";
-            Assert.assertTrue(e.getCause().getMessage().contains(msg));
-
         }
     }
     
