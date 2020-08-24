@@ -87,6 +87,9 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getName() != null) {
                 queryObj.addLikeClause(AvArtist.PROP_NAME, criteria.getName());
             }
+            if (criteria.getCriteria() != null) {
+                queryObj.addCustomCriteria(criteria.getCriteria());
+            }
         }
 
         // Query data
@@ -155,6 +158,9 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getContentPath() != null) {
                 queryObj.addCriteria(AvProject.PROP_CONTENTPATH, criteria.getContentPath());
             }
+            if (criteria.getCriteria() != null) {
+                queryObj.addCustomCriteria(criteria.getCriteria());
+            }
         }
 
         // Query data
@@ -200,9 +206,13 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             }
             if (criteria.getTrackTitle() != null) {
                 queryObj.addLikeClause(AvTracks.PROP_TRACKTITLE, criteria.getTrackTitle());
+
             }
             if (criteria.getComments() != null) {
                 queryObj.addLikeClause(AvTracks.PROP_COMMENTS, criteria.getComments(), OrmBean.LIKE_CONTAINS);
+            }
+            if (criteria.getCriteria() != null) {
+                queryObj.addCustomCriteria(criteria.getCriteria());
             }
         }
 
