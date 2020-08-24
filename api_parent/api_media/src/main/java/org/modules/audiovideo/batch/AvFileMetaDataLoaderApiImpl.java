@@ -33,12 +33,10 @@ import com.RMT2Constants;
 import com.SystemException;
 import com.api.BatchFileException;
 import com.api.foundation.AbstractTransactionApiImpl;
-import com.api.messaging.email.EmailMessageBean;
-import com.api.messaging.email.smtp.SmtpApi;
-import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.DatabaseException;
 import com.api.util.RMT2Date;
 import com.api.util.RMT2File;
+import com.api.util.RMT2String;
 
 /**
  * An file loader implementation of {@link AudioVideoBatchFileProcessorApi}
@@ -56,6 +54,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     private static Logger logger = Logger.getLogger(AvFileMetaDataLoaderApiImpl.class);
     
     private static Integer MP3_READER_IMPL_TO_USE;
+
+    private static boolean REQUEST_REFRESH;
 
     private File directoryPath;
 
@@ -102,6 +102,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     protected AvFileMetaDataLoaderApiImpl(String dirPath) throws BatchFileProcessException {
         super(MediaConstants.APP_NAME);
         this.initConnection(dirPath);
+        REQUEST_REFRESH = false;
         logger.info("Audio/Video batch processor is initialized.");
         logger.info("Audio/Video batch processing witll begin at this location: " + this.directoryPath.getAbsolutePath());
     }
@@ -142,8 +143,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         this.fileErrorMsg = new ArrayList<String>();
         
         // Setup DAO
-        AudioVideoDaoFactory f = new AudioVideoDaoFactory();
-        this.avDao = f.createRmt2OrmDaoInstance();
+        this.avDao = AudioVideoDaoFactory.createRmt2OrmDaoInstance();
         this.avDao.setDaoUser(this.getApiUser());
     }
 
@@ -170,8 +170,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      */
     public int processBatch() throws BatchFileProcessException {
         this.startTime = new Date();
-        AudioVideoDaoFactory f = new AudioVideoDaoFactory();
-        AudioVideoDao dao = f.createRmt2OrmDaoInstance();
+        AudioVideoDao dao = AudioVideoDaoFactory.createRmt2OrmDaoInstance();
         dao.setDaoUser(this.getApiUser());
 
         // Begin process all files
@@ -262,7 +261,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     @Override
     public Object processSingleFile(File mediaFile, Object parent) throws BatchFileProcessException {
         String pathName;
-        AvCombinedProjectBean avb;
+        AvCombinedProjectBean avb = null;
 
         File parentDirectory = (File) parent;
         pathName = mediaFile.getPath();
@@ -274,8 +273,10 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             }
             this.successCnt++;
         } catch (MP3ApiInstantiationException e) {
-            this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Invalid Source File", e.getMessage()));
-            this.errorCnt++;
+            if (mediaFile.getName().contains(".mp3")) {
+                this.fileErrorMsg.add(this.buildFileWarningMessage(pathName, "Not a valid audio File", e.getMessage()));
+            }
+            this.nonAvFileCnt++;
         } catch (AvProjectDataValidationException e) {
             this.fileErrorMsg.add(this.buildFileErrorMessage(pathName, "Project Data Not Valid", e.getMessage()));
             this.errorCnt++;
@@ -412,7 +413,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             av.setTitle(mp3.getAlbum());
 
             // Get Track Number
-            avt.setTrackNumber(mp3.getTrack());
+            avt.setTrackNumber(mp3.getTrack() == 0 ? 1 : mp3.getTrack());
 
             // Get Track Title
             avt.setTrackTitle(mp3.getTrackTitle());
@@ -441,10 +442,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             }
 
             // Get Disc Number
-            int discNo = mp3.getDiscNumber();
-            if (discNo >= 1) {
-                avt.setTrackDisc(String.valueOf(discNo));    
-            }
+            avt.setTrackDisc(mp3.getDiscNumber() == 0 ? "1" : String.valueOf(mp3.getDiscNumber()));
 
             // Capture the media file location data
             String pathOnly = RMT2File.getFilePathInfo(mediaPath);
@@ -512,11 +510,14 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         try {
             if (artist.getArtistId() == 0) {
                 ArtistDto artistCriteria = Rmt2MediaDtoFactory.getAvArtistInstance(null);
-                artistCriteria.setName(artistDto.getName());
+                String temp = RMT2String.replaceAll2(artist.getName(), "''", "'");
+                String customSql = " name = '" + temp + "' ";
+                artistCriteria.setCriteria(customSql);
                 List<ArtistDto> a = this.avDao.fetchArtist(artistCriteria);
                 if (a != null && a.size() == 1) {
                     artistId = a.get(0).getId();
                     artistDto.setId(artistId);
+                    artistDto.setDateCreated(a.get(0).getDateCreated());
                     artist.setArtistId(artistId);
                 }
             }    
@@ -560,7 +561,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             ProjectDto projCriteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
             
             // Verify the existence of project by artist/project title
-            projCriteria.setTitle(projectDto.getTitle());
+            String temp = RMT2String.replaceAll2(project.getTitle(), "''", "'");
+            String customSql = " title = '" + temp + "' ";
+            projCriteria.setCriteria(customSql);
             projCriteria.setArtistId(artistId);
             List<ProjectDto> p = null;
             try {
@@ -580,8 +583,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 // Verify the existence of project by project title/content path
                 // (This is typically for albums with multiple artists).
                 projCriteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
-                projCriteria.setTitle(projectDto.getTitle());
-                projCriteria.setContentPath(projectDto.getContentPath());
+                projCriteria.setCriteria(" title = '" + temp + "' ");
+                projCriteria.setContentPath(project.getContentPath());
                 try {
                     p = this.avDao.fetchProject(projCriteria);    
                 }
@@ -605,7 +608,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 projectId = this.avDao.maintainProject(projectDto);
             }
             else {
-                this.avDao.maintainProject(projectDto);
+                if (REQUEST_REFRESH) {
+                    this.avDao.maintainProject(projectDto);
+                }
             }    
         }
         catch (AudioVideoDaoException e) {
@@ -625,7 +630,11 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             if (track.getTrackId() == 0) {
                 TracksDto criteria = Rmt2MediaDtoFactory.getAvTrackInstance(null);
                 criteria.setProjectId(track.getProjectId());
-                criteria.setTrackTitle(track.getTrackTitle());
+
+                String escapedValue = RMT2String.replaceAll2(track.getTrackTitle(), "''", "'");
+                String customSql = " track_title = '" + escapedValue + "' ";
+
+                criteria.setCriteria(customSql);
                 List<TracksDto> t = this.avDao.fetchTrack(criteria);
                 if (t != null && t.size() == 1) {
                     trackId = t.get(0).getTrackId();
@@ -645,7 +654,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             }
             else {
                 // Update existing track
-                this.avDao.maintainTrack(trackDto);
+                if (REQUEST_REFRESH) {
+                    this.avDao.maintainTrack(trackDto);
+                }
             }    
         }
         catch (AudioVideoDaoException e) {
@@ -761,6 +772,34 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     }
 
     /**
+     * 
+     * @param fileName
+     * @param msgCatg
+     * @param msg
+     * @return
+     */
+    private String buildFileWarningMessage(String fileName, String msgCatg, String msg) {
+        StringBuffer errMsg = new StringBuffer();
+        errMsg.append("File: ");
+        errMsg.append(fileName);
+        errMsg.append("\n");
+        errMsg.append("Waring Category: ");
+        errMsg.append(msgCatg);
+        errMsg.append("\n");
+        errMsg.append("Cause: ");
+        if (msg == null) {
+            msg = "Unknown";
+        }
+        errMsg.append(msg);
+        errMsg.append("\n");
+
+        String m = errMsg.toString();
+        System.out.println("Error ===> " + m);
+        logger.log(Level.WARN, "Warning ===> " + m);
+        return m;
+    }
+
+    /**
      * Creates a report detailing the success or failure of all the files
      * processed and transmits the report via SMTP to the user designated as the
      * application's email recipient.
@@ -801,6 +840,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         body.append("Total Media Files Successfully Processed: " + this.successCnt);
         body.append("\n");
         body.append("Total Media Files Unsuccessfully Processed: " + this.errorCnt);
+        body.append("\n");
+        body.append("Total non-Media Files Encountered: " + this.nonAvFileCnt);
         body.append("\n\n\n");
 
         if (this.fileErrorMsg.size() > 0) {
@@ -823,26 +864,29 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             body.append("\n");
         }
 
-        // Setup bean that represents the email message.
-        EmailMessageBean bean = new EmailMessageBean();
-        bean.setFromAddress(fromAddr);
-
-        // You can optionally enter multiple email addresses separated by commas
-        bean.setToAddress(toAddr);
-        bean.setSubject(subject);
-        bean.setBody(body.toString(), EmailMessageBean.TEXT_CONTENT);
-
-        // Declare and initialize SMTP api and allow the system to discover SMTP
-        // host
-        SmtpApi api = SmtpFactory.getSmtpInstance();
-        // Send simple email to its intended destination
-        try {
-            api.sendMessage(bean);
-            // Close the service.
-            api.close();
-        } catch (Exception e) {
-            throw new AvBatchReportException(e);
-        }
+        RMT2File.outputFile(body.toString(), "c:/tmp/log/media_import_error_report.txt");
+        // // Setup bean that represents the email message.
+        // EmailMessageBean bean = new EmailMessageBean();
+        // bean.setFromAddress(fromAddr);
+        //
+        // // You can optionally enter multiple email addresses separated by
+        // commas
+        // bean.setToAddress(toAddr);
+        // bean.setSubject(subject);
+        // bean.setBody(body.toString(), EmailMessageBean.TEXT_CONTENT);
+        //
+        // // Declare and initialize SMTP api and allow the system to discover
+        // SMTP
+        // // host
+        // SmtpApi api = SmtpFactory.getSmtpInstance();
+        // // Send simple email to its intended destination
+        // try {
+        // api.sendMessage(bean);
+        // // Close the service.
+        // api.close();
+        // } catch (Exception e) {
+        // throw new AvBatchReportException(e);
+        // }
         return;
     }
     
