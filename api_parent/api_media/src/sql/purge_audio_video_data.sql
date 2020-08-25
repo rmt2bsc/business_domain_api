@@ -22,4 +22,8 @@ union
 select 'projects', count(*) from AV_PROJECT
 union
 select 'tracks', count(*) from AV_TRACKS
- order by 1
+ order by 1;
+
+// Check genres assigned to audio projects
+select a.ARTIST_ID, a.NAME, p.PROJECT_ID, p.TITLE from av_artist a, av_project p where a.ARTIST_ID = p.ARTIST_ID and  p.genre_id = 999
+--select count() from av_project p where genre_id = 999
