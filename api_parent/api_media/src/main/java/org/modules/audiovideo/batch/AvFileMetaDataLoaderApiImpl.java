@@ -454,6 +454,15 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             String fileName = mediaFile.getName();
             avt.setLocFilename(fileName);
 
+            try {
+                String unc[] = RMT2File.getUNCFilename(mediaFile.getCanonicalPath());
+                if (unc != null && unc.length > 0) {
+                    avt.setLocServername(unc[0]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             // Initialized Ripped flag
             av.setRipped(mediaPath.indexOf(AudioVideoDaoConstants.DIRNAME_NON_RIPPED) > -1 ? 0 : 1);
             return avb;
@@ -531,6 +540,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         try {
             if (artist.getArtistId() == 0) {
                 artistId = this.avDao.maintainArtist(artistDto);
+            }
+            else {
+                logger.info("Artist, " + artist.getName() + ", already exists...add operation skipped.");
             }
         }
         catch (AudioVideoDaoException e) {
@@ -628,6 +640,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 if (REQUEST_REFRESH) {
                     this.avDao.maintainProject(projectDto);
                 }
+                else {
+                    logger.info("Project, " + project.getTitle() + ", already exists...add operation skipped.");
+                }
             }    
         }
         catch (AudioVideoDaoException e) {
@@ -673,6 +688,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 // Update existing track
                 if (REQUEST_REFRESH) {
                     this.avDao.maintainTrack(trackDto);
+                }
+                else {
+                    logger.info("Track, " + track.getTrackTitle() + ", already exists...add operation skipped.");
                 }
             }    
         }
