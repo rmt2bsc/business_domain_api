@@ -494,24 +494,21 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * @throws AudioVideoApiException
      */
     protected int addAudioVideoFileData(AvCombinedProjectBean avProj, File parentDirectory) throws AudioVideoApiException {
-        AvArtist artist = avProj.getAva();
-        AvProject project = avProj.getAv();
-        AvTracks track = avProj.getAvt();
-
         // Process artist
-        int artistId = this.insertArtistFromFile(artist);
-        project.setArtistId(artistId);
+        int artistId = this.insertArtistFromFile(avProj);
+        avProj.getAv().setArtistId(artistId);
         
         // Process Project/Album
-        int projectId = this.insertProjectFromFile(project, avProj.getGenre(), parentDirectory);
-        track.setProjectId(projectId);
+        int projectId = this.insertProjectFromFile(avProj, parentDirectory);
+        avProj.getAvt().setProjectId(projectId);
         
         // Process track
-        this.insertTrackFromFile(track);
+        this.insertTrackFromFile(avProj);
         return projectId;
     }
     
-    private int insertArtistFromFile(AvArtist artist) throws AudioVideoApiException {
+    private int insertArtistFromFile(AvCombinedProjectBean avProj) throws AudioVideoApiException {
+        AvArtist artist = avProj.getAva();
         ArtistDto artistDto = Rmt2MediaDtoFactory.getAvArtistInstance(artist);
         this.validateArtist(artistDto);
         int artistId = 0;
@@ -551,7 +548,9 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return artistId;
     }
 
-    private int insertProjectFromFile(AvProject project, String genreValue, File parentDirectory) throws AudioVideoApiException {
+    private int insertProjectFromFile(AvCombinedProjectBean avProj, File parentDirectory) throws AudioVideoApiException {
+        AvProject project = avProj.getAv();
+        String genreValue = avProj.getGenre();
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
         projectDto.setArtistId(project.getArtistId());
@@ -651,7 +650,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return projectId;
     }
 
-    private int insertTrackFromFile(AvTracks track) throws AudioVideoApiException {
+    private int insertTrackFromFile(AvCombinedProjectBean avProj) throws AudioVideoApiException {
+        AvTracks track = avProj.getAvt();
         TracksDto trackDto = Rmt2MediaDtoFactory.getAvTrackInstance(track);
         int trackId = 0;
         trackDto.setProjectId(track.getProjectId());
