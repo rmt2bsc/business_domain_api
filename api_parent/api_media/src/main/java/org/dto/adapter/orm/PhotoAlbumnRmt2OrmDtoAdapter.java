@@ -51,7 +51,7 @@ class PhotoAlbumnRmt2OrmDtoAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setAlbumId(int value) {
-        this.p.setAlbumId(value);
+        this.p.setAlbumId2(value);
     }
 
     /*
@@ -61,7 +61,7 @@ class PhotoAlbumnRmt2OrmDtoAdapter extends TransactionDtoImpl implements
      */
     @Override
     public int getAlbumId() {
-        return this.p.getAlbumId();
+        return this.p.getAlbumId2();
     }
 
     /*
