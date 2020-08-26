@@ -36,6 +36,7 @@ import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.persistence.DatabaseException;
 import com.api.util.RMT2Date;
 import com.api.util.RMT2File;
+import com.api.util.RMT2Money;
 import com.api.util.RMT2String;
 
 /**
@@ -538,21 +539,37 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return artistId;
     }
 
-    private int insertProjectFromFile(AvProject project, String genreName, File parentDirectory) throws AudioVideoApiException {
-        int artistId = project.getArtistId();
+    private int insertProjectFromFile(AvProject project, String genreValue, File parentDirectory) throws AudioVideoApiException {
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
-        project.setArtistId(artistId);
-        projectDto.setArtistId(artistId);
+        projectDto.setArtistId(project.getArtistId());
         this.validateProject(projectDto);
 
+        // Genre value may have been obtained as a UID value in the format of
+        // (n) or as its name.
         GenreDto genreCriteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
-        genreCriteria.setDescription(genreName);
-        List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
         int genreId = AudioVideoDaoConstants.UNKNOWN_GENRE;
-        if (g != null && g.size() == 1) {
-            genreId = g.get(0).getUid();
+        if (genreValue != null) {
+            if (genreValue.contains("(") && genreValue.contains(")")) {
+                String genreIdString = RMT2String.replace(RMT2String.replace(genreValue, "", "("), "", ")");
+                if (RMT2Money.isNumeric(genreIdString)) {
+                    int temp = Integer.valueOf(genreIdString);
+                    genreCriteria.setUid(temp);
+                }
+                else {
+                    genreCriteria.setDescription(genreValue);
+                }
+            }
+            else {
+                genreCriteria.setDescription(genreValue);
+            }    
+            List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
+            if (g != null && g.size() == 1) {
+                genreId = g.get(0).getUid();
+            }
         }
+
+        // Continue processing the rest of "project"
         project.setGenreId(genreId);
         projectDto.setGenreId(genreId);
         
@@ -564,7 +581,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             String temp = RMT2String.replaceAll2(project.getTitle(), "''", "'");
             String customSql = " title = '" + temp + "' ";
             projCriteria.setCriteria(customSql);
-            projCriteria.setArtistId(artistId);
+            projCriteria.setArtistId(project.getArtistId());
             List<ProjectDto> p = null;
             try {
                 p = this.avDao.fetchProject(projCriteria);    
@@ -572,7 +589,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             catch (AudioVideoDaoException e) {
                 throw new AudioVideoApiException(
                         "Unable to verify project/album existence by artist id and title ["
-                                + artistId + ", " + projectDto.getTitle() + "]", e);
+                                + project.getArtistId() + ", " + projectDto.getTitle() + "]", e);
             }
             if (p != null && p.size() == 1) {
                 projectId = p.get(0).getProjectId();
