@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -22,8 +21,8 @@ public class PhotoAlbum extends OrmBean {
 
 	// Property name constants that belong to respective DataSource, PhotoAlbumView
 
-/** The property name constant equivalent to property, AlbumId, of respective DataSource view. */
-  public static final String PROP_ALBUMID = "AlbumId";
+/** The property name constant equivalent to property, AlbumId2, of respective DataSource view. */
+  public static final String PROP_ALBUMID2 = "AlbumId2";
 /** The property name constant equivalent to property, AlbumName, of respective DataSource view. */
   public static final String PROP_ALBUMNAME = "AlbumName";
 /** The property name constant equivalent to property, AlbumDate, of respective DataSource view. */
@@ -43,8 +42,8 @@ public class PhotoAlbum extends OrmBean {
 
 
 
-	/** The javabean property equivalent of database column photo_album.album_id */
-  private int albumId;
+	/** The javabean property equivalent of database column photo_album.album_id2 */
+  private int albumId2;
 /** The javabean property equivalent of database column photo_album.album_name */
   private String albumName;
 /** The javabean property equivalent of database column photo_album.album_date */
@@ -73,16 +72,16 @@ public class PhotoAlbum extends OrmBean {
 	super();
  }
 /**
- * Sets the value of member variable albumId
+ * Sets the value of member variable albumId2
  */
-  public void setAlbumId(int value) {
-    this.albumId = value;
+  public void setAlbumId2(int value) {
+    this.albumId2 = value;
   }
 /**
- * Gets the value of member variable albumId
+ * Gets the value of member variable albumId2
  */
-  public int getAlbumId() {
-    return this.albumId;
+  public int getAlbumId2() {
+    return this.albumId2;
   }
 /**
  * Sets the value of member variable albumName
@@ -193,7 +192,7 @@ public boolean equals(Object obj) {
       return false;
    }
    final PhotoAlbum other = (PhotoAlbum) obj; 
-   if (EqualityAssistant.notEqual(this.albumId, other.albumId)) {
+   if (EqualityAssistant.notEqual(this.albumId2, other.albumId2)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.albumName, other.albumName)) {
@@ -216,7 +215,7 @@ public boolean equals(Object obj) {
 
 @Override
 public int hashCode() {
-   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.albumId),
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.albumId2),
                HashCodeAssistant.hashObject(this.albumName),
                HashCodeAssistant.hashObject(this.albumDate),
                HashCodeAssistant.hashObject(this.location),
@@ -226,7 +225,7 @@ public int hashCode() {
 
 @Override
 public String toString() {
-   return "PhotoAlbum [albumId=" + albumId + 
+   return "PhotoAlbum [albumId2=" + albumId2 + 
           ", albumName=" + albumName + 
           ", albumDate=" + albumDate + 
           ", location=" + location + 

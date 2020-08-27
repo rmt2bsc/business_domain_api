@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -30,6 +29,8 @@ public class AvProject extends OrmBean {
   public static final String PROP_PROJECTTYPEID = "ProjectTypeId";
 /** The property name constant equivalent to property, GenreId, of respective DataSource view. */
   public static final String PROP_GENREID = "GenreId";
+/** The property name constant equivalent to property, ContentId, of respective DataSource view. */
+  public static final String PROP_CONTENTID = "ContentId";
 /** The property name constant equivalent to property, MediaTypeId, of respective DataSource view. */
   public static final String PROP_MEDIATYPEID = "MediaTypeId";
 /** The property name constant equivalent to property, Title, of respective DataSource view. */
@@ -42,24 +43,22 @@ public class AvProject extends OrmBean {
   public static final String PROP_RIPPED = "Ripped";
 /** The property name constant equivalent to property, Cost, of respective DataSource view. */
   public static final String PROP_COST = "Cost";
+/** The property name constant equivalent to property, ContentPath, of respective DataSource view. */
+  public static final String PROP_CONTENTPATH = "ContentPath";
+/** The property name constant equivalent to property, ContentFilename, of respective DataSource view. */
+  public static final String PROP_CONTENTFILENAME = "ContentFilename";
+/** The property name constant equivalent to property, ArtWorkPath, of respective DataSource view. */
+  public static final String PROP_ARTWORKPATH = "ArtWorkPath";
+/** The property name constant equivalent to property, ArtWorkFilename, of respective DataSource view. */
+  public static final String PROP_ARTWORKFILENAME = "ArtWorkFilename";
+/** The property name constant equivalent to property, ProjectComments, of respective DataSource view. */
+  public static final String PROP_PROJECTCOMMENTS = "ProjectComments";
 /** The property name constant equivalent to property, DateCreated, of respective DataSource view. */
   public static final String PROP_DATECREATED = "DateCreated";
 /** The property name constant equivalent to property, DateUpdated, of respective DataSource view. */
   public static final String PROP_DATEUPDATED = "DateUpdated";
 /** The property name constant equivalent to property, UserId, of respective DataSource view. */
   public static final String PROP_USERID = "UserId";
-/** The property name constant equivalent to property, ContentId, of respective DataSource view. */
-  public static final String PROP_CONTENTID = "ContentId";
-/** The property name constant equivalent to property, ArtWorkPath, of respective DataSource view. */
-  public static final String PROP_ARTWORKPATH = "ArtWorkPath";
-/** The property name constant equivalent to property, ContentPath, of respective DataSource view. */
-  public static final String PROP_CONTENTPATH = "ContentPath";
-/** The property name constant equivalent to property, ProjectComments, of respective DataSource view. */
-  public static final String PROP_PROJECTCOMMENTS = "ProjectComments";
-/** The property name constant equivalent to property, ContentFilename, of respective DataSource view. */
-  public static final String PROP_CONTENTFILENAME = "ContentFilename";
-/** The property name constant equivalent to property, ArtWorkFilename, of respective DataSource view. */
-  public static final String PROP_ARTWORKFILENAME = "ArtWorkFilename";
 
 
 
@@ -71,6 +70,8 @@ public class AvProject extends OrmBean {
   private int projectTypeId;
 /** The javabean property equivalent of database column av_project.genre_id */
   private int genreId;
+/** The javabean property equivalent of database column av_project.content_id */
+  private int contentId;
 /** The javabean property equivalent of database column av_project.media_type_id */
   private int mediaTypeId;
 /** The javabean property equivalent of database column av_project.title */
@@ -83,24 +84,22 @@ public class AvProject extends OrmBean {
   private int ripped;
 /** The javabean property equivalent of database column av_project.cost */
   private double cost;
+/** The javabean property equivalent of database column av_project.content_path */
+  private String contentPath;
+/** The javabean property equivalent of database column av_project.content_filename */
+  private String contentFilename;
+/** The javabean property equivalent of database column av_project.art_work_path */
+  private String artWorkPath;
+/** The javabean property equivalent of database column av_project.art_work_filename */
+  private String artWorkFilename;
+/** The javabean property equivalent of database column av_project.project_comments */
+  private String projectComments;
 /** The javabean property equivalent of database column av_project.date_created */
   private java.util.Date dateCreated;
 /** The javabean property equivalent of database column av_project.date_updated */
   private java.util.Date dateUpdated;
 /** The javabean property equivalent of database column av_project.user_id */
   private String userId;
-/** The javabean property equivalent of database column av_project.content_id */
-  private int contentId;
-/** The javabean property equivalent of database column av_project.art_work_path */
-  private String artWorkPath;
-/** The javabean property equivalent of database column av_project.content_path */
-  private String contentPath;
-/** The javabean property equivalent of database column av_project.project_comments */
-  private String projectComments;
-/** The javabean property equivalent of database column av_project.content_filename */
-  private String contentFilename;
-/** The javabean property equivalent of database column av_project.art_work_filename */
-  private String artWorkFilename;
 
 
 
@@ -159,6 +158,18 @@ public class AvProject extends OrmBean {
  */
   public int getGenreId() {
     return this.genreId;
+  }
+/**
+ * Sets the value of member variable contentId
+ */
+  public void setContentId(int value) {
+    this.contentId = value;
+  }
+/**
+ * Gets the value of member variable contentId
+ */
+  public int getContentId() {
+    return this.contentId;
   }
 /**
  * Sets the value of member variable mediaTypeId
@@ -233,6 +244,66 @@ public class AvProject extends OrmBean {
     return this.cost;
   }
 /**
+ * Sets the value of member variable contentPath
+ */
+  public void setContentPath(String value) {
+    this.contentPath = value;
+  }
+/**
+ * Gets the value of member variable contentPath
+ */
+  public String getContentPath() {
+    return this.contentPath;
+  }
+/**
+ * Sets the value of member variable contentFilename
+ */
+  public void setContentFilename(String value) {
+    this.contentFilename = value;
+  }
+/**
+ * Gets the value of member variable contentFilename
+ */
+  public String getContentFilename() {
+    return this.contentFilename;
+  }
+/**
+ * Sets the value of member variable artWorkPath
+ */
+  public void setArtWorkPath(String value) {
+    this.artWorkPath = value;
+  }
+/**
+ * Gets the value of member variable artWorkPath
+ */
+  public String getArtWorkPath() {
+    return this.artWorkPath;
+  }
+/**
+ * Sets the value of member variable artWorkFilename
+ */
+  public void setArtWorkFilename(String value) {
+    this.artWorkFilename = value;
+  }
+/**
+ * Gets the value of member variable artWorkFilename
+ */
+  public String getArtWorkFilename() {
+    return this.artWorkFilename;
+  }
+/**
+ * Sets the value of member variable projectComments
+ */
+  public void setProjectComments(String value) {
+    this.projectComments = value;
+  }
+/**
+ * Gets the value of member variable projectComments
+ */
+  public String getProjectComments() {
+    return this.projectComments;
+  }
+/**
  * Sets the value of member variable dateCreated
  */
   public void setDateCreated(java.util.Date value) {
@@ -268,78 +339,6 @@ public class AvProject extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
-/**
- * Sets the value of member variable contentId
- */
-  public void setContentId(int value) {
-    this.contentId = value;
-  }
-/**
- * Gets the value of member variable contentId
- */
-  public int getContentId() {
-    return this.contentId;
-  }
-/**
- * Sets the value of member variable artWorkPath
- */
-  public void setArtWorkPath(String value) {
-    this.artWorkPath = value;
-  }
-/**
- * Gets the value of member variable artWorkPath
- */
-  public String getArtWorkPath() {
-    return this.artWorkPath;
-  }
-/**
- * Sets the value of member variable contentPath
- */
-  public void setContentPath(String value) {
-    this.contentPath = value;
-  }
-/**
- * Gets the value of member variable contentPath
- */
-  public String getContentPath() {
-    return this.contentPath;
-  }
-/**
- * Sets the value of member variable projectComments
- */
-  public void setProjectComments(String value) {
-    this.projectComments = value;
-  }
-/**
- * Gets the value of member variable projectComments
- */
-  public String getProjectComments() {
-    return this.projectComments;
-  }
-/**
- * Sets the value of member variable contentFilename
- */
-  public void setContentFilename(String value) {
-    this.contentFilename = value;
-  }
-/**
- * Gets the value of member variable contentFilename
- */
-  public String getContentFilename() {
-    return this.contentFilename;
-  }
-/**
- * Sets the value of member variable artWorkFilename
- */
-  public void setArtWorkFilename(String value) {
-    this.artWorkFilename = value;
-  }
-/**
- * Gets the value of member variable artWorkFilename
- */
-  public String getArtWorkFilename() {
-    return this.artWorkFilename;
-  }
 
 @Override
 public boolean equals(Object obj) {
@@ -365,6 +364,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.genreId, other.genreId)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.contentId, other.contentId)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.mediaTypeId, other.mediaTypeId)) {
       return false;
    }
@@ -383,22 +385,19 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.cost, other.cost)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.contentId, other.contentId)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.artWorkPath, other.artWorkPath)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.contentPath, other.contentPath)) {
-      return false;
-   }
-   if (EqualityAssistant.notEqual(this.projectComments, other.projectComments)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.contentFilename, other.contentFilename)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.artWorkPath, other.artWorkPath)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.artWorkFilename, other.artWorkFilename)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.projectComments, other.projectComments)) {
       return false;
    }
    return true; 
@@ -410,18 +409,18 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.artistId),
                HashCodeAssistant.hashObject(this.projectTypeId),
                HashCodeAssistant.hashObject(this.genreId),
+               HashCodeAssistant.hashObject(this.contentId),
                HashCodeAssistant.hashObject(this.mediaTypeId),
                HashCodeAssistant.hashObject(this.title),
                HashCodeAssistant.hashObject(this.year),
                HashCodeAssistant.hashObject(this.masterDupId),
                HashCodeAssistant.hashObject(this.ripped),
                HashCodeAssistant.hashObject(this.cost),
-               HashCodeAssistant.hashObject(this.contentId),
-               HashCodeAssistant.hashObject(this.artWorkPath),
                HashCodeAssistant.hashObject(this.contentPath),
-               HashCodeAssistant.hashObject(this.projectComments),
                HashCodeAssistant.hashObject(this.contentFilename),
-               HashCodeAssistant.hashObject(this.artWorkFilename));
+               HashCodeAssistant.hashObject(this.artWorkPath),
+               HashCodeAssistant.hashObject(this.artWorkFilename),
+               HashCodeAssistant.hashObject(this.projectComments));
 } 
 
 @Override
@@ -430,18 +429,18 @@ public String toString() {
           ", artistId=" + artistId + 
           ", projectTypeId=" + projectTypeId + 
           ", genreId=" + genreId + 
+          ", contentId=" + contentId + 
           ", mediaTypeId=" + mediaTypeId + 
           ", title=" + title + 
           ", year=" + year + 
           ", masterDupId=" + masterDupId + 
           ", ripped=" + ripped + 
           ", cost=" + cost + 
-          ", contentId=" + contentId + 
-          ", artWorkPath=" + artWorkPath + 
           ", contentPath=" + contentPath + 
-          ", projectComments=" + projectComments + 
           ", contentFilename=" + contentFilename + 
-          ", artWorkFilename=" + artWorkFilename  + "]";
+          ", artWorkPath=" + artWorkPath + 
+          ", artWorkFilename=" + artWorkFilename + 
+          ", projectComments=" + projectComments  + "]";
 }
 
 /**

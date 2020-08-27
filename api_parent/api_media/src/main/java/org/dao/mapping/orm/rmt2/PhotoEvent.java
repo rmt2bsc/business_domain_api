@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -22,10 +21,10 @@ public class PhotoEvent extends OrmBean {
 
 	// Property name constants that belong to respective DataSource, PhotoEventView
 
-/** The property name constant equivalent to property, EventId, of respective DataSource view. */
-  public static final String PROP_EVENTID = "EventId";
-/** The property name constant equivalent to property, AlbumId, of respective DataSource view. */
-  public static final String PROP_ALBUMID = "AlbumId";
+/** The property name constant equivalent to property, EventId3, of respective DataSource view. */
+  public static final String PROP_EVENTID3 = "EventId3";
+/** The property name constant equivalent to property, AlbumId2, of respective DataSource view. */
+  public static final String PROP_ALBUMID2 = "AlbumId2";
 /** The property name constant equivalent to property, EventName, of respective DataSource view. */
   public static final String PROP_EVENTNAME = "EventName";
 /** The property name constant equivalent to property, Location, of respective DataSource view. */
@@ -39,10 +38,10 @@ public class PhotoEvent extends OrmBean {
 
 
 
-	/** The javabean property equivalent of database column photo_event.event_id */
-  private int eventId;
-/** The javabean property equivalent of database column photo_event.album_id */
-  private int albumId;
+	/** The javabean property equivalent of database column photo_event.event_id3 */
+  private int eventId3;
+/** The javabean property equivalent of database column photo_event.album_id2 */
+  private int albumId2;
 /** The javabean property equivalent of database column photo_event.event_name */
   private String eventName;
 /** The javabean property equivalent of database column photo_event.location */
@@ -65,28 +64,28 @@ public class PhotoEvent extends OrmBean {
 	super();
  }
 /**
- * Sets the value of member variable eventId
+ * Sets the value of member variable eventId3
  */
-  public void setEventId(int value) {
-    this.eventId = value;
+  public void setEventId3(int value) {
+    this.eventId3 = value;
   }
 /**
- * Gets the value of member variable eventId
+ * Gets the value of member variable eventId3
  */
-  public int getEventId() {
-    return this.eventId;
+  public int getEventId3() {
+    return this.eventId3;
   }
 /**
- * Sets the value of member variable albumId
+ * Sets the value of member variable albumId2
  */
-  public void setAlbumId(int value) {
-    this.albumId = value;
+  public void setAlbumId2(int value) {
+    this.albumId2 = value;
   }
 /**
- * Gets the value of member variable albumId
+ * Gets the value of member variable albumId2
  */
-  public int getAlbumId() {
-    return this.albumId;
+  public int getAlbumId2() {
+    return this.albumId2;
   }
 /**
  * Sets the value of member variable eventName
@@ -161,10 +160,10 @@ public boolean equals(Object obj) {
       return false;
    }
    final PhotoEvent other = (PhotoEvent) obj; 
-   if (EqualityAssistant.notEqual(this.eventId, other.eventId)) {
+   if (EqualityAssistant.notEqual(this.eventId3, other.eventId3)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.albumId, other.albumId)) {
+   if (EqualityAssistant.notEqual(this.albumId2, other.albumId2)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.eventName, other.eventName)) {
@@ -178,16 +177,16 @@ public boolean equals(Object obj) {
 
 @Override
 public int hashCode() {
-   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.eventId),
-               HashCodeAssistant.hashObject(this.albumId),
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.eventId3),
+               HashCodeAssistant.hashObject(this.albumId2),
                HashCodeAssistant.hashObject(this.eventName),
                HashCodeAssistant.hashObject(this.location));
 } 
 
 @Override
 public String toString() {
-   return "PhotoEvent [eventId=" + eventId + 
-          ", albumId=" + albumId + 
+   return "PhotoEvent [eventId3=" + eventId3 + 
+          ", albumId2=" + albumId2 + 
           ", eventName=" + eventName + 
           ", location=" + location  + "]";
 }

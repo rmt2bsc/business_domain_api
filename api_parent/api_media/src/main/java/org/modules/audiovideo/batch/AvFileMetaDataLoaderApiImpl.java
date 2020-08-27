@@ -553,7 +553,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // String genreValue = avProj.getGenre();
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
-        projectDto.setArtistId(project.getArtistId());
         this.validateProject(projectDto);
 
         // Genre value may have been obtained as a UID value in the format of
@@ -659,7 +658,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         track.setGenreId(avProj.getAv().getGenreId());
         TracksDto trackDto = Rmt2MediaDtoFactory.getAvTrackInstance(track);
         int trackId = 0;
-        trackDto.setProjectId(track.getProjectId());
         this.validateTarck(trackDto);
 
         // Verify that track does not exists for this project
