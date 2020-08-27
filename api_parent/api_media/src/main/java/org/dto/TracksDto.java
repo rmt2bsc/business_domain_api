@@ -32,6 +32,16 @@ public interface TracksDto extends TransactionDto {
     int getProjectId();
 
     /**
+     * Sets the genre Id
+     */
+    void setGenreId(int value);
+
+    /**
+     * Gets the genre Id
+     */
+    int getGenreId();
+
+    /**
      * Sets the track Number
      */
     void setTrackNumber(int value);

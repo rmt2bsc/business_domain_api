@@ -128,6 +128,7 @@ public class AvMediaMockDataFactory {
         AvTracks o = new AvTracks();
         o.setTrackId(trackId);
         o.setProjectId(projectId);
+        o.setGenreId(AvMediaMockDataFactory.TEST_GENRE_ID); // Funk
         o.setTrackNumber(trackNumber);
         o.setTrackTitle(title);
         o.setTrackHours(hh);

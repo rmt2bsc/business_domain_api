@@ -550,7 +550,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
     private int insertProjectFromFile(AvCombinedProjectBean avProj, File parentDirectory) throws AudioVideoApiException {
         AvProject project = avProj.getAv();
-        String genreValue = avProj.getGenre();
+        // String genreValue = avProj.getGenre();
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
         projectDto.setArtistId(project.getArtistId());
@@ -558,27 +558,31 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
         // Genre value may have been obtained as a UID value in the format of
         // (n) or as its name.
-        GenreDto genreCriteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
-        int genreId = AudioVideoDaoConstants.UNKNOWN_GENRE;
-        if (genreValue != null) {
-            if (genreValue.contains("(") && genreValue.contains(")")) {
-                String genreIdString = RMT2String.replace(RMT2String.replace(genreValue, "", "("), "", ")");
-                if (RMT2Money.isNumeric(genreIdString)) {
-                    int temp = Integer.valueOf(genreIdString);
-                    genreCriteria.setUid(temp);
-                }
-                else {
-                    genreCriteria.setDescription(genreValue);
-                }
-            }
-            else {
-                genreCriteria.setDescription(genreValue);
-            }    
-            List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
-            if (g != null && g.size() == 1) {
-                genreId = g.get(0).getUid();
-            }
-        }
+        int genreId = this.getGenreId(avProj);
+
+        // GenreDto genreCriteria =
+        // Rmt2MediaDtoFactory.getAvGenreInstance(null);
+        // int genreId = AudioVideoDaoConstants.UNKNOWN_GENRE;
+        // if (genreValue != null) {
+        // if (genreValue.contains("(") && genreValue.contains(")")) {
+        // String genreIdString =
+        // RMT2String.replace(RMT2String.replace(genreValue, "", "("), "", ")");
+        // if (RMT2Money.isNumeric(genreIdString)) {
+        // int temp = Integer.valueOf(genreIdString);
+        // genreCriteria.setUid(temp);
+        // }
+        // else {
+        // genreCriteria.setDescription(genreValue);
+        // }
+        // }
+        // else {
+        // genreCriteria.setDescription(genreValue);
+        // }
+        // List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
+        // if (g != null && g.size() == 1) {
+        // genreId = g.get(0).getUid();
+        // }
+        // }
 
         // Continue processing the rest of "project"
         project.setGenreId(genreId);
@@ -652,6 +656,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
     private int insertTrackFromFile(AvCombinedProjectBean avProj) throws AudioVideoApiException {
         AvTracks track = avProj.getAvt();
+        track.setGenreId(avProj.getAv().getGenreId());
         TracksDto trackDto = Rmt2MediaDtoFactory.getAvTrackInstance(track);
         int trackId = 0;
         trackDto.setProjectId(track.getProjectId());
@@ -700,6 +705,32 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         return trackId;
     }
     
+    private int getGenreId(AvCombinedProjectBean avProj) {
+        GenreDto genreCriteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
+        int genreId = AudioVideoDaoConstants.UNKNOWN_GENRE;
+        String genreValue = avProj.getGenre();
+        if (genreValue != null) {
+            if (genreValue.contains("(") && genreValue.contains(")")) {
+                String genreIdString = RMT2String.replace(RMT2String.replace(genreValue, "", "("), "", ")");
+                if (RMT2Money.isNumeric(genreIdString)) {
+                    int temp = Integer.valueOf(genreIdString);
+                    genreCriteria.setUid(temp);
+                }
+                else {
+                    genreCriteria.setDescription(genreValue);
+                }
+            }
+            else {
+                genreCriteria.setDescription(genreValue);
+            }
+            List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
+            if (g != null && g.size() == 1) {
+                genreId = g.get(0).getUid();
+            }
+        }
+        return genreId;
+    }
+
     /**
      * Verifies if <i>artist</i> is valid.
      * <p>

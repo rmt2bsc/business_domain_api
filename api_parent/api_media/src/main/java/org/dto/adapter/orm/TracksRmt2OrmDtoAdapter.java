@@ -80,6 +80,17 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
         return this.t.getProjectId();
     }
 
+    @Override
+    public void setGenreId(int value) {
+        this.t.setGenreId(value);
+
+    }
+
+    @Override
+    public int getGenreId() {
+        return this.t.getGenreId();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -379,4 +390,5 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
     public String getComments() {
         return this.t.getComments();
     }
+
 }

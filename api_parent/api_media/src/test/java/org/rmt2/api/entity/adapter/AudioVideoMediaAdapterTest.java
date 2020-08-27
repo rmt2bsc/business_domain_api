@@ -205,6 +205,7 @@ public class AudioVideoMediaAdapterTest {
 
         Assert.assertEquals(AvMediaMockDataFactory.TEST_TRACK_ID, dto.getTrackId());
         Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getProjectId());
+        Assert.assertEquals(AvMediaMockDataFactory.TEST_GENRE_ID, dto.getGenreId());
         Assert.assertEquals(trackNo, dto.getTrackNumber());
         Assert.assertEquals(5, dto.getTrackHours());
         Assert.assertEquals(30, dto.getTrackMinutes());
@@ -224,6 +225,7 @@ public class AudioVideoMediaAdapterTest {
             dto = Rmt2MediaDtoFactory.getAvTrackInstance(nullParm);
             dto.setTrackId(AvMediaMockDataFactory.TEST_TRACK_ID);
             dto.setProjectId(AvMediaMockDataFactory.TEST_PROJECT_ID);
+            dto.setGenreId(AvMediaMockDataFactory.TEST_GENRE_ID);
             dto.setTrackNumber(trackNo);
             dto.setTrackHours(5);
             dto.setTrackMinutes(30);
@@ -241,6 +243,7 @@ public class AudioVideoMediaAdapterTest {
 
             Assert.assertEquals(AvMediaMockDataFactory.TEST_TRACK_ID, dto.getTrackId());
             Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getProjectId());
+            Assert.assertEquals(AvMediaMockDataFactory.TEST_GENRE_ID, dto.getGenreId());
             Assert.assertEquals(trackNo, dto.getTrackNumber());
             Assert.assertEquals(5, dto.getTrackHours());
             Assert.assertEquals(30, dto.getTrackMinutes());
