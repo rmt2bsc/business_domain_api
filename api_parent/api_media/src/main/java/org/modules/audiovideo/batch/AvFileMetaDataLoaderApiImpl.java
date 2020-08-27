@@ -550,7 +550,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
     private int insertProjectFromFile(AvCombinedProjectBean avProj, File parentDirectory) throws AudioVideoApiException {
         AvProject project = avProj.getAv();
-        // String genreValue = avProj.getGenre();
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
         this.validateProject(projectDto);
@@ -558,30 +557,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // Genre value may have been obtained as a UID value in the format of
         // (n) or as its name.
         int genreId = this.getGenreId(avProj);
-
-        // GenreDto genreCriteria =
-        // Rmt2MediaDtoFactory.getAvGenreInstance(null);
-        // int genreId = AudioVideoDaoConstants.UNKNOWN_GENRE;
-        // if (genreValue != null) {
-        // if (genreValue.contains("(") && genreValue.contains(")")) {
-        // String genreIdString =
-        // RMT2String.replace(RMT2String.replace(genreValue, "", "("), "", ")");
-        // if (RMT2Money.isNumeric(genreIdString)) {
-        // int temp = Integer.valueOf(genreIdString);
-        // genreCriteria.setUid(temp);
-        // }
-        // else {
-        // genreCriteria.setDescription(genreValue);
-        // }
-        // }
-        // else {
-        // genreCriteria.setDescription(genreValue);
-        // }
-        // List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
-        // if (g != null && g.size() == 1) {
-        // genreId = g.get(0).getUid();
-        // }
-        // }
 
         // Continue processing the rest of "project"
         project.setGenreId(genreId);
