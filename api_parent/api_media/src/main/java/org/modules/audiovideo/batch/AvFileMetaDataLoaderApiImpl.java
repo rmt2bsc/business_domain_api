@@ -271,6 +271,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             avb = this.extractFileMetaData(mediaFile);
             if (avb != null) {
                 this.addAudioVideoFileData(avb, parentDirectory);
+                this.avDao.commitTrans();
             }
             this.successCnt++;
         } catch (MP3ApiInstantiationException e) {
