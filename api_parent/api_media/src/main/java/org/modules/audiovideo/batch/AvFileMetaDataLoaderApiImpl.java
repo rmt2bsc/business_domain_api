@@ -420,14 +420,18 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             // Get Track Title
             avt.setTrackTitle(mp3.getTrackTitle());
 
-            // Get Composer
-            avt.setTrackComposer(mp3.getComposer());
+            try {
+                // Get Composer
+                avt.setTrackComposer(mp3.getComposer());
 
-            // Get producer
-            avt.setTrackProducer(mp3.getProducer());
+                // Get producer
+                avt.setTrackProducer(mp3.getProducer());
 
-            // Get Lyricist
-            avt.setTrackLyricist(mp3.getLyricist());
+                // Get Lyricist
+                avt.setTrackLyricist(mp3.getLyricist());
+            } catch (Exception e) {
+                // method may not be implemented..do nothing
+            }
 
             // Get comments.
             avt.setComments(mp3.getComment());
