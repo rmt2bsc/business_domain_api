@@ -2,6 +2,7 @@ package org.modules.audiovideo;
 
 import java.util.List;
 
+import org.dao.entity.CommonMediaDto;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.MediaTypeDto;
@@ -49,6 +50,18 @@ public interface AudioVideoApi extends TransactionApi {
      * @throws AudioVideoApiException
      */
     List<ProjectTypeDto> getProjectType(ProjectTypeDto criteria) throws AudioVideoApiException;
+
+    /**
+     * Retrieve a list of common media data (artisit, project, and/or track
+     * data) using a simple String value.
+     * 
+     * @param criteria
+     *            String that could represent either the artist, project, or
+     *            track.
+     * @return List of {@link CommonMediaDto} objects
+     * @throws AudioVideoApiException
+     */
+    List<CommonMediaDto> getCommonMedia(String criteria) throws AudioVideoApiException;
 
     /**
      * Retrieve list of artists based on selection criteria contained in

@@ -5,6 +5,7 @@ import java.util.List;
 import org.dao.audiovideo.AudioVideoDao;
 import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.audiovideo.AudioVideoDaoFactory;
+import org.dao.entity.CommonMediaDto;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.MediaTypeDto;
@@ -30,7 +31,7 @@ import com.api.util.assistants.VerifyException;
  */
 public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implements AudioVideoApi {
     
-    private AudioVideoDaoFactory daoFact;
+    // private AudioVideoDaoFactory daoFact;
     private AudioVideoDao dao;
 
 
@@ -43,7 +44,8 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     AudioVideoMetadataImpl(String appName) {
         super(appName);
-        this.dao = this.daoFact.createRmt2OrmDaoInstance(appName);
+        this.dao = AudioVideoDaoFactory.createRmt2OrmDaoInstance(appName);
+        // this.dao = this.daoFact.createRmt2OrmDaoInstance(appName);
         this.setSharedDao(this.dao);
         this.setApiUser(this.apiUser);
     }
@@ -57,13 +59,15 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
      */
     AudioVideoMetadataImpl(DaoClient dao) {
         super(dao);
-        this.dao = this.daoFact.createRmt2OrmDaoInstance(this.getSharedDao());
+        this.dao = AudioVideoDaoFactory.createRmt2OrmDaoInstance(this.getSharedDao());
+        // this.dao =
+        // this.daoFact.createRmt2OrmDaoInstance(this.getSharedDao());
     }
 
     @Override
     public void init() {
         super.init();
-        this.daoFact = new AudioVideoDaoFactory();
+        // this.daoFact = new AudioVideoDaoFactory();
     }
 
     @Override
@@ -98,6 +102,25 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
             throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve project type(s)", e);
         }
     }
+    
+    @Override
+    public List<CommonMediaDto> getCommonMedia(String criteria) throws AudioVideoApiException {
+        try {
+            Verifier.verifyNotEmpty(criteria);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Common media criteria object is required", e);
+        }
+        List<CommonMediaDto> results = null;
+        try {
+            results = this.dao.fetchCommonMedia(criteria);
+            return results;
+        }
+        catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve common media data", e);
+        }
+    }
+
     
     /* (non-Javadoc)
      * @see org.modules.audiovideo.AudioVideoApi#getArtist(org.dto.ArtistDto)
@@ -323,5 +346,6 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
             throw new InvalidDataException("Track number is required", e);
         }
     }
-    
+
+        
 }

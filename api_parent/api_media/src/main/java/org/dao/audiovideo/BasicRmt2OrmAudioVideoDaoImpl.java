@@ -1,11 +1,14 @@
 package org.dao.audiovideo;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dao.MediaDaoImpl;
+import org.dao.entity.CommonMediaDto;
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
 import org.dao.mapping.orm.rmt2.AvMediaType;
@@ -23,11 +26,14 @@ import org.modules.audiovideo.AudioVideoFactory;
 
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
+import com.api.persistence.PersistenceConst;
 import com.api.persistence.db.DatabaseConnectionBean;
 import com.api.persistence.db.DynamicSqlApi;
 import com.api.persistence.db.DynamicSqlFactory;
 import com.api.persistence.db.orm.OrmBean;
 import com.api.util.RMT2Date;
+import com.api.util.RMT2File;
+import com.api.util.RMT2String;
 import com.api.util.UserTimestamp;
 
 /**
@@ -66,6 +72,44 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         super(client);
     }
     
+    @Override
+    public List<CommonMediaDto> fetchCommonMedia(String criteria) throws AudioVideoDaoException {
+        String sql = RMT2File.getFileContentsAsString("sql/FetchMediaInfo.sql");
+        sql = RMT2String.replaceAll(sql, criteria, PersistenceConst.SQL_PLACEHOLDER);
+        ResultSet rs = null;
+        try {
+            rs = this.client.executeSql(sql);
+        } catch (DatabaseException e) {
+            this.msg = "Error fetching common media information record(s)";
+            throw new AudioVideoDaoException(this.msg, e);
+        }
+
+        List<CommonMediaDto> list = new ArrayList<>();
+        try {
+            if (rs != null) {
+                while (rs.next()) {
+                    CommonMediaDto dto = new CommonMediaDto();
+                    dto.setResultType(rs.getInt("result_type"));
+                    dto.setResultTypeDescription(rs.getString("result_type_description"));
+                    dto.setArtistId(rs.getInt("artist_id"));
+                    dto.setArtistName(rs.getString("artist_name"));
+                    dto.setProjectId(rs.getInt("project_id"));
+                    dto.setProjectTitle(rs.getString("project_title"));
+                    dto.setTrackNumber(rs.getInt("track_number"));
+                    dto.setTrackName(rs.getString("track_name"));
+                    dto.setTrackHours(rs.getInt("track_hours"));
+                    dto.setTrackMinutes(rs.getInt("track_minutes"));
+                    dto.setTrackSeconds(rs.getInt("track_seconds"));
+                    list.add(dto);
+                }
+            }
+            return list;
+        } catch (SQLException e) {
+            this.msg = "Error fetching common media information from SQL resultset";
+            throw new AudioVideoDaoException(this.msg, e);
+        }
+    }
+
     /**
      * Fetches artist information from the <i>av_artist</i> table based on
      * selection criteria contained in <i>criteria</i>.
