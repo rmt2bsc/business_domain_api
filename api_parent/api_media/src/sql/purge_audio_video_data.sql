@@ -8,7 +8,13 @@ CALL sa_reset_identity('AV_PROJECT', 'DBA', 0);
 CALL sa_reset_identity('AV_TRACKS', 'DBA', 0);
 
 commit;
+
+or
+
+CALL "DBA"."sp_refresh_media_tables"()
 */
+
+
 
 /**
 select name 'artists', count(*) from av_artist group by name having count(*) > 1 
