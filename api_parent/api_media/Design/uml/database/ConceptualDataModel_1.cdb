@@ -745,7 +745,7 @@ NameToCode=Yes</a:ModelOptionsText>
 <a:Code>MIMEPHYSICALDATAMODEL_1</a:Code>
 <a:CreationDate>1264918084</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1264918084</a:ModificationDate>
+<a:ModificationDate>1598477112</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:History>Common_ConceptDataModel (C:\ProjectServer\Common\Design\database\Common_ConceptDataModel.cdm)	CommonDB (C:\ProjectServer\Common\Design\database\CommonDB_ASA.PDM)
 </a:History>
@@ -1139,7 +1139,7 @@ NAMA 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1267894634</a:ModificationDate>
 <a:Rect>((7678,44089), (29694,53831))</a:Rect>
 <a:ListOfPoints>((29694,53831),(7678,44089))</a:ListOfPoints>
-<a:ArrowStyle>4627</a:ArrowStyle>
+<a:ArrowStyle>4371</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
 <a:FontList>DISPNAME 0 Arial,8,N
@@ -1747,7 +1747,7 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_TRACKS</a:Code>
 <a:CreationDate>1267816066</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1598475140</a:ModificationDate>
+<a:ModificationDate>1598477180</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Manages the details of the individual tracks of an audio-video asset.</a:Comment>
 <a:Number>5000000</a:Number>
@@ -1972,7 +1972,7 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_PROJECT</a:Code>
 <a:CreationDate>1267816074</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1488409255</a:ModificationDate>
+<a:ModificationDate>1599428020</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>The audio-video projects.</a:Comment>
 <a:Number>1000000</a:Number>
@@ -2146,7 +2146,7 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_ARTIST</a:Code>
 <a:CreationDate>1267816074</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1267895320</a:ModificationDate>
+<a:ModificationDate>1599428020</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Master list of artist regarding audio and video.</a:Comment>
 <a:Number>500000</a:Number>
@@ -2249,7 +2249,7 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_GENRE</a:Code>
 <a:CreationDate>1267816074</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1598475140</a:ModificationDate>
+<a:ModificationDate>1598477180</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Manages music and movie genres.</a:Comment>
 <a:Number>200</a:Number>
@@ -2711,11 +2711,11 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_ARTIST_RELATIONSHIP</a:Code>
 <a:CreationDate>1267817261</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1267895320</a:ModificationDate>
+<a:ModificationDate>1599428020</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Every audio-video project must be assoicated with an artist.</a:Comment>
 <a:Entity1ToEntity2RoleCardinality>0,n</a:Entity1ToEntity2RoleCardinality>
-<a:Entity2ToEntity1RoleCardinality>1,1</a:Entity2ToEntity1RoleCardinality>
+<a:Entity2ToEntity1RoleCardinality>0,1</a:Entity2ToEntity1RoleCardinality>
 <c:Object1>
 <o:Entity Ref="o41"/>
 </c:Object1>
@@ -2868,8 +2868,9 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>GENRE_TRACKS_RELATIONSHIP</a:Code>
 <a:CreationDate>1598474121</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1598475140</a:ModificationDate>
+<a:ModificationDate>1598477180</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
+<a:Comment>The id of the media&#39;s genre</a:Comment>
 <a:Entity1ToEntity2RoleCardinality>0,n</a:Entity1ToEntity2RoleCardinality>
 <a:Entity2ToEntity1RoleCardinality>0,1</a:Entity2ToEntity1RoleCardinality>
 <c:Object1>
@@ -4060,7 +4061,7 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Creator>appdev</a:Creator>
 <a:ModificationDate>1266283611</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
-<a:TargetModelURL>file:///C|/projects/multimedia/Design/uml/database/PhysicalDataModel_1.pdm</a:TargetModelURL>
+<a:TargetModelURL>file:///C|/source/Business_Domain_Api/api_parent/api_media/Design/uml/database/PhysicalDataModel_1.pdm</a:TargetModelURL>
 <a:TargetModelID>3DBEBF1F-B5CC-4B8B-8E83-F64408C56A9D</a:TargetModelID>
 <a:TargetModelClassID>CDE44E21-9669-11D1-9914-006097355D9B</a:TargetModelClassID>
 <c:SessionShortcuts>
