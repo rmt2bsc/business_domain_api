@@ -271,7 +271,6 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             avb = this.extractFileMetaData(mediaFile);
             if (avb != null) {
                 this.addAudioVideoFileData(avb, parentDirectory);
-                this.avDao.commitTrans();
             }
             this.successCnt++;
         } catch (MP3ApiInstantiationException e) {
@@ -552,9 +551,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         try {
             if (artist.getArtistId() == 0) {
                 artistId = this.avDao.maintainArtist(artistDto);
-            }
-            else {
-                logger.info("Artist, " + artist.getName() + ", already exists...add operation skipped.");
+                logger.info("Added Artist: " + artistDto.getName());
             }
         }
         catch (AudioVideoDaoException e) {
@@ -627,13 +624,12 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             if (projectId == 0) {
                 // Create project/album
                 projectId = this.avDao.maintainProject(projectDto);
+                logger.info("Added Album: " + projectDto.getTitle());
             }
             else {
                 if (REQUEST_REFRESH) {
                     this.avDao.maintainProject(projectDto);
-                }
-                else {
-                    logger.info("Project, " + project.getTitle() + ", already exists...add operation skipped.");
+                    logger.info("Updated Album: " + projectDto.getTitle());
                 }
             }    
         }
@@ -676,14 +672,13 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
                 trackId = this.avDao.maintainTrack(trackDto);
                 track.setTrackId(trackId);
                 trackDto.setTrackId(trackId);
+                logger.info("Added Track: " + trackDto.getTrackTitle());
             }
             else {
                 // Update existing track
                 if (REQUEST_REFRESH) {
                     this.avDao.maintainTrack(trackDto);
-                }
-                else {
-                    logger.info("Track, " + track.getTrackTitle() + ", already exists...add operation skipped.");
+                    logger.info("Updated Track: " + trackDto.getTrackTitle());
                 }
             }    
         }
