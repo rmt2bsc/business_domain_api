@@ -155,7 +155,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = f.createApiInstance(dir);
+            api = f.createMediaFileBatchImportApiInstance(dir);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }
@@ -178,7 +178,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         String dir = null;
         AvBatchFileFactory f = new AvBatchFileFactory();
         try {
-            f.createApiInstance(dir);
+            f.createMediaFileBatchImportApiInstance(dir);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -194,7 +194,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         dir += "/Aaliyah/One In A Million/Aaliyah-One In A Million-17-Came To Give Love (Outro).mp3";
         AvBatchFileFactory f = new AvBatchFileFactory();
         try {
-            f.createApiInstance(dir);
+            f.createMediaFileBatchImportApiInstance(dir);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -212,7 +212,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         AvBatchFileFactory f = new AvBatchFileFactory();
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -243,7 +243,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         AvBatchFileFactory f = new AvBatchFileFactory();
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -269,7 +269,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         AvBatchFileFactory f = new AvBatchFileFactory();
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -298,7 +298,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = f.createApiInstance(dir);
+            api = f.createMediaFileBatchImportApiInstance(dir);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }
