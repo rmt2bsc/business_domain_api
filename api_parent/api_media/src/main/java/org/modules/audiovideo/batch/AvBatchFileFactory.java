@@ -33,4 +33,18 @@ public class AvBatchFileFactory extends RMT2Base {
         api = new AvFileMetaDataLoaderApiImpl(srcDir);
         return api;
     }
+
+    /**
+     * Creates an instance of the AvBatchFileProcessorApi using the CSV video
+     * batch file meta data importer implementation.
+     * 
+     * @return an instance of {@link AvBatchFileProcessorApi}
+     * @throws BatchFileProcessException
+     *             Unable to create AvBatchFileProcessorApi
+     */
+    public static final AvBatchFileProcessorApi createCsvBatchImportApiInstance(String srcDir) throws BatchFileProcessException {
+        AvBatchFileProcessorApi api;
+        api = new CsvVideoMetaDataLoaderApiImpl(srcDir);
+        return api;
+    }
 }
