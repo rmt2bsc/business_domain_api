@@ -913,7 +913,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             body.append("\n");
         }
 
-        RMT2File.outputFile(body.toString(), "c:/tmp/log/media_import_error_report.txt");
+        RMT2File.outputFile(body.toString(), "/tmp/log/media_import_error_report.txt");
         // // Setup bean that represents the email message.
         // EmailMessageBean bean = new EmailMessageBean();
         // bean.setFromAddress(fromAddr);
