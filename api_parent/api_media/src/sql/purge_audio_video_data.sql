@@ -2,11 +2,9 @@
 delete FROM AV_TRACKS;
 delete from AV_PROJECT;
 delete from AV_ARTIST;
-
 CALL sa_reset_identity('AV_ARTIST', 'DBA', 0);
 CALL sa_reset_identity('AV_PROJECT', 'DBA', 0);
 CALL sa_reset_identity('AV_TRACKS', 'DBA', 0);
-
 commit;
 
 or
@@ -28,6 +26,8 @@ union
 select 'projects', count(*) from AV_PROJECT
 union
 select 'tracks', count(*) from AV_TRACKS
+UNION 
+select 'movies', count(*) from AV_PROJECT where project_type_id = 2
  order by 1;
 
 // Check genres assigned to audio projects
