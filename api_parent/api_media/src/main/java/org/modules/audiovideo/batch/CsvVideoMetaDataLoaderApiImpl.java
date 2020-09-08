@@ -219,14 +219,22 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         try {
             this.csvReader = new BufferedReader(new FileReader(mediaFile));
             String row = null;
+            int ndx = 0;
             while ((row = csvReader.readLine()) != null) {
-                String[] data = row.split(",");
+                if (ndx++ == 0) {
+                    // Skip header line
+                    continue;
+                }
+                String[] data = row.split("\\|");
                 AvCombinedProjectBean avb = this.extractFileMetaData(data);
                 try {
                     this.addAudioVideoFileData(avb);
                     this.successCnt++;
                 } catch (AudioVideoApiException e) {
                     logger.error("Error adding meta data for video, " + data[0] + ", to database", e);
+                    this.errorCnt++;
+                } catch (AvProjectDataValidationException e) {
+                    logger.error("Validation error occurred while attempting to add video data to the database");
                     this.errorCnt++;
                 } finally {
                     this.totCnt++;
@@ -237,6 +245,8 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
             throw new AudioVideoApiException("Error setting up connection to video batch import file", e);
         } catch (IOException e) {
             throw new AudioVideoApiException("Error reading line in video batch import file", e);
+        } catch (Exception e) {
+            throw new AudioVideoApiException("An unexpected error was encountered processing the video batch import file", e);
         } finally {
             try {
                 csvReader.close();
@@ -281,7 +291,7 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         avt.setTrackSeconds(secs);
 
         // Get cost
-        double cost = (d[8] != null && RMT2Money.isNumeric(d[8]) ? Integer.valueOf(d[8]) : 2.99);
+        double cost = (d[8] != null && RMT2Money.isNumeric(d[8]) ? Double.valueOf(d[8]) : 2.99);
         avp.setCost(cost);
 
         // Set track number to 1 by default
@@ -297,18 +307,23 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         avp.setRipped((d[11] != null && RMT2Money.isNumeric(d[11]) ? Integer.valueOf(d[11]) : 0));
 
         // Set File name
-        String fileName = d[12];
-        avp.setContentFilename(fileName);
+        String fileName = null;
+        try {
+            fileName = d[12];
+            avp.setContentFilename(fileName);
 
-        // Set artwork filename
-        if (fileName != null && !fileName.isEmpty()) {
-            List<String> tokens = RMT2String.getTokens(fileName, ".");
-            avp.setArtWorkFilename(tokens.get(0) + ".jpg");
+            // Set artwork filename
+            if (fileName != null && !fileName.isEmpty()) {
+                List<String> tokens = RMT2String.getTokens(fileName, ".");
+                avp.setArtWorkFilename(tokens.get(0) + ".jpg");
+            }
+
+            // Set path for content file name and artwork filename
+            avp.setContentPath(this.videoPath);
+            avp.setArtWorkPath(this.videoPath);
+        } catch (Exception e) {
+            logger.warn(d[0] + " does not conatain a file name (Index out of bounds)");
         }
-
-        // Set path for content file name and artwork filename
-        avp.setContentPath(this.videoPath);
-        avp.setArtWorkPath(this.videoPath);
         return avb;
     }
     
@@ -452,10 +467,6 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
     protected void validateTarck(TracksDto track) throws AvProjectDataValidationException {
         if (track == null) {
             this.msg = "Track object is invalid or null";
-            throw new AvProjectDataValidationException(this.msg);
-        }
-        if (track.getTrackTitle() == null) {
-            this.msg = "Track title is required";
             throw new AvProjectDataValidationException(this.msg);
         }
         if (track.getTrackNumber() <= 0) {

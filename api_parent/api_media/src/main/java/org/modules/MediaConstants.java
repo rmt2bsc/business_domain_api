@@ -64,7 +64,7 @@ public class MediaConstants {
     /**
      * Path to video csv import file
      */
-    public static final String VIDEO_IMPORT_DATAFILE_PATH = "data/video_batch_import.csv";
+    public static final String VIDEO_IMPORT_DATAFILE_PATH = "data/video_batch_import.txt";
 
     /**
      * Default constructor
