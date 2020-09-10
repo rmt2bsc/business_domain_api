@@ -16,7 +16,6 @@ import org.dao.audiovideo.AudioVideoDaoConstants;
 import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.audiovideo.AudioVideoDaoFactory;
 import org.dao.mapping.orm.rmt2.AvProject;
-import org.dao.mapping.orm.rmt2.AvTracks;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.ProjectDto;
@@ -261,18 +260,22 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
     private AvCombinedProjectBean extractFileMetaData(String[] d) {
         AvCombinedProjectBean avb = new AvCombinedProjectBean();
         AvProject avp = avb.getAv();
-        AvTracks avt = avb.getAvt();
         avp.setProjectTypeId(AudioVideoDaoConstants.PROJ_TYPE_ID_VIDEO);
 
         // Get movie title
         avp.setTitle(d[0]);
 
         // Get movie producer/director
-        avt.setTrackProducer(d[1]);
+        avp.setProducer(d[1]);
 
         // Get Genre
-        avp.setGenreId(Integer.valueOf(d[2]));
-        avt.setGenreId(Integer.valueOf(d[2]));
+        avp.setGenreId(AudioVideoDaoConstants.UNKNOWN_GENRE);
+        if (RMT2Money.isNumeric(d[2])) {
+            int genreId = Integer.valueOf(d[2]);
+            if (this.isValidateGenreId(genreId)) {
+                avp.setGenreId(genreId);
+            }
+        }
 
         // Media type
         avp.setMediaTypeId(Integer.valueOf(d[3]));
@@ -287,23 +290,14 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
             hours = Integer.valueOf(d[5]);
             mins += (hours * 60);
         }
-        int secs = (d[7] != null && RMT2Money.isNumeric(d[7]) ? Integer.valueOf(d[7]) : 0);
-        avt.setTrackHours(hours);
-        avt.setTrackMinutes(mins);
-        avt.setTrackSeconds(secs);
+        avp.setTotalTime(mins);
 
         // Get cost
         double cost = (d[8] != null && RMT2Money.isNumeric(d[8]) ? Double.valueOf(d[8]) : 2.99);
         avp.setCost(cost);
 
-        // Set track number to 1 by default
-        avt.setTrackNumber(1);
-
         // Add cast memebers to project comments.
         avp.setProjectComments(d[9]);
-
-        // Get Disc Number
-        avt.setTrackDisc("1");
 
         // Initialized Ripped flag
         avp.setRipped((d[11] != null && RMT2Money.isNumeric(d[11]) ? Integer.valueOf(d[11]) : 0));
@@ -358,8 +352,6 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         int projectId = this.insertProjectFromFile(avProj);
         avProj.getAvt().setProjectId(projectId);
         
-        // Process track
-        this.insertTrackFromFile(avProj);
         return projectId;
     }
     
@@ -397,52 +389,15 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         return projectId;
     }
 
-    private int insertTrackFromFile(AvCombinedProjectBean avProj) throws AudioVideoApiException {
-        AvTracks track = avProj.getAvt();
-        track.setGenreId(avProj.getAv().getGenreId());
-        TracksDto trackDto = Rmt2MediaDtoFactory.getAvTrackInstance(track);
-        int trackId = 0;
-        this.validateTarck(trackDto);
-       
-        try {
-            if (trackDto.getTrackId() == 0) {
-                // Create new track
-                trackId = this.avDao.maintainTrack(trackDto);
-                track.setTrackId(trackId);
-                trackDto.setTrackId(trackId);
-                logger.info("Added Video Track information for: " + avProj.getAv().getTitle());
-            }
-        }
-        catch (AudioVideoDaoException e) {
-            throw new AudioVideoApiException("Unable to create/modify track: " + track.getTrackTitle(), e); 
-        }
-        return trackId;
-    }
     
-    private int getGenreId(AvCombinedProjectBean avProj) {
+    private boolean isValidateGenreId(int testGenreId) {
         GenreDto genreCriteria = Rmt2MediaDtoFactory.getAvGenreInstance(null);
-        int genreId = AudioVideoDaoConstants.UNKNOWN_GENRE;
-        String genreValue = avProj.getGenre();
-        if (genreValue != null) {
-            if (genreValue.contains("(") && genreValue.contains(")")) {
-                String genreIdString = RMT2String.replace(RMT2String.replace(genreValue, "", "("), "", ")");
-                if (RMT2Money.isNumeric(genreIdString)) {
-                    int temp = Integer.valueOf(genreIdString);
-                    genreCriteria.setUid(temp);
-                }
-                else {
-                    genreCriteria.setDescription(genreValue);
-                }
-            }
-            else {
-                genreCriteria.setDescription(genreValue);
-            }
-            List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
-            if (g != null && g.size() == 1) {
-                genreId = g.get(0).getUid();
-            }
+        genreCriteria.setUid(testGenreId);
+        List<GenreDto> g = this.avDao.fetchGenre(genreCriteria);
+        if (g != null && g.size() == 1) {
+            return true;
         }
-        return genreId;
+        return false;
     }
 
     
