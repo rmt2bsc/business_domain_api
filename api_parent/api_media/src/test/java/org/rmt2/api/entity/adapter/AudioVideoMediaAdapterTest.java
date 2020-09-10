@@ -148,6 +148,8 @@ public class AudioVideoMediaAdapterTest {
         Assert.assertEquals(AvMediaMockDataFactory.TEST_GENRE_ID, dto.getGenreId());
         Assert.assertEquals(AvMediaMockDataFactory.TEST_MEDIA_TYPE_ID, dto.getMediaTypeId());
         Assert.assertEquals("Title" + AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getTitle());
+        Assert.assertEquals("producer_name", dto.getProducer());
+        Assert.assertEquals(125, dto.getTotalTime());
         Assert.assertEquals(2018, dto.getYear());
         Assert.assertEquals("/FilePath/" + AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getArtWorkPath());
         Assert.assertEquals("ProjectFileName" + AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getArtWorkFilename());
@@ -172,6 +174,8 @@ public class AudioVideoMediaAdapterTest {
             dto.setComments("ProjectCommentsFor" + AvMediaMockDataFactory.TEST_PROJECT_ID);
             dto.setRippedInd(1);
             dto.setMasterDupId(AvMediaMockDataFactory.TEST_PROJECT_ID + 1000);
+            dto.setProducer("producer_name");
+            dto.setTotalTime(125);
 
             Assert.assertEquals(AvMediaMockDataFactory.TEST_ARTIST_ID, dto.getArtistId());
             Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getProjectId());
@@ -186,6 +190,8 @@ public class AudioVideoMediaAdapterTest {
             Assert.assertEquals("ProjectCommentsFor" + AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getComments());
             Assert.assertEquals(1, dto.getRippedInd());
             Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID + 1000, dto.getMasterDupId());
+            Assert.assertEquals("producer_name", dto.getProducer());
+            Assert.assertEquals(125, dto.getTotalTime());
 
         } catch (Exception e) {
             e.printStackTrace();
