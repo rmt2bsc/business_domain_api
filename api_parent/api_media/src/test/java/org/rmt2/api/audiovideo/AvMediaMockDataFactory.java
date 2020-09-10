@@ -103,6 +103,7 @@ public class AvMediaMockDataFactory {
         o.setProjectComments("ProjectCommentsFor" + projectId);
         o.setRipped(1);
         o.setMasterDupId(projectId + 1000);
+        o.setTotalTime(125);
         
         return o;
     }

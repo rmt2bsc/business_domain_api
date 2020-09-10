@@ -59,6 +59,8 @@ public class AvProject extends OrmBean {
   public static final String PROP_DATEUPDATED = "DateUpdated";
 /** The property name constant equivalent to property, UserId, of respective DataSource view. */
   public static final String PROP_USERID = "UserId";
+/** The property name constant equivalent to property, TotalTime, of respective DataSource view. */
+  public static final String PROP_TOTALTIME = "TotalTime";
 
 
 
@@ -100,6 +102,8 @@ public class AvProject extends OrmBean {
   private java.util.Date dateUpdated;
 /** The javabean property equivalent of database column av_project.user_id */
   private String userId;
+/** The javabean property equivalent of database column av_project.total_time */
+  private int totalTime;
 
 
 
@@ -339,6 +343,18 @@ public class AvProject extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+/**
+ * Sets the value of member variable totalTime
+ */
+  public void setTotalTime(int value) {
+    this.totalTime = value;
+  }
+/**
+ * Gets the value of member variable totalTime
+ */
+  public int getTotalTime() {
+    return this.totalTime;
+  }
 
 @Override
 public boolean equals(Object obj) {
@@ -400,6 +416,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.projectComments, other.projectComments)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.totalTime, other.totalTime)) {
+      return false;
+   }
    return true; 
 } 
 
@@ -420,7 +439,8 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.contentFilename),
                HashCodeAssistant.hashObject(this.artWorkPath),
                HashCodeAssistant.hashObject(this.artWorkFilename),
-               HashCodeAssistant.hashObject(this.projectComments));
+               HashCodeAssistant.hashObject(this.projectComments),
+               HashCodeAssistant.hashObject(this.totalTime));
 } 
 
 @Override
@@ -440,7 +460,8 @@ public String toString() {
           ", contentFilename=" + contentFilename + 
           ", artWorkPath=" + artWorkPath + 
           ", artWorkFilename=" + artWorkFilename + 
-          ", projectComments=" + projectComments  + "]";
+          ", projectComments=" + projectComments + 
+          ", totalTime=" + totalTime  + "]";
 }
 
 /**

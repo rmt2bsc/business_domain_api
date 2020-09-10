@@ -83,6 +83,10 @@ public class AvProjectOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
+        o2.setTotalTime(125);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
         o2.setArtWorkPath("/FilePath/" + AvMediaMockDataFactory.TEST_PROJECT_ID);
         result = o1.equals(o2);
         Assert.assertFalse(result);
