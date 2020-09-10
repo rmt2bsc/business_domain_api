@@ -17,6 +17,7 @@ import org.dao.audiovideo.AudioVideoDaoException;
 import org.dao.audiovideo.AudioVideoDaoFactory;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvTracks;
+import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.ProjectDto;
 import org.dto.TracksDto;
@@ -60,6 +61,7 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
     protected int nonAvFileCnt;
     protected int totCnt;
     private AudioVideoDao avDao;
+    private int generalArtistId;
 
     /**
      * Creates a CsvVideoMetaDataLoaderApiImpl that does no point to a source
@@ -346,6 +348,12 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
      * @throws AudioVideoApiException
      */
     protected int addAudioVideoFileData(AvCombinedProjectBean avProj) throws AudioVideoApiException {
+        // Since all video type media uses a generic artist entity, add one
+        // artists for all videos
+        if (this.generalArtistId <= 0) {
+            this.insertArtistFromFile(avProj);
+        }
+
         // Process movie project
         int projectId = this.insertProjectFromFile(avProj);
         avProj.getAvt().setProjectId(projectId);
@@ -355,9 +363,24 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         return projectId;
     }
     
+    private int insertArtistFromFile(AvCombinedProjectBean avProj) throws AudioVideoApiException {
+        ArtistDto artistDto = Rmt2MediaDtoFactory.getAvArtistInstance(null);
+        artistDto.setName("General Video");
+        int artistId = 0;
+
+        // Since artist does not exist, add it.
+        try {
+            this.generalArtistId = this.avDao.maintainArtist(artistDto);
+            logger.info("Added Artist: " + artistDto.getName());
+        } catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Unable to create artist: " + artistDto.getName(), e);
+        }
+        return artistId;
+    }
 
     private int insertProjectFromFile(AvCombinedProjectBean avProj) throws AudioVideoApiException {
         AvProject project = avProj.getAv();
+        project.setArtistId(this.generalArtistId);
         ProjectDto projectDto = Rmt2MediaDtoFactory.getAvProjectInstance(project);
         int projectId = 0;
         this.validateProject(projectDto);
