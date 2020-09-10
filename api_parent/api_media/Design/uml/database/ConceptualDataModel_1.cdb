@@ -1139,7 +1139,7 @@ NAMA 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1267894634</a:ModificationDate>
 <a:Rect>((7678,44292), (29694,53831))</a:Rect>
 <a:ListOfPoints>((29694,53831),(7678,44292))</a:ListOfPoints>
-<a:ArrowStyle>4371</a:ArrowStyle>
+<a:ArrowStyle>4627</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
 <a:FontList>DISPNAME 0 Arial,8,N
@@ -1198,7 +1198,7 @@ NAMA 0 Arial,8,N</a:FontList>
 <a:CreationDate>1267817852</a:CreationDate>
 <a:ModificationDate>1267817883</a:ModificationDate>
 <a:CenterTextOffset>(1, -850)</a:CenterTextOffset>
-<a:Rect>((-32448,39592), (-9454,42570))</a:Rect>
+<a:Rect>((-32448,39542), (-9454,42570))</a:Rect>
 <a:ListOfPoints>((-9454,41170),(-32448,42253))</a:ListOfPoints>
 <a:ArrowStyle>4627</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
@@ -1972,7 +1972,7 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_PROJECT</a:Code>
 <a:CreationDate>1267816074</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1599768045</a:ModificationDate>
+<a:ModificationDate>1599768937</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>The audio-video projects.</a:Comment>
 <a:Number>1000000</a:Number>
@@ -2156,7 +2156,7 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_ARTIST</a:Code>
 <a:CreationDate>1267816074</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1599428020</a:ModificationDate>
+<a:ModificationDate>1599768937</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Master list of artist regarding audio and video.</a:Comment>
 <a:Number>500000</a:Number>
@@ -2721,11 +2721,11 @@ EntityComment 0 Arial,8,N</a:FontList>
 <a:Code>AV_ARTIST_RELATIONSHIP</a:Code>
 <a:CreationDate>1267817261</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1599428020</a:ModificationDate>
+<a:ModificationDate>1599768937</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Every audio-video project must be assoicated with an artist.</a:Comment>
 <a:Entity1ToEntity2RoleCardinality>0,n</a:Entity1ToEntity2RoleCardinality>
-<a:Entity2ToEntity1RoleCardinality>0,1</a:Entity2ToEntity1RoleCardinality>
+<a:Entity2ToEntity1RoleCardinality>1,1</a:Entity2ToEntity1RoleCardinality>
 <c:Object1>
 <o:Entity Ref="o41"/>
 </c:Object1>
