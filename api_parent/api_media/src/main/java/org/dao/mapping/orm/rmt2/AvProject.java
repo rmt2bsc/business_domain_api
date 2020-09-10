@@ -61,6 +61,8 @@ public class AvProject extends OrmBean {
   public static final String PROP_USERID = "UserId";
 /** The property name constant equivalent to property, TotalTime, of respective DataSource view. */
   public static final String PROP_TOTALTIME = "TotalTime";
+/** The property name constant equivalent to property, Producer, of respective DataSource view. */
+  public static final String PROP_PRODUCER = "Producer";
 
 
 
@@ -104,6 +106,8 @@ public class AvProject extends OrmBean {
   private String userId;
 /** The javabean property equivalent of database column av_project.total_time */
   private int totalTime;
+/** The javabean property equivalent of database column av_project.producer */
+  private String producer;
 
 
 
@@ -355,6 +359,18 @@ public class AvProject extends OrmBean {
   public int getTotalTime() {
     return this.totalTime;
   }
+/**
+ * Sets the value of member variable producer
+ */
+  public void setProducer(String value) {
+    this.producer = value;
+  }
+/**
+ * Gets the value of member variable producer
+ */
+  public String getProducer() {
+    return this.producer;
+  }
 
 @Override
 public boolean equals(Object obj) {
@@ -419,6 +435,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.totalTime, other.totalTime)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.producer, other.producer)) {
+      return false;
+   }
    return true; 
 } 
 
@@ -440,7 +459,8 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.artWorkPath),
                HashCodeAssistant.hashObject(this.artWorkFilename),
                HashCodeAssistant.hashObject(this.projectComments),
-               HashCodeAssistant.hashObject(this.totalTime));
+               HashCodeAssistant.hashObject(this.totalTime),
+               HashCodeAssistant.hashObject(this.producer));
 } 
 
 @Override
@@ -461,7 +481,8 @@ public String toString() {
           ", artWorkPath=" + artWorkPath + 
           ", artWorkFilename=" + artWorkFilename + 
           ", projectComments=" + projectComments + 
-          ", totalTime=" + totalTime  + "]";
+          ", totalTime=" + totalTime + 
+          ", producer=" + producer  + "]";
 }
 
 /**
