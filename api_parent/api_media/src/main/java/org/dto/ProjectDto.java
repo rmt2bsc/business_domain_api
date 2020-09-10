@@ -275,4 +275,18 @@ public interface ProjectDto extends TransactionDto {
      *            int
      */
     void setTotalTime(int totalTime);
+
+    /**
+     * Get producer
+     * 
+     * @return
+     */
+    String getProducer();
+
+    /**
+     * Set producer
+     * 
+     * @param producer
+     */
+    void setProducer(String producer);
 }

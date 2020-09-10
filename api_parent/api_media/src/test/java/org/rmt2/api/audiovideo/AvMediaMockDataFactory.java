@@ -104,6 +104,7 @@ public class AvMediaMockDataFactory {
         o.setRipped(1);
         o.setMasterDupId(projectId + 1000);
         o.setTotalTime(125);
+        o.setProducer("producer_name");
         
         return o;
     }

@@ -120,6 +120,7 @@ public class AudioVideoFactory extends RMT2Base {
         p.setContentId(proj.getContentId());
         p.setDateCreated(proj.getDateCreated());
         p.setContentPath(proj.getContentPath());
+        p.setProducer(proj.getProducer());
         return p;
     }
 

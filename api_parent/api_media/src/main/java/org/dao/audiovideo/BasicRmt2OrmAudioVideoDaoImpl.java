@@ -202,6 +202,9 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getContentPath() != null) {
                 queryObj.addCriteria(AvProject.PROP_CONTENTPATH, criteria.getContentPath());
             }
+            if (criteria.getProducer() != null) {
+                queryObj.addCriteria(AvProject.PROP_PRODUCER, criteria.getProducer());
+            }
             if (criteria.getCriteria() != null) {
                 queryObj.addCustomCriteria(criteria.getCriteria());
             }
