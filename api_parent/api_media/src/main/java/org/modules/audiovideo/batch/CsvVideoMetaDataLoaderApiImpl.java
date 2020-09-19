@@ -96,8 +96,7 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
      * configuration is known at implementation.
      * 
      * @param dirPath
-     *            a String representing the directory path process audio/video
-     *            files
+     *            The path indicating where the actual video files live
      * 
      * @throws BatchFileProcessException
      */
@@ -300,7 +299,14 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         avp.setProjectComments(d[9]);
 
         // Initialized Ripped flag
-        avp.setRipped((d[11] != null && RMT2Money.isNumeric(d[11]) ? Integer.valueOf(d[11]) : 0));
+        if (d.length > 10) {
+            try {
+                avp.setRipped((d[11] != null && RMT2Money.isNumeric(d[11]) ? Integer.valueOf(d[11]) : 0));
+            } catch (Exception e) {
+                logger.error("Error adding ripped value");
+                avp.setRipped(0);
+            }
+        }
 
         // Set File name
         String fileName = null;
