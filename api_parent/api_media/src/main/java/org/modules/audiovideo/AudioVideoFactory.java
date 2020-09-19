@@ -117,6 +117,7 @@ public class AudioVideoFactory extends RMT2Base {
         p.setMasterDupId(proj.getMasterDupId());
         p.setRipped(proj.getRippedInd());
         p.setCost(proj.getCost());
+        p.setProjectComments(proj.getComments());
         p.setContentId(proj.getContentId());
         p.setDateCreated(proj.getDateCreated());
         p.setContentPath(proj.getContentPath());
