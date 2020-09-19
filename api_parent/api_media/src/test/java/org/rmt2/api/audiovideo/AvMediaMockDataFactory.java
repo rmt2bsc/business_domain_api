@@ -19,6 +19,7 @@ public class AvMediaMockDataFactory {
     public static final int TEST_MEDIA_TYPE_ID = 400;
     public static final int TEST_UPDATE_RC = 1;
     public static final String TEST_AUDIO_DIR = "media/audio";
+    public static final String TEST_VIDEO_DIR = "/MyBook1/multimedia/video/movies";
     
     /**
      * 
