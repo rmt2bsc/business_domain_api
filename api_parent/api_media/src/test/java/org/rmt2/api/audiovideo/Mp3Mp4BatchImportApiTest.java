@@ -47,7 +47,7 @@ import com.api.util.RMT2File;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class, SmtpFactory.class })
-public class AudioVideoBatchImportApiTest extends AvMediaMockData {
+public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
     
     private static final String PROP_NAME_MP3_READER_IMPL_TO_USE = "MP3_READER_IMPL_TO_USE";
     /**
