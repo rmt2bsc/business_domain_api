@@ -385,4 +385,24 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
 
     }
 
+    @Override
+    public int getTotalTime() {
+        return this.p.getTotalTime();
+    }
+
+    @Override
+    public void setTotalTime(int totalTime) {
+        this.p.setTotalTime(totalTime);
+    }
+
+    @Override
+    public String getProducer() {
+        return this.p.getProducer();
+    }
+
+    @Override
+    public void setProducer(String producer) {
+        this.p.setProducer(producer);
+    }
+
 }

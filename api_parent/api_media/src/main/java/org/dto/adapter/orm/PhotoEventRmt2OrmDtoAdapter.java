@@ -48,7 +48,7 @@ class PhotoEventRmt2OrmDtoAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setEventId(int value) {
-        this.p.setEventId(value);
+        this.p.setEventId3(value);
     }
 
     /*
@@ -58,7 +58,7 @@ class PhotoEventRmt2OrmDtoAdapter extends TransactionDtoImpl implements
      */
     @Override
     public int getEventId() {
-        return this.p.getEventId();
+        return this.p.getEventId3();
     }
 
     /*
@@ -68,7 +68,7 @@ class PhotoEventRmt2OrmDtoAdapter extends TransactionDtoImpl implements
      */
     @Override
     public void setAlbumId(int value) {
-        this.p.setAlbumId(value);
+        this.p.setAlbumId2(value);
     }
 
     /*
@@ -78,7 +78,7 @@ class PhotoEventRmt2OrmDtoAdapter extends TransactionDtoImpl implements
      */
     @Override
     public int getAlbumId() {
-        return this.p.getAlbumId();
+        return this.p.getAlbumId2();
     }
 
     /*

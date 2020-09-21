@@ -25,9 +25,7 @@ import org.modules.MediaConstants;
 import org.modules.audiovideo.Mp3ReaderIdentityNotConfiguredException;
 import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
-import org.modules.audiovideo.batch.AvSourceNotADirectoryException;
 import org.modules.audiovideo.batch.BatchFileProcessException;
-import org.modules.audiovideo.batch.InvalidBatchRootDirectoryException;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -49,7 +47,7 @@ import com.api.util.RMT2File;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class, SmtpFactory.class })
-public class AudioVideoBatchImportApiTest extends AvMediaMockData {
+public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
     
     private static final String PROP_NAME_MP3_READER_IMPL_TO_USE = "MP3_READER_IMPL_TO_USE";
     /**
@@ -157,7 +155,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = f.createApiInstance(dir);
+            api = f.createMediaFileBatchImportApiInstance(dir);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }
@@ -180,16 +178,12 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         String dir = null;
         AvBatchFileFactory f = new AvBatchFileFactory();
         try {
-            f.createApiInstance(dir);
+            f.createMediaFileBatchImportApiInstance(dir);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof BatchFileProcessException);
-            Assert.assertEquals("Could not instantiate Audio/Video batch file loader class", e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof InvalidBatchRootDirectoryException);
-            Assert.assertEquals("The root directory path is invalid or null", e.getCause().getMessage());
-
         }
     }
     
@@ -200,17 +194,12 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         dir += "/Aaliyah/One In A Million/Aaliyah-One In A Million-17-Came To Give Love (Outro).mp3";
         AvBatchFileFactory f = new AvBatchFileFactory();
         try {
-            f.createApiInstance(dir);
+            f.createMediaFileBatchImportApiInstance(dir);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof BatchFileProcessException);
-            Assert.assertEquals("Could not instantiate Audio/Video batch file loader class", e.getMessage());
-            Assert.assertTrue(e.getCause() instanceof AvSourceNotADirectoryException);
-            String msg = " is required to be a directory for Audio Video Batch process";
-            Assert.assertTrue(e.getCause().getMessage().contains(msg));
-
         }
     }
     
@@ -223,7 +212,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         AvBatchFileFactory f = new AvBatchFileFactory();
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -254,7 +243,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         AvBatchFileFactory f = new AvBatchFileFactory();
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -280,7 +269,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         AvBatchFileFactory f = new AvBatchFileFactory();
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createApiInstance(dir);
+            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -309,7 +298,7 @@ public class AudioVideoBatchImportApiTest extends AvMediaMockData {
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = f.createApiInstance(dir);
+            api = f.createMediaFileBatchImportApiInstance(dir);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }

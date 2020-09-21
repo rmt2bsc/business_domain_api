@@ -76,6 +76,7 @@ public class AudioVideoFactory extends RMT2Base {
         AvTracks t = new AvTracks();
         t.setTrackId(track.getTrackId());
         t.setProjectId(track.getProjectId());
+        t.setGenreId(track.getGenreId());
         t.setTrackNumber(track.getTrackNumber());
         t.setTrackTitle(track.getTrackTitle());
         t.setTrackHours(track.getTrackHours());
@@ -112,11 +113,15 @@ public class AudioVideoFactory extends RMT2Base {
         p.setMediaTypeId(proj.getMediaTypeId());
         p.setTitle(proj.getTitle());
         p.setYear(proj.getYear());
+        p.setTotalTime(proj.getTotalTime());
         p.setMasterDupId(proj.getMasterDupId());
         p.setRipped(proj.getRippedInd());
         p.setCost(proj.getCost());
+        p.setProjectComments(proj.getComments());
         p.setContentId(proj.getContentId());
         p.setDateCreated(proj.getDateCreated());
+        p.setContentPath(proj.getContentPath());
+        p.setProducer(proj.getProducer());
         return p;
     }
 

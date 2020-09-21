@@ -20,7 +20,9 @@ import com.api.foundation.AbstractTransactionApiImpl;
  * @author rterrell
  * 
  */
-abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl implements MediaFileProcessor { //extends AbstractMediaFileProcessorDaoImp {
+abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl implements MediaFileProcessor {
+
+    // extends AbstractMediaFileProcessorDaoImp {
 
     private static Logger logger = Logger.getLogger(AbstractMediaFileProcessorImpl.class);
     private List<String> errorMessages;

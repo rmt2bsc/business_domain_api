@@ -1,5 +1,7 @@
 package org.dao.audiovideo;
 
+import org.modules.MediaConstants;
+
 import com.RMT2Base;
 import com.api.persistence.DaoClient;
 
@@ -24,8 +26,8 @@ public class AudioVideoDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link AudioVideoDao}
      */
-    public AudioVideoDao createRmt2OrmDaoInstance() {
-        AudioVideoDao dao = new BasicRmt2OrmAudioVideoDaoImpl();
+    public static final AudioVideoDao createRmt2OrmDaoInstance() {
+        AudioVideoDao dao = AudioVideoDaoFactory.createRmt2OrmDaoInstance(MediaConstants.APP_NAME);
         return dao;
     }
 
@@ -37,7 +39,7 @@ public class AudioVideoDaoFactory extends RMT2Base {
      *            application name
      * @return an instance of {@link AudioVideoDao}
      */
-    public AudioVideoDao createRmt2OrmDaoInstance(String appName) {
+    public static final AudioVideoDao createRmt2OrmDaoInstance(String appName) {
         AudioVideoDao dao = new BasicRmt2OrmAudioVideoDaoImpl(appName);
         return dao;
     }
@@ -50,7 +52,7 @@ public class AudioVideoDaoFactory extends RMT2Base {
      *            an instnace of {@link PersistenceClient}
      * @return an instance of {@link AudioVideoDao}
      */
-    public AudioVideoDao createRmt2OrmDaoInstance(DaoClient dao) {
+    public static final AudioVideoDao createRmt2OrmDaoInstance(DaoClient dao) {
         AudioVideoDao d = new BasicRmt2OrmAudioVideoDaoImpl(dao.getClient());
         return d;
     }

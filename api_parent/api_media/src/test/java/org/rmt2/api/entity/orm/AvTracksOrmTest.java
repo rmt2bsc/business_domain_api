@@ -59,6 +59,10 @@ public class AvTracksOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
+        o2.setGenreId(AvMediaMockDataFactory.TEST_GENRE_ID);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
         o2.setTrackNumber(1);
         result = o1.equals(o2);
         Assert.assertFalse(result);

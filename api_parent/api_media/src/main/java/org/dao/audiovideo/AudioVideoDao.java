@@ -2,8 +2,10 @@ package org.dao.audiovideo;
 
 import java.util.List;
 
+import org.dao.entity.CommonMediaDto;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
+import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
@@ -18,6 +20,18 @@ import com.api.persistence.DaoClient;
  * 
  */
 public interface AudioVideoDao extends DaoClient {
+
+    /**
+     * Fetches common media information (artisit, project, and/or track data)
+     * using a simple String value.
+     * 
+     * @param criteria
+     *            String that could represent either the artist, project, or
+     *            track.
+     * @return List of {@link CommonMediaDto} objects
+     * @throws AudioVideoDaoException
+     */
+    List<CommonMediaDto> fetchCommonMedia(String criteria) throws AudioVideoDaoException;
 
     /**
      * Fetches artist information based on the selection criteria data elements
@@ -80,6 +94,19 @@ public interface AudioVideoDao extends DaoClient {
      * @throws AudioVideoDaoException
      */
     List<ProjectTypeDto> fetchProjectType(ProjectTypeDto criteria) throws AudioVideoDaoException;
+
+    /**
+     * Fetches media type information based on the selection criteria data
+     * elements containted in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instnace of {@link MediaTypeDto} containing values for
+     *            selection criteria.
+     * @return a List of {@link MediaTypeDto} objects or null if no data was
+     *         found.
+     * @throws AudioVideoDaoException
+     */
+    List<MediaTypeDto> fetchMediaType(MediaTypeDto criteria) throws AudioVideoDaoException;
 
     /**
      * Creates a new or modifies an existing artist object.

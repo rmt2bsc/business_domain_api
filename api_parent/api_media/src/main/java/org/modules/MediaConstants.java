@@ -62,6 +62,11 @@ public class MediaConstants {
     public static final String BATCH_FILE_IMPORT_REPORT_EMAIL = "audioVideoBatchImportEmail";
     
     /**
+     * Path to video csv import file
+     */
+    public static final String VIDEO_IMPORT_DATAFILE_PATH = "data/video_batch_import.txt";
+
+    /**
      * Default constructor
      */
     public MediaConstants() {

@@ -260,4 +260,33 @@ public interface ProjectDto extends TransactionDto {
      * @param contentPath
      */
     void setContentFilename(String contentFilename);
+
+    /**
+     * Get total time in minutes.
+     * 
+     * @return int
+     */
+    int getTotalTime();
+
+    /**
+     * Set total time in minutes.
+     * 
+     * @param contentId
+     *            int
+     */
+    void setTotalTime(int totalTime);
+
+    /**
+     * Get producer
+     * 
+     * @return
+     */
+    String getProducer();
+
+    /**
+     * Set producer
+     * 
+     * @param producer
+     */
+    void setProducer(String producer);
 }

@@ -19,6 +19,7 @@ public class AvMediaMockDataFactory {
     public static final int TEST_MEDIA_TYPE_ID = 400;
     public static final int TEST_UPDATE_RC = 1;
     public static final String TEST_AUDIO_DIR = "media/audio";
+    public static final String TEST_VIDEO_DIR = "/MyBook1/multimedia/video/movies";
     
     /**
      * 
@@ -103,6 +104,8 @@ public class AvMediaMockDataFactory {
         o.setProjectComments("ProjectCommentsFor" + projectId);
         o.setRipped(1);
         o.setMasterDupId(projectId + 1000);
+        o.setTotalTime(125);
+        o.setProducer("producer_name");
         
         return o;
     }
@@ -128,6 +131,7 @@ public class AvMediaMockDataFactory {
         AvTracks o = new AvTracks();
         o.setTrackId(trackId);
         o.setProjectId(projectId);
+        o.setGenreId(AvMediaMockDataFactory.TEST_GENRE_ID); // Funk
         o.setTrackNumber(trackNumber);
         o.setTrackTitle(title);
         o.setTrackHours(hh);
