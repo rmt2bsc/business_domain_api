@@ -35,3 +35,6 @@ select 'movies', count(*) from AV_PROJECT where project_type_id = 2
 --select a.ARTIST_ID, a.NAME, p.PROJECT_ID, p.TITLE, t.TRACK_TITLE, t.GENRE_ID from av_artist a, av_project p, AV_TRACKS t where a.ARTIST_ID = p.ARTIST_ID and p.PROJECT_ID = t.PROJECT_ID and  t.genre_id = 999
 --select count() from av_project p where genre_id = 999
 --select count() from av_tracks p where genre_id = 999
+
+// Delete all movie rows 
+--delete from av_project where project_type_id = 2
