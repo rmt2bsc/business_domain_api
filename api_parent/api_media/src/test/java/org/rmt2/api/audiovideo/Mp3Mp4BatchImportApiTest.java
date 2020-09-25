@@ -25,6 +25,7 @@ import org.modules.MediaConstants;
 import org.modules.audiovideo.Mp3ReaderIdentityNotConfiguredException;
 import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
+import org.modules.audiovideo.batch.AvBatchImportParameters;
 import org.modules.audiovideo.batch.BatchFileProcessException;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -151,11 +152,12 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         // Get full directory path for relative path which resides on the classpath
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
         
-        AvBatchFileFactory f = new AvBatchFileFactory();
         int results = 0;
         AvBatchFileProcessorApi api = null;
+        AvBatchImportParameters parms = new AvBatchImportParameters();
+        parms.setPath(dir);
         try {
-            api = f.createMediaFileBatchImportApiInstance(dir);
+            api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }
@@ -176,9 +178,10 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
     @Test
     public void testValidation_Null_Directory() {
         String dir = null;
-        AvBatchFileFactory f = new AvBatchFileFactory();
+        AvBatchImportParameters parms = new AvBatchImportParameters();
+        parms.setPath(dir);
         try {
-            f.createMediaFileBatchImportApiInstance(dir);
+            AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -192,9 +195,10 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
     public void testValidation_File_As_Directory() {
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
         dir += "/Aaliyah/One In A Million/Aaliyah-One In A Million-17-Came To Give Love (Outro).mp3";
-        AvBatchFileFactory f = new AvBatchFileFactory();
+        AvBatchImportParameters parms = new AvBatchImportParameters();
+        parms.setPath(dir);
         try {
-            f.createMediaFileBatchImportApiInstance(dir);
+            AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -209,10 +213,11 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         
         // Get full directory path for relative path which resides on the classpath
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
-        AvBatchFileFactory f = new AvBatchFileFactory();
+        AvBatchImportParameters parms = new AvBatchImportParameters();
+        parms.setPath(dir);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -240,10 +245,11 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         
         // Get full directory path for relative path which resides on the classpath
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
-        AvBatchFileFactory f = new AvBatchFileFactory();
+        AvBatchImportParameters parms = new AvBatchImportParameters();
+        parms.setPath(dir);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -266,10 +272,11 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
     public void testError_Create_MP3Reader_Null_Config_Object() {
         // Get full directory path for relative path which resides on the classpath
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
-        AvBatchFileFactory f = new AvBatchFileFactory();
+        AvBatchImportParameters parms = new AvBatchImportParameters();
+        parms.setPath(dir);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = f.createMediaFileBatchImportApiInstance(dir);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -293,12 +300,13 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         
         // Get full directory path for relative path which resides on the classpath
         String dir = RMT2File.resolveRelativeFilePath(AvMediaMockDataFactory.TEST_AUDIO_DIR);
+        AvBatchImportParameters parms = new AvBatchImportParameters();
+        parms.setPath(dir);
         
-        AvBatchFileFactory f = new AvBatchFileFactory();
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = f.createMediaFileBatchImportApiInstance(dir);
+            api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }

@@ -78,6 +78,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     
     private AudioVideoDao avDao;
 
+    private AvBatchImportParameters parms;
+
     /**
      * Creates a MetaDataFileLoaderApiImpl that does no point to a source
      * directory for batch.
@@ -96,13 +98,13 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * User is responsible for providing the directory where batch processing
      * starts.
      * 
-     * @param dirPath
-     *            the complete path where to start processing audio/video files
+     * @param parms
+     *            an instance of {@link AvBatchImportParameters}
      * @throws BatchFileProcessException
      */
-    protected AvFileMetaDataLoaderApiImpl(String dirPath) throws BatchFileProcessException {
+    protected AvFileMetaDataLoaderApiImpl(AvBatchImportParameters parms) throws BatchFileProcessException {
         super(MediaConstants.APP_NAME);
-        this.initConnection(dirPath);
+        this.initConnection(parms);
         REQUEST_REFRESH = false;
         logger.info("Audio/Video batch processor is initialized.");
         logger.info("Audio/Video batch processing witll begin at this location: " + this.directoryPath.getAbsolutePath());
@@ -112,26 +114,27 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * Setup connection for an arbitrary external datasource which the
      * configuration is known at implementation.
      * 
-     * @param dirPath
-     *            a String representing the directory path process audio/video
-     *            files
+     * @param parms
+     *            a genreic object containing the parmeters needed to identify
+     *            the resources to import.
      * 
      * @throws BatchFileProcessException
      */
-    public void initConnection(Object dirPath) throws BatchFileProcessException {
-        if (dirPath == null) {
-            this.msg = "The root directory path is invalid or null";
+    public void initConnection(Object parms) throws BatchFileProcessException {
+        if (parms == null || !(parms instanceof AvBatchImportParameters)) {
+            this.msg = "The audio/video batch import parameters are required";
             AvFileMetaDataLoaderApiImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
-        if (!(dirPath instanceof String)) {
-            this.msg = "The root directory path must be of String datatype";
+        this.parms = (AvBatchImportParameters) parms;
+        if (this.parms.getPath() == null) {
+            this.msg = "Path/Location value is required as an audio/video batch import parameter";
             AvFileMetaDataLoaderApiImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
         
         // Verify that the starting resource path is a directory
-        File testFile = new File(dirPath.toString());
+        File testFile = new File(this.parms.getAbsolutePath());
         if (RMT2File.verifyDirectory(testFile) != RMT2File.FILE_IO_EXIST) {
             this.msg = testFile + " is required to be a directory for Audio Video Batch process";
             throw new AvSourceNotADirectoryException(this.msg);
@@ -460,9 +463,16 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
             avt.setTrackDisc(mp3.getDiscNumber() == 0 ? "1" : String.valueOf(mp3.getDiscNumber()));
 
             // Capture the media file location data
+            avt.setLocServername(this.parms.getServerName());
+            avt.setLocSharename(this.parms.getShareName());
+            avt.setLocRootPath(this.parms.getRootPath());
             String pathOnly = RMT2File.getFilePathInfo(mediaPath);
             avt.setLocPath(pathOnly);
             av.setContentPath(pathOnly);
+            av.setArtWorkPath(pathOnly);
+
+            String image = this.getImageFile(pathOnly);
+            av.setArtWorkFilename(image);
 
             // Set File name
             String fileName = mediaFile.getName();
@@ -487,6 +497,23 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         }
     }
     
+    private String getImageFile(String dir) {
+        List<String> listing = RMT2File.getDirectoryListing(dir, "*.jpg");
+        // Try to return folder.jpg, if it exists
+        int ndx = 0;
+        String firstAvailable = null;
+        for (String item : listing) {
+            if (ndx++ == 0) {
+                firstAvailable = item;
+            }
+            if (item.equalsIgnoreCase("folder.jpg")) {
+                return item;
+            }
+        }
+
+        return firstAvailable;
+    }
+
     /**
      * Combines the efforts of adding artist, project, and all project tracks to
      * the tables, <i>av_artist</i>, <i>av_project</i>, and <i>av_tracks</i>,

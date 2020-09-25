@@ -61,6 +61,7 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
     protected int totCnt;
     private AudioVideoDao avDao;
     private int generalArtistId;
+    private AvBatchImportParameters parms;
 
     /**
      * Creates a CsvVideoMetaDataLoaderApiImpl that does no point to a source
@@ -80,13 +81,13 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
      * User is responsible for providing the directory where batch processing
      * starts.
      * 
-     * @param dirPath
-     *            the complete path where to start processing audio/video files
+     * @param parms
+     *            an instance of {@link AvBatchImportParameters}
      * @throws BatchFileProcessException
      */
-    protected CsvVideoMetaDataLoaderApiImpl(String dirPath) throws BatchFileProcessException {
+    protected CsvVideoMetaDataLoaderApiImpl(AvBatchImportParameters parms) throws BatchFileProcessException {
         super(MediaConstants.APP_NAME);
-        this.initConnection(dirPath);
+        this.initConnection(parms);
         logger.info("Video batch processor is initialized.");
         logger.info("Video batch processing will begin at this location: " + this.videoPath);
     }
@@ -95,15 +96,25 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
      * Setup connection for an arbitrary external datasource which the
      * configuration is known at implementation.
      * 
-     * @param dirPath
-     *            The path indicating where the actual video files live
+     * @param parms
+     *            a genreic object containing the parmeters needed to identify
+     *            the resources to import.
      * 
      * @throws BatchFileProcessException
      */
-    public void initConnection(Object dirPath) throws BatchFileProcessException {
-        if (dirPath != null) {
-            this.videoPath = dirPath.toString();
+    public void initConnection(Object parms) throws BatchFileProcessException {
+        if (parms == null || !(parms instanceof AvBatchImportParameters)) {
+            this.msg = "The CSV video batch import parameters are required";
+            CsvVideoMetaDataLoaderApiImpl.logger.error(this.msg);
+            throw new InvalidBatchRootDirectoryException(this.msg);
         }
+        this.parms = (AvBatchImportParameters) parms;
+        if (this.parms.getPath() == null) {
+            this.msg = "Path/Location value is required as a CSV video batch import parameter";
+            CsvVideoMetaDataLoaderApiImpl.logger.error(this.msg);
+            throw new InvalidBatchRootDirectoryException(this.msg);
+        }
+        this.videoPath = this.parms.getAbsolutePath();
         this.successCnt = 0;
         this.errorCnt = 0;
         this.totCnt = 0;

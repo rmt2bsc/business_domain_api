@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modules.audiovideo.batch.AvBatchFileFactory;
 import org.modules.audiovideo.batch.AvBatchFileProcessorApi;
+import org.modules.audiovideo.batch.AvBatchImportParameters;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -94,7 +95,10 @@ public class CsvVideoBatchImportApiTest extends AvMediaMockData {
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = AvBatchFileFactory.createCsvBatchImportApiInstance(AvMediaMockDataFactory.TEST_VIDEO_DIR);
+            AvBatchImportParameters parms = new AvBatchImportParameters();
+            parms.setShareName("MyBook1");
+            parms.setPath("multimedia/video/movies");
+            api = AvBatchFileFactory.createCsvBatchImportApiInstance(parms);
             results = api.processBatch();
         }
         catch (BatchFileException e) {
