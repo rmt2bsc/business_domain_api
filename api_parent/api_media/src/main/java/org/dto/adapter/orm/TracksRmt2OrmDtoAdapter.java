@@ -13,7 +13,7 @@ import com.api.foundation.TransactionDtoImpl;
  */
 class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
 
-    private AvTracks t;
+    private AvTracks adaptee;
 
     /**
      * Creates a TracksRmt2OrmDtoAdapter without initializing its adaptee
@@ -35,7 +35,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
         if (trackInfo == null) {
             trackInfo = new AvTracks();
         }
-        this.t = trackInfo;
+        this.adaptee = trackInfo;
         this.init(trackInfo.getDateCreated(), trackInfo.getDateUpdated(),
                 trackInfo.getUserId());
     }
@@ -47,7 +47,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackId(int value) {
-        this.t.setTrackId(value);
+        this.adaptee.setTrackId(value);
     }
 
     /*
@@ -57,7 +57,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public int getTrackId() {
-        return this.t.getTrackId();
+        return this.adaptee.getTrackId();
     }
 
     /*
@@ -67,7 +67,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setProjectId(int value) {
-        this.t.setProjectId(value);
+        this.adaptee.setProjectId(value);
     }
 
     /*
@@ -77,18 +77,18 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public int getProjectId() {
-        return this.t.getProjectId();
+        return this.adaptee.getProjectId();
     }
 
     @Override
     public void setGenreId(int value) {
-        this.t.setGenreId(value);
+        this.adaptee.setGenreId(value);
 
     }
 
     @Override
     public int getGenreId() {
-        return this.t.getGenreId();
+        return this.adaptee.getGenreId();
     }
 
     /*
@@ -98,7 +98,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackNumber(int value) {
-        this.t.setTrackNumber(value);
+        this.adaptee.setTrackNumber(value);
     }
 
     /*
@@ -108,7 +108,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public int getTrackNumber() {
-        return this.t.getTrackNumber();
+        return this.adaptee.getTrackNumber();
     }
 
     /*
@@ -118,7 +118,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackTitle(String value) {
-        this.t.setTrackTitle(value);
+        this.adaptee.setTrackTitle(value);
     }
 
     /*
@@ -128,7 +128,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getTrackTitle() {
-        return this.t.getTrackTitle();
+        return this.adaptee.getTrackTitle();
     }
 
     /*
@@ -138,7 +138,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackHours(int value) {
-        this.t.setTrackHours(value);
+        this.adaptee.setTrackHours(value);
     }
 
     /*
@@ -148,7 +148,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public int getTrackHours() {
-        return this.t.getTrackHours();
+        return this.adaptee.getTrackHours();
     }
 
     /*
@@ -158,7 +158,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackMinutes(int value) {
-        this.t.setTrackMinutes(value);
+        this.adaptee.setTrackMinutes(value);
     }
 
     /*
@@ -168,7 +168,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public int getTrackMinutes() {
-        return this.t.getTrackMinutes();
+        return this.adaptee.getTrackMinutes();
     }
 
     /*
@@ -178,7 +178,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackSeconds(int value) {
-        this.t.setTrackSeconds(value);
+        this.adaptee.setTrackSeconds(value);
     }
 
     /*
@@ -188,7 +188,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public int getTrackSeconds() {
-        return this.t.getTrackSeconds();
+        return this.adaptee.getTrackSeconds();
     }
 
     /*
@@ -198,7 +198,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackDisc(String value) {
-        this.t.setTrackDisc(value);
+        this.adaptee.setTrackDisc(value);
     }
 
     /*
@@ -208,7 +208,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getTrackDisc() {
-        return this.t.getTrackDisc();
+        return this.adaptee.getTrackDisc();
     }
 
     /*
@@ -218,7 +218,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackProducer(String value) {
-        this.t.setTrackProducer(value);
+        this.adaptee.setTrackProducer(value);
     }
 
     /*
@@ -228,7 +228,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getTrackProducer() {
-        return this.t.getTrackProducer();
+        return this.adaptee.getTrackProducer();
     }
 
     /*
@@ -238,7 +238,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackComposer(String value) {
-        this.t.setTrackComposer(value);
+        this.adaptee.setTrackComposer(value);
     }
 
     /*
@@ -248,7 +248,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getTrackComposer() {
-        return this.t.getTrackComposer();
+        return this.adaptee.getTrackComposer();
     }
 
     /*
@@ -258,7 +258,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setTrackLyricist(String value) {
-        this.t.setTrackLyricist(value);
+        this.adaptee.setTrackLyricist(value);
     }
 
     /*
@@ -268,7 +268,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getTrackLyricist() {
-        return this.t.getTrackLyricist();
+        return this.adaptee.getTrackLyricist();
     }
 
     /*
@@ -278,7 +278,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setLocServername(String value) {
-        this.t.setLocServername(value);
+        this.adaptee.setLocServername(value);
     }
 
     /*
@@ -288,7 +288,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getLocServername() {
-        return this.t.getLocServername();
+        return this.adaptee.getLocServername();
     }
 
     /*
@@ -298,7 +298,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setLocSharename(String value) {
-        this.t.setLocSharename(value);
+        this.adaptee.setLocSharename(value);
     }
 
     /*
@@ -308,7 +308,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getLocSharename() {
-        return this.t.getLocSharename();
+        return this.adaptee.getLocSharename();
     }
 
     /*
@@ -318,7 +318,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setLocRootPath(String value) {
-        this.t.setLocRootPath(value);
+        this.adaptee.setLocRootPath(value);
     }
 
     /*
@@ -328,7 +328,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getLocRootPath() {
-        return this.t.getLocRootPath();
+        return this.adaptee.getLocRootPath();
     }
 
     /*
@@ -338,7 +338,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setLocPath(String value) {
-        this.t.setLocPath(value);
+        this.adaptee.setLocPath(value);
     }
 
     /*
@@ -348,7 +348,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getLocPath() {
-        return this.t.getLocPath();
+        return this.adaptee.getLocPath();
     }
 
     /*
@@ -358,7 +358,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setLocFilename(String value) {
-        this.t.setLocFilename(value);
+        this.adaptee.setLocFilename(value);
     }
 
     /*
@@ -368,7 +368,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getLocFilename() {
-        return this.t.getLocFilename();
+        return this.adaptee.getLocFilename();
     }
 
     /*
@@ -378,7 +378,7 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public void setComments(String value) {
-        this.t.setComments(value);
+        this.adaptee.setComments(value);
     }
 
     /*
@@ -388,7 +388,27 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
      */
     @Override
     public String getComments() {
-        return this.t.getComments();
+        return this.adaptee.getComments();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return this.getTrackId() == ((TracksDto) obj).getTrackId()
+                && this.getTrackTitle().equalsIgnoreCase(((TracksDto) obj).getTrackTitle());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return this.adaptee.hashCode();
+    }
 }

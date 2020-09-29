@@ -13,14 +13,14 @@ import com.api.foundation.TransactionDtoImpl;
  */
 class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto {
 
-    private AvProject p;
+    private AvProject adaptee;
 
     /**
      * Creates a ProjectRmt2OrmDtoAdapter without initializing its adaptee
      */
     private ProjectRmt2OrmDtoAdapter() {
         super();
-        this.p = null;
+        this.adaptee = null;
         return;
     }
 
@@ -37,7 +37,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
         if (project == null) {
             project = new AvProject();
         }
-        this.p = project;
+        this.adaptee = project;
         this.init(project.getDateCreated(), project.getDateUpdated(),
                 project.getUserId());
     }
@@ -49,7 +49,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getProjectId() {
-        return this.p.getProjectId();
+        return this.adaptee.getProjectId();
     }
 
     /*
@@ -59,7 +59,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setProjectId(int projId) {
-        this.p.setProjectId(projId);
+        this.adaptee.setProjectId(projId);
     }
 
     /*
@@ -69,7 +69,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getArtistId() {
-        return this.p.getArtistId();
+        return this.adaptee.getArtistId();
     }
 
     /*
@@ -79,7 +79,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setArtistId(int artistId) {
-        this.p.setArtistId(artistId);
+        this.adaptee.setArtistId(artistId);
     }
 
     /*
@@ -89,7 +89,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getProjectTypeId() {
-        return this.p.getProjectTypeId();
+        return this.adaptee.getProjectTypeId();
     }
 
     /*
@@ -99,7 +99,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setProjectTypeId(int projTypeId) {
-        this.p.setProjectTypeId(projTypeId);
+        this.adaptee.setProjectTypeId(projTypeId);
     }
 
     /*
@@ -109,7 +109,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getGenreId() {
-        return this.p.getGenreId();
+        return this.adaptee.getGenreId();
     }
 
     /*
@@ -119,7 +119,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setGenreId(int genreId) {
-        this.p.setGenreId(genreId);
+        this.adaptee.setGenreId(genreId);
     }
 
     /*
@@ -129,7 +129,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getMediaTypeId() {
-        return this.p.getMediaTypeId();
+        return this.adaptee.getMediaTypeId();
     }
 
     /*
@@ -139,7 +139,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setMediaTypeId(int mediaTypeId) {
-        this.p.setMediaTypeId(mediaTypeId);
+        this.adaptee.setMediaTypeId(mediaTypeId);
     }
 
     /*
@@ -149,7 +149,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public String getTitle() {
-        return this.p.getTitle();
+        return this.adaptee.getTitle();
     }
 
     /*
@@ -159,7 +159,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setTitle(String title) {
-        this.p.setTitle(title);
+        this.adaptee.setTitle(title);
     }
 
     /*
@@ -169,7 +169,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getYear() {
-        return this.p.getYear();
+        return this.adaptee.getYear();
     }
 
     /*
@@ -179,7 +179,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setYear(int year) {
-        this.p.setYear(year);
+        this.adaptee.setYear(year);
     }
 
     /*
@@ -189,7 +189,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getMasterDupId() {
-        return this.p.getMasterDupId();
+        return this.adaptee.getMasterDupId();
     }
 
     /*
@@ -199,7 +199,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setMasterDupId(int value) {
-        this.p.setMasterDupId(value);
+        this.adaptee.setMasterDupId(value);
     }
 
     /*
@@ -209,7 +209,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getRippedInd() {
-        return this.p.getRipped();
+        return this.adaptee.getRipped();
     }
 
     /*
@@ -219,7 +219,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setRippedInd(int flag) {
-        this.p.setRipped(flag);
+        this.adaptee.setRipped(flag);
     }
 
     /*
@@ -229,7 +229,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public double getCost() {
-        return this.p.getCost();
+        return this.adaptee.getCost();
     }
 
     /*
@@ -239,7 +239,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setCost(double cost) {
-        this.p.setCost(cost);
+        this.adaptee.setCost(cost);
     }
 
     /*
@@ -249,7 +249,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public int getContentId() {
-        return this.p.getContentId();
+        return this.adaptee.getContentId();
     }
 
     /*
@@ -259,7 +259,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setContentId(int contentId) {
-        this.p.setContentId(contentId);
+        this.adaptee.setContentId(contentId);
     }
 
     /*
@@ -291,7 +291,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public String getContentPath() {
-        return this.p.getContentPath();
+        return this.adaptee.getContentPath();
     }
 
     /*
@@ -301,7 +301,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setContentPath(String contentPath) {
-        this.p.setContentPath(contentPath);
+        this.adaptee.setContentPath(contentPath);
     }
 
     /*
@@ -311,7 +311,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public String getArtWorkPath() {
-        return this.p.getArtWorkPath();
+        return this.adaptee.getArtWorkPath();
     }
 
     /*
@@ -321,7 +321,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setArtWorkPath(String artWorkPath) {
-        this.p.setArtWorkPath(artWorkPath);
+        this.adaptee.setArtWorkPath(artWorkPath);
     }
 
     /*
@@ -331,7 +331,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public String getComments() {
-        return this.p.getProjectComments();
+        return this.adaptee.getProjectComments();
     }
 
     /*
@@ -341,7 +341,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setComments(String comments) {
-        this.p.setProjectComments(comments);
+        this.adaptee.setProjectComments(comments);
     }
 
     /*
@@ -351,7 +351,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public String getArtWorkFilename() {
-        return this.p.getArtWorkFilename();
+        return this.adaptee.getArtWorkFilename();
     }
 
     /*
@@ -361,7 +361,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setArtWorkFilename(String artWorkFilename) {
-        this.p.setArtWorkFilename(artWorkFilename);
+        this.adaptee.setArtWorkFilename(artWorkFilename);
     }
 
     /*
@@ -371,7 +371,7 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public String getContentFilename() {
-        return this.p.getContentFilename();
+        return this.adaptee.getContentFilename();
     }
 
     /*
@@ -381,28 +381,48 @@ class ProjectRmt2OrmDtoAdapter extends TransactionDtoImpl implements ProjectDto 
      */
     @Override
     public void setContentFilename(String contentFilename) {
-        this.p.setContentFilename(contentFilename);
+        this.adaptee.setContentFilename(contentFilename);
 
     }
 
     @Override
     public int getTotalTime() {
-        return this.p.getTotalTime();
+        return this.adaptee.getTotalTime();
     }
 
     @Override
     public void setTotalTime(int totalTime) {
-        this.p.setTotalTime(totalTime);
+        this.adaptee.setTotalTime(totalTime);
     }
 
     @Override
     public String getProducer() {
-        return this.p.getProducer();
+        return this.adaptee.getProducer();
     }
 
     @Override
     public void setProducer(String producer) {
-        this.p.setProducer(producer);
+        this.adaptee.setProducer(producer);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return this.getProjectId() == ((ProjectDto) obj).getProjectId()
+                && this.getTitle().equalsIgnoreCase(((ProjectDto) obj).getTitle());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return this.adaptee.hashCode();
+    }
 }
