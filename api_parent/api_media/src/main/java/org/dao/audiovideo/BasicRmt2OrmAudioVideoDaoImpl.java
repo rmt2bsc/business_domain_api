@@ -464,6 +464,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     private int updateArtist(AvArtist artist) throws AudioVideoDaoException {
         int rc = 0;
         try {
+            artist.addCriteria(AvArtist.PROP_ARTISTID, artist.getArtistId());
             rc = this.client.updateRow(artist);
             return rc;
         } catch (DatabaseException e) {
@@ -532,6 +533,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (proj.getContentId() == 0) {
                 proj.setNull(AvProject.PROP_CONTENTID);
             }
+            proj.addCriteria(AvProject.PROP_PROJECTID, proj.getProjectId());
             rc = this.client.updateRow(proj);
             return rc;
         } catch (DatabaseException e) {
@@ -594,6 +596,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             track.setDateUpdated(ut.getDateCreated());
             track.setUserId(ut.getLoginId());
+            track.addCriteria(AvTracks.PROP_TRACKID, track.getTrackId());
             rc = this.client.updateRow(track);
             return rc;
         } catch (DatabaseException e) {
