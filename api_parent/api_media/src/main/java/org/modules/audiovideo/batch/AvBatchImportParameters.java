@@ -12,6 +12,7 @@ public class AvBatchImportParameters {
     private String shareName;
     private String rootPath;
     private String path;
+    private String importFilePath;
 
     public AvBatchImportParameters() {
 
@@ -124,5 +125,20 @@ public class AvBatchImportParameters {
             buf.append(this.path);
         }
         return buf.toString();
+    }
+
+    /**
+     * @return the importFilePath
+     */
+    public String getImportFilePath() {
+        return importFilePath;
+    }
+
+    /**
+     * @param importFilePath
+     *            the importFilePath to set
+     */
+    public void setImportFilePath(String importFilePath) {
+        this.importFilePath = importFilePath;
     }
 }
