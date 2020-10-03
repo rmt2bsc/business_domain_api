@@ -156,7 +156,7 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
         try {
             this.msg = "Video Batch Update process started";
             logger.info(this.msg);
-            this.processSingleFile(MediaConstants.VIDEO_IMPORT_DATAFILE_PATH, null);
+            this.processSingleFile(this.parms.getImportFilePath(), null);
             return this.totCnt;
         } catch (BatchFileProcessException e) {
             this.msg = "A batch file error occurred";
@@ -655,7 +655,7 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
      * @see com.api.BatchFileProcessor#processSingleFile(java.lang.String)
      */
     public Object processSingleFile(String importFile, Object parent) throws BatchFileException {
-        File csv = RMT2File.getFileInstanceFromClassPath(importFile);
+        File csv = new File(importFile);
         return this.processSingleFile(csv, null);
     }
 
