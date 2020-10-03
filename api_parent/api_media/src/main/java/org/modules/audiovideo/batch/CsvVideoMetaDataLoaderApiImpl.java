@@ -187,6 +187,32 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.BatchFileProcessor#processSingleFile(java.lang.String)
+     */
+    public Object processSingleFile(String importFile, Object parent) throws BatchFileException {
+        File csv = null;
+        if (importFile == null) {
+            // Typically for unit testing
+            try {
+                csv = RMT2File.getFileInstanceFromClassPath(MediaConstants.VIDEO_IMPORT_DATAFILE_PATH);
+            } catch (Exception e) {
+                throw new BatchFileException("Unable to locate source import data file: " + importFile);
+            }
+        }
+        else {
+            csv = new File(importFile);
+        }
+
+        if (csv.isDirectory() || csv.isFile()) {
+            return this.processSingleFile(csv, null);
+        }
+        // File csv = new File(importFile);
+        throw new BatchFileException("Unable to determine source import data file: " + importFile);
+    }
+
     /**
      * Initiates the media file data extraction process.
      * 
@@ -647,16 +673,6 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
     public Object processFiles(List<String> arg0, Object parent)
             throws BatchFileException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.api.BatchFileProcessor#processSingleFile(java.lang.String)
-     */
-    public Object processSingleFile(String importFile, Object parent) throws BatchFileException {
-        File csv = new File(importFile);
-        return this.processSingleFile(csv, null);
     }
 
     /**
