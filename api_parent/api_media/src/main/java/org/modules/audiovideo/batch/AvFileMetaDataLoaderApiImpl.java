@@ -335,17 +335,8 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         // Create MP3Reader based on selected implementation
         MP3Reader api = null;
         switch (AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE) {
-            case MediaConstants.MP3_READER_IMPL_ENTAGGED:
-                api = AudioVideoFactory.createEntaggedId3Instance(mp3Source);
-                break;
-            case MediaConstants.MP3_READER_IMPL_ID3MP3WMV:
-                api = AudioVideoFactory.createId3mp3WmvInstance(mp3Source);
-                break;
-            case MediaConstants.MP3_READER_IMPL_JID3:
-                api = AudioVideoFactory.createJID3Mp3Instance(mp3Source);
-                break;
-            case MediaConstants.MP3_READER_IMPL_MYID3:
-                api = AudioVideoFactory.createMyId3Instance(mp3Source);
+            case MediaConstants.MP3_READER_IMPL_MP3AGIC:
+                api = AudioVideoFactory.createMp3agicInstance(mp3Source);
                 break;
             default:
                 this.msg = "An invalid MP3 reader implementation code was specified in configuration: " + AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE;
@@ -411,7 +402,13 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
 
         try {
             // Get Artist
-            ava.setName(mp3.getArtist());
+            if (!mp3.getArtist().equalsIgnoreCase(mp3.getAlbumArtist()) && mp3.getAlbumArtist() != null) {
+                ava.setName(mp3.getAlbumArtist());
+                // TODO: Add logic to set track artisits in the av_tracks table
+            }
+            else {
+                ava.setName(mp3.getArtist());
+            }
 
             // Get Album
             av.setTitle(mp3.getAlbum());

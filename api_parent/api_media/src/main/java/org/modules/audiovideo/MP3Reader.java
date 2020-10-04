@@ -18,6 +18,13 @@ public interface MP3Reader {
     String getArtist();
 
     /**
+     * Get albumn artist
+     * 
+     * @return String;
+     */
+    String getAlbumArtist();
+
+    /**
      * Get Album name
      * 
      * @return String
