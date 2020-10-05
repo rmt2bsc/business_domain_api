@@ -63,6 +63,8 @@ public class AvTracks extends OrmBean {
   public static final String PROP_USERID = "UserId";
 /** The property name constant equivalent to property, GenreId, of respective DataSource view. */
   public static final String PROP_GENREID = "GenreId";
+/** The property name constant equivalent to property, TrackArtist, of respective DataSource view. */
+  public static final String PROP_TRACKARTIST = "TrackArtist";
 
 
 
@@ -108,6 +110,8 @@ public class AvTracks extends OrmBean {
   private String userId;
 /** The javabean property equivalent of database column av_tracks.genre_id */
   private int genreId;
+/** The javabean property equivalent of database column av_tracks.track_artist */
+  private String trackArtist;
 
 
 
@@ -371,6 +375,18 @@ public class AvTracks extends OrmBean {
   public int getGenreId() {
     return this.genreId;
   }
+/**
+ * Sets the value of member variable trackArtist
+ */
+  public void setTrackArtist(String value) {
+    this.trackArtist = value;
+  }
+/**
+ * Gets the value of member variable trackArtist
+ */
+  public String getTrackArtist() {
+    return this.trackArtist;
+  }
 
 @Override
 public boolean equals(Object obj) {
@@ -438,6 +454,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.genreId, other.genreId)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.trackArtist, other.trackArtist)) {
+      return false;
+   }
    return true; 
 } 
 
@@ -460,7 +479,8 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.locPath),
                HashCodeAssistant.hashObject(this.locFilename),
                HashCodeAssistant.hashObject(this.comments),
-               HashCodeAssistant.hashObject(this.genreId));
+               HashCodeAssistant.hashObject(this.genreId),
+               HashCodeAssistant.hashObject(this.trackArtist));
 } 
 
 @Override
@@ -482,7 +502,8 @@ public String toString() {
           ", locPath=" + locPath + 
           ", locFilename=" + locFilename + 
           ", comments=" + comments + 
-          ", genreId=" + genreId  + "]";
+          ", genreId=" + genreId + 
+          ", trackArtist=" + trackArtist  + "]";
 }
 
 /**
