@@ -119,6 +119,10 @@ public class AvTracksOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
+        o2.setTrackArtist("Track Artist");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
         o2.setTrackProducer("john smith");
         result = o1.equals(o2);
         Assert.assertTrue(result);
