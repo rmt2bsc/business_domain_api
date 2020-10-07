@@ -140,6 +140,7 @@ public class AvMediaMockDataFactory {
         o.setTrackDisc(disc);
         o.setLocPath(filePath);
         o.setLocFilename(fileName);
+        o.setTrackArtist("Track Artist");
         o.setLocServername("ServerName");
         o.setLocRootPath("www.rmt2.net");
         o.setLocSharename("multimedia");

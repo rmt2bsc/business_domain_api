@@ -403,8 +403,14 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         try {
             // Get Artist
             if (!mp3.getArtist().equalsIgnoreCase(mp3.getAlbumArtist()) && mp3.getAlbumArtist() != null) {
+                // This is for Various Artist type album/cd
+
+                // Set artist in the av_artist table to the name of the various
+                // artist project.
                 ava.setName(mp3.getAlbumArtist());
-                // TODO: Add logic to set track artisits in the av_tracks table
+                // Set track artist in the av_tracks table to actual artist of
+                // the track on the various artist project
+                avt.setTrackArtist(mp3.getArtist());
             }
             else {
                 ava.setName(mp3.getArtist());

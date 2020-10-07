@@ -411,4 +411,14 @@ class TracksRmt2OrmDtoAdapter extends TransactionDtoImpl implements TracksDto {
     public int hashCode() {
         return this.adaptee.hashCode();
     }
+
+    @Override
+    public void setTrackArtist(String value) {
+        this.adaptee.setTrackArtist(value);
+    }
+
+    @Override
+    public String getTrackArtist() {
+        return this.adaptee.getTrackArtist();
+    }
 }

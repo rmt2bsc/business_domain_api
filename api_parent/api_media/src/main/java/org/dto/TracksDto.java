@@ -102,6 +102,16 @@ public interface TracksDto extends TransactionDto {
     String getTrackDisc();
 
     /**
+     * Sets the track Artist
+     */
+    void setTrackArtist(String value);
+
+    /**
+     * Gets the track Artist
+     */
+    String getTrackArtist();
+
+    /**
      * Sets the track Producer
      */
     void setTrackProducer(String value);

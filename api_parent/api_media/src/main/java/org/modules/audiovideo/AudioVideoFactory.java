@@ -82,6 +82,7 @@ public class AudioVideoFactory extends RMT2Base {
         t.setTrackMinutes(track.getTrackMinutes());
         t.setTrackSeconds(track.getTrackSeconds());
         t.setTrackDisc(track.getTrackDisc());
+        t.setTrackArtist(track.getTrackArtist());
         t.setTrackProducer(track.getTrackProducer());
         t.setTrackComposer(track.getTrackComposer());
         t.setTrackLyricist(track.getTrackLyricist());

@@ -257,6 +257,9 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getTrackTitle() != null) {
                 queryObj.addLikeClause(AvTracks.PROP_TRACKTITLE, criteria.getTrackTitle());
             }
+            if (criteria.getTrackArtist() != null) {
+                queryObj.addLikeClause(AvTracks.PROP_TRACKARTIST, criteria.getTrackArtist());
+            }
             if (criteria.getComments() != null) {
                 queryObj.addLikeClause(AvTracks.PROP_COMMENTS, criteria.getComments(), OrmBean.LIKE_CONTAINS);
             }

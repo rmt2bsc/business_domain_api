@@ -228,6 +228,7 @@ public class AudioVideoMediaAdapterTest {
         Assert.assertEquals("john smith", dto.getTrackComposer());
         Assert.assertEquals("john smith", dto.getTrackProducer());
         Assert.assertEquals("john smith", dto.getTrackLyricist());
+        Assert.assertEquals("Track Artist", dto.getTrackArtist());
 
         try {
             AvTracks nullParm = null;
@@ -249,6 +250,7 @@ public class AudioVideoMediaAdapterTest {
             dto.setTrackComposer("john smith");
             dto.setTrackLyricist("john smith");
             dto.setTrackProducer("john smith");
+            dto.setTrackArtist("TrackArtist1");
 
             Assert.assertEquals(AvMediaMockDataFactory.TEST_TRACK_ID, dto.getTrackId());
             Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID, dto.getProjectId());
@@ -266,6 +268,7 @@ public class AudioVideoMediaAdapterTest {
             Assert.assertEquals("john smith", dto.getTrackComposer());
             Assert.assertEquals("john smith", dto.getTrackProducer());
             Assert.assertEquals("john smith", dto.getTrackLyricist());
+            Assert.assertEquals("TrackArtist1", dto.getTrackArtist());
 
         } catch (Exception e) {
             e.printStackTrace();
