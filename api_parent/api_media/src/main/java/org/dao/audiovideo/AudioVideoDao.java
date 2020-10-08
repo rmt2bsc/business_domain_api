@@ -9,6 +9,7 @@ import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 
 import com.api.persistence.DaoClient;
 
@@ -32,6 +33,19 @@ public interface AudioVideoDao extends DaoClient {
      * @throws AudioVideoDaoException
      */
     List<CommonMediaDto> fetchCommonMedia(String criteria) throws AudioVideoDaoException;
+
+    /**
+     * Fetches primary, non-primary and video type artists information based on
+     * the selection criteria data elements containted in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instnace of {@link VwArtistDto} containing values for
+     *            selection criteria.
+     * @return a List of {@link VwArtistDto} objects or null if no data was
+     *         found.
+     * @throws AudioVideoDaoException
+     */
+    List<VwArtistDto> fetchVwArtist(VwArtistDto criteria) throws AudioVideoDaoException;
 
     /**
      * Fetches artist information based on the selection criteria data elements

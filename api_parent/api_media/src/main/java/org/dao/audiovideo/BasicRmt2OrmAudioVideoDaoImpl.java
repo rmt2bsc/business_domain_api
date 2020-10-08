@@ -15,12 +15,14 @@ import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
+import org.dao.mapping.orm.rmt2.VwAudioVideoArtists;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.audiovideo.AudioVideoFactory;
 
@@ -151,6 +153,80 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         List<ArtistDto> list = new ArrayList<ArtistDto>();
         for (AvArtist item : results) {
             ArtistDto dto = Rmt2MediaDtoFactory.getAvArtistInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+
+    /**
+     * Fetches consolidated artists, which includes primary, non-primary, and
+     * video artists, information from the <i>vw_audio_video_artists</i> view
+     * based on selection criteria contained in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instnace of {@link VwArtistDto} containing values for
+     *            selection criteria.
+     * @return a List of {@link VwArtistDto} objects or null if no data was
+     *         found.
+     * @throws AudioVideoDaoException
+     */
+    @Override
+    public List<VwArtistDto> fetchVwArtist(VwArtistDto criteria) throws AudioVideoDaoException {
+        // Setup criteria
+        VwAudioVideoArtists queryObj = new VwAudioVideoArtists();
+        if (criteria != null) {
+            if (criteria.getArtistId() > 0) {
+                queryObj.addCriteria(VwAudioVideoArtists.PROP_ARTISTID, criteria.getArtistId());
+            }
+            if (criteria.getArtistName() != null) {
+                queryObj.addLikeClause(VwAudioVideoArtists.PROP_ARTIST, criteria.getArtistName(), OrmBean.LIKE_BEGIN);
+            }
+            if (criteria.getProjectId() > 0) {
+                queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTID, criteria.getProjectId());
+            }
+            if (criteria.getProjectName() != null) {
+                queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTITLE, criteria.getProjectName(), OrmBean.LIKE_BEGIN);
+            }
+            if (criteria.getProjectComments() != null) {
+                queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTCOMMENTS, criteria.getProjectComments(),
+                        OrmBean.LIKE_CONTAINS);
+            }
+            if (criteria.getTrackId() > 0) {
+                queryObj.addCriteria(VwAudioVideoArtists.PROP_TRACKID, criteria.getTrackId());
+            }
+            if (criteria.getTrackName() != null) {
+                queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKTITLE, criteria.getTrackName(), OrmBean.LIKE_BEGIN);
+            }
+            if (criteria.getTrackComments() != null) {
+                queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKCOMMENTS, criteria.getTrackComments(), OrmBean.LIKE_CONTAINS);
+            }
+            if (criteria.getProjectTypeId() > 0) {
+                queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTTYPEID, criteria.getProjectTypeId());
+            }
+            if (criteria.getProjectTypeName() != null) {
+                queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTYPENAME, criteria.getProjectTypeName(),
+                        OrmBean.LIKE_CONTAINS);
+            }
+            if (criteria.getCriteria() != null) {
+                queryObj.addCustomCriteria(criteria.getCriteria());
+            }
+        }
+
+        // Query data
+        List<VwAudioVideoArtists> results = null;
+        try {
+            results = this.client.retrieveList(queryObj);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new AudioVideoDaoException(e);
+        }
+
+        // Package results
+        List<VwArtistDto> list = new ArrayList<>();
+        for (VwAudioVideoArtists item : results) {
+            VwArtistDto dto = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(item);
             list.add(dto);
         }
         return list;

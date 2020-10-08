@@ -9,6 +9,7 @@ import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 
 import com.api.foundation.TransactionApi;
 
@@ -75,6 +76,19 @@ public interface AudioVideoApi extends TransactionApi {
      */
     List<ArtistDto> getArtist(ArtistDto criteria) throws AudioVideoApiException;
     
+    /**
+     * Retrieve list of primary, non-primary, and video artists based on
+     * selection criteria contained in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instance of {@link VwArtistDto} containing the selection
+     *            criteria.
+     * @return List of {@link VwArtistDto} objects or null when no data is
+     *         found.
+     * @throws AudioVideoApiException
+     */
+    List<VwArtistDto> getConsolidatedArtist(VwArtistDto criteria) throws AudioVideoApiException;
+
     /**
      * Apply modifications to an artists
      * 

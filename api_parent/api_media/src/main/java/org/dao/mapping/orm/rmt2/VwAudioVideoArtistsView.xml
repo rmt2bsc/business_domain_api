@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VwAudioVideoArtistsView">
+   <Sql From="vw_audio_video_artists" GroupBy="" Having="" OrderBy="" Select="primary_artist, &#xA;&#x9;&#x9;project_type_id, &#xA;&#x9;&#x9;project_type_name, &#xA;&#x9;&#x9;artist, &#xA;&#x9;&#x9;artist_id, &#xA;&#x9;&#x9;project_title, &#xA;&#x9;&#x9;project_id, &#xA;&#x9;&#x9;project_comments, &#xA;&#x9;&#x9;track_id, &#xA;&#x9;&#x9;track_title, &#xA;&#x9;&#x9;track_comments" Where="" />
+   <TableUsage DBName="vw_audio_video_artists" Name="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="primary_artist" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="PrimaryArtist" PrimaryKey="false" SqlType="smallint" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="project_type_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ProjectTypeId" PrimaryKey="false" SqlType="integer" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="project_type_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ProjectTypeName" PrimaryKey="false" SqlType="varchar" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="artist" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="Artist" PrimaryKey="false" SqlType="varchar" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="artist_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="ArtistId" PrimaryKey="false" SqlType="integer" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="project_title" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ProjectTitle" PrimaryKey="false" SqlType="varchar" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="project_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ProjectId" PrimaryKey="false" SqlType="integer" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="project_comments" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="ProjectComments" PrimaryKey="false" SqlType="varchar" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="track_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="TrackId" PrimaryKey="false" SqlType="integer" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="track_title" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="TrackTitle" PrimaryKey="false" SqlType="varchar" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="track_comments" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="TrackComments" PrimaryKey="false" SqlType="varchar" TableName="VwAudioVideoArtistsTable" Updateable="true" />
+</DataSource>
+

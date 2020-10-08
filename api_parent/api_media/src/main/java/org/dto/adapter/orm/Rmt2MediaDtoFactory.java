@@ -11,6 +11,7 @@ import org.dao.mapping.orm.rmt2.MimeTypes;
 import org.dao.mapping.orm.rmt2.PhotoAlbum;
 import org.dao.mapping.orm.rmt2.PhotoEvent;
 import org.dao.mapping.orm.rmt2.PhotoImage;
+import org.dao.mapping.orm.rmt2.VwAudioVideoArtists;
 import org.dao.mapping.orm.rmt2.VwPhoto;
 import org.dto.ArtistDto;
 import org.dto.ContentDto;
@@ -23,6 +24,7 @@ import org.dto.PhotoImageDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 import org.dto.VwPhotoDto;
 
 import com.RMT2Base;
@@ -36,6 +38,18 @@ import com.api.util.RMT2File;
  * 
  */
 public class Rmt2MediaDtoFactory extends RMT2Base {
+
+    /**
+     * Creates an instance of class <i>VwArtistDto</i> based on
+     * <i>VwAudioVideoArtists</i> instance.
+     * 
+     * @return an instance of {@link VwArtistDto}. Set to null for the purpose
+     *         of instantiating a new AvArtist object.
+     */
+    public static final VwArtistDto getVwAudioVideoArtistsInstance(VwAudioVideoArtists artist) {
+        VwArtistDto dto = new VwArtistRmt2OrmDtoAdapter(artist);
+        return dto;
+    }
 
     /**
      * Creates an instance of class <i>ArtistDto</i> based on <i>AvArtist</i>

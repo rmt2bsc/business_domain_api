@@ -12,6 +12,7 @@ import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 
 import com.InvalidDataException;
 import com.RMT2Constants;
@@ -141,6 +142,23 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
         }
         catch (AudioVideoDaoException e) {
             throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve artist(s)", e);
+        }
+    }
+
+    @Override
+    public List<VwArtistDto> getConsolidatedArtist(VwArtistDto criteria) throws AudioVideoApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Consolidated artist criteria object is required", e);
+        }
+
+        List<VwArtistDto> results = null;
+        try {
+            results = this.dao.fetchVwArtist(criteria);
+            return results;
+        } catch (AudioVideoDaoException e) {
+            throw new AudioVideoApiException("Audio/Video DAO error: Unable to retrieve consolidated artist(s)", e);
         }
     }
 
@@ -346,6 +364,4 @@ public class AudioVideoMetadataImpl extends AbstractTransactionApiImpl implement
             throw new InvalidDataException("Track number is required", e);
         }
     }
-
-        
 }

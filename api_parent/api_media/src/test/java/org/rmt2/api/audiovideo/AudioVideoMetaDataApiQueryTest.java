@@ -12,12 +12,14 @@ import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
+import org.dao.mapping.orm.rmt2.VwAudioVideoArtists;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -66,6 +68,8 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
                 .thenReturn(this.mockAvProjectData);
         when(this.mockPersistenceClient.retrieveList(isA(AvTracks.class)))
                 .thenReturn(this.mockAvTracksData);
+        when(this.mockPersistenceClient.retrieveList(isA(VwAudioVideoArtists.class)))
+                .thenReturn(this.mockVwAudioVideoArtistsData);
     }
     
     /**
@@ -315,4 +319,72 @@ public class AudioVideoMetaDataApiQueryTest extends AvMediaMockData {
         }
     }
 
+    @Test
+    public void testSuccess_Consolidated_Artist_Fetch() {
+        AudioVideoApi api = null;
+        VwArtistDto criteria = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(null);
+        List<VwArtistDto> results = null;
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            results = api.getConsolidatedArtist(criteria);
+        } catch (AudioVideoApiException e) {
+            e.printStackTrace();
+            Assert.fail("An exception was not expected");
+        }
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(5, results.size());
+
+        int ndx = 0;
+        for (VwArtistDto item : results) {
+            Assert.assertTrue(item.isPrimaryArtist());
+            Assert.assertEquals(1, item.getProjectTypeId());
+            Assert.assertEquals("Audio", item.getProjectTypeName());
+            Assert.assertEquals(AvMediaMockDataFactory.TEST_ARTIST_ID + ndx, item.getArtistId());
+            Assert.assertEquals("Artist" + (AvMediaMockDataFactory.TEST_ARTIST_ID + ndx), item.getArtistName());
+            Assert.assertEquals(AvMediaMockDataFactory.TEST_PROJECT_ID + ndx, item.getProjectId());
+            Assert.assertEquals("Project Name" + ndx, item.getProjectName());
+            Assert.assertEquals(AvMediaMockDataFactory.TEST_TRACK_ID + ndx, item.getTrackId());
+            Assert.assertEquals("Track Name" + ndx, item.getTrackName());
+            Assert.assertEquals("Track Comments", item.getTrackComments());
+            Assert.assertEquals("Project Comments", item.getProjectComments());
+            ndx++;
+        }
+    }
+
+    @Test
+    public void testError_Consolidated_Artist_Fetch_DB_Access_Fault() {
+        String errMsg = "A Database error occurred retrieving consolidated artists data";
+        when(this.mockPersistenceClient.retrieveList(isA(VwAudioVideoArtists.class)))
+                .thenThrow(new DatabaseException(errMsg));
+
+        AudioVideoApi api = null;
+        VwArtistDto criteria = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(null);
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            api.getConsolidatedArtist(criteria);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof AudioVideoApiException);
+            Assert.assertTrue(e.getCause() instanceof AudioVideoDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+            Assert.assertEquals(errMsg, e.getCause().getCause().getMessage());
+        }
+    }
+
+    @Test
+    public void testValidation_Consolidated_Artist_Fetch_Null_Data_Object() {
+        String errMsg = "Consolidated artist criteria object is required";
+        AudioVideoApi api = null;
+        try {
+            api = AudioVideoFactory.createApi(MediaConstants.APP_NAME);
+            api.getConsolidatedArtist(null);
+            Assert.fail("An exception was expected to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidDataException);
+            Assert.assertEquals(errMsg, e.getMessage());
+        }
+    }
 }

@@ -9,6 +9,7 @@ import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
+import org.dao.mapping.orm.rmt2.VwAudioVideoArtists;
 import org.junit.After;
 import org.junit.Before;
 import org.rmt2.api.BaseMediaDaoTest;
@@ -29,6 +30,7 @@ public class AvMediaMockData extends BaseMediaDaoTest {
     protected List<AvArtist> mockAvArtistData;
     protected List<AvProject> mockAvProjectData;
     protected List<AvTracks> mockAvTracksData;
+    protected List<VwAudioVideoArtists> mockVwAudioVideoArtistsData;
 
     /**
      * @throws java.lang.Exception
@@ -43,6 +45,7 @@ public class AvMediaMockData extends BaseMediaDaoTest {
         this.mockAvArtistData = this.createAvArtistMockData();
         this.mockAvProjectData = this.createAvProjectMockData();
         this.mockAvTracksData = this.createAvTrackMockData();
+        this.mockVwAudioVideoArtistsData = this.createVwAudioVideoArtistsMockData();
         return;
     }
 
@@ -127,6 +130,38 @@ public class AvMediaMockData extends BaseMediaDaoTest {
         return list;
     }
     
+    private List<VwAudioVideoArtists> createVwAudioVideoArtistsMockData() {
+        List<VwAudioVideoArtists> list = new ArrayList<>();
+        int ndx = 0;
+        VwAudioVideoArtists o = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID,
+                "Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name" + ndx,
+                AvMediaMockDataFactory.TEST_TRACK_ID, "Track Name" + ndx, true, 1);
+        list.add(o);
+
+        o = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID + (++ndx),
+                "Artist" + (AvMediaMockDataFactory.TEST_ARTIST_ID + ndx), AvMediaMockDataFactory.TEST_PROJECT_ID + ndx,
+                "Project Name" + ndx,
+                AvMediaMockDataFactory.TEST_TRACK_ID + ndx, "Track Name" + ndx, true, 1);
+        list.add(o);
+        o = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID + (++ndx),
+                "Artist" + (AvMediaMockDataFactory.TEST_ARTIST_ID + ndx), AvMediaMockDataFactory.TEST_PROJECT_ID + ndx,
+                "Project Name" + ndx,
+                AvMediaMockDataFactory.TEST_TRACK_ID + ndx, "Track Name" + ndx, true, 1);
+        list.add(o);
+        o = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID + (++ndx),
+                "Artist" + (AvMediaMockDataFactory.TEST_ARTIST_ID + ndx), AvMediaMockDataFactory.TEST_PROJECT_ID + ndx,
+                "Project Name" + ndx,
+                AvMediaMockDataFactory.TEST_TRACK_ID + ndx, "Track Name" + ndx, true, 1);
+        list.add(o);
+        o = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID + (++ndx),
+                "Artist" + (AvMediaMockDataFactory.TEST_ARTIST_ID + ndx), AvMediaMockDataFactory.TEST_PROJECT_ID + ndx,
+                "Project Name" + ndx,
+                AvMediaMockDataFactory.TEST_TRACK_ID + ndx, "Track Name" + ndx, true, 1);
+        list.add(o);
+
+        return list;
+    }
+
     private List<AvProject> createAvProjectMockData() {
         List<AvProject> list = new ArrayList<>();
         int ndx = AvMediaMockDataFactory.TEST_PROJECT_ID;
