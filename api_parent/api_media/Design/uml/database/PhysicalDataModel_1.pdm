@@ -1829,7 +1829,7 @@ CARD 0 Arial,8,N</a:FontList>
 </c:Object>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o10">
-<a:Rect>((-349,29981), (30734,41722))</a:Rect>
+<a:Rect>((-349,29981), (30734,41672))</a:Rect>
 <a:ListOfPoints>((-349,40586),(8327,40376),(30734,29981))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
@@ -1865,7 +1865,7 @@ CARD 0 Arial,8,N</a:FontList>
 </c:Object>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o17">
-<a:Rect>((-9072,48492), (6227,60358))</a:Rect>
+<a:Rect>((-9110,48492), (6264,60358))</a:Rect>
 <a:ListOfPoints>((-1568,48492),(-1330,60358))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
@@ -1883,8 +1883,8 @@ CARD 0 Arial,8,N</a:FontList>
 </c:Object>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o20">
-<a:Rect>((-36178,17302), (-49,40886))</a:Rect>
-<a:ListOfPoints>((-49,40886),(-10648,38229),(-35848,19648),(-36178,17302))</a:ListOfPoints>
+<a:Rect>((-36252,17476), (-49,40886))</a:Rect>
+<a:ListOfPoints>((-49,40886),(-10648,38229),(-35848,19648),(-36252,17476))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -1901,7 +1901,7 @@ CARD 0 Arial,8,N</a:FontList>
 </c:Object>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o23">
-<a:Rect>((-40098,41036), (101,43063))</a:Rect>
+<a:Rect>((-40098,41036), (101,43013))</a:Rect>
 <a:ListOfPoints>((-40098,42708),(-32273,42233),(-9454,41202),(101,41036))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
@@ -1991,8 +1991,8 @@ CARD 0 Arial,8,N</a:FontList>
 </c:Object>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o37">
-<a:Rect>((-48617,19123), (-32793,32720))</a:Rect>
-<a:ListOfPoints>((-40967,32720),(-40498,19123))</a:ListOfPoints>
+<a:Rect>((-48665,19455), (-32765,32720))</a:Rect>
+<a:ListOfPoints>((-40967,32720),(-40515,19455))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>11184640</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -2143,8 +2143,9 @@ TableComment 0 Arial,8,N</a:FontList>
 </c:Object>
 </o:TableSymbol>
 <o:TableSymbol Id="o21">
-<a:ModificationDate>1601935661</a:ModificationDate>
-<a:Rect>((-41830,15303), (-30526,19302))</a:Rect>
+<a:ModificationDate>1602182044</a:ModificationDate>
+<a:Rect>((-41830,15303), (-30674,19650))</a:Rect>
+<a:AutoAdjustToText>0</a:AutoAdjustToText>
 <a:LineColor>12615680</a:LineColor>
 <a:FillColor>16570034</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -2160,6 +2161,7 @@ TableComment 0 Arial,8,N</a:FontList>
 <a:BrushStyle>6</a:BrushStyle>
 <a:GradientFillMode>65</a:GradientFillMode>
 <a:GradientEndColor>16777215</a:GradientEndColor>
+<a:ManuallyResized>1</a:ManuallyResized>
 <c:Object>
 <o:Table Ref="o45"/>
 </c:Object>
@@ -4531,7 +4533,7 @@ DAT 1601935661</a:History>
 <a:Code>VW_AUDIO_VIDEO_ARTISTS</a:Code>
 <a:CreationDate>1602113362</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1602113362</a:ModificationDate>
+<a:ModificationDate>1602182064</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Query that consolidates artists that are the primary artist of the project, artists that are not the primary artists of the project, and artists as video titles.</a:Comment>
 <a:View.SQLQuery>-- Query for audio artists that are not the project&#39;s primary artist (Various Artists)
@@ -4583,8 +4585,8 @@ SELECT
    1 &quot;primary_artist&quot;,
    p.PROJECT_TYPE_ID,
    pt.DESCRIPTION &quot;project_type_name&quot;,
-   null &quot;artist&quot;,
-   null &quot;artist_id&quot;,
+   p.TITLE &quot;artist&quot;,
+   a.ARTIST_ID &quot;artist_id&quot;,
    p.TITLE &quot;project_title&quot;,
    p.PROJECT_ID,
    p.PROJECT_COMMENTS &quot;project_comments&quot;,
@@ -4647,8 +4649,8 @@ SELECT
    1 &quot;primary_artist&quot;,
    p.PROJECT_TYPE_ID,
    pt.DESCRIPTION &quot;project_type_name&quot;,
-   null &quot;artist&quot;,
-   null &quot;artist_id&quot;,
+   p.TITLE &quot;artist&quot;,
+   a.ARTIST_ID &quot;artist_id&quot;,
    p.TITLE &quot;project_title&quot;,
    p.PROJECT_ID,
    p.PROJECT_COMMENTS &quot;project_comments&quot;,
