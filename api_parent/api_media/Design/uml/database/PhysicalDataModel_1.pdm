@@ -4533,10 +4533,12 @@ DAT 1601935661</a:History>
 <a:Code>VW_AUDIO_VIDEO_ARTISTS</a:Code>
 <a:CreationDate>1602113362</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1602182064</a:ModificationDate>
+<a:ModificationDate>1602444117</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Query that consolidates artists that are the primary artist of the project, artists that are not the primary artists of the project, and artists as video titles.</a:Comment>
-<a:View.SQLQuery>-- Query for audio artists that are not the project&#39;s primary artist (Various Artists)
+<a:View.SQLQuery>ALTER VIEW &quot;DBA&quot;.&quot;vw_audio_video_artists&quot;( /* view_column_name, ... */ )
+AS
+-- Query for audio artists that are not the project&#39;s primary artist (Various Artists)
 SELECT 
    0 &quot;primary_artist&quot;,
    p.PROJECT_TYPE_ID,
@@ -4582,10 +4584,10 @@ UNION
 
 -- Query for video artists only.
 SELECT 
-   1 &quot;primary_artist&quot;,
+   0 &quot;primary_artist&quot;,
    p.PROJECT_TYPE_ID,
    pt.DESCRIPTION &quot;project_type_name&quot;,
-   p.TITLE &quot;artist&quot;,
+   p.title &quot;artist&quot;,
    a.ARTIST_ID &quot;artist_id&quot;,
    p.TITLE &quot;project_title&quot;,
    p.PROJECT_ID,
@@ -4600,7 +4602,9 @@ where
       a.NAME in (&#39;General Video&#39;)
 
 order by 2, 1 desc, 4, 6</a:View.SQLQuery>
-<a:TaggedSQLQuery>-- Query for audio artists that are not the project&#39;s primary artist (Various Artists)
+<a:TaggedSQLQuery>ALTER VIEW &quot;DBA&quot;.&quot;vw_audio_video_artists&quot;( /* view_column_name, ... */ )
+AS
+-- Query for audio artists that are not the project&#39;s primary artist (Various Artists)
 SELECT 
    0 &quot;primary_artist&quot;,
    p.PROJECT_TYPE_ID,
@@ -4646,10 +4650,10 @@ UNION
 
 -- Query for video artists only.
 SELECT 
-   1 &quot;primary_artist&quot;,
+   0 &quot;primary_artist&quot;,
    p.PROJECT_TYPE_ID,
    pt.DESCRIPTION &quot;project_type_name&quot;,
-   p.TITLE &quot;artist&quot;,
+   p.title &quot;artist&quot;,
    a.ARTIST_ID &quot;artist_id&quot;,
    p.TITLE &quot;project_title&quot;,
    p.PROJECT_ID,
