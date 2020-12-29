@@ -1,5 +1,9 @@
 package org.modules.audiovideo.batch;
 
+import java.io.File;
+
+import com.api.util.RMT2String;
+
 /**
  * Class for managing audio video batch import request parameters.
  * 
@@ -7,7 +11,7 @@ package org.modules.audiovideo.batch;
  *
  */
 public class AvBatchImportParameters {
-
+    private String sessionId;
     private String serverName;
     private String shareName;
     private String rootPath;
@@ -111,11 +115,21 @@ public class AvBatchImportParameters {
             buf.append(this.serverName);
         }
         if (this.shareName != null) {
-            buf.append("/");
+            if (buf.length() > 0) {
+                buf.append("/");
+            }
+            buf.append(this.shareName);
+        }
+        if (this.shareName != null) {
+            if (buf.length() > 0) {
+                buf.append("/");
+            }
             buf.append(this.shareName);
         }
         if (this.rootPath != null) {
-            buf.append("/");
+            if (buf.length() > 0) {
+                buf.append("/");
+            }
             buf.append(this.rootPath);
         }
         if (this.path != null) {
@@ -125,6 +139,30 @@ public class AvBatchImportParameters {
             buf.append(this.path);
         }
         return buf.toString();
+    }
+
+    public String getFTPPath(String filePath, boolean excludeHomeDir) {
+        if (filePath == null) {
+            return null;
+        }
+        File f = new File(filePath);
+        String path = f.getPath(); // RMT2File.getFilePathInfo(filePath);
+        if (excludeHomeDir) {
+            String homePart = null;
+            if (this.shareName != null && this.rootPath != null) {
+                homePart = this.shareName + "/" + this.rootPath + "/";
+            }
+            else if (this.shareName != null && this.rootPath == null) {
+                homePart = this.shareName + "/";
+            }
+            else if (this.shareName == null && this.rootPath != null) {
+                homePart = this.rootPath + "/";
+            }
+            if (homePart != null) {
+                path = RMT2String.replace(path, "", homePart);
+            }
+        }
+        return path;
     }
 
     /**
@@ -140,5 +178,20 @@ public class AvBatchImportParameters {
      */
     public void setImportFilePath(String importFilePath) {
         this.importFilePath = importFilePath;
+    }
+
+    /**
+     * @return the sessionId
+     */
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    /**
+     * @param sessionId
+     *            the sessionId to set
+     */
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

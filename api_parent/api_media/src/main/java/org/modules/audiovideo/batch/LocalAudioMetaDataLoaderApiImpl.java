@@ -41,8 +41,8 @@ import com.api.util.RMT2String;
 
 /**
  * An file loader implementation of {@link AudioVideoBatchFileProcessorApi}
- * which extracts meta data from audio/video files and imports the data to
- * various tables in the database.
+ * which extracts metadata from audio files stored locally on the server in
+ * which it is executed and imports the data to various tables in the database.
  * <p>
  * The tables targeted for the data import are <i>av_artist</i>,
  * <i>av_project</i>, and <i>av_trackes</i>.
@@ -50,9 +50,9 @@ import com.api.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements AvBatchFileProcessorApi {
+class LocalAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements AvBatchFileProcessorApi {
 
-    private static Logger logger = Logger.getLogger(AvFileMetaDataLoaderApiImpl.class);
+    private static Logger logger = Logger.getLogger(LocalAudioMetaDataLoaderApiImpl.class);
     
     private static Integer MP3_READER_IMPL_TO_USE;
 
@@ -86,7 +86,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      * 
      * @throws BatchFileProcessException
      */
-    protected AvFileMetaDataLoaderApiImpl() throws BatchFileProcessException {
+    protected LocalAudioMetaDataLoaderApiImpl() throws BatchFileProcessException {
         super();
         return;
     }
@@ -102,7 +102,7 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      *            an instance of {@link AvBatchImportParameters}
      * @throws BatchFileProcessException
      */
-    protected AvFileMetaDataLoaderApiImpl(AvBatchImportParameters parms) throws BatchFileProcessException {
+    protected LocalAudioMetaDataLoaderApiImpl(AvBatchImportParameters parms) throws BatchFileProcessException {
         super(MediaConstants.APP_NAME);
         this.initConnection(parms);
         REQUEST_REFRESH = false;
@@ -123,13 +123,13 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
     public void initConnection(Object parms) throws BatchFileProcessException {
         if (parms == null || !(parms instanceof AvBatchImportParameters)) {
             this.msg = "The audio/video batch import parameters are required";
-            AvFileMetaDataLoaderApiImpl.logger.error(this.msg);
+            LocalAudioMetaDataLoaderApiImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
         this.parms = (AvBatchImportParameters) parms;
         if (this.parms.getPath() == null) {
             this.msg = "Path/Location value is required as an audio/video batch import parameter";
-            AvFileMetaDataLoaderApiImpl.logger.error(this.msg);
+            LocalAudioMetaDataLoaderApiImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
         
@@ -316,11 +316,11 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
      */
     protected MP3Reader getMp3ReaderInstance(File mp3Source) {
         // Determine the implementation to use for MP3Reader 
-        if (AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE == null) {
+        if (LocalAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE == null) {
             String val = null;
             try {
                 val = this.getConfig().getProperty(MediaConstants.MP3_READER_TO_USE_CONFIG_KEY);
-                AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE = Integer.valueOf(val);
+                LocalAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE = Integer.valueOf(val);
             }
             catch (NumberFormatException e) {
                 this.msg = "A non-numeric code was discovered to be configured for the MP3 reader implementation to use for this API [" + val + "]";
@@ -334,12 +334,12 @@ class AvFileMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements 
         
         // Create MP3Reader based on selected implementation
         MP3Reader api = null;
-        switch (AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE) {
+        switch (LocalAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE) {
             case MediaConstants.MP3_READER_IMPL_MP3AGIC:
                 api = AudioVideoFactory.createMp3agicInstance(mp3Source);
                 break;
             default:
-                this.msg = "An invalid MP3 reader implementation code was specified in configuration: " + AvFileMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE;
+                this.msg = "An invalid MP3 reader implementation code was specified in configuration: " + LocalAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE;
                 throw new Mp3ReaderIdentityNotConfiguredException(this.msg);
         }
         return api;

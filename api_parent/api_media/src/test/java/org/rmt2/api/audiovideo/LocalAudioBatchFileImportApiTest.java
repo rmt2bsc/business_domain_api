@@ -48,7 +48,7 @@ import com.api.util.RMT2File;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, RMT2File.class, SmtpFactory.class })
-public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
+public class LocalAudioBatchFileImportApiTest extends AvMediaMockData {
     
     private static final String PROP_NAME_MP3_READER_IMPL_TO_USE = "MP3_READER_IMPL_TO_USE";
     /**
@@ -157,7 +157,7 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         AvBatchImportParameters parms = new AvBatchImportParameters();
         parms.setPath(dir);
         try {
-            api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
+            api = AvBatchFileFactory.createLocalAudioBatchImportApiInstance(parms);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }
@@ -174,14 +174,13 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         Assert.assertEquals(0, api.getErrorMessages().size());
     }
     
-  
     @Test
     public void testValidation_Null_Directory() {
         String dir = null;
         AvBatchImportParameters parms = new AvBatchImportParameters();
         parms.setPath(dir);
         try {
-            AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
+            AvBatchFileFactory.createLocalAudioBatchImportApiInstance(parms);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -198,7 +197,7 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         AvBatchImportParameters parms = new AvBatchImportParameters();
         parms.setPath(dir);
         try {
-            AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
+            AvBatchFileFactory.createLocalAudioBatchImportApiInstance(parms);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -217,7 +216,7 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         parms.setPath(dir);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createLocalAudioBatchImportApiInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -249,7 +248,7 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         parms.setPath(dir);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createLocalAudioBatchImportApiInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -276,7 +275,7 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         parms.setPath(dir);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createLocalAudioBatchImportApiInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -306,7 +305,7 @@ public class Mp3Mp4BatchImportApiTest extends AvMediaMockData {
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = AvBatchFileFactory.createMediaFileBatchImportApiInstance(parms);
+            api = AvBatchFileFactory.createLocalAudioBatchImportApiInstance(parms);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }

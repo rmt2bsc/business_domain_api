@@ -22,8 +22,8 @@ public class AvBatchFileFactory extends RMT2Base {
     }
 
     /**
-     * Creates an instance of the AvBatchFileProcessorApi using the batch file
-     * meta data importer implementation.
+     * Creates an instance of the AvBatchFileProcessorApi using the local batch
+     * file metadata importer implementation.
      * 
      * @param parms
      *            an instance of {@link AvBatchImportParameters}
@@ -31,10 +31,26 @@ public class AvBatchFileFactory extends RMT2Base {
      * @throws BatchFileProcessException
      *             Unable to create AvBatchFileProcessorApi
      */
-    public static final AvBatchFileProcessorApi createMediaFileBatchImportApiInstance(AvBatchImportParameters parms)
+    public static final AvBatchFileProcessorApi createLocalAudioBatchImportApiInstance(AvBatchImportParameters parms)
             throws BatchFileProcessException {
         AvBatchFileProcessorApi api;
-        api = new AvFileMetaDataLoaderApiImpl(parms);
+        api = new LocalAudioMetaDataLoaderApiImpl(parms);
+        return api;
+    }
+
+    /**
+     * Creates an instance of the AvBatchFileProcessorApi using the remote batch
+     * file metadata importer implementation.
+     * 
+     * @param parms
+     *            an instance of {@link AvBatchImportParameters}
+     * @return an instance of {@link AvBatchFileProcessorApi}
+     * @throws BatchFileProcessException
+     *             Unable to create AvBatchFileProcessorApi
+     */
+    public static final AvBatchFileProcessorApi createRemoteAudioBatchImportApiInstance(AvBatchImportParameters parms)
+            throws BatchFileProcessException {
+        AvBatchFileProcessorApi api = new RemoteAudioMetaDataLoaderApiImpl(parms);
         return api;
     }
 
