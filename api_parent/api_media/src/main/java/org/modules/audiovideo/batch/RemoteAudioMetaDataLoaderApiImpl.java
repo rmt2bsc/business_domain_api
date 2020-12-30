@@ -533,16 +533,7 @@ class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implem
     private String getImageFile(String dir) {
         // In the event the runtime is Windows OS, convert directory separators
         // to forward slashes
-        List<String> t = RMT2String.getTokens(dir, "\\");
-        if (t != null && t.size() > 1) {
-            StringBuilder buf = new StringBuilder();
-            for (String item : t) {
-                buf.append(item);
-                buf.append("/");
-            }
-            dir = buf.toString();
-        }
-
+        dir = RMT2File.changePathToUNC(dir);
         List<String> files = this.ftp.listDirectory(dir, false);
         if (files == null) {
             return null;

@@ -93,15 +93,15 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         // Setup mock data
         this.mockDataFileNames = new ArrayList<>();
         this.mockDataFileNames.add(this.testMediaFileDir + File.separator
-                + "Aaliyah\\One In A Million\\Aaliyah-One In A Million-17-Came To Give Love (Outro).mp3");
+                + "Aaliyah" + File.separator + "One In A Million" + File.separator + "Aaliyah-One In A Million-17-Came To Give Love (Outro).mp3");
         this.mockDataFileNames.add(this.testMediaFileDir + File.separator
-                + "Alexander O'Neal\\Greatest Hits\\A Broken Heart Can Mend.mp3");
+                + "Alexander O'Neal" + File.separator + "Greatest Hits" + File.separator + "A Broken Heart Can Mend.mp3");
         this.mockDataFileNames.add(this.testMediaFileDir + File.separator
-                + "Bass Addiction\\Bass Apocolypse  World Bass War, Vol. 1\\Dance Shake and Swing.mp3");
+                + "Bass Addiction" + File.separator + "Bass Apocolypse  World Bass War, Vol. 1" + File.separator + "Dance Shake and Swing.mp3");
         this.mockDataFileNames.add(this.testMediaFileDir + File.separator
-                + "Bass Addiction\\Bass Apocolypse  World Bass War, Vol. 1\\Der Ausserts Bass Erfahrung.mp3");
+                + "Bass Addiction" + File.separator + "Bass Apocolypse  World Bass War, Vol. 1" + File.separator + "Der Ausserts Bass Erfahrung.mp3");
         this.mockDataFileNames.add(this.testMediaFileDir + File.separator
-                + "Various Artists\\DJ-KiCKS\\Eli Gold-DJ-KiCKS-10-Throw That (Interlude).mp3");
+                + "Various Artists" + File.separator + "DJ-KiCKS" + File.separator + "Eli Gold-DJ-KiCKS-10-Throw That (Interlude).mp3");
 
         List<String> mockImageFileNames = new ArrayList<>();
         mockImageFileNames.add("folder.jpg");
