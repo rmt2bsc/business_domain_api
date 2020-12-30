@@ -556,6 +556,8 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
      * Creates a report detailing the success or failure of all the files
      * processed and transmits the report via SMTP to the user designated as the
      * application's email recipient.
+     * <p>
+     * The file location of the report is store at: AppServer/log/media_import_error_report.txt
      * 
      * @throws AvBatchReportException
      *             problem occurred creaing or sending file drop report via
@@ -617,7 +619,7 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
             body.append("\n");
         }
 
-        RMT2File.outputFile(body.toString(), "c:/tmp/log/media_import_error_report.txt");
+        RMT2File.outputFile(body.toString(), "/AppServer/log/media_import_error_report.txt");
         return;
     }
     
