@@ -31,12 +31,38 @@ public class VwAudioVideoArtists extends OrmBean {
   public static final String PROP_ARTIST = "Artist";
 /** The property name constant equivalent to property, ArtistId, of respective DataSource view. */
   public static final String PROP_ARTISTID = "ArtistId";
-/** The property name constant equivalent to property, ProjectTitle, of respective DataSource view. */
-  public static final String PROP_PROJECTTITLE = "ProjectTitle";
 /** The property name constant equivalent to property, ProjectId, of respective DataSource view. */
   public static final String PROP_PROJECTID = "ProjectId";
+/** The property name constant equivalent to property, ProjectTitle, of respective DataSource view. */
+  public static final String PROP_PROJECTTITLE = "ProjectTitle";
 /** The property name constant equivalent to property, ProjectComments, of respective DataSource view. */
   public static final String PROP_PROJECTCOMMENTS = "ProjectComments";
+/** The property name constant equivalent to property, GenreId, of respective DataSource view. */
+  public static final String PROP_GENREID = "GenreId";
+/** The property name constant equivalent to property, ContentId, of respective DataSource view. */
+  public static final String PROP_CONTENTID = "ContentId";
+/** The property name constant equivalent to property, MediaTypeId, of respective DataSource view. */
+  public static final String PROP_MEDIATYPEID = "MediaTypeId";
+/** The property name constant equivalent to property, Year, of respective DataSource view. */
+  public static final String PROP_YEAR = "Year";
+/** The property name constant equivalent to property, MasterDupId, of respective DataSource view. */
+  public static final String PROP_MASTERDUPID = "MasterDupId";
+/** The property name constant equivalent to property, Ripped, of respective DataSource view. */
+  public static final String PROP_RIPPED = "Ripped";
+/** The property name constant equivalent to property, Cost, of respective DataSource view. */
+  public static final String PROP_COST = "Cost";
+/** The property name constant equivalent to property, ContentPath, of respective DataSource view. */
+  public static final String PROP_CONTENTPATH = "ContentPath";
+/** The property name constant equivalent to property, ContentFilename, of respective DataSource view. */
+  public static final String PROP_CONTENTFILENAME = "ContentFilename";
+/** The property name constant equivalent to property, ArtWorkPath, of respective DataSource view. */
+  public static final String PROP_ARTWORKPATH = "ArtWorkPath";
+/** The property name constant equivalent to property, ArtWorkFilename, of respective DataSource view. */
+  public static final String PROP_ARTWORKFILENAME = "ArtWorkFilename";
+/** The property name constant equivalent to property, TotalTime, of respective DataSource view. */
+  public static final String PROP_TOTALTIME = "TotalTime";
+/** The property name constant equivalent to property, Producer, of respective DataSource view. */
+  public static final String PROP_PRODUCER = "Producer";
 /** The property name constant equivalent to property, TrackId, of respective DataSource view. */
   public static final String PROP_TRACKID = "TrackId";
 /** The property name constant equivalent to property, TrackTitle, of respective DataSource view. */
@@ -56,12 +82,38 @@ public class VwAudioVideoArtists extends OrmBean {
   private String artist;
 /** The javabean property equivalent of database column vw_audio_video_artists.artist_id */
   private int artistId;
-/** The javabean property equivalent of database column vw_audio_video_artists.project_title */
-  private String projectTitle;
 /** The javabean property equivalent of database column vw_audio_video_artists.project_id */
   private int projectId;
+/** The javabean property equivalent of database column vw_audio_video_artists.project_title */
+  private String projectTitle;
 /** The javabean property equivalent of database column vw_audio_video_artists.project_comments */
   private String projectComments;
+/** The javabean property equivalent of database column vw_audio_video_artists.genre_id */
+  private int genreId;
+/** The javabean property equivalent of database column vw_audio_video_artists.content_id */
+  private int contentId;
+/** The javabean property equivalent of database column vw_audio_video_artists.media_type_id */
+  private int mediaTypeId;
+/** The javabean property equivalent of database column vw_audio_video_artists.year */
+  private int year;
+/** The javabean property equivalent of database column vw_audio_video_artists.master_dup_id */
+  private int masterDupId;
+/** The javabean property equivalent of database column vw_audio_video_artists.ripped */
+  private int ripped;
+/** The javabean property equivalent of database column vw_audio_video_artists.cost */
+  private double cost;
+/** The javabean property equivalent of database column vw_audio_video_artists.content_path */
+  private String contentPath;
+/** The javabean property equivalent of database column vw_audio_video_artists.content_filename */
+  private String contentFilename;
+/** The javabean property equivalent of database column vw_audio_video_artists.art_work_path */
+  private String artWorkPath;
+/** The javabean property equivalent of database column vw_audio_video_artists.art_work_filename */
+  private String artWorkFilename;
+/** The javabean property equivalent of database column vw_audio_video_artists.total_time */
+  private int totalTime;
+/** The javabean property equivalent of database column vw_audio_video_artists.producer */
+  private String producer;
 /** The javabean property equivalent of database column vw_audio_video_artists.track_id */
   private int trackId;
 /** The javabean property equivalent of database column vw_audio_video_artists.track_title */
@@ -140,18 +192,6 @@ public class VwAudioVideoArtists extends OrmBean {
     return this.artistId;
   }
 /**
- * Sets the value of member variable projectTitle
- */
-  public void setProjectTitle(String value) {
-    this.projectTitle = value;
-  }
-/**
- * Gets the value of member variable projectTitle
- */
-  public String getProjectTitle() {
-    return this.projectTitle;
-  }
-/**
  * Sets the value of member variable projectId
  */
   public void setProjectId(int value) {
@@ -164,6 +204,18 @@ public class VwAudioVideoArtists extends OrmBean {
     return this.projectId;
   }
 /**
+ * Sets the value of member variable projectTitle
+ */
+  public void setProjectTitle(String value) {
+    this.projectTitle = value;
+  }
+/**
+ * Gets the value of member variable projectTitle
+ */
+  public String getProjectTitle() {
+    return this.projectTitle;
+  }
+/**
  * Sets the value of member variable projectComments
  */
   public void setProjectComments(String value) {
@@ -174,6 +226,162 @@ public class VwAudioVideoArtists extends OrmBean {
  */
   public String getProjectComments() {
     return this.projectComments;
+  }
+/**
+ * Sets the value of member variable genreId
+ */
+  public void setGenreId(int value) {
+    this.genreId = value;
+  }
+/**
+ * Gets the value of member variable genreId
+ */
+  public int getGenreId() {
+    return this.genreId;
+  }
+/**
+ * Sets the value of member variable contentId
+ */
+  public void setContentId(int value) {
+    this.contentId = value;
+  }
+/**
+ * Gets the value of member variable contentId
+ */
+  public int getContentId() {
+    return this.contentId;
+  }
+/**
+ * Sets the value of member variable mediaTypeId
+ */
+  public void setMediaTypeId(int value) {
+    this.mediaTypeId = value;
+  }
+/**
+ * Gets the value of member variable mediaTypeId
+ */
+  public int getMediaTypeId() {
+    return this.mediaTypeId;
+  }
+/**
+ * Sets the value of member variable year
+ */
+  public void setYear(int value) {
+    this.year = value;
+  }
+/**
+ * Gets the value of member variable year
+ */
+  public int getYear() {
+    return this.year;
+  }
+/**
+ * Sets the value of member variable masterDupId
+ */
+  public void setMasterDupId(int value) {
+    this.masterDupId = value;
+  }
+/**
+ * Gets the value of member variable masterDupId
+ */
+  public int getMasterDupId() {
+    return this.masterDupId;
+  }
+/**
+ * Sets the value of member variable ripped
+ */
+  public void setRipped(int value) {
+    this.ripped = value;
+  }
+/**
+ * Gets the value of member variable ripped
+ */
+  public int getRipped() {
+    return this.ripped;
+  }
+/**
+ * Sets the value of member variable cost
+ */
+  public void setCost(double value) {
+    this.cost = value;
+  }
+/**
+ * Gets the value of member variable cost
+ */
+  public double getCost() {
+    return this.cost;
+  }
+/**
+ * Sets the value of member variable contentPath
+ */
+  public void setContentPath(String value) {
+    this.contentPath = value;
+  }
+/**
+ * Gets the value of member variable contentPath
+ */
+  public String getContentPath() {
+    return this.contentPath;
+  }
+/**
+ * Sets the value of member variable contentFilename
+ */
+  public void setContentFilename(String value) {
+    this.contentFilename = value;
+  }
+/**
+ * Gets the value of member variable contentFilename
+ */
+  public String getContentFilename() {
+    return this.contentFilename;
+  }
+/**
+ * Sets the value of member variable artWorkPath
+ */
+  public void setArtWorkPath(String value) {
+    this.artWorkPath = value;
+  }
+/**
+ * Gets the value of member variable artWorkPath
+ */
+  public String getArtWorkPath() {
+    return this.artWorkPath;
+  }
+/**
+ * Sets the value of member variable artWorkFilename
+ */
+  public void setArtWorkFilename(String value) {
+    this.artWorkFilename = value;
+  }
+/**
+ * Gets the value of member variable artWorkFilename
+ */
+  public String getArtWorkFilename() {
+    return this.artWorkFilename;
+  }
+/**
+ * Sets the value of member variable totalTime
+ */
+  public void setTotalTime(int value) {
+    this.totalTime = value;
+  }
+/**
+ * Gets the value of member variable totalTime
+ */
+  public int getTotalTime() {
+    return this.totalTime;
+  }
+/**
+ * Sets the value of member variable producer
+ */
+  public void setProducer(String value) {
+    this.producer = value;
+  }
+/**
+ * Gets the value of member variable producer
+ */
+  public String getProducer() {
+    return this.producer;
   }
 /**
  * Sets the value of member variable trackId
@@ -239,13 +447,52 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.artistId, other.artistId)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.projectTitle, other.projectTitle)) {
-      return false;
-   }
    if (EqualityAssistant.notEqual(this.projectId, other.projectId)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.projectTitle, other.projectTitle)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.projectComments, other.projectComments)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.genreId, other.genreId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contentId, other.contentId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.mediaTypeId, other.mediaTypeId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.year, other.year)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.masterDupId, other.masterDupId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.ripped, other.ripped)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.cost, other.cost)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contentPath, other.contentPath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.contentFilename, other.contentFilename)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.artWorkPath, other.artWorkPath)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.artWorkFilename, other.artWorkFilename)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.totalTime, other.totalTime)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.producer, other.producer)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.trackId, other.trackId)) {
@@ -267,9 +514,22 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.projectTypeName),
                HashCodeAssistant.hashObject(this.artist),
                HashCodeAssistant.hashObject(this.artistId),
-               HashCodeAssistant.hashObject(this.projectTitle),
                HashCodeAssistant.hashObject(this.projectId),
+               HashCodeAssistant.hashObject(this.projectTitle),
                HashCodeAssistant.hashObject(this.projectComments),
+               HashCodeAssistant.hashObject(this.genreId),
+               HashCodeAssistant.hashObject(this.contentId),
+               HashCodeAssistant.hashObject(this.mediaTypeId),
+               HashCodeAssistant.hashObject(this.year),
+               HashCodeAssistant.hashObject(this.masterDupId),
+               HashCodeAssistant.hashObject(this.ripped),
+               HashCodeAssistant.hashObject(this.cost),
+               HashCodeAssistant.hashObject(this.contentPath),
+               HashCodeAssistant.hashObject(this.contentFilename),
+               HashCodeAssistant.hashObject(this.artWorkPath),
+               HashCodeAssistant.hashObject(this.artWorkFilename),
+               HashCodeAssistant.hashObject(this.totalTime),
+               HashCodeAssistant.hashObject(this.producer),
                HashCodeAssistant.hashObject(this.trackId),
                HashCodeAssistant.hashObject(this.trackTitle),
                HashCodeAssistant.hashObject(this.trackComments));
@@ -282,9 +542,22 @@ public String toString() {
           ", projectTypeName=" + projectTypeName + 
           ", artist=" + artist + 
           ", artistId=" + artistId + 
-          ", projectTitle=" + projectTitle + 
           ", projectId=" + projectId + 
+          ", projectTitle=" + projectTitle + 
           ", projectComments=" + projectComments + 
+          ", genreId=" + genreId + 
+          ", contentId=" + contentId + 
+          ", mediaTypeId=" + mediaTypeId + 
+          ", year=" + year + 
+          ", masterDupId=" + masterDupId + 
+          ", ripped=" + ripped + 
+          ", cost=" + cost + 
+          ", contentPath=" + contentPath + 
+          ", contentFilename=" + contentFilename + 
+          ", artWorkPath=" + artWorkPath + 
+          ", artWorkFilename=" + artWorkFilename + 
+          ", totalTime=" + totalTime + 
+          ", producer=" + producer + 
           ", trackId=" + trackId + 
           ", trackTitle=" + trackTitle + 
           ", trackComments=" + trackComments  + "]";

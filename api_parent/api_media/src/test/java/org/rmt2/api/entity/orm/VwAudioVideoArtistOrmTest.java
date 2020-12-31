@@ -94,6 +94,58 @@ public class VwAudioVideoArtistOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
+        o2.setGenreId(100);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setContentId(200);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setMediaTypeId(3);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setYear(1999);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setMasterDupId(1);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setRipped(1);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setCost(9.99);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setContentPath("//servername/directory_path/");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setContentFilename("mediafile.mp3");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setArtWorkPath("//servername/directory_path/");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setArtWorkFilename("artworkfile.jpg");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setTotalTime(40);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setProducer("Producer Name");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
         o2.setProjectTypeName("Audio");
         result = o1.equals(o2);
         Assert.assertTrue(result);

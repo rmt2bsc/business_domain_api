@@ -151,6 +151,266 @@ class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDt
     /*
      * (non-Javadoc)
      * 
+     * @see org.dto.VwArtistDto#getGenreId()
+     */
+    @Override
+    public int getGenreId() {
+        return this.adaptee.getGenreId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setGenreId(int)
+     */
+    @Override
+    public void setGenreId(int genreId) {
+        this.adaptee.setGenreId(genreId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getMediaTypeId()
+     */
+    @Override
+    public int getMediaTypeId() {
+        return this.adaptee.getMediaTypeId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setMediaTypeId(int)
+     */
+    @Override
+    public void setMediaTypeId(int mediaTypeId) {
+        this.adaptee.setMediaTypeId(mediaTypeId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getYear()
+     */
+    @Override
+    public int getYear() {
+        return this.adaptee.getYear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setYear(int)
+     */
+    @Override
+    public void setYear(int year) {
+        this.adaptee.setYear(year);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getMasterDupId()
+     */
+    @Override
+    public int getMasterDupId() {
+        return this.adaptee.getMasterDupId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setMasterDupId(int)
+     */
+    @Override
+    public void setMasterDupId(int value) {
+        this.adaptee.setMasterDupId(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getRippedInd()
+     */
+    @Override
+    public int getRippedInd() {
+        return this.adaptee.getRipped();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setRippedInd(int)
+     */
+    @Override
+    public void setRippedInd(int flag) {
+        this.adaptee.setRipped(flag);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getCost()
+     */
+    @Override
+    public double getCost() {
+        return this.adaptee.getCost();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setCost(double)
+     */
+    @Override
+    public void setCost(double cost) {
+        this.adaptee.setCost(cost);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getContentId()
+     */
+    @Override
+    public int getContentId() {
+        return this.adaptee.getContentId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setContentId(int)
+     */
+    @Override
+    public void setContentId(int contentId) {
+        this.adaptee.setContentId(contentId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getContentPath()
+     */
+    @Override
+    public String getContentPath() {
+        return this.adaptee.getContentPath();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setContentPath(java.lang.String)
+     */
+    @Override
+    public void setContentPath(String contentPath) {
+        this.adaptee.setContentPath(contentPath);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getArtWorkPath()
+     */
+    @Override
+    public String getArtWorkPath() {
+        return this.adaptee.getArtWorkPath();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setArtWorkPath(java.lang.String)
+     */
+    @Override
+    public void setArtWorkPath(String artWorkPath) {
+        this.adaptee.setArtWorkPath(artWorkPath);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getArtWorkFilename()
+     */
+    @Override
+    public String getArtWorkFilename() {
+        return this.adaptee.getArtWorkFilename();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setArtWorkFilename(java.lang.String)
+     */
+    @Override
+    public void setArtWorkFilename(String artWorkFilename) {
+        this.adaptee.setArtWorkFilename(artWorkFilename);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getContentFilename()
+     */
+    @Override
+    public String getContentFilename() {
+        return this.adaptee.getContentFilename();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setContentFilename(java.lang.String)
+     */
+    @Override
+    public void setContentFilename(String contentFilename) {
+        this.adaptee.setContentFilename(contentFilename);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getTotalTime()
+     */
+    @Override
+    public int getTotalTime() {
+        return this.adaptee.getTotalTime();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setTotalTime(int)
+     */
+    @Override
+    public void setTotalTime(int totalTime) {
+        this.adaptee.setTotalTime(totalTime);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#getProducer()
+     */
+    @Override
+    public String getProducer() {
+        return this.adaptee.getProducer();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.VwArtistDto#setProducer(java.lang.String)
+     */
+    @Override
+    public void setProducer(String producer) {
+        this.adaptee.setProducer(producer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -167,6 +427,4 @@ class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDt
     public int hashCode() {
         return this.adaptee.hashCode();
     }
-
-
 }

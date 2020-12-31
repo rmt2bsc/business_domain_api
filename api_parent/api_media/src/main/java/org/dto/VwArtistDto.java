@@ -127,6 +127,196 @@ public interface VwArtistDto extends TransactionDto {
     void setProjectComments(String value);
 
     /**
+     * Get genre id.
+     * 
+     * @return int
+     */
+    int getGenreId();
+
+    /**
+     * Set genre id.
+     * 
+     * @param genreId
+     *            int
+     */
+    void setGenreId(int genreId);
+
+    /**
+     * Get media type id.
+     * 
+     * @return int
+     */
+    int getMediaTypeId();
+
+    /**
+     * Set media type id
+     * 
+     * @param mediaTypeId
+     *            int
+     */
+    void setMediaTypeId(int mediaTypeId);
+
+    /**
+     * Get project year
+     * 
+     * @return int
+     */
+    int getYear();
+
+    /**
+     * Set project year
+     * 
+     * @param year
+     *            int
+     */
+    void setYear(int year);
+
+    /**
+     * Get master duplication id.
+     * 
+     * @return int
+     */
+    int getMasterDupId();
+
+    /**
+     * Set Master duplication id
+     * 
+     * @param value
+     *            int
+     */
+    void setMasterDupId(int value);
+
+    /**
+     * Get ripped indicator
+     * 
+     * @return int
+     */
+    int getRippedInd();
+
+    /**
+     * Set ripped indicator
+     * 
+     * @param flag
+     *            int
+     */
+    void setRippedInd(int flag);
+
+    /**
+     * Get project cost
+     * 
+     * @return double
+     */
+    double getCost();
+
+    /**
+     * Set project cost
+     * 
+     * @param cost
+     *            double
+     */
+    void setCost(double cost);
+
+    /**
+     * Get document details id.
+     * 
+     * @return int
+     */
+    int getContentId();
+
+    /**
+     * Set document details id.
+     * 
+     * @param contentId
+     *            int
+     */
+    void setContentId(int contentId);
+
+    /**
+     * get content path
+     * 
+     * @return
+     */
+    String getContentPath();
+
+    /**
+     * set content path
+     * 
+     * @param contentPath
+     */
+    void setContentPath(String contentPath);
+
+    /**
+     * get art work image path
+     * 
+     * @return
+     */
+    String getArtWorkPath();
+
+    /**
+     * Set art work image path
+     * 
+     * @param artWorkPath
+     */
+    void setArtWorkPath(String artWorkPath);
+
+    /**
+     * Get art work image filename
+     * 
+     * @return
+     */
+    String getArtWorkFilename();
+
+    /**
+     * Set art work image filename
+     * 
+     * @param artWorkFilename
+     */
+    void setArtWorkFilename(String artWorkFilename);
+
+    /**
+     * Get content filename
+     * 
+     * @return
+     */
+    String getContentFilename();
+
+    /**
+     * Set the filename of content
+     * 
+     * @param contentPath
+     */
+    void setContentFilename(String contentFilename);
+
+    /**
+     * Get total time in minutes.
+     * 
+     * @return int
+     */
+    int getTotalTime();
+
+    /**
+     * Set total time in minutes.
+     * 
+     * @param contentId
+     *            int
+     */
+    void setTotalTime(int totalTime);
+
+    /**
+     * Get producer
+     * 
+     * @return
+     */
+    String getProducer();
+
+    /**
+     * Set producer
+     * 
+     * @param producer
+     */
+    void setProducer(String producer);
+
+    /**
      * Return track Id
      * 
      * @return

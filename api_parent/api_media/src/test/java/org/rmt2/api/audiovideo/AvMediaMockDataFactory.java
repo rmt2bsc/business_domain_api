@@ -101,6 +101,19 @@ public class AvMediaMockDataFactory {
         o.setTrackTitle(trackName);
         o.setProjectComments("Project Comments");
         o.setTrackComments("Track Comments");
+        o.setGenreId(100);
+        o.setContentId(200);
+        o.setMediaTypeId(3);
+        o.setYear(1999);
+        o.setMasterDupId(1);
+        o.setRipped(1);
+        o.setCost(9.99);
+        o.setContentPath("//servername/directory_path/");
+        o.setContentFilename("mediafile.mp3");
+        o.setArtWorkPath("//servername/directory_path/");
+        o.setArtWorkFilename("artworkfile.jpg");
+        o.setTotalTime(40);
+        o.setProducer("Producer Name");
 
         return o;
     }
