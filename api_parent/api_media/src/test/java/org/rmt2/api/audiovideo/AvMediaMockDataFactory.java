@@ -1,5 +1,7 @@
 package org.rmt2.api.audiovideo;
 
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
 import org.dao.mapping.orm.rmt2.AvMediaType;
@@ -151,6 +153,7 @@ public class AvMediaMockDataFactory {
         o.setMasterDupId(projectId + 1000);
         o.setTotalTime(125);
         o.setProducer("producer_name");
+        o.setDateCreated(new Date());
         
         return o;
     }

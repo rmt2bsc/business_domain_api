@@ -604,9 +604,14 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     }
 
     private int updateProject(AvProject proj) throws AudioVideoDaoException {
+        ProjectDto criteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
+        criteria.setProjectId(proj.getProjectId());
+        List<ProjectDto> orig = this.fetchProject(criteria);
+
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
+            proj.setDateCreated(orig.get(0).getDateCreated());
             proj.setDateUpdated(ut.getDateCreated());
             proj.setUserId(ut.getLoginId());
             if (proj.getContentId() == 0) {
