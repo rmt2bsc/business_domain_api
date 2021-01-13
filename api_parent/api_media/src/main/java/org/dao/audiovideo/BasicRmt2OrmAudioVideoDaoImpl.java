@@ -675,9 +675,13 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     }
 
     private int updateTrack(AvTracks track) throws AudioVideoDaoException {
+        TracksDto dto = Rmt2MediaDtoFactory.getAvTrackInstance(null);
+        dto.setTrackId(track.getTrackId());
+        List<TracksDto> orig = this.fetchTrack(dto);
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
+            track.setDateCreated(orig.get(0).getDateCreated());
             track.setDateUpdated(ut.getDateCreated());
             track.setUserId(ut.getLoginId());
             track.addCriteria(AvTracks.PROP_TRACKID, track.getTrackId());
