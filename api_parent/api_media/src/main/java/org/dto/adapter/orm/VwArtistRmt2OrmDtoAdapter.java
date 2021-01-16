@@ -129,6 +129,26 @@ class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDt
     }
 
     @Override
+    public int getTrackDiscNumber() {
+        return this.adaptee.gettrack;
+    }
+
+    @Override
+    public void setTrackDiscNumber(int value) {
+        this.adaptee.settrack
+    }
+
+    @Override
+    public int getTrackNumber() {
+        return this.adaptee.gettrack;
+    }
+
+    @Override
+    public void setTrackNumber(int value) {
+        this.adaptee.settrack
+    }
+
+    @Override
     public String getTrackName() {
         return this.adaptee.getTrackTitle();
     }
