@@ -2259,8 +2259,8 @@ TableComment 0 Arial,8,N</a:FontList>
 </o:TableSymbol>
 <o:ViewSymbol Id="o50">
 <a:CreationDate>1602113362</a:CreationDate>
-<a:ModificationDate>1602113365</a:ModificationDate>
-<a:Rect>((-11954,-63145), (-948,-33653))</a:Rect>
+<a:ModificationDate>1610751468</a:ModificationDate>
+<a:Rect>((-6704,-67120), (4302,-37628))</a:Rect>
 <a:LineColor>12615808</a:LineColor>
 <a:FillColor>16765136</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -4533,7 +4533,7 @@ DAT 1601935661</a:History>
 <a:Code>VW_AUDIO_VIDEO_ARTISTS</a:Code>
 <a:CreationDate>1602113362</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1609395398</a:ModificationDate>
+<a:ModificationDate>1610821278</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>Query that consolidates artists that are the primary artist of the project, artists that are not the primary artists of the project, and artists as video titles.</a:Comment>
 <a:View.SQLQuery>ALTER VIEW &quot;DBA&quot;.&quot;vw_audio_video_artists&quot;( /* view_column_name, ... */ )
@@ -4556,7 +4556,7 @@ SELECT
    p.RIPPED,	
    p.COST,	
    p.CONTENT_PATH,	
-   p.CONTENT_FILENAME,
+   t.LOC_FILENAME &quot;CONTENT_FILENAME&quot;,
    p.ART_WORK_PATH,	
    p.ART_WORK_FILENAME,
    p.TOTAL_TIME,
@@ -4570,7 +4570,7 @@ from AV_TRACKS t
       INNER JOIN av_artist a on p.ARTIST_ID = a.ARTIST_ID
 where
       t.TRACK_ARTIST is not null
-  and a.NAME = &#39;Various Artists&#39;
+  and a.NAME in (&#39;Various Artists&#39;)
 
 UNION
 
@@ -4592,19 +4592,21 @@ SELECT
    p.RIPPED,	
    p.COST,	
    p.CONTENT_PATH,	
-   p.CONTENT_FILENAME,
+   t.LOC_FILENAME &quot;CONTENT_FILENAME&quot;,
    p.ART_WORK_PATH,	
    p.ART_WORK_FILENAME,
    p.TOTAL_TIME,
    p.PRODUCER,
-   null &quot;track_id&quot;,
-   null &quot;track_title&quot;,
-   null &quot;track_comments&quot;
-from av_artist a
-      INNER JOIN av_project p ON a.ARTIST_ID = p.ARTIST_ID
+   t.TRACK_ID &quot;track_id&quot;,
+   t.TRACK_TITLE &quot;track_title&quot;,
+   t.COMMENTS &quot;track_comments&quot;
+from AV_TRACKS t
+      INNER JOIN av_project p ON t.PROJECT_ID = p.PROJECT_ID
       INNER JOIN AV_PROJECT_TYPE pt ON p.PROJECT_TYPE_ID = pt.PROJECT_TYPE_ID
+      INNER JOIN av_artist a on p.ARTIST_ID = a.ARTIST_ID
 where
-      a.NAME not in (&#39;Various Artists&#39;, &#39;General Video&#39;)
+      t.TRACK_ARTIST is null
+  and a.NAME not in (&#39;Various Artists&#39;, &#39;General Video&#39;)
 
 UNION
 
@@ -4640,7 +4642,7 @@ from av_artist a
 where
       a.NAME in (&#39;General Video&#39;)
 
-order by 2, 1 desc, 4, 6</a:View.SQLQuery>
+order by 4, 6, 2, 1</a:View.SQLQuery>
 <a:TaggedSQLQuery>ALTER VIEW &quot;DBA&quot;.&quot;vw_audio_video_artists&quot;( /* view_column_name, ... */ )
 AS
 -- Query for audio artists that are not the project&#39;s primary artist (Various Artists)
@@ -4661,7 +4663,7 @@ SELECT
    p.RIPPED,	
    p.COST,	
    p.CONTENT_PATH,	
-   p.CONTENT_FILENAME,
+   t.LOC_FILENAME &quot;CONTENT_FILENAME&quot;,
    p.ART_WORK_PATH,	
    p.ART_WORK_FILENAME,
    p.TOTAL_TIME,
@@ -4675,7 +4677,7 @@ from AV_TRACKS t
       INNER JOIN av_artist a on p.ARTIST_ID = a.ARTIST_ID
 where
       t.TRACK_ARTIST is not null
-  and a.NAME = &#39;Various Artists&#39;
+  and a.NAME in (&#39;Various Artists&#39;)
 
 UNION
 
@@ -4697,19 +4699,21 @@ SELECT
    p.RIPPED,	
    p.COST,	
    p.CONTENT_PATH,	
-   p.CONTENT_FILENAME,
+   t.LOC_FILENAME &quot;CONTENT_FILENAME&quot;,
    p.ART_WORK_PATH,	
    p.ART_WORK_FILENAME,
    p.TOTAL_TIME,
    p.PRODUCER,
-   null &quot;track_id&quot;,
-   null &quot;track_title&quot;,
-   null &quot;track_comments&quot;
-from av_artist a
-      INNER JOIN av_project p ON a.ARTIST_ID = p.ARTIST_ID
+   t.TRACK_ID &quot;track_id&quot;,
+   t.TRACK_TITLE &quot;track_title&quot;,
+   t.COMMENTS &quot;track_comments&quot;
+from AV_TRACKS t
+      INNER JOIN av_project p ON t.PROJECT_ID = p.PROJECT_ID
       INNER JOIN AV_PROJECT_TYPE pt ON p.PROJECT_TYPE_ID = pt.PROJECT_TYPE_ID
+      INNER JOIN av_artist a on p.ARTIST_ID = a.ARTIST_ID
 where
-      a.NAME not in (&#39;Various Artists&#39;, &#39;General Video&#39;)
+      t.TRACK_ARTIST is null
+  and a.NAME not in (&#39;Various Artists&#39;, &#39;General Video&#39;)
 
 UNION
 
@@ -4745,7 +4749,7 @@ from av_artist a
 where
       a.NAME in (&#39;General Video&#39;)
 
-order by 2, 1 desc, 4, 6</a:TaggedSQLQuery>
+order by 4, 6, 2, 1</a:TaggedSQLQuery>
 <a:UserDefinedSQL>1</a:UserDefinedSQL>
 <c:Columns>
 <o:ViewColumn Id="o202">
