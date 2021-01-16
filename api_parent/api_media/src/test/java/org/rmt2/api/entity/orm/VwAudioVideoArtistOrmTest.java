@@ -74,6 +74,14 @@ public class VwAudioVideoArtistOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
+        o2.setTrackDiscNumber("1");
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setTrackNumber(1);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
         o2.setTrackTitle("Track Name");
         result = o1.equals(o2);
         Assert.assertFalse(result);
