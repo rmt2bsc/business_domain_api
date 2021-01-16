@@ -116,6 +116,8 @@ public class AvMediaMockDataFactory {
         o.setArtWorkFilename("artworkfile.jpg");
         o.setTotalTime(40);
         o.setProducer("Producer Name");
+        o.setTrackDiscNumber("1");
+        o.setTrackNumber(1);
 
         return o;
     }

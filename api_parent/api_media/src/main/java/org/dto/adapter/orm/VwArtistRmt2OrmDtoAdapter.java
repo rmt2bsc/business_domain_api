@@ -129,23 +129,23 @@ class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDt
     }
 
     @Override
-    public int getTrackDiscNumber() {
-        return this.adaptee.gettrack;
+    public String getTrackDiscNumber() {
+        return this.adaptee.getTrackDiscNumber();
     }
 
     @Override
-    public void setTrackDiscNumber(int value) {
-        this.adaptee.settrack
+    public void setTrackDiscNumber(String value) {
+        this.adaptee.setTrackDiscNumber(value);
     }
 
     @Override
     public int getTrackNumber() {
-        return this.adaptee.gettrack;
+        return this.adaptee.getTrackNumber();
     }
 
     @Override
     public void setTrackNumber(int value) {
-        this.adaptee.settrack
+        this.adaptee.setTrackNumber(value);
     }
 
     @Override
@@ -435,7 +435,9 @@ class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDt
      */
     @Override
     public boolean equals(Object obj) {
-        return this.getArtistId() == ((VwArtistDto) obj).getArtistId();
+        return (this.getArtistId() == ((VwArtistDto) obj).getArtistId()
+                && this.getProjectId() == ((VwArtistDto) obj).getProjectId() && this.getTrackId() == ((VwArtistDto) obj)
+                .getTrackId());
     }
 
     /*

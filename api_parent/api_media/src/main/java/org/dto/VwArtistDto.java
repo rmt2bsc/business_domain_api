@@ -335,14 +335,14 @@ public interface VwArtistDto extends TransactionDto {
      * 
      * @param value
      */
-    int getTrackDiscNumber();
+    String getTrackDiscNumber();
 
     /**
      * Set track disc number
      * 
      * @param value
      */
-    void setTrackDiscNumber(int value);
+    void setTrackDiscNumber(String value);
 
     /**
      * Get track number
