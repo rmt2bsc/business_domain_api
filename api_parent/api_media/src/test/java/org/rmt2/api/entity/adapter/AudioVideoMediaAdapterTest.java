@@ -9,12 +9,14 @@ import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
+import org.dao.mapping.orm.rmt2.VwAudioVideoArtists;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
 import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
@@ -495,12 +497,88 @@ public class AudioVideoMediaAdapterTest {
         map.put(dto, "Track1");
         map.put(dto2, "Track2");
 
+        // dto3's contents is the same as dto's contents
         String value = map.get(dto3);
         Assert.assertNotNull(value);
         Assert.assertEquals("Track1", value);
 
+        // dto4's contents is the same as dto2's contents
         value = map.get(dto4);
         Assert.assertNotNull(value);
         Assert.assertEquals("Track2", value);
+    }
+
+    @Test
+    public void testNotEqualCompare_VwAudioVideoArtists() {
+        VwAudioVideoArtists o1 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID,
+                "Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                AvMediaMockDataFactory.TEST_TRACK_ID, "Track Name", true, 1234);
+        VwArtistDto dto = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o1);
+
+        int trackIdNew = AvMediaMockDataFactory.TEST_TRACK_ID + 100;
+        int artistIdNew = AvMediaMockDataFactory.TEST_ARTIST_ID + 100;
+        VwAudioVideoArtists o2 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(artistIdNew,
+                "Artist" + artistIdNew, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                trackIdNew, "Track Name", true, 1234);
+        VwArtistDto dto2 = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o2);
+
+        Assert.assertNotEquals(dto, dto2);
+    }
+
+    @Test
+    public void testEqualCompare_VwAudioVideoArtists() {
+        VwAudioVideoArtists o1 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID,
+                "Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                AvMediaMockDataFactory.TEST_TRACK_ID, "Track Name", true, 1234);
+        VwArtistDto dto = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o1);
+
+        VwAudioVideoArtists o2 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID,
+                "Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                AvMediaMockDataFactory.TEST_TRACK_ID, "Track Name", true, 1234);
+        VwArtistDto dto2 = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o2);
+
+        Assert.assertEquals(dto, dto2);
+    }
+
+    @Test
+    public void testMapCompare_VwAudioVideoArtists() {
+        VwAudioVideoArtists o1 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID,
+                "Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                AvMediaMockDataFactory.TEST_TRACK_ID, "Track Name", true, 1234);
+        VwArtistDto dto = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o1);
+
+        int trackIdNew = AvMediaMockDataFactory.TEST_TRACK_ID + 100;
+        int artistIdNew = AvMediaMockDataFactory.TEST_ARTIST_ID + 100;
+        VwAudioVideoArtists o2 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(artistIdNew,
+                "Artist" + artistIdNew, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                trackIdNew, "Track Name", true, 1234);
+        VwArtistDto dto2 = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o2);
+
+        VwAudioVideoArtists o3 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(AvMediaMockDataFactory.TEST_ARTIST_ID,
+                "Artist" + AvMediaMockDataFactory.TEST_ARTIST_ID, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                AvMediaMockDataFactory.TEST_TRACK_ID, "Track Name", true, 1234);
+        VwArtistDto dto3 = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o3);
+
+
+        int trackIdNew4 = AvMediaMockDataFactory.TEST_TRACK_ID + 100;
+        int artistIdNew4 = AvMediaMockDataFactory.TEST_ARTIST_ID + 100;
+        VwAudioVideoArtists o4 = AvMediaMockDataFactory.createOrmVwAudioVideoArtists(artistIdNew4,
+                "Artist" + artistIdNew, AvMediaMockDataFactory.TEST_PROJECT_ID, "Project Name",
+                trackIdNew4, "Track Name", true, 1234);
+        VwArtistDto dto4 = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(o4);
+
+        Map<VwArtistDto, String> map = new HashMap<>();
+        map.put(dto, "Object1");
+        map.put(dto2, "Object2");
+
+        // dto3's contents is the same as dto's contents
+        String value = map.get(dto3);
+        Assert.assertNotNull(value);
+        Assert.assertEquals("Object1", value);
+
+        // dto4's contents is the same as dto2's contents
+        value = map.get(dto4);
+        Assert.assertNotNull(value);
+        Assert.assertEquals("Object2", value);
     }
 }
