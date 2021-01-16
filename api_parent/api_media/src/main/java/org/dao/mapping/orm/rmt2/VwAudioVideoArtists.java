@@ -65,6 +65,10 @@ public class VwAudioVideoArtists extends OrmBean {
   public static final String PROP_PRODUCER = "Producer";
 /** The property name constant equivalent to property, TrackId, of respective DataSource view. */
   public static final String PROP_TRACKID = "TrackId";
+/** The property name constant equivalent to property, TrackDiscNumber, of respective DataSource view. */
+  public static final String PROP_TRACKDISCNUMBER = "TrackDiscNumber";
+/** The property name constant equivalent to property, TrackNumber, of respective DataSource view. */
+  public static final String PROP_TRACKNUMBER = "TrackNumber";
 /** The property name constant equivalent to property, TrackTitle, of respective DataSource view. */
   public static final String PROP_TRACKTITLE = "TrackTitle";
 /** The property name constant equivalent to property, TrackComments, of respective DataSource view. */
@@ -116,6 +120,10 @@ public class VwAudioVideoArtists extends OrmBean {
   private String producer;
 /** The javabean property equivalent of database column vw_audio_video_artists.track_id */
   private int trackId;
+/** The javabean property equivalent of database column vw_audio_video_artists.track_disc_number */
+  private String trackDiscNumber;
+/** The javabean property equivalent of database column vw_audio_video_artists.track_number */
+  private int trackNumber;
 /** The javabean property equivalent of database column vw_audio_video_artists.track_title */
   private String trackTitle;
 /** The javabean property equivalent of database column vw_audio_video_artists.track_comments */
@@ -396,6 +404,30 @@ public class VwAudioVideoArtists extends OrmBean {
     return this.trackId;
   }
 /**
+ * Sets the value of member variable trackDiscNumber
+ */
+  public void setTrackDiscNumber(String value) {
+    this.trackDiscNumber = value;
+  }
+/**
+ * Gets the value of member variable trackDiscNumber
+ */
+  public String getTrackDiscNumber() {
+    return this.trackDiscNumber;
+  }
+/**
+ * Sets the value of member variable trackNumber
+ */
+  public void setTrackNumber(int value) {
+    this.trackNumber = value;
+  }
+/**
+ * Gets the value of member variable trackNumber
+ */
+  public int getTrackNumber() {
+    return this.trackNumber;
+  }
+/**
  * Sets the value of member variable trackTitle
  */
   public void setTrackTitle(String value) {
@@ -498,6 +530,12 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.trackId, other.trackId)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.trackDiscNumber, other.trackDiscNumber)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackNumber, other.trackNumber)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.trackTitle, other.trackTitle)) {
       return false;
    }
@@ -531,6 +569,8 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.totalTime),
                HashCodeAssistant.hashObject(this.producer),
                HashCodeAssistant.hashObject(this.trackId),
+               HashCodeAssistant.hashObject(this.trackDiscNumber),
+               HashCodeAssistant.hashObject(this.trackNumber),
                HashCodeAssistant.hashObject(this.trackTitle),
                HashCodeAssistant.hashObject(this.trackComments));
 } 
@@ -559,6 +599,8 @@ public String toString() {
           ", totalTime=" + totalTime + 
           ", producer=" + producer + 
           ", trackId=" + trackId + 
+          ", trackDiscNumber=" + trackDiscNumber + 
+          ", trackNumber=" + trackNumber + 
           ", trackTitle=" + trackTitle + 
           ", trackComments=" + trackComments  + "]";
 }
