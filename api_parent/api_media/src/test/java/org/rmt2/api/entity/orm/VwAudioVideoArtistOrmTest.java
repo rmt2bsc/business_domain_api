@@ -154,6 +154,18 @@ public class VwAudioVideoArtistOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
 
+        o2.setTrackHours(0);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setTrackMinutes(5);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
+        o2.setTrackSeconds(45);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
         o2.setProjectTypeName("Audio");
         result = o1.equals(o2);
         Assert.assertTrue(result);

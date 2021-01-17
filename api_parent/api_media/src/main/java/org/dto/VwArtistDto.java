@@ -385,4 +385,46 @@ public interface VwArtistDto extends TransactionDto {
      * @param value
      */
     void setTrackComments(String value);
+
+    /**
+     * Get track hours
+     * 
+     * @param value
+     */
+    int getTrackHours();
+
+    /**
+     * Set track hours
+     * 
+     * @param value
+     */
+    void setTrackHours(int value);
+
+    /**
+     * Get track minutes
+     * 
+     * @param value
+     */
+    int getTrackMinutes();
+
+    /**
+     * Set track minutes
+     * 
+     * @param value
+     */
+    void setTrackMinutes(int value);
+
+    /**
+     * Get track seconds
+     * 
+     * @param value
+     */
+    int getTrackSeconds();
+
+    /**
+     * Set track seconds
+     * 
+     * @param value
+     */
+    void setTrackSeconds(int value);
 }

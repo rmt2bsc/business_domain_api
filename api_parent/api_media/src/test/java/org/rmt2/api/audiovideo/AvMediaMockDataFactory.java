@@ -103,6 +103,9 @@ public class AvMediaMockDataFactory {
         o.setTrackTitle(trackName);
         o.setProjectComments("Project Comments");
         o.setTrackComments("Track Comments");
+        o.setTrackHours(0);
+        o.setTrackMinutes(5);
+        o.setTrackSeconds(45);
         o.setGenreId(100);
         o.setContentId(200);
         o.setMediaTypeId(3);

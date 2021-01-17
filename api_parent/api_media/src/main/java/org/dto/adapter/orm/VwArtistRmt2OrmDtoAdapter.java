@@ -418,6 +418,36 @@ class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDt
         return this.adaptee.getProducer();
     }
 
+    @Override
+    public int getTrackHours() {
+        return this.adaptee.getTrackHours();
+    }
+
+    @Override
+    public void setTrackHours(int value) {
+        this.adaptee.setTrackHours(value);
+    }
+
+    @Override
+    public int getTrackMinutes() {
+        return this.adaptee.getTrackMinutes();
+    }
+
+    @Override
+    public void setTrackMinutes(int value) {
+        this.adaptee.setTrackMinutes(value);
+    }
+
+    @Override
+    public int getTrackSeconds() {
+        return this.adaptee.getTrackSeconds();
+    }
+
+    @Override
+    public void setTrackSeconds(int value) {
+        this.adaptee.setTrackSeconds(value);
+    }
+
     /*
      * (non-Javadoc)
      * 

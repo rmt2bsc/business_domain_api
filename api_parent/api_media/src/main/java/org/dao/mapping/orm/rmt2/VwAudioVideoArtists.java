@@ -71,6 +71,12 @@ public class VwAudioVideoArtists extends OrmBean {
   public static final String PROP_TRACKNUMBER = "TrackNumber";
 /** The property name constant equivalent to property, TrackTitle, of respective DataSource view. */
   public static final String PROP_TRACKTITLE = "TrackTitle";
+/** The property name constant equivalent to property, TrackHours, of respective DataSource view. */
+  public static final String PROP_TRACKHOURS = "TrackHours";
+/** The property name constant equivalent to property, TrackMinutes, of respective DataSource view. */
+  public static final String PROP_TRACKMINUTES = "TrackMinutes";
+/** The property name constant equivalent to property, TrackSeconds, of respective DataSource view. */
+  public static final String PROP_TRACKSECONDS = "TrackSeconds";
 /** The property name constant equivalent to property, TrackComments, of respective DataSource view. */
   public static final String PROP_TRACKCOMMENTS = "TrackComments";
 
@@ -126,6 +132,12 @@ public class VwAudioVideoArtists extends OrmBean {
   private int trackNumber;
 /** The javabean property equivalent of database column vw_audio_video_artists.track_title */
   private String trackTitle;
+/** The javabean property equivalent of database column vw_audio_video_artists.track_hours */
+  private int trackHours;
+/** The javabean property equivalent of database column vw_audio_video_artists.track_minutes */
+  private int trackMinutes;
+/** The javabean property equivalent of database column vw_audio_video_artists.track_seconds */
+  private int trackSeconds;
 /** The javabean property equivalent of database column vw_audio_video_artists.track_comments */
   private String trackComments;
 
@@ -440,6 +452,42 @@ public class VwAudioVideoArtists extends OrmBean {
     return this.trackTitle;
   }
 /**
+ * Sets the value of member variable trackHours
+ */
+  public void setTrackHours(int value) {
+    this.trackHours = value;
+  }
+/**
+ * Gets the value of member variable trackHours
+ */
+  public int getTrackHours() {
+    return this.trackHours;
+  }
+/**
+ * Sets the value of member variable trackMinutes
+ */
+  public void setTrackMinutes(int value) {
+    this.trackMinutes = value;
+  }
+/**
+ * Gets the value of member variable trackMinutes
+ */
+  public int getTrackMinutes() {
+    return this.trackMinutes;
+  }
+/**
+ * Sets the value of member variable trackSeconds
+ */
+  public void setTrackSeconds(int value) {
+    this.trackSeconds = value;
+  }
+/**
+ * Gets the value of member variable trackSeconds
+ */
+  public int getTrackSeconds() {
+    return this.trackSeconds;
+  }
+/**
  * Sets the value of member variable trackComments
  */
   public void setTrackComments(String value) {
@@ -539,6 +587,15 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.trackTitle, other.trackTitle)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.trackHours, other.trackHours)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackMinutes, other.trackMinutes)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackSeconds, other.trackSeconds)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.trackComments, other.trackComments)) {
       return false;
    }
@@ -572,6 +629,9 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.trackDiscNumber),
                HashCodeAssistant.hashObject(this.trackNumber),
                HashCodeAssistant.hashObject(this.trackTitle),
+               HashCodeAssistant.hashObject(this.trackHours),
+               HashCodeAssistant.hashObject(this.trackMinutes),
+               HashCodeAssistant.hashObject(this.trackSeconds),
                HashCodeAssistant.hashObject(this.trackComments));
 } 
 
@@ -602,6 +662,9 @@ public String toString() {
           ", trackDiscNumber=" + trackDiscNumber + 
           ", trackNumber=" + trackNumber + 
           ", trackTitle=" + trackTitle + 
+          ", trackHours=" + trackHours + 
+          ", trackMinutes=" + trackMinutes + 
+          ", trackSeconds=" + trackSeconds + 
           ", trackComments=" + trackComments  + "]";
 }
 
