@@ -2440,11 +2440,13 @@ DAT 1601935661</a:History>
 <a:Code>DATE_CREATED</a:Code>
 <a:CreationDate>1601935661</a:CreationDate>
 <a:Creator>appdev</a:Creator>
-<a:ModificationDate>1601935661</a:ModificationDate>
+<a:ModificationDate>1611147973</a:ModificationDate>
 <a:Modifier>appdev</a:Modifier>
 <a:Comment>The date and time the content was entered into the system.</a:Comment>
 <a:History>ORG {250980D9-C2C1-4E95-B00E-9D6D1221D549}
-DAT 1601935661</a:History>
+DAT 1601935661
+ATT DVAL</a:History>
+<a:DefaultValue>current timestamp</a:DefaultValue>
 <a:DataType>timestamp</a:DataType>
 </o:Column>
 <o:Column Id="o63">
