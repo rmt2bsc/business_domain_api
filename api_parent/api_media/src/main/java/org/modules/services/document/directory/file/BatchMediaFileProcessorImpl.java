@@ -308,7 +308,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
     
     private int deleteContent(int contentId) {
         ContentDaoFactory daoFactory = new ContentDaoFactory();
-        ContentDao dao = daoFactory.createDatabaseMediaDaoInstance();
+        ContentDao dao = daoFactory.createSybaseAsaDatabaseMediaDaoInstance();
         try {
             dao.deleteContent(contentId);
             return 1;

@@ -64,7 +64,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         super(appName);
         this.factory = new ContentDaoFactory();
         if (persistInDb) {
-            dao = this.factory.createDatabaseMediaDaoInstance();
+            dao = this.factory.createSybaseAsaDatabaseMediaDaoInstance();
         }
         else {
             dao = this.factory.createExternalFileMediaDaoInstance();
@@ -118,6 +118,55 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } 
         catch (NotFoundException e) {
             this.msg = "Unable to add media document as a database recrod or as an external file due to input file cannot be located";
+            throw new MediaModuleException(this.msg, e);
+        }
+    }
+
+    /**
+     * Add media document in which the image data and assoicated meta data is
+     * availble.
+     * 
+     * @param document
+     *            An instance of {@link ContentDto} which contains the document
+     *            image and its metadata.
+     * @return The internal unique identifier of the document object added.
+     * @throws MediaModuleException
+     */
+    @Override
+    public int add(ContentDto document) throws MediaModuleException {
+        try {
+            Verifier.verifyNotNull(document);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("A valid ContentDto oject must exists for this API operation");
+        }
+
+        try {
+            Verifier.verifyNotEmpty(document.getImageData());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Document content is required");
+        }
+
+        dao.setDaoUser(this.apiUser);
+        int newContentId = 0;
+        try {
+            String fileExt = RMT2File.getFileExt(document.getFilename());
+            if (fileExt != null) {
+                MimeTypeDto mtCriteria = Rmt2MediaDtoFactory.getMimeTypeInstance(null);
+                mtCriteria.setFileExt("." + fileExt);
+                List<MimeTypeDto> mtDto = this.dao.fetchMimeType(mtCriteria);
+                if (mtDto != null && mtDto.size() == 1) {
+                    document.setMimeTypeId(mtDto.get(0).getMimeTypeId());
+                }
+            }
+
+            // Validate Media DTO
+            this.validate(document);
+
+            // Save content
+            newContentId = dao.saveContent(document);
+            return newContentId;
+        } catch (ContentDaoException e) {
+            this.msg = "Unable to add media document, " + document.getFilename() + ", as a database recrod";
             throw new MediaModuleException(this.msg, e);
         }
     }
@@ -297,7 +346,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
 
         // Get mime type id of file name.
         MimeTypeDto mtCriteria = Rmt2MediaDtoFactory.getMimeTypeInstance(null);
-        mtCriteria.setFileExt(ext);
+        mtCriteria.setFileExt("." + ext);
         List<MimeTypeDto> list = this.getMimeType(mtCriteria);
         if (list == null) {
             this.msg = "File, "

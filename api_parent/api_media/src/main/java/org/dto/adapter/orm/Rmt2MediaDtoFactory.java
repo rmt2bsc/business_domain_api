@@ -137,8 +137,8 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
     }
     
     /**
-     * Creates a <i>ContentDto</i> object using the name of
-     * <i>mediaFileName</i>.
+     * Creates a <i>ContentDto</i> object using the name of <i>mediaFileName</i>
+     * to fetch the file contents from disc to be strored.
      * <p>
      * The <i>ContentDto</i> properties, <i>filename</i> and <i>filepath</i>,
      * are set based on the value of <i>mediaFileName</i>. If
@@ -158,6 +158,44 @@ public class Rmt2MediaDtoFactory extends RMT2Base {
         String path = RMT2File.getFilePathInfo(mediaFileName);
         dto.setFilename(fn);
         dto.setFilepath(path);
+        return dto;
+    }
+
+    /**
+     * Creates a <i>ContentDto</i> object using application code, module code,
+     * the name of file <i>fileName</i>, and the actual file content to store.
+     * <p>
+     * The <i>ContentDto</i> properties, <i>filename</i> and <i>filepath</i>,
+     * are set based on the value of <i>fileName</i>. If <i>mediaFileName</i>
+     * contains the file name and file extension, but the path sequence is not
+     * present, then <i>filepath</i> will equal <i>filename</i>. Otherwise,
+     * <i>filepath</i> and <i>filename</i> will be assigned the path sequence
+     * and file name, respectively.
+     * 
+     * @param appCode
+     *            the applicaton code
+     * @param moduleCode
+     *            the module code
+     * @param fileName
+     *            the full path of the file to build Content object, if
+     *            available.
+     * @param fileContent
+     *            file content
+     * @return {@link ContentDto}
+     */
+    public static final ContentDto getContentInstance(String appCode, String moduleCode, String fileName, byte[] fileContent) {
+        Content nullContent = null;
+        ContentDto dto = Rmt2MediaDtoFactory.getContentInstance(nullContent);
+        if (fileName != null && !fileName.isEmpty()) {
+            String fn = RMT2File.getFileName(fileName);
+            String path = RMT2File.getFilePathInfo(fileName);
+            dto.setFilename(fn);
+            dto.setFilepath(path);
+        }
+        dto.setImageData(fileContent);
+        dto.setSize(fileContent.length);
+        dto.setAppCode(appCode);
+        dto.setModuleCode(moduleCode);
         return dto;
     }
 

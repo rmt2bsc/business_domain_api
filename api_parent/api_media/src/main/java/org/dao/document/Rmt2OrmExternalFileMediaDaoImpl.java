@@ -1,5 +1,7 @@
 package org.dao.document;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 import org.dto.ContentDto;
 
@@ -167,7 +169,7 @@ class Rmt2OrmExternalFileMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
             String path = null;
             int bytesWritten = 0;
             if (this.rec.getImageData() != null) {
-                path = this.rec.getFilepath() + this.rec.getFilename();
+                path = this.rec.getFilepath() + File.pathSeparator + this.rec.getFilename();
                 byte binaryData[] = (byte[]) rec.getImageData(); 
                 bytesWritten = RMT2File.outputFile(binaryData, path);
                 this.rec.setSize(bytesWritten);

@@ -25,7 +25,7 @@ public class DocumentContentApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link DocumentContentApi}
      */
-    public DocumentContentApi createMediaContentApi() {
+    public static final DocumentContentApi createMediaContentApi() {
         return createMediaContentApi(MediaConstants.APP_NAME);
     }
 
@@ -33,7 +33,7 @@ public class DocumentContentApiFactory extends RMT2Base {
      * Creates an instance of {@link DocumentContentApi} using the transaction api
      * implementation.
      */
-    public DocumentContentApi createMediaContentApi(String appName) {
+    public static final DocumentContentApi createMediaContentApi(String appName) {
         DocumentContentApi api = new DocumentContentApiImpl(appName);
         return api;
     }
@@ -46,7 +46,7 @@ public class DocumentContentApiFactory extends RMT2Base {
      * @param persistInDb
      * @return
      */
-    public DocumentContentApi createMediaContentApi(String appName, boolean persistInDb) {
+    public static final DocumentContentApi createMediaContentApi(String appName, boolean persistInDb) {
         DocumentContentApi api = new DocumentContentApiImpl(appName,  persistInDb);
         return api;
     }

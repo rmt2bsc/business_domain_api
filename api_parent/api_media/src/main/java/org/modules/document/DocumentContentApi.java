@@ -19,6 +19,17 @@ public interface DocumentContentApi extends TransactionApi {
     /**
      * Add media document.
      * 
+     * @param document
+     *            An instance of {@link ContentDto} which contains the document
+     *            image and its metadata.
+     * @return The internal unique identifier of the document object added.
+     * @throws MediaModuleException
+     */
+    int add(ContentDto document) throws MediaModuleException;
+
+    /**
+     * Add media document.
+     * 
      * @param filePath
      *            The full path of the media file to be added.
      * @return The internal unique identifier of the document object added.

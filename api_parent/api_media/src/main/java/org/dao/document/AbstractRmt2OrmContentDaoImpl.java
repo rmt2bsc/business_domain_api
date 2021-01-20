@@ -45,7 +45,6 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
         return;
     }
 
-    
     /**
      * Retrieves multi media document by its primary key value.
      * <p>
@@ -64,6 +63,7 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
      * @throws ContentDaoException
      *             NotFoundException
      */
+    @Override
     public ContentDto fetchContent(int contentId) throws ContentDaoException {
         Content criteria = new Content();
         criteria.addCriteria(Content.PROP_CONTENTID, contentId);
@@ -77,7 +77,6 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
             this.msg = "DAO error occurred fetching media content record by content id, " + contentId;
             throw new ContentDaoException(this.msg, e);
         }
-        
         // Convert results to DTO
         ContentDto dto = Rmt2MediaDtoFactory.getContentInstance(results);
         return dto;
@@ -143,8 +142,7 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
     }
     
     /**
-     * Adds a record to the <i>content</i> table including the image
-     * data.
+     * Adds a record to the <i>content</i> table including the image data.
      * 
      * @param mediaRec
      *            An instance of {@link ContentDto}
@@ -155,23 +153,30 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
      */
     @Override
     public int saveContent(ContentDto mediaRec) throws ContentDaoException {
+        // Identify logged in user to track updates
         mediaRec.setUpdateUserId(this.getDaoUser());
+        if (mediaRec.getImageData() != null) {
+            mediaRec.setSize(mediaRec.getImageData().length);
+        }
 
+        // Add media meta data and media binary content to hte database
         Content rec = new Content();
         rec.setMimeTypeId(mediaRec.getMimeTypeId());
         rec.setFilepath(mediaRec.getFilepath());
         rec.setFilename(mediaRec.getFilename());
         rec.setSize(mediaRec.getSize());
         rec.setTextData(null);
-        rec.setAppCode(null);
-        rec.setModuleCode(null);
-        
+        rec.setAppCode(mediaRec.getAppCode());
+        rec.setModuleCode(mediaRec.getModuleCode());
+
         int newContentId = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(mediaRec.getUpdateUserId());
             rec.setDateCreated(ut.getDateCreated());
             rec.setUserId(ut.getLoginId());
             rec.setNull(Content.PROP_PROJECTID);
+
+            // Add media medta data first
             newContentId = this.client.insertRow(rec, true);
             mediaRec.setContentId(newContentId);
             return newContentId;
@@ -180,7 +185,7 @@ abstract class AbstractRmt2OrmContentDaoImpl extends MediaDaoImpl implements Con
             throw new ContentDaoException(this.msg, e);
         }
     }
-    
+
     /**
      * Deletes a single media document record from the database.
      * 
