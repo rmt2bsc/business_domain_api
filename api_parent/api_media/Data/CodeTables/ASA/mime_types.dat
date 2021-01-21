@@ -648,3 +648,4 @@
 649,.wmx,video/x-ms-wmx
 650,.wmz,application/x-ms-wmz
 651,.wmd,application/x-ms-wmd
+652,.docx,application/msword
