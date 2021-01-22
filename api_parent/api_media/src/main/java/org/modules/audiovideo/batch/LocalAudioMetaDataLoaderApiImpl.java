@@ -943,7 +943,9 @@ class LocalAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl impleme
             body.append("\n");
         }
 
-        RMT2File.outputFile(body.toString(), "/tmp/log/media_import_error_report.txt");
+        // TODO:  Create global constant variable for referencing AppServer directory
+        RMT2File.outputFile(body.toString(), "/AppServer/log/media_import_error_report.txt");
+        
         // // Setup bean that represents the email message.
         // EmailMessageBean bean = new EmailMessageBean();
         // bean.setFromAddress(fromAddr);
