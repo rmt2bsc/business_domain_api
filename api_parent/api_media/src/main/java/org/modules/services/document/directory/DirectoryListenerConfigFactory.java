@@ -41,7 +41,8 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
 
         // When environment is production, use the default configuration file,
         // BatchImportConfig.properties
-        if (ENV != null && !ENV.equalsIgnoreCase(ConfigConstants.ENVTYPE_PROD)) {
+        if (ENV != null && !ENV.equalsIgnoreCase(ConfigConstants.ENVTYPE_PROD)
+                && !ENV.equalsIgnoreCase(ConfigConstants.ENVTYPE_DEV)) {
             // Use environment specific MimeConfig_<ENV>.properties file
             propFile += "_" + DirectoryListenerConfigFactory.ENV;
         }
