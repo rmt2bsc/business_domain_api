@@ -360,7 +360,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      */
     @Override
     public String getMediaFileListenerStatus() {
-        if (MEDIA_DIR_LISTENER.getStatus()) {
+        if (MEDIA_DIR_LISTENER != null && MEDIA_DIR_LISTENER.getStatus()) {
             return DocumentContentApiImpl.STATUS_RUNNING;
         }
         else {
