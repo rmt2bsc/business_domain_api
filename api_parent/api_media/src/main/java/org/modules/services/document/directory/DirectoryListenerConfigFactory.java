@@ -38,10 +38,13 @@ public class DirectoryListenerConfigFactory extends RMT2Base {
     public static DirectoryListenerConfigBean getDocumentListenerConfigBeanInstance() {
         // Setup to use default MimeConfig.properties file
         String propFile = MediaConstants.CONFIG_CLASSPATH + "."  + DirectoryListenerConfigFactory.configFile; 
-        // if (ENV != null) {
+
+        // When environment is production, use the default configuration file,
+        // BatchImportConfig.properties
+        if (ENV != null && !ENV.equalsIgnoreCase(ConfigConstants.ENVTYPE_PROD)) {
             // Use environment specific MimeConfig_<ENV>.properties file
-            // propFile += "_" + DirectoryListenerConfigFactory.ENV;
-        // }
+            propFile += "_" + DirectoryListenerConfigFactory.ENV;
+        }
 
         logger.info("Looking for MIME Configuration in, " + propFile);
         return DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance(propFile);
