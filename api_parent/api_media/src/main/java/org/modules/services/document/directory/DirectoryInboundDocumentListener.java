@@ -88,4 +88,14 @@ public class DirectoryInboundDocumentListener extends RMT2Base implements Runnab
     public void stop() {
         this.continueToRun = false;
     }
+
+    /**
+     * Indicates whether or not the thread is still running.
+     * 
+     * @return boolean <i>true<i/> when thread is running and <i>false<i/> when
+     *         thread has stopped
+     */
+    public boolean getStatus() {
+        return this.continueToRun;
+    }
 }

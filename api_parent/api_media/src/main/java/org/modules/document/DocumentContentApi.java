@@ -97,4 +97,12 @@ public interface DocumentContentApi extends TransactionApi {
      * file.
      */
     void stopMediaFileListener();
+
+    /**
+     * Indicates whether or not the media file listener is running.
+     * 
+     * @return String <i>Running</i> when the listener is running and
+     *         <i>Stopped<i/> when the listener is not running.
+     */
+    String getMediaFileListenerStatus();
 }

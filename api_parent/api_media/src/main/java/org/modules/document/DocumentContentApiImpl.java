@@ -35,6 +35,8 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
     private ContentDao dao;
 
     private static DirectoryInboundDocumentListener MEDIA_DIR_LISTENER;
+    private static final String STATUS_RUNNING = "Running";
+    private static final String STATUS_STOPPED = "Stopped";
 
 
 
@@ -269,31 +271,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.document.DocumentContentApi#startMediaFileListener()
-     */
-    @Override
-    public void startMediaFileListener() {
-        MEDIA_DIR_LISTENER = new DirectoryInboundDocumentListener();
-        Thread t = new Thread(MEDIA_DIR_LISTENER);
-        t.start();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.document.DocumentContentApi#stopMediaFileListener()
-     */
-    @Override
-    public void stopMediaFileListener() {
-        if (MEDIA_DIR_LISTENER == null) {
-            return;
-        }
-        MEDIA_DIR_LISTENER.stop();
-    }
-
     
     /**
      * Verifies that the media content record contains valid data..
@@ -311,16 +288,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      *             when either file name, file extension or image data proerties
      *             are not present, or general database error while attempting
      *             to obtain MIME type data based on file extension.
-     */
-    /**
-     * Verifies that the file name and file path properties are present.
-     * 
-     * @param dto
-     *            an instance of {@link ContentDto} which will be validated.
-     * @return always returns null.
-     * @throws MediaModuleException Error occurred obtaining MIME type information
-     * @throws InvalidDataException
-     *             when either the file name or file path is not present.
      */
     protected void validate(ContentDto dto) throws MediaModuleException {
         logger.info("Validate file name");
@@ -359,5 +326,45 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         logger.info("Mime Type: " + mt.getMediaType());
         dto.setMimeTypeId(mt.getMimeTypeId());
         logger.info("Passed media file validations");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.document.DocumentContentApi#startMediaFileListener()
+     */
+    @Override
+    public void startMediaFileListener() {
+        MEDIA_DIR_LISTENER = new DirectoryInboundDocumentListener();
+        Thread t = new Thread(MEDIA_DIR_LISTENER);
+        t.start();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.document.DocumentContentApi#stopMediaFileListener()
+     */
+    @Override
+    public void stopMediaFileListener() {
+        if (MEDIA_DIR_LISTENER == null) {
+            return;
+        }
+        MEDIA_DIR_LISTENER.stop();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.document.DocumentContentApi#getMediaFileListenerStatus()
+     */
+    @Override
+    public String getMediaFileListenerStatus() {
+        if (MEDIA_DIR_LISTENER.getStatus()) {
+            return DocumentContentApiImpl.STATUS_RUNNING;
+        }
+        else {
+            return DocumentContentApiImpl.STATUS_STOPPED;
+        }
     }
 }
