@@ -15,7 +15,7 @@ import com.RMT2Base;
 public class DirectoryInboundDocumentListener extends RMT2Base implements Runnable {
     private static Logger logger = Logger.getLogger(DirectoryInboundDocumentListener.class);
 
-    private boolean continueToRun;
+    private volatile boolean continueToRun;
 
     private DocumentProcessingService srvc;
 
