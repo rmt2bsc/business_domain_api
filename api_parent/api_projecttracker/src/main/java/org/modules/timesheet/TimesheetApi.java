@@ -188,6 +188,16 @@ public interface TimesheetApi extends TransactionApi {
     List<TimesheetHoursDto> getHours(Integer timesheetId) throws TimesheetApiException;
 
     /**
+     * Updates the base timesheet only.
+     * 
+     * @param timesheet
+     *            instance of {@link TimesheetDto}
+     * @return The total number of timesheets effected.
+     * @throws TimesheetApiException
+     */
+    int updateTimesheet(TimesheetDto timesheet) throws TimesheetApiException;
+
+    /**
      * Creates a new or modifies an existing timesheet including all hours for
      * each project task.
      * <p>

@@ -469,12 +469,29 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     }
 
     /**
+     * Updates the base timesheet only.
+     * <p>
+     * User of this method is responsible for fetching the original timesheet
+     * and applying the in-memory changes before invoking the update
+     * functionality.
+     * 
+     * @param timesheet
+     *            instance of {@link TimesheetDto}
+     * @return The total number of timesheets effected.
+     * @throws TimesheetApiException
+     */
+    @Override
+    public int updateTimesheet(TimesheetDto timesheet) throws TimesheetApiException {
+        return this.dao.maintainTimesheet(timesheet);
+    }
+
+    /**
      * Drives the process of saving the data of a single timesheet.
      * <p>
      * First the base timesheet data is processed followed by the processing of
      * each task's time. This method is also responsible for procesing those
      * tasks that are selected for deletion. Timesheet can only be updated when
-     * the current status is NEW or DRAFT.   
+     * the current status is NEW or DRAFT.
      * <p>
      * Creates a new client record in the event the client does not exist for
      * the tiemsheet's client id.
