@@ -2,7 +2,6 @@ package org.modules.services.document.directory.file;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +18,9 @@ import org.modules.services.document.directory.DirectoryListenerConfigFactory;
 import org.rmt2.constants.ApiTransactionCodes;
 import org.rmt2.jaxb.HeaderType;
 import org.rmt2.jaxb.MediaApplicationLinkRequest;
+import org.rmt2.jaxb.MediaAttachmentDetailsType;
+import org.rmt2.jaxb.MediaAttachmentType;
+import org.rmt2.jaxb.MediaLinkGroup;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.util.JaxbPayloadFactory;
 
@@ -259,7 +261,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             logger.info("Link media content to HOME application...");
             // Make web service call to Home App in order to link document
             // to a particular application module
-            this.linkHomeApplication(this.moduleId, newContentId);
+            this.linkHomeApplication(this.moduleId, newContentId, fileName);
             logger.info("Linking of media content to Home Application completed");
             return newContentId;
         }
@@ -276,7 +278,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         }
     }
 
-    private void linkHomeApplication(int moduleId, int contentId) throws BatchFileException {
+    private void linkHomeApplication(int moduleId, int contentId, String fileName) throws BatchFileException {
         logger.info("Preparing to link media content to its home application");
         ApplicationModuleBean mod = this.config.getModules().get(moduleId);
         if (mod == null) {
@@ -284,17 +286,35 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new BatchFileException(this.msg);
         }
 
+        // Parse file name into separate parts
+        List<String> fileNameTokens = RMT2String.getTokens(fileName, "_");
+
+        // Get the primary key value of the home application's table
+        fileNameTokens = RMT2String.getTokens(fileNameTokens.get(2), ".");
+        String homeAppPkValString = fileNameTokens.get(0);
+        int homeAppPkVal = 0;
+        if (homeAppPkValString != null) {
+            homeAppPkVal = Integer.valueOf(homeAppPkValString);
+        }
+
         // Setup request object
         ObjectFactory f = new ObjectFactory();
         MediaApplicationLinkRequest request = f.createMediaApplicationLinkRequest();
-        HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
-                "module", ApiTransactionCodes.MEDIA_CONTENT_APP_LINK, "ASYNC", "REQUEST", this.getApiUser());
+        HeaderType header = JaxbPayloadFactory.createHeader(ApiTransactionCodes.ROUTE_MEDIA_LINK, "media",
+                "maint", ApiTransactionCodes.MEDIA_CONTENT_APP_LINK, "ASYNC", "REQUEST", this.getApiUser());
         request.setHeader(header);
         
-       request.setContentId(BigInteger.valueOf(contentId));
-       request.setEntityId(mod.getEntityUid());
-       request.setProjectName(mod.getProjectName());
-       request.setModuleName(mod.getModuleName());
+        MediaLinkGroup mlg = f.createMediaLinkGroup();
+        MediaAttachmentType mat = f.createMediaAttachmentType();
+        MediaAttachmentDetailsType madt = f.createMediaAttachmentDetailsType();
+        madt.setContentId(contentId);
+        madt.setProjectName(mod.getProjectName());
+        madt.setModuleName(mod.getModuleName());
+        madt.setPropertyName(mod.getEntityUid());
+        madt.setPropertyId(homeAppPkVal);
+        mat.setAttachment(madt);
+        mlg.setMediaLinkData(mat);
+        request.setProfile(mlg);
 
         // Send request to its destination
         try {
@@ -304,8 +324,7 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             throw new BatchFileException(this.msg, e);
         }
     }
-    
-    
+
     private int deleteContent(int contentId) {
         ContentDaoFactory daoFactory = new ContentDaoFactory();
         ContentDao dao = daoFactory.createSybaseAsaDatabaseMediaDaoInstance();
