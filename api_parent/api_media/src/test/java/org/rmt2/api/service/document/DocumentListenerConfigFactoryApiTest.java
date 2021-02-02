@@ -51,32 +51,32 @@ public class DocumentListenerConfigFactoryApiTest extends DocumentMediaMockData 
     public void testSuccess_Load_From_Default_Prop_File() {
         // Ensure that System property is set to null
         DirectoryListenerConfigFactory f = new DirectoryListenerConfigFactory();
-        Whitebox.setInternalState(f, "ENV", null);
+        Whitebox.setInternalState(f, "ENV", "TEST");
         
         DirectoryListenerConfigBean config = DirectoryListenerConfigFactory.getDocumentListenerConfigBeanInstance();
         
         Assert.assertNotNull(config);
-        Assert.assertEquals("royterrell@hotmail.com", config.getEmailRecipients());
+        Assert.assertEquals("john.smith@gte.net", config.getEmailRecipients());
         Assert.assertTrue(config.isEmailResults());
-        Assert.assertEquals("/AppServer/data/mime/in/", config.getInboundDir());
-        Assert.assertEquals("/AppServer/data/mime/out/", config.getOutboundDir());
-        Assert.assertEquals("/AppServer/data/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals("/AppServer/test/mime/in/", config.getInboundDir());
+        Assert.assertEquals("/AppServer/test/mime/out/", config.getOutboundDir());
+        Assert.assertEquals("/AppServer/test/mime/archive/", config.getArchiveDir());
         Assert.assertEquals(10000, config.getPollFreq());
         Assert.assertEquals(2, config.getModuleCount());
         
         ApplicationModuleBean a = config.getModules().get(0);
-        Assert.assertEquals("cd", a.getModuleCode());
+        Assert.assertEquals("cd1", a.getModuleCode());
         Assert.assertEquals("acct*.*", a.getFilePattern().trim());
-        Assert.assertEquals("Accounting", a.getProjectName());
-        Assert.assertEquals("transaction", a.getModuleName());
-        Assert.assertEquals("xact_id", a.getEntityUid());
+        Assert.assertEquals("projectName1", a.getProjectName());
+        Assert.assertEquals("moduleName1", a.getModuleName());
+        Assert.assertEquals("entityUid1", a.getEntityUid());
         
         a = config.getModules().get(1);
-        Assert.assertEquals("ts", a.getModuleCode());
+        Assert.assertEquals("cd2", a.getModuleCode());
         Assert.assertEquals("proj*.*", a.getFilePattern().trim());
-        Assert.assertEquals("ProjectTracker", a.getProjectName());
-        Assert.assertEquals("timesheet", a.getModuleName());
-        Assert.assertEquals("timesheet_id", a.getEntityUid());
+        Assert.assertEquals("projectName2", a.getProjectName());
+        Assert.assertEquals("moduleName2", a.getModuleName());
+        Assert.assertEquals("entityUid2", a.getEntityUid());
 
         // Ensure that the System prpoerty, ENV, is set back to "TEST"
         System.setProperty(ConfigConstants.PROPNAME_ENV, ConfigConstants.ENVTYPE_TEST);
@@ -94,9 +94,9 @@ public class DocumentListenerConfigFactoryApiTest extends DocumentMediaMockData 
         Assert.assertNotNull(config);
         Assert.assertEquals("john.smith@gte.net", config.getEmailRecipients());
         Assert.assertTrue(config.isEmailResults());
-        Assert.assertEquals("/AppServer/data/mime/in/", config.getInboundDir());
-        Assert.assertEquals("/AppServer/data/mime/out/", config.getOutboundDir());
-        Assert.assertEquals("/AppServer/data/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals("/AppServer/test/mime/in/", config.getInboundDir());
+        Assert.assertEquals("/AppServer/test/mime/out/", config.getOutboundDir());
+        Assert.assertEquals("/AppServer/test/mime/archive/", config.getArchiveDir());
         Assert.assertEquals(10000, config.getPollFreq());
         Assert.assertEquals(2, config.getModuleCount());
         
