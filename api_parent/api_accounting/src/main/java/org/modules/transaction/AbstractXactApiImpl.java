@@ -604,6 +604,54 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         return;
     }
 
+    /**
+     * Updates the base transaction.
+     * <p>
+     * This applies only for existing transactions, hence the functionality does
+     * not create new transactions.
+     * 
+     * @param xact
+     *            The transaction object to be managed.
+     * @return The total number of transactions effected.
+     * @throws XactApiException
+     */
+    @Override
+    public int update(XactDto xact) throws XactApiException {
+        // Fetch original transaction
+        XactDto obj = this.getXactById(xact.getXactId());
+        if (obj == null) {
+            return 0;
+        }
+
+        // Apply updates to the original record
+        obj.setXactAmount(xact.getXactAmount());
+        obj.setXactBankTransInd(xact.getXactBankTransInd());
+        obj.setXactTypeId(xact.getXactTypeId());
+        obj.setXactSubtypeId(xact.getXactSubtypeId());
+        obj.setXactDate(xact.getXactDate());
+        obj.setXactTenderId(xact.getXactTenderId());
+        obj.setXactNegInstrNo(xact.getXactNegInstrNo());
+        obj.setXactConfirmNo(xact.getXactConfirmNo());
+        obj.setXactEntityRefNo(xact.getXactEntityRefNo());
+        obj.setXactPostedDate(xact.getXactPostedDate());
+        obj.setXactReason(xact.getXactReason());
+        obj.setDocumentId(xact.getDocumentId());
+
+        int rc = 0;
+        XactDao dao = this.getXactDao();
+        dao.setDaoUser(this.getApiUser());
+
+        // Apply transaction changes
+        try {
+            rc = dao.maintain(xact);
+            return rc;
+        } catch (Exception e) {
+            this.msg = "Base transaction update failed";
+            logger.error(this.msg, e);
+            throw new XactApiException(this.msg, e);
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 

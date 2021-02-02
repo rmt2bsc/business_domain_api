@@ -226,6 +226,16 @@ public interface XactApi extends TransactionApi {
     int update(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException;
 
     /**
+     * Performs updates only on the base transaction.
+     * 
+     * @param xact
+     *            The transaction object to be managed.
+     * @return The total number of transactions effected.
+     * @throws XactApiException
+     */
+    int update(XactDto xact) throws XactApiException;
+
+    /**
      * Reverses a transaction and its detail items.
      * 
      * @param xact
