@@ -482,7 +482,11 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     @Override
     public int updateTimesheet(TimesheetDto timesheet) throws TimesheetApiException {
-        return this.dao.maintainTimesheet(timesheet);
+        try {
+            return this.dao.maintainTimesheet(timesheet);
+        } catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("Unable to update timesheet due to DAO error", e);
+        }
     }
 
     /**

@@ -617,6 +617,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public int update(XactDto xact) throws XactApiException {
+        this.validate(xact);
+
         // Fetch original transaction
         XactDto obj = this.getXactById(xact.getXactId());
         if (obj == null) {
