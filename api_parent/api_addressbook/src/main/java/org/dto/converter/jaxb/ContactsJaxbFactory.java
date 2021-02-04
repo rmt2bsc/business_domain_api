@@ -395,6 +395,7 @@ public class ContactsJaxbFactory extends RMT2Base {
         cdt.setCodeId(BigInteger.valueOf(dto.getCodeId()));
         cdt.setLongdesc(dto.getCodeLongName());
         cdt.setShortdesc(dto.getCodeShortName());
+        codes.close();
         return cdt;
     }
 
@@ -451,20 +452,16 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @throws ZipcodeException
      */
     public ZipcodeType getZipcode(int zipId) throws PostalApiException {
+        if (zipId == 0) {
+            return null;
+        }
         ObjectFactory f = new ObjectFactory();
         PostalApi api = PostalApiFactory.createApi();
-        // ZipcodeDto zList = (ZipcodeDto) api.getZipCode(zipId);
-        // if (zList == null || zList.size() == 0) {
-        // return null;
-        // }
-
         ZipcodeDto z = (ZipcodeDto) api.getZipCode(zipId);
         if (z == null) {
             return null;
         }
-        // ZipcodeDto z = zList.get(0);
         ZipcodeType zip = f.createZipcodeType();
-
         BigInteger zipcodeVal = BigInteger.valueOf(z.getZip());
         zip.setZipId(zipcodeVal == BigInteger.ZERO ? null : zipcodeVal);
         zipcodeVal = BigInteger.valueOf(z.getZip());
