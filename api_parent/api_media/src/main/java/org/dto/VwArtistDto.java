@@ -427,4 +427,18 @@ public interface VwArtistDto extends TransactionDto {
      * @param value
      */
     void setTrackSeconds(int value);
+
+    /**
+     * Get single seach team
+     * 
+     * @return
+     */
+    String getSearchTerm();
+
+    /**
+     * Set single search term
+     * 
+     * @param value
+     */
+    void setSearchTerm(String value);
 }

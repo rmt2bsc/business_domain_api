@@ -14,6 +14,7 @@ import com.api.foundation.TransactionDtoImpl;
 class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDto {
 
     private VwAudioVideoArtists adaptee;
+    private String searchTerm;
 
     /**
      * Creates a ArtistRmt2OrmDtoAdapter without initializing its adaptee
@@ -456,6 +457,16 @@ class VwArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements VwArtistDt
     @Override
     public void setProducer(String producer) {
         this.adaptee.setProducer(producer);
+    }
+
+    @Override
+    public String getSearchTerm() {
+        return this.searchTerm;
+    }
+
+    @Override
+    public void setSearchTerm(String value) {
+        this.searchTerm = value;
     }
 
     /*
