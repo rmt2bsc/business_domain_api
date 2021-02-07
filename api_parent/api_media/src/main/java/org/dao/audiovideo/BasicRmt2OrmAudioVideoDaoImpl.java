@@ -175,40 +175,62 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         // Setup criteria
         VwAudioVideoArtists queryObj = new VwAudioVideoArtists();
         if (criteria != null) {
-            if (criteria.getArtistId() > 0) {
-                queryObj.addCriteria(VwAudioVideoArtists.PROP_ARTISTID, criteria.getArtistId());
+            // The single search term is mutually exclusive to the other searc
+            // criteria items.
+            if (criteria.getSearchTerm() != null && !criteria.getSearchTerm().isEmpty()) {
+                String predicate = new StringBuilder()
+                        .append("(artist like '%")
+                        .append(criteria.getSearchTerm())
+                        .append("%'")
+                        .append(" or ")
+                        .append("project_title like '%")
+                        .append(criteria.getSearchTerm())
+                        .append("%'")
+                        .append(" or ")
+                        .append("track_title like '%")
+                        .append(criteria.getSearchTerm())
+                        .append("%') ")
+                        .toString();
+
+                queryObj.addCustomCriteria(predicate);
             }
-            if (criteria.getArtistName() != null) {
-                queryObj.addLikeClause(VwAudioVideoArtists.PROP_ARTIST, criteria.getArtistName(), OrmBean.LIKE_BEGIN);
-            }
-            if (criteria.getProjectId() > 0) {
-                queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTID, criteria.getProjectId());
-            }
-            if (criteria.getProjectName() != null) {
-                queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTITLE, criteria.getProjectName(), OrmBean.LIKE_BEGIN);
-            }
-            if (criteria.getProjectComments() != null) {
-                queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTCOMMENTS, criteria.getProjectComments(),
-                        OrmBean.LIKE_CONTAINS);
-            }
-            if (criteria.getTrackId() > 0) {
-                queryObj.addCriteria(VwAudioVideoArtists.PROP_TRACKID, criteria.getTrackId());
-            }
-            if (criteria.getTrackName() != null) {
-                queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKTITLE, criteria.getTrackName(), OrmBean.LIKE_BEGIN);
-            }
-            if (criteria.getTrackComments() != null) {
-                queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKCOMMENTS, criteria.getTrackComments(), OrmBean.LIKE_CONTAINS);
-            }
-            if (criteria.getProjectTypeId() > 0) {
-                queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTTYPEID, criteria.getProjectTypeId());
-            }
-            if (criteria.getProjectTypeName() != null) {
-                queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTYPENAME, criteria.getProjectTypeName(),
-                        OrmBean.LIKE_CONTAINS);
-            }
-            if (criteria.getCriteria() != null) {
-                queryObj.addCustomCriteria(criteria.getCriteria());
+            else {
+                if (criteria.getArtistId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_ARTISTID, criteria.getArtistId());
+                }
+                if (criteria.getArtistName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_ARTIST, criteria.getArtistName(), OrmBean.LIKE_BEGIN);
+                }
+                if (criteria.getProjectId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTID, criteria.getProjectId());
+                }
+                if (criteria.getProjectName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTITLE, criteria.getProjectName(), OrmBean.LIKE_BEGIN);
+                }
+                if (criteria.getProjectComments() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTCOMMENTS, criteria.getProjectComments(),
+                            OrmBean.LIKE_CONTAINS);
+                }
+                if (criteria.getTrackId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_TRACKID, criteria.getTrackId());
+                }
+                if (criteria.getTrackName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKTITLE, criteria.getTrackName(), OrmBean.LIKE_BEGIN);
+                }
+                if (criteria.getTrackComments() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKCOMMENTS, criteria.getTrackComments(),
+                            OrmBean.LIKE_CONTAINS);
+                }
+                if (criteria.getProjectTypeId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTTYPEID, criteria.getProjectTypeId());
+                }
+                if (criteria.getProjectTypeName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTYPENAME, criteria.getProjectTypeName(),
+                            OrmBean.LIKE_CONTAINS);
+                }
+                if (criteria.getCriteria() != null) {
+                    queryObj.addCustomCriteria(criteria.getCriteria());
+                }
             }
         }
 
