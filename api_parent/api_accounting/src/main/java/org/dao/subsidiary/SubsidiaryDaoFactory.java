@@ -32,7 +32,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link SubsidiaryDao}
      */
-    public SubsidiaryDao createRmt2OrmSubsidiaryDao() {
+    public static final SubsidiaryDao createRmt2OrmSubsidiaryDao() {
         SubsidiaryDao dao = new DefaultRmt2SubsidiaryContactDaoImpl();
         return dao;
     }
@@ -43,7 +43,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link SubsidiaryDao}
      */
-    public SubsidiaryDao createRmt2OrmSubsidiaryDao(String appName) {
+    public static final SubsidiaryDao createRmt2OrmSubsidiaryDao(String appName) {
         SubsidiaryDao dao = new DefaultRmt2SubsidiaryContactDaoImpl(appName);
         return dao;
     }
@@ -54,7 +54,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link CustomerDao}
      */
-    public CustomerDao createRmt2OrmCustomerDao() {
+    public static final CustomerDao createRmt2OrmCustomerDao() {
         CustomerDao dao = new Rmt2OrmCustomerDaoImpl();
         return dao;
     }
@@ -65,7 +65,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link CreditorDao}
      */
-    public CreditorDao createRmt2OrmCreditorDao() {
+    public static final CreditorDao createRmt2OrmCreditorDao() {
         CreditorDao dao = new Rmt2OrmCreditorDaoImpl();
         return dao;
     }
@@ -77,7 +77,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link CustomerDao}
      */
-    public CustomerDao createRmt2OrmCustomerDao(String appName) {
+    public static final CustomerDao createRmt2OrmCustomerDao(String appName) {
         CustomerDao dao = new Rmt2OrmCustomerDaoImpl(appName);
         return dao;
     }
@@ -89,7 +89,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * @param appName
      * @return an instance of {@link CreditorDao}
      */
-    public CreditorDao createRmt2OrmCreditorDao(String appName) {
+    public static final CreditorDao createRmt2OrmCreditorDao(String appName) {
         CreditorDao dao = new Rmt2OrmCreditorDaoImpl(appName);
         return dao;
     }
@@ -103,7 +103,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link CustomerDao}
      */
-    public CustomerDao createRmt2OrmCustomerDao(DaoClient dao) {
+    public static final CustomerDao createRmt2OrmCustomerDao(DaoClient dao) {
         CustomerDao d = new Rmt2OrmCustomerDaoImpl(dao.getClient());
         return d;
     }
@@ -117,7 +117,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
      * 
      * @return an instance of {@link CreditorDao}
      */
-    public CreditorDao createRmt2OrmCreditorDao(DaoClient dao) {
+    public static final CreditorDao createRmt2OrmCreditorDao(DaoClient dao) {
         CreditorDao d = new Rmt2OrmCreditorDaoImpl(dao.getClient());
         return d;
     }
@@ -139,6 +139,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
         c.setActive(dto.getActive());
         c.setBusinessId(dto.getContactId());
         c.setCreditLimit(dto.getCreditLimit());
+        c.setDescription(dto.getDescription());
         c.setCustomerId(dto.getCustomerId());
         c.setDateCreated(dto.getDateCreated());
         c.setDateUpdated(dto.getDateUpdated());

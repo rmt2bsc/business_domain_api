@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.dao.timesheet.TimesheetConst;
@@ -18,6 +19,7 @@ import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
+import org.dto.TimesheetHoursSummaryDto;
 import org.dto.adapter.orm.EmployeeObjectFactory;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.dto.adapter.orm.TimesheetObjectFactory;
@@ -33,10 +35,10 @@ import org.modules.timesheet.invoice.InvoiceTimesheetApiException;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.SystemException;
-import com.api.config.AppPropertyPool;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.messaging.email.EmailMessageBean;
 import com.api.persistence.DaoClient;
+import com.api.util.RMT2File;
 import com.api.util.RMT2String;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
@@ -59,6 +61,8 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     private int currentProjectId;
 
     private TimesheetDto timeSheet;
+
+    private TimesheetHoursSummaryDto timesheetSummary;
 
     private Map<ProjectTaskDto, List<EventDto>> timeSheetHours;
 
@@ -239,6 +243,30 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         return results;
     }
     
+    @Override
+    public List<TimesheetHoursSummaryDto> getTimesheetSummary(TimesheetHoursSummaryDto criteria) throws TimesheetApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            this.msg = "Timesheet summary selection criteria is required";
+            throw new InvalidTimesheetException(this.msg, e);
+        }
+
+        List<TimesheetHoursSummaryDto> results = null;
+        StringBuilder buf = new StringBuilder();
+        try {
+            results = this.dao.fetchHourSummary(criteria);
+            if (results == null) {
+                return null;
+            }
+        } catch (TimesheetDaoException e) {
+            buf.append("Database error occurred retrieving summary timesheet(s) using selection criteria object");
+            this.msg = buf.toString();
+            throw new TimesheetApiException(this.msg, e);
+        }
+        return results;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -441,12 +469,34 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     }
 
     /**
+     * Updates the base timesheet only.
+     * <p>
+     * User of this method is responsible for fetching the original timesheet
+     * and applying the in-memory changes before invoking the update
+     * functionality.
+     * 
+     * @param timesheet
+     *            instance of {@link TimesheetDto}
+     * @return The total number of timesheets effected.
+     * @throws TimesheetApiException
+     */
+    @Override
+    public int updateTimesheet(TimesheetDto timesheet) throws TimesheetApiException {
+        this.validateTimesheetForUpdate(timesheet);
+        try {
+            return this.dao.maintainTimesheet(timesheet);
+        } catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("Unable to update timesheet due to DAO error", e);
+        }
+    }
+
+    /**
      * Drives the process of saving the data of a single timesheet.
      * <p>
      * First the base timesheet data is processed followed by the processing of
      * each task's time. This method is also responsible for procesing those
      * tasks that are selected for deletion. Timesheet can only be updated when
-     * the current status is NEW or DRAFT.   
+     * the current status is NEW or DRAFT.
      * <p>
      * Creates a new client record in the event the client does not exist for
      * the tiemsheet's client id.
@@ -548,15 +598,16 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
      */
     private int getMaxDisplayValueDigits() throws InvoiceTimesheetApiException {
         int sheetIdSize = 0;
-        String temp = null;
+        String idSize = null;
         try {
-            temp = AppPropertyPool.getProperty("sheet_id_size");
-            sheetIdSize = Integer.parseInt(temp);
+            Properties prop = RMT2File.loadPropertiesFromClasspath(ProjectTrackerApiConst.LOCAL_CONFIG);
+            idSize = prop.getProperty("sheet_id_size");
+            sheetIdSize = Integer.parseInt(idSize);
             return sheetIdSize;
         } catch (NumberFormatException e) {
             StringBuffer buf = new StringBuffer();
             buf.append("An invalid value was found to be assoication with properties value, sheet_id_size.  Unable to convert ");
-            buf.append(temp);
+            buf.append(idSize);
             buf.append(" to a number.  Defaulting to 5");
             logger.info(buf);
             return 10;
@@ -730,8 +781,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
 
         // Verify that project task exists
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi projApi = f.createApi(this.getSharedDao());
+        // IS-43: Changed logic to utilize the static approach when invoking
+        // createApi method.
+        ProjectAdminApi projApi = ProjectAdminApiFactory.createApi(this.getSharedDao());
         try {
             ProjectTaskDto criteria = ProjectObjectFactory.createProjectTaskExtendedDtoInstance(null);
             criteria.setProjectTaskId(projectTaskId);
@@ -745,7 +797,6 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         } catch (ProjectAdminApiException e) {
             throw new SystemException("A DAO error occurred validating project task entity existence", e);
         } finally {
-            f = null;
             projApi = null;
         }
 
@@ -969,12 +1020,11 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     @Override
     public int approve(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
-        
+
         // Set timesheet status to Approved.
         TimesheetHistDto currentStatus = this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_APPROVED);
-        
-        // Send confirmation
-        return this.transmitConfirmation(timesheetId, currentStatus);
+        this.load(timesheetId);
+        return currentStatus.getStatusId();
     }
 
     /*
@@ -985,12 +1035,11 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     @Override
     public int decline(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
-        
+
         // Set timesheet status to Declined
         TimesheetHistDto currentStatus =  this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_DECLINED);
-        
-        // Send confirmation
-        return this.transmitConfirmation(timesheetId, currentStatus);
+        this.load(timesheetId);
+        return currentStatus.getStatusId();
     }
 
     /**
@@ -1005,53 +1054,10 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
     public int submit(Integer timesheetId) throws TimesheetApiException {
         this.validateNumericParam(timesheetId, ProjectTrackerApiConst.PARM_NAME_TIMESHEET_ID);
         
-        this.load(timesheetId);
         // Set timesheet status to SUBMITTED.
-        this.changeTimesheetStatus(this.timeSheet.getTimesheetId(), TimesheetConst.STATUS_SUBMITTED);
-
-        // Email timesheet
-        TimesheetTransmissionApi xmitApi = null;
-        try {
-            // Get employee profile
-            EmployeeApiFactory empFact = new EmployeeApiFactory();
-            EmployeeApi empApi = empFact.createApi(this.getSharedDao());
-            
-            EmployeeDto empCriteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
-            empCriteria.setEmployeeId(this.timeSheet.getEmpId());
-            
-            // TODO: Might need to eliminate the assumption that the employee
-            // exists and handle for the "Not Found" possibility
-            List<EmployeeDto> employees = empApi.getEmployeeExt(empCriteria);
-            EmployeeDto employee = employees.get(0);
-            
-            EmployeeDto manager = empApi.getEmployee(employee.getManagerId());
-
-            // get client profile
-            ProjectAdminApiFactory projFact = new ProjectAdminApiFactory();
-            ProjectAdminApi projApi = projFact.createApi(this.getSharedDao());
-            ClientDto clientCriteria = ProjectObjectFactory.createClientDtoInstance(null);
-            clientCriteria.setClientId(this.timeSheet.getClientId());
-            List<ClientDto> clients = projApi.getClient(clientCriteria);
-
-            // send timesheet via email
-            xmitApi = TimesheetApiFactory.createTransmissionApi();
-            EmailMessageBean msg = xmitApi.createSubmitMessage(this.timeSheet, employee, manager, 
-                    clients.get(0), this.timeSheetHours);
-            Integer rc = (Integer) xmitApi.send(msg);
-            return rc;
-        } catch (TimesheetTransmissionException e) {
-            this.msg = "SMTP error occurred attempting to send timesheet: " + this.timeSheet.getDisplayValue();
-            throw new TimesheetApiException(this.msg, e);
-        } catch (EmployeeApiException e) {
-            this.msg = "Data access error fetching timesheet's employee profile: " + this.timeSheet.getEmpId();
-            throw new TimesheetApiException(this.msg, e);
-        } catch (ProjectAdminApiException e) {
-            this.msg = "Data access error fetching timesheet's client profile: " + this.timeSheet.getClientId();
-            throw new TimesheetApiException(this.msg, e);
-        } finally {
-            xmitApi = null;
-        }
-
+        this.changeTimesheetStatus(timesheetId, TimesheetConst.STATUS_SUBMITTED);
+        this.load(timesheetId);
+        return 1;
     }
 
     /*
@@ -1065,10 +1071,21 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         // Delete all project/tasks belonging to the timesheet
         this.deleteProjectTasks(timesheetId);
-        // Now delete the timesheet
-        TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
-        criteria.setTimesheetId(timesheetId);
+
+        // Delete timesheet status history
         try {
+            TimesheetHistDto criteria = TimesheetObjectFactory.createTimesheetHistoryDtoInstance(null);
+            criteria.setTimesheetId(timesheetId);
+            this.dao.deleteTimesheetStatus(criteria);
+        } catch (TimesheetDaoException e) {
+            throw new TimesheetApiException("DAO error occurred deleting timesheet status history by timesheet id: "
+                    + timesheetId, e);
+        }
+
+        // Now delete the timesheet
+        try {
+            TimesheetDto criteria = TimesheetObjectFactory.createTimesheetDtoInstance(null);
+            criteria.setTimesheetId(timesheetId);
             int rc = this.dao.deleteTimesheet(criteria);
             return rc;
         } catch (TimesheetDaoException e) {
@@ -1111,6 +1128,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         List<ProjectTaskDto> ptList = this.getProjectTaskByTimesheet(timesheetId);
         int count = 0;
+        if (ptList == null) {
+            return count;
+        }
         for (ProjectTaskDto item : ptList) {
             this.deleteProjectTask(item.getProjectTaskId());
             count++;
@@ -1207,10 +1227,16 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         if (ts == null) {
             this.timeSheet = null;
             this.timeSheetHours = null;
-            logger.warn("Failed to build timesheet object graph due to Timesheet ["
-                            + timesheetId + "] could not be found");
-            return null;
+            throw new NotFoundException("Failed to build timesheet object graph due to Timesheet ["
+                    + timesheetId + "] could not be found");
         }
+        this.timeSheet = ts;
+
+        // Get timesheet summary
+        TimesheetHoursSummaryDto summaryCriteria = TimesheetObjectFactory.createTimesheetSummaryDtoInstance(null);
+        summaryCriteria.setTimesheetId(timesheetId);
+        List<TimesheetHoursSummaryDto> hoursSummary = this.getTimesheetSummary(summaryCriteria);
+        this.timesheetSummary = hoursSummary.get(0);
 
         // Fetch project/tasks which should be ordered by project name, task
         // name, and timesheet id.
@@ -1227,8 +1253,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         // allow us to build the object graph.
         Map<ProjectTaskDto, List<EventDto>> timesheetGraph = new LinkedHashMap<ProjectTaskDto, List<EventDto>>();
 
-        ProjectAdminApiFactory projApiFact = new ProjectAdminApiFactory();
-        ProjectAdminApi api = projApiFact.createApi(this.getSharedDao());
+        // IS-43: Changed logic to utilize the static approach when invoking
+        // createApi method.
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.getSharedDao());
         try {
             for (ProjectTaskDto pt : ptList) {
                 try {
@@ -1255,12 +1282,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
                 }
             }
         } finally {
-            projApiFact = null;
             api = null;
         }
 
-        // Set member variables
-        this.timeSheet = ts;
         this.timeSheetHours = timesheetGraph;
         return timesheetGraph;
     }
@@ -1280,7 +1304,7 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         }
     }
     
-    
+    @Deprecated
     private int transmitConfirmation(int timesheetId, TimesheetHistDto currentStatus) throws TimesheetApiException {
         // Obtain timesheet's current status
         TimesheetDto ts = this.getExt(timesheetId);;
@@ -1288,8 +1312,9 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         
         try {
             // Get employee profile
-            EmployeeApiFactory empFact = new EmployeeApiFactory();
-            EmployeeApi empApi = empFact.createApi(this.getSharedDao());
+            // IS-43: Changed logic to utilize the static approach when invoking
+            // createApi method.
+            EmployeeApi empApi = EmployeeApiFactory.createApi(this.getSharedDao());
             
             EmployeeDto empCriteria = EmployeeObjectFactory.createEmployeeExtendedDtoInstance(null);
             empCriteria.setEmployeeId(ts.getEmpId());
@@ -1313,5 +1338,20 @@ class TimesheetApiImpl extends AbstractTransactionApiImpl implements TimesheetAp
         catch (TimesheetTransmissionException e) {
             throw new TimesheetApiException("Error occurred sending time sheet email confirmation", e);
         }
+    }
+
+    @Override
+    public TimesheetDto getTimesheet() {
+        return this.timeSheet;
+    }
+
+    @Override
+    public Map<ProjectTaskDto, List<EventDto>> getTimesheetHours() {
+        return this.timeSheetHours;
+    }
+
+    @Override
+    public TimesheetHoursSummaryDto getTimesheetSummary() {
+        return this.timesheetSummary;
     }
 }

@@ -1,31 +1,41 @@
 package org.dao.audiovideo;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dao.MediaDaoImpl;
+import org.dao.entity.CommonMediaDto;
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
+import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
+import org.dao.mapping.orm.rmt2.VwAudioVideoArtists;
 import org.dto.ArtistDto;
 import org.dto.GenreDto;
+import org.dto.MediaTypeDto;
 import org.dto.ProjectDto;
 import org.dto.ProjectTypeDto;
 import org.dto.TracksDto;
+import org.dto.VwArtistDto;
 import org.dto.adapter.orm.Rmt2MediaDtoFactory;
 import org.modules.audiovideo.AudioVideoFactory;
 
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
+import com.api.persistence.PersistenceConst;
 import com.api.persistence.db.DatabaseConnectionBean;
 import com.api.persistence.db.DynamicSqlApi;
 import com.api.persistence.db.DynamicSqlFactory;
 import com.api.persistence.db.orm.OrmBean;
 import com.api.util.RMT2Date;
+import com.api.util.RMT2File;
+import com.api.util.RMT2String;
 import com.api.util.UserTimestamp;
 
 /**
@@ -64,6 +74,44 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         super(client);
     }
     
+    @Override
+    public List<CommonMediaDto> fetchCommonMedia(String criteria) throws AudioVideoDaoException {
+        String sql = RMT2File.getFileContentsAsString("sql/FetchMediaInfo.sql");
+        sql = RMT2String.replaceAll(sql, criteria, PersistenceConst.SQL_PLACEHOLDER);
+        ResultSet rs = null;
+        try {
+            rs = this.client.executeSql(sql);
+        } catch (DatabaseException e) {
+            this.msg = "Error fetching common media information record(s)";
+            throw new AudioVideoDaoException(this.msg, e);
+        }
+
+        List<CommonMediaDto> list = new ArrayList<>();
+        try {
+            if (rs != null) {
+                while (rs.next()) {
+                    CommonMediaDto dto = new CommonMediaDto();
+                    dto.setResultType(rs.getInt("result_type"));
+                    dto.setResultTypeDescription(rs.getString("result_type_description"));
+                    dto.setArtistId(rs.getInt("artist_id"));
+                    dto.setArtistName(rs.getString("artist_name"));
+                    dto.setProjectId(rs.getInt("project_id"));
+                    dto.setProjectTitle(rs.getString("project_title"));
+                    dto.setTrackNumber(rs.getInt("track_number"));
+                    dto.setTrackName(rs.getString("track_name"));
+                    dto.setTrackHours(rs.getInt("track_hours"));
+                    dto.setTrackMinutes(rs.getInt("track_minutes"));
+                    dto.setTrackSeconds(rs.getInt("track_seconds"));
+                    list.add(dto);
+                }
+            }
+            return list;
+        } catch (SQLException e) {
+            this.msg = "Error fetching common media information from SQL resultset";
+            throw new AudioVideoDaoException(this.msg, e);
+        }
+    }
+
     /**
      * Fetches artist information from the <i>av_artist</i> table based on
      * selection criteria contained in <i>criteria</i>.
@@ -85,6 +133,9 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getName() != null) {
                 queryObj.addLikeClause(AvArtist.PROP_NAME, criteria.getName());
             }
+            if (criteria.getCriteria() != null) {
+                queryObj.addCustomCriteria(criteria.getCriteria());
+            }
         }
 
         // Query data
@@ -102,6 +153,102 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
         List<ArtistDto> list = new ArrayList<ArtistDto>();
         for (AvArtist item : results) {
             ArtistDto dto = Rmt2MediaDtoFactory.getAvArtistInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+
+    /**
+     * Fetches consolidated artists, which includes primary, non-primary, and
+     * video artists, information from the <i>vw_audio_video_artists</i> view
+     * based on selection criteria contained in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instnace of {@link VwArtistDto} containing values for
+     *            selection criteria.
+     * @return a List of {@link VwArtistDto} objects or null if no data was
+     *         found.
+     * @throws AudioVideoDaoException
+     */
+    @Override
+    public List<VwArtistDto> fetchVwArtist(VwArtistDto criteria) throws AudioVideoDaoException {
+        // Setup criteria
+        VwAudioVideoArtists queryObj = new VwAudioVideoArtists();
+        if (criteria != null) {
+            // The single search term is mutually exclusive to the other searc
+            // criteria items.
+            if (criteria.getSearchTerm() != null && !criteria.getSearchTerm().isEmpty()) {
+                String predicate = new StringBuilder()
+                        .append("(artist like '%")
+                        .append(criteria.getSearchTerm())
+                        .append("%'")
+                        .append(" or ")
+                        .append("project_title like '%")
+                        .append(criteria.getSearchTerm())
+                        .append("%'")
+                        .append(" or ")
+                        .append("track_title like '%")
+                        .append(criteria.getSearchTerm())
+                        .append("%') ")
+                        .toString();
+
+                queryObj.addCustomCriteria(predicate);
+            }
+            else {
+                if (criteria.getArtistId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_ARTISTID, criteria.getArtistId());
+                }
+                if (criteria.getArtistName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_ARTIST, criteria.getArtistName(), OrmBean.LIKE_BEGIN);
+                }
+                if (criteria.getProjectId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTID, criteria.getProjectId());
+                }
+                if (criteria.getProjectName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTITLE, criteria.getProjectName(), OrmBean.LIKE_BEGIN);
+                }
+                if (criteria.getProjectComments() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTCOMMENTS, criteria.getProjectComments(),
+                            OrmBean.LIKE_CONTAINS);
+                }
+                if (criteria.getTrackId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_TRACKID, criteria.getTrackId());
+                }
+                if (criteria.getTrackName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKTITLE, criteria.getTrackName(), OrmBean.LIKE_BEGIN);
+                }
+                if (criteria.getTrackComments() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_TRACKCOMMENTS, criteria.getTrackComments(),
+                            OrmBean.LIKE_CONTAINS);
+                }
+                if (criteria.getProjectTypeId() > 0) {
+                    queryObj.addCriteria(VwAudioVideoArtists.PROP_PROJECTTYPEID, criteria.getProjectTypeId());
+                }
+                if (criteria.getProjectTypeName() != null) {
+                    queryObj.addLikeClause(VwAudioVideoArtists.PROP_PROJECTTYPENAME, criteria.getProjectTypeName(),
+                            OrmBean.LIKE_CONTAINS);
+                }
+                if (criteria.getCriteria() != null) {
+                    queryObj.addCustomCriteria(criteria.getCriteria());
+                }
+            }
+        }
+
+        // Query data
+        List<VwAudioVideoArtists> results = null;
+        try {
+            results = this.client.retrieveList(queryObj);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new AudioVideoDaoException(e);
+        }
+
+        // Package results
+        List<VwArtistDto> list = new ArrayList<>();
+        for (VwAudioVideoArtists item : results) {
+            VwArtistDto dto = Rmt2MediaDtoFactory.getVwAudioVideoArtistsInstance(item);
             list.add(dto);
         }
         return list;
@@ -153,6 +300,12 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getContentPath() != null) {
                 queryObj.addCriteria(AvProject.PROP_CONTENTPATH, criteria.getContentPath());
             }
+            if (criteria.getProducer() != null) {
+                queryObj.addCriteria(AvProject.PROP_PRODUCER, criteria.getProducer());
+            }
+            if (criteria.getCriteria() != null) {
+                queryObj.addCustomCriteria(criteria.getCriteria());
+            }
         }
 
         // Query data
@@ -196,11 +349,20 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
             if (criteria.getProjectId() > 0) {
                 queryObj.addCriteria(AvTracks.PROP_PROJECTID, criteria.getProjectId());
             }
+            if (criteria.getGenreId() > 0) {
+                queryObj.addCriteria(AvTracks.PROP_GENREID, criteria.getGenreId());
+            }
             if (criteria.getTrackTitle() != null) {
                 queryObj.addLikeClause(AvTracks.PROP_TRACKTITLE, criteria.getTrackTitle());
             }
+            if (criteria.getTrackArtist() != null) {
+                queryObj.addLikeClause(AvTracks.PROP_TRACKARTIST, criteria.getTrackArtist());
+            }
             if (criteria.getComments() != null) {
                 queryObj.addLikeClause(AvTracks.PROP_COMMENTS, criteria.getComments(), OrmBean.LIKE_CONTAINS);
+            }
+            if (criteria.getCriteria() != null) {
+                queryObj.addCustomCriteria(criteria.getCriteria());
             }
         }
 
@@ -312,6 +474,50 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     }
 
     /**
+     * Fetches media type information from the <i>av_media_type</i> table based
+     * on the selection criteria contained in <i>criteria</i>.
+     * 
+     * @param criteria
+     *            an instnace of {@link MediaTypeDto} containing values for
+     *            selection criteria.
+     * @return a List of {@link MediaTypeDto} objects or null if no data was
+     *         found.
+     * @throws AudioVideoDaoException
+     */
+    @Override
+    public List<MediaTypeDto> fetchMediaType(MediaTypeDto criteria) throws AudioVideoDaoException {
+        // Setup criteria
+        AvMediaType queryObj = new AvMediaType();
+        if (criteria != null) {
+            if (criteria.getUid() > 0) {
+                queryObj.addCriteria(AvMediaType.PROP_MEDIATYPEID, criteria.getUid());
+            }
+            if (criteria.getDescritpion() != null) {
+                queryObj.addCriteria(AvMediaType.PROP_DESCRIPTION, criteria.getDescritpion());
+            }
+        }
+
+        // Query data
+        List<AvMediaType> results = null;
+        try {
+            results = this.client.retrieveList(queryObj);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new AudioVideoDaoException(e);
+        }
+
+        // Package results
+        List<MediaTypeDto> list = new ArrayList<>();
+        for (AvMediaType item : results) {
+            MediaTypeDto dto = Rmt2MediaDtoFactory.getAvMediaTypeInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+
+    /**
      * Creates a new or modifies an existing artist record in the
      * <i>av_artist</i> table.
      * <p>
@@ -359,6 +565,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     private int updateArtist(AvArtist artist) throws AudioVideoDaoException {
         int rc = 0;
         try {
+            artist.addCriteria(AvArtist.PROP_ARTISTID, artist.getArtistId());
             rc = this.client.updateRow(artist);
             return rc;
         } catch (DatabaseException e) {
@@ -419,14 +626,20 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     }
 
     private int updateProject(AvProject proj) throws AudioVideoDaoException {
+        ProjectDto criteria = Rmt2MediaDtoFactory.getAvProjectInstance(null);
+        criteria.setProjectId(proj.getProjectId());
+        List<ProjectDto> orig = this.fetchProject(criteria);
+
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
+            proj.setDateCreated(orig.get(0).getDateCreated());
             proj.setDateUpdated(ut.getDateCreated());
             proj.setUserId(ut.getLoginId());
             if (proj.getContentId() == 0) {
                 proj.setNull(AvProject.PROP_CONTENTID);
             }
+            proj.addCriteria(AvProject.PROP_PROJECTID, proj.getProjectId());
             rc = this.client.updateRow(proj);
             return rc;
         } catch (DatabaseException e) {
@@ -484,11 +697,16 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
     }
 
     private int updateTrack(AvTracks track) throws AudioVideoDaoException {
+        TracksDto dto = Rmt2MediaDtoFactory.getAvTrackInstance(null);
+        dto.setTrackId(track.getTrackId());
+        List<TracksDto> orig = this.fetchTrack(dto);
         int rc = 0;
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
+            track.setDateCreated(orig.get(0).getDateCreated());
             track.setDateUpdated(ut.getDateCreated());
             track.setUserId(ut.getLoginId());
+            track.addCriteria(AvTracks.PROP_TRACKID, track.getTrackId());
             rc = this.client.updateRow(track);
             return rc;
         } catch (DatabaseException e) {

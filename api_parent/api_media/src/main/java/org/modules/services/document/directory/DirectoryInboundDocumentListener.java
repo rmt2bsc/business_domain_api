@@ -15,7 +15,7 @@ import com.RMT2Base;
 public class DirectoryInboundDocumentListener extends RMT2Base implements Runnable {
     private static Logger logger = Logger.getLogger(DirectoryInboundDocumentListener.class);
 
-    private boolean continueToRun;
+    private volatile boolean continueToRun;
 
     private DocumentProcessingService srvc;
 
@@ -87,5 +87,15 @@ public class DirectoryInboundDocumentListener extends RMT2Base implements Runnab
      */
     public void stop() {
         this.continueToRun = false;
+    }
+
+    /**
+     * Indicates whether or not the thread is still running.
+     * 
+     * @return boolean <i>true<i/> when thread is running and <i>false<i/> when
+     *         thread has stopped
+     */
+    public boolean getStatus() {
+        return this.continueToRun;
     }
 }

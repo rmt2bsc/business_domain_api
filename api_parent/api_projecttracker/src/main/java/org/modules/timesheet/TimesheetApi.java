@@ -11,6 +11,7 @@ import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
 import org.dto.TimesheetHistDto;
 import org.dto.TimesheetHoursDto;
+import org.dto.TimesheetHoursSummaryDto;
 
 import com.api.foundation.TransactionApi;
 
@@ -63,6 +64,27 @@ public interface TimesheetApi extends TransactionApi {
     int getCurrentProjectId();
 
     /**
+     * Get in-memory timeheet object
+     * 
+     * @return {@link TimesheetDto}
+     */
+    TimesheetDto getTimesheet();
+
+    /**
+     * Get in-memory timeheet summary object
+     * 
+     * @return {@link TimesheetDto}
+     */
+    TimesheetHoursSummaryDto getTimesheetSummary();
+
+    /**
+     * Get in-memory timesheet hours
+     * 
+     * @return Map<{@link ProjectTaskDto}, List<{@link EventDto}>>
+     */
+    Map<ProjectTaskDto, List<EventDto>> getTimesheetHours();
+
+    /**
      * Retrieve a single TimesheetDto object by timesheet id.
      * 
      * @param timesheetId
@@ -92,7 +114,17 @@ public interface TimesheetApi extends TransactionApi {
     List<TimesheetDto> get(TimesheetDto criteria) throws TimesheetApiException;
     
     /**
-     * Retrieve TimesheetDto objects, which will contain extended timesheet data, based on selection criteria.
+     * Retrieve TimesheetHoursSummaryDto objects based on selection criteria.
+     * 
+     * @param criteria
+     * @return a List of {@link TimesheetHoursSummaryDto}
+     * @throws TimesheetApiException
+     */
+    List<TimesheetHoursSummaryDto> getTimesheetSummary(TimesheetHoursSummaryDto criteria) throws TimesheetApiException;
+
+    /**
+     * Retrieve TimesheetDto objects, which will contain extended timesheet
+     * data, based on selection criteria.
      * 
      * @param criteria
      * @return a List of {@link TimesheetDto} containing extended timesheet data
@@ -154,6 +186,16 @@ public interface TimesheetApi extends TransactionApi {
      * @throws TimesheetApiException
      */
     List<TimesheetHoursDto> getHours(Integer timesheetId) throws TimesheetApiException;
+
+    /**
+     * Updates the base timesheet only.
+     * 
+     * @param timesheet
+     *            instance of {@link TimesheetDto}
+     * @return The total number of timesheets effected.
+     * @throws TimesheetApiException
+     */
+    int updateTimesheet(TimesheetDto timesheet) throws TimesheetApiException;
 
     /**
      * Creates a new or modifies an existing timesheet including all hours for
@@ -260,7 +302,7 @@ public interface TimesheetApi extends TransactionApi {
      * Approves an employee's timesheet.
      * 
      * @param timesheetId
-     * @return the id of the previous timesheet status.
+     * @return the id of the timesheet's new status.
      * @throws TimesheetApiException
      */
     int approve(Integer timesheetId) throws TimesheetApiException;
@@ -269,7 +311,7 @@ public interface TimesheetApi extends TransactionApi {
      * Declines an employee's timesheet.
      * 
      * @param timesheetId
-     * @return the id of the previous timesheet status.
+     * @return the id of the timesheet's new status.
      * @throws TimesheetApiException
      */
     int decline(Integer timesheetId) throws TimesheetApiException;

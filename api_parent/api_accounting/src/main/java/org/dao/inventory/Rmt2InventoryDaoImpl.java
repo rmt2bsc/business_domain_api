@@ -10,6 +10,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
@@ -313,7 +314,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
 
     /**
      * Retrieves a list of inventory item status objects from the
-     * item_master_status_hist database table.
+     * vw_item_status_history database view.
      * <p>
      * A filter can be applied to the query using one or more properties
      * available in <i>criteria</i> as selection criteria. The following
@@ -341,13 +342,10 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      *             General data access errors
      */
     @Override
-    public List<ItemMasterStatusHistDto> fetch(ItemMasterStatusHistDto criteria)
-            throws InventoryDaoException {
-        ItemMasterStatusHist obj = InventoryDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(ItemMasterStatusHist.PROP_DATECREATED,
-                ItemMasterStatusHist.ORDERBY_DESCENDING);
+    public List<ItemMasterStatusHistDto> fetch(ItemMasterStatusHistDto criteria) throws InventoryDaoException {
+        VwItemStatusHistory obj = InventoryDaoFactory.createVwItemHistCriteria(criteria);
         // Retrieve Data
-        List<ItemMasterStatusHist> results = null;
+        List<VwItemStatusHistory> results = null;
         try {
             results = this.client.retrieveList(obj);
             if (results == null) {
@@ -358,9 +356,8 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
         }
 
         List<ItemMasterStatusHistDto> list = new ArrayList<ItemMasterStatusHistDto>();
-        for (ItemMasterStatusHist item : results) {
-            ItemMasterStatusHistDto dto = Rmt2InventoryDtoFactory
-                    .createItemStatusHistoryInstance(item);
+        for (VwItemStatusHistory item : results) {
+            ItemMasterStatusHistDto dto = Rmt2InventoryDtoFactory.createItemStatusHistoryInstance(item);
             list.add(dto);
         }
         return list;
@@ -372,20 +369,19 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      * @see org.dao.inventory.InventoryDao#fetchCurrentItemStatusHistory(int)
      */
     @Override
-    public ItemMasterStatusHistDto fetchCurrentItemStatusHistory(
-            int itemMasterId) throws InventoryDaoException {
-        ItemMasterStatusHist obj = new ItemMasterStatusHist();
-        obj.addCriteria(ItemMasterStatusHist.PROP_ITEMID, itemMasterId);
+    public ItemMasterStatusHistDto fetchCurrentItemStatusHistory(int itemMasterId) throws InventoryDaoException {
+        VwItemStatusHistory obj = new VwItemStatusHistory();
+        obj.addCriteria(VwItemStatusHistory.PROP_ITEMID, itemMasterId);
         obj.setItemId(itemMasterId);
-        obj.addCriteria(ItemMasterStatusHist.PROP_ENDDATE,
+        obj.addCriteria(VwItemStatusHistory.PROP_ENDDATE,
                 ItemMasterStatusHist.DB_NULL);
         obj.setEndDate(null);
-        obj.addOrderBy(ItemMasterStatus.PROP_DESCRIPTION,
+        obj.addOrderBy(VwItemStatusHistory.PROP_DESCRIPTION,
                 ItemMasterStatus.ORDERBY_ASCENDING);
         // Retrieve Data
-        ItemMasterStatusHist results = null;
+        VwItemStatusHistory results = null;
         try {
-            results = (ItemMasterStatusHist) this.client.retrieveObject(obj);
+            results = (VwItemStatusHistory) this.client.retrieveObject(obj);
             if (results == null) {
                 return null;
             }
@@ -996,8 +992,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
      *             General data access errors
      */
     @Override
-    public int delete(ItemMasterStatusHistDto criteria)
-            throws InventoryDaoException {
+    public int delete(ItemMasterStatusHistDto criteria) throws InventoryDaoException {
         ItemMasterStatusHist obj = InventoryDaoFactory.createCriteria(criteria);
         return this.client.deleteRow(obj);
     }

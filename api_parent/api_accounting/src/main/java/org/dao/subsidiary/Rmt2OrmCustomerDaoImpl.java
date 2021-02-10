@@ -51,7 +51,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     public CustomerDto fetch(int customerId) throws CustomerDaoException {
         // Retrieve customer data
         Customer criteria = new Customer();
-        criteria.setCustomerId(customerId);
+        criteria.addCriteria(Customer.PROP_CUSTOMERID, customerId);
         try {
             Customer results = (Customer) this.client.retrieveObject(criteria);
             if (results == null) {
@@ -84,7 +84,18 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
                 ormCust.addCriteria(Customer.PROP_BUSINESSID, criteria.getContactId());
             }
             if (criteria.getAccountNo() != null) {
-                ormCust.addCriteria(Customer.PROP_ACCOUNTNO, criteria.getAccountNo());
+                ormCust.addLikeClause(Customer.PROP_ACCOUNTNO, criteria.getAccountNo());
+            }
+            if (criteria.getContactName() != null) {
+                ormCust.addInClause(Customer.PROP_BUSINESSID,
+                        criteria.getContactIdList().toArray(new Integer[criteria.getContactIdList().size()]));
+            }
+            if (criteria.getDescription() != null) {
+                ormCust.addLikeClause(Customer.PROP_DESCRIPTION, criteria.getDescription());
+            }
+            if (criteria.getContactIdList() != null) {
+                ormCust.addInClause(Customer.PROP_BUSINESSID,
+                        criteria.getContactIdList().toArray(new Integer[criteria.getContactIdList().size()]));
             }
         }
 
@@ -272,8 +283,7 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      */
     @Override
     public double calculateBalance(int customerId) throws SubsidiaryDaoException {
-        String sql = RMT2String.replace(AccountingSqlConst.SQL_CUSTOMER_BALANCE,
-                String.valueOf(customerId), "$1");
+        String sql = RMT2String.replace(AccountingSqlConst.SQL_CUSTOMER_BALANCE, String.valueOf(customerId), "$1");
         double bal = 0;
         try {
             ResultSet rs = this.client.executeSql(sql);

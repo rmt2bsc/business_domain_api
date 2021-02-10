@@ -23,8 +23,8 @@ import org.dto.EmployeeDto;
 import org.dto.EmployeeTitleDto;
 import org.dto.EmployeeTypeDto;
 import org.dto.EventDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -128,10 +128,10 @@ public class ProjectAdminDaoFactory extends RMT2Base {
 
     /**
      * Creates and returns an <i>ProjProject</i> object containing selection
-     * criteria obtained from an instance of <i>ProjectDto</i>.
+     * criteria obtained from an instance of <i>Project2Dto</i>.
      * 
      * @param criteria
-     *            an instance of {@link ProjectDto} which the following
+     *            an instance of {@link Project2Dto} which the following
      *            properties are recognized:
      *            <ul>
      *            <li>clientId</li>
@@ -142,7 +142,7 @@ public class ProjectAdminDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link ProjProject}
      */
-    public static final ProjProject createCriteria(ProjectDto criteria) {
+    public static final ProjProject createCriteria(Project2Dto criteria) {
         ProjProject obj = new ProjProject();
         if (criteria != null) {
             if (criteria.getClientId() > 0) {
@@ -590,6 +590,14 @@ public class ProjectAdminDaoFactory extends RMT2Base {
                 obj.addCriteria(VwEmployeeProjects.PROP_PROJENDDATE,
                         criteria.getProjectEndDate());
             }
+            if (criteria.getHourlyRate() > 0) {
+                obj.addCriteria(VwEmployeeProjects.PROP_PAYRATE,
+                        criteria.getHourlyRate());
+            }
+            if (criteria.getHourlyOverRate() > 0) {
+                obj.addCriteria(VwEmployeeProjects.PROP_OTPAYRATE,
+                        criteria.getHourlyOverRate());
+            }
             if (criteria.getCriteria() != null) {
                 obj.addCustomCriteria(criteria.getCriteria());
             }
@@ -775,13 +783,13 @@ public class ProjectAdminDaoFactory extends RMT2Base {
     }
 
     /**
-     * Create a ProjProject object from a ProjectDto object.
+     * Create a ProjProject object from a Project2Dto object.
      * 
      * @param dto
-     *            an instance of {@link ProjectDto}
+     *            an instance of {@link Project2Dto}
      * @return an instance of {@link ProjProject}
      */
-    public static final ProjProject createOrm(ProjectDto dto) {
+    public static final ProjProject createOrm(Project2Dto dto) {
         ProjProject obj = new ProjProject();
         obj.setProjId(dto.getProjId());
         obj.setClientId(dto.getClientId());
@@ -804,6 +812,7 @@ public class ProjectAdminDaoFactory extends RMT2Base {
     public static final ProjEmployee createOrm(EmployeeDto dto) {
         ProjEmployee obj = new ProjEmployee();
         obj.setEmpId(dto.getEmployeeId());
+        obj.setPersonId(dto.getPersonId());
         obj.setEmpTitleId(dto.getEmployeeTitleId());
         obj.setEmpTypeId(dto.getEmployeeTypeId());
         obj.setManagerId(dto.getManagerId());
@@ -817,9 +826,6 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         obj.setEmail(dto.getEmployeeEmail());
         obj.setCompanyName(dto.getEmployeeCompanyName());
         obj.setIsManager(dto.getIsManager());
-        obj.setDateCreated(dto.getDateCreated());
-        obj.setDateUpdated(dto.getDateUpdated());
-        obj.setUserId(dto.getUpdateUserId());
         return obj;
     }
 
@@ -883,15 +889,10 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         obj.setProjId(dto.getProjId());
         obj.setEffectiveDate(dto.getProjEmpEffectiveDate());
         obj.setEndDate(dto.getProjEmpEndDate());
-        obj.setHourlyRate(dto.getClientBillRate());
-        obj.setHourlyOverRate(dto.getClientOtBillRate());
+        obj.setHourlyRate(dto.getHourlyRate());
+        obj.setHourlyOverRate(dto.getHourlyOverRate());
         obj.setFlatRate(dto.getFlatRate());
         obj.setComments(dto.getComments());
-        obj.setDateCreated(dto.getDateCreated());
-        obj.setDateUpdated(dto.getDateUpdated());
-        obj.setUserId(dto.getUpdateUserId());
-        obj.setIpCreated(dto.getIpCreated());
-        obj.setIpUpdated(dto.getIpUpdated());
         return obj;
     }
 

@@ -221,4 +221,14 @@ class ItemStatusHistRmt2OrmAdapter extends TransactionDtoImpl implements
         return this.i.getReason();
     }
 
+    @Override
+    public void setItemStatusName(String value) {
+        return;
+
+    }
+
+    @Override
+    public String getItemStatusName() {
+        return null;
+    }
 }

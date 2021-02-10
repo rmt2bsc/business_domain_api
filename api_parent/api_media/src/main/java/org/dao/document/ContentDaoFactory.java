@@ -1,5 +1,7 @@
 package org.dao.document;
 
+import org.modules.MediaConstants;
+
 import com.RMT2Base;
 import com.SystemException;
 import com.api.util.RMT2BeanUtility;
@@ -53,17 +55,27 @@ public class ContentDaoFactory extends RMT2Base {
     }
 
     /**
-     * Creates an instance of the {@link ContentDao} using the RMT2 ORM embedded
-     * media file document implementation.
+     * Creates an instance of the {@link ContentDao} using the RMT2 Sybase
+     * Adaptive Server Anywhere media implementation.
      * 
      * @return an instance of {@link ContentDao}
      */
-    public ContentDao createDatabaseMediaDaoInstance() {
-        return new Rmt2OrmDatabaseMediaDaoImpl();
+    public ContentDao createSybaseAsaDatabaseMediaDaoInstance() {
+        return new Rmt2SybaseMediaDaoImpl(MediaConstants.APP_NAME);
     }
 
     /**
-     * Creates an instance of the {@link ContentDao} using the RMT2 ORM External
+     * Creates an instance of the {@link ContentDao} using the RMT2 Sybase
+     * Adaptive Server Anywhere media implementation.
+     * 
+     * @return an instance of {@link ContentDao}
+     */
+    public ContentDao createSybaseAsaDatabaseMediaDaoInstance(String appName) {
+        return new Rmt2SybaseMediaDaoImpl(appName);
+    }
+
+    /**
+     * Creates an instance of the {@link ContentDao} using the RMT2 ORM embedded
      * media file document implementation.
      * 
      * @return an instance of {@link ContentDao}

@@ -18,6 +18,7 @@ import com.api.messaging.email.EmailMessageBean;
  * @author Roy Terrell
  * 
  */
+@Deprecated
 public interface TimesheetTransmissionApi {
 
     final String SUBJECT_TRANSMISSION_PREFIX = "Time Sheet Submission for ";
@@ -38,6 +39,7 @@ public interface TimesheetTransmissionApi {
      *             Error occurs sending timesheet data to its designated
      *             recipient.
      */
+    @Deprecated
     Object send(EmailMessageBean message) throws TimesheetApiException, TimesheetTransmissionException;
 
     /**
@@ -62,6 +64,7 @@ public interface TimesheetTransmissionApi {
      *             Error occurs sending timesheet data to its designated
      *             recipient.
      */
+    @Deprecated
     EmailMessageBean createSubmitMessage(TimesheetDto timesheet, EmployeeDto employee, EmployeeDto manager, 
             ClientDto client, Map<ProjectTaskDto, List<EventDto>> hours) throws TimesheetTransmissionException;
 

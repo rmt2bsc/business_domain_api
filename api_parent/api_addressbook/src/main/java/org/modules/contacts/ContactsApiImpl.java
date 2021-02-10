@@ -71,9 +71,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             this.msg = "Error retrieving list of generic contacts";
             logger.error(this.msg, e);
             throw new ContactsApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -102,9 +99,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             this.msg = "Error retrieving generic contact by contact id, " + contactId;
             logger.error(this.msg, e);
             throw new ContactsApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -151,9 +145,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             this.msg = "Error retrieving list of business contacts";
             logger.error(this.msg, e);
             throw new ContactsApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -185,9 +176,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             this.msg = "Error retrieving list of contacts using DTO as criteria";
             logger.error(this.msg, e);
             throw new ContactsApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -225,9 +213,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             this.msg = "Error occurred updating contact, " + contact.getContactName();
             logger.error(this.msg, e);
             throw new ContactsApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 
@@ -278,9 +263,6 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
             this.msg = "Error occurred deleting contact, " + contact.getContactName();
             logger.error(this.msg, e);
             throw new ContactsApiException(this.msg, e);
-        } finally {
-            dao.close();
-            dao = null;
         }
     }
 }

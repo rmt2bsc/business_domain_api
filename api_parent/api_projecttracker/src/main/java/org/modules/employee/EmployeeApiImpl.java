@@ -10,6 +10,7 @@ import org.dao.ProjecttrackerDaoException;
 import org.dao.admin.EmployeeDaoException;
 import org.dao.admin.ProjectAdminDao;
 import org.dao.admin.ProjectAdminDaoFactory;
+import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dto.ClientDto;
 import org.dto.EmployeeDto;
 import org.dto.EmployeeTitleDto;
@@ -265,7 +266,8 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
     public List<ClientDto> getClients(Integer empId) throws EmployeeApiException {
         this.validateEmployeeId(empId);
 
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        VwEmployeeProjects vep = new VwEmployeeProjects();
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
         criteria.setEmpId(empId);
 
         List<ProjectEmployeeDto> peList = this.getProjectEmployee(criteria);
@@ -314,7 +316,8 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         } catch (VerifyException e) {
             throw new InvalidDataException("Empoyee-Project Id must greater than zero");
         }
-        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+        VwEmployeeProjects vep = new VwEmployeeProjects();
+        ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
         criteria.setEmpProjId(empProjId);
         List<ProjectEmployeeDto> results;
         StringBuilder buf = new StringBuilder();
@@ -386,8 +389,8 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         try {
             try {
                 Verifier.verifyPositive(employee.getEmployeeId());
-                EmployeeDto delta = this.applyDelta(employee);
-                rc = this.dao.maintainEmployee(delta);
+                // EmployeeDto delta = this.applyDelta(employee);
+                rc = this.dao.maintainEmployee(employee);
             }
             catch (VerifyException e) {
                 rc = this.dao.maintainEmployee(employee);
@@ -507,7 +510,8 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         // If new, make sure that we are not trying to duplicate the employee/project combination
         if (projEmployee.getEmpProjId() == 0) {
             try {
-                ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+                VwEmployeeProjects vep = new VwEmployeeProjects();
+                ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
                 criteria.setEmpId(projEmployee.getEmpId());
                 criteria.setProjId(projEmployee.getProjId());
                 List<ProjectEmployeeDto> results = this.getProjectEmployee(criteria);
@@ -526,24 +530,6 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
             }            
         }
         return;
-    }
-
-    private EmployeeDto applyDelta(EmployeeDto employee) throws EmployeeApiException {
-        EmployeeDto delta = this.getEmployee(employee.getEmployeeId());
-        if (delta == null) {
-            this.msg = "Employee API update failed for employee.  The employee does not exist by employee id: "
-                    + employee.getEmployeeId();
-            throw new InvalidEmployeeException(this.msg);
-        }
-        // Update employee object obtained from data store with changes.
-        delta.setManagerId(employee.getManagerId());
-        delta.setEmployeeTitleId(employee.getEmployeeTitleId());
-        delta.setEmployeeTypeId(employee.getEmployeeTypeId());
-        delta.setSsn(employee.getSsn());
-        delta.setStartDate(employee.getStartDate());
-        delta.setTerminationDate(employee.getTerminationDate());
-        delta.setEmployeeEmail(employee.getEmployeeEmail());
-        return delta;
     }
 
     private ProjectEmployeeDto applyDelta(ProjectEmployeeDto projEmployee) throws EmployeeApiException {

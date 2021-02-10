@@ -312,6 +312,10 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
         List<AvProject> list = this.setupMockDataSingleProject(
                 AvMediaMockDataFactory.TEST_PROJECT_ID,
                 AvMediaMockDataFactory.TEST_ARTIST_ID, "New Project/Album");
+
+        when(this.mockPersistenceClient.retrieveList(isA(AvProject.class)))
+                .thenReturn(list);
+
         AudioVideoApi api = null;
         ProjectDto obj = Rmt2MediaDtoFactory.getAvProjectInstance(list.get(0));
         int rc = 0;
@@ -340,6 +344,10 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
                 AvMediaMockDataFactory.TEST_PROJECT_ID,
                 AvMediaMockDataFactory.TEST_ARTIST_ID,
                 "Existing Project/Album");
+
+        when(this.mockPersistenceClient.retrieveList(isA(AvProject.class)))
+                .thenReturn(list);
+
         AudioVideoApi api = null;
         ProjectDto obj = Rmt2MediaDtoFactory.getAvProjectInstance(list.get(0));
         try {
@@ -558,6 +566,10 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
         List<AvTracks> list = this.setupMockDataSingleTrack(
                 AvMediaMockDataFactory.TEST_TRACK_ID,
                 AvMediaMockDataFactory.TEST_PROJECT_ID, 1, "Track Title");
+
+        when(this.mockPersistenceClient.retrieveList(isA(AvTracks.class)))
+                .thenReturn(list);
+
         AudioVideoApi api = null;
         TracksDto obj = Rmt2MediaDtoFactory.getAvTrackInstance(list.get(0));
         int rc = 0;
@@ -579,12 +591,17 @@ public class AudioVideoMetaDataApiUpdateTest extends AvMediaMockData {
     @Test
     public void testError_Track_Update_DB_Access_Fault() {
         String errMsg = "A Database error occurred updating track";
+
         when(this.mockPersistenceClient.updateRow(isA(AvTracks.class)))
                .thenThrow(new DatabaseException(errMsg));
         
         List<AvTracks> list = this.setupMockDataSingleTrack(
                 AvMediaMockDataFactory.TEST_TRACK_ID,
                 AvMediaMockDataFactory.TEST_PROJECT_ID, 1, "Track Title");
+
+        when(this.mockPersistenceClient.retrieveList(isA(AvTracks.class)))
+                .thenReturn(list);
+
         AudioVideoApi api = null;
         TracksDto obj = Rmt2MediaDtoFactory.getAvTrackInstance(list.get(0));
         try {

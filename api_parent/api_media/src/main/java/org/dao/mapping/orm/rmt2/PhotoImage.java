@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -22,10 +21,10 @@ public class PhotoImage extends OrmBean {
 
 	// Property name constants that belong to respective DataSource, PhotoImageView
 
-/** The property name constant equivalent to property, ImageId, of respective DataSource view. */
-  public static final String PROP_IMAGEID = "ImageId";
-/** The property name constant equivalent to property, EventId, of respective DataSource view. */
-  public static final String PROP_EVENTID = "EventId";
+/** The property name constant equivalent to property, ImageId2, of respective DataSource view. */
+  public static final String PROP_IMAGEID2 = "ImageId2";
+/** The property name constant equivalent to property, EventId3, of respective DataSource view. */
+  public static final String PROP_EVENTID3 = "EventId3";
 /** The property name constant equivalent to property, MimeTypeId, of respective DataSource view. */
   public static final String PROP_MIMETYPEID = "MimeTypeId";
 /** The property name constant equivalent to property, DirPath, of respective DataSource view. */
@@ -36,8 +35,6 @@ public class PhotoImage extends OrmBean {
   public static final String PROP_FILESIZE = "FileSize";
 /** The property name constant equivalent to property, FileExt, of respective DataSource view. */
   public static final String PROP_FILEEXT = "FileExt";
-/** The property name constant equivalent to property, Url, of respective DataSource view. */
-  public static final String PROP_URL = "Url";
 /** The property name constant equivalent to property, DateCreated, of respective DataSource view. */
   public static final String PROP_DATECREATED = "DateCreated";
 /** The property name constant equivalent to property, DateUpdated, of respective DataSource view. */
@@ -47,10 +44,10 @@ public class PhotoImage extends OrmBean {
 
 
 
-	/** The javabean property equivalent of database column photo_image.image_id */
-  private int imageId;
-/** The javabean property equivalent of database column photo_image.event_id */
-  private int eventId;
+	/** The javabean property equivalent of database column photo_image.image_id2 */
+  private int imageId2;
+/** The javabean property equivalent of database column photo_image.event_id3 */
+  private int eventId3;
 /** The javabean property equivalent of database column photo_image.mime_type_id */
   private int mimeTypeId;
 /** The javabean property equivalent of database column photo_image.dir_path */
@@ -61,8 +58,6 @@ public class PhotoImage extends OrmBean {
   private int fileSize;
 /** The javabean property equivalent of database column photo_image.file_ext */
   private String fileExt;
-/** The javabean property equivalent of database column photo_image.url */
-  private String url;
 /** The javabean property equivalent of database column photo_image.date_created */
   private java.util.Date dateCreated;
 /** The javabean property equivalent of database column photo_image.date_updated */
@@ -81,28 +76,28 @@ public class PhotoImage extends OrmBean {
 	super();
  }
 /**
- * Sets the value of member variable imageId
+ * Sets the value of member variable imageId2
  */
-  public void setImageId(int value) {
-    this.imageId = value;
+  public void setImageId2(int value) {
+    this.imageId2 = value;
   }
 /**
- * Gets the value of member variable imageId
+ * Gets the value of member variable imageId2
  */
-  public int getImageId() {
-    return this.imageId;
+  public int getImageId2() {
+    return this.imageId2;
   }
 /**
- * Sets the value of member variable eventId
+ * Sets the value of member variable eventId3
  */
-  public void setEventId(int value) {
-    this.eventId = value;
+  public void setEventId3(int value) {
+    this.eventId3 = value;
   }
 /**
- * Gets the value of member variable eventId
+ * Gets the value of member variable eventId3
  */
-  public int getEventId() {
-    return this.eventId;
+  public int getEventId3() {
+    return this.eventId3;
   }
 /**
  * Sets the value of member variable mimeTypeId
@@ -165,18 +160,6 @@ public class PhotoImage extends OrmBean {
     return this.fileExt;
   }
 /**
- * Sets the value of member variable url
- */
-  public void setUrl(String value) {
-    this.url = value;
-  }
-/**
- * Gets the value of member variable url
- */
-  public String getUrl() {
-    return this.url;
-  }
-/**
  * Sets the value of member variable dateCreated
  */
   public void setDateCreated(java.util.Date value) {
@@ -225,10 +208,10 @@ public boolean equals(Object obj) {
       return false;
    }
    final PhotoImage other = (PhotoImage) obj; 
-   if (EqualityAssistant.notEqual(this.imageId, other.imageId)) {
+   if (EqualityAssistant.notEqual(this.imageId2, other.imageId2)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.eventId, other.eventId)) {
+   if (EqualityAssistant.notEqual(this.eventId3, other.eventId3)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.mimeTypeId, other.mimeTypeId)) {
@@ -246,34 +229,29 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.fileExt, other.fileExt)) {
       return false;
    }
-   if (EqualityAssistant.notEqual(this.url, other.url)) {
-      return false;
-   }
    return true; 
 } 
 
 @Override
 public int hashCode() {
-   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.imageId),
-               HashCodeAssistant.hashObject(this.eventId),
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.imageId2),
+               HashCodeAssistant.hashObject(this.eventId3),
                HashCodeAssistant.hashObject(this.mimeTypeId),
                HashCodeAssistant.hashObject(this.dirPath),
                HashCodeAssistant.hashObject(this.fileName),
                HashCodeAssistant.hashObject(this.fileSize),
-               HashCodeAssistant.hashObject(this.fileExt),
-               HashCodeAssistant.hashObject(this.url));
+               HashCodeAssistant.hashObject(this.fileExt));
 } 
 
 @Override
 public String toString() {
-   return "PhotoImage [imageId=" + imageId + 
-          ", eventId=" + eventId + 
+   return "PhotoImage [imageId2=" + imageId2 + 
+          ", eventId3=" + eventId3 + 
           ", mimeTypeId=" + mimeTypeId + 
           ", dirPath=" + dirPath + 
           ", fileName=" + fileName + 
           ", fileSize=" + fileSize + 
-          ", fileExt=" + fileExt + 
-          ", url=" + url  + "]";
+          ", fileExt=" + fileExt  + "]";
 }
 
 /**

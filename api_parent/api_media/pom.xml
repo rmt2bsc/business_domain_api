@@ -33,32 +33,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>rmt2.mp3.lib</groupId>
-			<artifactId>mp3.entagged</artifactId>
-			<version>0.35</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/${mp3LibPath}/Entagged-0.35.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>rmt2.mp3.lib</groupId>
-			<artifactId>mp3.jid3</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/${mp3LibPath}/JID3.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>rmt2.mp3.lib</groupId>
-			<artifactId>mp3.MP3Tag</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/${mp3LibPath}/MP3Tag-0.3.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>rmt2.mp3.lib</groupId>
-			<artifactId>mp3.myid3</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/${mp3LibPath}/myid3.jar</systemPath>
+			<groupId>com.mpatric</groupId>
+			<artifactId>mp3agic</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -87,8 +64,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -221,20 +221,20 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
         VwStateCountry s = new VwStateCountry();
         if (criteria != null) {
             if (criteria.getCountryId() > 0) {
-                s.addCriteria(Country.PROP_COUNTRYID, criteria.getCountryId());
+                s.addCriteria(VwStateCountry.PROP_COUNTRYID, criteria.getCountryId());
             }
             if (criteria.getCountryName() != null) {
-                s.addLikeClause(Country.PROP_NAME, criteria.getCountryName());
+                s.addLikeClause(VwStateCountry.PROP_COUNTRYNAME, criteria.getCountryName());
             }
 
             if (criteria.getStateId() > 0) {
-                s.addCriteria(State.PROP_STATEID, criteria.getStateId());
+                s.addCriteria(VwStateCountry.PROP_STATEID, criteria.getStateId());
             }
             if (criteria.getStateCode() != null) {
-                s.addCriteria(State.PROP_ABBRCODE, criteria.getStateCode());
+                s.addCriteria(VwStateCountry.PROP_STATECODE, criteria.getStateCode());
             }
             if (criteria.getStateName() != null) {
-                s.addLikeClause(State.PROP_STATENAME, criteria.getStateName());
+                s.addLikeClause(VwStateCountry.PROP_STATENAME, criteria.getStateName());
             }
         }
         else {

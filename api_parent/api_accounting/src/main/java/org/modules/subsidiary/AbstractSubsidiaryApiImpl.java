@@ -129,8 +129,7 @@ abstract class AbstractSubsidiaryApiImpl<E> extends AbstractTransactionApiImpl
             contactDto.setPhoneCompany(criteria.getPhoneCompany());
         }
         
-        ContactsApiFactory f = new ContactsApiFactory();
-        ContactsApi api = f.createApi(AddressBookConstants.APP_NAME);
+        ContactsApi api = ContactsApiFactory.createApi(AddressBookConstants.APP_NAME);
         List<ContactDto> results = null;
         try {
             results = api.getContact(contactDto);

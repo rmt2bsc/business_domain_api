@@ -300,12 +300,14 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     @Test
     public void testFetchByBusinessId() {
         Customer mockCustCriteria = new Customer();
-        mockCustCriteria.setBusinessId(1351);
+        // mockCustCriteria.setBusinessId(1351);
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
-        this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
+        mockContactCritereia.setBusinessId(1351);
+        // this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia,
+        // mockCustCriteria);
+        this.setupSingleSubsidiaryContactInfoExactFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         CustomerDto results = null;
         try {
             results = api.getByBusinessId(1351);
@@ -323,8 +325,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         CustomerDto results = null;
         try {
             results = api.getByBusinessId(9999);
@@ -341,8 +342,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByBusinessId(1351);
             Assert.fail("Expected exception due to too many customer records returned");
@@ -354,8 +354,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByNullBusinessId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByBusinessId(null);
             Assert.fail("Expected exception due to null business id");
@@ -367,8 +366,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByZeroBusinessId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByBusinessId(0);
             Assert.fail("Expected exception due to business id equals zero");
@@ -380,8 +378,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByNegativeBusinessId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByBusinessId(0);
             Assert.fail("Expected exception due to negative business id");
@@ -398,8 +395,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         CustomerDto results = null;
         try {
             results = api.getByCustomerId(200);
@@ -417,8 +413,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         CustomerDto results = null;
         try {
             results = api.getByCustomerId(999);
@@ -435,8 +430,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByCustomerId(200);
             Assert.fail("Expected exception due to too many customer records returned");
@@ -448,8 +442,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByNullCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByCustomerId(null);
             Assert.fail("Expected exception due to null customer id");
@@ -461,8 +454,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByZeroCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByCustomerId(0);
             Assert.fail("Expected exception due to customer id equals zero");
@@ -474,8 +466,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByNegativeCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByCustomerId(0);
             Assert.fail("Expected exception due to negative customer id");
@@ -492,8 +483,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupSingleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         CustomerDto results = null;
         try {
             results = api.getByUid(200);
@@ -511,8 +501,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupNotFoundSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         CustomerDto results = null;
         try {
             results = api.getByUid(999);
@@ -529,8 +518,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         VwBusinessAddress mockContactCritereia = new VwBusinessAddress();
         this.setupMultipleSubsidiaryContactInfoFetch(mockContactCritereia, mockCustCriteria);
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByUid(200);
             Assert.fail("Expected exception due to too many customer records returned");
@@ -542,8 +530,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByNullUID() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByUid(null);
             Assert.fail("Expected exception due to null UID");
@@ -555,8 +542,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByZeroUID() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(CommonAccountingConst.APP_NAME);
+        CreditorApi api = SubsidiaryApiFactory.createCreditorApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByUid(0);
             Assert.fail("Expected exception due to UID equals zero");
@@ -568,8 +554,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchByNegativeUID() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getByUid(-100);
             Assert.fail("Expected exception due to negative UID");
@@ -593,8 +578,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Fetch customer balance test case setup failed");
         }
 
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
        double results = 0;
         try {
             results = api.getBalance(1350);
@@ -617,8 +601,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Fetch creditor balance test case setup failed");
         }
 
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
        double results = 0;
         try {
             results = api.getBalance(1350);
@@ -631,8 +614,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testGetBalanceWithNullCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getBalance(null);
             Assert.fail("Expected exception due to negative creditor id");
@@ -644,8 +626,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testGetBalanceWithZeroCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getBalance(0);
             Assert.fail("Expected exception due to creditor id is zero");
@@ -657,8 +638,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testGetBalanceWithNegativeCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getBalance(-1350);
             Assert.fail("Expected exception due to creditor id is zero");
@@ -679,8 +659,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Customer transaction history fetch test case setup failed");
         }
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         List<CustomerXactHistoryDto> results = null;
         try {
             results = api.getTransactionHistory(100);
@@ -702,8 +681,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Customer transaction history fetch test case setup failed");
         }
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         List<CustomerXactHistoryDto> results = null;
         try {
             results = api.getTransactionHistory(100);
@@ -715,8 +693,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchTransactionHistoryWithNullCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getTransactionHistory(null);
             Assert.fail("Expected exception due to customer id is null");
@@ -728,8 +705,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchTransactionHistoryWithZeroCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getTransactionHistory(0);
             Assert.fail("Expected exception due to customer id is zero");
@@ -741,8 +717,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testFetchTransactionHistoryWithNegativeCustomerId() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.getTransactionHistory(-123);
             Assert.fail("Expected exception due to creditor id is zero");
@@ -778,8 +753,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         }
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
             rc = api.update(criteria);
@@ -806,8 +780,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to general database error occurre while fetching GL Account information");
@@ -833,8 +806,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to fetching GL Account information was not found");
@@ -869,8 +841,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to fetched GL Account contains an invalid account type id");
@@ -899,8 +870,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
                 "9723333333", "royroy@gte.net", "75-1234567", "ABCCompany.com");
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to business id is invalid");
@@ -912,8 +882,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testCreateNewCreditorWithNullCreditorObject() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(null);
             Assert.fail("Expected exception due to customer input object is null");
@@ -941,8 +910,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         Customer updateCustomer = AccountingMockDataFactory.createMockOrmCustomer(200, 1351, 0,
                 333, "C1234589", "Customer 1");
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
             rc = api.update(criteria);
@@ -962,8 +930,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         Customer updateCustomer = AccountingMockDataFactory.createMockOrmCustomer(200, 1351, 0,
                 333, "C1234589", "Customer 1");
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(criteria);
             Assert.fail("Expected exception due to customer ws not found");
@@ -975,8 +942,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testUpdateExistingCustomerWithInvalidCustomerObject() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.update(null);
             Assert.fail("Expected exception due to input customer object is null");
@@ -1000,8 +966,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
 
         CustomerDto deleteCustomer = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         deleteCustomer.setCustomerId(1350);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
             rc = api.delete(deleteCustomer);
@@ -1013,8 +978,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     
     @Test
     public void testDeleteCustomerWithNullCustomerObject() {
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         try {
             api.delete(null);
             Assert.fail("Expected exception due to input customer object is null");
@@ -1035,8 +999,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Fetch all customers with exception test case setup failed");
         }
 
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         List<CustomerDto> results = null;
         try {
@@ -1058,8 +1021,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
             Assert.fail("Customer transaction history fetch with exception test case setup failed");
         }
         
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         List<CustomerXactHistoryDto> results = null;
         try {
             results = api.getTransactionHistory(100);
@@ -1088,8 +1050,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         Customer updateCustomer = AccountingMockDataFactory.createMockOrmCustomer(200, 1351, 0,
                 333, "C1234589", "Customer 1");
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(updateCustomer, null);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
             rc = api.update(criteria);
@@ -1127,8 +1088,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         }
 
         CustomerDto criteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(cust, bus);
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(CommonAccountingConst.APP_NAME);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
         int rc = 0;
         try {
             rc = api.update(criteria);

@@ -1,14 +1,19 @@
 package org.rmt2.api;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.mockito.Mockito;
 import org.modules.ProjectTrackerConfigurator;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
+import com.api.config.AppPropertyPool;
+import com.api.config.ConfigConstants;
 import com.api.persistence.DaoClient;
 import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -20,6 +25,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  *
  */
 
+@PrepareForTest({ Rmt2OrmClientFactory.class, AppPropertyPool.class })
 public class BaseProjectTrackerDaoTest {
     protected PersistenceClient mockPersistenceClient;
     protected DaoClient mockDaoClient;
@@ -41,6 +47,14 @@ public class BaseProjectTrackerDaoTest {
         ProjectTrackerConfigurator configurator = new ProjectTrackerConfigurator();
         configurator.start();
         
+        PowerMockito.mockStatic(AppPropertyPool.class);
+        try {
+            when(AppPropertyPool.getProperty(eq("dbmsVendor"))).thenReturn(ConfigConstants.DBMSTYPE_ASA);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Mocking dbmsVendor value fetch setup failed");
+        }
+
         // Mock database connection since the common transaction Api expects
         // derived Api modules to obtain and pass in an instance of DaoClient.
         PowerMockito.mockStatic(Rmt2OrmClientFactory.class);

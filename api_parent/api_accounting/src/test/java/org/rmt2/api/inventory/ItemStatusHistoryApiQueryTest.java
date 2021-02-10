@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dto.ItemMasterStatusHistDto;
 import org.dto.adapter.orm.inventory.Rmt2ItemMasterDtoFactory;
 import org.junit.After;
@@ -38,12 +39,11 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class,
-        ResultSet.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class })
 public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
-    private List<ItemMasterStatusHist> mockSingleFetchResponse;
-    private List<ItemMasterStatusHist> mockCriteriaFetchResponse;
-    private List<ItemMasterStatusHist> mockFetchAllResponse;
+    private List<VwItemStatusHistory> mockSingleFetchResponse;
+    private List<VwItemStatusHistory> mockCriteriaFetchResponse;
+    private List<VwItemStatusHistory> mockFetchAllResponse;
     private List<ItemMasterStatusHist> mockNotFoundFetchResponse;
 
     /**
@@ -53,11 +53,9 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
     public void setUp() throws Exception {
         super.setUp();
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
-        this.mockCriteriaFetchResponse = this
-                .createMockFetchUsingCriteriaResponse();
+        this.mockCriteriaFetchResponse = this.createMockFetchUsingCriteriaResponse();
         this.mockFetchAllResponse = this.createMockFetchAllResponse();
-        this.mockNotFoundFetchResponse = this
-                .createMockNotFoundSearchResultsResponse();
+        this.mockNotFoundFetchResponse = this.createMockNotFoundSearchResultsResponse();
     }
 
     /**
@@ -74,12 +72,12 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
         return list;
     }
 
-    private List<ItemMasterStatusHist> createMockSingleFetchResponse() {
-        List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataFactory
+    private List<VwItemStatusHistory> createMockSingleFetchResponse() {
+        List<VwItemStatusHistory> list = new ArrayList<>();
+        VwItemStatusHistory p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
-                        "Item Status History Description 1");
+                        "Item Status History Description 1", "Status Name");
         list.add(p);
         return list;
     }
@@ -89,48 +87,48 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
      * 
      * @return
      */
-    private List<ItemMasterStatusHist> createMockFetchUsingCriteriaResponse() {
-        List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataFactory
+    private List<VwItemStatusHistory> createMockFetchUsingCriteriaResponse() {
+        List<VwItemStatusHistory> list = new ArrayList<>();
+        VwItemStatusHistory p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2107-01-01", "2017-02-15",
-                        "Item Status History Description 1");
+                        "Item Status History Description 1", "Status Name 1");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(11,
-                100, 1001, 13.50, 3, "2107-01-16", "2017-03-15",
-                "Item Status History Description 2");
+                        100, 1001, 13.50, 3, "2107-01-16", "2017-03-15",
+                "Item Status History Description 2", "Status Name 2");
         list.add(p);
 
         return list;
     }
 
-    private List<ItemMasterStatusHist> createMockFetchAllResponse() {
-        List<ItemMasterStatusHist> list = new ArrayList<ItemMasterStatusHist>();
-        ItemMasterStatusHist p = AccountingMockDataFactory
+    private List<VwItemStatusHistory> createMockFetchAllResponse() {
+        List<VwItemStatusHistory> list = new ArrayList<>();
+        VwItemStatusHistory p = AccountingMockDataFactory
                 .createMockOrmItemMasterStatusHistory(10, 100, 1000, 12.50, 3,
                         "2017-01-01", "2017-02-15",
-                        "Item Status History Description 1");
+                        "Item Status History Description 1", "Status Name 1");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(11,
                 101, 1001, 12.50, 3, "2017-02-16", "2017-03-15",
-                "Item Status History Description 2");
+                "Item Status History Description 2", "Status Name 2");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(12,
                 102, 1000, 3.50, 3, "2017-01-01", "2017-02-15",
-                "Item Status History Description 3");
+                "Item Status History Description 3", "Status Name 3");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(13,
                 103, 1001, 3.50, 3, "2017-02-15", "2017-03-15",
-                "Item Status History Description 4");
+                "Item Status History Description 4", "Status Name 4");
         list.add(p);
 
         p = AccountingMockDataFactory.createMockOrmItemMasterStatusHistory(14,
                 104, 1003, 93.50, 3, "2017-02-15", "2017-03-15",
-                "Item Status History Description 5");
+                "Item Status History Description 5", "Status Name 5");
         list.add(p);
         return list;
     }

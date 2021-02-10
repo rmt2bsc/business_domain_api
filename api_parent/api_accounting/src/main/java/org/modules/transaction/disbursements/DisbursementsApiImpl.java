@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.transaction.disbursements.DisbursementsDao;
 import org.dao.transaction.disbursements.DisbursementsDaoException;
@@ -86,8 +87,13 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      */
     @Override
     public List<XactDto> get(XactDto criteria, XactCustomCriteriaDto customCriteria) throws DisbursementsApiException {
+        String sqlCriteria = null;
         try {
             Verifier.verifyNotNull(criteria);
+            sqlCriteria = this.parseCriteria(customCriteria);
+            if (sqlCriteria != null) {
+                criteria.setCriteria(sqlCriteria);
+            }
         }
         catch (VerifyException e) {
             throw new InvalidDataException("Base Transaction criteria object cannot be null", e);
@@ -100,47 +106,9 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         catch (VerifyException e) {
             throw new InvalidDataException("Cannot return all cash disbursements transactions.  At least one transaction criteria property must be set to filter data", e);
         }
-        
-        String sqlCriteria = this.parseCriteria(customCriteria);
-        
-        // Handle the transaction reason
-        if (!RMT2String2.isEmpty(criteria.getXactReason())) {
-            StringBuilder buf = new StringBuilder();
-            buf.append("xact_reason ");
-            switch (customCriteria.getXactReasonFilterOption()) {
-                case XactCustomCriteriaDto.ADV_SRCH_BEGIN:
-                    buf.append("like \'");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("%\' ");
-                    break;
-                case XactCustomCriteriaDto.ADV_SRCH_CONTATIN:
-                    buf.append("like \'%");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("%\' ");
-                    break;
-                case XactCustomCriteriaDto.ADV_SRCH_END:
-                    buf.append("like \'%");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("like \'");
-                    break;
-                case XactCustomCriteriaDto.ADV_SRCH_EXACT:
-                    buf.append("= \'");
-                    buf.append(customCriteria.getXactReasonFilterOption());
-                    buf.append("\'");
-                    break;
-                default:
-            }
-            if (!RMT2String2.isEmpty(sqlCriteria)) {
-                sqlCriteria += " and " + buf.toString();
-            }
-            else {
-                sqlCriteria = buf.toString();
-            }
-        }
-        
+
         List<XactDto> results;
         try {
-            criteria.setCriteria(sqlCriteria);
             results = dao.fetchDisbursmentByXact(criteria);
             if (results == null) {
                 return null;
@@ -346,6 +314,9 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         if (RMT2String2.isNotEmpty(criteria.getCriteria())) {
             criteriaCount++;
         }
+        if (RMT2String2.isNotEmpty(criteria.getXactReason())) {
+            criteriaCount++;
+        }
         return (criteriaCount > 0);
     }
     
@@ -456,7 +427,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         try {
             // Create creditor activity (transaction history) regarding
             // the disbursement.  The usual valdiations will take place in this call.
-            super.createSubsidiaryActivity(creditorId, newXctId, xactAmount);
+            super.createSubsidiaryActivity(creditorId, SubsidiaryType.CREDITOR, newXctId, xactAmount);
         } catch (XactApiException e) {
             throw new DisbursementsApiException("Unable to process cash disbursement transaction", e);
         }
@@ -524,14 +495,6 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         } catch (XactApiException e) {
             throw new DisbursementsApiException("Error reversing Cash Disbursement transaction", e);
         }
-        
-        // Finalize Transaction
-        try {
-            this.finalizeXact(xact);
-        } catch (XactApiException e) {
-            throw new DisbursementsApiException("Error finalizing Cash Disbursement transaction after reversal", e);
-        }
-        
         return newXactId;
     }
 

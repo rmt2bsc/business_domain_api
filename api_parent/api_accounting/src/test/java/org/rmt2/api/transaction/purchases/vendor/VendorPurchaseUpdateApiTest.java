@@ -1493,8 +1493,6 @@ public class VendorPurchaseUpdateApiTest extends VendorPurchaseApiTestData {
             e.printStackTrace();
             Assert.assertTrue(e instanceof VendorPurchasesApiException);
             Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof InvalidDataException);
         }
     }
     

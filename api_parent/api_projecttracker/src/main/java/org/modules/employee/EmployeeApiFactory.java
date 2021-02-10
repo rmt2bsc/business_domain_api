@@ -27,8 +27,8 @@ public class EmployeeApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link EmployeeApi}
      */
-    public EmployeeApi createApi() {
-        return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
+    public static final EmployeeApi createApi() {
+        return EmployeeApiFactory.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -39,7 +39,7 @@ public class EmployeeApiFactory extends RMT2Base {
      *            application name.
      * @return an instance of {@link EmployeeApi}
      */
-    public EmployeeApi createApi(String appName) {
+    public static final EmployeeApi createApi(String appName) {
         EmployeeApiImpl api = new EmployeeApiImpl(appName);
         return api;
     }
@@ -54,7 +54,7 @@ public class EmployeeApiFactory extends RMT2Base {
      * 
      *            ProjectApi * null.
      */
-    public EmployeeApi createApi(DaoClient connection) {
+    public static final EmployeeApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }

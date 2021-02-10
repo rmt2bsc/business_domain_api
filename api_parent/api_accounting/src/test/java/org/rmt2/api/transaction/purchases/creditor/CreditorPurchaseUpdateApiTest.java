@@ -18,6 +18,7 @@ import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.dao.transaction.XactDaoException;
 import org.dto.XactCreditChargeDto;
+import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.purchases.creditor.Rmt2CreditChargeDtoFactory;
@@ -346,68 +347,22 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             e.printStackTrace();
         }
     }
+
+
     @Test
     public void testReversal_ExceptionDuringFinalization() {
         Date mockXactDate = new Date();
-        Xact mockXact = this.buildXactOrm(this.mockXactDto);
-        mockXact.setXactId(0);
-        mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
-        mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
-        mockXact.setXactDate(mockXactDate);
-        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
-        
-        // Mock transaction detail items reversal
-        try {
-            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
-                    .thenReturn(500, 501, 502, 503, 504);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up cash disbursement transaction item activity update case failed");
-        }
-        
-        // Mock base transaction reversal
-        Xact mockRevXact = this.buildXactOrm(this.mockXactDto);
-        mockRevXact.setXactId(0);
-        mockRevXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
-        mockRevXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
-        mockRevXact.setXactDate(mockXactDate);
-        try {
-            when(this.mockPersistenceClient.insertRow(eq(mockRevXact), eq(true))).thenReturn(NEW_XACT_ID);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up cash disbursement base transaction update case failed");
-        }
-
-        // Mock finalization
-        Xact mockFinalXact = this.buildXactOrm(this.mockXactDto);
-        mockFinalXact.setXactId(NEW_XACT_ID);
-        mockFinalXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
-        mockFinalXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
-        mockFinalXact.setXactDate(mockXactDate);
-        try {
-            when(this.mockPersistenceClient.updateRow(eq(mockFinalXact))).thenThrow(DatabaseException.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up cash disbursement base transaction update case failed");
-        }
-        
-        // Mock transactoin fetch
-        VwXactList mockXactCriteria = new VwXactList();
-        mockXactCriteria.setId(NEW_XACT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
-                    .thenReturn(this.mockXactFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-
-        CreditorPurchasesApiFactory f = new CreditorPurchasesApiFactory();
-        CreditorPurchasesApi api = f.createApi(mockDaoClient);
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
-        this.mockXactDto.setXactAmount(this.mockXactDto.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
+        try {
+            when(this.mockPersistenceClient.updateRow(any(XactDto.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+        
+        CreditorPurchasesApi api = CreditorPurchasesApiFactory.createApi(mockDaoClient);
         try {
             api.update(this.mockXactDto, this.mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to database error");

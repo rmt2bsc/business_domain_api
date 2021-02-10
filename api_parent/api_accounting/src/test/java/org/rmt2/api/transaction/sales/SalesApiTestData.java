@@ -181,7 +181,7 @@ public class SalesApiTestData extends TransactionApiTestData {
         list.add(o);
 
         o = AccountingMockDataFactory.createMockOrmSalesOrderItem(88882, 33332,
-                1000, 10, 2.00);
+                1000, 10, 5.00);
         list.add(o);
 
         o = AccountingMockDataFactory.createMockOrmSalesOrderItem(88883, 33333,
@@ -189,7 +189,7 @@ public class SalesApiTestData extends TransactionApiTestData {
         list.add(o);
 
         o = AccountingMockDataFactory.createMockOrmSalesOrderItem(88884, 33334,
-                1000, 20, 1.00);
+                1000, 20, 5.00);
         list.add(o);
         return list;
     }

@@ -1,6 +1,7 @@
 package org.modules.audiovideo;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -8,35 +9,55 @@ import org.apache.log4j.Logger;
 import com.RMT2Base;
 import com.RMT2Constants;
 import com.api.util.RMT2Date;
-
-import entagged.audioformats.AudioFile;
-import entagged.audioformats.AudioFileIO;
-import entagged.audioformats.generic.TagTextField;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v1Tag;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
+import com.mpatric.mp3agic.Mp3File;
 
 /**
- * An EntaggedMp3 implementaion of {@link MP3Reader}
+ * An Mp3agic implementaion of {@link MP3Reader}
  * 
  * @author appdev
  * 
  */
-class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
+class Mp3agicMp3LibImpl extends RMT2Base implements MP3Reader {
 
-    private static Logger logger = Logger.getLogger(EntaggedMp3LibImpl.class);
-
-    private AudioFile mp3;
+    private static Logger logger = Logger.getLogger(Mp3agicMp3LibImpl.class);
+    private Mp3File mp3;
+    private ID3v1 id3v1Tag;
+    private ID3v2 id3v2Tag;
 
     /**
      * 
      */
-    EntaggedMp3LibImpl() {
+    Mp3agicMp3LibImpl() {
         return;
     }
 
-    EntaggedMp3LibImpl(File source) {
+    Mp3agicMp3LibImpl(File source) {
         try {
-            this.mp3 = AudioFileIO.read(source);
+            this.mp3 = new Mp3File(source);
+
+            if (this.mp3.hasId3v1Tag()) {
+                this.id3v1Tag = this.mp3.getId3v1Tag();
+            }
+            else {
+                // mp3 does not have an ID3v1 tag, let's create one...
+                this.id3v1Tag = new ID3v1Tag();
+                this.mp3.setId3v1Tag(id3v1Tag);
+            }
+            // Use ID3v2 tagging
+            if (this.mp3.hasId3v2Tag()) {
+                this.id3v2Tag = this.mp3.getId3v2Tag();
+            }
+            else {
+                // mp3 does not have an ID3v2 tag, let's create one...
+                this.id3v2Tag = new ID3v24Tag();
+                this.mp3.setId3v2Tag(id3v2Tag);
+            }
         } catch (Throwable e) {
-            throw new Mp3ReaderIdentityNotConfiguredException("Unable to create Entagged Mp3 Implementation", e);
+            throw new Mp3ReaderIdentityNotConfiguredException("Unable to create Mp3agic Mp3 Implementation", e);
         }
     }
 
@@ -46,7 +67,7 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getAlbum()
      */
     public String getAlbum() {
-        return this.mp3.getTag().getFirstAlbum();
+        return this.id3v2Tag.getAlbum();
     }
 
     /*
@@ -55,7 +76,12 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getArtist()
      */
     public String getArtist() {
-        return this.mp3.getTag().getFirstArtist();
+        return this.id3v2Tag.getArtist();
+    }
+
+    @Override
+    public String getAlbumArtist() {
+        return this.id3v2Tag.getAlbumArtist();
     }
 
     /*
@@ -64,12 +90,7 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getComment()
      */
     public String getComment() {
-        List<TagTextField> list = this.mp3.getTag().getComment();
-        if (list != null && list.size() > 0) {
-            String content = list.get(0).getContent();
-            return content;
-        }
-        return null;
+        return id3v2Tag.getComment();
     }
 
     /*
@@ -78,8 +99,7 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getComposer()
      */
     public String getComposer() {
-        throw new UnsupportedOperationException(
-                RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        return id3v2Tag.getComposer();
     }
 
     /*
@@ -97,8 +117,8 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getDurationSeconds()
      */
     public List<Integer> getDuration() {
-        int seconds = this.mp3.getLength();
-        List<Integer> list = RMT2Date.convertSecondsToList(seconds);
+        long secs = this.mp3.getLengthInSeconds();
+        List<Integer> list = RMT2Date.convertSecondsToList(BigInteger.valueOf(secs).intValue());
         return list;
     }
 
@@ -108,14 +128,7 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getGenre()
      */
     public String getGenre() {
-        List<TagTextField> list = this.mp3.getTag().getGenre();
-        if (list != null && list.size() > 0) {
-            for (TagTextField item : list) {
-                String val = item.getContent();
-                return val;
-            }
-        }
-        return null;
+        return this.id3v2Tag.getGenreDescription();
     }
 
     /*
@@ -144,7 +157,7 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getTrack()
      */
     public int getTrack() {
-        String strTrack = this.mp3.getTag().getFirstTrack();
+        String strTrack = this.id3v2Tag.getTrack();
         int track;
         try {
             track = Integer.parseInt(strTrack);
@@ -170,7 +183,7 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getTrackTitle()
      */
     public String getTrackTitle() {
-        return this.mp3.getTag().getFirstTitle();
+        return this.id3v2Tag.getTitle();
     }
 
     /*
@@ -179,7 +192,7 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
      * @see com.audiovideo.MP3Reader#getYear()
      */
     public int getYear() {
-        String strYear = this.mp3.getTag().getFirstYear();
+        String strYear = this.id3v2Tag.getYear();
         int year;
         try {
             year = Integer.parseInt(strYear);
@@ -188,5 +201,6 @@ class EntaggedMp3LibImpl extends RMT2Base implements MP3Reader {
         }
         return year;
     }
+
 
 }

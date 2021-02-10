@@ -1,5 +1,6 @@
 package org.rmt2.api.subsidiary;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -260,8 +261,8 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
      * @param busContactCriteria
      * @param creditorCriteria
      */
-    protected void setupMultipleSubsidiaryContactInfoFetchDbException(
-            VwBusinessAddress busContactCriteria, Creditor creditorCriteria) {
+    protected void setupMultipleSubsidiaryContactInfoFetchDbException(VwBusinessAddress busContactCriteria,
+            Creditor creditorCriteria) {
         try {
             when(this.mockPersistenceClient
                     .retrieveList(eq(busContactCriteria))).thenThrow(DatabaseException.class);
@@ -336,12 +337,13 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
      * @param busContactCriteria
      * @param customerCriteria
      */
-    protected void setupSingleSubsidiaryContactInfoFetch(
-            VwBusinessAddress busContactCriteria, Customer customerCriteria) {
+    protected void setupSingleSubsidiaryContactInfoFetch(VwBusinessAddress busContactCriteria, Customer customerCriteria) {
+        // For some reason, the "any" matcher must be delcared before "eq"
+        // matcher in order for this to work.
         try {
             when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
-                            this.mockBusinessContactFetchSingleResponse);
+                    .retrieveList(any(VwBusinessAddress.class))).thenReturn(
+                    this.mockBusinessContactFetchSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
@@ -358,6 +360,36 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
     }
 
     /**
+     * 
+     * @param busContactCriteria
+     * @param customerCriteria
+     */
+    protected void setupSingleSubsidiaryContactInfoExactFetch(VwBusinessAddress busContactCriteria, Customer customerCriteria) {
+        // For some reason, the "any" matcher must be delcared before "eq"
+        // matcher in order for this to work.
+        try {
+            // Could not use "eq" matcher for this mock due to the API is using
+            // the setContactIdList(List) method to identify the customer's
+            // contact id as criteria. The setContactIdList is directly
+            // associated with the adapter and not the Customer ORM class. So
+            // the eq matcher does not work here.
+            when(this.mockPersistenceClient.retrieveList(any(Customer.class)))
+                    .thenReturn(this.mockCustomerFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single Customer fetch test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(busContactCriteria)))
+                    .thenReturn(this.mockBusinessContactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(
+                    "Single Business Contact for customer fetch test case setup failed");
+        }
+    }
+
+    /**
      * Setup mocks to retrieve multiple matching customer and common business
      * contact data.
      * 
@@ -368,7 +400,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
             VwBusinessAddress busContactCriteria, Customer customerCriteria) {
         try {
             when(this.mockPersistenceClient
-                    .retrieveList(eq(busContactCriteria))).thenReturn(
+                    .retrieveList(any(VwBusinessAddress.class))).thenReturn(
                             this.mockBusinessContactFetchAllResponse);
         } catch (Exception e) {
             e.printStackTrace();

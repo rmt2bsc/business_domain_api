@@ -26,6 +26,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.InvalidDataException;
+import com.api.config.AppPropertyPool;
+import com.api.config.ConfigConstants;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
@@ -64,6 +66,7 @@ public class TransactionQueryApiTest extends TransactionApiTestData {
 
     @Test
     public void testFetchGenericTransactionData() {
+        AppPropertyPool.getProperty(ConfigConstants.PROPNAME_DBMS_VENDOR);
         VwGenericXactList mockCriteria = new VwGenericXactList();
         mockCriteria.setXactDate(RMT2Date.stringToDate("2020-01-01"));
         mockCriteria.setBusinessName("XYZ");

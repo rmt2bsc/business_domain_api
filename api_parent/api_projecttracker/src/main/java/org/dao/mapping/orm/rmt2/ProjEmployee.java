@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -56,6 +55,8 @@ public class ProjEmployee extends OrmBean {
   public static final String PROP_COMPANYNAME = "CompanyName";
 /** The property name constant equivalent to property, IsManager, of respective DataSource view. */
   public static final String PROP_ISMANAGER = "IsManager";
+/** The property name constant equivalent to property, PersonId, of respective DataSource view. */
+  public static final String PROP_PERSONID = "PersonId";
 
 
 
@@ -93,6 +94,8 @@ public class ProjEmployee extends OrmBean {
   private String companyName;
 /** The javabean property equivalent of database column proj_employee.is_manager */
   private int isManager;
+/** The javabean property equivalent of database column proj_employee.person_id */
+  private int personId;
 
 
 
@@ -308,6 +311,18 @@ public class ProjEmployee extends OrmBean {
   public int getIsManager() {
     return this.isManager;
   }
+/**
+ * Sets the value of member variable personId
+ */
+  public void setPersonId(int value) {
+    this.personId = value;
+  }
+/**
+ * Gets the value of member variable personId
+ */
+  public int getPersonId() {
+    return this.personId;
+  }
 
 @Override
 public boolean equals(Object obj) {
@@ -363,6 +378,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.isManager, other.isManager)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.personId, other.personId)) {
+      return false;
+   }
    return true; 
 } 
 
@@ -381,7 +399,8 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.email),
                HashCodeAssistant.hashObject(this.loginName),
                HashCodeAssistant.hashObject(this.companyName),
-               HashCodeAssistant.hashObject(this.isManager));
+               HashCodeAssistant.hashObject(this.isManager),
+               HashCodeAssistant.hashObject(this.personId));
 } 
 
 @Override
@@ -399,7 +418,8 @@ public String toString() {
           ", email=" + email + 
           ", loginName=" + loginName + 
           ", companyName=" + companyName + 
-          ", isManager=" + isManager  + "]";
+          ", isManager=" + isManager + 
+          ", personId=" + personId  + "]";
 }
 
 /**

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjEmployee;
+import org.dao.mapping.orm.rmt2.ProjEmployeeProject;
 import org.dao.mapping.orm.rmt2.ProjEmployeeTitle;
 import org.dao.mapping.orm.rmt2.ProjEmployeeType;
 import org.dao.mapping.orm.rmt2.ProjEvent;
@@ -15,10 +16,12 @@ import org.dao.mapping.orm.rmt2.ProjTimesheet;
 import org.dao.mapping.orm.rmt2.ProjTimesheetHist;
 import org.dao.mapping.orm.rmt2.VwEmployeeExt;
 import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
+import org.dao.mapping.orm.rmt2.VwProjectClient;
 import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
+import org.dao.mapping.orm.rmt2.VwTimesheetSummary;
 import org.dao.timesheet.TimesheetConst;
 
 import com.api.util.RMT2Date;
@@ -101,6 +104,30 @@ public class ProjectTrackerMockDataFactory {
     
     /**
      * 
+     * @param projId
+     * @param clientId
+     * @param projName
+     * @param effectiveDate
+     * @param endDate
+     * @param clientName
+     * @param clientBusinessId
+     * @return
+     */
+    public static final VwProjectClient createMockOrmVwProjectClient(int projId, int clientId, String projName,
+            String effectiveDate, String endDate, String clientName, int clientBusinessId) {
+        VwProjectClient o = new VwProjectClient();
+        o.setProjId(projId);
+        o.setClientId(clientId);
+        o.setDescription(projName);
+        o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
+        o.setEndDate(RMT2Date.stringToDate(endDate));
+        o.setName(clientName);
+        o.setBusinessId(clientBusinessId);
+        return o;
+    }
+
+    /**
+     * 
      * @param empId
      * @param empTypeId
      * @param isManager
@@ -175,6 +202,7 @@ public class ProjectTrackerMockDataFactory {
         o.setSsn(ssn);
         o.setCompanyName(companyName);
         o.setEmail(firstName + "." + lastName + "@gte.net");
+        o.setProjCount(10);
         return o;
     }
     
@@ -253,6 +281,33 @@ public class ProjectTrackerMockDataFactory {
         return o;
     }
     
+    /**
+     * 
+     * @param empProjId
+     * @param projId
+     * @param empId
+     * @param projEmpEffectiveDate
+     * @param projEmpEndDate
+     * @param payRate
+     * @param otPayRate
+     * @param flatRate
+     * @return
+     */
+    public static final ProjEmployeeProject createMockOrmProjEmployeeProject(int empProjId, int projId, int empId,
+            String projEmpEffectiveDate, String projEmpEndDate, double payRate, double otPayRate, double flatRate) {
+        ProjEmployeeProject o = new ProjEmployeeProject();
+        o.setEmpProjId(empProjId);
+        o.setProjId(projId);
+        o.setEmpId(empId);
+        o.setEffectiveDate(RMT2Date.stringToDate(projEmpEffectiveDate));
+        o.setEndDate(RMT2Date.stringToDate(projEmpEndDate));
+        o.setHourlyRate(payRate);
+        o.setHourlyOverRate(otPayRate);
+        o.setFlatRate(flatRate);
+        o.setComments("Comments for Employee Project Id: " + empProjId);
+        return o;
+    }
+
     /**
      * 
      * @param timesheetId
@@ -541,6 +596,34 @@ public class ProjectTrackerMockDataFactory {
         o.setIpCreated("1.2.3.4");
         o.setIpUpdated("1.2.3.4");
         o.setUserId("testuser");
+        return o;
+    }
+
+    /**
+     * 
+     * @param timesheetId
+     * @param firstName
+     * @param lastName
+     * @param endDate
+     * @param dailyHours
+     * @return
+     */
+    public static final VwTimesheetSummary createMockOrmVwTimesheetSummary(int timesheetId, String firstName, String lastName,
+            String endDate, double dailyHours) {
+        VwTimesheetSummary o = new VwTimesheetSummary();
+        o.setTimesheetId(timesheetId);
+        o.setEndPeriod(RMT2Date.stringToDate(endDate));
+        o.setDocumentId(1234567);
+        String displayValue = RMT2String.padInt(timesheetId, 12, RMT2String.PAD_LEADING);
+        o.setDisplayValue(displayValue);
+        o.setShortname(firstName + " " + lastName);
+        o.setDay1Hrs(0);
+        o.setDay2Hrs(dailyHours);
+        o.setDay3Hrs(dailyHours);
+        o.setDay4Hrs(dailyHours);
+        o.setDay5Hrs(dailyHours);
+        o.setDay6Hrs(dailyHours);
+        o.setDay7Hrs(0);
         return o;
     }
 }

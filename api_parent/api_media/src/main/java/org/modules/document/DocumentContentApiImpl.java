@@ -35,6 +35,8 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
     private ContentDao dao;
 
     private static DirectoryInboundDocumentListener MEDIA_DIR_LISTENER;
+    private static final String STATUS_RUNNING = "Running";
+    private static final String STATUS_STOPPED = "Stopped";
 
 
 
@@ -64,7 +66,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         super(appName);
         this.factory = new ContentDaoFactory();
         if (persistInDb) {
-            dao = this.factory.createDatabaseMediaDaoInstance();
+            dao = this.factory.createSybaseAsaDatabaseMediaDaoInstance();
         }
         else {
             dao = this.factory.createExternalFileMediaDaoInstance();
@@ -118,6 +120,55 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } 
         catch (NotFoundException e) {
             this.msg = "Unable to add media document as a database recrod or as an external file due to input file cannot be located";
+            throw new MediaModuleException(this.msg, e);
+        }
+    }
+
+    /**
+     * Add media document in which the image data and assoicated meta data is
+     * availble.
+     * 
+     * @param document
+     *            An instance of {@link ContentDto} which contains the document
+     *            image and its metadata.
+     * @return The internal unique identifier of the document object added.
+     * @throws MediaModuleException
+     */
+    @Override
+    public int add(ContentDto document) throws MediaModuleException {
+        try {
+            Verifier.verifyNotNull(document);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("A valid ContentDto oject must exists for this API operation");
+        }
+
+        try {
+            Verifier.verifyNotEmpty(document.getImageData());
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Document content is required");
+        }
+
+        dao.setDaoUser(this.apiUser);
+        int newContentId = 0;
+        try {
+            String fileExt = RMT2File.getFileExt(document.getFilename());
+            if (fileExt != null) {
+                MimeTypeDto mtCriteria = Rmt2MediaDtoFactory.getMimeTypeInstance(null);
+                mtCriteria.setFileExt("." + fileExt);
+                List<MimeTypeDto> mtDto = this.dao.fetchMimeType(mtCriteria);
+                if (mtDto != null && mtDto.size() == 1) {
+                    document.setMimeTypeId(mtDto.get(0).getMimeTypeId());
+                }
+            }
+
+            // Validate Media DTO
+            this.validate(document);
+
+            // Save content
+            newContentId = dao.saveContent(document);
+            return newContentId;
+        } catch (ContentDaoException e) {
+            this.msg = "Unable to add media document, " + document.getFilename() + ", as a database recrod";
             throw new MediaModuleException(this.msg, e);
         }
     }
@@ -220,31 +271,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         } 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.document.DocumentContentApi#startMediaFileListener()
-     */
-    @Override
-    public void startMediaFileListener() {
-        MEDIA_DIR_LISTENER = new DirectoryInboundDocumentListener();
-        Thread t = new Thread(MEDIA_DIR_LISTENER);
-        t.start();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.modules.document.DocumentContentApi#stopMediaFileListener()
-     */
-    @Override
-    public void stopMediaFileListener() {
-        if (MEDIA_DIR_LISTENER == null) {
-            return;
-        }
-        MEDIA_DIR_LISTENER.stop();
-    }
-
     
     /**
      * Verifies that the media content record contains valid data..
@@ -262,16 +288,6 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
      *             when either file name, file extension or image data proerties
      *             are not present, or general database error while attempting
      *             to obtain MIME type data based on file extension.
-     */
-    /**
-     * Verifies that the file name and file path properties are present.
-     * 
-     * @param dto
-     *            an instance of {@link ContentDto} which will be validated.
-     * @return always returns null.
-     * @throws MediaModuleException Error occurred obtaining MIME type information
-     * @throws InvalidDataException
-     *             when either the file name or file path is not present.
      */
     protected void validate(ContentDto dto) throws MediaModuleException {
         logger.info("Validate file name");
@@ -297,7 +313,7 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
 
         // Get mime type id of file name.
         MimeTypeDto mtCriteria = Rmt2MediaDtoFactory.getMimeTypeInstance(null);
-        mtCriteria.setFileExt(ext);
+        mtCriteria.setFileExt("." + ext);
         List<MimeTypeDto> list = this.getMimeType(mtCriteria);
         if (list == null) {
             this.msg = "File, "
@@ -310,5 +326,45 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
         logger.info("Mime Type: " + mt.getMediaType());
         dto.setMimeTypeId(mt.getMimeTypeId());
         logger.info("Passed media file validations");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.document.DocumentContentApi#startMediaFileListener()
+     */
+    @Override
+    public void startMediaFileListener() {
+        MEDIA_DIR_LISTENER = new DirectoryInboundDocumentListener();
+        Thread t = new Thread(MEDIA_DIR_LISTENER);
+        t.start();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.document.DocumentContentApi#stopMediaFileListener()
+     */
+    @Override
+    public void stopMediaFileListener() {
+        if (MEDIA_DIR_LISTENER == null) {
+            return;
+        }
+        MEDIA_DIR_LISTENER.stop();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.modules.document.DocumentContentApi#getMediaFileListenerStatus()
+     */
+    @Override
+    public String getMediaFileListenerStatus() {
+        if (MEDIA_DIR_LISTENER != null && MEDIA_DIR_LISTENER.getStatus()) {
+            return DocumentContentApiImpl.STATUS_RUNNING;
+        }
+        else {
+            return DocumentContentApiImpl.STATUS_STOPPED;
+        }
     }
 }

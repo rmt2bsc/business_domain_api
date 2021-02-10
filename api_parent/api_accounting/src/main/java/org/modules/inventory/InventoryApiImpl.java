@@ -1240,7 +1240,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // dao.beginTrans();
             // Remove all items from item master status history
             ItemMasterStatusHistDto imshCriteria = Rmt2InventoryDtoFactory
-                    .createItemStatusHistoryInstance(null);
+                    .createItemStatusHistoryInstance((ItemMasterStatusHist) null);
             imshCriteria.setItemId(itemId);
             rc = dao.delete(imshCriteria);
             this.msg = "Total item status history entries removed for item id, "
@@ -1621,7 +1621,11 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * Changes the override flag to true for one or more of a vendor's items.
      * <p>
      * Activates a vendor-item override for all item id's stored in items
-     * collection.
+     * collection. This method enables a vendor-item override targeting the
+     * inventory item, itemId. Also, the creditor id of the inventory item
+     * master is set to the vendor's id. An override instructs the system to
+     * obtain pricing information for an inventory item from the vendor_items
+     * table instead of the item_master table .
      * 
      * @param vendorId
      *            The id of the vendor that will be assoicated with each item
@@ -1843,8 +1847,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             }
 
             // Create new item status
-            imsh = Rmt2InventoryDtoFactory
-                    .createItemStatusHistoryInstance(null);
+            imsh = Rmt2InventoryDtoFactory.createItemStatusHistoryInstance((ItemMasterStatusHist) null);
             imsh.setItemId(item.getItemId());
             imsh.setItemStatusId(newItemStatusId);
             imsh.setUnitCost(item.getUnitCost());

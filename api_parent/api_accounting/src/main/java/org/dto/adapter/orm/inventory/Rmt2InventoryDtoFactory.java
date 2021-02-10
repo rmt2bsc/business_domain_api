@@ -6,6 +6,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwItemMaster;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
@@ -102,6 +103,21 @@ public class Rmt2InventoryDtoFactory extends RMT2Base {
     public static final ItemMasterStatusHistDto createItemStatusHistoryInstance(
             ItemMasterStatusHist ormBean) {
         return new ItemStatusHistRmt2OrmAdapter(ormBean);
+    }
+
+    /**
+     * Create an instance of <i>ItemMasterStatusHistDto</i>.
+     * <p>
+     * A brand new instance of ItemMasterStatusHistDto is created when
+     * <i>ormBean</i> is null. Otherwise, <i>ormBean</i> is adapted to an
+     * instance of ItemMasterStatusHistDto.
+     * 
+     * @param ormBean
+     *            an instance of {@link VwItemStatusHistory}
+     * @return an instance of {@link ItemMasterStatusHistDto}.
+     */
+    public static final ItemMasterStatusHistDto createItemStatusHistoryInstance(VwItemStatusHistory ormBean) {
+        return new VwItemStatusHistRmt2OrmAdapter(ormBean);
     }
 
     /**

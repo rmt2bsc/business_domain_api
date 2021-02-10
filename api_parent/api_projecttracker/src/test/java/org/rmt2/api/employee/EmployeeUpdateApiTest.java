@@ -68,8 +68,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Insert employee case setup failed");
         }
         
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
         // Make sure employee is new
         emp.setEmployeeId(0);
@@ -94,8 +93,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Insert employee case setup failed");
         }
         
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
         // Make sure employee is new
         emp.setEmployeeId(0);
@@ -110,8 +108,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Employee_Null_Employee_Object() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = null;
         try {
             api.update(emp);
@@ -124,8 +121,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Employee_Zero_EmployeeTitleId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
         emp.setEmployeeTitleId(0);
         try {
@@ -139,8 +135,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Employee_Negative_EmployeeTitleId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
         emp.setEmployeeTitleId(-12);
         try {
@@ -154,8 +149,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Employee_Zero_EmployeeTypeId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
         emp.setEmployeeTypeId(0);
         try {
@@ -169,8 +163,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Employee_Negative_EmployeeTypeId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
         emp.setEmployeeTypeId(-1299);
         try {
@@ -201,8 +194,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Update employee case setup failed");
         }
         
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         EmployeeDto emp = EmployeeObjectFactory.createEmployeeDtoInstance(this.mockEmployeeFetchSingle.get(0));
         int results = 0;
         try {
@@ -233,8 +225,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Insert employee project case setup failed");
         }
         
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory.createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
         // Make sure employee is new
         projEmp.setEmpProjId(0);
@@ -269,8 +260,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Insert employee project case setup failed");
         }
         
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory.createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
         // Make sure employee is new
         projEmp.setEmpProjId(0);
@@ -285,8 +275,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Project_Employee_Null_ProjectEmployee_Object() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = null;
         try {
             api.update(projEmp);
@@ -299,8 +288,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Project_Employee_Zero_EmployeeId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory.createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
         projEmp.setEmpId(0);
         try {
@@ -314,8 +302,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Project_Employee_Negative_EmployeeId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory.createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
         projEmp.setEmpId(-1234);
         try {
@@ -329,8 +316,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Project_Employee_Zero_ProjectId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory.createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
         projEmp.setProjId(0);
         try {
@@ -344,8 +330,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
     
     @Test
     public void testValidation_Create_Project_Employee_Negative_ProjectId() {
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory.createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
         projEmp.setProjId(-1234);
         try {
@@ -365,7 +350,16 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockVwEmployeeProjectsFetchSingle);
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Fetch single employee projects case setup failed");
+            Assert.fail("Fetch single VwEmployeeProjects case setup failed");
+        }
+
+        ProjEmployeeProject mockEmployeeProject = ProjectTrackerMockDataFactory.createMockOrmProjEmployeeProject(55551, 4440,
+                2220, "2018-01-01", "2018-02-01", 80.00, 80.00, 15000.00);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(isA(ProjEmployeeProject.class))).thenReturn(mockEmployeeProject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single ProjEmployeeProject case setup failed");
         }
         
         try {
@@ -375,8 +369,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Update employee project case setup failed");
         }
         
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory.createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
         int results = 0;
         try {
@@ -401,8 +394,7 @@ public class EmployeeUpdateApiTest extends ProjectTrackerMockData {
             e.printStackTrace();
             Assert.fail("Fetch single employee projects case setup failed");
         }
-        EmployeeApiFactory f = new EmployeeApiFactory();
-        EmployeeApi api = f.createApi(this.mockDaoClient);
+        EmployeeApi api = EmployeeApiFactory.createApi(this.mockDaoClient);
         ProjectEmployeeDto projEmp = ProjectObjectFactory
                 .createEmployeeProjectDtoInstance(this.mockVwEmployeeProjectsFetchSingle.get(0));
 

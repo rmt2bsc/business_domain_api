@@ -8,7 +8,7 @@ import org.dto.EmployeeTitleDto;
 import org.dto.EmployeeTypeDto;
 import org.dto.EventDto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -67,13 +67,13 @@ public interface ProjectAdminDao extends DaoClient {
      * value.
      * 
      * @param criteria
-     *            an instance of {@link ProjectDto} to filter results or null to
+     *            an instance of {@link Project2Dto} to filter results or null to
      *            fetch all projects.
-     * @return A List of {@link ProjectDto} or null if no data is found.
+     * @return A List of {@link Project2Dto} or null if no data is found.
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    List<ProjectDto> fetchProject(ProjectDto criteria)  throws ProjectAdminDaoException;
+    List<Project2Dto> fetchProject(Project2Dto criteria)  throws ProjectAdminDaoException;
 
     /**
      * Fetches one or more employees using selection criteria.
@@ -255,14 +255,14 @@ public interface ProjectAdminDao extends DaoClient {
      * where applicable.
      * 
      * @param obj
-     *            an instance of {@link ProjectDto} representing the project to
+     *            an instance of {@link Project2Dto} representing the project to
      *            be updated.
      * @return total number of projects updated or the id of the new project
      *         created.
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    int maintainProject(ProjectDto obj) throws ProjectAdminDaoException;
+    int maintainProject(Project2Dto obj) throws ProjectAdminDaoException;
 
     /**
      * Creates a new or updates an existing employee.
@@ -382,13 +382,13 @@ public interface ProjectAdminDao extends DaoClient {
      * value.
      * 
      * @param criteria
-     *            an instance of {@link ProjectDto} used as a filter to target a
+     *            an instance of {@link Project2Dto} used as a filter to target a
      *            particular set of projects to delete.
      * @return total number of projects deleted.
      * @throws ProjectAdminDaoException
      *             general data access errors
      */
-    int deleteProject(ProjectDto criteria) throws ProjectAdminDaoException;
+    int deleteProject(Project2Dto criteria) throws ProjectAdminDaoException;
 
     /**
      * Deletes one or more employees using selection criteria.

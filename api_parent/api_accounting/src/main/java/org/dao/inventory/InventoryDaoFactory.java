@@ -6,6 +6,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
@@ -366,7 +367,7 @@ public class InventoryDaoFactory extends RMT2Base {
      * <i>ItemMasterStatusHistDto</i>.
      * 
      * @param criteria
-     *            an instance of {@link ItemMasterStatusHistDto} which the
+     *            an instance of {@link ItemMasterStatusHist} which the
      *            following properties are recognized:
      *            <ul>
      *            <li>itemStatusHistId</li>
@@ -375,23 +376,53 @@ public class InventoryDaoFactory extends RMT2Base {
      *            </ul>
      * @return an instance of {@link ItemMasterStatusHist}
      */
-    public static final ItemMasterStatusHist createCriteria(
-            ItemMasterStatusHistDto criteria) {
+    public static final ItemMasterStatusHist createCriteria(ItemMasterStatusHistDto criteria) {
         ItemMasterStatusHist obj = new ItemMasterStatusHist();
         if (criteria != null) {
             if (criteria.getEntityId() > 0) {
-                obj.addCriteria(ItemMasterStatusHist.PROP_ITEMSTATUSHISTID,
-                        criteria.getEntityId());
+                obj.addCriteria(ItemMasterStatusHist.PROP_ITEMSTATUSHISTID, criteria.getEntityId());
                 obj.setItemStatusHistId(criteria.getEntityId());
             }
             if (criteria.getItemId() > 0) {
-                obj.addCriteria(ItemMasterStatusHist.PROP_ITEMID,
-                        criteria.getItemId());
+                obj.addCriteria(ItemMasterStatusHist.PROP_ITEMID, criteria.getItemId());
                 obj.setItemId(criteria.getItemId());
             }
             if (criteria.getItemStatusId() > 0) {
-                obj.addCriteria(ItemMasterStatusHist.PROP_ITEMSTATUSID,
-                        criteria.getItemStatusId());
+                obj.addCriteria(ItemMasterStatusHist.PROP_ITEMSTATUSID, criteria.getItemStatusId());
+                obj.setItemStatusId(criteria.getItemStatusId());
+            }
+        }
+        return obj;
+    }
+
+    /**
+     * Creates and returns an <i>VwItemStatusHistory</i> object containing
+     * selection criteria obtained from an instance of
+     * <i>ItemMasterStatusHistDto</i>.
+     * 
+     * @param criteria
+     *            an instance of {@link VwItemStatusHistory} which the following
+     *            properties are recognized:
+     *            <ul>
+     *            <li>itemStatusHistId</li>
+     *            <li>itemId</li>
+     *            <li>itemStatusId</li>
+     *            </ul>
+     * @return an instance of {@link ItemMasterStatusHist}
+     */
+    public static final VwItemStatusHistory createVwItemHistCriteria(ItemMasterStatusHistDto criteria) {
+        VwItemStatusHistory obj = new VwItemStatusHistory();
+        if (criteria != null) {
+            if (criteria.getEntityId() > 0) {
+                obj.addCriteria(VwItemStatusHistory.PROP_ITEMSTATUSHISTID, criteria.getEntityId());
+                obj.setItemStatusHistId(criteria.getEntityId());
+            }
+            if (criteria.getItemId() > 0) {
+                obj.addCriteria(VwItemStatusHistory.PROP_ITEMID, criteria.getItemId());
+                obj.setItemId(criteria.getItemId());
+            }
+            if (criteria.getItemStatusId() > 0) {
+                obj.addCriteria(VwItemStatusHistory.PROP_ITEMSTATUSID, criteria.getItemStatusId());
                 obj.setItemStatusId(criteria.getItemStatusId());
             }
         }

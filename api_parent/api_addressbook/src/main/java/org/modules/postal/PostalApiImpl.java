@@ -156,6 +156,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
             this.msg = "Unable to fetch zip code object by internal unique id, " + zipCode;
             throw new PostalApiException(this.msg, e);
         }
+ finally {
+            if (dao != null) {
+                dao.close();
+            }
+        }
         return results;
     }
 

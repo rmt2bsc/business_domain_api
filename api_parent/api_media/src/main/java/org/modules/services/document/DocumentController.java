@@ -22,8 +22,7 @@ public class DocumentController extends HttpServlet {
         super.init();
         
         // Start Media inbound directory file listener
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        f.createMediaContentApi().startMediaFileListener();
+        DocumentContentApiFactory.createMediaContentApi().startMediaFileListener();
     }
 
     /**
@@ -34,7 +33,6 @@ public class DocumentController extends HttpServlet {
         super.destroy();
         
         // Stop Media inbound directory file listener
-        DocumentContentApiFactory f = new DocumentContentApiFactory();
-        f.createMediaContentApi().stopMediaFileListener();
+        DocumentContentApiFactory.createMediaContentApi().stopMediaFileListener();
     }
 }

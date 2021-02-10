@@ -157,11 +157,10 @@ public interface SalesApi extends XactApi {
      * @param receivePayment
      *            indicates whether or not a full payment transaction should be
      *            performed.
-     * @return invoice id
+     * @return transaction id
      * @throws SalesApiException
      */
-    int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items, 
-            boolean receivePayment) throws SalesApiException;
+    int invoiceSalesOrder(SalesOrderDto order, List<SalesOrderItemDto> items, boolean receivePayment) throws SalesApiException;
 
     /**
      * Cancels a sales order.

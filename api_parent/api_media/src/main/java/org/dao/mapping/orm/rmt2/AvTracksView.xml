@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataSource Name="AvTracksView">
-   <Sql From="av_tracks" GroupBy="" Having="" OrderBy="" Select="track_id, &#xA;&#x9;&#x9;project_id, &#xA;&#x9;&#x9;track_number, &#xA;&#x9;&#x9;track_title, &#xA;&#x9;&#x9;track_hours, &#xA;&#x9;&#x9;track_minutes, &#xA;&#x9;&#x9;track_seconds, &#xA;&#x9;&#x9;track_disc, &#xA;&#x9;&#x9;track_producer, &#xA;&#x9;&#x9;track_composer, &#xA;&#x9;&#x9;track_lyricist, &#xA;&#x9;&#x9;loc_servername, &#xA;&#x9;&#x9;loc_sharename, &#xA;&#x9;&#x9;loc_root_path, &#xA;&#x9;&#x9;loc_path, &#xA;&#x9;&#x9;loc_filename, &#xA;&#x9;&#x9;comments, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id" Where="" />
+   <Sql From="av_tracks" GroupBy="" Having="" OrderBy="" Select="track_id, &#xA;&#x9;&#x9;project_id, &#xA;&#x9;&#x9;track_number, &#xA;&#x9;&#x9;track_title, &#xA;&#x9;&#x9;track_hours, &#xA;&#x9;&#x9;track_minutes, &#xA;&#x9;&#x9;track_seconds, &#xA;&#x9;&#x9;track_disc, &#xA;&#x9;&#x9;track_producer, &#xA;&#x9;&#x9;track_composer, &#xA;&#x9;&#x9;track_lyricist, &#xA;&#x9;&#x9;loc_servername, &#xA;&#x9;&#x9;loc_sharename, &#xA;&#x9;&#x9;loc_root_path, &#xA;&#x9;&#x9;loc_path, &#xA;&#x9;&#x9;loc_filename, &#xA;&#x9;&#x9;comments, &#xA;&#x9;&#x9;date_created, &#xA;&#x9;&#x9;date_updated, &#xA;&#x9;&#x9;user_id, &#xA;&#x9;&#x9;genre_id, &#xA;&#x9;&#x9;track_artist" Where="" />
    <TableUsage DBName="av_tracks" Name="AvTracksTable" Updateable="true" />
    <ColAttr Computed="false" DBName="track_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="TrackId" PrimaryKey="true" SqlType="integer" TableName="AvTracksTable" Updateable="true" />
    <ColAttr Computed="false" DBName="project_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="ProjectId" PrimaryKey="false" SqlType="integer" TableName="AvTracksTable" Updateable="true" />
@@ -22,5 +22,7 @@
    <ColAttr Computed="false" DBName="date_created" DataValue="" DisplayHeader="" IsNull="false" JavaType="java.util.Date" Name="DateCreated" PrimaryKey="false" SqlType="timestamp" TableName="AvTracksTable" Updateable="true" />
    <ColAttr Computed="false" DBName="date_updated" DataValue="" DisplayHeader="" IsNull="false" JavaType="java.util.Date" Name="DateUpdated" PrimaryKey="false" SqlType="timestamp" TableName="AvTracksTable" Updateable="true" />
    <ColAttr Computed="false" DBName="user_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="String" Name="UserId" PrimaryKey="false" SqlType="varchar" TableName="AvTracksTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="genre_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="GenreId" PrimaryKey="false" SqlType="integer" TableName="AvTracksTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="track_artist" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="TrackArtist" PrimaryKey="false" SqlType="varchar" TableName="AvTracksTable" Updateable="true" />
 </DataSource>
 

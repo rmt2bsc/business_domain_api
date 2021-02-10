@@ -19,6 +19,8 @@ public class ProjectTrackerApiConst {
     
     public static final String APP_MODULE_TIMESHEET_INVOICE = "timesheet_invoicing";
 
+    public static final String LOCAL_CONFIG = "config.ProjectTracker-AppParms";
+
     /** Flag indicating a billable task */
     public static final int TASK_BILLABLE_FLAG = 1;
 

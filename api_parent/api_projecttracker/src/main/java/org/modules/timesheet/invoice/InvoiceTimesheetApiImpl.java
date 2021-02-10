@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.dao.mapping.orm.rmt2.VwEmployeeProjects;
 import org.dao.timesheet.TimesheetConst;
 import org.dao.timesheet.TimesheetDao;
 import org.dao.timesheet.TimesheetDaoException;
@@ -34,17 +35,21 @@ import org.rmt2.jaxb.HeaderType;
 import org.rmt2.jaxb.ObjectFactory;
 import org.rmt2.jaxb.SalesOrderType;
 import org.rmt2.jaxb.TransactionDetailGroup;
-import org.rmt2.util.JaxbPayloadFactory;
+import org.rmt2.util.HeaderTypeBuilder;
 
 import com.InvalidDataException;
 import com.NotFoundException;
+import com.api.config.ConfigConstants;
+import com.api.config.SystemConfigurator;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.foundation.TransactionApiException;
+import com.api.messaging.webservice.WebServiceConstants;
 import com.api.messaging.webservice.router.MessageRouterHelper;
 import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
+import com.api.xml.jaxb.JaxbUtil;
 
 /**
  * Implementation of InvoiceTimesheetApi that manages the invoicing of an
@@ -87,7 +92,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      * @param appName
      */
     protected InvoiceTimesheetApiImpl(String appName) {
-        super();
+        super(appName);
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.setSharedDao(this.dao);
         this.setApiUser(this.apiUser);
@@ -289,8 +294,16 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
     private int submitBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
         ObjectFactory f = new ObjectFactory();
         AccountingTransactionRequest request = f.createAccountingTransactionRequest();
-        HeaderType header = JaxbPayloadFactory.createHeader("routing", "app",
-                "module", ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, "SYNC", "REQUEST", this.getApiUser());
+        HeaderType header = HeaderTypeBuilder.Builder.create()
+                .withRouting(ApiTransactionCodes.ROUTE_ACCOUNTING)
+                .withApplication(ApiTransactionCodes.APP_ACCOUNTING)
+                .withModule("transaction")
+                .withTransaction(ApiTransactionCodes.ACCOUNTING_SALESORDER_INVOICE_CREATE)
+                .withDeliveryMode(WebServiceConstants.MSG_TRANSPORT_MODE_SYNC)
+                .withMessageMode(WebServiceConstants.MSG_MODE_REQUEST)
+                .withDeliveryDate(new Date())
+                .withUserId(this.getApiUser())
+                .build();
         request.setHeader(header);
 
         // Setup customer's sales order that will be invoiced
@@ -302,14 +315,24 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
 
         // Send time sheet deatils to Accounting systsem to create and invoice sales order
         try {
-            Object response = this.sendMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_CREATE, request);
-            if (response != null && response instanceof AccountingTransactionResponse) {
-                AccountingTransactionResponse r = (AccountingTransactionResponse) response;
-                return r.getReplyStatus().getReturnCode().intValue();
+            Object response = this.sendMessage(ApiTransactionCodes.ACCOUNTING_SALESORDER_INVOICE_CREATE, request);
+            if (response == null) {
+                throw new TransactionApiException("Create sales order and invoice for Timesheet web service response is null");
+            }
+            Object msg = null;
+            try {
+                JaxbUtil util = SystemConfigurator.getJaxb(ConfigConstants.JAXB_CONTEXNAME_DEFAULT);
+                msg = util.unMarshalMessage(response.toString());
+            } catch (Exception e) {
+                throw new InvoiceTimesheetApiException("Unable to convert payload to XML String");
+            }
+            if (msg instanceof AccountingTransactionResponse) {
+                AccountingTransactionResponse r = (AccountingTransactionResponse) msg;
+                return r.getProfile().getSalesOrders().getSalesOrder().get(0).getInvoiceDetails().getInvoiceId().intValue();
             }
             else {
                 throw new InvoiceTimesheetApiException(
-                        "An invalid response was returned from the Timesheet-to-sales order web service operation");
+                        "An invalid response was returned from the Timesheet-to-sales order web service operation. Expected response type of AccountingTransactionResponse");
             }
         } catch (TransactionApiException e) {
             this.msg = "A web service problem occurred sending time sheet(s) to accounting for the purpose of creating a sales order: timesheet id's "
@@ -493,7 +516,8 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
             if (ndx == 0) {
                 try {
                     // Get employee bill rates for target project
-                    ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+                    VwEmployeeProjects vep = new VwEmployeeProjects();
+                    ProjectEmployeeDto criteria = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
                     criteria.setEmpId(hoursEvent.getEmpId());
                     criteria.setProjId(hoursEvent.getProjId());
                     List<ProjectEmployeeDto> peps = this.empApi.getProjectEmployee(criteria);

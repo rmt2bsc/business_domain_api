@@ -1,11 +1,14 @@
 package org.rmt2.api.audiovideo;
 
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.AvArtist;
 import org.dao.mapping.orm.rmt2.AvGenre;
 import org.dao.mapping.orm.rmt2.AvMediaType;
 import org.dao.mapping.orm.rmt2.AvProject;
 import org.dao.mapping.orm.rmt2.AvProjectType;
 import org.dao.mapping.orm.rmt2.AvTracks;
+import org.dao.mapping.orm.rmt2.VwAudioVideoArtists;
 
 public class AvMediaMockDataFactory {
     public static final int TEST_ARTIST_ID = 123450;
@@ -19,6 +22,7 @@ public class AvMediaMockDataFactory {
     public static final int TEST_MEDIA_TYPE_ID = 400;
     public static final int TEST_UPDATE_RC = 1;
     public static final String TEST_AUDIO_DIR = "media/audio";
+    public static final String TEST_VIDEO_DIR = "/MyBook1/multimedia/video/movies";
     
     /**
      * 
@@ -74,6 +78,55 @@ public class AvMediaMockDataFactory {
     
     /**
      * 
+     * @param artistId
+     * @param artistName
+     * @param projId
+     * @param projName
+     * @param trackId
+     * @param trackName
+     * @param primary
+     * @param projTypeId
+     * @return
+     */
+    public static final VwAudioVideoArtists createOrmVwAudioVideoArtists(int artistId, String artistName, int projId,
+            String projName, int trackId, String trackName, boolean primary, int projTypeId) {
+        VwAudioVideoArtists o = new VwAudioVideoArtists();
+
+        o.setPrimaryArtist(primary ? 1 : 0);
+        o.setProjectTypeId(projTypeId);
+        o.setProjectTypeName(projTypeId == 1 ? "Audio" : "Video");
+        o.setArtistId(artistId);
+        o.setArtist(artistName);
+        o.setProjectId(projId);
+        o.setProjectTitle(projName);
+        o.setTrackId(trackId);
+        o.setTrackTitle(trackName);
+        o.setProjectComments("Project Comments");
+        o.setTrackComments("Track Comments");
+        o.setTrackHours(0);
+        o.setTrackMinutes(5);
+        o.setTrackSeconds(45);
+        o.setGenreId(100);
+        o.setContentId(200);
+        o.setMediaTypeId(3);
+        o.setYear(1999);
+        o.setMasterDupId(1);
+        o.setRipped(1);
+        o.setCost(9.99);
+        o.setContentPath("//servername/directory_path/");
+        o.setContentFilename("mediafile.mp3");
+        o.setArtWorkPath("//servername/directory_path/");
+        o.setArtWorkFilename("artworkfile.jpg");
+        o.setTotalTime(40);
+        o.setProducer("Producer Name");
+        o.setTrackDiscNumber("1");
+        o.setTrackNumber(1);
+
+        return o;
+    }
+
+    /**
+     * 
      * @param projectId
      * @param artistId
      * @param projectTypeId
@@ -103,6 +156,9 @@ public class AvMediaMockDataFactory {
         o.setProjectComments("ProjectCommentsFor" + projectId);
         o.setRipped(1);
         o.setMasterDupId(projectId + 1000);
+        o.setTotalTime(125);
+        o.setProducer("producer_name");
+        o.setDateCreated(new Date());
         
         return o;
     }
@@ -128,6 +184,7 @@ public class AvMediaMockDataFactory {
         AvTracks o = new AvTracks();
         o.setTrackId(trackId);
         o.setProjectId(projectId);
+        o.setGenreId(AvMediaMockDataFactory.TEST_GENRE_ID); // Funk
         o.setTrackNumber(trackNumber);
         o.setTrackTitle(title);
         o.setTrackHours(hh);
@@ -136,6 +193,7 @@ public class AvMediaMockDataFactory {
         o.setTrackDisc(disc);
         o.setLocPath(filePath);
         o.setLocFilename(fileName);
+        o.setTrackArtist("Track Artist");
         o.setLocServername("ServerName");
         o.setLocRootPath("www.rmt2.net");
         o.setLocSharename("multimedia");

@@ -20,7 +20,9 @@ import com.api.foundation.AbstractTransactionApiImpl;
  * @author rterrell
  * 
  */
-abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl implements MediaFileProcessor { //extends AbstractMediaFileProcessorDaoImp {
+abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl implements MediaFileProcessor {
+
+    // extends AbstractMediaFileProcessorDaoImp {
 
     private static Logger logger = Logger.getLogger(AbstractMediaFileProcessorImpl.class);
     private List<String> errorMessages;
@@ -55,8 +57,7 @@ abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl
         int contentId = 0;
         try {
             // Save media file data to the content table
-            DocumentContentApiFactory dcApiFact = new DocumentContentApiFactory();
-            DocumentContentApi dcApi = dcApiFact.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME);
+            DocumentContentApi dcApi = DocumentContentApiFactory.createMediaContentApi(MediaConstants.DEFAULT_CONTEXT_NAME);
             contentId = dcApi.add(fileName);
             return contentId;
         } catch (Exception e) {

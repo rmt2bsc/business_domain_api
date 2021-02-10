@@ -19,6 +19,17 @@ public interface DocumentContentApi extends TransactionApi {
     /**
      * Add media document.
      * 
+     * @param document
+     *            An instance of {@link ContentDto} which contains the document
+     *            image and its metadata.
+     * @return The internal unique identifier of the document object added.
+     * @throws MediaModuleException
+     */
+    int add(ContentDto document) throws MediaModuleException;
+
+    /**
+     * Add media document.
+     * 
      * @param filePath
      *            The full path of the media file to be added.
      * @return The internal unique identifier of the document object added.
@@ -86,4 +97,12 @@ public interface DocumentContentApi extends TransactionApi {
      * file.
      */
     void stopMediaFileListener();
+
+    /**
+     * Indicates whether or not the media file listener is running.
+     * 
+     * @return String <i>Running</i> when the listener is running and
+     *         <i>Stopped<i/> when the listener is not running.
+     */
+    String getMediaFileListenerStatus();
 }

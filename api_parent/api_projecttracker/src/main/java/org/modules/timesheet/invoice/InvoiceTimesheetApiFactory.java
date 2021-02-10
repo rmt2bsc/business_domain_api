@@ -35,8 +35,8 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link InvoiceTimesheetApi}
      */
-    public InvoiceTimesheetApi createApi() {
-        return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
+    public static final InvoiceTimesheetApi createApi() {
+        return InvoiceTimesheetApiFactory.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -47,7 +47,7 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
      *            the application name
      * @return an instance of {@link InvoiceTimesheetApi}
      */
-    public InvoiceTimesheetApi createApi(String appName) {
+    public static final InvoiceTimesheetApi createApi(String appName) {
         InvoiceTimesheetApiImpl api = new InvoiceTimesheetApiImpl(appName);
         return api;
     }
@@ -63,7 +63,7 @@ public class InvoiceTimesheetApiFactory extends RMT2Base {
      * @return an instance of {@link InvoiceTimesheetApi} or null when
      *         <i>connection</i> is null.
      */
-    public InvoiceTimesheetApi createApi(DaoClient connection) {
+    public static final InvoiceTimesheetApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }

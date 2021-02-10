@@ -1,46 +1,39 @@
 package org.modules.transaction.receipts;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.subsidiary.CustomerDao;
 import org.dao.subsidiary.SubsidiaryDaoException;
 import org.dao.subsidiary.SubsidiaryDaoFactory;
-import org.dao.transaction.XactDao;
-import org.dao.transaction.XactDaoException;
-import org.dao.transaction.XactDaoFactory;
-import org.dao.transaction.receipts.CashReceiptDao;
-import org.dao.transaction.receipts.CashReceiptDaoException;
-import org.dao.transaction.receipts.CashReceiptDaoFactory;
 import org.dao.transaction.sales.SalesOrderDao;
 import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dao.transaction.sales.SalesOrderDaoFactory;
+import org.dto.BusinessContactDto;
+import org.dto.ContactDto;
 import org.dto.CustomerDto;
 import org.dto.SalesOrderDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
+import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 import org.dto.adapter.orm.account.subsidiary.CustomerExt;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
+import org.modules.contacts.ContactsApi;
+import org.modules.contacts.ContactsApiException;
+import org.modules.contacts.ContactsApiFactory;
 import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 
 import com.InvalidDataException;
-import com.api.config.ConfigConstants;
-import com.api.messaging.MessageException;
-import com.api.messaging.MessageManager;
-import com.api.messaging.email.EmailMessageBean;
-import com.api.messaging.email.smtp.SmtpApi;
-import com.api.messaging.email.smtp.SmtpFactory;
 import com.api.persistence.DaoClient;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
-import com.api.xml.RMT2XmlUtility;
 
 /**
  * API implementation of CashReceiptApi for managing cash receipts transactions.
@@ -112,7 +105,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
      * @throws {@link CashReceiptApiException}
      * @throws {@link InvalidDataException}
      */
-    public boolean applyPaymentToInvoice(SalesOrderDto salesOrder, Double cashPaymentAmount) 
+    public int applyPaymentToInvoice(SalesOrderDto salesOrder, Double cashPaymentAmount) 
             throws CashReceiptApiException {
         
         // Sales order object cannot be null
@@ -141,23 +134,12 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
 
         // Create cash receipt transaction for the given sales order.
         try {
-            this.receivePayment(xact, salesOrder.getCustomerId());
+            return this.receivePayment(xact, salesOrder.getCustomerId());
         } catch (CashReceiptApiException e) {
             this.msg = "Unable to apply customer payment sales order, " + salesOrder.getSalesOrderId();
             logger.error(this.msg);
-            throw new CashReceiptApiException(this.msg, e);
+            throw new CashReceiptApiException(e);
         }
-
-        // Send email confirmation
-        try {
-            this.emailPaymentConfirmation(salesOrder.getSalesOrderId(), xact.getXactId());
-        } catch (CashReceiptApiException e) {
-            this.msg = "Error notifying customer of payment confirmation via SMTP for sales order id, "
-                    + salesOrder.getSalesOrderId();
-            logger.error(this.msg);
-            throw new CashReceiptApiException(this.msg, e);
-        }
-        return true;
     }
 
     /**
@@ -244,7 +226,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             xactId = this.update(xact, null);
             // Ensure that the customer activity is posted as a negative amount.
             xactAmount = xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER;
-            super.createSubsidiaryActivity(customerId, xactId, xactAmount);
+            super.createSubsidiaryActivity(customerId, SubsidiaryType.CUSTOMER, xactId, xactAmount);
             return xactId;
         } catch (XactApiException e) {
             throw new CashReceiptApiException(e);
@@ -275,13 +257,13 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
                 throw new CashReceiptApiException(msg);
             }
 
-            this.finalizeXact(xact);
+            // reverse transaction
             xactId = this.reverse(xact, null);
 
             // Apply a reversal multiplier on the revised base transaction
             // amount which will be used to offset the customer activity.
             xactAmount = xact.getXactAmount() * XactConst.REVERSE_MULTIPLIER;
-            super.createSubsidiaryActivity(customerId, xactId, xactAmount);
+            super.createSubsidiaryActivity(customerId, SubsidiaryType.CUSTOMER, xactId, xactAmount);
             return xactId;
         } catch (XactApiException e) {
             throw new CashReceiptApiException(e);
@@ -314,9 +296,6 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
      */
     protected void preCreateXact(XactDto xact) {
         super.preCreateXact(xact);
-        // if (xact.getXactTenderId() == 0) {
-        // xact.setNull("tenderId");
-        // }
         if (xact.getXactReason() == null || xact.getXactReason().equals("")) {
             return;
         }
@@ -348,198 +327,16 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         return;
     }
 
-    /**
-     * Emails a payment confirmation message to the email address on the
-     * customer's profile.
-     * 
-     * @param salesOrderId
-     *            the sales order id
-     * @param xactId
-     *            the transaction id
-     * @return true upon success and false in the event the transport service
-     *         could not be initialized.
-     * @throws CashReceiptApiException
-     */
-    public boolean emailPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException {
-        //  Customer id cannot be null
-        try {
-            Verifier.verifyNotNull(salesOrderId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Sales order Id is required";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        // Customer id must be greater than zero
-        try {
-            Verifier.verifyPositive(salesOrderId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Customer Id must be a value greater than zero";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        //  Transaction id cannot be null
-        try {
-            Verifier.verifyNotNull(xactId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Transaction Id is required";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        // Transaction id must be greater than zero
-        try {
-            Verifier.verifyPositive(xactId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Transaction Id must be a value greater than zero";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        CashReceiptDaoFactory fact = new CashReceiptDaoFactory();
-        CashReceiptDao dao = fact.createRmt2OrmDao(this.dao);
-        String custData;
-        try {
-            custData = this.buildPaymentConfirmation(salesOrderId, xactId);
-        } catch (CashReceiptDaoException e) {
-            this.msg = "Unable to retreive customer payment email confirmation body";
-            logger.error(this.msg);
-            throw new CashReceiptApiException(this.msg, e);
-        }
-        String appRoot = "c:/tmp/";
-        StringBuffer xmlBuf = new StringBuffer();
-        xmlBuf.append(MessageManager.MSG_OPEN_TAG);
-        xmlBuf.append(MessageManager.MSG_OPEN_APPROOT_TAG);
-        xmlBuf.append(appRoot);
-        xmlBuf.append(MessageManager.MSG_CLOSE_APPROOT_TAG);
-        xmlBuf.append("<pageTitle>");
-        xmlBuf.append("Customer Payment Confirmation");
-        xmlBuf.append("</pageTitle>");
-        xmlBuf.append(custData);
-        xmlBuf.append(MessageManager.MSG_CLOSE_TAG);
-        String xml = xmlBuf.toString();
 
-        // Transform XML to HTML document
-        String appFilePath = "/email/";
-        RMT2XmlUtility xsl = RMT2XmlUtility.getInstance();
-        String xslFile = appFilePath + "CustomerPaymentConfirmation.xsl";
-        ByteArrayOutputStream baos = null;
-        try {
-            baos = new ByteArrayOutputStream();
-            xsl.transform(xslFile, xml.toString(), baos);
-        } catch (Exception e) {
-            this.msg = "XSL Customer Payment Email transformation failed for resource, "
-                    + xslFile + " due to a System error.  " + e.getMessage();
-            logger.error(this.msg);
-            throw new CashReceiptApiException(e);
-        } finally {
-            xsl = null;
-        }
-
-        // Get results of transformation
-        String html = baos.toString();
-
-        // Build email message
-        String emailSubject = "RMT2 Business Systems Corp Account Payment Confirmation";
-        EmailMessageBean msg = new EmailMessageBean();
-        msg.setFromAddress(System.getProperty(ConfigConstants.OWNER_EMAIL));
-        // msg.setToAddress(((CustomerExt) this.customerExt).getContactEmail());
-        msg.setToAddress("royterrell@hotmail.com");
-
-        msg.setSubject(emailSubject);
-        msg.setBody(html, EmailMessageBean.HTML_CONTENT);
-
-        // Send Email message to intended recipient
-        SmtpApi api = SmtpFactory.getSmtpInstance();
-        if (api == null) {
-            return false;
-        }
-        try {
-            api.sendMessage(msg);
-            api.close();
-            this.msg = "Customer payment confirmation was sent via email successfully";
-            return true;
-        } catch (MessageException e) {
-            this.msg = "Customer payment confirmation error.  " + e.getMessage();
-            throw new CashReceiptApiException(this.msg, e);
-        }
-    }
-
-    /**
-     * Creates customer payment confirmation message.
-     * 
-     * @param salesOrderId
-     * @param xactId
-     * @return
-     * @throws CashReceiptApiException
-     */
-    @Override
-    public String buildPaymentConfirmation(Integer salesOrderId, Integer xactId) throws CashReceiptApiException {
-        //  Customer id cannot be null
-        try {
-            Verifier.verifyNotNull(salesOrderId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Sales order Id is required";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        // Customer id must be greater than zero
-        try {
-            Verifier.verifyPositive(salesOrderId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Customer Id must be a value greater than zero";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        //  Transaction id cannot be null
-        try {
-            Verifier.verifyNotNull(xactId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Transaction Id is required";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        // Transaction id must be greater than zero
-        try {
-            Verifier.verifyPositive(xactId);
-        }
-        catch (VerifyException e ) {
-            this.msg = "Transaction Id must be a value greater than zero";
-            throw new InvalidDataException(this.msg, e);
-        }
-        
-        Xact xact = null;
-        XactDto criteria = Rmt2XactDtoFactory.createXactInstance((Xact) null);
-        criteria.setXactId(xactId);
-        try {
-            XactDaoFactory xactDaoFactory = new XactDaoFactory();
-            XactDao xactDao = xactDaoFactory.createRmt2OrmXactDao();
-            xactDao.setDaoUser(this.getApiUser());
-            List<XactDto> xactDto = xactDao.fetchXact(criteria);
-            if (xactDto != null && xactDto.size() == 1) {
-                xact = XactDaoFactory.createXact(xactDto.get(0));
-            }
-            else {
-                this.msg = "Transaction was not found: " + xactId;
-                throw new CashReceiptApiException(this.msg);
-            }
-        } catch (XactDaoException e) {
-            throw new CashReceiptApiException(e);
-        }
-
-        SalesOrder so = null;
+    private SalesOrder getSalesOrder(int salesOrderId) throws CashReceiptApiException {
         SalesOrderDaoFactory soDaoFact = new SalesOrderDaoFactory();
-        SalesOrderDao soDao = soDaoFact.createRmt2OrmDao();
+        SalesOrderDao soDao = soDaoFact.createRmt2OrmDao(this.getSharedDao());
         SalesOrderDto soCriteria = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(null);
         soCriteria.setSalesOrderId(salesOrderId);
         try {
             List<SalesOrderDto> soDto = soDao.fetchSalesOrder(soCriteria);
             if (soDto != null && soDto.size() == 1) {
-                so = SalesOrderDaoFactory.createOrmSalesOrder(soDto.get(0));
+                return SalesOrderDaoFactory.createOrmSalesOrder(soDto.get(0));
             }
             else {
                 this.msg = "Sales order was not found: " + salesOrderId;
@@ -548,32 +345,50 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         } catch (SalesOrderDaoException e) {
             throw new CashReceiptApiException(e);
         }
+    }
 
-        CustomerExt cust = null;
+    private CustomerExt getCustomer(int customerId) throws CashReceiptApiException {
         SubsidiaryDaoFactory subDaoFact = new SubsidiaryDaoFactory();
-        CustomerDao custDao = subDaoFact.createRmt2OrmCustomerDao();
+        CustomerDao custDao = subDaoFact.createRmt2OrmCustomerDao(this.getSharedDao());
         CustomerDto custCriteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
-        custCriteria.setCustomerId(so.getCustomerId());
+        custCriteria.setCustomerId(customerId);
+        CustomerExt cust = null;
         try {
-            List<CustomerDto> custDto = custDao.fetch(custCriteria);
-            if (custDto != null && custDto.size() == 1) {
-                cust = SubsidiaryDaoFactory.createCustomerExtBean(custDto.get(0));
+            List<CustomerDto> custList = custDao.fetch(custCriteria);
+            if (custList != null && custList.size() == 1) {
+                cust = SubsidiaryDaoFactory.createCustomerExtBean(custList.get(0));
                 double bal = custDao.calculateBalance(cust.getCustomerId());
                 cust.setBalance(bal);
+                return cust;
             }
             else {
-                this.msg = "Unable to perform cash receipts confirmation due to customer, " + so.getCustomerId()
-                        + ", was not found";
+                this.msg = "Unable to fetch customer details to perform cash receipts confirmation due to customer, "
+                        + customerId + ", was not found";
                 throw new CashReceiptApiException(this.msg);
             }
         } catch (SubsidiaryDaoException e) {
             throw new CashReceiptApiException(e);
         }
+    }
 
-        StringBuffer xmlBuf = new StringBuffer();
-        xmlBuf.append(cust.toXml());
-        xmlBuf.append(so.toXml());
-        xmlBuf.append(xact.toXml());
-        return xmlBuf.toString();
+    private BusinessContactDto getBusinessContact(int salesOrderId) throws CashReceiptApiException {
+        SalesOrder so = this.getSalesOrder(salesOrderId);
+        CustomerExt customer = this.getCustomer(so.getCustomerId());
+        ContactsApi contactsApi = ContactsApiFactory.createApi();
+        BusinessContactDto criteria = Rmt2AddressBookDtoFactory.getBusinessInstance(null);
+        criteria.setContactId(customer.getBusinessId());
+        try {
+            List<ContactDto> contacts = contactsApi.getContact(criteria);
+            if (contacts != null && contacts.size() == 1 && contacts.get(0) instanceof BusinessContactDto) {
+                return (BusinessContactDto) contacts.get(0);
+            }
+            else {
+                this.msg = "Unable to fetch customer business contact details to perform cash receipts confirmation due to customer business contact data was not found for sales order, "
+                        + salesOrderId;
+                throw new CashReceiptApiException(this.msg);
+            }
+        } catch (ContactsApiException e) {
+            throw new CashReceiptApiException(e);
+        }
     }
 }

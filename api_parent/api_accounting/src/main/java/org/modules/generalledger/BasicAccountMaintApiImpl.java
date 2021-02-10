@@ -39,7 +39,7 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements GlA
     protected BasicAccountMaintApiImpl(String appName) {
         super();
         this.factory = new GeneralLedgerDaoFactory();
-        this.dao = this.factory.createRmt2OrmDao(this.appName);
+        this.dao = this.factory.createRmt2OrmDao(appName);
         this.setSharedDao(dao);
         this.dao.setDaoUser(this.apiUser);
         this.appName = appName;

@@ -58,8 +58,7 @@ public interface XactDao extends DaoClient {
      *         found
      * @throws XactDaoException
      */
-    List<XactCategoryDto> fetchCategory(XactCategoryDto criteria)
-            throws XactDaoException;
+    List<XactCategoryDto> fetchCategory(XactCategoryDto criteria) throws XactDaoException;
 
     /**
      * Retrieves a list of transaction code group data based custom criteria
@@ -73,8 +72,7 @@ public interface XactDao extends DaoClient {
      *         found
      * @throws XactDaoException
      */
-    List<XactCodeGroupDto> fetchGroup(XactCodeGroupDto criteria)
-            throws XactDaoException;
+    List<XactCodeGroupDto> fetchGroup(XactCodeGroupDto criteria) throws XactDaoException;
 
     /**
      * Retrieves a list of transaction code data based custom criteria supplied
@@ -112,8 +110,7 @@ public interface XactDao extends DaoClient {
      *         found
      * @throws XactDaoException
      */
-    List<XactTypeItemDto> fetchXactTypeItem(XactTypeItemDto criteria)
-            throws XactDaoException;
+    List<XactTypeItemDto> fetchXactTypeItem(XactTypeItemDto criteria) throws XactDaoException;
 
     /**
      * Retrieves one or more transaction type item activity objects related to
@@ -126,8 +123,7 @@ public interface XactDao extends DaoClient {
      *         data is found
      * @throws XactDaoException
      */
-    List<XactTypeItemActivityDto> fetchXactTypeItemActivity(
-            XactTypeItemActivityDto criteria) throws XactDaoException;
+    List<XactTypeItemActivityDto> fetchXactTypeItemActivity(XactTypeItemActivityDto criteria) throws XactDaoException;
 
     /**
      * Retrieves one or more extended transaction type item activity objects
@@ -140,8 +136,7 @@ public interface XactDao extends DaoClient {
      *         data is found
      * @throws XactDaoException
      */
-    List<XactTypeItemActivityDto> fetchXactTypeItemActivityExt(
-            XactTypeItemActivityDto criteria) throws XactDaoException;
+    List<XactTypeItemActivityDto> fetchXactTypeItemActivityExt(XactTypeItemActivityDto criteria) throws XactDaoException;
 
     /**
      * Creates a common transtaction.
@@ -153,8 +148,7 @@ public interface XactDao extends DaoClient {
      * @return The id of the newly formed transction.
      * @throws XactDaoException
      */
-    int maintain(XactDto xact, List<XactTypeItemActivityDto> items)
-            throws XactDaoException;
+    int maintain(XactDto xact, List<XactTypeItemActivityDto> items) throws XactDaoException;
 
     /**
      * Updates an existing transaction entry.

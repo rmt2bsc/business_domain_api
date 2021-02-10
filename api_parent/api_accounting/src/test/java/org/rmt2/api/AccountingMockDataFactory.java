@@ -11,7 +11,6 @@ import org.dao.mapping.orm.rmt2.GlAccountTypes;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
-import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.PurchaseOrder;
 import org.dao.mapping.orm.rmt2.PurchaseOrderItems;
@@ -30,6 +29,7 @@ import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dao.mapping.orm.rmt2.VwSalesOrderInvoice;
 import org.dao.mapping.orm.rmt2.VwSalesorderItemsBySalesorder;
 import org.dao.mapping.orm.rmt2.VwVendorItemPurchaseOrderItem;
@@ -218,15 +218,17 @@ public class AccountingMockDataFactory {
      * @param effDate
      * @param endDate
      * @param reason
+     * @param statusName
      * @return
      */
-    public static final ItemMasterStatusHist createMockOrmItemMasterStatusHistory(
+    public static final VwItemStatusHistory createMockOrmItemMasterStatusHistory(
             int id, int itemId, int statusId, double unitCost, double markup,
-            String effDate, String endDate, String reason) {
-        ItemMasterStatusHist i = new ItemMasterStatusHist();
+            String effDate, String endDate, String reason, String statusName) {
+        VwItemStatusHistory i = new VwItemStatusHistory();
         i.setItemStatusHistId(id);
         i.setItemId(itemId);
         i.setItemStatusId(statusId);
+        i.setDescription(statusName);
         i.setUnitCost(unitCost);
         i.setMarkup(markup);
         try {

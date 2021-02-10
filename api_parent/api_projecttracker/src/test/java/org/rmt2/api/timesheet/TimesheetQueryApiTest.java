@@ -17,6 +17,7 @@ import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetHours;
 import org.dao.mapping.orm.rmt2.VwTimesheetList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
+import org.dao.mapping.orm.rmt2.VwTimesheetSummary;
 import org.dao.timesheet.TimesheetConst;
 import org.dto.EventDto;
 import org.dto.ProjectEventDto;
@@ -44,6 +45,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
 
 import com.InvalidDataException;
+import com.NotFoundException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -65,6 +67,15 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+
+        VwTimesheetSummary mockCriteria = new VwTimesheetSummary();
+        mockCriteria.setTimesheetId(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
+        try {
+            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockTimesheetSummary);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single timesheet case setup failed");
+        }
     }
 
     /**
@@ -802,7 +813,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
             Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
-            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+            Assert.assertEquals(obj.getTaskBillable().intValue(), (ndx <= 3 ? 1 : 0));
         }
     }
   
@@ -909,7 +920,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
             Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
-            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+            Assert.assertEquals(obj.getTaskBillable().intValue(), (ndx <= 3 ? 1 : 0));
         }
     }
     
@@ -947,7 +958,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
         Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
         Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[0]);
-        Assert.assertEquals(obj.getTaskBillable(), 1);
+        Assert.assertEquals(obj.getTaskBillable().intValue(), 1);
     }
     
     @Test
@@ -983,7 +994,7 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
             Assert.assertEquals(obj.getProjectEffectiveDate(), RMT2Date.stringToDate("2018-01-01"));
             Assert.assertEquals(obj.getProjectEndDate(), RMT2Date.stringToDate("2018-01-07"));
             Assert.assertEquals(obj.getTaskDescription(), ProjectTrackerMockDataFactory.TEST_TASK_NAMES[ndx]);
-            Assert.assertEquals(obj.getTaskBillable(), (ndx <= 3 ? 1 : 0));
+            Assert.assertEquals(obj.getTaskBillable().intValue(), (ndx <= 3 ? 1 : 0));
         }
     }
     
@@ -1499,10 +1510,9 @@ public class TimesheetQueryApiTest extends TimesheetMockData {
         try {
             api.load(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof TimesheetApiException);
+            Assert.assertTrue(e instanceof NotFoundException);
             Assert.assertTrue(e.getMessage().contains("Failed to build timesheet object graph due to Timesheet ["
                             + ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID + "] could not be found"));
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }

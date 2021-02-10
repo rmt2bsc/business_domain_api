@@ -46,6 +46,11 @@ public class AudioVideoDaoConstants {
     public static final int MEDIA_TYPE_DVD = 2;
 
     /**
+     * Digital Video Download
+     */
+    public static final int MEDIA_TYPE_DOWNLOAD = 12;
+
+    /**
      * 
      */
     public static final int UNKNOWN_GENRE = 999;

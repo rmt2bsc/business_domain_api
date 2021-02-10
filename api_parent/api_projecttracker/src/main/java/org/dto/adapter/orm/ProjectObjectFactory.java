@@ -12,8 +12,8 @@ import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -43,14 +43,14 @@ public class ProjectObjectFactory extends RMT2Base {
     }
 
     /**
-     * Create an instance of <i>ProjectDto</i>.
+     * Create an instance of <i>Project2Dto</i>.
      * 
      * @param ormBean
      *            an instance of {@link ProjProject}
      * 
-     * @return an instance of {@link ProjectDto}.
+     * @return an instance of {@link Project2Dto}.
      */
-    public static final ProjectDto createProjectDtoInstance(ProjProject ormBean) {
+    public static final Project2Dto createProjectDtoInstance(ProjProject ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 
@@ -99,6 +99,18 @@ public class ProjectObjectFactory extends RMT2Base {
      * @return an instance of {@link ProjectTaskDto}.
      */
     public static final ProjectTaskDto createProjectTaskExtendedDtoInstance(VwTimesheetProjectTask ormBean) {
+        return new ProjectRmt2OrmAdapter(ormBean);
+    }
+
+    /**
+     * Create an instance of <i>ProjectEmployeeDto</i>.
+     * 
+     * @param ormBean
+     *            an instance of {@link ProjEmployeeProject}
+     * 
+     * @return an instance of {@link ProjectEmployeeDto}.
+     */
+    public static final ProjectEmployeeDto createEmployeeProjectDtoInstance(ProjEmployeeProject ormBean) {
         return new ProjectRmt2OrmAdapter(ormBean);
     }
 

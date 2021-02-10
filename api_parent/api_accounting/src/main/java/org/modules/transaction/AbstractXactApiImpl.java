@@ -18,7 +18,6 @@ import org.dto.CreditorDto;
 import org.dto.CreditorXactHistoryDto;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
-import org.dto.SubsidiaryDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -605,6 +604,56 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         return;
     }
 
+    /**
+     * Updates the base transaction.
+     * <p>
+     * This applies only for existing transactions, hence the functionality does
+     * not create new transactions.
+     * 
+     * @param xact
+     *            The transaction object to be managed.
+     * @return The total number of transactions effected.
+     * @throws XactApiException
+     */
+    @Override
+    public int update(XactDto xact) throws XactApiException {
+        this.validate(xact);
+
+        // Fetch original transaction
+        XactDto obj = this.getXactById(xact.getXactId());
+        if (obj == null) {
+            return 0;
+        }
+
+        // Apply updates to the original record
+        obj.setXactAmount(xact.getXactAmount());
+        obj.setXactBankTransInd(xact.getXactBankTransInd());
+        obj.setXactTypeId(xact.getXactTypeId());
+        obj.setXactSubtypeId(xact.getXactSubtypeId());
+        obj.setXactDate(xact.getXactDate());
+        obj.setXactTenderId(xact.getXactTenderId());
+        obj.setXactNegInstrNo(xact.getXactNegInstrNo());
+        obj.setXactConfirmNo(xact.getXactConfirmNo());
+        obj.setXactEntityRefNo(xact.getXactEntityRefNo());
+        obj.setXactPostedDate(xact.getXactPostedDate());
+        obj.setXactReason(xact.getXactReason());
+        obj.setDocumentId(xact.getDocumentId());
+
+        int rc = 0;
+        XactDao dao = this.getXactDao();
+        dao.setDaoUser(this.getApiUser());
+
+        // Apply transaction changes
+        try {
+            rc = dao.maintain(xact);
+            return rc;
+        } catch (Exception e) {
+            this.msg = "Base transaction update failed";
+            logger.error(this.msg, e);
+            throw new XactApiException(this.msg, e);
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -617,8 +666,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         try {
             this.validate(xact, xactItems);
         } catch (Exception e) {
-            this.msg = "Common transaction update failed validation checks";
-            throw new XactApiException(this.msg, e);
+            throw new XactApiException(e);
         }
 
         int rc = 0;
@@ -699,7 +747,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             this.validate(xact);    
         }
         catch (Exception e) {
-            throw new InvalidDataException("base transaction failed validation", e);
+            throw new InvalidDataException(e);
         }
 
         // Validate transaction items.
@@ -761,22 +809,27 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * Verifies that the said transaction is a proper candidate for
      * finailization.
      * <p>
-     * Aplplicable sub transaction types are:
+     * Aplplicable sub transaction type values are:
      * <ul>
-     * <li>cancellations</li>
-     * <li>reversals</li>
+     * <li>{@link XactConst.XACT_SUBTYPE_REVERSE}</li>
+     * <li>{@link XactConst.XACT_SUBTYPE_CANCEL}</li>
+     * <li>{@link XactConst.XACT_SUBTYPE_NOT_ASSIGNED}</li>
      * </ul>
      * 
      * @param xact
      * @throws XactApiException
      */
     private void validateFinalization(XactDto xact) throws XactApiException {
-        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_REVERSE
-                || xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_CANCEL) {
-            // This is valid
-        }
-        else {
-            throw new InvalidFinalizationAttemptException("Transaction sub type must be reversed or cancelled");
+        switch (xact.getXactSubtypeId()) {
+            case XactConst.XACT_SUBTYPE_REVERSE:
+            case XactConst.XACT_SUBTYPE_CANCEL:
+            case XactConst.XACT_SUBTYPE_NOT_ASSIGNED:
+                // This is valid
+                break;
+
+            default:
+                throw new InvalidFinalizationAttemptException(
+                        "Unable to finalize target transaction.  The Sub type must be unassigned, reversed or cancelled");
         }
     }
 
@@ -980,6 +1033,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public int reverse(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
+        // Finalize Transaction
+        this.finalizeXact(xact);
+
         int rc = 0;
         this.preReverse(xact, xactItems);
         this.reverse(xact);
@@ -1122,7 +1178,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @throws XactApiException
      */
     @Override
-    public int createSubsidiaryActivity(Integer subsidiaryId, Integer xactId, Double amount) throws XactApiException {
+    public int createSubsidiaryActivity(Integer subsidiaryId, SubsidiaryType subsidiaryType, Integer xactId, Double amount) throws XactApiException {
         try {
             Verifier.verifyNotNull(subsidiaryId);
         } catch (VerifyException e) {
@@ -1134,6 +1190,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             Verifier.verifyPositive(subsidiaryId);
         } catch (VerifyException e) {
             this.msg = "Subsidiary id must be a value greater than zero";
+            logger.error(this.msg);
+            throw new InvalidDataException(this.msg, e);
+        }
+        try {
+            Verifier.verifyNotNull(subsidiaryType);
+        } catch (VerifyException e) {
+            this.msg = "Subsidiary Type is required.  Must be SubsidiaryType.CREDITOR or SubsidiaryType.CUSTOMER";
             logger.error(this.msg);
             throw new InvalidDataException(this.msg, e);
         }
@@ -1159,19 +1222,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new InvalidDataException(this.msg, e);
         }
 
-        int rc = 0;
-        // Determine the type of subsidiary we are dealing with
-        SubsidiaryType subType = this.evaluateSubsidiaryType(subsidiaryId);
-
-        // Verify that we were able to identify the subsidiary type
-        try {
-            Verifier.verifyNotNull(subType);
-        } catch (VerifyException e) {
-            this.msg = "Subsidiary id passed is invalid.  Must be SubsidiaryType.CREDITOR or SubsidiaryType.CUSTOMER";
-            logger.error(this.msg);
-            throw new NotFoundException(this.msg, e);
-        }
         // validate transaction id
+        int rc = 0;
         XactDto xactDto = this.getXactById(xactId);
         try {
             Verifier.verifyNotNull(xactDto);
@@ -1184,12 +1236,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
 
         XactDao xactDao = this.getXactDao();
         // Create transaction for creditor
-        if (subType == SubsidiaryType.CREDITOR) {
-            rc = this.createTransactionHistoryForCreditor(xactDao, subsidiaryId, xactId, amount);
-        }
-        // Create transaction for customer
-        if (subType == SubsidiaryType.CUSTOMER) {
-            rc = this.createTransactionHistoryForCustomer(xactDao, xactDto, subsidiaryId, xactId, amount);
+        switch (subsidiaryType) {
+            case CREDITOR:
+                rc = this.createTransactionHistoryForCreditor(xactDao, subsidiaryId, xactId, amount);
+                break;
+            case CUSTOMER:
+                rc = this.createTransactionHistoryForCustomer(xactDao, xactDto, subsidiaryId, xactId, amount);
+                break;
         }
         return rc;
     }
@@ -1256,58 +1309,39 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
     }
 
     /**
-     * Determine if the subsidiary id represents a creditor or a customer.
+     * Verifies the existence of the creditor
      * 
-     * @param subsidiaryId
-     *            the id of the subsidiary
-     * @return {@link SubsidiaryType} when the creditor or customer is found.
-     *         Otherwise, null is returned.
-     * @throws XactApiException
+     * @param creditorId
+     * @return {@link CreditorDto} if found. Otherwise null is retunred.
+     * @throws SubsidiaryException
      */
-    public SubsidiaryType evaluateSubsidiaryType(Integer subsidiaryId) throws XactApiException {
-        SubsidiaryDto result = null;
-        try {
-            result = this.getCreditor(subsidiaryId);
-            if (result != null) {
-                return SubsidiaryType.CREDITOR;
-            }
-        } catch (Exception e) {
-            throw new XactApiException("Error evaluating creditor [creditor id=" + subsidiaryId + "]", e);
-        }
-
-        try {
-            result = this.getCustomer(subsidiaryId);
-            if (result != null) {
-                return SubsidiaryType.CUSTOMER;
-            }
-        } catch (Exception e) {
-            throw new XactApiException("Error evaluating customer [customer id=" + subsidiaryId + "]", e);
-        }
-        return null;
-    }
-
-    private CreditorDto getCreditor(int creditorId) throws SubsidiaryException {
+    protected CreditorDto verifyCreditor(int creditorId) throws SubsidiaryException {
         XactDao xactDao;
         try {
             xactDao = this.getXactDao();
         } catch (XactApiException e) {
             throw new SubsidiaryException("Unable to retrieve creditor profile due to bad XactDao", e);
         }
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(xactDao);
+        CreditorApi api = SubsidiaryApiFactory.createCreditorApi(xactDao);
         CreditorDto dto = api.get(creditorId);
         return dto;
     }
 
-    private CustomerDto getCustomer(int customerId) throws SubsidiaryException {
+    /**
+     * Verifies the existence of the customer
+     * 
+     * @param customerId
+     * @return {@link CustomerDto} if found. Otherwise null is retunred.
+     * @throws SubsidiaryException
+     */
+    protected CustomerDto verifyCustomer(int customerId) throws SubsidiaryException {
         XactDao xactDao;
         try {
             xactDao = this.getXactDao();
         } catch (XactApiException e) {
             throw new SubsidiaryException("Unable to retrieve customer profile due to bad XactDao", e);
         }
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CustomerApi api = f.createCustomerApi(xactDao);
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(xactDao);
         CustomerDto dto = api.get(customerId);
         return dto;
     }
@@ -1336,6 +1370,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * This method flags the transaction, <i>xact</i>, as finalized by setting
      * the transaction sub type property to XactConst.XACT_TYPE_FINAL.
      * <p>
+     * We assuming that the transaction has undergone basic validations. If not,
+     * then this.validate(XactDto) will need to be called.
+     * <p>
      * Once the transaction is finalized, the transaction cannot be changed
      * anymore. Transactions that involve finalization are: sales order
      * cancellation, cash disbursement reversal, credit charge reversal, and
@@ -1349,15 +1386,6 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public void finalizeXact(XactDto xact) throws XactApiException {
-        // Do basic transaction validations
-        try {
-            this.validate(xact);
-        } catch (Exception e) {
-            this.msg = "Finalization of transaction failed due to common validation error";
-            logger.error(this.msg, e);
-            throw new XactApiException(this.msg, e);
-        }
-
         // Check if okay to finailze.
         try {
             this.validateFinalization(xact);
@@ -1374,15 +1402,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
 
         // Apply transaction changes
         try {
-            // dao.beginTrans();
             dao.maintain(xact);
-            // dao.commitTrans();
             return;
         } catch (Exception e) {
-            // dao.rollbackTrans();
             this.msg = "Error occurred finalizing transaction: " + xact.getXactId();
             logger.error(this.msg, e);
-            throw new XactApiException(this.msg, e);
+            throw new XactApiException(e);
         }
     }
 }

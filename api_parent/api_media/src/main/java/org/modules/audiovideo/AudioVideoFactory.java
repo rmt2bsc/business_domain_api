@@ -11,7 +11,6 @@ import org.dto.ProjectDto;
 import org.dto.TracksDto;
 import org.modules.MediaConstants;
 
-import com.NotFoundException;
 import com.RMT2Base;
 
 /**
@@ -76,12 +75,14 @@ public class AudioVideoFactory extends RMT2Base {
         AvTracks t = new AvTracks();
         t.setTrackId(track.getTrackId());
         t.setProjectId(track.getProjectId());
+        t.setGenreId(track.getGenreId());
         t.setTrackNumber(track.getTrackNumber());
         t.setTrackTitle(track.getTrackTitle());
         t.setTrackHours(track.getTrackHours());
         t.setTrackMinutes(track.getTrackMinutes());
         t.setTrackSeconds(track.getTrackSeconds());
         t.setTrackDisc(track.getTrackDisc());
+        t.setTrackArtist(track.getTrackArtist());
         t.setTrackProducer(track.getTrackProducer());
         t.setTrackComposer(track.getTrackComposer());
         t.setTrackLyricist(track.getTrackLyricist());
@@ -112,27 +113,33 @@ public class AudioVideoFactory extends RMT2Base {
         p.setMediaTypeId(proj.getMediaTypeId());
         p.setTitle(proj.getTitle());
         p.setYear(proj.getYear());
+        p.setTotalTime(proj.getTotalTime());
         p.setMasterDupId(proj.getMasterDupId());
         p.setRipped(proj.getRippedInd());
         p.setCost(proj.getCost());
+        p.setProjectComments(proj.getComments());
         p.setContentId(proj.getContentId());
         p.setDateCreated(proj.getDateCreated());
+        p.setContentPath(proj.getContentPath());
+        p.setContentFilename(proj.getContentFilename());
+        p.setArtWorkFilename(proj.getArtWorkFilename());
+        p.setArtWorkPath(proj.getArtWorkPath());
+        p.setProducer(proj.getProducer());
         return p;
     }
 
-    
     /**
-     * Create an instance of MP3Reader from a Id3Mp3Wmv API implementation.
+     * Create an instance of MP3Reader from a Mp3agic API implementation.
      * 
      * @param mp3Source
      * @return an instacne of {@link MP3Reader}
      * @throws MP3ApiInstantiationException
      */
-    public static MP3Reader createId3mp3WmvInstance(File mp3Source) {
+    public static MP3Reader createMp3agicInstance(File mp3Source) {
         String msg = AudioVideoFactory.ERROR_MP3_API;
         MP3Reader api = null;
         try {
-            api = new Id3Mp3WmvLibImpl(mp3Source);
+            api = new Mp3agicMp3LibImpl(mp3Source);
             AudioVideoFactory.LOGGER.info("API is using Id3Mp3Wmv implementation for MP3Reader");
             return api;
         } catch (Throwable e) {
@@ -140,70 +147,4 @@ public class AudioVideoFactory extends RMT2Base {
             throw new MP3ApiInstantiationException(msg, e);
         }
     }
-
-    /**
-     * Create an instance of MP3Reader from an Entagged ID3 API implementation.
-     * 
-     * @param mp3Source
-     *            A {@link File} instance pointing to the actual media file
-     * @return an instance of {@link MP3Reader}
-     * @throws MP3ApiInstantiationException
-     */
-    public static MP3Reader createEntaggedId3Instance(File mp3Source) {
-        String msg = AudioVideoFactory.ERROR_MP3_API;
-        MP3Reader api = null;
-        try {
-            api = new EntaggedMp3LibImpl(mp3Source);
-            AudioVideoFactory.LOGGER.info("API is using Entagged ID3 implementation for MP3Reader");
-            return api;
-        } catch (Throwable e) {
-            msg += "Unable to create EntaggedId3 MP3Reader implementation for media resource, " + mp3Source.getAbsolutePath();
-            throw new MP3ApiInstantiationException(msg, e);
-        }
-    }
-
-    /**
-     * Create an instance of MP3Reader from a JID3 API implementation.
-     * 
-     * @param mp3Source
-     * @return an instance of {@link MP3Reader}
-     * @throws MP3ApiInstantiationException
-     */
-    public static MP3Reader createJID3Mp3Instance(File mp3Source) {
-        String msg = AudioVideoFactory.ERROR_MP3_API;
-        MP3Reader api = null;
-        try {
-            api = new JID3Mp3LibImpl(mp3Source);
-            AudioVideoFactory.LOGGER.info("API is using JID3 implementation for MP3Reader");
-            return api;
-        } catch (NotFoundException e) {
-            return null;
-        } catch (Exception e) {
-            msg += "Unable to create JID3 MP3Reader implementation for media resource, " + mp3Source.getAbsolutePath();
-            throw new MP3ApiInstantiationException(msg, e);
-        }
-    }
-
-    /**
-     * Create an instance of MP3Reader from a MyId3 API implementation.
-     * 
-     * @param mp3Source
-     * @return an instance of {@link MP3Reader}
-     * @throws MP3ApiInstantiationException
-     */
-    public static MP3Reader createMyId3Instance(File mp3Source) {
-        String msg = AudioVideoFactory.ERROR_MP3_API;
-        MP3Reader api = null;
-        try {
-            api = new MyMp3LibImpl(mp3Source);
-            AudioVideoFactory.LOGGER.info("API is using MyId3 implementation for MP3Reader");
-            return api;
-        } catch (Exception e) {
-            msg += "Unable to create MyId3 MP3Reader implementation for media resource, " + mp3Source.getAbsolutePath();
-            throw new MP3ApiInstantiationException(msg, e);
-        }
-    }
-
-    
-    
 }

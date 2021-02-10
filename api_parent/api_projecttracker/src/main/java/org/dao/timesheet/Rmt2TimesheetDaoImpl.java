@@ -41,8 +41,7 @@ import com.api.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
-        TimesheetDao {
+class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements TimesheetDao {
 
     /**
      * Creates a Rmt2ProjectAdminDaoImpl object with its own persistent client.
@@ -66,6 +65,28 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      */
     protected Rmt2TimesheetDaoImpl(PersistenceClient client) {
         super(client);
+    }
+
+    /**
+     * 
+     * @param timesheetId
+     * @return
+     * @throws TimesheetDaoException
+     */
+    private TimesheetDto fetch(int timesheetId) throws TimesheetDaoException {
+        ProjTimesheet obj = new ProjTimesheet();
+        obj.addCriteria(ProjTimesheet.PROP_TIMESHEETID, timesheetId);
+        ProjTimesheet results = null;
+        try {
+            results = (ProjTimesheet) this.client.retrieveObject(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new TimesheetDaoException(e);
+        }
+        TimesheetDto dto = TimesheetObjectFactory.createTimesheetDtoInstance(results);
+        return dto;
     }
 
     /*
@@ -342,6 +363,31 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
         return list;
     }
 
+    /**
+     * Retrieve a single instance of EventDto
+     * 
+     * @param eventId
+     *            event id
+     * @return instance of {@link EventDto}
+     * @throws TimesheetDaoException
+     */
+    protected EventDto fetchEvent(int eventId) throws TimesheetDaoException {
+        ProjEvent obj = new ProjEvent();
+        obj.addCriteria(ProjEvent.PROP_EVENTID, eventId);
+
+        ProjEvent results = null;
+        try {
+            results = (ProjEvent) this.client.retrieveObject(obj);
+            if (results == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new TimesheetDaoException(e);
+        }
+        EventDto dto = ProjectObjectFactory.createEventDtoInstance(results);
+        return dto;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -417,6 +463,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      *             a database access error.
      */
     private int updateTimesheet(ProjTimesheet ts) throws TimesheetDaoException {
+        TimesheetDto origTs = this.fetch(ts.getTimesheetId());
         int rc = 0;
         UserTimestamp ut = null;
         try {
@@ -428,6 +475,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
             else {
                 ts.removeNull(ProjTimesheet.PROP_PROJID);
             }
+            ts.setDateCreated(origTs.getDateCreated());
             ts.setDateUpdated(ut.getDateCreated());
             ts.setUserId(ut.getLoginId());
             ts.setIpUpdated(ut.getIpAddr());
@@ -619,6 +667,12 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      *             a database access error.
      */
     private int updateEvent(ProjEvent evt) throws TimesheetDaoException {
+        EventDto origEvent = this.fetchEvent(evt.getEventId());
+        if (origEvent == null) {
+            this.msg = "Error updatinging timesheet - Project Event, " + evt.getEventId()
+                    + ", does not exist.  Update operation aborted.";
+            throw new TimesheetDaoException(this.msg);
+        }
         int rc = 0;
         UserTimestamp ut = null;
         try {
@@ -626,6 +680,7 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
             if (evt.getHours() <= 0) {
                 evt.setNull("hours");
             }
+            evt.setDateCreated(origEvent.getDateCreated());
             evt.setDateUpdated(ut.getDateCreated());
             evt.setUserId(ut.getLoginId());
             evt.addCriteria(ProjEvent.PROP_EVENTID, evt.getEventId());
@@ -660,8 +715,13 @@ class Rmt2TimesheetDaoImpl extends AbstractProjecttrackerDaoImpl implements
      * TimesheetStatusDto)
      */
     @Override
-    public int deleteTimesheetStatus(TimesheetStatusDto criteria) throws TimesheetDaoException {
-        return 0;
+    public int deleteTimesheetStatus(TimesheetHistDto criteria) throws TimesheetDaoException {
+        ProjTimesheetHist obj = TimesheetDaoFactory.createCriteria(criteria);
+        try {
+            return this.deleteObject(obj);
+        } catch (DatabaseException e) {
+            throw new TimesheetDaoException("Unable to delete timesheet status history", e);
+        }
     }
 
     /*

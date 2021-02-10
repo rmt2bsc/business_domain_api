@@ -14,8 +14,8 @@ import org.dao.mapping.orm.rmt2.VwTimesheetEventList;
 import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dto.ClientDto;
 import org.dto.EventDto;
+import org.dto.Project2Dto;
 import org.dto.ProjectClientDto;
-import org.dto.ProjectDto;
 import org.dto.ProjectEmployeeDto;
 import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
@@ -34,7 +34,7 @@ import com.api.foundation.TransactionDtoImpl;
  * 
  */
 class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
-        ProjectDto, TaskDto, EventDto, ProjectClientDto, ProjectEmployeeDto,
+        Project2Dto, TaskDto, EventDto, ProjectClientDto, ProjectEmployeeDto,
         ProjectTaskDto, ProjectEventDto {
 
     private ProjClient pc;
@@ -347,15 +347,15 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
      * @see org.dto.TaskDto#getTaskBillable()
      */
     @Override
-    public int getTaskBillable() {
+    public Integer getTaskBillable() {
         if (this.pt != null) {
-            return this.pt.getBillable();
+            return Integer.valueOf(this.pt.getBillable());
         }
         if (this.vtpt != null) {
-            return this.vtpt.getBillable();
+            return Integer.valueOf(this.vtpt.getBillable());
         }
         if (this.vtel != null) {
-            return this.vtel.getBillable();
+            return Integer.valueOf(this.vtel.getBillable());
         }
         return 0;
     }
@@ -492,7 +492,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
     /*
      * (non-Javadoc)
      * 
-     * @see org.dto.ProjectDto#setProjectDescription(java.lang.String)
+     * @see org.dto.Project2Dto#setProjectDescription(java.lang.String)
      */
     @Override
     public void setProjectDescription(String value) {
@@ -517,7 +517,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
     /*
      * (non-Javadoc)
      * 
-     * @see org.dto.ProjectDto#getProjectDescription()
+     * @see org.dto.Project2Dto#getProjectDescription()
      */
     @Override
     public String getProjectDescription() {
@@ -542,7 +542,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
     /*
      * (non-Javadoc)
      * 
-     * @see org.dto.ProjectDto#setProjectEffectiveDate(java.util.Date)
+     * @see org.dto.Project2Dto#setProjectEffectiveDate(java.util.Date)
      */
     @Override
     public void setProjectEffectiveDate(Date value) {
@@ -567,7 +567,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
     /*
      * (non-Javadoc)
      * 
-     * @see org.dto.ProjectDto#getProjectEffectiveDate()
+     * @see org.dto.Project2Dto#getProjectEffectiveDate()
      */
     @Override
     public Date getProjectEffectiveDate() {
@@ -592,7 +592,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
     /*
      * (non-Javadoc)
      * 
-     * @see org.dto.ProjectDto#setProjectEndDate(java.util.Date)
+     * @see org.dto.Project2Dto#setProjectEndDate(java.util.Date)
      */
     @Override
     public void setProjectEndDate(Date value) {
@@ -617,7 +617,7 @@ class ProjectRmt2OrmAdapter extends TransactionDtoImpl implements ClientDto,
     /*
      * (non-Javadoc)
      * 
-     * @see org.dto.ProjectDto#getProjectEndDate()
+     * @see org.dto.Project2Dto#getProjectEndDate()
      */
     @Override
     public Date getProjectEndDate() {

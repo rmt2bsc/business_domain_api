@@ -214,7 +214,8 @@ public class EmployeeModuleAdapterTest {
         Assert.assertEquals(RMT2Date.stringToDate("2018-02-01"), dto.getProjEmpEndDate());
         
         try {
-            dto = ProjectObjectFactory.createEmployeeProjectDtoInstance(null);
+            VwEmployeeProjects vep = new VwEmployeeProjects();
+            dto = ProjectObjectFactory.createEmployeeProjectDtoInstance(vep);
             dto.setEmpProjId(55551);
             dto.setEmpId(5000);
             dto.setProjId(2220);

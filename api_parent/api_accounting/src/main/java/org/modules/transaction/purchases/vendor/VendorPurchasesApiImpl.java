@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.AccountingConst;
+import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.transaction.purchases.vendor.VendorPurchasesConst;
@@ -1470,7 +1471,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             xact = this.getXactById(po.getXactId());
             this.reverse(xact, null);
             // Associate transaction with creditor activity
-            this.createSubsidiaryActivity(po.getCreditorId(), xact.getXactId(), xact.getXactAmount());
+            this.createSubsidiaryActivity(po.getCreditorId(), SubsidiaryType.CREDITOR, xact.getXactId(), xact.getXactAmount());
         } catch (XactApiException e) {
             throw new VendorPurchasesApiException(e);
         }
@@ -1606,7 +1607,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             xactId = this.update(xact, null);
 
             // Associate transaction with creditor
-            this.createSubsidiaryActivity(po.getCreditorId(), xactId, poTotal);
+            this.createSubsidiaryActivity(po.getCreditorId(), SubsidiaryType.CREDITOR, xactId, poTotal);
 
             // Associate transaction with PO
             po.setXactId(xactId);
@@ -1655,7 +1656,7 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
             xact = this.getXactById(po.getXactId());
             this.reverse(xact, null);
             rc = xact.getXactId();
-            this.createSubsidiaryActivity(po.getCreditorId(), xact.getXactId(), xact.getXactAmount());
+            this.createSubsidiaryActivity(po.getCreditorId(), SubsidiaryType.CREDITOR, xact.getXactId(), xact.getXactAmount());
         } catch (XactApiException e) {
             throw new VendorPurchasesApiException(e);
         }

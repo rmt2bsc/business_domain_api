@@ -77,7 +77,7 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     public CreditorDto fetch(int creditorId) throws CustomerDaoException {
         // Retrieve Creditor data
         Creditor criteria = new Creditor();
-        criteria.setCreditorId(creditorId);
+        criteria.addCriteria(Creditor.PROP_CREDITORID, creditorId);
         try {
             Creditor results = (Creditor) this.client.retrieveObject(criteria);
             if (results == null) {
@@ -175,13 +175,16 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             ormCred = new Creditor();
             if (criteria.getContactIdList() != null && criteria.getContactIdList().size() > 0) {
                 Integer[] intArray = criteria.getContactIdList().toArray(new Integer[criteria.getContactIdList().size()]);
-                ormCred.addInClause(Creditor.PROP_CREDITORID, intArray);
+                ormCred.addInClause(Creditor.PROP_BUSINESSID, intArray);
             }
             if (criteria.getCreditorId() > 0) {
                 ormCred.addCriteria(Creditor.PROP_CREDITORID, criteria.getCreditorId());
             }
             if (criteria.getContactId() > 0) {
                 ormCred.addCriteria(Creditor.PROP_BUSINESSID, criteria.getContactId());
+            }
+            if (criteria.getAcctId() > 0) {
+                ormCred.addCriteria(Creditor.PROP_ACCTID, criteria.getAcctId());
             }
             if (criteria.getAccountNo() != null) {
                 ormCred.addCriteria(Creditor.PROP_ACCOUNTNUMBER, criteria.getAccountNo());

@@ -76,6 +76,7 @@ public class EmployeeObjectFactory extends RMT2Base {
      */
     public static ProjEmployee createOrmEmployee(VwEmployeeExt src) {
         ProjEmployee employee = new ProjEmployee();
+        employee.setPersonId(src.getPersonId());
         employee.setEmpId(src.getEmployeeId());
         employee.setEmpTypeId(src.getTypeId());
         employee.setEmpTitleId(src.getTitleId());

@@ -345,93 +345,25 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof DatabaseException);
         }
     }
+
     @Test
-    public void testReversal_ExceptionDuringFinalization() {
+    public void testReversalForCreditor_ExceptionDuringFinalization() {
         Date mockXactDate = new Date();
-        Xact mockXact = this.buildXactOrm(this.mockXactDto);
-        mockXact.setXactId(0);
-        mockXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
-        mockXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
-        mockXact.setXactDate(mockXactDate);
-        mockXact.setXactAmount(mockXact.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
-        
-        // Mock transaction detail items reversal
-        try {
-            when(this.mockPersistenceClient.insertRow(any(XactTypeItemActivity.class), any(Boolean.class)))
-                    .thenReturn(500, 501, 502, 503, 504);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up cash disbursement transaction item activity update case failed");
-        }
-        
-        // Mock base transaction reversal
-        Xact mockRevXact = this.buildXactOrm(this.mockXactDto);
-        mockRevXact.setXactId(0);
-        mockRevXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
-        mockRevXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
-        mockRevXact.setXactDate(mockXactDate);
-        try {
-            when(this.mockPersistenceClient.insertRow(eq(mockRevXact), eq(true))).thenReturn(NEW_XACT_ID);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up cash disbursement base transaction update case failed");
-        }
 
-        // Mock finalization
-        Xact mockFinalXact = this.buildXactOrm(this.mockXactDto);
-        mockFinalXact.setXactId(NEW_XACT_ID);
-        mockFinalXact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
-        mockFinalXact.setReason("Reversed Transaction 1234000 reason for transaction id 111111");
-        mockFinalXact.setXactDate(mockXactDate);
-        try {
-            when(this.mockPersistenceClient.updateRow(eq(mockFinalXact))).thenThrow(DatabaseException.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up cash disbursement base transaction update case failed");
-        }
-        
-        // Mock creditor data
-        Creditor mockCriteria = new Creditor();
-        mockCriteria.setCreditorId(CREDITOR_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveObject(eq(mockCriteria)))
-                    .thenReturn(this.mockCreditorFetchSingleResponse.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single creditor test case setup failed");
-        }
-
-        // Mock transactoin fetch
-        VwXactList mockXactCriteria = new VwXactList();
-        mockXactCriteria.setId(NEW_XACT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
-                    .thenReturn(this.mockXactFetchSingleResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single xact test case setup failed");
-        }
-
-        //  Mock creditor transaction item activity
-        CreditorActivity mockCreditorActivity = new CreditorActivity();
-        mockCreditorActivity.setCreditorId(CREDITOR_ID);
-        mockCreditorActivity.setXactId(NEW_XACT_ID);
-        mockCreditorActivity.setAmount(mockXact.getXactAmount());
-        try {
-            when(this.mockPersistenceClient.insertRow(eq(mockCreditorActivity), eq(true))).thenReturn(987654);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Setting up creditor activity insert case failed");
-        }
-
-        DisbursementsApiFactory f = new DisbursementsApiFactory();
-        DisbursementsApi api = f.createApi(mockDaoClient);
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
-        this.mockXactDto.setXactAmount(this.mockXactDto.getXactAmount() * XactConst.REVERSE_MULTIPLIER);
+
         try {
-            api.updateTrans(this.mockXactDto, this.mockXactItemsDto, mockCriteria.getCreditorId());
+            when(this.mockPersistenceClient.updateRow(any(XactDto.class))).thenThrow(DatabaseException.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Setting up cash disbursement base transaction update case failed");
+        }
+
+        DisbursementsApi api = DisbursementsApiFactory.createApi(mockDaoClient);
+        try {
+            api.updateTrans(this.mockXactDto, this.mockXactItemsDto, CREDITOR_ID);
             Assert.fail("Expected exception to be thrown due to database error");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
@@ -441,6 +373,7 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             e.printStackTrace();
         }
     }
+
 
     @Test
     public void testReversal_IncorrectSubTypeId() {

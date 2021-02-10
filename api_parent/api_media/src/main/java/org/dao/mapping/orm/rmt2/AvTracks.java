@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -62,6 +61,10 @@ public class AvTracks extends OrmBean {
   public static final String PROP_DATEUPDATED = "DateUpdated";
 /** The property name constant equivalent to property, UserId, of respective DataSource view. */
   public static final String PROP_USERID = "UserId";
+/** The property name constant equivalent to property, GenreId, of respective DataSource view. */
+  public static final String PROP_GENREID = "GenreId";
+/** The property name constant equivalent to property, TrackArtist, of respective DataSource view. */
+  public static final String PROP_TRACKARTIST = "TrackArtist";
 
 
 
@@ -105,6 +108,10 @@ public class AvTracks extends OrmBean {
   private java.util.Date dateUpdated;
 /** The javabean property equivalent of database column av_tracks.user_id */
   private String userId;
+/** The javabean property equivalent of database column av_tracks.genre_id */
+  private int genreId;
+/** The javabean property equivalent of database column av_tracks.track_artist */
+  private String trackArtist;
 
 
 
@@ -356,6 +363,30 @@ public class AvTracks extends OrmBean {
   public String getUserId() {
     return this.userId;
   }
+/**
+ * Sets the value of member variable genreId
+ */
+  public void setGenreId(int value) {
+    this.genreId = value;
+  }
+/**
+ * Gets the value of member variable genreId
+ */
+  public int getGenreId() {
+    return this.genreId;
+  }
+/**
+ * Sets the value of member variable trackArtist
+ */
+  public void setTrackArtist(String value) {
+    this.trackArtist = value;
+  }
+/**
+ * Gets the value of member variable trackArtist
+ */
+  public String getTrackArtist() {
+    return this.trackArtist;
+  }
 
 @Override
 public boolean equals(Object obj) {
@@ -420,6 +451,12 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.comments, other.comments)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.genreId, other.genreId)) {
+      return false;
+   }
+   if (EqualityAssistant.notEqual(this.trackArtist, other.trackArtist)) {
+      return false;
+   }
    return true; 
 } 
 
@@ -441,7 +478,9 @@ public int hashCode() {
                HashCodeAssistant.hashObject(this.locRootPath),
                HashCodeAssistant.hashObject(this.locPath),
                HashCodeAssistant.hashObject(this.locFilename),
-               HashCodeAssistant.hashObject(this.comments));
+               HashCodeAssistant.hashObject(this.comments),
+               HashCodeAssistant.hashObject(this.genreId),
+               HashCodeAssistant.hashObject(this.trackArtist));
 } 
 
 @Override
@@ -462,7 +501,9 @@ public String toString() {
           ", locRootPath=" + locRootPath + 
           ", locPath=" + locPath + 
           ", locFilename=" + locFilename + 
-          ", comments=" + comments  + "]";
+          ", comments=" + comments + 
+          ", genreId=" + genreId + 
+          ", trackArtist=" + trackArtist  + "]";
 }
 
 /**

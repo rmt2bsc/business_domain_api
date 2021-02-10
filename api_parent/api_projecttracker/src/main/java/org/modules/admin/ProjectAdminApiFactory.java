@@ -27,8 +27,8 @@ public class ProjectAdminApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link ProjectApi}
      */
-    public ProjectAdminApi createApi() {
-        return this.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
+    public static final ProjectAdminApi createApi() {
+        return ProjectAdminApiFactory.createApi(ProjectTrackerApiConst.DEFAULT_CONTEXT_NAME);
     }
 
     /**
@@ -39,7 +39,7 @@ public class ProjectAdminApiFactory extends RMT2Base {
      *            name of the application.
      * @return an instance of {@link ProjectApi}
      */
-    public ProjectAdminApi createApi(String appName) {
+    public static final ProjectAdminApi createApi(String appName) {
         ProjectAdminApiImpl api = new ProjectAdminApiImpl(appName);
         return api;
     }
@@ -54,7 +54,7 @@ public class ProjectAdminApiFactory extends RMT2Base {
      * 
      *            ProjectApi * null.
      */
-    public ProjectAdminApi createApi(DaoClient connection) {
+    public static final ProjectAdminApi createApi(DaoClient connection) {
         if (connection == null) {
             return null;
         }

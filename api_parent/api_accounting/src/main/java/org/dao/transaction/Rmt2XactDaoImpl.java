@@ -25,6 +25,7 @@ import org.dto.XactTypeDto;
 import org.dto.XactTypeItemActivityDto;
 import org.dto.XactTypeItemDto;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
+import org.modules.transaction.XactConst;
 
 import com.api.persistence.CannotRetrieveException;
 import com.api.persistence.DatabaseException;
@@ -421,7 +422,6 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
                     + xact.getXactAmount());
         } catch (Exception e) {
             this.msg = "A database error prevented the creation of base transaction";
-            logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
         }
         // Handle transaction items
@@ -433,7 +433,6 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
         } catch (Exception e) {
             this.msg = "Error occurred creating a transaction detail item for base transaction id, "
                     + xactId;
-            logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
         }
         return xactId;
@@ -457,7 +456,6 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             logger.info("Transaction, " + xactId + ", was updated");
         } catch (Exception e) {
             this.msg = "Unable to persist base transaction";
-            logger.error(this.msg, e);
             throw new XactDaoException(this.msg, e);
         }
         return xactId;
@@ -473,7 +471,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      */
     private int insert(Xact xact)  {
         int newXactId = 0;
-        if (xact.getXactSubtypeId() <= 0) {
+        if (xact.getXactSubtypeId() == XactConst.XACT_SUBTYPE_NOT_ASSIGNED) {
             xact.setNull("xactSubtypeId");
         }
         if (xact.getTenderId() == 0) {

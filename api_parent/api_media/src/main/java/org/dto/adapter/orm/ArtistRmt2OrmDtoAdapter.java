@@ -77,4 +77,25 @@ class ArtistRmt2OrmDtoAdapter extends TransactionDtoImpl implements ArtistDto {
     public String getName() {
         return this.adaptee.getName();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return this.getId() == ((ArtistDto) obj).getId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return this.adaptee.hashCode();
+    }
+
 }

@@ -11,7 +11,7 @@ import org.dao.mapping.orm.rmt2.ProjClient;
 import org.dao.mapping.orm.rmt2.ProjProject;
 import org.dao.mapping.orm.rmt2.ProjTask;
 import org.dto.ClientDto;
-import org.dto.ProjectDto;
+import org.dto.Project2Dto;
 import org.dto.TaskDto;
 import org.dto.adapter.orm.ProjectObjectFactory;
 import org.junit.After;
@@ -113,11 +113,17 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Fetch single client case setup failed");
         }
         
+        try {
+            when(this.mockPersistenceClient.retrieveObject(isA(ProjClient.class))).thenReturn(this.mockClientFetchSingle.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single client case setup failed");
+        }
+
         // Setup stubs for mocking client update web service calls
         this.setupClientWebServiceUpdateStub();
 
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
         ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
         int results = 0;
         try {
@@ -184,16 +190,13 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
             Assert.fail("Modify single client case setup failed");
         }
         
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
         ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
         try {
             api.updateClient(client);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof ProjectAdminApiException);
-            Assert.assertTrue(e.getCause() instanceof ProjectAdminDaoException);
-            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }
@@ -277,7 +280,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
     @Test
     public void testInsert_Client_Success() {
         try {
-            when(this.mockPersistenceClient.insertRow(isA(ProjClient.class), eq(true))).thenReturn(TEST_NEW_CLIENT_ID);
+            when(this.mockPersistenceClient.insertRow(isA(ProjClient.class), eq(false))).thenReturn(TEST_NEW_CLIENT_ID);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Insert single client case setup failed");
@@ -286,8 +289,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
         // Setup stubs for mocking client update web service calls
         this.setupClientWebServiceUpdateStub();
 
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
         ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
         client.setClientId(0);
         int results = 0;
@@ -362,7 +364,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
         }
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         int results = 0;
         try {
             results = api.updateProject(project);
@@ -382,7 +384,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
         }
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         project.setProjId(0);
         int results = 0;
         try {
@@ -404,7 +406,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
         }
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         try {
             api.updateProject(project);
             Assert.fail("Expected exception to be thrown");
@@ -435,7 +437,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
     public void testValidation_Modify_Project_Negative_ProjectId() {
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         project.setProjId(-12345);
         try {
             api.updateProject(project);
@@ -452,7 +454,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
     public void testValidation_Modify_Project_Null_Description() {
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         project.setProjectDescription(null);
         try {
             api.updateProject(project);
@@ -469,7 +471,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
     public void testValidation_Modify_Project_Empty_Description() {
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         project.setProjectDescription("");
         try {
             api.updateProject(project);
@@ -486,7 +488,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
     public void testValidation_Modify_Project_Null_EffectiveDate() {
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         project.setProjectEffectiveDate(null);
         try {
             api.updateProject(project);
@@ -510,7 +512,7 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
         
         ProjectAdminApiFactory f = new ProjectAdminApiFactory();
         ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ProjectDto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
+        Project2Dto project = ProjectObjectFactory.createProjectDtoInstance(this.mockProjectFetchSingle.get(0));
         int results = 0;
         try {
             results = api.deleteProject(project);

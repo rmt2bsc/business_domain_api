@@ -120,13 +120,14 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         
         boolean useCustomerParms = false;
         boolean useContactParms = false;
-        useContactParms = (criteria.getTaxId() != null || 
-                           criteria.getContactName() != null || 
-                           criteria.getPhoneCompany() != null);
+        useContactParms = (criteria.getTaxId() != null ||
+                criteria.getContactName() != null ||
+                criteria.getContactId() > 0 ||
+                criteria.getPhoneCompany() != null);
 
-        useCustomerParms = (criteria.getAccountNo() != null || 
-                            criteria.getCustomerId() > 0 || 
-                            criteria.getContactId() > 0);
+        useCustomerParms = (criteria.getAccountNo() != null ||
+                criteria.getDescription() != null ||
+                criteria.getCustomerId() > 0);
         
         Map<Integer, SubsidiaryContactInfoDto> contactResults = null;
         List<CustomerDto> customerResults = null;
@@ -557,16 +558,14 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         if (oldCust == null) {
             throw new CustomerNotFoundException("Customer was not found by creditor id: " + deltaCust.getCustomerId());
         }
-        // Set modifyable fields
+        // Set modifyable fields. Ignore fields customer id, account no, acct
+        // id, gate created, and ip created in which these fields should never
+        // be modified post initial creation.
         deltaCust.setCustomerId(oldCust.getCustomerId());
         deltaCust.setAccountNo(oldCust.getAccountNo());
         deltaCust.setAcctId(oldCust.getAcctId());
-        deltaCust.setContactId(oldCust.getContactId());
         deltaCust.setDateCreated(oldCust.getDateCreated());
-        deltaCust.setDateUpdated(oldCust.getDateUpdated());
-        deltaCust.setUpdateUserId(oldCust.getUpdateUserId());
         deltaCust.setIpCreated(oldCust.getIpCreated());
-        deltaCust.setIpUpdated(oldCust.getIpUpdated());
         return;
     }
 

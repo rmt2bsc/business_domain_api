@@ -28,9 +28,8 @@ import com.api.foundation.TransactionDtoImpl;
  * @author Roy Terrell
  * 
  */
-class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
-        TimesheetDto, TimesheetStatusDto, TimesheetHistDto, TimesheetHoursDto,
-        TimesheetClientDto, TimesheetHoursSummaryDto {
+class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements TimesheetDto, TimesheetStatusDto, TimesheetHistDto,
+        TimesheetHoursDto, TimesheetClientDto, TimesheetHoursSummaryDto {
 
     // private ProjTimesheet ts;
     private ProjTimesheetStatus tss;
@@ -179,6 +178,9 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
         if (this.tsh != null) {
             this.tsh.setTimesheetId(value);
         }
+        if (this.vts != null) {
+            this.vts.setTimesheetId(value);
+        }
     }
 
     /*
@@ -196,6 +198,9 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
         }
         if (this.tsh != null) {
             return this.tsh.getTimesheetId();
+        }
+        if (this.vts != null) {
+            return this.vts.getTimesheetId();
         }
         return 0;
     }
@@ -1376,7 +1381,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getHours1() {
         if (this.vts != null) {
-            this.vts.getDay1Hrs();
+            return this.vts.getDay1Hrs();
         }
         return 0;
     }
@@ -1401,7 +1406,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getHours2() {
         if (this.vts != null) {
-            this.vts.getDay2Hrs();
+            return this.vts.getDay2Hrs();
         }
         return 0;
     }
@@ -1426,7 +1431,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getHours3() {
         if (this.vts != null) {
-            this.vts.getDay3Hrs();
+            return this.vts.getDay3Hrs();
         }
         return 0;
     }
@@ -1451,7 +1456,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getHours4() {
         if (this.vts != null) {
-            this.vts.getDay4Hrs();
+            return this.vts.getDay4Hrs();
         }
         return 0;
     }
@@ -1476,7 +1481,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getHours5() {
         if (this.vts != null) {
-            this.vts.getDay5Hrs();
+            return this.vts.getDay5Hrs();
         }
         return 0;
     }
@@ -1501,7 +1506,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getHours6() {
         if (this.vts != null) {
-            this.vts.getDay6Hrs();
+            return this.vts.getDay6Hrs();
         }
         return 0;
     }
@@ -1526,7 +1531,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getHours7() {
         if (this.vts != null) {
-            this.vts.getDay7Hrs();
+            return this.vts.getDay7Hrs();
         }
         return 0;
     }
@@ -1551,7 +1556,7 @@ class TimesheetRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public double getTotalHours() {
         if (this.vts != null) {
-            this.vts.getTotalHrs();
+            return this.vts.getTotalHrs();
         }
         return 0;
     }
