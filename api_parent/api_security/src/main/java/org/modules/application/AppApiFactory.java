@@ -25,7 +25,7 @@ public class AppApiFactory extends RMT2Base {
      * 
      * @return an instance of {@link AppApi}
      */
-    public AppApi createApi() {
+    public static final AppApi createApi() {
         AppApi api = createApiInstance(SecurityConstants.APP_NAME);
         return api;
     }
