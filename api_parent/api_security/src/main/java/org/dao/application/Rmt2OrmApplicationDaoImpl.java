@@ -14,6 +14,7 @@ import org.dto.adapter.orm.Rmt2OrmDtoFactory;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
 import com.api.util.RMT2Date;
+import com.api.util.RMT2Money;
 import com.api.util.UserTimestamp;
 
 /**
@@ -54,6 +55,23 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
      */
     public Rmt2OrmApplicationDaoImpl(PersistenceClient client) {
         super(client);
+    }
+
+    private ApplicationDto fetchApp(int appId) throws SecurityDaoException {
+        Application app = AppDaoFactory.createCriteria(null);
+        app.addCriteria(Application.PROP_APPID, appId);
+        app.addOrderBy(Application.PROP_NAME, Application.ORDERBY_ASCENDING);
+        Application results = null;
+        try {
+            results = (Application) this.client.retrieveObject(app);
+            if (results == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new AppDaoException(e);
+        }
+        ApplicationDto dto = Rmt2OrmDtoFactory.getAppDtoInstance(results);
+        return dto;
     }
 
     @Override
@@ -103,6 +121,8 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
         app.setAppId(appDto.getApplicationId());
         app.setName(appDto.getAppName());
         app.setDescription(appDto.getAppDescription());
+        app.setActive((appDto.getActive() != null && RMT2Money.isNumeric(appDto.getActive()) ? Integer.valueOf(appDto.getActive())
+                : 1));
         app.setUserId(appDto.getUpdateUserId());
 
         // Perform update transaction
@@ -158,6 +178,8 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
      *             for database and system errors.
      */
     private int update(Application app) throws DatabaseException {
+        ApplicationDto orig = this.fetchApp(app.getAppId());
+        app.setDateCreated(orig.getDateCreated());
         UserTimestamp ut = null;
         try {
             ut = RMT2Date.getUserTimeStamp(this.getDaoUser());

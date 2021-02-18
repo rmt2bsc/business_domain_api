@@ -48,6 +48,8 @@ public class ApplicationApiTest extends SecurityMockData {
     public void setUp() throws Exception {
         super.setUp();
 
+        when(this.mockPersistenceClient.retrieveObject(any(Application.class)))
+                .thenReturn(this.mockApplicationData.get(0));
         when(this.mockPersistenceClient.retrieveList(any(Application.class)))
              .thenReturn(this.mockApplicationData);
         when(this.mockPersistenceClient.insertRow(any(Application.class), eq(true)))
