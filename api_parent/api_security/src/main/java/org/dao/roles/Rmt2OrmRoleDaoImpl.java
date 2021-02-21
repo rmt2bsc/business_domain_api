@@ -390,6 +390,10 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      *             for database and system errors.
      */
     private int updateRole(Roles role) throws RoleDaoException {
+        CategoryDto orig = this.fetchRole(role.getRoleId());
+        if (orig != null) {
+            role.setDateCreated(orig.getDateCreated());
+        }
         try {
             // Update record
             role.addCriteria(Roles.PROP_ROLEID, role.getRoleId());
