@@ -64,7 +64,7 @@ public class DocumentMediaUpdateApiTest extends DocumentMediaMockData {
 
         // Create user session work area for storing temporary media files
         // locally
-        String userSessionWorkArea = RMT2File.createUserSessionWorkArea();
+        String userSessionWorkArea = RMT2File.createUserWorkArea();
         System.setProperty("SerialPath", userSessionWorkArea);
         TEST_DOWNLOADED_FILE_PATH = System.getProperty("SerialPath") + File.separator + TEST_USER_SESSION_ID + File.separator;
 

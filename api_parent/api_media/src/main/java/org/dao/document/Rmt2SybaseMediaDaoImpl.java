@@ -69,7 +69,7 @@ class Rmt2SybaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
     }
 
     private void getBinaryContentFromDatabase(ContentDto media) {
-        String waFileName = RMT2File.createUserSessionWorkArea() + File.separator + media.getFilename();
+        String waFileName = RMT2File.createUserWorkArea() + File.separator + media.getFilename();
         String sql = "select xp_write_file(\'" + waFileName + "\', image_data) from content where content_id = "
                 + media.getContentId();
         try {
@@ -101,7 +101,7 @@ class Rmt2SybaseMediaDaoImpl extends AbstractRmt2OrmContentDaoImpl {
     @Override
     public int saveContent(ContentDto mediaRec) throws ContentDaoException {
         // Point media file path to the user's temporary work area. 
-        mediaRec.setFilepath(RMT2File.createUserSessionWorkArea());
+        mediaRec.setFilepath(RMT2File.createUserWorkArea());
 
         int newContentId = 0;
         try {
