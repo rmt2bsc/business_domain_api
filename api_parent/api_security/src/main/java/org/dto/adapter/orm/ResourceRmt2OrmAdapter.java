@@ -1,5 +1,7 @@
 package org.dto.adapter.orm;
 
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.UserResource;
 import org.dto.DefaultResourceAdapter;
 import org.dto.WebServiceDto;
@@ -203,5 +205,66 @@ class ResourceRmt2OrmAdapter extends DefaultResourceAdapter implements WebServic
     @Override
     public int getSubTypeId() {
         return this.r.getRsrcSubtypeId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#getUpdateUserId()
+     */
+    @Override
+    public String getUpdateUserId() {
+        return this.r.getUserId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.api.foundation.TransactionDtoImpl#setUpdateUserId(java.lang.String)
+     */
+    @Override
+    public void setUpdateUserId(String updateUserId) {
+        this.r.setUserId(updateUserId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#getDateCreated()
+     */
+    @Override
+    public Date getDateCreated() {
+        return this.r.getDateCreated();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#setDateCreated(java.util.Date)
+     */
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.r.setDateCreated(dateCreated);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#getDateUpdated()
+     */
+    @Override
+    public Date getDateUpdated() {
+        return this.r.getDateUpdated();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#setDateUpdated(java.util.Date)
+     */
+    @Override
+    public void setDateUpdated(Date dateUpdated) {
+        this.r.setDateUpdated(dateUpdated);
     }
 }
