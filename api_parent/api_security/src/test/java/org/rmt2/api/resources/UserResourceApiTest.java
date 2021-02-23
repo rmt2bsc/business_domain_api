@@ -49,6 +49,8 @@ public class UserResourceApiTest extends SecurityMockData {
     public void setUp() throws Exception {
         super.setUp();
 
+        when(this.mockPersistenceClient.retrieveObject(any(Integer.class)))
+                .thenReturn(this.mockUserResourceData.get(0));
         when(this.mockPersistenceClient.retrieveList(any(UserResource.class)))
              .thenReturn(this.mockUserResourceData);
         when(this.mockPersistenceClient.insertRow(any(UserResource.class), eq(true)))

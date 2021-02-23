@@ -352,6 +352,15 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
     }
 
     private int updateResource(UserResource obj) throws ResourceDaoUpdateException {
+        ResourceDto orig = this.fetchResource(obj.getRsrcId());
+        if (orig != null) {
+            obj.setDateUpdated(orig.getDateCreated());
+        }
+        else {
+            this.msg = "Update of resource record could not be performed due to the original record could not be located.  Resource Id: "
+                    + obj.getRsrcId();
+            throw new ResourceDaoUpdateException(this.msg);
+        }
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateUpdated(ut.getDateCreated());
@@ -427,6 +436,15 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
     }
 
     private int updateResourceType(UserResourceType obj) throws ResourceDaoUpdateException {
+        ResourceDto orig = this.fetchResourceType(obj.getRsrcTypeId());
+        if (orig != null) {
+            obj.setDateCreated(orig.getDateCreated());
+        }
+        else {
+            this.msg = "Update of resource type record could not be performed due to the original record could not be located.  Resource Type Id: "
+                    + obj.getRsrcTypeId();
+            throw new ResourceDaoUpdateException(this.msg);
+        }
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateUpdated(ut.getDateCreated());
@@ -505,8 +523,17 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         }
     }
 
-    private int updateResourceSubType(UserResourceSubtype obj)
-            throws ResourceDaoUpdateException {
+    private int updateResourceSubType(UserResourceSubtype obj) throws ResourceDaoUpdateException {
+        ResourceDto orig = this.fetchResourceSubType(obj.getRsrcSubtypeId());
+        if (orig != null) {
+            obj.setDateUpdated(orig.getDateCreated());
+        }
+        else {
+            this.msg = "Update of resource sub type record could not be performed due to the original record could not be located.  Resource sub type Id: "
+                    + obj.getRsrcSubtypeId();
+            throw new ResourceDaoUpdateException(this.msg);
+        }
+        
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateUpdated(ut.getDateCreated());
