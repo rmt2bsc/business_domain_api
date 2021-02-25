@@ -192,8 +192,8 @@ public class ResourcesDaoFactory extends RMT2Base {
             if (criteria.getTypeId() > 0) {
                 results.addCriteria(UserResourceType.PROP_RSRCTYPEID, criteria.getTypeId());
             }
-            if (criteria.getDescription() != null) {
-                results.addLikeClause(UserResourceType.PROP_DESCRIPTION, criteria.getDescription());
+            if (criteria.getTypeDescription() != null) {
+                results.addLikeClause(UserResourceType.PROP_DESCRIPTION, criteria.getTypeDescription());
             }
         }
         return results;
