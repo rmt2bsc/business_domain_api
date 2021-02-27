@@ -526,7 +526,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
     private int updateResourceSubType(UserResourceSubtype obj) throws ResourceDaoUpdateException {
         ResourceDto orig = this.fetchResourceSubType(obj.getRsrcSubtypeId());
         if (orig != null) {
-            obj.setDateUpdated(orig.getDateCreated());
+            obj.setDateCreated(orig.getDateCreated());
         }
         else {
             this.msg = "Update of resource sub type record could not be performed due to the original record could not be located.  Resource sub type Id: "
@@ -538,8 +538,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
             obj.setDateUpdated(ut.getDateCreated());
             obj.setUserId(ut.getLoginId());
-            obj.addCriteria(UserResourceSubtype.PROP_RSRCSUBTYPEID,
-                    obj.getRsrcSubtypeId());
+            obj.addCriteria(UserResourceSubtype.PROP_RSRCSUBTYPEID, obj.getRsrcSubtypeId());
             int rc = this.client.updateRow(obj);
             return rc;
         } catch (DatabaseException e) {
