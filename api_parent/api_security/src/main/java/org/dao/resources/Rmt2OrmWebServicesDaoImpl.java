@@ -354,7 +354,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
     private int updateResource(UserResource obj) throws ResourceDaoUpdateException {
         ResourceDto orig = this.fetchResource(obj.getRsrcId());
         if (orig != null) {
-            obj.setDateUpdated(orig.getDateCreated());
+            obj.setDateCreated(orig.getDateCreated());
         }
         else {
             this.msg = "Update of resource record could not be performed due to the original record could not be located.  Resource Id: "
