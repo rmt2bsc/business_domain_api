@@ -118,6 +118,11 @@ class ResourceRmt2OrmAdapter extends DefaultResourceAdapter implements WebServic
      * @see org.dto.DefaultResourceRmt2OrmAdapter#setSecured(boolean)
      */
     public void setSecured(Boolean value) {
+        if (value == null) {
+            // Since type is int, set to -1 to indicate value is null.
+            this.r.setSecured(-1);
+            return;
+        }
         this.r.setSecured(value ? 1 : 0);
     }
 
@@ -127,6 +132,10 @@ class ResourceRmt2OrmAdapter extends DefaultResourceAdapter implements WebServic
      * @see org.dto.DefaultResourceRmt2OrmAdapter#getSecured()
      */
     public Boolean isSecured() {
+        // -1 indicates flag is null
+        if (this.r.getSecured() == -1) {
+            return null;
+        }
         return (this.r.getSecured() == 1 ? true : false);
     }
 
