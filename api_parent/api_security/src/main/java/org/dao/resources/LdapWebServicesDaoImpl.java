@@ -217,7 +217,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
                         op.getMatchAttributes().put(
                                 "isSecured",
                                 String.valueOf(((WebServiceDto) criteria)
-                                        .isSecured()));
+                                        .getSecured()));
                     }
                     op.setUseSearchFilterExpression(false);
                 }
@@ -240,7 +240,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
                         op.getSearchFilterArgs().put(
                                 "isSecured",
                                 String.valueOf(((WebServiceDto) criteria)
-                                        .isSecured()));
+                                        .getSecured()));
                     }
                     op.setUseSearchFilterExpression(true);
                     logger.info("LDAP filter to be applied: "
@@ -435,7 +435,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
         op.addAttribute("cn", wsConfig.getName());
         op.addAttribute("description", wsConfig.getDescription());
         op.addAttribute("isSecured",
-                String.valueOf(((WebServiceDto) wsConfig).isSecured()));
+                String.valueOf(((WebServiceDto) wsConfig).getSecured()));
         op.addAttribute("requestUrl",
                 ((WebServiceDto) wsConfig).getRequestUrl());
         op.addAttribute("replyMsgId",
@@ -468,7 +468,7 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
         op.addAttribute("description", wsConfig.getDescription(),
                 LdapClient.MOD_OPERATION_REPLACE);
         op.addAttribute("isSecured",
-                String.valueOf(((WebServiceDto) wsConfig).isSecured()),
+                String.valueOf(((WebServiceDto) wsConfig).getSecured()),
                 LdapClient.MOD_OPERATION_REPLACE);
         op.addAttribute("requestUrl",
                 ((WebServiceDto) wsConfig).getRequestUrl(),
@@ -530,34 +530,28 @@ class LdapWebServicesDaoImpl extends DefaultResourceImpl {
      *             name, name, description or request URL is absent, or the
      *             secured flag contains a valid other than 0 or 1.
      */
-    protected void validateResource(ResourceDto rsrc)
-            throws ResourceDaoException {
+    protected void validateResource(ResourceDto rsrc) throws ResourceDaoException {
         if (rsrc == null) {
-            throw new ResourceDaoException(
-                    "Web service resource object is invalid");
+            throw new ResourceDaoException("Web service resource object is invalid");
         }
         if (!(rsrc instanceof WebServiceDto)) {
             throw new InvalidResourceDaoException(
                     "The target web service resource object is required to be of type, WebServiceDto, at runtime");
         }
         if (rsrc.getSubTypeName() == null) {
-            throw new ResourceDaoException(
-                    "Web service sub type name is required");
+            throw new ResourceDaoException("Web service sub type name is required");
         }
         if (rsrc.getName() == null) {
-            throw new ResourceDaoException(
-                    "Web service resource name is required");
+            throw new ResourceDaoException("Web service resource name is required");
         }
         if (rsrc.getDescription() == null) {
-            throw new ResourceDaoException(
-                    "Web service resource description is required");
+            throw new ResourceDaoException("Web service resource description is required");
         }
         if (((WebServiceDto) rsrc).getRequestUrl() == null) {
-            throw new ResourceDaoException(
-                    "Web service resource request URL is required");
+            throw new ResourceDaoException("Web service resource request URL is required");
         }
-        if (rsrc.isSecured() == null) {
-            rsrc.setSecured(false);
+        if (rsrc.getSecured() == null) {
+            rsrc.setSecured(-1);
         }
         return;
     }

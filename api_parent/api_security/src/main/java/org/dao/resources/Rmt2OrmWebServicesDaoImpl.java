@@ -310,7 +310,7 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         r.setRsrcSubtypeId(resource.getSubTypeId());
         r.setUrl(((WebServiceDto) resource).getRequestUrl());
         r.setDescription(resource.getDescription());
-        r.setSecured((resource).isSecured() ? 1 : 0);
+        r.setSecured(resource.getSecured());
         r.setHost(((WebServiceDto) resource).getHost());
         r.setDateCreated(resource.getDateCreated());
         r.setDateUpdated(resource.getDateUpdated());

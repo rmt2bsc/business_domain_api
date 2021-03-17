@@ -325,11 +325,11 @@ public class DefaultResourceAdapter extends TransactionDtoImpl implements Resour
     }
 
     @Override
-    public void setSecured(Boolean value) {
+    public void setSecured(Integer value) {
     }
 
     @Override
-    public Boolean isSecured() {
-        return false;
+    public Integer getSecured() {
+        return -1;
     }
 }

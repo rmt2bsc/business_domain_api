@@ -96,8 +96,8 @@ public class ResourcesDaoFactory extends RMT2Base {
             if (criteria.getSubTypeId() > 0) {
                 results.addCriteria(UserResource.PROP_RSRCSUBTYPEID, criteria.getSubTypeId());
             }
-            if (criteria.isSecured() != null) {
-                results.addCriteria(UserResource.PROP_SECURED, criteria.isSecured() ? 1 : 0);
+            if (criteria.getSecured() != null && criteria.getSecured() != -1) {
+                results.addCriteria(UserResource.PROP_SECURED, criteria.getSecured());
             }
             if (criteria.getDescription() != null) {
                 results.addLikeClause(UserResource.PROP_DESCRIPTION, criteria.getDescription());
@@ -128,7 +128,7 @@ public class ResourcesDaoFactory extends RMT2Base {
                 rsrc.addLikeClause(VwResource.PROP_DESCRIPTION, criteria.getDescription());
             }
             if (((WebServiceDto) criteria).isQuerySecureFlag()) {
-                rsrc.addCriteria(VwResource.PROP_SECURED, ((WebServiceDto) criteria).isSecured());
+                rsrc.addCriteria(VwResource.PROP_SECURED, ((WebServiceDto) criteria).getSecured());
             }
 
             // Check for UserResourceType related predicates

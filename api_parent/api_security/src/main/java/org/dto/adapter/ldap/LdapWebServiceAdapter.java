@@ -82,8 +82,8 @@ public class LdapWebServiceAdapter extends ResourceLdapAdapter implements
      * @see org.dto.WebServiceDto#setSecured(int)
      */
     @Override
-    public void setSecured(Boolean value) {
-        this.ws.setIsSecured(String.valueOf(value));
+    public void setSecured(Integer value) {
+        this.ws.setIsSecured(value == null ? "-1" : value.toString());
     }
 
     /*
@@ -92,11 +92,14 @@ public class LdapWebServiceAdapter extends ResourceLdapAdapter implements
      * @see org.dto.WebServiceDto#getSecured()
      */
     @Override
-    public Boolean isSecured() {
+    public Integer getSecured() {
+        if (this.ws.getIsSecured() == null) {
+            return -1;
+        }
         try {
-            return Boolean.getBoolean(this.ws.getIsSecured());
+            return Integer.valueOf(this.ws.getIsSecured());
         } catch (NumberFormatException e) {
-            return false;
+            return -1;
         }
     }
 

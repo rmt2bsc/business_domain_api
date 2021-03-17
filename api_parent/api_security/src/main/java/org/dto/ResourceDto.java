@@ -133,12 +133,12 @@ public interface ResourceDto extends TransactionDto {
      * @param value
      *            the secured flag
      */
-    void setSecured(Boolean value);
+    void setSecured(Integer value);
 
     /**
      * Gets the secured flag
      * 
      * @return secured flag
      */
-    Boolean isSecured();
+    Integer getSecured();
 }
