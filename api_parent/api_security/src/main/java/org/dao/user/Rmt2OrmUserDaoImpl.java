@@ -426,6 +426,10 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
      *             for database and system errors.
      */
     private int updateGroup(UserGroup grp) throws DatabaseException {
+        UserDto orig = this.fetchUserGroup(grp.getGrpId());
+        if (orig != null) {
+            grp.setDateCreated(orig.getDateCreated());
+        }
         UserTimestamp ut = null;
         ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
         grp.setDateUpdated(ut.getDateCreated());
