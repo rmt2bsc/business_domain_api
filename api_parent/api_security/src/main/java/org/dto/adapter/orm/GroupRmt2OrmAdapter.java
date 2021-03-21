@@ -1,5 +1,7 @@
 package org.dto.adapter.orm;
 
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.UserGroup;
 import org.dto.DefaultUserAdapter;
 
@@ -81,5 +83,35 @@ class GroupRmt2OrmAdapter extends DefaultUserAdapter {
     @Override
     public void setGrpDescription(String value) {
         this.u.setDescription(value);
+    }
+    
+    @Override
+    public String getUpdateUserId() {
+        return this.u.getUserId();
+    }
+
+    @Override
+    public void setUpdateUserId(String updateUserId) {
+        this.u.setUserId(updateUserId);
+    }
+
+    @Override
+    public Date getDateCreated() {
+        return this.u.getDateCreated();
+    }
+
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.u.setDateCreated(dateCreated);
+    }
+
+    @Override
+    public Date getDateUpdated() {
+        return this.u.getDateUpdated();
+    }
+
+    @Override
+    public void setDateUpdated(Date dateUpdated) {
+        this.u.setDateUpdated(dateUpdated);
     }
 }
