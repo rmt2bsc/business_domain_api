@@ -255,4 +255,14 @@ class UserGroupRmt2OrmAdapter extends DefaultUserAdapter {
     public void setGrp(String value) {
         this.u.setGroupDescription(value);
     }
+    
+    @Override
+    public String getGrpDescription() {
+        return this.u.getGroupDescription();
+    }
+
+    @Override
+    public void setGrpDescription(String value) {
+         this.u.setGroupDescription(value);
+    }
 }
