@@ -500,6 +500,10 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      *             for database and system errors.
      */
     private int updateAppRole(AppRole appRole) throws RoleDaoException {
+        CategoryDto orig = this.fetchAppRole(appRole.getAppRoleId());
+        if (orig != null) {
+            appRole.setDateCreated(orig.getDateCreated());
+        }
         try {
             // Update application role
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());

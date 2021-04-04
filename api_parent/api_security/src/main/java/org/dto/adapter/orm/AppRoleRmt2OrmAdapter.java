@@ -1,5 +1,7 @@
 package org.dto.adapter.orm;
 
+import java.util.Date;
+
 import org.dao.mapping.orm.rmt2.AppRole;
 import org.dto.DefaultCategoryAdapter;
 
@@ -155,6 +157,67 @@ class AppRoleRmt2OrmAdapter extends DefaultCategoryAdapter {
     @Override
     public int getApplicationId() {
         return this.ar.getAppId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#getUpdateUserId()
+     */
+    @Override
+    public String getUpdateUserId() {
+        return this.ar.getUserId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.api.foundation.TransactionDtoImpl#setUpdateUserId(java.lang.String)
+     */
+    @Override
+    public void setUpdateUserId(String updateUserId) {
+        this.ar.setUserId(updateUserId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#getDateCreated()
+     */
+    @Override
+    public Date getDateCreated() {
+        return this.ar.getDateCreated();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#setDateCreated(java.util.Date)
+     */
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.ar.setDateCreated(dateCreated);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#getDateUpdated()
+     */
+    @Override
+    public Date getDateUpdated() {
+        return this.ar.getDateUpdated();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.TransactionDtoImpl#setDateUpdated(java.util.Date)
+     */
+    @Override
+    public void setDateUpdated(Date dateUpdated) {
+        this.ar.setDateUpdated(dateUpdated);
     }
 
 }
