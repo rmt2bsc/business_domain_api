@@ -117,6 +117,12 @@ public class RoleDaoFactory extends RMT2Base {
             if (criteria.getAppRoleCode() != null) {
                 obj.addLikeClause(VwAppRoles.PROP_APPROLECODE, criteria.getAppRoleCode());
             }
+            if (criteria.getAppRoleName() != null) {
+                obj.addLikeClause(VwAppRoles.PROP_APPROLENAME, criteria.getAppRoleName());
+            }
+            if (criteria.getAppRoleDescription() != null) {
+                obj.addLikeClause(VwAppRoles.PROP_APPROLEDESCRIPTION, criteria.getAppRoleDescription());
+            }
         }
         return obj;
     }
