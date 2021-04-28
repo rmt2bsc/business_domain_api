@@ -212,7 +212,7 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         
         // Check password
         // Encrypt password in cases where the password is new or is being changed.
-        boolean pwChanged = (origRec != null && origRec.getPassword().equalsIgnoreCase(user.getPassword()));
+        boolean pwChanged = (origRec != null && !origRec.getPassword().equalsIgnoreCase(user.getPassword()));
         boolean pwNew = (user.getLoginUid() == 0); 
         String hashPassPw = null;
         if (pwChanged || pwNew) {
