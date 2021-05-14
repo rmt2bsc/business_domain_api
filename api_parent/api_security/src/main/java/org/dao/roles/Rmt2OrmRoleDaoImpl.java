@@ -555,7 +555,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
      * @param revokedRoles
      *            A String array of revoked application-role codes. Currently
      *            not used.
-     * @return Total number of rows effected.
+     * @return Total number of application roles assigned to the user.
      * @throws SecurityDaoException
      */
     @Override

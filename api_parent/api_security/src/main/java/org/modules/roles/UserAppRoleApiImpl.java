@@ -157,11 +157,23 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Assigns a new list of roles to the user for an a given application.
+     * <p>
+     * In order to identify the user and application the roles are to be
+     * associated, <i>userAppDetails</i> is required to contain the user name
+     * and application id. This opertation should perform a complete refresh of
+     * the user's application roles. This means that all roles are deleted, and
+     * all elements of <i>roles</i> will be assigned.
      * 
-     * @see org.modules.roles.UserAppRoleApi#update(org.dto.CategoryDto,
-     * java.util.List)
+     * @param userAppDetails
+     *            an instance of {@link CategoryDto} containing the login id and
+     *            the application id.
+     * @param roleCodes
+     *            A List of Strings where each item is an application role code
+     *            that is to be assigned.
+     * @return Total number of application roles assinged to the user.
+     * @throws SecurityDaoException
      */
     @Override
     public int update(CategoryDto userAppDetails, List<String> appRoleCodes) throws UserAppRoleApiException {
