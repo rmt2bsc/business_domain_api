@@ -38,6 +38,8 @@ public class VwUserAppRolesAdapterTest {
                 "2018-01-01");
         CategoryDto dto = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(o1, "test_user");
         
+        Assert.assertEquals(SecurityMockDataFactory.TEST_USER_ID + SecurityMockDataFactory.TEST_APP_ID
+                + SecurityMockDataFactory.TEST_ROLE_ID, dto.getUserAppRoleId());
         Assert.assertEquals(SecurityMockDataFactory.TEST_USER_ID, dto.getLoginUid());
         Assert.assertEquals(SecurityMockDataFactory.TEST_APP_ROLE_ID, dto.getAppRoleId());
         Assert.assertEquals(SecurityMockDataFactory.TEST_APP_ID, dto.getApplicationId());
@@ -62,6 +64,8 @@ public class VwUserAppRolesAdapterTest {
         try {
             VwUserAppRoles nullParm = null;
             dto = Rmt2OrmDtoFactory.getUserAppRoleDtoInstance(nullParm, null);
+            dto.setUserAppRoleId(SecurityMockDataFactory.TEST_USER_ID + SecurityMockDataFactory.TEST_APP_ID
+                    + SecurityMockDataFactory.TEST_ROLE_ID);
             dto.setLoginUid(SecurityMockDataFactory.TEST_USER_ID);
             dto.setAppRoleId(SecurityMockDataFactory.TEST_APP_ROLE_ID);
             dto.setApplicationId(SecurityMockDataFactory.TEST_APP_ID);
@@ -83,6 +87,8 @@ public class VwUserAppRolesAdapterTest {
             dto.setActive(1);
             dto.setSsn("111-11-1111");
 
+            Assert.assertEquals(SecurityMockDataFactory.TEST_USER_ID + SecurityMockDataFactory.TEST_APP_ID
+                    + SecurityMockDataFactory.TEST_ROLE_ID, dto.getUserAppRoleId());
             Assert.assertEquals(SecurityMockDataFactory.TEST_USER_ID, dto.getLoginUid());
             Assert.assertEquals(SecurityMockDataFactory.TEST_APP_ROLE_ID, dto.getAppRoleId());
             Assert.assertEquals(SecurityMockDataFactory.TEST_APP_ID, dto.getApplicationId());

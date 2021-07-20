@@ -3,10 +3,9 @@ package org.dao.mapping.orm.rmt2;
 
 import java.util.Date;
 import java.io.*;
-
-import com.api.persistence.db.orm.OrmBean;
 import com.api.util.assistants.EqualityAssistant;
 import com.api.util.assistants.HashCodeAssistant;
+import com.api.persistence.db.orm.OrmBean;
 import com.SystemException;
 
 
@@ -22,6 +21,8 @@ public class VwUserAppRoles extends OrmBean {
 
 	// Property name constants that belong to respective DataSource, VwUserAppRolesView
 
+/** The property name constant equivalent to property, UserAppRoleId, of respective DataSource view. */
+  public static final String PROP_USERAPPROLEID = "UserAppRoleId";
 /** The property name constant equivalent to property, LoginUid, of respective DataSource view. */
   public static final String PROP_LOGINUID = "LoginUid";
 /** The property name constant equivalent to property, Username, of respective DataSource view. */
@@ -67,7 +68,9 @@ public class VwUserAppRoles extends OrmBean {
 
 
 
-	/** The javabean property equivalent of database column vw_user_app_roles.login_uid */
+	/** The javabean property equivalent of database column vw_user_app_roles.user_app_role_id */
+  private int userAppRoleId;
+/** The javabean property equivalent of database column vw_user_app_roles.login_uid */
   private int loginUid;
 /** The javabean property equivalent of database column vw_user_app_roles.username */
   private String username;
@@ -120,6 +123,18 @@ public class VwUserAppRoles extends OrmBean {
   public VwUserAppRoles() throws SystemException {
 	super();
  }
+/**
+ * Sets the value of member variable userAppRoleId
+ */
+  public void setUserAppRoleId(int value) {
+    this.userAppRoleId = value;
+  }
+/**
+ * Gets the value of member variable userAppRoleId
+ */
+  public int getUserAppRoleId() {
+    return this.userAppRoleId;
+  }
 /**
  * Sets the value of member variable loginUid
  */
@@ -385,6 +400,9 @@ public boolean equals(Object obj) {
       return false;
    }
    final VwUserAppRoles other = (VwUserAppRoles) obj; 
+   if (EqualityAssistant.notEqual(this.userAppRoleId, other.userAppRoleId)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.loginUid, other.loginUid)) {
       return false;
    }
@@ -453,7 +471,8 @@ public boolean equals(Object obj) {
 
 @Override
 public int hashCode() {
-   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.loginUid),
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.userAppRoleId),
+               HashCodeAssistant.hashObject(this.loginUid),
                HashCodeAssistant.hashObject(this.username),
                HashCodeAssistant.hashObject(this.firstname),
                HashCodeAssistant.hashObject(this.lastname),
@@ -478,7 +497,8 @@ public int hashCode() {
 
 @Override
 public String toString() {
-   return "VwUserAppRoles [loginUid=" + loginUid + 
+   return "VwUserAppRoles [userAppRoleId=" + userAppRoleId + 
+          ", loginUid=" + loginUid + 
           ", username=" + username + 
           ", firstname=" + firstname + 
           ", lastname=" + lastname + 

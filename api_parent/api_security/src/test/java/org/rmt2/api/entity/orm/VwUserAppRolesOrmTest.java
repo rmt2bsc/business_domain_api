@@ -52,6 +52,11 @@ public class VwUserAppRolesOrmTest {
 
         result = o1.equals(o2);
         
+        o2.setUserAppRoleId(SecurityMockDataFactory.TEST_USER_ID + SecurityMockDataFactory.TEST_APP_ID
+                + SecurityMockDataFactory.TEST_ROLE_ID);
+        result = o1.equals(o2);
+        Assert.assertFalse(result);
+
         o2.setLoginUid(SecurityMockDataFactory.TEST_USER_ID);
         result = o1.equals(o2);
         Assert.assertFalse(result);

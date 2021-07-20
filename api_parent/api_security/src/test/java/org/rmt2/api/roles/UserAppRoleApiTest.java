@@ -97,6 +97,7 @@ public class UserAppRoleApiTest extends SecurityMockData {
         Assert.assertEquals(5, results.size());
         for (int ndx = 0; ndx < results.size(); ndx++) {
             CategoryDto dto = results.get(ndx);
+            Assert.assertEquals(dto.getLoginUid() + dto.getApplicationId() + dto.getRoleId(), dto.getUserAppRoleId());
             Assert.assertEquals(SecurityMockDataFactory.TEST_USER_ID, dto.getLoginUid());
             Assert.assertEquals(SecurityMockDataFactory.TEST_APP_ROLE_ID + ndx, dto.getAppRoleId());
             Assert.assertEquals(SecurityMockDataFactory.TEST_APP_ID, dto.getApplicationId());

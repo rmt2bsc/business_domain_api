@@ -479,4 +479,24 @@ class UserAppRoleExtRmt2OrmAdapter extends DefaultCategoryAdapter {
         this.uar.setGroupDescription(value);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.DefaultCategoryAdapter#setUserAppRoleId(int)
+     */
+    @Override
+    public void setUserAppRoleId(int value) {
+        this.uar.setUserAppRoleId(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.DefaultCategoryAdapter#getUserAppRoleId()
+     */
+    @Override
+    public int getUserAppRoleId() {
+        return this.uar.getUserAppRoleId();
+    }
+
 }
