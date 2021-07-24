@@ -143,6 +143,9 @@ class Rmt2OrmUserDaoImpl extends SecurityDaoImpl implements UserDao {
         u.setDateCreated(user.getDateCreated());
         u.setDateUpdated(user.getDateUpdated());
         u.setUserId(user.getUpdateUserId());
+        
+        // TODO: do not recoginze password unless this is a new user or the user
+        // requested a password change
         u.setPassword(user.getPassword());
 
         // start transaction
