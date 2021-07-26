@@ -76,15 +76,20 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Updates a user's profile.
      * 
-     * @see org.modules.users.UserApi#updateUser(org.dto.UserDto)
+     * @param user
+     *            the user instance to validate
+     * @throws UserApiException
+     *             when <i>user</i> fails validations, password encryption
+     *             operation fails, or a DAO operation fails.
+     * 
      */
     @Override
     public int updateUser(UserDto user) throws UserApiException {
         this.validateUser(user);
-        this.verifyUserFoUpdate(user);
+        this.verifyUserForUpdate(user);
         
         dao.setDaoUser(this.apiUser);
         try {
@@ -94,6 +99,68 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             return rc;
         } catch (Exception e) {
             this.msg = "Unable to save changes to user, " + user.getUsername();
+            logger.error(this.msg);
+            throw new UserApiException(this.msg, e);
+        }
+    }
+
+    /**
+     * Changes the user's password.
+     * 
+     * @param userName
+     *            the user's username or network id
+     * @param newPassword
+     *            the new password
+     * @throws InvalidUserInstanceException
+     *             <i>username</i> and/or <i>newPassword</i> is blank or null
+     * @throws UserApiException
+     *             The <iuserName</i> and/or <i>newPassword</i> is null or
+     *             blank, the user's profile does not exists
+     */
+    @Override
+    public void changePassword(String userName, String newPassword) throws UserApiException {
+        try {
+            Verifier.verifyNotEmpty(userName);
+        } catch (VerifyException e) {
+            throw new InvalidUserInstanceException("Username is required for change password operation", e);
+        }
+        try {
+            Verifier.verifyNotEmpty(newPassword);
+        } catch (VerifyException e) {
+            throw new InvalidUserInstanceException("New user password is required for change password operation", e);
+        }
+
+        UserDto origRec = null;
+        // Ensure the user exists prior to applying modifications
+        try {
+            origRec = dao.fetchUserProfile(userName);
+            Verifier.verifyNotNull(origRec);
+        } catch (VerifyException e) {
+            this.msg = "User Profile does not exists for username: " + userName;
+            throw new NotFoundException(this.msg, e);
+        } catch (UserDaoException e) {
+            this.msg = "Unable to verify the existence of User Profile by username, " + userName;
+            throw new UserApiException(this.msg, e);
+        }
+
+        // Encrypt password
+        origRec.setPassword(newPassword);
+        this.encryptedPassword(origRec);
+
+        // Apply updates
+        dao.setDaoUser(this.apiUser);
+        try {
+            int rc = dao.maintainUser(origRec);
+            if (rc > 0) {
+                this.msg = "Password changed successfully for user, " + userName;
+            }
+            else {
+                this.msg = "Password change operation was successful, but the password was not changed for user, " + userName;
+            }
+            logger.info(this.msg);
+            return;
+        } catch (UserDaoException e) {
+            this.msg = "A UserDao error occurred updating password for user, " + userName;
             logger.error(this.msg);
             throw new UserApiException(this.msg, e);
         }
@@ -151,12 +218,15 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             throw new InvalidUserInstanceException("Group id is required for user", e);
         }
 
-        try {
-            Verifier.verifyNotEmpty(user.getPassword());
+        // Validate password only when user profile is new.
+        if (user.getLoginUid() == 0) {
+            try {
+                Verifier.verifyNotEmpty(user.getPassword());
+            } catch (VerifyException e) {
+                throw new InvalidUserInstanceException("User password is required", e);
+            }
         }
-        catch (VerifyException e) {
-            throw new InvalidUserInstanceException("User password is required", e);
-        }
+
         return;
     }
 
@@ -166,22 +236,34 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
      * <p>
      * The following conditions must pass:
      * <ul>
+     * <li>The user's profile must exists in the system</li>
+     * <li>When changing the username, the usernmae must not exists for any
+     * other user profiles in the systme</li>
+     * <li>The user's profile must exists in the system</li>
      * </ul>
      * 
      * @param user
+     *            an instance of {@link UserDto}
      * @throws UsernameAleadyExistsException
+     *             A user profile already exists in the system by
+     *             <i>user.userName</i>
      * @throws NotFoundException
+     *             <i>user.userName</i> is already associated with a user
+     *             profile in the system.
      * @throws UserApiException
+     *             A paroble occurred encrypting the user's password.
      */
-    protected void verifyUserFoUpdate(UserDto user) throws UsernameAleadyExistsException, NotFoundException,
-            UserApiException {
+    protected void verifyUserForUpdate(UserDto user) throws UsernameAleadyExistsException, NotFoundException, UserApiException {
         
+        boolean pwNew = false;
         UserDto origRec = null;
         if (user.getLoginUid() > 0) {
             // Ensure the user exists prior to applying modifications
             try {
                 origRec = dao.fetchUserProfile(user.getLoginUid());
                 Verifier.verifyNotNull(origRec);
+                // Capture original date created before persisting the actual
+                // updates.
                 user.setDateCreated(origRec.getDateCreated());
             } catch (VerifyException e) {
                 this.msg = "User Profile does not exists [user id=" + user.getLoginUid() + "]";
@@ -191,11 +273,15 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
                 throw new UserApiException(this.msg, e);
             }
         }
+        else {
+            pwNew = true;
+        }
 
+        // TODO: Confirm if modification of existing username should be allowed
         // If changing the username of an existing profile or the profile is
-        // new, verify that username delta does not exists.
-        boolean userNameChanged = (user.getLoginUid() > 0 && origRec != null
-                && !user.getUsername().equals(origRec.getUsername()));
+        // new, verify that new username does not exists.
+        boolean userNameChanged =
+                (user.getLoginUid() > 0 && origRec != null && !user.getUsername().equals(origRec.getUsername()));
         if (userNameChanged || user.getLoginUid() == 0) {
             try {
                 Object results = dao.fetchUserProfile(user.getUsername());
@@ -210,22 +296,27 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             }
         }
         
-        // Check password
-        // Encrypt password in cases where the password is new or is being changed.
-        boolean pwChanged = (origRec != null && !origRec.getPassword().equalsIgnoreCase(user.getPassword()));
-        boolean pwNew = (user.getLoginUid() == 0); 
-        String hashPassPw = null;
-        if (pwChanged || pwNew) {
-            try {
-                hashPassPw = CryptoUtils.byteArrayToHexString(CryptoUtils.computeHash(user.getUsername() + user.getPassword()));
-            } catch (NoSuchAlgorithmException e) {
-                throw new UserApiException("Unable to encrypt password while maintaining user profile", e);
-            }
-            user.setPassword(hashPassPw);
+        // Check for password updates. Encrypt password in cases where the
+        // password is new or is being changed.
+        if (pwNew) {
+            this.encryptedPassword(user);
         }
     }
     
-        
+
+
+    private String encryptedPassword(UserDto user) throws UserApiException {
+        String hashPassPw = null;
+        try {
+            byte[] pwHash = CryptoUtils.computeHash(user.getUsername() + user.getPassword());
+            hashPassPw = CryptoUtils.byteArrayToHexString(pwHash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new UserApiException("Unable to encrypt password while maintaining user profile", e);
+        }
+        user.setPassword(hashPassPw);
+        return hashPassPw;
+    }
+
     /**
      * Validates a UserDto object based on UserGroup.
      * 
@@ -390,4 +481,6 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
             throw new UserApiException(this.msg, e);
         }
     }
+
+
 }

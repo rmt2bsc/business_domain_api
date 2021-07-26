@@ -2,8 +2,10 @@ package org.rmt2.api.user;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.UserLogin;
@@ -16,11 +18,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.SecurityConstants;
+import org.modules.authentication.CryptoUtils;
+import org.modules.users.InvalidUserInstanceException;
 import org.modules.users.UserApi;
 import org.modules.users.UserApiException;
 import org.modules.users.UserApiFactory;
 import org.modules.users.UsernameAleadyExistsException;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.SecurityMockData;
@@ -39,7 +45,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class })
+@PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, CryptoUtils.class })
 public class UserApiTest extends SecurityMockData {
 
     
@@ -379,7 +385,7 @@ public class UserApiTest extends SecurityMockData {
     @Test
     public void testValidation_Update_Password_Null() {
         UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", null, "2018-01-01");
+        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(0, 500, "user_name", null, "2018-01-01");
         UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
         try {
             api.updateUser(dto);
@@ -393,7 +399,7 @@ public class UserApiTest extends SecurityMockData {
     @Test
     public void testValidation_Update_Password_Empty() {
         UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
-        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(1350, 500, "user_name", "", "2018-01-01");
+        UserLogin obj = SecurityMockDataFactory.createOrmUserLogin(0, 500, "user_name", "", "2018-01-01");
         UserDto dto = Rmt2OrmDtoFactory.getUserDtoInstance(obj);
         try {
             api.updateUser(dto);
@@ -458,6 +464,112 @@ public class UserApiTest extends SecurityMockData {
             Assert.assertTrue(e instanceof UserApiException);
             Assert.assertTrue(e.getCause() instanceof UserDaoException);
             Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+
+    @Test
+    public void testSuccess_ChangePassword() {
+        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class))).thenReturn(this.mockUserLoginData.get(0));
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        String username = "UserName_" + SecurityMockDataFactory.TEST_USER_ID;
+        String newPassword = "NewPassword";
+        try {
+            api.changePassword(username, newPassword);
+            Mockito.verify(this.mockPersistenceClient).retrieveObject(isA(UserLogin.class));
+        } catch (UserApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testError_ChangePassword_API_Error() {
+        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class)))
+                .thenThrow(new DatabaseException("API Error changing user password"));
+
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        String username = "UserName_" + SecurityMockDataFactory.TEST_USER_ID;
+        String newPassword = "NewPassword";
+        try {
+            api.changePassword(username, newPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UserApiException);
+            Assert.assertTrue(e.getCause() instanceof UserDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+
+    @Test
+    public void testError_ChangePassword_Encryption_Error() {
+        String username = "UserName_" + SecurityMockDataFactory.TEST_USER_ID;
+        String newPassword = "NewPassword";
+        
+        when(this.mockPersistenceClient.retrieveObject(any(UserLogin.class))).thenReturn(this.mockUserLoginData.get(0));
+
+        PowerMockito.mockStatic(CryptoUtils.class);
+        try {
+            when(CryptoUtils.computeHash(eq(username + newPassword))).thenThrow(
+                    new NoSuchAlgorithmException("Password encryption error"));
+        } catch (NoSuchAlgorithmException e1) {
+            e1.printStackTrace();
+            Assert.fail(e1.getMessage());
+        }
+
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        try {
+            api.changePassword(username, newPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof UserApiException);
+            Assert.assertTrue(e.getCause() instanceof NoSuchAlgorithmException);
+        }
+    }
+
+    @Test
+    public void testValidation_ChangePassword_Username_Null() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        String newPassword = "NewPassword";
+        try {
+            api.changePassword(null, newPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidUserInstanceException);
+        }
+    }
+
+    @Test
+    public void testValidation_ChangePassword_Username_Blank() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        String newPassword = "NewPassword";
+        try {
+            api.changePassword("", newPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidUserInstanceException);
+        }
+    }
+
+    @Test
+    public void testValidation_ChangePassword_NewPassword_Null() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        String username = "UserName_" + SecurityMockDataFactory.TEST_USER_ID;
+        try {
+            api.changePassword(username, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidUserInstanceException);
+        }
+    }
+
+    @Test
+    public void testValidation_ChangePassword_NewPassword_Blank() {
+        UserApi api = UserApiFactory.createApiInstance(SecurityConstants.APP_NAME);
+        String username = "UserName_" + SecurityMockDataFactory.TEST_USER_ID;
+        try {
+            api.changePassword(username, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof InvalidUserInstanceException);
         }
     }
 }

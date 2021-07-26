@@ -93,4 +93,15 @@ public interface UserApi extends TransactionApi {
      * @throws UserApiException
      */
     void inActivate(String userName) throws UserApiException;
+
+    /**
+     * Changes the user's password.
+     * 
+     * @param userName
+     *            the user's username or network id
+     * @param newPassword
+     *            the new password
+     * @throws UserApiException
+     */
+    void changePassword(String userName, String newPassword) throws UserApiException;
 }
