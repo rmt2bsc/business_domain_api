@@ -138,7 +138,7 @@ public class FirstTimeAuthenticationApiTest extends SecurityMockData {
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.assertTrue(e instanceof AuthenticationException);
+            Assert.assertTrue(e instanceof SecurityDaoException);
             Assert.assertTrue(e.getCause() instanceof UserDaoException);
         }
     }

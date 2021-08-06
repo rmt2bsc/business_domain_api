@@ -187,12 +187,13 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * @param password
      *            The user's passowrd.
      * @return The user's profile as an instance of {@link UserDto}
-     * @throws DatabaseException
+     * @throws AuthenticationException
      *             password is incorrect or the user's loggedIn flag could not
      *             be applied to the database.
      * @throws NotFoundException
      *             <i>userName</i> is null or does not exist in the database.
-     * @throws AuthenticationException
+     * @throws SecurityDaoException
+     *             API error occurred.
      * @throws CannotPersistException
      *             unable to update user's profile
      */
@@ -266,9 +267,9 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
      * 
      * @param userName
      * @return
-     * @throws AuthenticationException
+     * @throws SecurityDaoException
      */
-    private UserDto getUser(String userName) throws AuthenticationException {
+    private UserDto getUser(String userName) throws SecurityDaoException {
         UserDao dao = null;
         List<UserDto> userList = null;
         try {
@@ -282,7 +283,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             }
             return null;
         } catch (UserDaoException e) {
-            throw new AuthenticationException("Unable to retrieve user's profile during authentication", e);
+            throw new SecurityDaoException("Unable to retrieve user's profile during authentication", e);
         }
     }
     
