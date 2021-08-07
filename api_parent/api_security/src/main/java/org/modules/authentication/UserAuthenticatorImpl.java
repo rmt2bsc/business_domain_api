@@ -567,5 +567,13 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         }
         return (totalMatches > 0);
     }
+
+    /**
+     * Override since there does not exists an actual shared DAO instance.
+     */
+    @Override
+    public void close() {
+        return;
+    }
     
 }
