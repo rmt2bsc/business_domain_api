@@ -66,7 +66,8 @@ public interface Authenticator extends TransactionApi {
      * 
      * @param userName
      *            The user's unique system identifier
-     * @return The number of remianing applications the user was signed on.
+     * @return The number of remianing applications the user is currently signed
+     *         on.
      * @throws LogoutException
      */
     int logout(String userName) throws LogoutException;
