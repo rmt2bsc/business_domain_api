@@ -112,7 +112,8 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             token = null;
         }
         if (token == null) {
-            throw new AuthenticationException("Single sign on authentication failed for user, " + userName);
+            throw new AuthenticationException("User, " + userName
+                    + ", must be logged into one or more applications for SSO operation");
         }
         token.getUser().incrementAppCount();
         // Update token properties with changes made to its User instance.

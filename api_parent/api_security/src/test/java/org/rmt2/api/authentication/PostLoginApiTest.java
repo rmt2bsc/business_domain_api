@@ -133,7 +133,8 @@ public class PostLoginApiTest extends SecurityMockData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof AuthenticationException);
-            Assert.assertEquals("Single sign on authentication failed for user, " + userName, e.getMessage());
+            Assert.assertEquals("User, " + userName + ", must be logged into one or more applications for SSO operation",
+                    e.getMessage());
         }
     }
     
