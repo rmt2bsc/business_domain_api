@@ -372,7 +372,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         }
         // User is not logged on to any applications.
         if (token == null) {
-            return 0;
+            throw new LogoutException("User, " + userName + ", is not logged into the system");
         }
 
         // Since the user is signed on to multiple applications, decrement
