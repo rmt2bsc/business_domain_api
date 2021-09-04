@@ -218,7 +218,7 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         // increment total logons
         int logons = user.getTotalLogons();
         user.setTotalLogons(++logons);
-        
+        user.setLoggedIn(1);
         return user;
     }
 
@@ -390,6 +390,19 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             } catch (SecurityTokenAccessException e) {
                 throw new LogoutException("An error occurred attempting to invalidate security token for user, " + userName, e);
             }    
+
+            // Since user has logged out of all applications, update the user's
+            // profile
+            try {
+                UserDto user = this.getUser(userName);
+                UserDao dao = UserDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
+                dao.setDaoUser(userName);
+                user.setLoggedIn(0);
+                dao.maintainUser(user);
+                logger.info("User, " + user.getUsername() + ", was successfully logged out of the system");
+            } catch (UserDaoException e) {
+                throw new LogoutException("Unable to update user's profile during logout operation", e);
+            }
         }
         
         return token.getAppCount();
