@@ -49,7 +49,8 @@ class Rmt2OrmPostalLocationDaoImpl extends AddressBookDaoImpl implements PostalL
     @Override
     public ZipcodeDto fetchZipCode(int uid) throws PostalDaoException {
         Zipcode z = new Zipcode();
-        z.addCriteria(Zipcode.PROP_ZIPID, uid);
+        // IS-70: Changed criteria to be based on zip code instead of zip id.
+        z.addCriteria(Zipcode.PROP_ZIP, uid);
         try {
             Zipcode results = (Zipcode) this.client.retrieveObject(z);
             if (results == null) {

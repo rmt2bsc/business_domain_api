@@ -462,9 +462,11 @@ public class ContactsJaxbFactory extends RMT2Base {
             return null;
         }
         ZipcodeType zip = f.createZipcodeType();
+        // IS-70: Captured zip id correctly. Initially zipcode was incorrectly
+        // captured as the zip id.
+        BigInteger zipIdVal = BigInteger.valueOf(z.getId());
+        zip.setZipId(zipIdVal == BigInteger.ZERO ? null : zipIdVal);
         BigInteger zipcodeVal = BigInteger.valueOf(z.getZip());
-        zip.setZipId(zipcodeVal == BigInteger.ZERO ? null : zipcodeVal);
-        zipcodeVal = BigInteger.valueOf(z.getZip());
         zip.setZipcode(zipcodeVal == BigInteger.ZERO ? null : zipcodeVal);
 
         zip.setAreaCode(z.getAreaCode());
