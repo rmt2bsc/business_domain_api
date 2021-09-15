@@ -308,4 +308,19 @@ class LookupDataApiImpl extends AbstractTransactionApiImpl implements LookupData
                     "General lookup object must have either a short or long descripton");
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.api.foundation.AbstractTransactionApiImpl#close()
+     */
+    @Override
+    public void close() {
+        // IS-70: Added logic to properly close DB connection to prevent memory
+        // leaks.
+        if (this.dao != null) {
+            this.dao.close();
+            this.dao = null;
+        }
+    }
 }

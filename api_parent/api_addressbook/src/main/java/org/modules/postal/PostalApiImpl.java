@@ -208,6 +208,12 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (ZipcodeDaoException e) {
             this.msg = "Unable to fetch zip code object(s) using DTO criteria";
             throw new PostalApiException(this.msg, e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            if (dao != null) {
+                dao.close();
+            }
         }
     }
     
@@ -250,6 +256,12 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (PostalDaoException e) {
             this.msg = "Unable to fetch time zone object by internal unique id, " + uid;
             throw new PostalApiException(this.msg, e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            if (dao != null) {
+                dao.close();
+            }
         }
     }
 
@@ -270,6 +282,12 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (ZipcodeDaoException e) {
             this.msg = "Unable to fetch time zone object(s) using DTO criteria";
             throw new PostalApiException(this.msg, e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            if (dao != null) {
+                dao.close();
+            }
         }
     }
 
@@ -286,6 +304,12 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (IpDaoException e) {
             this.msg = "Unable to fetch IP address object by " + ip;
             throw new PostalApiException(this.msg, e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            if (dao != null) {
+                dao.close();
+            }
         }
     }
 
@@ -302,6 +326,11 @@ class PostalApiImpl extends AbstractTransactionApiImpl implements PostalApi {
         } catch (IpDaoException e) {
             this.msg = "Unable to fetch IP address object by " + ip;
             throw new PostalApiException(this.msg, e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            dao.close();
+            dao = null;
         }
     }
 

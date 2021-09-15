@@ -9,13 +9,17 @@ import org.dto.RegionDto;
 import org.dto.TimeZoneDto;
 import org.dto.ZipcodeDto;
 
+import com.api.foundation.TransactionApi;
+
 /**
  * An contract for executing transactions related to the postal module.
  * 
  * @author rterrell
  * 
  */
-public interface PostalApi {
+// IS-70: Changed class definition so to take advantage of the "close()"
+// operation
+public interface PostalApi extends TransactionApi {
 
     /**
      * Obtains a single country object by its internal unique id.

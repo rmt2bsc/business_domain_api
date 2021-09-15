@@ -243,17 +243,32 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             }
         } catch (SecurityDaoException e) {
             throw new AuthenticationException("Unable to retrieve user's application roles during authentication", e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            if (roleDao != null) {
+                roleDao.close();
+                roleDao = null;
+            }
         }
 
         // Update the authenticated user's profile
+        UserDao dao = null;
         try {
-            UserDao dao = UserDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
+            dao = UserDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
             dao.setDaoUser(userProfile.getUsername());
             int rows = dao.maintainUser(userProfile);
             logger.info("User, " + userProfile.getUsername() + ", was successfully logged in effecting " + rows
                     + " rows(s)");
         } catch (UserDaoException e) {
             throw new AuthenticationException("Unable to update user's profile durig authentication", e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            if (dao != null) {
+                dao.close();
+                dao = null;
+            }
         }
 
         // Create security token and add to list of authenticated users.
@@ -285,6 +300,13 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
             return null;
         } catch (UserDaoException e) {
             throw new SecurityDaoException("Unable to retrieve user's profile during authentication", e);
+        } finally {
+            // IS-70: Added logic to close DB connection to prevent memory
+            // leaks.
+            if (dao != null) {
+                dao.close();
+                dao = null;
+            }
         }
     }
     

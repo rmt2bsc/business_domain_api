@@ -458,6 +458,10 @@ public class ContactsJaxbFactory extends RMT2Base {
         ObjectFactory f = new ObjectFactory();
         PostalApi api = PostalApiFactory.createApi();
         ZipcodeDto z = (ZipcodeDto) api.getZipCode(zipId);
+        // IS-70: Close api so to not create memory leaks due to too many like
+        // open DAO objects
+        api.close();
+        api = null;
         if (z == null) {
             return null;
         }
@@ -626,10 +630,9 @@ public class ContactsJaxbFactory extends RMT2Base {
         if (c == null) {
             return null;
         }
-        ContactsJaxbFactory cf = new ContactsJaxbFactory();
         List<CountryType> list = new ArrayList<CountryType>();
         for (Country src : c) {
-            CountryType ct = cf.createCountryTypeInstance(src.getCountryId(), src.getName(), src.getCode());
+            CountryType ct = ContactsJaxbFactory.createCountryTypeInstance(src.getCountryId(), src.getName(), src.getCode());
             list.add(ct);
         }
         return list;
