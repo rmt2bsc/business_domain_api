@@ -127,7 +127,6 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
 
         // Perform update transaction
         int rc = 0;
-        this.client.beginTrans();
         try {
             if (app.getAppId() > 0) {
                 rc = this.update(app);
@@ -137,10 +136,8 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
                 app.setAppId(rc);
                 appDto.setApplicationId(rc);
             }
-            this.client.commitTrans();
             return rc;
         } catch (Exception e) {
-            this.client.rollbackTrans();
             throw new AppDaoException("Application Module DAO update failed", e);
         }
     }
@@ -205,9 +202,7 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
      */
     @Override
     public int deleteApp(int appId) throws AppDaoException {
-        // Start transaction
         int rc = 0;
-        this.client.beginTrans();
         try {
             Application app = new Application();
             app.addCriteria(Application.PROP_APPID, appId);
@@ -215,9 +210,7 @@ class Rmt2OrmApplicationDaoImpl extends SecurityDaoImpl implements AppDao {
             this.client.commitTrans();
             return rc;
         } catch (DatabaseException e) {
-            this.client.rollbackTrans();
-            throw new AppDaoException("Unable to delete Application record, "
-                    + appId + ", due to database error", e);
+            throw new AppDaoException("Unable to delete Application record, " + appId + ", due to database error", e);
         }
     }
 }
