@@ -132,7 +132,7 @@ class AppRoleApiImpl extends AbstractTransactionApiImpl implements AppRoleApi {
             return rc;
         } catch (Exception e) {
             this.msg = "Unable to update Application Role identitfied as " + appRole.getAppRoleName();
-            throw new AppRoleApiException(this.msg, e);
+            throw new AppRoleApiException(e);
         }
     }
 
