@@ -93,6 +93,23 @@ class UserApiImpl extends AbstractTransactionApiImpl implements UserApi {
         
         dao.setDaoUser(this.apiUser);
         try {
+            // IS-70: For existing users, ensure original password is maintained
+            if (user.getLoginUid() > 0) {
+                UserDto origRec = null;
+                try {
+                    origRec = dao.fetchUserProfile(user.getUsername());
+                    Verifier.verifyNotNull(origRec);
+                    user.setPassword(origRec.getPassword());
+                } catch (VerifyException e) {
+                    this.msg = "Unable to obtain original user credentials due to user profile does not exists for user, "
+                            + user.getUsername();
+                    throw new NotFoundException(this.msg, e);
+                } catch (UserDaoException e) {
+                    this.msg = "Unable to verify the existence of User Profile by username, " + user.getUsername();
+                    throw new UserApiException(this.msg, e);
+                }
+            }
+
             int rc = dao.maintainUser(user);
             this.msg = "Changes to user was saved successfully for user, " + user.getUsername();
             logger.info(this.msg);
