@@ -12,6 +12,7 @@ import org.dto.DefaultCategoryAdapter;
 class UserAppRoleRmt2OrmAdapter extends DefaultCategoryAdapter {
 
     private UserAppRole uar;
+    private String userName;
 
     private UserAppRoleRmt2OrmAdapter() {
         super();
@@ -32,6 +33,16 @@ class UserAppRoleRmt2OrmAdapter extends DefaultCategoryAdapter {
             userAppRole = new UserAppRole();
         }
         this.uar = userAppRole;
+    }
+
+    @Override
+    public void setUsername(String value) {
+        this.userName = value;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userName;
     }
 
     @Override
