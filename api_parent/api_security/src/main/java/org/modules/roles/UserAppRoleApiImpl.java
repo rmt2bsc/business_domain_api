@@ -304,8 +304,21 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
      * 
      * @see org.modules.CategoryApiModule#delete(int)
      */
+    // IS-70: Added
     @Override
     public int delete(int uid) throws UserAppRoleApiException {
-        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        // throw new
+        // UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+        // Delete user app roles
+        int rc = 0;
+        try {
+            rc = dao.deleteUserAppRoles(uid);
+            logger.info("Total number of user application-roles deleted: " + rc);
+            return rc;
+        } catch (Exception e) {
+            this.msg = "Unable to remove application role, " + uid;
+            logger.error(this.msg);
+            throw new UserAppRoleApiException(this.msg, e);
+        }
     }
 }

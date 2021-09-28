@@ -72,6 +72,7 @@ public class UserAppRoleApiTest extends SecurityMockData {
 //             .thenReturn(1);
         when(this.mockPersistenceClient.deleteRow(isA(UserAppRole.class)))
              .thenReturn(5);
+
     }
 
     /**
@@ -235,6 +236,7 @@ public class UserAppRoleApiTest extends SecurityMockData {
     }
     
     
+
     @Test
     public void testSuccess_Create_UnsupportedOperation_Update() {
         UserAppRoleApi api = RoleSecurityApiFactory.createUserAppRoleApi(SecurityConstants.APP_NAME);
@@ -324,7 +326,6 @@ public class UserAppRoleApiTest extends SecurityMockData {
         UserAppRoleApi api = RoleSecurityApiFactory.createUserAppRoleApi(SecurityConstants.APP_NAME);
         int results = 0;
         try {
-            List<String> appRoleCodeList = new ArrayList<>();
             results = api.delete("user_name", null);
         } catch (SecurityModuleException e) {
             e.printStackTrace();
@@ -342,6 +343,38 @@ public class UserAppRoleApiTest extends SecurityMockData {
         try {
             List<String> appRoleCodeList = Arrays.asList(APP_ROLE_CODES);
             api.delete("user_name", appRoleCodeList);
+            Assert.fail("Expected an exception to be thrown");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.assertTrue(e instanceof SecurityModuleException);
+            Assert.assertTrue(e instanceof UserAppRoleApiException);
+            Assert.assertTrue(e.getCause() instanceof RoleDaoException);
+            Assert.assertTrue(e.getCause().getCause() instanceof DatabaseException);
+        }
+    }
+
+    // IS-70: Created
+    @Test
+    public void testSuccess_DeleteSingle() {
+        when(this.mockPersistenceClient.deleteRow(isA(UserAppRole.class))).thenReturn(1);
+        UserAppRoleApi api = RoleSecurityApiFactory.createUserAppRoleApi(SecurityConstants.APP_NAME);
+        int rc = 0;
+        try {
+            rc = api.delete(1);
+            Assert.assertEquals(1, rc);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testError_DeleteSingle_DB_Access_Fault() {
+        when(this.mockPersistenceClient.deleteRow(any(UserAppRole.class)))
+                .thenThrow(new DatabaseException("Error deleting single UserAppRole data"));
+
+        UserAppRoleApi api = RoleSecurityApiFactory.createUserAppRoleApi(SecurityConstants.APP_NAME);
+        try {
+            api.delete(1);
             Assert.fail("Expected an exception to be thrown");
         } catch (Exception e) {
             e.printStackTrace();

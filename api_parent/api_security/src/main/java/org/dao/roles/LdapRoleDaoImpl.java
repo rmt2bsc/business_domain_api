@@ -790,4 +790,15 @@ class LdapRoleDaoImpl extends AbstractLdapDaoClient implements RoleDao {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dao.roles.RoleDao#deleteUserAppRoles(int)
+     */
+    // IS-70: Added
+    @Override
+    public int deleteUserAppRoles(int userAppRoleId) throws SecurityDaoException {
+        throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
+    }
+
 }

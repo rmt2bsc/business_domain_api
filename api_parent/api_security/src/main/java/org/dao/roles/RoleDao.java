@@ -265,6 +265,17 @@ public interface RoleDao extends DaoClient {
     int deleteAppRole(String appRoleCode) throws SecurityDaoException;
 
     /**
+     * Delete a single user application role record.
+     * 
+     * @param userAppRoleId
+     *            int representing the primay key
+     * @return The total number of records effected
+     * @throws SecurityDaoException
+     */
+    // IS-70: Added
+    int deleteUserAppRoles(int userAppRoleId) throws SecurityDaoException;
+
+    /**
      * Delete all roles assoicated with a particular user.
      * 
      * @param user

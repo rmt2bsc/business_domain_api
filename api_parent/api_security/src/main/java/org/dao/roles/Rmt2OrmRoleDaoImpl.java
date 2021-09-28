@@ -592,7 +592,7 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         List<AppRole> results = null;
         try {
             results = this.client.retrieveList(obj);
-            if (appRoleCodes == null) {
+            if (results == null) {
                 return null;
             }
         } catch (DatabaseException e) {
@@ -605,6 +605,24 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
             roleId[cnt++] = String.valueOf(item.getAppRoleId());
         }
         return roleId;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dao.roles.RoleDao#deleteUserAppRoles(int)
+     */
+    // IS-70: Added
+    @Override
+    public int deleteUserAppRoles(int userAppRoleId) throws SecurityDaoException {
+        try {
+            UserAppRole uar = new UserAppRole();
+            uar.addCriteria(UserAppRole.PROP_USERAPPROLEID, userAppRoleId);
+            int rows = this.client.deleteRow(uar);
+            return rows;
+        } catch (DatabaseException e) {
+            throw new RoleDaoException("DAO error occurred deleting User Application Roles", e);
+        }
     }
 
     /**
@@ -727,6 +745,4 @@ class Rmt2OrmRoleDaoImpl extends SecurityDaoImpl implements RoleDao {
         throw new UnsupportedOperationException(
                 RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
-
-    
 }
