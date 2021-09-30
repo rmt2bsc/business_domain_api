@@ -207,7 +207,7 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         int rc = 0;
         try {
             rc = dao.maintainUserAppRole(userDto, appRoleIdArray, null);
-            this.msg = "Total number of roles created user, "
+            this.msg = "Total number of roles created for user, "
                     + userAppDetails.getUsername() + ", for application, "
                     + userAppDetails.getApplicationId() + ": " + rc;
             logger.info(this.msg);
@@ -273,11 +273,12 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
     }
 
     private UserDto getUserDto(String userName) throws UserAppRoleApiException {
-        UserApi userApi = UserApiFactory.createApiInstance();
-        UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
-        userCriteria.setUsername(userName);
-        UserDto userDto = null;
+        UserApi userApi = null;
         try {
+            userApi = UserApiFactory.createApiInstance();
+            UserDto userCriteria = Rmt2OrmDtoFactory.getNewUserInstance();
+            userCriteria.setUsername(userName);
+            UserDto userDto = null;
             List<UserDto> userDtoList = userApi.getUser(userCriteria);
             if (userDtoList != null && userDtoList.size() == 1) {
                 userDto = userDtoList.get(0);
@@ -285,7 +286,13 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
             return userDto;
         } catch (UserApiException e1) {
             throw new UserAppRoleApiException("Unable to otbatin UserLogin object based on userName, " + userName);
+        } finally {
+            // IS-70: Added logic to properly close API instance
+            if (userApi != null) {
+                userApi.close();
+            }
         }
+
 
     }
 
@@ -307,9 +314,6 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
     // IS-70: Added
     @Override
     public int delete(int uid) throws UserAppRoleApiException {
-        // throw new
-        // UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
-        // Delete user app roles
         int rc = 0;
         try {
             rc = dao.deleteUserAppRoles(uid);
