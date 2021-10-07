@@ -135,10 +135,16 @@ abstract class AbstractSubsidiaryApiImpl<E> extends AbstractTransactionApiImpl
             results = api.getContact(contactDto);
         } catch (ContactsApiException e) {
             e.printStackTrace();
+        } finally {
+            // IS-70: Added logic to close API instance in order to prevent
+            // memory leaks from left over open DB connections
+            if (api != null) {
+                api.close();
+            }
         }
         
-        Map<Integer, SubsidiaryContactInfoDto> map = Rmt2SubsidiaryDtoFactory
-                .createContactMap(results);
+        // Create Map of results
+        Map<Integer, SubsidiaryContactInfoDto> map = Rmt2SubsidiaryDtoFactory.createContactMap(results);
         return map;
     }
 }
