@@ -35,7 +35,6 @@ import com.api.util.assistants.VerifyException;
 class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements CustomerApi {
     private static final Logger logger = Logger.getLogger(CustomerApiImp.class);
 
-    private SubsidiaryDaoFactory daoFact;
     private CustomerDao dao;
 
 
@@ -47,7 +46,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      */
     public CustomerApiImp(String appName) {
         super();
-        this.dao = this.daoFact.createRmt2OrmCustomerDao(appName);
+        this.dao = SubsidiaryDaoFactory.createRmt2OrmCustomerDao(appName);
         this.setSharedDao(this.dao);
         this.dao.setDaoUser(this.apiUser);
         return;
@@ -61,7 +60,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      */
     protected CustomerApiImp(DaoClient connection) {
         super(connection);
-        this.dao = this.daoFact.createRmt2OrmCustomerDao(this.getSharedDao());
+        this.dao = SubsidiaryDaoFactory.createRmt2OrmCustomerDao(this.getSharedDao());
     }
 
     /*
@@ -72,7 +71,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
     @Override
     public void init() {
         super.init();
-        this.daoFact = new SubsidiaryDaoFactory();
     }
 
     @Override
@@ -146,7 +144,8 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
                 customerResults = this.get(criteria2);    
             }
         }
-        else if (useCustomerParms) {
+        // Fetch using customer related criteria or fetch all customers
+        else if (useCustomerParms || (!useCustomerParms && !useContactParms)) {
             // First fetch customer specific data and then common contact data
             customerResults = this.get(criteria);
             if (customerResults != null) {
@@ -176,8 +175,7 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
      *          or if there is nothing to merge.
      */
     @Override
-    protected List<CustomerDto> mergeContactInfo(List<CustomerDto> subsidiaries,
-            Map<Integer, SubsidiaryContactInfoDto> contacts) {
+    protected List<CustomerDto> mergeContactInfo(List<CustomerDto> subsidiaries, Map<Integer, SubsidiaryContactInfoDto> contacts) {
         try {
             Verifier.verifyNotNull(subsidiaries);
             Verifier.verifyNotNull(contacts);
