@@ -205,6 +205,8 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         int rc = 0;
         if (orm.getCustomerId() <= 0) {
             rc = this.insert(orm);
+            // update customer with new customer ID
+            cust.setCustomerId(rc);
         }
         else {
             rc = this.update(orm);
