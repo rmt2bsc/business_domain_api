@@ -89,7 +89,7 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
      *             general data access error
      */
     @Override
-    public ContactDto getontact(int contactId) throws ContactsApiException {
+    public ContactDto getContact(int contactId) throws ContactsApiException {
         try {
             ContactDto results = dao.fetchContact(contactId);
             this.msg = "Successfully retrieved contact details for contact, " + contactId;

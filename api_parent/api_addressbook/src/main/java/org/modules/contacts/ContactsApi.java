@@ -42,7 +42,7 @@ public interface ContactsApi extends TransactionApi {
      * @return an instance of {@link ContactDto}
      * @throws ContactsApiException
      */
-    ContactDto getontact(int contactId) throws ContactsApiException;
+    ContactDto getContact(int contactId) throws ContactsApiException;
 
     /**
      * Obtains one or more business contact objects using a List of business
