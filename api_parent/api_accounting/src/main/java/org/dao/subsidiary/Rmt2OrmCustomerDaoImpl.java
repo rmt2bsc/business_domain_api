@@ -136,6 +136,10 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         List<VwCustomerXactHist> results = null;
         try {
             results = this.client.retrieveList(obj);
+            // Customer does not have any history
+            if (results == null) {
+                return null;
+            }
         } catch (DatabaseException e) {
             throw new CustomerDaoException(e);
         }
