@@ -47,7 +47,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
      */
     public CreditorApiImpl(String appName) {
         super();
-        this.dao = this.daoFact.createRmt2OrmCreditorDao(appName);
+        this.dao = SubsidiaryDaoFactory.createRmt2OrmCreditorDao(appName);
         this.setSharedDao(this.dao);
         this.dao.setDaoUser(this.apiUser);
         return;
@@ -61,7 +61,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
      */
     protected CreditorApiImpl(DaoClient connection) {
         super(connection);
-        this.dao = this.daoFact.createRmt2OrmCreditorDao(this.getSharedDao());
+        this.dao = SubsidiaryDaoFactory.createRmt2OrmCreditorDao(this.getSharedDao());
     }
 
     /*
@@ -648,7 +648,12 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             this.msg = "Unable to retrieve GL Account information for new creditor";
             logger.error(this.msg);
             throw new NewCreditorSetupFailureException(this.msg, e);
+        } finally {
+            // IS-70: Added logic to close API instance in order to prevent
+            // memory leaks from left over open DB connections
+            api.close();
         }
+
         if (acctDto == null) {
             this.msg = "Accounts Payable General ledger account could not be found for the purpose of assigning to creditor";
             logger.error(this.msg);

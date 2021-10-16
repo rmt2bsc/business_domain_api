@@ -534,7 +534,12 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             this.msg = "Unable to retrieve GL Account information for new customer";
             logger.error(this.msg);
             throw new NewCustomerSetupFailureException(this.msg);
+        } finally {
+            // IS-70: Added logic to close API instance in order to prevent
+            // memory leaks from left over open DB connections
+            api.close();
         }
+
         if (acctDto == null) {
             this.msg = "Accounts Payable General ledger account could not be found for the purpose of assigning to customer";
             logger.error(this.msg);
