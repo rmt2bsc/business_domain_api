@@ -258,8 +258,7 @@ public class ItemStatusHistoryApiQueryTest extends BaseAccountingDaoTest {
     public void testFetchCurrentItemStatus() {
         try {
             when(this.mockPersistenceClient
-                    .retrieveList(any(ItemMasterStatusHist.class)))
-                            .thenReturn(this.mockSingleFetchResponse);
+                    .retrieveObject(any(Integer.class))).thenReturn(this.mockSingleFetchResponse.get(0));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(
