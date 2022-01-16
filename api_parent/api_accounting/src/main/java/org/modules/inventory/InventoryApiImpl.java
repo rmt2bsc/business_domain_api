@@ -920,7 +920,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             }
         }
 
-        // Capute the original override flag
+        // Capture the original override flag
         int oldOverrideRetailFlag = imDto.getOverrideRetail();
 
         // add delta to old inventory item master version
@@ -1635,8 +1635,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @throws ItemMasterException
      */
     @Override
-    public int addInventoryOverride(Integer vendorId, Integer[] items)
-            throws InventoryApiException {
+    public int addInventoryOverride(Integer vendorId, Integer[] items) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
         }
@@ -1666,7 +1665,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         }
         
         int count = 0;
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
@@ -1752,9 +1750,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         }
         
         int count = 0;
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
-        // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
                 ItemMasterDto imDto = this.getItemById(items[ndx]);
@@ -1765,7 +1761,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     throw new InventoryApiException(this.msg);
                 }
 
-                // Do not attempt to update an item that is currently overriden.
+                // Do not attempt to update an item that is currently overridden.
                 if (imDto.getOverrideRetail() == InventoryConst.ITEM_OVERRIDE_NO) {
                     continue;
                 }
