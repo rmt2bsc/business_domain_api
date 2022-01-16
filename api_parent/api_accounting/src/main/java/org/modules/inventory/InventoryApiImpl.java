@@ -1554,10 +1554,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *            The id of the vendor
      * @param items
      *            A list inventory item id's to remove.
-     * @return The number of items removedto the vendor.
+     * @return The number of items removed from the vendor.
      * @throws InventoryException
      *             An inventory item in <i>items</i> does not exist in the
-     *             system or database error trying to disassoicate the vendor
+     *             system or database error when disassociating the vendor
      *             from an inventory item.
      */
     @Override
@@ -1626,7 +1626,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * table instead of the item_master table .
      * 
      * @param vendorId
-     *            The id of the vendor that will be assoicated with each item
+     *            The id of the vendor that will be associated with each item
      *            id.
      * @param items
      *            Collection containing one or more item_master id's to
@@ -1678,7 +1678,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                     throw new InventoryApiException(this.msg);
                 }
 
-                // Do not attempt to update an item that is currently overriden.
+                // Do not attempt to update an item that is currently overridden.
                 if (imDto.getOverrideRetail() == InventoryConst.ITEM_OVERRIDE_YES) {
                     continue;
                 }
