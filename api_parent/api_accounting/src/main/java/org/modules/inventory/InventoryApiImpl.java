@@ -950,6 +950,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             if (isNewItem) {
                 // Indicate that item is in service
                 this.changeItemStatus(imDto, InventoryConst.ITEM_STATUS_INSRVC);
+                item.setItemId(rc);
             }
             else {
                 // Get item master's current status
