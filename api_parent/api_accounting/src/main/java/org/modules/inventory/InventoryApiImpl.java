@@ -681,14 +681,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             throw new InvalidDataException("Item Id must be greater than zero");
         }
         dao.setDaoUser(this.apiUser);
-        List<ItemMasterStatusHistDto> results;
+        ItemMasterStatusHistDto results;
         StringBuffer msgBuf = new StringBuffer();
         try {
-            ItemMasterStatusHist imt = null;
-            ItemMasterStatusHistDto criteria = Rmt2InventoryDtoFactory
-                    .createItemStatusHistoryInstance(imt);
-            criteria.setItemId(itemId);
-            results = this.getItemStatusHist(criteria);
+            results = dao.fetchCurrentItemStatusHistory(itemId);
         } catch (Exception e) {
             this.msg = "Unable to retrieve current inventory item status history by item id: "
                     + itemId;
@@ -702,12 +698,13 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             logger.warn(msgBuf);
             return null;
         }
-        msgBuf.append(results.size());
+        msgBuf.append(1);
         msgBuf.append(" Current inventory item status history object(s) were retrieved by item id, ");
         msgBuf.append(itemId);
         logger.info(msgBuf);
-        return results.get(0);
+        return results;
     }
+    
 
     /*
      * (non-Javadoc)
