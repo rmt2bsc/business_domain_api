@@ -164,8 +164,7 @@ public class Rmt2InventoryDtoFactory extends RMT2Base {
      *            an instance of {@link ItemMasterDto}
      * @return an instance of {@link VendorItemDto}
      */
-    public static final VendorItemDto createVendorItemInstance(int vendorId,
-            ItemMasterDto item) {
+    public static final VendorItemDto createVendorItemInstance(int vendorId, ItemMasterDto item) {
         return new VendorItemRmt2OrmAdapter(vendorId, item);
     }
 }

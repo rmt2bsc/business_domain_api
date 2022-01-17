@@ -186,8 +186,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
     public List<VendorItemDto> fetch(VendorItemDto criteria)
             throws InventoryDaoException {
         VwVendorItems obj = InventoryDaoFactory.createCriteria(criteria);
-        obj.addOrderBy(VwVendorItems.PROP_DESCRIPTION,
-                VwVendorItems.ORDERBY_ASCENDING);
+        obj.addOrderBy(VwVendorItems.PROP_DESCRIPTION, VwVendorItems.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<VwVendorItems> results = null;
@@ -202,8 +201,7 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
 
         List<VendorItemDto> list = new ArrayList<VendorItemDto>();
         for (VwVendorItems item : results) {
-            VendorItemDto dto = Rmt2InventoryDtoFactory
-                    .createVendorItemInstance(item);
+            VendorItemDto dto = Rmt2InventoryDtoFactory.createVendorItemInstance(item);
             list.add(dto);
         }
         return list;
@@ -573,11 +571,11 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
     }
 
     /**
-     * Applies the modificatons of an existing vendor item to the vendor_items
+     * Applies the modifications of an existing vendor item to the vendor_items
      * table.
      * 
      * @param item
-     *            intance of {@link VendorItems}.
+     *            instance of {@link VendorItems}.
      * @return The total number of items updated from transaction.
      * @throws InventoryDaoException
      */

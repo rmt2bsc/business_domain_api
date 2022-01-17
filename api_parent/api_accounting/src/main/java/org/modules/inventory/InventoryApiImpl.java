@@ -712,8 +712,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * @see org.modules.inventory.InventoryApi#getVendorItem(int, int)
      */
     @Override
-    public List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId)
-            throws InventoryApiException {
+    public List<VendorItemDto> getVendorItem(Integer vendorId, Integer itemId) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
         }
@@ -771,13 +770,11 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         StringBuffer msgBuf = new StringBuffer();
         try {
             VwVendorItems imt = null;
-            VendorItemDto criteria = Rmt2InventoryDtoFactory
-                    .createVendorItemInstance(imt);
+            VendorItemDto criteria = Rmt2InventoryDtoFactory.createVendorItemInstance(imt);
             criteria.setVendorId(vendorId);
             results = dao.fetch(criteria);
         } catch (Exception e) {
-            this.msg = "Unable to retrieve vendor associated inventory items by vendor id: "
-                    + vendorId;
+            this.msg = "Unable to retrieve vendor associated inventory items by vendor id: " + vendorId;
             logger.error(this.msg, e);
             throw new InventoryApiException(e);
         }
@@ -1128,7 +1125,10 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         dao.setDaoUser(this.apiUser);
         int rc;
         try {
-            rc = dao.maintain(item, false);
+        	List<VendorItemDto> results = this.getVendorItem(item.getVendorId(), item.getItemId());
+        	// Determine if we are creating a new or modifying an existing vendor item
+        	boolean newRec  = (results == null || results.size() == 0 ? true : false);
+            rc = dao.maintain(item, newRec);
             return rc;
         } catch (Exception e) {
             this.msg = "Unable to process inventory vendor item updates.";
@@ -1188,8 +1188,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         }
         
         // Validate Creditor
-        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
-        CreditorApi api = f.createCreditorApi(this.dao);
+//        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
+        CreditorApi api = SubsidiaryApiFactory.createCreditorApi(this.dao);
         Object cred;
         try {
             cred = api.getByCreditorId(vi.getVendorId());
@@ -1462,8 +1462,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * <p>
      * This method iterates through the list of inventory item id's contained in
      * <i>items</i> and assigns each one to a vendor identified as
-     * <i>vendorId</i>. If an error is encounterd during an iteration, the
-     * entire process is aborted and all previous successful transations are
+     * <i>vendorId</i>. If an error is encountered during an iteration, the
+     * entire process is aborted and all previous successful transactions are
      * rolled back.
      * 
      * @param vendorId
@@ -1514,15 +1514,14 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             for (int ndx = 0; ndx < items.length; ndx++) {
                 ItemMasterDto imDto = this.getItemById(items[ndx]);
                 if (imDto == null) {
-                    this.msg = "Item id is not found in the database: "
-                            + items[ndx];
+                    this.msg = "Item id is not found in the database: " + items[ndx];
                     logger.error(this.msg);
                     throw new InventoryApiException(this.msg);
                 }
-                VendorItemDto viDto = Rmt2InventoryDtoFactory
-                        .createVendorItemInstance(vendorId, imDto);
+                VendorItemDto viDto = Rmt2InventoryDtoFactory.createVendorItemInstance(vendorId, imDto);
                 try {
-                    count += dao.maintain(viDto, true);
+                	count += this.updateVendorItem(viDto);
+//                    count += dao.maintain(viDto, true);
                 } catch (Exception e) {
                     this.msg = "Error creating vendor id [" + vendorId
                             + "] and item id {" + imDto.getItemId()
@@ -1546,8 +1545,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      * <p>
      * This method iterates through the list of inventory item id's contained in
      * <i>items</i> and removes each one from the vendor identified as
-     * <i>vendorId</i>. If an error is encounterd during an iteration, the
-     * entire process is aborted and all previous successful transations are
+     * <i>vendorId</i>. If an error is encountered during an iteration, the
+     * entire process is aborted and all previous successful transactions are
      * rolled back.
      * 
      * @param vendorId
@@ -1561,8 +1560,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
      *             from an inventory item.
      */
     @Override
-    public int removeVendorItems(Integer vendorId, Integer[] items)
-            throws InventoryApiException {
+    public int removeVendorItems(Integer vendorId, Integer[] items) throws InventoryApiException {
         try {
             Verifier.verifyNotNull(vendorId);    
         }
