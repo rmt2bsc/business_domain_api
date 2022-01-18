@@ -1188,7 +1188,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         }
         
         // Validate Creditor
-//        SubsidiaryApiFactory f = new SubsidiaryApiFactory();
         CreditorApi api = SubsidiaryApiFactory.createCreditorApi(this.dao);
         Object cred;
         try {
@@ -1507,9 +1506,7 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         }
         
         int count = 0;
-        // InventoryDao dao = this.factory.createRmt2OrmDao();
         dao.setDaoUser(this.apiUser);
-        // dao.beginTrans();
         try {
             for (int ndx = 0; ndx < items.length; ndx++) {
                 ItemMasterDto imDto = this.getItemById(items[ndx]);
@@ -1520,8 +1517,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                 }
                 VendorItemDto viDto = Rmt2InventoryDtoFactory.createVendorItemInstance(vendorId, imDto);
                 try {
-                	count += this.updateVendorItem(viDto);
-//                    count += dao.maintain(viDto, true);
+//                	count += this.updateVendorItem(viDto);
+                    count += dao.maintain(viDto, true);
                 } catch (Exception e) {
                     this.msg = "Error creating vendor id [" + vendorId
                             + "] and item id {" + imDto.getItemId()

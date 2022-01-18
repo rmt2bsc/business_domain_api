@@ -10,15 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dao.inventory.InventoryDaoException;
+import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.ItemMasterStatus;
 import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.VendorItems;
+import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
 import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
+import org.dao.mapping.orm.rmt2.VwVendorItems;
+import org.dto.CreditorDto;
 import org.dto.ItemAssociationDto;
 import org.dto.ItemMasterDto;
 import org.dto.ItemMasterStatusDto;
+import org.dto.VendorItemDto;
 import org.dto.adapter.orm.inventory.Rmt2InventoryDtoFactory;
 import org.dto.adapter.orm.inventory.Rmt2ItemMasterDtoFactory;
 import org.junit.After;
@@ -26,11 +31,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.modules.AddressBookConstants;
 import org.modules.inventory.InventoryApi;
 import org.modules.inventory.InventoryApiException;
 import org.modules.inventory.InventoryApiFactory;
 import org.modules.inventory.InventoryConst;
+import org.modules.subsidiary.CreditorApi;
+import org.modules.subsidiary.CreditorApiException;
+import org.modules.subsidiary.SubsidiaryApiFactory;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.AccountingMockDataFactory;
@@ -39,6 +49,7 @@ import org.rmt2.api.BaseAccountingDaoTest;
 import com.InvalidDataException;
 import com.RMT2Base;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
@@ -56,6 +67,9 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
     private List<ItemMaster> mockFetchAllItemsMasterResponse;
     private List<ItemMasterStatusHist> mockFetchItemStatusAllResponse;
     private List<VwItemAssociations> mockVwItemAssociationsFetchResponse;
+    
+    private List<VwBusinessAddress> mockBusinessContactFetchResponse;
+    private List<Creditor> mockCreditorFetchResponse;
 
     /**
      * @throws java.lang.Exception
@@ -66,6 +80,10 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         this.mockSingleFetchResponse = this.createMockSingleFetchResponse();
         this.mockFetchAllItemsMasterResponse = this.createMockFetchAllResponse();
         this.mockVwItemAssociationsFetchResponse = this.createMockItemAssoicationsSearchResultsResponse();
+        
+        this.mockBusinessContactFetchResponse = this.createMockSingleContactFetchResponse();
+        this.mockCreditorFetchResponse = this.createMockSingleCreditorFetchResponse();
+        
     }
 
     /**
@@ -77,7 +95,26 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         return;
     }
 
- 
+    private List<VwBusinessAddress> createMockSingleContactFetchResponse() {
+        List<VwBusinessAddress> list = new ArrayList<VwBusinessAddress>();
+        VwBusinessAddress p = AccountingMockDataFactory
+                .createMockOrmBusinessContact(1351, "ABC Company", 2222,
+                        "94393 Hall Ave.", "Building 123", "Suite 300",
+                        "Room 45", "Dallas", "TX", 75232);
+        list.add(p);
+        return list;
+    }
+    
+
+    private List<Creditor> createMockSingleCreditorFetchResponse() {
+        List<Creditor> list = new ArrayList<Creditor>();
+        Creditor o = AccountingMockDataFactory.createMockOrmCreditor(200, 1351,
+                333, "C1234589", "123-456-789", 22);
+        list.add(o);
+        return list;
+    }
+    
+    
     private List<VwItemAssociations> createMockItemAssoicationsSearchResultsResponse() {
         List<VwItemAssociations> list = new ArrayList<VwItemAssociations>();
         VwItemAssociations o = AccountingMockDataFactory.createMockOrmVwItemAssociations(22, 22, 100, "so", 10, 2.22);
@@ -765,11 +802,13 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
             e.printStackTrace();
             Assert.fail("Vendor Item update row test case setup failed");
         }
+        
 
         InventoryApiFactory f = new InventoryApiFactory();
         InventoryApi api = f.createApi(AddressBookConstants.APP_NAME);
         int rc = 0;
         Integer items[] = {100, 200, 300};
+
         try {
             rc = api.assignVendorItems(555, items);
         } catch (InventoryApiException e) {
@@ -777,10 +816,6 @@ public class ItemMasterApiUpdateTest extends BaseAccountingDaoTest {
         }
         Assert.assertEquals(3, rc);
     }
-    
-    
-    
-    
     
     
     @Test
