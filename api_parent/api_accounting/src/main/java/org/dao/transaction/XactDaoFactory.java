@@ -494,8 +494,7 @@ public class XactDaoFactory extends RMT2Base {
      *            A List of {@link XactTypeItemActivityDto}
      * @return A List of {@link XactTypeItemActivity}
      */
-    public static final List<XactTypeItemActivity> createXactItemActivity(
-            List<XactTypeItemActivityDto> actvList) {
+    public static final List<XactTypeItemActivity> createXactItemActivity(List<XactTypeItemActivityDto> actvList) {
         if (actvList == null) {
             return null;
         }
@@ -514,8 +513,7 @@ public class XactDaoFactory extends RMT2Base {
      *            an instnace of {@link XactTypeItemActivityDto}
      * @return an instnace of {@link XactTypeItemActivity}
      */
-    public static final XactTypeItemActivity createXactItemActivity(
-            XactTypeItemActivityDto obj) {
+    public static final XactTypeItemActivity createXactItemActivity(XactTypeItemActivityDto obj) {
         if (obj == null) {
             return null;
         }
