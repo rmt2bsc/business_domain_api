@@ -764,7 +764,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             logger.warn("There are no transaction items associated with the base transaction", e);
             return;
         } catch (Exception e) {
-            throw new InvalidDataException("List of base transaction detail items failed validation", e);
+            throw new InvalidDataException(e);
         }
         // At this point, we have items. Make sure the reversal of the
         // transaction base and transaction items balance.
