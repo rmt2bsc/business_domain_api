@@ -807,9 +807,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
 
     /**
      * Verifies that the said transaction is a proper candidate for
-     * finailization.
+     * finalization.
      * <p>
-     * Aplplicable sub transaction type values are:
+     * Applicable sub transaction type values are:
      * <ul>
      * <li>{@link XactConst.XACT_SUBTYPE_REVERSE}</li>
      * <li>{@link XactConst.XACT_SUBTYPE_CANCEL}</li>
