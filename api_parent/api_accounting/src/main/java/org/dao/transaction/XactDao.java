@@ -139,7 +139,7 @@ public interface XactDao extends DaoClient {
     List<XactTypeItemActivityDto> fetchXactTypeItemActivityExt(XactTypeItemActivityDto criteria) throws XactDaoException;
 
     /**
-     * Creates a common transtaction.
+     * Creates a common transaction.
      * 
      * @param xact
      *            The transaction object to be managed.
