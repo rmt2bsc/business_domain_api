@@ -261,8 +261,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * @see org.dao.transaction.XactDao#fetchType(org.dto.XactTypeDto)
      */
     @Override
-    public List<XactTypeDto> fetchType(XactTypeDto criteria)
-            throws XactDaoException {
+    public List<XactTypeDto> fetchType(XactTypeDto criteria) throws XactDaoException {
         XactType ormCriteria = XactDaoFactory.createCriteria(criteria);
         ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION,
                 ItemMaster.ORDERBY_ASCENDING);
@@ -293,11 +292,9 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * org.dao.transaction.XactDao#fetchXactTypeItem(org.dto.XactTypeItemDto)
      */
     @Override
-    public List<XactTypeItemDto> fetchXactTypeItem(XactTypeItemDto criteria)
-            throws XactDaoException {
+    public List<XactTypeItemDto> fetchXactTypeItem(XactTypeItemDto criteria) throws XactDaoException {
         XactTypeItem ormCriteria = XactDaoFactory.createCriteria(criteria);
-        ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION,
-                ItemMaster.ORDERBY_ASCENDING);
+        ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
 
         // Retrieve Data
         List<XactTypeItem> results = null;
@@ -326,8 +323,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * XactTypeItemActivityDto)
      */
     @Override
-    public List<XactTypeItemActivityDto> fetchXactTypeItemActivity(XactTypeItemActivityDto criteria) 
-            throws XactDaoException {
+    public List<XactTypeItemActivityDto> fetchXactTypeItemActivity(XactTypeItemActivityDto criteria) throws XactDaoException {
         XactTypeItemActivity ormCriteria = XactDaoFactory.createCriteria(criteria);
         ormCriteria.addOrderBy(XactCodes.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
 
@@ -363,8 +359,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * @throws XactDaoException
      */
     @Override
-    public List<XactTypeItemActivityDto> fetchXactTypeItemActivityExt(
-            XactTypeItemActivityDto criteria) throws XactDaoException {
+    public List<XactTypeItemActivityDto> fetchXactTypeItemActivityExt(XactTypeItemActivityDto criteria) throws XactDaoException {
         VwXactTypeItemActivity ormCriteria = XactDaoFactory
                 .createCriteriaExt(criteria);
         ormCriteria.addOrderBy(VwXactTypeItemActivity.PROP_XACTDATE,
@@ -404,12 +399,11 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
      * @param items
      *            A List of {@link XactTypeItemActivityDto} instances
      *            representing the transaction's items.
-     * @return The new transacton id.
+     * @return The new transaction id.
      * @throws XactDaoException
      */
     @Override
-    public int maintain(XactDto xact, List<XactTypeItemActivityDto> items)
-            throws XactDaoException {
+    public int maintain(XactDto xact, List<XactTypeItemActivityDto> items) throws XactDaoException {
         Xact ormXact = XactDaoFactory.createXact(xact);
         List<XactTypeItemActivity> ormItems = XactDaoFactory.createXactItemActivity(items);
         // Handle base transaction
@@ -417,9 +411,7 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
         try {
             xactId = this.insert(ormXact);
             xact.setXactId(xactId);
-            logger.info("Transaction, " + xactId
-                    + ", was created for the amount of $"
-                    + xact.getXactAmount());
+            logger.info("Transaction, " + xactId + ", was created for the amount of $" + xact.getXactAmount());
         } catch (Exception e) {
             this.msg = "A database error prevented the creation of base transaction";
             throw new XactDaoException(this.msg, e);
@@ -428,11 +420,9 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
         int itemCount = 0;
         try {
             itemCount = this.insert(ormXact, ormItems);
-            logger.info("Base Transaction, " + xactId + ", created " + itemCount
-                    + " activitiy items");
+            logger.info("Base Transaction, " + xactId + ", created " + itemCount + " activitiy items");
         } catch (Exception e) {
-            this.msg = "Error occurred creating a transaction detail item for base transaction id, "
-                    + xactId;
+            this.msg = "Error occurred creating a transaction detail item for base transaction id, " + xactId;
             throw new XactDaoException(this.msg, e);
         }
         return xactId;
