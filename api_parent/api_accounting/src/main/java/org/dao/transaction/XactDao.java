@@ -85,7 +85,7 @@ public interface XactDao extends DaoClient {
      * @return A List of {@link XactCodeDto} objects or null if no data is found
      * @throws XactDaoException
      */
-    List<XactCodeDto> fetchCode(XactCodeDto _criteria) throws XactDaoException;
+    List<XactCodeDto> fetchCode(XactCodeDto criteria) throws XactDaoException;
 
     /**
      * Retrieves an ArrayList of transaction type objects based custom criteria
@@ -145,7 +145,7 @@ public interface XactDao extends DaoClient {
      *            The transaction object to be managed.
      * @param items
      *            A list of transaction Type Item Activity objects
-     * @return The id of the newly formed transction.
+     * @return The id of the newly formed transaction.
      * @throws XactDaoException
      */
     int maintain(XactDto xact, List<XactTypeItemActivityDto> items) throws XactDaoException;
