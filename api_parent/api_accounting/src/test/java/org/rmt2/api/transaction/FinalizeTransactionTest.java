@@ -4,6 +4,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
@@ -63,8 +65,18 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
 
     @Test
     public void testReverseFinalizationSuccess() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        
+        List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        xactList.add(obj);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("REverse transaction test case setup failed");
+        }
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -85,8 +97,18 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
      */
     @Test
     public void testReverseFinalizationSuccess_WithEvenXactAmount() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        
+        List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        xactList.add(obj);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Reverse transaction test case setup failed");
+        }
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -103,8 +125,18 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
     
     @Test
     public void testCancellationFinalizationSuccess() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        
+        List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_CANCEL);
+        xactList.add(obj);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Cancel transaction test case setup failed");
+        }
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -121,15 +153,24 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
     
     @Test
     public void testDaoFailure() {
+    	List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_CANCEL);
+        xactList.add(obj);
         try {
-            when(this.mockPersistenceClient.updateRow(any(Xact.class)))
-                .thenThrow(DatabaseException.class);
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Cancel transaction test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.updateRow(any(Xact.class))).thenThrow(DatabaseException.class);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Update xact DAO exception test case setup failed");
         }
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         
         // Build mock transaction object to be updated
         VwXactList vwXact = this.mockXactFetchSingleResponse.get(0); 
@@ -148,8 +189,7 @@ public class FinalizeTransactionTest extends TransactionApiTestData {
     
     @Test
     public void testNullTransactionObjectInput() {
-        XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
         
         try {
             api.finalizeXact(null);

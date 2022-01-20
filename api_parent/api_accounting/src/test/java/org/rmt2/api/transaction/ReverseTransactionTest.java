@@ -91,7 +91,18 @@ public class ReverseTransactionTest extends TransactionApiTestData {
     @Test
     public void testSuccess() {
         XactApiFactory f = new XactApiFactory();
-        XactApi api = f.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        
+        List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_REVERSE);
+        xactList.add(obj);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Reverse transaction test case setup failed");
+        }
         
         int rc = 0;
         try {
