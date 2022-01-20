@@ -820,7 +820,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @throws XactApiException
      */
     private void validateFinalization(XactDto xact) throws XactApiException {
-        switch (xact.getXactSubtypeId()) {
+    	XactDto orig = this.getXactById(xact.getXactId());
+    	if (orig == null) {
+    		throw new InvalidFinalizationAttemptException(
+                    "Unable to finalize target transaction due to transction, " + xact.getXactId() + ", does not exists");
+    	}
+        switch (orig.getXactSubtypeId()) {
             case XactConst.XACT_SUBTYPE_REVERSE:
             case XactConst.XACT_SUBTYPE_CANCEL:
             case XactConst.XACT_SUBTYPE_NOT_ASSIGNED:
@@ -1019,10 +1024,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
     /**
      * Reverses a transaction and its detail items.
      * <p>
-     * The process of reversing a transaction is to multiply the transactin
+     * The process of reversing a transaction is to multiply the transaction
      * amount by -1 and providing a calculated reason. As a result of this
      * operation, the original transaction amount is permanently changed by
-     * offsetting the previous transaction.
+     * off setting the previous transaction.
      * 
      * @param xact
      *            The base transaction that is to be reversed.
@@ -1381,18 +1386,18 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @param xact
      *            Transaction object that is to finalized.
      * @throws XactApiException
-     *             If transactio id or transaction type id are invalid, or when
+     *             If transaction id or transaction type id are invalid, or when
      *             a database error occurs.
      */
     @Override
     public void finalizeXact(XactDto xact) throws XactApiException {
-        // Check if okay to finailze.
+        // Check if okay to finalize.
         try {
             this.validateFinalization(xact);
         } catch (Exception e) {
             this.msg = "Finalization of transaction failed due to transaction sub type incompatibilities";
             logger.error(this.msg, e);
-            throw new XactApiException(this.msg, e);
+            throw new XactApiException(e);
         }
 
         xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
