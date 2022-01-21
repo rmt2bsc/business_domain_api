@@ -3,8 +3,6 @@ package org.dao.transaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dao.mapping.orm.rmt2.CreditorActivity;
-import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
@@ -16,7 +14,6 @@ import org.dao.mapping.orm.rmt2.XactType;
 import org.dao.mapping.orm.rmt2.XactTypeItem;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.dto.CommonXactDto;
-import org.dto.SubsidiaryActivityDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
 import org.dto.XactCodeGroupDto;
@@ -457,8 +454,8 @@ public class XactDaoFactory extends RMT2Base {
      * Create <i>Xact</i> object from an instance of <i>XactDto</i>
      * 
      * @param obj
-     *            an instnace of {@link XactDto}
-     * @return an instnace of {@link Xact}
+     *            an instance of {@link XactDto}
+     * @return an instance of {@link Xact}
      */
     public static final Xact createXact(XactDto obj) {
         if (obj == null) {
@@ -510,8 +507,8 @@ public class XactDaoFactory extends RMT2Base {
      * <i>XactTypeItemActivityDto</i>
      * 
      * @param obj
-     *            an instnace of {@link XactTypeItemActivityDto}
-     * @return an instnace of {@link XactTypeItemActivity}
+     *            an instance of {@link XactTypeItemActivityDto}
+     * @return an instance of {@link XactTypeItemActivity}
      */
     public static final XactTypeItemActivity createXactItemActivity(XactTypeItemActivityDto obj) {
         if (obj == null) {
@@ -530,32 +527,5 @@ public class XactDaoFactory extends RMT2Base {
         x.setIpUpdated(obj.getIpUpdated());
         return x;
     }
-
-    public static final CustomerActivity createCustomerActivity(
-            SubsidiaryActivityDto subsidiary) {
-        if (subsidiary == null) {
-            return null;
-        }
-        CustomerActivity obj = new CustomerActivity();
-        obj.setCustomerActvId(subsidiary.getActivityId());
-        obj.setCustomerId(subsidiary.getSubsidiaryId());
-        obj.setXactId(subsidiary.getXactId());
-        obj.setAmount(subsidiary.getActivityAmount());
-        obj.setDateCreated(subsidiary.getDateCreated());
-        obj.setDateUpdated(subsidiary.getDateUpdated());
-        obj.setUserId(subsidiary.getUpdateUserId());
-        obj.setIpCreated(subsidiary.getIpCreated());
-        obj.setIpUpdated(subsidiary.getIpUpdated());
-        return obj;
-    }
-
-    public static final CreditorActivity createCreditorActivity(
-            SubsidiaryActivityDto subsidiary) {
-        CreditorActivity obj = new CreditorActivity();
-        if (subsidiary == null) {
-            return null;
-        }
-
-        return obj;
-    }
+	
 }
