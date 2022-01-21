@@ -29,7 +29,7 @@ public interface XactApi extends TransactionApi {
      * Retrieves a list transaction objects
      * 
      * @param criteria
-     *            instnce of {@link Xact}
+     *            instance of {@link Xact}
      * @return List<{@link Xact}>
      * @throws XactApiException
      */
@@ -170,7 +170,7 @@ public interface XactApi extends TransactionApi {
      * xactId.
      * 
      * @param xactId
-     *            The id of the transction.
+     *            The id of the transaction.
      * @return ArrayList of one or more {@link XactTypeItemActivity} obejcts.
      * @throws XactApiException
      */
@@ -181,7 +181,7 @@ public interface XactApi extends TransactionApi {
      * related to xactId.
      * 
      * @param xactId
-     *            The id of the transction.
+     *            The id of the transaction.
      * @return ArrayList of one or more {@link XactTypeItemActivity} obejcts.
      * @throws XactApiException
      */
@@ -220,7 +220,7 @@ public interface XactApi extends TransactionApi {
      *            The transaction object to be managed.
      * @param _xactItems
      *            A list of transaction Type Item Activity objects
-     * @return The id of the newly formed transction.
+     * @return The id of the newly formed transaction.
      * @throws XactApiException
      */
     int update(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException;
@@ -269,7 +269,7 @@ public interface XactApi extends TransactionApi {
      * @param xact
      *            The transaction that is to be managed
      * @return true indicating the transaction is eligible to be changed, and
-     *         false indicating change is not allowd.
+     *         false indicating change is not allowed.
      * @throws com.InvalidDataException
      *             when xact is invalid or null.
      */
@@ -281,7 +281,7 @@ public interface XactApi extends TransactionApi {
      * @param xact
      *            Transaction object that is to finalized.
      * @throws XactApiException
-     *             If transactio id or transaction type id are invalid, or when
+     *             If transaction id or transaction type id are invalid, or when
      *             a database error occurs.
      */
     void finalizeXact(XactDto xact) throws XactApiException;
