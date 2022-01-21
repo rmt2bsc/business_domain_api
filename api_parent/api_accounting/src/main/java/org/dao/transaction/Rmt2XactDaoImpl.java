@@ -584,4 +584,57 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
             throw new DatabaseException(this.msg, e);
         }
     }
+
+    /**
+     * Deletes one or more transactions including the transaction line items.
+     * 
+     * @param transactionIdList
+     *            A List of Integer values representing individual transaction is's.
+     * @return total number of xact rows deleted.
+     * @throws XactDaoException
+     */
+	@Override
+	public int delete(List<Integer> transactionIdList) throws XactDaoException {
+		if (transactionIdList == null || transactionIdList.isEmpty()) {
+			return 0;
+		}
+		int rc = 0;
+		
+		// Build list of transaction id's that are to be deleted.  This is typically used to construct error messages.
+		StringBuilder xactIdList = new StringBuilder();
+		for (Integer xactId : transactionIdList) {
+			if (xactIdList.length() > 0) {
+				xactIdList.append(", ");
+			}
+			xactIdList.append(xactId);
+		}
+		
+		// First, delete associated transaction line items.
+		try {
+			XactTypeItemActivity lineItemCriteria = XactDaoFactory.createXactItemActivityDeleteCriteria(transactionIdList);
+			if (lineItemCriteria != null) {
+				rc = this.client.deleteRow(lineItemCriteria);	
+				logger.info("Total number of transaction line items deleted: " + rc);
+			}
+		}
+		catch (DatabaseException e) {
+			this.msg = "An error occurred attempting to delete line item entries targeting transaction id's [" + xactIdList + "]";
+			throw new XactDaoException(this.msg, e);
+		}
+		
+		// Lastly, delete the base transactions
+		try {
+			Xact xactCriteria = XactDaoFactory.createXactDeleteCriteria(transactionIdList);
+			if (xactCriteria != null) {
+				rc = this.client.deleteRow(xactCriteria);	
+				logger.info("Total number of transactions deleted: " + rc);
+			}
+		}
+		catch (DatabaseException e) {
+			this.msg = "An error occurred attempting to delete base transaction entries targeting transaction id's [" + xactIdList + "]";
+			throw new XactDaoException(this.msg, e);
+		}
+		
+		return rc;
+	}
 }

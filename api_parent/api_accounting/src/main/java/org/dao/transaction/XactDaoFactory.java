@@ -528,4 +528,84 @@ public class XactDaoFactory extends RMT2Base {
         return x;
     }
 	
+//	/**
+//	 * Creates a <i>Xact</i> object containing selection criteria obtained from an
+//	 * instance of <i>XactDto</i> for deleting transaction.
+//	 * 
+//	 * @param criteria an instance of {@link XactDto} which the following properties
+//	 *                 are recognized:
+//	 *                 <ul>
+//	 *                 <li>xactId</li>
+//	 *                 <li>xactDate</li>
+//	 *                 <li>xactTypeId</li>
+//	 *                 <li>confirmNo</li>
+//	 *                 <li>tenderId</li>
+//	 *                 <li>customCriteria</li>
+//	 *                 </ul>
+//	 * @return an instance of {@link Xact}
+//	 */
+//    public static final Xact createXactDeleteCriteria(XactDto criteria) {
+//    	Xact obj = new Xact();
+//        if (criteria != null) {
+//            if (criteria.getXactId() > 0) {
+//                obj.addCriteria(Xact.PROP_XACTID, criteria.getXactId());
+//            }
+//            if (criteria.getXactDate() != null) {
+//                obj.addCriteria(Xact.PROP_XACTDATE, criteria.getXactDate());
+//            }
+//            if (criteria.getXactTypeId() > 0) {
+//                obj.addCriteria(Xact.PROP_XACTTYPEID, criteria.getXactTypeId());
+//            }
+//            if (criteria.getXactConfirmNo() != null) {
+//                obj.addLikeClause(Xact.PROP_CONFIRMNO, criteria.getXactConfirmNo());
+//            }
+//            if (criteria.getXactTenderId() > 0) {
+//                obj.addCriteria(Xact.PROP_TENDERID, criteria.getXactTenderId());
+//            }
+//            if (criteria.getCriteria() != null) {
+//                obj.addCustomCriteria(criteria.getCriteria());
+//            }
+//        }
+//        return obj;
+//    }
+    
+	/**
+	 * Creates a <i>Xact</i> object containing a list of xact_id's used for deleting
+	 * one or more transactions.
+	 * 
+	 * @param criteria List of Integer values as transaction id's
+	 * @return an instance of {@link Xact} or null when <i>criteria</i> is null or empty;
+	 */
+    public static final Xact createXactDeleteCriteria(List<Integer> criteria) {
+        if (criteria != null && !criteria.isEmpty()) {
+        	Xact obj = new Xact();
+        	Integer[] xactIdList = new Integer[criteria.size()];
+        	xactIdList = criteria.toArray(xactIdList);
+        	obj.addInClause(Xact.PROP_XACTID, xactIdList);
+        	return obj;
+        }
+        else {
+        	return null;	
+        }
+    }
+    
+    /**
+     * Creates a <i>XactTypeItemActivity</i> object containing a list of xact_id's used for deleting
+	 * one or more transaction type item activity objects.
+	 * 
+	 * @param criteria List of Integer values as transaction id's
+	 * @return an instance of {@link XactTypeItemActivity} or null when <i>criteria</i> is null or empty;
+     */
+    public static final XactTypeItemActivity createXactItemActivityDeleteCriteria(List<Integer> criteria) {
+    	if (criteria != null && !criteria.isEmpty()) {
+    		XactTypeItemActivity obj = new XactTypeItemActivity();
+        	Integer[] xactIdList = new Integer[criteria.size()];
+        	xactIdList = criteria.toArray(xactIdList);
+        	obj.addInClause(XactTypeItemActivity.PROP_XACTID, xactIdList);
+        	return obj;
+        }
+        else {
+        	return null;	
+        }
+    }
 }

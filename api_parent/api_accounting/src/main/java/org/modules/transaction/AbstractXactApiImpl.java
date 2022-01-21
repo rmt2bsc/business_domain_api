@@ -12,6 +12,7 @@ import org.dao.subsidiary.CreditorDao;
 import org.dao.subsidiary.CustomerDao;
 import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dao.transaction.XactDao;
+import org.dao.transaction.XactDaoException;
 import org.dao.transaction.XactDaoFactory;
 import org.dto.CommonXactDto;
 import org.dto.CreditorDto;
@@ -1415,4 +1416,31 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new XactApiException(e);
         }
     }
+    
+    /**
+     * Deletes one or more transaction objects.
+     * 
+     * @param xactIdList
+     *            A List of Integer.
+     * @return total number of objects effected.
+     * @throws XactApiException
+     */
+    @Override
+	public int deleteXact(List<Integer> xactIdList) throws XactApiException {
+		try {
+			Verifier.verifyNotEmpty(xactIdList);
+		} catch (VerifyException e) {
+			this.msg = "The transaction id list criteria object is cannot be null or empty for the delete transaction operation";
+			throw new InvalidDataException(this.msg, e);
+		}
+		XactDao dao = this.getXactDao();
+		dao.setDaoUser(this.getApiUser());
+		int rc = 0;
+		try {
+			rc = dao.delete(xactIdList);
+		} catch (XactDaoException e) {
+			throw new XactApiException(e);
+		}
+		return rc;
+	}
 }

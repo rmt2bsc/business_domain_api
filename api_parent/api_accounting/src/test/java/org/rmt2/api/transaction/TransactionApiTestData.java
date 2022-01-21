@@ -64,6 +64,8 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     protected List<VwXactTypeItemActivity> mockVwXactTypeItemActivityNotFoundFetchResponse;
     protected List<VwXactTypeItemActivity> mockVwXactTypeItemActivityFetchAllResponse;
     protected List<VwXactTypeItemActivity> mockVwXactTypeItemActivityFetchSingleResponse;
+    
+    protected List<Integer> mockXactIdList;
 
     /**
      * @throws java.lang.Exception
@@ -127,6 +129,8 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         this.mockVwXactTypeItemActivityNotFoundFetchResponse = this
                 .createMockVwXactTypeItemActivityNotFoundResponse();
 
+        this.mockXactIdList = this.createMockXactIdListResponse();
+        
         return;
     }
 
@@ -139,6 +143,15 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         return;
     }
 
+    
+    private List<Integer> createMockXactIdListResponse() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1111111);
+        list.add(2222222);
+        list.add(3333333);
+        return list;
+    }
+    
     private List<VwXactTypeItemActivity> createMockVwXactTypeItemActivityNotFoundResponse() {
         List<VwXactTypeItemActivity> list = null;
         return list;

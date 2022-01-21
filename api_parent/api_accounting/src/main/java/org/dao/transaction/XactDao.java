@@ -159,4 +159,14 @@ public interface XactDao extends DaoClient {
      * @throws XactDaoException
      */
     int maintain(XactDto xact) throws XactDaoException;
+    
+    /**
+     * Deletes one or more transaction entries.
+     * 
+     * @param transactionIdList
+     *            A List of Integer.
+     * @return total number of rows effected.
+     * @throws XactDaoException
+     */
+    int delete(List<Integer> transactionIdList) throws XactDaoException;
 }

@@ -3,6 +3,7 @@ package org.modules.transaction;
 import java.util.List;
 
 import org.AccountingConst.SubsidiaryType;
+import org.dao.transaction.XactDaoException;
 import org.dto.CommonXactDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
@@ -285,4 +286,14 @@ public interface XactApi extends TransactionApi {
      *             a database error occurs.
      */
     void finalizeXact(XactDto xact) throws XactApiException;
+    
+    /**
+     * Deletes one or more transaction objects.
+     * 
+     * @param xactIdList
+     *            A List of Integer.
+     * @return total number of rows effected.
+     * @throws XactApiException
+     */
+    int deleteXact(List<Integer> xactIdList) throws XactApiException;
 }
