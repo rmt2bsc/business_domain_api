@@ -6,6 +6,7 @@ import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dto.CreditorDto;
 import org.dto.CustomerDto;
+import org.dto.SubsidiaryActivityDto;
 import org.dto.adapter.orm.account.subsidiary.CustomerExt;
 
 import com.RMT2Base;
@@ -241,8 +242,7 @@ public class SubsidiaryDaoFactory extends RMT2Base {
         }
     }
 
-    public static CustomerActivity createCustomerActivity(int customerId,
-            int xactId, double amount) {
+    public static CustomerActivity createCustomerActivity(int customerId, int xactId, double amount) {
         CustomerActivity obj = null;
         obj = SubsidiaryDaoFactory.createCustomerActivity();
         obj.setCustomerId(customerId);
@@ -261,13 +261,61 @@ public class SubsidiaryDaoFactory extends RMT2Base {
         }
     }
 
-    public static CreditorActivity createCreditorActivity(int creditorId,
-            int xactId, double amount) {
+    public static CreditorActivity createCreditorActivity(int creditorId, int xactId, double amount) {
         CreditorActivity obj = null;
         obj = SubsidiaryDaoFactory.createCreditorActivity();
         obj.setCreditorId(creditorId);
         obj.setXactId(xactId);
         obj.setAmount(amount);
+        return obj;
+    }
+    
+    /**
+	 * Create customer activity profile object using a common subsidiary activity DTO
+	 * object.
+	 * 
+	 * @param subsidiary instance of {@link SubsidiaryActivityDto}
+	 * @return {@link CustomerActivity}
+	 */
+    public static final CustomerActivity createCustomerActivity(SubsidiaryActivityDto subsidiary) {
+        if (subsidiary == null) {
+            return null;
+        }
+        CustomerActivity obj = new CustomerActivity();
+        obj.setCustomerActvId(subsidiary.getActivityId());
+        obj.setCustomerId(subsidiary.getSubsidiaryId());
+        obj.setXactId(subsidiary.getXactId());
+        obj.setAmount(subsidiary.getActivityAmount());
+        obj.setDateCreated(subsidiary.getDateCreated());
+        obj.setDateUpdated(subsidiary.getDateUpdated());
+        obj.setUserId(subsidiary.getUpdateUserId());
+        obj.setIpCreated(subsidiary.getIpCreated());
+        obj.setIpUpdated(subsidiary.getIpUpdated());
+        return obj;
+    }
+
+    /**
+	 * Create creditor activity object data using a common subsidiary activity DTO
+	 * object.
+	 * 
+	 * @param subsidiary instance of {@link SubsidiaryActivityDto}
+	 * @return {@link CreditorActivity} where the properties
+	 */
+    public static final CreditorActivity createCreditorActivity(SubsidiaryActivityDto subsidiary) {
+        
+        if (subsidiary == null) {
+            return null;
+        }
+        CreditorActivity obj = new CreditorActivity();
+        obj.setCreditorActvId(subsidiary.getActivityId());
+        obj.setCreditorId(subsidiary.getSubsidiaryId());
+        obj.setXactId(subsidiary.getXactId());
+        obj.setAmount(subsidiary.getActivityAmount());
+        obj.setDateCreated(subsidiary.getDateCreated());
+        obj.setDateUpdated(subsidiary.getDateUpdated());
+        obj.setUserId(subsidiary.getUpdateUserId());
+        obj.setIpCreated(subsidiary.getIpCreated());
+        obj.setIpUpdated(subsidiary.getIpUpdated());
         return obj;
     }
 
