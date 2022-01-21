@@ -44,7 +44,7 @@ import com.api.util.assistants.VerifyException;
 /**
  * The base implementation of XactApi interface containing common transaction
  * functionality such as transaction creation, subsidiary transaction history
- * creation, transacction reversal, and transaction finalization.
+ * creation, transaction reversal, and transaction finalization.
  * <p>
  * This implementation forces the user to supply a valid DaoClient object via
  * the class constructor or setter method. This connection sharing will
