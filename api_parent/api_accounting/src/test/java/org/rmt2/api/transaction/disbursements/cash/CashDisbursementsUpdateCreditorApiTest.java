@@ -238,6 +238,20 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Setting up creditor activity insert case failed");
         }
 
+        // IS-70: Added mock logic as a result of adding validation logic to AbstractXactApiImpl.validateFinalization(XactDto)
+        // to fetch the original transaction record in order to verify that  the xact_subtype_id is of the correct value 
+        // (reverse, cancel, or not assigned.).
+        List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        xactList.add(obj);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Reverse transaction test case setup failed");
+        }
+        
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         int results = 0;
@@ -327,6 +341,20 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Setting up creditor activity insert case failed");
         }
 
+        // IS-70: Added mock logic as a result of adding validation logic to AbstractXactApiImpl.validateFinalization(XactDto)
+        // to fetch the original transaction record in order to verify that  the xact_subtype_id is of the correct value 
+        // (reverse, cancel, or not assigned.).
+        List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        xactList.add(obj);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Reverse transaction test case setup failed");
+        }
+        
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         this.mockXactDto.setXactId(EXISTING_XACT_ID);
@@ -354,6 +382,20 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
         this.mockXactDto.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
         this.mockXactDto.setXactDate(mockXactDate);
 
+        // IS-70: Added mock logic as a result of adding validation logic to AbstractXactApiImpl.validateFinalization(XactDto)
+        // to fetch the original transaction record in order to verify that  the xact_subtype_id is of the correct value 
+        // (reverse, cancel, or not assigned.).
+        List<VwXactList> xactList = new ArrayList<>();
+        VwXactList obj = new VwXactList();
+        obj.setXactSubtypeId(XactConst.XACT_SUBTYPE_NOT_ASSIGNED);
+        xactList.add(obj);
+        try {
+            when(this.mockPersistenceClient.retrieveList(any(VwXactList.class))).thenReturn(xactList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Reverse transaction test case setup failed");
+        }
+        
         try {
             when(this.mockPersistenceClient.updateRow(any(XactDto.class))).thenThrow(DatabaseException.class);
         } catch (Exception e) {
