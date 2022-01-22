@@ -389,8 +389,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * (org.dto.XactDto, java.util.List, int)
      */
     @Override
-    public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId)
-            throws DisbursementsApiException {
+    public int updateTrans(XactDto xact, List<XactTypeItemActivityDto> items, Integer creditorId) throws DisbursementsApiException {
         
         // Identify this transaction as a creditor cash disbursement
         this.creditorDisb = true;
@@ -419,14 +418,14 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         }
 
         // At this point a transaction was successfully created, and we need to
-        // reflect that tranaction in the creditor's activity table. Since the 
+        // reflect that transaction in the creditor's activity table. Since the 
         // creditor activity amount will always post as an offset to the base 
         // transaction amount, take the revised base transaction amount an 
         // reverse it.
         double xactAmount = xact.getXactAmount();
         try {
             // Create creditor activity (transaction history) regarding
-            // the disbursement.  The usual valdiations will take place in this call.
+            // the disbursement.  The usual validations will take place in this call.
             super.createSubsidiaryActivity(creditorId, SubsidiaryType.CREDITOR, newXctId, xactAmount);
         } catch (XactApiException e) {
             throw new DisbursementsApiException("Unable to process cash disbursement transaction", e);
@@ -435,7 +434,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
     }
 
     /**
-     * Creates a general cash disbursement transasction
+     * Creates a general cash disbursement transaction
      * 
      * @param xact
      *            The disbursement transaction to be added to the database.
@@ -444,8 +443,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * @return The id of the new transaction.
      * @throws DisbursementsApiException
      */
-    private int createDisbursement(XactDto xact,  List<XactTypeItemActivityDto> items)
-            throws DisbursementsApiException {
+    private int createDisbursement(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException {
         int xactId = 0;
         try {
             // Make base transaction amount negative
@@ -458,7 +456,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
     }
 
     /**
-     * Reverses a disbursement and finalizes the source tranaction
+     * Reverses a disbursement and finalizes the source transaction
      * 
      * @param xact
      *            disbursement transaction.
@@ -466,8 +464,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      *            A List of {@link XactTypeItemActivityDto} objects.
      * @return The id of the reversed transaction.
      * @throws DisbursementsApiException
-     *             If customer payment transction is final or a general
-     *             transction error occurs.
+     *             If customer payment transaction is final or a general
+     *             transaction error occurs.
      */
     private int reverseDisbursement(XactDto xact, List<XactTypeItemActivityDto> items) throws DisbursementsApiException {
         // Cannot reverse payment transaction that has been finalized
@@ -504,7 +502,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      * Cash disbursement transactions require the reversal multiplier to be
      * applied which will yield a negative amount representing cash outgoing.
      * The reversal of an existing Cash Disbursement transaction requires the
-     * reversal mulitplier to be applied which offsets the orginal transaction.
+     * reversal multiplier to be applied which offsets the original transaction.
      * 
      * @param _xact
      *            The target transaction
@@ -598,11 +596,11 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
 
     /**
      * Ensures that the base of the transaction meets general Cash Disbursement
-     * validations. The following validations must be satified:
+     * validations. The following validations must be satisfied:
      * <ul>
      * <li>Transaction date must have a value</li>
      * <li>Transaction date is a valid date</li>
-     * <li>Transaction date is not greater than curent date</li>
+     * <li>Transaction date is not greater than current date</li>
      * <li>Transaction tender is entered</li>
      * <li>Transaction tender's negotiable instrument number is entered, if
      * applicable.</li>
@@ -643,7 +641,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throw new InvalidDataException("Cash disbursement tender id must be greater than zero", e);
         }
 
-        // Verify that the transaction's tender is assoicated with a negotiable
+        // Verify that the transaction's tender is associated with a negotiable
         // instrument number, if applicable
         switch (xact.getXactTenderId()) {
             case XactConst.TENDER_CHECK:
