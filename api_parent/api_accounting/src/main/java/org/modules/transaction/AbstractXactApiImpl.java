@@ -1253,14 +1253,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         return rc;
     }
 
-    private int createTransactionHistoryForCustomer(XactDao xactDao, XactDto xactDto, Integer subsidiaryId,
+    private int createTransactionHistoryForCustomer(XactDao xactDao, XactDto xactDto, Integer customerId,
             Integer xactId, Double amount) throws XactApiException {
         int rc = 0;
         SubsidiaryDaoFactory subsidiaryFactory = new SubsidiaryDaoFactory();
         CustomerDao custDao = subsidiaryFactory.createRmt2OrmCustomerDao(xactDao);
         custDao.setDaoUser(this.getApiUser());
         CustomerXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory.createCustomerTransactionInstance(null);
-        xactHist.setCustomerId(subsidiaryId);
+        xactHist.setCustomerId(customerId);
         xactHist.setXactId(xactId);
         xactHist.setActivityAmount(amount);
         try {
@@ -1276,26 +1276,26 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             } // end switch
             return rc;
         } catch (Exception e) {
-            this.msg = "Unable to create subidiary transaction activity for customer, " + subsidiaryId;
+            this.msg = "Unable to create subidiary transaction activity for customer, " + customerId;
             logger.error(this.msg);
             throw new XactApiException(this.msg, e);
         }
     }
 
-    private int createTransactionHistoryForCreditor(XactDao xactDao, Integer subsidiaryId, Integer xactId, Double amount)
+    private int createTransactionHistoryForCreditor(XactDao xactDao, Integer creditorId, Integer xactId, Double amount)
             throws XactApiException {
         SubsidiaryDaoFactory subsidiaryFactory = new SubsidiaryDaoFactory();
         CreditorDao credDao = subsidiaryFactory.createRmt2OrmCreditorDao(xactDao);
         credDao.setDaoUser(this.getApiUser());
         CreditorXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory.createCreditorTransactionInstance(null);
-        xactHist.setCreditorId(subsidiaryId);
+        xactHist.setCreditorId(creditorId);
         xactHist.setXactId(xactId);
         xactHist.setActivityAmount(amount);
         try {
             // Create creditor transaction history entry
             return credDao.maintain(xactHist);
         } catch (Exception e) {
-            this.msg = "Unable to create subidiary transaction activity for creditor, " + subsidiaryId;
+            this.msg = "Unable to create subidiary transaction activity for creditor, " + creditorId;
             logger.error(this.msg);
             throw new XactApiException(this.msg, e);
         }
