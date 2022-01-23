@@ -359,7 +359,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             this.validate(xact, items);    
         }
         catch (Exception e) {
-            throw new DisbursementsApiException("Basic Cash Disbursement input data is not valid", e);
+            throw new DisbursementsApiException(e);
         }
         
         // Transaction type must be cash disbursement
