@@ -402,7 +402,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             this.validate(xact, items, creditorId);
         }
         catch (Exception e) {
-            throw new DisbursementsApiException("Creditor Cash Disbursement input data is not valid", e);
+            throw new DisbursementsApiException(e);
         }
         
         // Transaction type must be cash disbursement
@@ -410,7 +410,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             Verifier.verify(xact.getXactTypeId() == XactConst.XACT_TYPE_CASH_DISBURSE_ACCOUNT);
         }
         catch (VerifyException e) {
-            throw new InvalidDataException("Update transaction failed due to transaction type must be account cash disbursement", e);
+            throw new InvalidDataException("Update transaction failed due to transaction type must be a creditor cash disbursement", e);
         }
         
         int newXctId = 0;
@@ -594,7 +594,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         try {
             Verifier.verifyPositive(creditorId);
         } catch (VerifyException e) {
-            throw new InvalidDataException("Creditor Id for cash Disbursement must be greater than zero", e);
+            throw new InvalidDataException("Creditor Id for cash Disbursement cannot be null and must be greater than zero", e);
         }
         
         // IS-70:  Verify creditor exists in the system
