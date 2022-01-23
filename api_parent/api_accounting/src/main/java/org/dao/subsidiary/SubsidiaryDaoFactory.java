@@ -1,9 +1,12 @@
 package org.dao.subsidiary;
 
+import java.util.List;
+
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorActivity;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
+import org.dao.mapping.orm.rmt2.Xact;
 import org.dto.CreditorDto;
 import org.dto.CustomerDto;
 import org.dto.SubsidiaryActivityDto;
@@ -250,6 +253,26 @@ public class SubsidiaryDaoFactory extends RMT2Base {
         obj.setAmount(amount);
         return obj;
     }
+    
+    /**
+	 * Creates a <i>CustomerActivity</i> object containing a list of xact_id's used for deleting
+	 * one or more transactions.
+	 * 
+	 * @param criteria List of Integer values as transaction id's
+	 * @return an instance of {@link CustomerActivity} or null when <i>criteria</i> is null or empty;
+	 */
+    public static final CustomerActivity createCustomerActivityDeleteCriteria(List<Integer> criteria) {
+        if (criteria != null && !criteria.isEmpty()) {
+        	CustomerActivity obj = new CustomerActivity();
+        	Integer[] xactIdList = new Integer[criteria.size()];
+        	xactIdList = criteria.toArray(xactIdList);
+        	obj.addInClause(CustomerActivity.PROP_XACTID, xactIdList);
+        	return obj;
+        }
+        else {
+        	return null;	
+        }
+    }
 
     public static CreditorActivity createCreditorActivity() {
         CreditorActivity obj = null;
@@ -268,6 +291,26 @@ public class SubsidiaryDaoFactory extends RMT2Base {
         obj.setXactId(xactId);
         obj.setAmount(amount);
         return obj;
+    }
+    
+    /**
+	 * Creates a <i>CreditorActivity</i> object containing a list of xact_id's used for deleting
+	 * one or more transactions.
+	 * 
+	 * @param criteria List of Integer values as transaction id's
+	 * @return an instance of {@link CreditorActivity} or null when <i>criteria</i> is null or empty;
+	 */
+    public static final CreditorActivity createCreditorActivityDeleteCriteria(List<Integer> criteria) {
+        if (criteria != null && !criteria.isEmpty()) {
+        	CreditorActivity obj = new CreditorActivity();
+        	Integer[] xactIdList = new Integer[criteria.size()];
+        	xactIdList = criteria.toArray(xactIdList);
+        	obj.addInClause(CreditorActivity.PROP_XACTID, xactIdList);
+        	return obj;
+        }
+        else {
+        	return null;	
+        }
     }
     
     /**

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dao.AccountingDaoImpl;
+import org.dao.mapping.orm.rmt2.CreditorActivity;
+import org.dao.mapping.orm.rmt2.CustomerActivity;
 import org.dao.mapping.orm.rmt2.ItemMaster;
 import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwXactList;
@@ -16,6 +18,7 @@ import org.dao.mapping.orm.rmt2.XactCodes;
 import org.dao.mapping.orm.rmt2.XactType;
 import org.dao.mapping.orm.rmt2.XactTypeItem;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
+import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dto.CommonXactDto;
 import org.dto.XactCategoryDto;
 import org.dto.XactCodeDto;
@@ -619,6 +622,32 @@ public class Rmt2XactDaoImpl extends AccountingDaoImpl implements XactDao {
 		}
 		catch (DatabaseException e) {
 			this.msg = "An error occurred attempting to delete line item entries targeting transaction id's [" + xactIdList + "]";
+			throw new XactDaoException(this.msg, e);
+		}
+		
+		// Delete customer activity transaction entries
+		try {
+			CustomerActivity lineItemCriteria = SubsidiaryDaoFactory.createCustomerActivityDeleteCriteria(transactionIdList);
+			if (lineItemCriteria != null) {
+				rc = this.client.deleteRow(lineItemCriteria);	
+				logger.info("Total number of customer activity line items deleted: " + rc);
+			}
+		}
+		catch (DatabaseException e) {
+			this.msg = "An error occurred attempting to delete customer activity line item entries targeting transaction id's [" + xactIdList + "]";
+			throw new XactDaoException(this.msg, e);
+		}
+		
+		// Delete creditor activity transaction entries
+		try {
+			CreditorActivity lineItemCriteria = SubsidiaryDaoFactory.createCreditorActivityDeleteCriteria(transactionIdList);
+			if (lineItemCriteria != null) {
+				rc = this.client.deleteRow(lineItemCriteria);
+				logger.info("Total number of creditor activity line items deleted: " + rc);
+			}
+		} catch (DatabaseException e) {
+			this.msg = "An error occurred attempting to delete creditor activity line item entries targeting transaction id's ["
+					+ xactIdList + "]";
 			throw new XactDaoException(this.msg, e);
 		}
 		
