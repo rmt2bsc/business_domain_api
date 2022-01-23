@@ -775,7 +775,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
     /**
      * Validates the base of the transaction that already exist for updating.
      * <p>
-     * The following validations must be satified:
+     * The following validations must be satisfied:
      * <ul>
      * <li>Base transaction object is valid</li>
      * <li>Base transaction type id is greater than zero</li>
