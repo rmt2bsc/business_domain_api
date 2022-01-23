@@ -9,9 +9,13 @@ import org.apache.log4j.Logger;
 import org.dao.transaction.disbursements.DisbursementsDao;
 import org.dao.transaction.disbursements.DisbursementsDaoException;
 import org.dao.transaction.disbursements.DisbursementsDaoFactory;
+import org.dto.CreditorDto;
 import org.dto.XactCustomCriteriaDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
+import org.modules.subsidiary.CreditorApi;
+import org.modules.subsidiary.CreditorApiException;
+import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
@@ -574,8 +578,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      *            the id of the creditor
      * @throws InvalidDataException
      *             When <i>xact</i> does not meet basic validation requirements,
-     *             <i>xactItems</i> is null or is empty, creditor id is null or
-     *             not greater than zero, or basic validations fail.
+     *             <i>xactItems</i> is null or is empty, creditor id is null,
+     *             not greater than zero, creditor does not exists, or creditor API call error.
      * @see {@link AbstractXactApiImpl#validate(XactDto, List)}
      */
     protected void validate(XactDto xact, List<XactTypeItemActivityDto> xactItems, Integer creditorId) {
@@ -592,6 +596,18 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         } catch (VerifyException e) {
             throw new InvalidDataException("Creditor Id for cash Disbursement must be greater than zero", e);
         }
+        
+        // IS-70:  Verify creditor exists in the system
+        // Validate creditor's existence
+        CreditorApi credApi = SubsidiaryApiFactory.createCreditorApi(this.getSharedDao());
+        try {
+			CreditorDto obj = credApi.get(creditorId);
+			if (obj == null) {
+				throw new InvalidDataException("Creditor, " + creditorId + ", does not exists");
+			}
+		} catch (CreditorApiException e) {
+			throw new InvalidDataException("A creditor API error occurred attempting to validate creditor, " + creditorId, e);
+		}
     }
 
     /**
@@ -626,7 +642,7 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
             throw new InvalidDataException("Cash disbursement transaction date cannot be null", e);
         }
 
-        // Verify that the transacton date value is valid
+        // Verify that the transaction date value is valid
         try {
             Verifier.verify(xact.getXactDate().getTime() <= today.getTime());
         } catch (VerifyException e) {

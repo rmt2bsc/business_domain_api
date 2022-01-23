@@ -3,6 +3,7 @@ package org.rmt2.api.transaction.disbursements.cash;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.isA;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -15,26 +16,34 @@ import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.dao.transaction.XactDaoException;
+import org.dto.CreditorDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
+import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.modules.subsidiary.CreditorApi;
+import org.modules.subsidiary.CreditorApiException;
+import org.modules.subsidiary.SubsidiaryApiFactory;
 import org.modules.transaction.TransactionAmountsUnbalancedException;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 import org.modules.transaction.disbursements.DisbursementsApi;
 import org.modules.transaction.disbursements.DisbursementsApiException;
 import org.modules.transaction.disbursements.DisbursementsApiFactory;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.transaction.TransactionApiTestData;
 
 import com.InvalidDataException;
 import com.api.persistence.AbstractDaoClientImpl;
+import com.api.persistence.DaoClient;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 import com.api.util.RMT2Date;
@@ -409,9 +418,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Expected exception to be thrown due to database error");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }
@@ -481,8 +487,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Expected exception to be thrown for Xact update");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
             e.printStackTrace();
         }
     }
@@ -505,6 +509,21 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Setting up general base transaction update case failed");
         }
 
+        CreditorApi mockCredApi = Mockito.mock(CreditorApi.class);
+        CreditorDto mockCredDto = Rmt2SubsidiaryDtoFactory.createCreditorInstance(null, null);
+        PowerMockito.mockStatic(SubsidiaryApiFactory.class);
+        try {
+        	when(SubsidiaryApiFactory.createCreditorApi(isA(DaoClient.class))).thenReturn(mockCredApi);
+        }
+        catch (Exception e) {
+        	e.printStackTrace();
+        }
+        try {
+			when(mockCredApi.get(isA(Integer.class))).thenReturn(mockCredDto);
+		} catch (CreditorApiException e1) {
+			e1.printStackTrace();
+		}
+        
         DisbursementsApiFactory f = new DisbursementsApiFactory();
         DisbursementsApi api = f.createApi(mockDaoClient);
         try {
@@ -512,8 +531,6 @@ public class CashDisbursementsUpdateCreditorApiTest extends TransactionApiTestDa
             Assert.fail("Expected exception to be thrown for Xact detail item update");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DisbursementsApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
             e.printStackTrace();
         }
     }
