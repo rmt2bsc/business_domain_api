@@ -45,8 +45,7 @@ public class Rmt2SubsidiaryDtoFactory extends RMT2Base {
      *            an instance of {@link BusinessType}
      * @return an instance of {@link CreditorDto}.
      */
-    public static final CreditorDto createCreditorInstance(Creditor ormBean,
-            BusinessType jaxbContact) {
+    public static final CreditorDto createCreditorInstance(Creditor ormBean, BusinessType jaxbContact) {
         return new CreditorRmt2OrmAdapter(ormBean, jaxbContact);
     }
 
