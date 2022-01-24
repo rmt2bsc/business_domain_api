@@ -608,6 +608,9 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
 		} catch (CreditorApiException e) {
 			throw new InvalidDataException("A creditor API error occurred attempting to validate creditor, " + creditorId, e);
 		}
+        finally {
+        	credApi = null;
+        }
     }
 
     /**
