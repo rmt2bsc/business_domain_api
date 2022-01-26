@@ -13,7 +13,6 @@ import org.dao.subsidiary.CustomerDao;
 import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dao.transaction.XactDao;
 import org.dao.transaction.XactDaoException;
-import org.dao.transaction.XactDaoFactory;
 import org.dto.CommonXactDto;
 import org.dto.CreditorDto;
 import org.dto.CreditorXactHistoryDto;
@@ -57,6 +56,9 @@ import com.api.util.assistants.VerifyException;
 public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl implements XactApi {
 
     private static final Logger logger = Logger.getLogger(AbstractXactApiImpl.class);
+    
+    // IS-71:  Added common accounting transaction DAO 
+    protected XactDao xactDao;
 
     /**
      * Default constructor
@@ -78,28 +80,18 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
     }
 
     /**
-     * Obtains a <i>XactDao</i> object using the shared DAO connection.
-     * 
-     * @return an instance of {@link XactDao}
-     * @throws XactApiException
-     *             the shared DAO instance is null, the shared DAO is valid but
-     *             is not associated with a valid connection.
-     */
+	 * Obtains a <i>XactDao</i> object using the shared DAO connection.
+	 * 
+	 * @return an instance of {@link XactDao}
+	 * @throws XactApiException the shared DAO instance is null, the shared DAO is
+	 *                          valid but is not associated with a valid connection.
+	 * 
+	 * @deprecated IS-71: Do not use this method due to code that deals with shared DAO
+	 *             object to get XactDao instance has been removed.
+	 */
     protected XactDao getXactDao() throws XactApiException {
-        if (this.getSharedDao() == null) {
-            this.msg = "Internal DaoClient object is not initialized";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
-        }
-        if (this.getSharedDao().getClient() == null) {
-            this.msg = "Internal DaoClient's persistence object is not initialized";
-            logger.error(this.msg);
-            throw new XactApiException(this.msg);
-        }
-        XactDaoFactory f = new XactDaoFactory();
-        XactDao dao = f.createRmt2OrmXactDao(this.getSharedDao());
-        dao.setDaoUser(this.getApiUser());
-        return dao;
+    	// IS-71:  Simply return the member variable that contains the reference to common transaction instance.
+    	return this.xactDao;
     }
 
     /**
@@ -128,10 +120,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new InvalidDataException("Common transaction criteria object is required", e);
         }
 
-        XactDao dao = this.getXactDao();
         List<CommonXactDto> results = null;
         try {
-            results = dao.fetchXact(criteria);
+        	// IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchXact(criteria);
         } catch (Exception e) {
             this.msg = "DAO error retreiving list of common transaction objects";
             throw new XactApiException(this.msg, e);
@@ -151,11 +143,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction criteria object is required", e);
         }
-
-        XactDao dao = this.getXactDao();
         List<XactDto> results = null;
         try {
-            results = dao.fetchXact(criteria);
+        	// IS-71:  Use new common accounting transaction member variable to fetch Xact object
+        	results = this.xactDao.fetchXact(criteria);
         } catch (Exception e) {
             this.msg = "DAO error retreiving list of transaction objects";
             throw new XactApiException(this.msg, e);
@@ -209,10 +200,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public List<XactCategoryDto> getCategory(XactCategoryDto criteria) throws XactApiException {
-        XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
-            results = dao.fetchCategory(criteria);
+        	// IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchCategory(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction categories";
@@ -238,12 +229,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new InvalidDataException("Transaction category id must be greater than zero", e);
         }
 
-        XactDao dao = this.getXactDao();
         List<XactCategoryDto> results = null;
         try {
             XactCategoryDto criteria = Rmt2XactDtoFactory.createXactCategoryInstance(null);
             criteria.setXactCatgId(catgId);
-            results = dao.fetchCategory(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchCategory(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction category by category id: " + catgId;
             throw new XactApiException(this.msg, e);
@@ -267,10 +258,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public List<XactCodeGroupDto> getGroup(XactCodeGroupDto criteria) throws XactApiException {
-        XactDao dao = this.getXactDao();
+    	// IS-71: Use the new xactDao member variable to access DAO methods;
         List<XactCodeGroupDto> results = null;
         try {
-            results = dao.fetchGroup(criteria);
+            results = this.xactDao.fetchGroup(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction groups";
@@ -296,12 +287,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new InvalidDataException("Transaction group id must be greater than zero", e);
         }
 
-        XactDao dao = this.getXactDao();
+        // IS-71: Use the new xactDao member variable to access DAO methods
         List<XactCodeGroupDto> results = null;
         try {
             XactCodeGroupDto criteria = Rmt2XactDtoFactory.createXactCodeGroupInstance(null);
             criteria.setEntityId(groupId);
-            results = dao.fetchGroup(criteria);
+            results = this.xactDao.fetchGroup(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction group by group id: " + groupId;
             throw new XactApiException(this.msg, e);
@@ -325,10 +316,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public List<XactCodeDto> getCodes(XactCodeDto criteria) throws XactApiException {
-        XactDao dao = this.getXactDao();
+    	// IS-71: Use the new xactDao member variable to access DAO methods
         List<XactCodeDto> results = null;
         try {
-            results = dao.fetchCode(criteria);
+            results = this.xactDao.fetchCode(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction codes";
@@ -353,12 +344,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction code id must be greater than zero", e);
         }
-        XactDao dao = this.getXactDao();
+        
         List<XactCodeDto> results = null;
         try {
             XactCodeDto criteria = Rmt2XactDtoFactory.createXactCodeInstance(null);
             criteria.setEntityId(codeId);
-            results = dao.fetchCode(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchCode(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction code by code id: " + codeId;
             throw new XactApiException(this.msg, e);
@@ -393,12 +385,12 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new InvalidDataException("Transaction group id must be greater than zero", e);
         }
 
-        XactDao dao = this.getXactDao();
         List<XactCodeDto> results = null;
         try {
             XactCodeDto criteria = Rmt2XactDtoFactory.createXactCodeInstance(null);
             criteria.setGrpId(groupId);
-            results = dao.fetchCode(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchCode(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve code transaction objects by group id: " + groupId;
@@ -413,10 +405,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      */
     @Override
     public List<XactTypeDto> getXactTypes(XactTypeDto criteria) throws XactApiException {
-        XactDao dao = this.getXactDao();
         List<XactTypeDto> results = null;
         try {
-            results = dao.fetchType(criteria);
+        	// IS-71:  Use DAO member variable to access database.
+            results = this.xactDao.fetchType(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve  transaction type objects";
@@ -441,12 +433,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction type id must be greater than zero", e);
         }
-        XactDao dao = this.getXactDao();
+
         List<XactTypeDto> results = null;
         try {
             XactTypeDto criteria = Rmt2XactDtoFactory.createXactTypeInstance(null);
             criteria.setXactTypeId(xactTypeId);
-            results = dao.fetchType(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchType(criteria);
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction type objects by xact type id: " + xactTypeId;
             throw new XactApiException(this.msg, e);
@@ -480,12 +473,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction category id must be greater than zero", e);
         }
-        XactDao dao = this.getXactDao();
+
         List<XactTypeDto> results = null;
         try {
             XactTypeDto criteria = Rmt2XactDtoFactory.createXactTypeInstance(null);
             criteria.setXactCatgId(catgId);
-            results = dao.fetchType(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchType(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction type objects by xact category id: " + catgId;
@@ -510,13 +504,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction id must be greater than zero", e);
         }
-        XactDao dao = this.getXactDao();
+
         List<XactTypeItemActivityDto> results = null;
         try {
             XactTypeItemActivityDto criteria = Rmt2XactDtoFactory
                     .createXactTypeItemActivityInstance((XactTypeItemActivity) null);
             criteria.setXactId(xactId);
-            results = dao.fetchXactTypeItemActivity(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchXactTypeItemActivity(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction item type activity objects by xact id: " + xactId;
@@ -541,13 +536,14 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction id must be greater than zero", e);
         }
-        XactDao dao = this.getXactDao();
+        
         List<XactTypeItemActivityDto> results = null;
         try {
             XactTypeItemActivityDto criteria = Rmt2XactDtoFactory
                     .createXactTypeItemActivityInstance((XactTypeItemActivity) null);
             criteria.setXactId(xactId);
-            results = dao.fetchXactTypeItemActivityExt(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchXactTypeItemActivityExt(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction item type activity objects by xact id: " + xactId;
@@ -572,12 +568,13 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         } catch (VerifyException e) {
             throw new InvalidDataException("Transaction type id must be greater than zero", e);
         }
-        XactDao dao = this.getXactDao();
+        
         List<XactTypeItemDto> results = null;
         try {
             XactTypeItemDto criteria = Rmt2XactDtoFactory.createXactTypeItemInstance(null);
             criteria.setXactTypeId(xactTypeId);
-            results = dao.fetchXactTypeItem(criteria);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            results = this.xactDao.fetchXactTypeItem(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to retrieve transaction type item objects by xact type id: " + xactTypeId;
@@ -641,12 +638,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         obj.setDocumentId(xact.getDocumentId());
 
         int rc = 0;
-        XactDao dao = this.getXactDao();
-        dao.setDaoUser(this.getApiUser());
-
         // Apply transaction changes
         try {
-            rc = dao.maintain(xact);
+        	// IS-71: Use the new xactDao member variable to access DAO methods
+            rc = this.xactDao.maintain(xact);
             return rc;
         } catch (Exception e) {
             this.msg = "Base transaction update failed";
@@ -671,13 +666,11 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         }
 
         int rc = 0;
-        XactDao dao = this.getXactDao();
-        dao.setDaoUser(this.getApiUser());
-
         // Apply transaction changes
         try {
             this.preCreateXact(xact);
-            rc = dao.maintain(xact, xactItems);
+            // IS-71: Use the new xactDao member variable to access DAO methods
+            rc = this.xactDao.maintain(xact, xactItems);
             this.postCreateXact(xact);
             return rc;
         } catch (Exception e) {
@@ -726,7 +719,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * (Creditor or Customer).
      * <p>
      * Override this method to add specific validations pertaining to the
-     * business requirement of the descendent.
+     * business requirement of the descendant.
      * 
      * @param xact
      *            An instance of {@link XactDto} serving as the base
@@ -1087,7 +1080,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
     }
 
     /**
-     * Reverses all items of an existing transaction withou applying changes to
+     * Reverses all items of an existing transaction without applying changes to
      * the database.
      * <p>
      * By default each item is expected to be of type
@@ -1240,24 +1233,39 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             throw new NotFoundException(this.msg, e);
         }
 
-        XactDao xactDao = this.getXactDao();
         // Create transaction for creditor
+        // IS-71:  Use transaction DAO member variable to reference common Xact DAO
         switch (subsidiaryType) {
-            case CREDITOR:
-                rc = this.createTransactionHistoryForCreditor(xactDao, subsidiaryId, xactId, amount);
-                break;
-            case CUSTOMER:
-                rc = this.createTransactionHistoryForCustomer(xactDao, xactDto, subsidiaryId, xactId, amount);
-                break;
-        }
+        case CREDITOR:
+            rc = this.createTransactionHistoryForCreditor(subsidiaryId, xactId, amount);
+            break;
+        case CUSTOMER:
+            rc = this.createTransactionHistoryForCustomer(xactDto, subsidiaryId, xactId, amount);
+            break;
+    }
         return rc;
     }
 
-    private int createTransactionHistoryForCustomer(XactDao xactDao, XactDto xactDto, Integer customerId,
-            Integer xactId, Double amount) throws XactApiException {
+
+    
+    /**
+     * Create transaction history for customers.
+     * <p>
+     * <b><u>Change log</u></b><p>
+     * IS-71:  Changed method signature by removing DAO parameter now that the xact DAO is made available at the class scope.
+     * <p>
+     * @param xactDto
+     * @param customerId
+     * @param xactId
+     * @param amount
+     * @return
+     * @throws XactApiException
+     */
+    protected int createTransactionHistoryForCustomer(XactDto xactDto, Integer customerId, Integer xactId, Double amount) 
+    		throws XactApiException {
         int rc = 0;
         SubsidiaryDaoFactory subsidiaryFactory = new SubsidiaryDaoFactory();
-        CustomerDao custDao = subsidiaryFactory.createRmt2OrmCustomerDao(xactDao);
+        CustomerDao custDao = subsidiaryFactory.createRmt2OrmCustomerDao(this.xactDao);
         custDao.setDaoUser(this.getApiUser());
         CustomerXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory.createCustomerTransactionInstance(null);
         xactHist.setCustomerId(customerId);
@@ -1282,10 +1290,22 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
         }
     }
 
-    private int createTransactionHistoryForCreditor(XactDao xactDao, Integer creditorId, Integer xactId, Double amount)
+    /**
+     * Create transaction history for creditors.
+     * <p>
+     * <b><u>Change log</u></b><p>
+     * IS-71:  Changed method signature by removing DAO parameter now that the xact DAO is made available at the class scope.
+     * <p>
+     * @param creditorId
+     * @param xactId
+     * @param amount
+     * @return
+     * @throws XactApiException
+     */
+    protected int createTransactionHistoryForCreditor(Integer creditorId, Integer xactId, Double amount)
             throws XactApiException {
         SubsidiaryDaoFactory subsidiaryFactory = new SubsidiaryDaoFactory();
-        CreditorDao credDao = subsidiaryFactory.createRmt2OrmCreditorDao(xactDao);
+        CreditorDao credDao = subsidiaryFactory.createRmt2OrmCreditorDao(this.xactDao);
         credDao.setDaoUser(this.getApiUser());
         CreditorXactHistoryDto xactHist = Rmt2SubsidiaryDtoFactory.createCreditorTransactionInstance(null);
         xactHist.setCreditorId(creditorId);
@@ -1322,13 +1342,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @throws SubsidiaryException
      */
     protected CreditorDto verifyCreditor(int creditorId) throws SubsidiaryException {
-        XactDao xactDao;
-        try {
-            xactDao = this.getXactDao();
-        } catch (XactApiException e) {
-            throw new SubsidiaryException("Unable to retrieve creditor profile due to bad XactDao", e);
-        }
-        CreditorApi api = SubsidiaryApiFactory.createCreditorApi(xactDao);
+    	// IS-71: Use the new xactDao member variable to access DAO methods
+        CreditorApi api = SubsidiaryApiFactory.createCreditorApi(this.xactDao);
         CreditorDto dto = api.get(creditorId);
         return dto;
     }
@@ -1341,13 +1356,8 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @throws SubsidiaryException
      */
     protected CustomerDto verifyCustomer(int customerId) throws SubsidiaryException {
-        XactDao xactDao;
-        try {
-            xactDao = this.getXactDao();
-        } catch (XactApiException e) {
-            throw new SubsidiaryException("Unable to retrieve customer profile due to bad XactDao", e);
-        }
-        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(xactDao);
+    	// IS-71: Use the new xactDao member variable to access DAO methods
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(this.xactDao);
         CustomerDto dto = api.get(customerId);
         return dto;
     }
@@ -1362,7 +1372,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
      * @param xact
      *            The transaction that is to be managed
      * @return true indicating that the transaction is eligible to be changed,
-     *         and false indicating change is not allowd.
+     *         and false indicating change is not allowed.
      * @throws InvalidDataException
      *             when xact is invalid or null.
      */
@@ -1403,12 +1413,10 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
 
         xact.setXactSubtypeId(XactConst.XACT_SUBTYPE_FINAL);
 
-        XactDao dao = this.getXactDao();
-        dao.setDaoUser(this.getApiUser());
-
         // Apply transaction changes
         try {
-            dao.maintain(xact);
+        	// IS-71:  Use new common accounting transaction DAO object to finalize transaction
+            this.xactDao.maintain(xact);
             return;
         } catch (Exception e) {
             this.msg = "Error occurred finalizing transaction: " + xact.getXactId();
@@ -1433,11 +1441,9 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
 			this.msg = "The transaction id list criteria object is cannot be null or empty for the delete transaction operation";
 			throw new InvalidDataException(this.msg, e);
 		}
-		XactDao dao = this.getXactDao();
-		dao.setDaoUser(this.getApiUser());
 		int rc = 0;
 		try {
-			rc = dao.delete(xactIdList);
+			rc = this.xactDao.delete(xactIdList);
 		} catch (XactDaoException e) {
 			throw new XactApiException(e);
 		}

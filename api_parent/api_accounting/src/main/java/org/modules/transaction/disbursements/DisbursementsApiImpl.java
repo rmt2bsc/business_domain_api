@@ -54,7 +54,10 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      */
     protected DisbursementsApiImpl(String appName) {
         super();
+        
+        // IS-71:  Instantiated XactDoa and DisbursementsDao types
         this.dao = this.daoFact.createRmt2OrmDao(appName);
+        this.xactDao = this.dao;
         this.setSharedDao(this.dao);
         this.dao.setDaoUser(this.apiUser);
         return;
@@ -68,7 +71,13 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
      */
     protected DisbursementsApiImpl(DaoClient connection) {
         super(connection);
-        this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        
+		// IS-71: Instantiated XactDoa and DisbursementsDao types and eliminated the
+		// dependency of getSharedDao method calls
+        this.dao = this.daoFact.createRmt2OrmDao(connection);
+        this.xactDao = this.dao;
+        this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
     }
 
     /*
@@ -599,7 +608,8 @@ public class DisbursementsApiImpl extends AbstractXactApiImpl implements Disburs
         
         // IS-70:  Verify creditor exists in the system
         // Validate creditor's existence
-        CreditorApi credApi = SubsidiaryApiFactory.createCreditorApi(this.getSharedDao());
+        // IS-71:  Use Disbursements DAO object to setup CreditorApi
+        CreditorApi credApi = SubsidiaryApiFactory.createCreditorApi(this.dao);
         try {
 			CreditorDto obj = credApi.get(creditorId);
 			if (obj == null) {

@@ -61,7 +61,10 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
      */
     protected CreditorApiImpl(DaoClient connection) {
         super(connection);
-        this.dao = SubsidiaryDaoFactory.createRmt2OrmCreditorDao(this.getSharedDao());
+        // IS-71:  Cast member dao with incoming connection object
+        this.dao = SubsidiaryDaoFactory.createRmt2OrmCreditorDao(connection);
+        this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
     }
 
     /*
@@ -99,7 +102,7 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
     }
     
     /**
-     * Retireve a list of creditor subsidiary accounts combined with common contact data. 
+     * Retrieve a list of creditor subsidiary accounts combined with common contact data. 
      * <p>
      * The results of this method will typically be a product of merging subsidiary 
      * accounts with their address book data based on related <i>business id</i>.

@@ -29,6 +29,11 @@ class DefaultXactApiImpl extends AbstractXactApiImpl {
      */
     protected DefaultXactApiImpl(DaoClient connection) {
         super(connection);
+        
+        // IS-71:  Assigned XactDao instance to member variable
+        if (connection instanceof XactDao) {
+        	this.xactDao = (XactDao) connection;	
+        }
     }
 
     /*
@@ -39,7 +44,6 @@ class DefaultXactApiImpl extends AbstractXactApiImpl {
      */
     @Override
     public int update(XactDto xact, List<XactTypeItemActivityDto> xactItems) throws XactApiException {
-        XactDao dao = this.getXactDao();
         return super.update(xact, xactItems);
     }
 

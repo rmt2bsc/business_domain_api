@@ -82,6 +82,8 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
     protected CashReceiptApiImpl(DaoClient connection) {
         super(connection);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
     }
 
     /*
@@ -117,7 +119,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             throw new InvalidDataException(this.msg, e);
         }
         
-        //  Cash payment amound cannot be null
+        //  Cash payment amount cannot be null
         try {
             Verifier.verifyNotNull(cashPaymentAmount);
         }
@@ -242,8 +244,8 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
      *            The id of the customer of this transaction.
      * @return The id of the reversed transaction.
      * @throws CashReceiptApiException
-     *             If customer payment transction is final or a general
-     *             transction error occurs.
+     *             If customer payment transaction is final or a general
+     *             transaction error occurs.
      */
     protected int reverseCustomerPayment(XactDto xact, int customerId) throws CashReceiptApiException {
         int xactId = 0;
@@ -287,7 +289,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
 
     /**
      * Prepends customer payment comments with a tag. If user did not input
-     * anything for the transction reason, then the method is aborted which will
+     * anything for the transaction reason, then the method is aborted which will
      * allow postValidateXact to catch the error. the transaction amount is
      * applied to the xact table as is.
      * 
@@ -300,8 +302,8 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             return;
         }
         // Only modify reason and accept transaction amount as is for actual
-        // cash receipts tranasctions.
-        // For reversals, the negative multiplier would have been appliedd prior
+        // cash receipts transactions.
+        // For reversals, the negative multiplier would have been applied prior
         // to the invocation of this method.
         if (xact.getXactSubtypeId() == 0) {
             xact.setXactReason("Cash Receipt: " + xact.getXactReason());
