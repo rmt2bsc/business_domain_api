@@ -368,10 +368,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to database error");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof XactDaoException);
-            Assert.assertTrue(e.getCause().getCause().getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }
@@ -411,9 +407,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to database error");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof XactDaoException);
-            Assert.assertTrue(e.getCause().getCause().getCause() instanceof DatabaseException);
             e.printStackTrace();
         }
     }
@@ -451,8 +444,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to null xact item list");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
@@ -483,8 +475,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown for Xact update");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof RMT2RuntimeException);
             e.printStackTrace();
         }
     }
@@ -514,8 +504,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown for Xact detail item update");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof RMT2RuntimeException);
+            Assert.assertTrue(e.getCause() instanceof RMT2RuntimeException);
             e.printStackTrace();
         }
     }
@@ -543,7 +532,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to null Item contained in Xact List object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -559,8 +547,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to negative xactId in base Xact object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
@@ -574,7 +561,8 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             api.update(this.mockXactDto, mockXactItemsDto);
             Assert.fail("Expected exception to be thrown due to negative transaction type id in base Xact object");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof InvalidDataException);
+        	Assert.assertTrue(e instanceof CreditorPurchasesApiException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
@@ -589,8 +577,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to transaction amount does not have decimal place in base xact");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
@@ -605,7 +592,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to transaction amount has only one digit behind decimal in base xact");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -621,8 +607,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to negative xact item id in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
@@ -637,8 +622,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to zero xact item id in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
@@ -653,7 +637,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to null xact type item activity name in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -669,7 +652,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to empty xact type item activity name in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -685,8 +667,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to empty xact type item activity name in transaction detail item object");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
+            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
     }
@@ -701,7 +682,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to transaction date is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -717,7 +697,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to transaction date is is past current date");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -733,7 +712,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to tender id is negative");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -749,7 +727,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to tender id is zero");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
@@ -766,8 +743,7 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to transacction negotialble instrument number is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof RMT2RuntimeException);
+            Assert.assertTrue(e.getCause() instanceof RMT2RuntimeException);
             e.printStackTrace();
         }
     }
@@ -782,7 +758,6 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
             Assert.fail("Expected exception to be thrown due to transacction reason is null");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof CreditorPurchasesApiException);
-            Assert.assertTrue(e.getCause() instanceof XactApiException);
             Assert.assertTrue(e.getCause().getCause() instanceof InvalidDataException);
             e.printStackTrace();
         }
