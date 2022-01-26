@@ -65,6 +65,9 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
     public CreditorPurchasesApiImpl(String appName) {
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
+        
+        // IS-71:  Instantiated XactDoa and CreditorPurchasesDao  types
+        this.xactDao = this.dao;
         this.setSharedDao(this.dao);
         this.dao.setDaoUser(this.apiUser);
         return;
@@ -78,7 +81,11 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     public CreditorPurchasesApiImpl(DaoClient connection) {
         super(connection);
-        this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        // IS-71:  Instantiated XactDoa and CreditorPurchasesDao  types
+        this.dao = this.daoFact.createRmt2OrmDao(connection);
+        this.xactDao = this.dao;
+        this.setSharedDao(this.dao);
+        this.dao.setDaoUser(this.apiUser);
     }
     
     @Override
@@ -471,27 +478,14 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      *             database access errors.
      */
     @Override
-    public int update(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items)
-            throws CreditorPurchasesApiException {
-
-        // We have to jump ahead of ancestor validation logic and check the
-        // validity of the transaction object since it is the source of the
-        // transaction id in which we need.
-        try {
-            Verifier.verifyNotNull(xact);
-        } catch (VerifyException e) {
-            this.msg = "Unable to access transaction id due to Creditor purchase transaction object is null";
-            logger.error(this.msg);
-            throw new CreditorPurchasesApiException(this.msg, e);
-        }
-        
-        // Transaction type must be creditor purchases
-        try {
-            Verifier.verify( xact.getXactTypeId() == XactConst.XACT_TYPE_CREDITOR_PURCHASE);
-        }
-        catch (VerifyException e) {
-            throw new InvalidDataException("Update transaction failed due to transaction type is required to be creditor purchases", e);
-        }
+    public int update(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items) throws CreditorPurchasesApiException {
+    	// Validate data
+    	try {
+    		this.validate(xact, items);
+    	}
+    	catch (InvalidDataException e) {
+    		throw new CreditorPurchasesApiException(e);
+    	}
 
         // Determine if we are creating or reversing the cash disbursement
         int xactId = 0;
@@ -515,7 +509,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
     }
 
     /**
-     * Creates a new creditor purchase transasction.
+     * Creates a new creditor purchase transaction.
      * 
      * @param xact
      *            The transaction to be added to the database.
@@ -539,7 +533,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      * Prepends credit charge comments with a tag and assigns the transaction
      * negotiable instrument property to a masked credit card number.
      * <p>
-     * If user did not input anything for the transction reason, then the method
+     * If user did not input anything for the transaction reason, then the method
      * is aborted which will allow postValidate to catch the error.
      * 
      * @param xact
@@ -604,10 +598,9 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      * @return The id of the new transaction.
      * @throws CreditorPurchasesApiException
      *             If the transaction has already bee flagged as finalized or if
-     *             a general transction error occurs.
+     *             a general transaction error occurs.
      */
-    protected int reversePurchase(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items)
-            throws CreditorPurchasesApiException {
+    protected int reversePurchase(XactCreditChargeDto xact, List<XactTypeItemActivityDto> items) throws CreditorPurchasesApiException {
         boolean xactModifiable = false;
         try {
             xactModifiable = this.isModifiable(xact);
@@ -661,16 +654,79 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
      */
     @Override
     public void validate(XactDto xact, List<XactTypeItemActivityDto> items) {
+    	// We have to jump ahead of ancestor validation logic and check the
+        // validity of the transaction object since it is the source of the
+        // transaction id in which we need.
+        try {
+            Verifier.verifyNotNull(xact);
+        } catch (VerifyException e) {
+            this.msg = "Unable to access transaction id due to creditor purchase transaction object is null";
+            logger.error(this.msg);
+            throw new InvalidDataException(this.msg, e);
+        }
+        
+        // Transaction type must be creditor purchases
+        try {
+            Verifier.verify( xact.getXactTypeId() == XactConst.XACT_TYPE_CREDITOR_PURCHASE);
+        }
+        catch (VerifyException e) {
+            throw new InvalidDataException("Update transaction failed due to transaction type is required to be creditor purchases", e);
+        }
+        
         // Perform common validations
         super.validate(xact, items);
 
         // Creditor purchase requires at least one detail item. The above
-        // ancestor code will allow transactions withot detail items.
+        // ancestor code will allow transactions without detail items.
         try {
             Verifier.verifyNotEmpty(items);
         } catch (VerifyException e) {
             this.msg = "Creditor purchase transaction must contain at least one line item";
             throw new InvalidDataException(this.msg, e);
+        }
+        
+        // Creditor validations
+        Integer creditorId = null;
+        if (xact instanceof XactCreditChargeDto) {
+        	creditorId = ((XactCreditChargeDto) xact).getCreditorId();
+        }
+        this.validate(creditorId);
+    }
+    
+	/**
+	 * This method validates the creditor.
+	 * 
+	 * @param creditorId the id of the creditor
+	 * @throws InvalidDataException When <i>creditorId</i> is null, not greater than
+	 *                              zero, creditor does not exists, or creditor API
+	 *                              call error.
+	 */
+    protected void validate(Integer creditorId) {
+        // Validate Creditor Id
+        try {
+            Verifier.verifyNotNull(creditorId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id for credit purchases cannot be null", e);
+        }
+        try {
+            Verifier.verifyPositive(creditorId);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Creditor Id for credit purchases cannot be null and must be greater than zero", e);
+        }
+        
+        // IS-70:  Verify creditor exists in the system
+        CreditorApi credApi = SubsidiaryApiFactory.createCreditorApi(this.dao);
+        try {
+            // Validate creditor's existence
+			CreditorDto obj = credApi.get(creditorId);
+			if (obj == null) {
+				throw new InvalidDataException("Creditor, " + creditorId + ", does not exists");
+			}
+		} catch (CreditorApiException e) {
+			throw new InvalidDataException("A API error occurred attempting to validate creditor, " + creditorId, e);
+		}
+        finally {
+        	credApi = null;
         }
     }
 
