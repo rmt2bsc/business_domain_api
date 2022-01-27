@@ -364,6 +364,10 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
             String msg = "Error occurred retrieving contact data for creditor purchases result set";
             logger.warn(msg);
         }
+        finally {
+        	creditorApi.close();
+        	creditorApi = null;
+        }
         
         try {
             Verifier.verifyNotNull(contactResults);
@@ -617,7 +621,7 @@ class CreditorPurchasesApiImpl extends AbstractXactApiImpl implements CreditorPu
         try {
             newXactId = this.reverse(xact, items);
         } catch (XactApiException e) {
-            throw new CreditorPurchasesApiException("Error reversing Creditor Purchases transaction", e);
+            throw new CreditorPurchasesApiException(e);
         }
         return newXactId;
     }
