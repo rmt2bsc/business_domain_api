@@ -23,6 +23,7 @@ import org.dto.adapter.orm.account.subsidiary.CustomerExt;
 import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
+import org.modules.CommonAccountingConst;
 import org.modules.contacts.ContactsApi;
 import org.modules.contacts.ContactsApiException;
 import org.modules.contacts.ContactsApiFactory;
@@ -362,7 +363,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
     }
 
     private CustomerExt getCustomer(int customerId) throws CashReceiptApiException {
-        CustomerDao custDao = SubsidiaryDaoFactory.createRmt2OrmCustomerDao(this.xactDao);
+        CustomerDao custDao = SubsidiaryDaoFactory.createRmt2OrmCustomerDao(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
         CustomerDto custCriteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         custCriteria.setCustomerId(customerId);
         CustomerExt cust = null;
@@ -381,6 +382,10 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             }
         } catch (SubsidiaryDaoException e) {
             throw new CashReceiptApiException(e);
+        }
+        finally {
+        	custDao.close();
+        	custDao = null;
         }
     }
 
