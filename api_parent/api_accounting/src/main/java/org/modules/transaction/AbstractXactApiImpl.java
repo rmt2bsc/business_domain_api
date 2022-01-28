@@ -755,7 +755,7 @@ public abstract class AbstractXactApiImpl extends AbstractTransactionApiImpl imp
             // to have any transaction detail items. If a transaction requires
             // detail items, then make provisions to validate that use case at
             // the descendant level.
-            logger.warn("There are no transaction items associated with the base transaction", e);
+            logger.warn("There are no transaction items associated with the base transaction");
             return;
         } catch (Exception e) {
             throw new InvalidDataException(e);

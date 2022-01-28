@@ -68,6 +68,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
     protected CashReceiptApiImpl(String appName) {
         super();
         this.dao = this.daoFact.createRmt2OrmDao(appName);
+        this.xactDao = this.dao;
         this.setSharedDao(this.dao);
         this.dao.setDaoUser(this.apiUser);
         return;
@@ -82,6 +83,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
     protected CashReceiptApiImpl(DaoClient connection) {
         super(connection);
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        this.xactDao = this.dao;
         this.setSharedDao(this.dao);
         this.dao.setDaoUser(this.apiUser);
     }
@@ -186,6 +188,16 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             this.msg = "Customer Id must be a value greater than zero";
             throw new InvalidDataException(this.msg, e);
         }
+        
+        // Verify customer's existence
+        try {
+        	this.getCustomer(customerId);	
+        }
+        catch (CashReceiptApiException e) {
+        	this.msg = "An API error occurred verifying the customer, " + customerId;
+            throw new InvalidDataException(this.msg, e);
+        }
+        
 
         // Verify tender is provided
         try {
@@ -236,7 +248,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
     }
 
     /**
-     * Reverses a customer's payment and finalizes the source tranaction
+     * Reverses a customer's payment and finalizes the source transaction
      * 
      * @param xact
      *            Source transaction.
@@ -350,8 +362,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
     }
 
     private CustomerExt getCustomer(int customerId) throws CashReceiptApiException {
-        SubsidiaryDaoFactory subDaoFact = new SubsidiaryDaoFactory();
-        CustomerDao custDao = subDaoFact.createRmt2OrmCustomerDao(this.getSharedDao());
+        CustomerDao custDao = SubsidiaryDaoFactory.createRmt2OrmCustomerDao(this.xactDao);
         CustomerDto custCriteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
         custCriteria.setCustomerId(customerId);
         CustomerExt cust = null;
@@ -366,7 +377,7 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
             else {
                 this.msg = "Unable to fetch customer details to perform cash receipts confirmation due to customer, "
                         + customerId + ", was not found";
-                throw new CashReceiptApiException(this.msg);
+                throw new InvalidDataException(this.msg);
             }
         } catch (SubsidiaryDaoException e) {
             throw new CashReceiptApiException(e);

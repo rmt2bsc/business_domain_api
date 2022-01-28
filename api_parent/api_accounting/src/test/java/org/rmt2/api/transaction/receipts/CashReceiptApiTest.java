@@ -14,6 +14,8 @@ import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
+import org.dao.subsidiary.CustomerDao;
+import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dao.transaction.XactDaoException;
 import org.dto.SalesOrderDto;
 import org.dto.XactDto;
@@ -31,6 +33,7 @@ import org.modules.transaction.receipts.CashReceiptApi;
 import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.receipts.CashReceiptApiFactory;
 import org.modules.transaction.sales.SalesApiException;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.AccountingMockDataFactory;
@@ -80,6 +83,19 @@ public class CashReceiptApiTest extends SalesApiTestData {
         this.salesOrderOrm = SalesApiTestData.createMockSalesOrderSingleResponse().get(0);
         this.salesOrderDto = Rmt2SalesOrderDtoFactory.createSalesOrderInstance(this.salesOrderOrm);
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+        
+        
+        // Setup customer validation mock
+        Customer mockCust = new Customer();
+        mockCust.setCustomerId(TEST_NEW_XACT_ID);
+        List<Customer> mockCustList = new ArrayList<>();
+        mockCustList.add(mockCust);
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(Customer.class))).thenReturn(mockCustList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch fetch custome balance test case setup failed");
+        }
     }
 
     /**
@@ -191,7 +207,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
     }
 
     private void setupMocksForApplyPaymentToInvoice() {
-        // Custmer mocking
+        // Customer mocking
         Customer mockCustomerCriteria = new Customer();
         mockCustomerCriteria.setCustomerId(2000);
         try {
@@ -245,8 +261,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
         // Mock Customer balance SQL query stub in Cash Receipts API.
         ResultSet mockResultSet = Mockito.mock(ResultSet.class);
         try {
-            when(this.mockPersistenceClient.executeSql(isA(String.class)))
-                            .thenReturn(mockResultSet);
+            when(this.mockPersistenceClient.executeSql(isA(String.class))).thenReturn(mockResultSet);
             when(mockResultSet.next()).thenReturn(true);
             when(mockResultSet.getDouble("balance")).thenReturn(300.00);
         } catch (Exception e) {
@@ -380,13 +395,23 @@ public class CashReceiptApiTest extends SalesApiTestData {
     public void test_Receive_Payment_Db_Exception() {
         // Mock base transaction creation stub.
         try {
-            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true)))
-                 .thenThrow(DatabaseException.class);
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), eq(true))).thenThrow(DatabaseException.class);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Update xact test case setup failed");
         }
 
+        // Mock Customer balance SQL query stub in Cash Receipts API.
+        ResultSet mockResultSet = Mockito.mock(ResultSet.class);
+        try {
+            when(this.mockPersistenceClient.executeSql(isA(String.class))).thenReturn(mockResultSet);
+            when(mockResultSet.next()).thenReturn(true);
+            when(mockResultSet.getDouble("balance")).thenReturn(300.00);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch fetch custome balance test case setup failed");
+        }
+        
         // Perform test
         CashReceiptApi api = CashReceiptApiFactory.createApi(mockDaoClient);
         
