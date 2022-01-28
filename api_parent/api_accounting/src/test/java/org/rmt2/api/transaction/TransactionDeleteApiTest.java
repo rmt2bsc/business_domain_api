@@ -2,26 +2,19 @@ package org.rmt2.api.transaction;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
 import org.dao.transaction.XactDaoException;
-import org.dto.XactDto;
-import org.dto.XactTypeItemActivityDto;
-import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modules.transaction.TransactionAmountsUnbalancedException;
 import org.modules.transaction.XactApi;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactApiFactory;
@@ -98,7 +91,7 @@ public class TransactionDeleteApiTest extends TransactionApiTestData {
     
     @Test
     public void testApiError_DeleteXactLineItemOperation() {
-    	String apiErrorMsg = "Test Database error occurred deleting transaction line items";
+        String apiErrorMsg = "Test Database error occurred deleting transaction line items";
         try {
             when(this.mockPersistenceClient.deleteRow(any(XactTypeItemActivity.class)))
                  .thenThrow(new DatabaseException(apiErrorMsg));
@@ -107,7 +100,7 @@ public class TransactionDeleteApiTest extends TransactionApiTestData {
             Assert.fail("Setting up delete transaction line item mock case failed");
         }
 
-        XactApi api = XactApiFactory.createDefaultXactApi(mockDaoClient);
+        XactApi api = XactApiFactory.createDefaultXactApi(this.mockDaoClient);
         try {
             api.deleteXact(this.mockXactIdList);
             Assert.fail("testApiError_DeleteXactLineItemOperation test case failed...expected an exception to occur");

@@ -2,7 +2,7 @@ package org.modules.transaction;
 
 import java.util.List;
 
-import org.dao.transaction.XactDao;
+import org.dao.transaction.Rmt2XactDaoImpl;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
 
@@ -31,9 +31,10 @@ class DefaultXactApiImpl extends AbstractXactApiImpl {
         super(connection);
         
         // IS-71:  Assigned XactDao instance to member variable
-        if (connection instanceof XactDao) {
-        	this.xactDao = (XactDao) connection;	
-        }
+        this.xactDao = new Rmt2XactDaoImpl(connection.getClient());
+        // if (connection instanceof XactDao) {
+        // this.xactDao = (XactDao) connection;
+        // }
     }
 
     /*
