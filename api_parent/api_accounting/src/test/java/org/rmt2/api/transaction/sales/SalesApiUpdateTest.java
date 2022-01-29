@@ -41,7 +41,6 @@ import org.modules.subsidiary.CustomerApiException;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 import org.modules.transaction.receipts.CashReceiptApi;
-import org.modules.transaction.receipts.CashReceiptApiException;
 import org.modules.transaction.sales.OutOfSyncSalesOrderStatusesException;
 import org.modules.transaction.sales.SalesApi;
 import org.modules.transaction.sales.SalesApiConst;
@@ -1415,8 +1414,6 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof SalesApiException);
-            Assert.assertTrue(e.getCause() instanceof SalesApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof CashReceiptApiException);
         }
     }
 
