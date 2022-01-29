@@ -68,6 +68,8 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
      */
     protected CashReceiptApiImpl(String appName) {
         super();
+        // IS-71: Instantiated XactDoa and SalesOrderDao types and eliminated the
+        // dependency of getSharedDao method calls
         this.dao = this.daoFact.createRmt2OrmDao(appName);
         this.xactDao = this.dao;
         this.setSharedDao(this.dao);
@@ -83,6 +85,8 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
      */
     protected CashReceiptApiImpl(DaoClient connection) {
         super(connection);
+        // IS-71: Instantiated XactDoa and SalesOrderDao types and eliminated the
+        // dependency of getSharedDao method calls
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
         this.xactDao = this.dao;
         this.setSharedDao(this.dao);

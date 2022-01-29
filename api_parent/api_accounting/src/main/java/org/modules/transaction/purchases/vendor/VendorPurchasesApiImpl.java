@@ -71,7 +71,10 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     public VendorPurchasesApiImpl(String appName) {
         super();
+        // IS-71: Instantiated XactDoa and VendorPurchasesDao types and eliminated the
+        // dependency of getSharedDao method calls
         this.dao = this.daoFact.createRmt2OrmDao(appName);
+        this.xactDao = this.dao;
         this.setSharedDao(this.dao);
         this.dao.setDaoUser(this.apiUser);
         return;
@@ -85,7 +88,10 @@ class VendorPurchasesApiImpl extends AbstractXactApiImpl implements VendorPurcha
      */
     public VendorPurchasesApiImpl(DaoClient connection) {
         super(connection);
+        // IS-71: Instantiated XactDoa and VendorPurchasesDao types and eliminated the
+        // dependency of getSharedDao method calls
         this.dao = this.daoFact.createRmt2OrmDao(this.getSharedDao());
+        this.xactDao = this.dao;
     }
 
     @Override
