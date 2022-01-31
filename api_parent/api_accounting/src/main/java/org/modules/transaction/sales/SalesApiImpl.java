@@ -790,6 +790,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
 
         // validate customer
         this.validateCustomer(order.getCustomerId());    
+        order.setAccountNo(this.customer.getAccountNo());
 
         // validate item(s)
         this.validateSalesOrderItems(items);
@@ -822,6 +823,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             logger.error(this.msg);
             throw new SalesApiException(this.msg, e);
         } finally {
+            custApi.close();
             custApi = null;
         }
     }
@@ -860,7 +862,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
             }
 
             InventoryApiFactory invFact = new InventoryApiFactory();
-            InventoryApi invApi = invFact.createApi(this.dao);
+            InventoryApi invApi = invFact.createApi(CommonAccountingConst.APP_NAME);
             try {
                 ItemMasterDto imDto = invApi.getItemById(item.getItemId());
                 try {
@@ -881,6 +883,7 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
                 this.msg = buf.toString();
                 throw new SalesApiException(this.msg, e);
             } finally {
+                invApi.close();
                 invApi = null;
             }
         }
