@@ -842,20 +842,19 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         StringBuilder buf = new StringBuilder();
         for (SalesOrderItemDto item : items) {
             try {
-                Verifier.verifyPositive(item.getItemId());
-            } catch (VerifyException e) {
-                buf.append("One of the sales order items failed validation check for sales order ");
-                buf.append("due to the discovery of an invalid item id");
-                this.msg = buf.toString();
-                throw new InvalidDataException(this.msg, e);
-            }
-
-            try {
                 Verifier.verifyPositive(item.getOrderQty());
             } catch (VerifyException e) {
                 buf.append("Order quantity is required for sales order item, ");
                 buf.append(item.getItemId());
                 buf.append(", which must be greater than or equal to 1");
+                this.msg = buf.toString();
+                throw new InvalidDataException(this.msg, e);
+            }
+            try {
+                Verifier.verifyPositive(item.getItemId());
+            } catch (VerifyException e) {
+                buf.append("One of the sales order items failed validation check for sales order ");
+                buf.append("due to the discovery of an invalid item id");
                 this.msg = buf.toString();
                 throw new InvalidDataException(this.msg, e);
             }
