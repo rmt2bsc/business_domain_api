@@ -6,27 +6,18 @@ import org.AccountingConst.SubsidiaryType;
 import org.apache.log4j.Logger;
 import org.dao.mapping.orm.rmt2.SalesOrder;
 import org.dao.mapping.orm.rmt2.Xact;
-import org.dao.subsidiary.CustomerDao;
-import org.dao.subsidiary.SubsidiaryDaoException;
-import org.dao.subsidiary.SubsidiaryDaoFactory;
 import org.dao.transaction.sales.SalesOrderDao;
 import org.dao.transaction.sales.SalesOrderDaoException;
 import org.dao.transaction.sales.SalesOrderDaoFactory;
-import org.dto.BusinessContactDto;
-import org.dto.ContactDto;
 import org.dto.CustomerDto;
 import org.dto.SalesOrderDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
-import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
-import org.dto.adapter.orm.account.subsidiary.CustomerExt;
-import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import org.dto.adapter.orm.transaction.Rmt2XactDtoFactory;
 import org.dto.adapter.orm.transaction.sales.Rmt2SalesOrderDtoFactory;
-import org.modules.CommonAccountingConst;
-import org.modules.contacts.ContactsApi;
-import org.modules.contacts.ContactsApiException;
-import org.modules.contacts.ContactsApiFactory;
+import org.modules.subsidiary.CustomerApi;
+import org.modules.subsidiary.SubsidiaryApiFactory;
+import org.modules.subsidiary.SubsidiaryException;
 import org.modules.transaction.AbstractXactApiImpl;
 import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
@@ -366,51 +357,25 @@ public class CashReceiptApiImpl extends AbstractXactApiImpl implements CashRecei
         }
     }
 
-    private CustomerExt getCustomer(int customerId) throws CashReceiptApiException {
-        CustomerDao custDao = SubsidiaryDaoFactory.createRmt2OrmCustomerDao(CommonAccountingConst.DEFAULT_CONTEXT_NAME);
-        CustomerDto custCriteria = Rmt2SubsidiaryDtoFactory.createCustomerInstance(null, null);
-        custCriteria.setCustomerId(customerId);
-        CustomerExt cust = null;
+    private CustomerDto getCustomer(int customerId) throws CashReceiptApiException {
+        CustomerApi custApi = SubsidiaryApiFactory.createCustomerApi();
         try {
-            List<CustomerDto> custList = custDao.fetch(custCriteria);
-            if (custList != null && custList.size() == 1) {
-                cust = SubsidiaryDaoFactory.createCustomerExtBean(custList.get(0));
-                double bal = custDao.calculateBalance(cust.getCustomerId());
-                cust.setBalance(bal);
-                return cust;
-            }
-            else {
+            CustomerDto dto = custApi.get(customerId);
+//            double bal = custApi.getBalance(customerId);
+            if (dto == null) {
                 this.msg = "Unable to fetch customer details to perform cash receipts confirmation due to customer, "
                         + customerId + ", was not found";
                 throw new InvalidDataException(this.msg);
             }
-        } catch (SubsidiaryDaoException e) {
+            else {
+                return dto;
+            }
+        } catch (SubsidiaryException e) {
             throw new CashReceiptApiException(e);
         }
         finally {
-        	custDao.close();
-        	custDao = null;
+            custApi.close();
         }
     }
 
-    private BusinessContactDto getBusinessContact(int salesOrderId) throws CashReceiptApiException {
-        SalesOrder so = this.getSalesOrder(salesOrderId);
-        CustomerExt customer = this.getCustomer(so.getCustomerId());
-        ContactsApi contactsApi = ContactsApiFactory.createApi();
-        BusinessContactDto criteria = Rmt2AddressBookDtoFactory.getBusinessInstance(null);
-        criteria.setContactId(customer.getBusinessId());
-        try {
-            List<ContactDto> contacts = contactsApi.getContact(criteria);
-            if (contacts != null && contacts.size() == 1 && contacts.get(0) instanceof BusinessContactDto) {
-                return (BusinessContactDto) contacts.get(0);
-            }
-            else {
-                this.msg = "Unable to fetch customer business contact details to perform cash receipts confirmation due to customer business contact data was not found for sales order, "
-                        + salesOrderId;
-                throw new CashReceiptApiException(this.msg);
-            }
-        } catch (ContactsApiException e) {
-            throw new CashReceiptApiException(e);
-        }
-    }
 }
