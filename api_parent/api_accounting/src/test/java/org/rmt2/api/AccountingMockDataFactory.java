@@ -26,6 +26,7 @@ import org.dao.mapping.orm.rmt2.VwAccount;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
+import org.dao.mapping.orm.rmt2.VwCustomerBalance;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
@@ -1241,6 +1242,19 @@ public class AccountingMockDataFactory {
         o.setEffectiveDate(RMT2Date.stringToDate(effectiveDate));
         o.setEndDate(endDate == null ? null : RMT2Date.stringToDate(endDate));
         o.setUserId("testuser");
+        return o;
+    }
+    
+    /**
+     * 
+     * @param customerId
+     * @param balance
+     * @return
+     */
+    public static final VwCustomerBalance createVwCustomerBalance(int customerId, double balance) {
+        VwCustomerBalance o = new VwCustomerBalance();
+        o.setCustomerId(customerId);
+        o.setBalance(balance);
         return o;
     }
 }

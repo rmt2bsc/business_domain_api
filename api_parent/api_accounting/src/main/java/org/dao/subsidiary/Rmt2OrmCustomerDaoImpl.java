@@ -1,12 +1,11 @@
 package org.dao.subsidiary;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dao.AccountingSqlConst;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
+import org.dao.mapping.orm.rmt2.VwCustomerBalance;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
@@ -16,7 +15,6 @@ import org.dto.adapter.orm.account.subsidiary.Rmt2SubsidiaryDtoFactory;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.PersistenceClient;
 import com.api.util.RMT2Date;
-import com.api.util.RMT2String;
 import com.api.util.UserTimestamp;
 
 /**
@@ -289,16 +287,16 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
      */
     @Override
     public double calculateBalance(int customerId) throws SubsidiaryDaoException {
-        String sql = RMT2String.replace(AccountingSqlConst.SQL_CUSTOMER_BALANCE, String.valueOf(customerId), "$1");
-        double bal = 0;
-        try {
-            ResultSet rs = this.client.executeSql(sql);
-            if (rs.next()) {
-                bal = rs.getDouble("balance");
-            }
-            return bal;
-        } catch (Exception e) {
-            throw new CustomerDaoException(e);
+        VwCustomerBalance criteria = new VwCustomerBalance();
+        criteria.addCriteria(VwCustomerBalance.PROP_CUSTOMERID, customerId);
+        Object results = this.client.retrieveObject(criteria);
+        if (results == null) {
+            return 0;
         }
+        VwCustomerBalance obj = null;
+        if (results instanceof VwCustomerBalance) {
+            obj =(VwCustomerBalance) results; 
+        }
+        return obj.getBalance();
     }
 }

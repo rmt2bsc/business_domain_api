@@ -2,6 +2,7 @@ package org.rmt2.api.subsidiary.customer;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import org.AccountingConst;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
+import org.dao.mapping.orm.rmt2.VwCustomerBalance;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dao.subsidiary.CustomerDaoException;
 import org.dto.CustomerDto;
@@ -564,13 +566,35 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
         }
     }
     
-    
     @Test
     public void testGetCustomerBalance() {
+        VwCustomerBalance mockResults = new VwCustomerBalance();
+        mockResults.setCustomerId(1350);
+        mockResults.setBalance(7777777.77);
+        try {
+            when(this.mockPersistenceClient.retrieveObject(isA(VwCustomerBalance.class)))
+                    .thenReturn(mockResults);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch customer balance test case setup failed");
+        }
+
+        CustomerApi api = SubsidiaryApiFactory.createCustomerApi(CommonAccountingConst.APP_NAME);
+       double results = 0;
+        try {
+            results = api.getBalance(1350);
+        } catch (SubsidiaryException e) {
+            e.printStackTrace();
+        }
+        Assert.assertNotNull(results);
+        Assert.assertEquals(7777777.77, results, 0);
+    }
+    
+    
+    private void testMock_JDBC_executeSql_SQLCalls_Example() {
         ResultSet mockResulstSet = Mockito.mock(ResultSet.class);
         try {
-            when(this.mockPersistenceClient.executeSql(any(String.class)))
-                            .thenReturn(mockResulstSet);
+            when(this.mockPersistenceClient.executeSql(any(String.class))).thenReturn(mockResulstSet);
             when(mockResulstSet.next()).thenReturn(true);
             when(mockResulstSet.getDouble("balance")).thenReturn(7777777.77);
         } catch (Exception e) {

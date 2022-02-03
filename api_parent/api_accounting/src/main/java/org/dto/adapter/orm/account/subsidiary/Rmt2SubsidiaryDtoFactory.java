@@ -9,6 +9,7 @@ import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
+import org.dao.mapping.orm.rmt2.VwCustomerBalance;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.dto.BusinessContactDto;
 import org.dto.ContactDto;
@@ -17,6 +18,7 @@ import org.dto.CreditorTypeDto;
 import org.dto.CreditorXactHistoryDto;
 import org.dto.CustomerDto;
 import org.dto.CustomerXactHistoryDto;
+import org.dto.SubsidiaryBalanceDto;
 import org.dto.SubsidiaryContactInfoDto;
 import org.rmt2.jaxb.BusinessType;
 
@@ -224,5 +226,20 @@ public class Rmt2SubsidiaryDtoFactory extends RMT2Base {
             }
         }
         return map;
+    }
+    
+    /**
+     * Create an instance of <i>SubsidiaryBalanceDto</i>.
+     * <p>
+     * A brand new instance of SubsidiaryBalanceDto is created when
+     * <i>entity</i> is null. Otherwise, <i>entity</i> is adapted to
+     * an instance of SubsidiaryContactInfoDto.
+     * 
+     * @param jaxbContact
+     *            an instance of {@link VwCustomerBalance}
+     * @return an instance of {@link SubsidiaryBalanceDto}.
+     */
+    public static final SubsidiaryBalanceDto createCustomerBalanceInstance(VwCustomerBalance entity) {
+        return new SubsidiaryBalanceRmt2OrmAdapter(entity);
     }
 }
