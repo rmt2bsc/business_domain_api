@@ -1124,16 +1124,18 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         // sales order being reversed. This will offset the original cash
         // receipt transaction that was created along with sales order that
         // is currently being reversed.
-        CashReceiptApiFactory crFact = new CashReceiptApiFactory();
-        CashReceiptApi crApi = CashReceiptApiFactory.createApi(this.dao);
+        CashReceiptApi crApi = CashReceiptApiFactory.createApi();
         int xactId = 0;
         try {
             xactId = crApi.applyPaymentToInvoice(order, amount);
             return xactId;
         } catch (CashReceiptApiException e) {
             this.msg = "Unable to apply customer payment for sales order, " + order.getSalesOrderId();
-            crApi = null;
             throw new SalesApiException(this.msg, e);
+        }
+        finally {
+            crApi.close();
+            crApi = null;
         }
     }
 
