@@ -707,17 +707,26 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         }
 
         int soId = 0;
+        int customerId = 0;
+        StringBuilder salesOrderIdList = new StringBuilder();
         try {
             for (SalesOrderDto order : orders) {
+                // All sales orders should belong to the same customer
+                customerId = order.getCustomerId();
                 soId = order.getSalesOrderId();
                 Verifier.verifyTrue(order.isInvoiced());
+                
+                if (salesOrderIdList.length() > 0) {
+                    salesOrderIdList.append(", ");
+                }
+                salesOrderIdList.append(order.getSalesOrderId());
             }
         } catch (VerifyException e) {
             this.msg = "Close of sales order for payment operation aborted due sales order is not invoiced: [sales order id="
                     + soId + "]";
             throw new InvalidDataException(this.msg, e);
         }
-
+        
         // Verify that total of selected orders equals transaction amount
         double combinedSalesOrderTotal = 0;
         for (SalesOrderDto order : orders) {
@@ -726,10 +735,27 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             Verifier.verify(combinedSalesOrderTotal == paymentXact.getXactAmount());
         } catch (VerifyException e) {
-            this.msg = "The total dollar amount of selected invoices must be equal to the payment amount received";
+            this.msg = "The total dollar amount of selected sales order invoices must be equal to the payment amount received";
             throw new SalesApiException(this.msg, e);
         }
 
+        // Consolidate multiple sales order invoice totals into one cash receipt transaction.
+        CashReceiptApi crApi = CashReceiptApiFactory.createApi();
+        int xactId = 0;
+        try {
+            // Build transaction reason indicating the sales orders that were paid.
+            paymentXact.setXactReason("Received payment for sales orders: " + salesOrderIdList.toString());
+            xactId = crApi.receivePayment(paymentXact, customerId);
+            paymentXact.setXactId(xactId);
+        } catch (CashReceiptApiException e) {
+            this.msg = "Unable to apply customer payment for sales orders: " + salesOrderIdList.toString();
+            throw new SalesApiException(this.msg, e);
+        }
+        finally {
+            crApi.close();
+            crApi = null;
+        }
+        
         // Close out each sales order
         int processCount = 0;
         for (SalesOrderDto order : orders) {

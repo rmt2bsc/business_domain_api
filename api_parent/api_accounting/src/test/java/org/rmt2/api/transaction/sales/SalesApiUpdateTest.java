@@ -1557,6 +1557,30 @@ public class SalesApiUpdateTest extends SalesApiTestData {
             Assert.fail("Single slaes order fetch test case setup failed");
         }
         
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwXactList.class)))
+                    .thenReturn(mockXactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single slaes order fetch test case setup failed");
+        }
+        
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(Xact.class), isA(Boolean.class)))
+                    .thenReturn(7777);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Single slaes order insert test case setup failed");
+        }
+        try {
+            when(this.mockPersistenceClient.insertRow(isA(CustomerActivity.class), isA(Boolean.class)))
+                    .thenReturn(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Insert CustomerActivity test case setup failed");
+        }
+        
+        
         // Setup mock to get the current status of the sales order
         SalesOrderStatusHist mockStatusHistoryInvoiced = createMockSalesOrderStatusHistoryInvoicedResponse();
         SalesOrderStatusHist mockCurrentSalesOrderStatus = new SalesOrderStatusHist();
@@ -1572,6 +1596,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         // Setup mock transaction
         List<VwXactList> xactList = this.createMockXactSingleFetchResponse();
         VwXactList vwXact = xactList.get(0);
+        vwXact.setId(0);
         vwXact.setXactAmount(100.00);
         XactDto xactDto = Rmt2XactDtoFactory.createXactInstance(vwXact);
 
@@ -1719,7 +1744,7 @@ public class SalesApiUpdateTest extends SalesApiTestData {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.assertEquals(
-                    "The total dollar amount of selected invoices must be equal to the payment amount received",
+                    "The total dollar amount of selected sales order invoices must be equal to the payment amount received",
                     e.getMessage());
         }
 
