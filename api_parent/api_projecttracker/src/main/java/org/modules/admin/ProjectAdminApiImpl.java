@@ -354,27 +354,34 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
         return;
     }
 
+    /**
+     * Updates existing clients only.
+     * <p>
+     * Logic to call web service that will send client updates to the
+     * AddressBook application. This is in case that changes occurred for client
+     * name, contact firstname, contact lastname, contact email, et cetera. Most
+     * likely, this will be a call to some messaging component that will put the
+     * the updates in the form of a SOAP or JSON message on to a JMS queue/topic
+     * just as the public server does when contacting one of the internal API's
+     * to delagate the user's request.
+     * 
+     * @param client
+     *            An instance of {@link ClientDto}
+     * @return The total number of existing clients modified.
+     * @throws ProjectApiException
+     */
     @Override
     public int updateClient(ClientDto client) throws ProjectAdminApiException {
         int rc = this.updateClientWithoutNotification(client);
         try {
-            // Logic to call web service that will send client updates to
-            // the AddressBook application. This is in case that changes occurred
-            // for client name, contact firstname, contact lastname, contact email,
-            // et cetera. Most likely, this will be a call to some mechanism that
-            // will put the intended message payload on a JMS queue / topic just as
-            // the public server does when contacting one of the internal API's to
-            // delagate the user's request.
-            
-            // Build request object with client data
+            // Build request object with client data.
+            // Fetch the the client's BusinessType record from the AddressBook
+            // app and assign the changes from the "clinet" object so that other
+            // BusinessType properties that are not visible to this application will
+            // not get over written. Setup business contact criteria
             ObjectFactory f = new ObjectFactory();
             AddressBookRequest req = f.createAddressBookRequest();
             req.setHeader(this.createRequestHeader());
-
-            // Fetch the the client's BusinessType record from the AddressBook
-            // app and assign the changes from the "clinet" object so that other
-            // BusinessType properties that are not visible to application will
-            // not get over written. Setup business contact criteria
             BusinessContactCriteria criteria = f.createBusinessContactCriteria();
             criteria.setContactId(BigInteger.valueOf(client.getBusinessId()));
             ContactCriteriaGroup criteriaGrp = f.createContactCriteriaGroup();
