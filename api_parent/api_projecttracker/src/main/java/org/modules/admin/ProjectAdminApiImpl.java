@@ -427,12 +427,22 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
         }
     }
     
+    /**
+     * Creates new or updates an existing client without sending update notifications to
+     * the AddressBook system.
+     * 
+     * @param client
+     *            An instance of {@link ClientDto}
+     * @return The id of the new client created or the total number of existing
+     *         clients modified.
+     * @throws ProjectApiException
+     */
     @Override
     public int updateClientWithoutNotification(ClientDto client) throws ProjectAdminApiException {
         try {
             this.validateClient(client);
         } catch (Exception e) {
-            throw new ProjectAdminApiException("Client validation error occurred", e);
+            throw new ProjectAdminApiException(e);
         }
         try {
             int rc = this.dao.maintainClient(client);
