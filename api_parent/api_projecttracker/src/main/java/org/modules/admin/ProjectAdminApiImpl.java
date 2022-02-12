@@ -428,8 +428,8 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
     }
     
     /**
-     * Creates new or updates an existing client locally without sending update notifications to
-     * the AddressBook system.
+     * Creates new or updates an existing client locally without sending update
+     * notifications to the AddressBook system.
      * 
      * @param client
      *            An instance of {@link ClientDto}
