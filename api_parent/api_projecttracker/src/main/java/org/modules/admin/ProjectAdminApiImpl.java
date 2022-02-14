@@ -1,7 +1,6 @@
 package org.modules.admin;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -18,26 +17,10 @@ import org.dto.ProjectEventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TaskDto;
 import org.modules.ProjectTrackerApiConst;
-import org.rmt2.constants.ApiHeaderNames;
-import org.rmt2.constants.ApiTransactionCodes;
-import org.rmt2.jaxb.AddressBookRequest;
-import org.rmt2.jaxb.AddressBookResponse;
-import org.rmt2.jaxb.BusinessContactCriteria;
-import org.rmt2.jaxb.BusinessType;
-import org.rmt2.jaxb.ContactCriteriaGroup;
-import org.rmt2.jaxb.ContactDetailGroup;
-import org.rmt2.jaxb.HeaderType;
-import org.rmt2.jaxb.ObjectFactory;
-import org.rmt2.jaxb.ReplyStatusType;
-import org.rmt2.util.HeaderTypeBuilder;
 
 import com.InvalidDataException;
-import com.NotFoundException;
-import com.api.config.ConfigConstants;
 import com.api.foundation.AbstractTransactionApiImpl;
 import com.api.foundation.TransactionApiException;
-import com.api.messaging.webservice.router.MessageRouterHelper;
-import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.DaoClient;
 import com.api.util.RMT2Date;
 import com.api.util.assistants.Verifier;
@@ -355,15 +338,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
     }
 
     /**
-     * Updates existing clients only.
-     * <p>
-     * Logic to call web service that will send client updates to the
-     * AddressBook application. This is in case that changes occurred for client
-     * name, contact firstname, contact lastname, contact email, et cetera. Most
-     * likely, this will be a call to some messaging component that will put the
-     * the updates in the form of a SOAP or JSON message on to a JMS queue/topic
-     * just as the public server does when contacting one of the internal API's
-     * to delagate the user's request.
+     * Method is not supported at this time.
      * 
      * @param client
      *            An instance of {@link ClientDto}
@@ -372,59 +347,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
      */
     @Override
     public int updateClient(ClientDto client) throws ProjectAdminApiException {
-        int rc = this.updateClientWithoutNotification(client);
-        try {
-            // Build request object with client data.
-            // Fetch the the client's BusinessType record from the AddressBook
-            // app and assign the changes from the "clinet" object so that other
-            // BusinessType properties that are not visible to this application will
-            // not get over written. Setup business contact criteria
-            ObjectFactory f = new ObjectFactory();
-            AddressBookRequest req = f.createAddressBookRequest();
-            req.setHeader(this.createRequestHeader());
-            BusinessContactCriteria criteria = f.createBusinessContactCriteria();
-            criteria.setContactId(BigInteger.valueOf(client.getBusinessId()));
-            ContactCriteriaGroup criteriaGrp = f.createContactCriteriaGroup();
-            criteriaGrp.setBusinessCriteria(criteria);
-            req.setCriteria(criteriaGrp);
-
-            // Route message to business server
-            AddressBookResponse r = f.createAddressBookResponse();
-            Object response = this.sendMessage(ApiTransactionCodes.CONTACTS_GET, req);
-            if (response != null && response instanceof AddressBookResponse) {
-                r = (AddressBookResponse) response;
-            }
-            else {
-                throw new NotFoundException("Client does not have a matching AddressBook profile: client id="
-                        + client.getClientId() + ", business id=" + client.getBusinessId());
-            }
-            
-            // Update existing BusinessType object, which was fetched from the
-            // AddressBook application, with client changes
-            BusinessType profile = r.getProfile().getBusinessContacts().get(0);
-            profile.setLongName(client.getClientName());
-            profile.setContactFirstname(client.getClientContactFirstname());
-            profile.setContactLastname(client.getClientContactLastname());
-            profile.setContactPhone(client.getClientContactPhone());
-            profile.setContactExt(client.getClientContactExt());
-            profile.setContactEmail(client.getClientContactEmail());
-            ContactDetailGroup contactGrp = f.createContactDetailGroup();
-            contactGrp.getBusinessContacts().add(profile);
-            req.setProfile(contactGrp);
-
-            // Send the modified BusinessType to the AddressBook application to be updated.
-            ReplyStatusType reply = (ReplyStatusType) this.sendMessage(ApiTransactionCodes.CONTACTS_UPDATE, req);
-            return rc;
-        }
-        catch (ProjectAdminDaoException e) {
-            throw new ProjectAdminApiException("Unable to update Client data", e);
-        }
-        catch (TransactionApiException e) {
-            throw new ProjectAdminApiException("Unable to perform client updates to AddressBook application", e);
-        }
-        catch (NotFoundException e) {
-            throw new ProjectAdminApiException("Client not found in AddressBook application", e);
-        }
+        throw new UnsupportedOperationException("Method is not implemented at this time");
     }
     
     /**
@@ -627,28 +550,7 @@ public class ProjectAdminApiImpl extends AbstractTransactionApiImpl implements P
 
     @Override
     public Object sendMessage(String messageId, Serializable payload) throws TransactionApiException {
-        String msg = null;
-        MessageRouterHelper helper = new MessageRouterHelper();
-        try {
-            return helper.routeXmlMessage(messageId, payload);
-        } catch (MessageRoutingException e) {
-            msg = "Error occurred routing XML message to its designated API handler";
-            throw new TransactionApiException(msg, e);
-        }
+        return null;
     }
-    
-    
-    
-    private HeaderType createRequestHeader() {
-        return HeaderTypeBuilder.Builder.create()
-                .withApplication(this.getConfig().getProperty(ConfigConstants.API_APP_CODE_KEY))
-                .withModule(ConfigConstants.API_APP_MODULE_VALUE)
-                .withMessageMode(ApiHeaderNames.MESSAGE_MODE_REQUEST)
-                .withDeliveryDate(new Date())
-                
-                // Set these header elements with dummy values in order to be properly assigned later.
-                .withTransaction(ApiHeaderNames.DUMMY_HEADER_VALUE)
-                .withRouting(ApiHeaderNames.DUMMY_HEADER_VALUE)
-                .withDeliveryMode(ApiHeaderNames.DUMMY_HEADER_VALUE).build();
-    }
+ 
 }
