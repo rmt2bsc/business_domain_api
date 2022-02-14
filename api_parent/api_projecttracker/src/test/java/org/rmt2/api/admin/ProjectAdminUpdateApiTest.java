@@ -42,10 +42,7 @@ import org.rmt2.util.addressbook.BusinessTypeBuilder;
 import org.rmt2.util.addressbook.ZipcodeTypeBuilder;
 
 import com.InvalidDataException;
-import com.NotFoundException;
-import com.api.foundation.TransactionApiException;
 import com.api.messaging.webservice.router.MessageRouterHelper;
-import com.api.messaging.webservice.router.MessageRoutingException;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -94,212 +91,227 @@ public class ProjectAdminUpdateApiTest extends ProjectTrackerMockData {
         return;
     }
     
-    
+
     @Test
     public void testModify_Client_Success() {
-        try {
-            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class))).thenReturn(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Modify single client case setup failed");
-        }
-        
-        ProjClient mockCriteria = new ProjClient();
-        mockCriteria.setClientId(TEST_CLIENT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchSingle);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single client case setup failed");
-        }
-        
-        try {
-            when(this.mockPersistenceClient.retrieveObject(isA(ProjClient.class))).thenReturn(this.mockClientFetchSingle.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single client case setup failed");
-        }
-
-        // Setup stubs for mocking client update web service calls
-        this.setupClientWebServiceUpdateStub();
-
         ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
         ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
-        int results = 0;
-        try {
-            results = api.updateClient(client);
-        } catch (ProjectAdminApiException e) {
-            e.printStackTrace();
-        }
-        Assert.assertEquals(1, results);
-    }
-    
-    @Test
-    public void testValidation_Modify_Client_Null_Client_Object() {
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        try {
-            api.updateClient(null);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof ProjectAdminApiException);
-            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
-    
-    @Test
-    public void testValidation_Modify_Client_Negative_ClientId() {
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
-        client.setClientId(-1234);
+        boolean exceptionThown = false;
         try {
             api.updateClient(client);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof ProjectAdminApiException);
-            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+            Assert.fail("Expected Unsupported Operation exception to be thrown here");
+        } catch (UnsupportedOperationException e) {
             e.printStackTrace();
+            exceptionThown = true;
         }
+        Assert.assertTrue(exceptionThown);
     }
+    
+//    @Test
+//    public void testModify_Client_Success() {
+//        try {
+//            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class))).thenReturn(1);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Modify single client case setup failed");
+//        }
+//        
+//        ProjClient mockCriteria = new ProjClient();
+//        mockCriteria.setClientId(TEST_CLIENT_ID);
+//        try {
+//            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchSingle);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Fetch single client case setup failed");
+//        }
+//        
+//        try {
+//            when(this.mockPersistenceClient.retrieveObject(isA(ProjClient.class))).thenReturn(this.mockClientFetchSingle.get(0));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Fetch single client case setup failed");
+//        }
+//
+//        // Setup stubs for mocking client update web service calls
+//        this.setupClientWebServiceUpdateStub();
+//
+//        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
+//        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
+//        int results = 0;
+//        try {
+//            results = api.updateClient(client);
+//        } catch (ProjectAdminApiException e) {
+//            e.printStackTrace();
+//        }
+//        Assert.assertEquals(1, results);
+//    }
+    
+//    @Test
+//    public void testValidation_Modify_Client_Null_Client_Object() {
+//        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+//        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+//        try {
+//            api.updateClient(null);
+//            Assert.fail("Expected an exception to be thrown");
+//        } catch (Exception e) {
+//            Assert.assertTrue(e instanceof ProjectAdminApiException);
+//            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+//            e.printStackTrace();
+//        }
+//    }
+    
+//    @Test
+//    public void testValidation_Modify_Client_Negative_ClientId() {
+//        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+//        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+//        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
+//        client.setClientId(-1234);
+//        try {
+//            api.updateClient(client);
+//            Assert.fail("Expected an exception to be thrown");
+//        } catch (Exception e) {
+//            Assert.assertTrue(e instanceof ProjectAdminApiException);
+//            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+//            e.printStackTrace();
+//        }
+//    }
 
-    @Test
-    public void testValidation_Modify_Client_Null_ClientName() {
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
-        client.setClientName(null);
-        try {
-            api.updateClient(client);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof ProjectAdminApiException);
-            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testValidation_Modify_Client_Null_ClientName() {
+//        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+//        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+//        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
+//        client.setClientName(null);
+//        try {
+//            api.updateClient(client);
+//            Assert.fail("Expected an exception to be thrown");
+//        } catch (Exception e) {
+//            Assert.assertTrue(e instanceof ProjectAdminApiException);
+//            Assert.assertTrue(e.getCause() instanceof InvalidDataException);
+//            e.printStackTrace();
+//        }
+//    }
     
-    @Test
-    public void testError_Modify_Client_Database_Access_Failure() {
-        try {
-            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class)))
-                    .thenThrow(new DatabaseException("A database access error occurred"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Modify single client case setup failed");
-        }
-        
-        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
-        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
-        try {
-            api.updateClient(client);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof ProjectAdminApiException);
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testError_Modify_Client_Database_Access_Failure() {
+//        try {
+//            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class)))
+//                    .thenThrow(new DatabaseException("A database access error occurred"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Modify single client case setup failed");
+//        }
+//        
+//        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
+//        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
+//        try {
+//            api.updateClient(client);
+//            Assert.fail("Expected an exception to be thrown");
+//        } catch (Exception e) {
+//            Assert.assertTrue(e instanceof ProjectAdminApiException);
+//            e.printStackTrace();
+//        }
+//    }
     
-    @Test
-    public void testError_Modify_Client_Web_Service_Call_Failure() {
-        try {
-            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class))).thenReturn(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Modify single client case setup failed");
-        }
-        
-        ProjClient mockCriteria = new ProjClient();
-        mockCriteria.setClientId(TEST_CLIENT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchSingle);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single client case setup failed");
-        }
-        
-        // Setup stubs for mocking client update web service calls
-        this.setupClientWebServiceUpdateStub();
-        
-        when(this.mockMessageRouterHelper.routeXmlMessage(isA(String.class),
-                isA(AddressBookRequest.class)))
-                        .thenThrow(new MessageRoutingException("A web service call error occurred"));
-        
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
-        try {
-            api.updateClient(client);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof ProjectAdminApiException);
-            Assert.assertTrue(e.getCause() instanceof TransactionApiException);
-            Assert.assertTrue(e.getCause().getCause() instanceof MessageRoutingException);
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testError_Modify_Client_Web_Service_Call_Failure() {
+//        try {
+//            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class))).thenReturn(1);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Modify single client case setup failed");
+//        }
+//        
+//        ProjClient mockCriteria = new ProjClient();
+//        mockCriteria.setClientId(TEST_CLIENT_ID);
+//        try {
+//            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchSingle);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Fetch single client case setup failed");
+//        }
+//        
+//        // Setup stubs for mocking client update web service calls
+//        this.setupClientWebServiceUpdateStub();
+//        
+//        when(this.mockMessageRouterHelper.routeXmlMessage(isA(String.class),
+//                isA(AddressBookRequest.class)))
+//                        .thenThrow(new MessageRoutingException("A web service call error occurred"));
+//        
+//        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+//        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+//        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
+//        try {
+//            api.updateClient(client);
+//            Assert.fail("Expected an exception to be thrown");
+//        } catch (Exception e) {
+//            Assert.assertTrue(e instanceof ProjectAdminApiException);
+//            Assert.assertTrue(e.getCause() instanceof TransactionApiException);
+//            Assert.assertTrue(e.getCause().getCause() instanceof MessageRoutingException);
+//            e.printStackTrace();
+//        }
+//    }
     
-    @Test
-    public void testError_Modify_Client_Profile_NotFound_In_AddressBook_App() {
-        try {
-            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class))).thenReturn(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Modify single client case setup failed");
-        }
-        
-        ProjClient mockCriteria = new ProjClient();
-        mockCriteria.setClientId(TEST_CLIENT_ID);
-        try {
-            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchSingle);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Fetch single client case setup failed");
-        }
-        
-        // Setup stubs for mocking client update web service calls
-        this.setupClientWebServiceUpdateStub();
-        
-        when(this.mockMessageRouterHelper.routeXmlMessage(isA(String.class),
-                isA(AddressBookRequest.class))).thenReturn(null);
-        
-        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
-        ProjectAdminApi api = f.createApi(this.mockDaoClient);
-        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
-        try {
-            api.updateClient(client);
-            Assert.fail("Expected an exception to be thrown");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof ProjectAdminApiException);
-            Assert.assertTrue(e.getCause() instanceof NotFoundException);
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testError_Modify_Client_Profile_NotFound_In_AddressBook_App() {
+//        try {
+//            when(this.mockPersistenceClient.updateRow(isA(ProjClient.class))).thenReturn(1);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Modify single client case setup failed");
+//        }
+//        
+//        ProjClient mockCriteria = new ProjClient();
+//        mockCriteria.setClientId(TEST_CLIENT_ID);
+//        try {
+//            when(this.mockPersistenceClient.retrieveList(eq(mockCriteria))).thenReturn(this.mockClientFetchSingle);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Fetch single client case setup failed");
+//        }
+//        
+//        // Setup stubs for mocking client update web service calls
+//        this.setupClientWebServiceUpdateStub();
+//        
+//        when(this.mockMessageRouterHelper.routeXmlMessage(isA(String.class),
+//                isA(AddressBookRequest.class))).thenReturn(null);
+//        
+//        ProjectAdminApiFactory f = new ProjectAdminApiFactory();
+//        ProjectAdminApi api = f.createApi(this.mockDaoClient);
+//        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
+//        try {
+//            api.updateClient(client);
+//            Assert.fail("Expected an exception to be thrown");
+//        } catch (Exception e) {
+//            Assert.assertTrue(e instanceof ProjectAdminApiException);
+//            Assert.assertTrue(e.getCause() instanceof NotFoundException);
+//            e.printStackTrace();
+//        }
+//    }
     
-    @Test
-    public void testInsert_Client_Success() {
-        try {
-            when(this.mockPersistenceClient.insertRow(isA(ProjClient.class), eq(false))).thenReturn(TEST_NEW_CLIENT_ID);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Insert single client case setup failed");
-        }
-
-        // Setup stubs for mocking client update web service calls
-        this.setupClientWebServiceUpdateStub();
-
-        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
-        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
-        client.setClientId(0);
-        int results = 0;
-        try {
-            results = api.updateClient(client);
-        } catch (ProjectAdminApiException e) {
-            e.printStackTrace();
-        }
-        Assert.assertEquals(TEST_NEW_CLIENT_ID, results);
-    }
+//    @Test
+//    public void testInsert_Client_Success() {
+//        try {
+//            when(this.mockPersistenceClient.insertRow(isA(ProjClient.class), eq(false))).thenReturn(TEST_NEW_CLIENT_ID);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("Insert single client case setup failed");
+//        }
+//
+//        // Setup stubs for mocking client update web service calls
+//        this.setupClientWebServiceUpdateStub();
+//
+//        ProjectAdminApi api = ProjectAdminApiFactory.createApi(this.mockDaoClient);
+//        ClientDto client = ProjectObjectFactory.createClientDtoInstance(this.mockClientFetchSingle.get(0));
+//        client.setClientId(0);
+//        int results = 0;
+//        try {
+//            results = api.updateClient(client);
+//        } catch (ProjectAdminApiException e) {
+//            e.printStackTrace();
+//        }
+//        Assert.assertEquals(TEST_NEW_CLIENT_ID, results);
+//    }
 
     private void setupClientWebServiceUpdateStub() {
         ObjectFactory jaxbObjFactory = new ObjectFactory();
