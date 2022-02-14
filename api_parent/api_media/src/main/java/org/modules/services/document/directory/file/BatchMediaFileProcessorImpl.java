@@ -260,7 +260,9 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
             // using document id and the module code
             logger.info("Link media content to HOME application...");
             // Make web service call to Home App in order to link document
-            // to a particular application module
+            // to a particular application module.
+            
+            // TODO: Change logic to make this call at the API handelr level for simplicity
             this.linkHomeApplication(this.moduleId, newContentId, fileName);
             logger.info("Linking of media content to Home Application completed");
             return newContentId;
@@ -279,6 +281,8 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
     }
 
     private void linkHomeApplication(int moduleId, int contentId, String fileName) throws BatchFileException {
+        // TODO: Change logic to make this call at the message handelr level by
+        // invoking the appropriate media API call for simplicity
         logger.info("Preparing to link media content to its home application");
         ApplicationModuleBean mod = this.config.getModules().get(moduleId);
         if (mod == null) {

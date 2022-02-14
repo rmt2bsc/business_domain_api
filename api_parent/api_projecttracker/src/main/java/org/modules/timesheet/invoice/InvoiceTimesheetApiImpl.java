@@ -270,6 +270,7 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
     private int startBilling(ClientDto client, List<TimesheetDto> timesheets) throws InvoiceTimesheetApiException {
         int invoiceId;
         InvoiceBean invBean = this.prepareBilling(client, timesheets);
+        // TODO: Revise this call at the level of the message handler
         invoiceId = this.submitBilling(invBean);
         if (invoiceId <= 0) {
             throw new InvoiceTimesheetApiException("Detected a problem with time sheet invoicing."
@@ -292,6 +293,8 @@ public class InvoiceTimesheetApiImpl extends AbstractTransactionApiImpl implemen
      *             system or general Systems errors.
      */
     private int submitBilling(InvoiceBean invBean) throws InvoiceTimesheetApiException {
+        // TODO: Change logic to make this call at the message handelr level by
+        // invoking the appropriate acounting API call for simplicity
         ObjectFactory f = new ObjectFactory();
         AccountingTransactionRequest request = f.createAccountingTransactionRequest();
         HeaderType header = HeaderTypeBuilder.Builder.create()
