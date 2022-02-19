@@ -19,5 +19,6 @@
    <ColAttr Computed="false" DBName="login_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="LoginName" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeTable" Updateable="true" />
    <ColAttr Computed="false" DBName="company_name" DataValue="" DisplayHeader="" IsNull="true" JavaType="String" Name="CompanyName" PrimaryKey="false" SqlType="varchar" TableName="ProjEmployeeTable" Updateable="true" />
    <ColAttr Computed="false" DBName="is_manager" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="IsManager" PrimaryKey="false" SqlType="integer" TableName="ProjEmployeeTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="person_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="PersonId" PrimaryKey="false" SqlType="integer" TableName="ProjEmployeeTable" Updateable="true" />
 </DataSource>
 
