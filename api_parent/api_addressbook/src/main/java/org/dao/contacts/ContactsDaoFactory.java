@@ -1,6 +1,7 @@
 package org.dao.contacts;
 
 import com.RMT2Base;
+import com.api.persistence.DaoClient;
 
 /**
  * A factory for creating DAO instances that manage Contacts data resources.
@@ -43,4 +44,16 @@ public class ContactsDaoFactory extends RMT2Base {
         return dao;
     }
 
+    /**
+     * Creates a database implementataion of ContactsDao interface using a
+     * shared DAO connection
+     * 
+     * @param dao
+     *            instance of {@link DaoClient}
+     * @return an instance of {@link ContactsDao}
+     */
+    public ContactsDao createRmt2OrmDao(DaoClient dao) {
+        ContactsDao obj = new Rmt2OrmDefaultContactDaoImpl(dao.getClient());
+        return obj;
+    }
 }

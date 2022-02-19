@@ -17,6 +17,7 @@ import org.dto.adapter.orm.Rmt2AddressBookDtoFactory;
 
 import com.NotFoundException;
 import com.api.persistence.DatabaseException;
+import com.api.persistence.PersistenceClient;
 import com.api.util.RMT2Date;
 import com.api.util.UserTimestamp;
 
@@ -41,7 +42,7 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
     }
 
     /**
-     * constructor
+     * Creates a Rmt2OrmDefaultContactDaoImpl object using the application name
      * 
      * @param appName
      *            application name
@@ -50,6 +51,15 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         super(appName);
     }
 
+    /**
+     * Creates a Rmt2OrmDefaultContactDaoImpl object with a shared persistent client.
+     * 
+     * @param client
+     */
+    Rmt2OrmDefaultContactDaoImpl(PersistenceClient client) {
+        super(client);
+    }
+    
     /**
      * Retrieves a list of all common contacts from the <i>vw_common_contact</i>
      * database view.

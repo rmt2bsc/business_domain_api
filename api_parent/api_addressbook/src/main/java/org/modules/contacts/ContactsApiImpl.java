@@ -11,6 +11,7 @@ import org.dto.ContactDto;
 
 import com.InvalidDataException;
 import com.api.foundation.AbstractTransactionApiImpl;
+import com.api.persistence.DaoClient;
 import com.api.util.RMT2Money;
 import com.api.util.assistants.Verifier;
 import com.api.util.assistants.VerifyException;
@@ -47,6 +48,18 @@ class ContactsApiImpl extends AbstractTransactionApiImpl implements ContactsApi 
         logger.info("logger initialized");
     }
 
+    /**
+     * Creates an SalesApiImpl initialized with a shared connection, <i>dao</i>.
+     * object.
+     * 
+     * @param connection
+     */
+    protected ContactsApiImpl(DaoClient connection) {
+        super(connection);
+        this.factory = new ContactsDaoFactory();
+        this.dao = this.factory.createRmt2OrmDao(this.getSharedDao());
+    }
+    
     /**
      * Obtains a list of all contact objects common to both personal and
      * business types.
