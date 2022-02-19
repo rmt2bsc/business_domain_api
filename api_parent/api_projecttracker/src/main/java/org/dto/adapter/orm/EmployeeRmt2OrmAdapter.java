@@ -51,6 +51,11 @@ class EmployeeRmt2OrmAdapter extends TransactionDtoImpl implements EmployeeDto,
         if (employee == null) {
             employee = new ProjEmployee();
         }
+        this.empTitle = new ProjEmployeeTitle();
+        this.empTitle.setEmpTitleId(employee.getEmpTitleId());
+        this.empType = new ProjEmployeeType();
+        this.empType.setEmpTypeId(employee.getEmpTypeId());
+       
         this.emp = employee;
         this.setDateCreated(employee.getDateCreated());
         this.setDateUpdated(employee.getDateUpdated());
