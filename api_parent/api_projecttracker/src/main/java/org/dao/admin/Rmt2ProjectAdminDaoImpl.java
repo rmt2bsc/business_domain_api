@@ -684,15 +684,8 @@ class Rmt2ProjectAdminDaoImpl extends AbstractProjecttrackerDaoImpl implements P
      *             employee title, or if a general database error occurs.
      */
     private int updateEmployee(ProjEmployee emp) throws EmployeeDaoException {
-        EmployeeDto origObj = this.fetchEmployee(emp.getEmpId());
         try {
             UserTimestamp ut = RMT2Date.getUserTimeStamp(this.getDaoUser());
-            if (origObj != null) {
-                emp.setDateCreated(origObj.getDateCreated());
-            }
-            else {
-                emp.setDateCreated(ut.getDateCreated());
-            }
             emp.setDateUpdated(ut.getDateCreated());
             emp.setUserId(ut.getLoginId());
             if (emp.getManagerId() == 0) {
