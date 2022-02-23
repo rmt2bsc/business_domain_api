@@ -387,14 +387,7 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         this.validate(employee);
         int rc = 0;
         try {
-            try {
-                Verifier.verifyPositive(employee.getEmployeeId());
-                // EmployeeDto delta = this.applyDelta(employee);
-                rc = this.dao.maintainEmployee(employee);
-            }
-            catch (VerifyException e) {
-                rc = this.dao.maintainEmployee(employee);
-            }
+            rc = this.dao.maintainEmployee(employee);
             return rc;
         }
         catch (EmployeeDaoException e) {
@@ -446,9 +439,11 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
      * @param emp
      * @throws InvalidEmployeeException
      *             If <i>emp</i> does not contain an employee type or an
-     *             employee title.
+     *             employee title. 
+     * @throws EmployeeApiException 
+     *             API error occurred sverifying employee's manager.
      */
-    protected void validate(EmployeeDto emp) {
+    protected void validate(EmployeeDto emp) throws EmployeeApiException {
         try {
             Verifier.verifyNotNull(emp);
         }
@@ -468,6 +463,31 @@ class EmployeeApiImpl extends AbstractTransactionApiImpl implements EmployeeApi 
         catch (VerifyException e) {
             this.msg = "Employee criteria object must contain an employee type";
             throw new InvalidEmployeeException(this.msg);   
+        }
+        
+        // IS-70:  Added logic to validate employee's existence provided this is an update transaction.
+        if (emp.getEmployeeId() > 0) {
+            EmployeeDto obj = this.getEmployee(emp.getEmployeeId());
+            try {
+                Verifier.verifyNotNull(obj);
+                // Since we are updating an existing employee, preserve the date
+                // created here instead of in the DAO.
+                emp.setDateCreated(obj.getDateCreated());
+            }
+            catch (VerifyException e) {
+                throw new InvalidEmployeeException("Employee, " +  emp.getEmployeeId() + ", does not exist");
+            }
+        }
+        
+        // IS-70:  Added logic to validate manager's existence provided it is supplied.
+        if (emp.getManagerId() > 0) {
+            Object mgr = this.getEmployee(emp.getManagerId());
+            try {
+                Verifier.verifyNotNull(mgr);
+            }
+            catch (VerifyException e) {
+                throw new InvalidEmployeeException("The employee's manager [" + emp.getManagerId() + "], does not exist");
+            }
         }
     }
 
