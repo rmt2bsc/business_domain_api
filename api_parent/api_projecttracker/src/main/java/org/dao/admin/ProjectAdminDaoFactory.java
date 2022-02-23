@@ -826,6 +826,9 @@ public class ProjectAdminDaoFactory extends RMT2Base {
         obj.setEmail(dto.getEmployeeEmail());
         obj.setCompanyName(dto.getEmployeeCompanyName());
         obj.setIsManager(dto.getIsManager());
+        obj.setDateCreated(dto.getDateCreated());
+        obj.setDateUpdated(dto.getDateUpdated());
+        obj.setUserId(dto.getUpdateUserId());
         return obj;
     }
 
