@@ -32,7 +32,7 @@ public interface ProjectAdminApi extends TransactionApi {
      *            an instance of {@link ClientDto} representing selection
      *            criteria.
      * @return A List of {@link ClientDto} objects or null if nothing is found.
-     * @throws ProjectApiException
+     * @throws ProjectAdminApiException
      */
     List<ClientDto> getClient(ClientDto criteria) throws ProjectAdminApiException;
 
