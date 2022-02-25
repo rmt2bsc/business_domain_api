@@ -23,8 +23,6 @@ import org.dao.mapping.orm.rmt2.VwTimesheetProjectTask;
 import org.dao.mapping.orm.rmt2.VwTimesheetSummary;
 import org.dao.timesheet.TimesheetConst;
 import org.dao.timesheet.TimesheetDaoException;
-import org.dto.ClientDto;
-import org.dto.EmployeeDto;
 import org.dto.EventDto;
 import org.dto.ProjectTaskDto;
 import org.dto.TimesheetDto;
@@ -36,7 +34,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modules.ProjectTrackerApiConst;
 import org.modules.admin.ProjectAdminApiException;
 import org.modules.employee.EmployeeApiException;
@@ -46,9 +43,7 @@ import org.modules.timesheet.InvalidTimesheetException;
 import org.modules.timesheet.TimesheetApi;
 import org.modules.timesheet.TimesheetApiException;
 import org.modules.timesheet.TimesheetApiFactory;
-import org.modules.timesheet.TimesheetTransmissionApi;
 import org.modules.timesheet.TimesheetTransmissionException;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.rmt2.api.ProjectTrackerMockDataFactory;
@@ -56,7 +51,6 @@ import org.rmt2.api.ProjectTrackerMockDataFactory;
 import com.InvalidDataException;
 import com.NotFoundException;
 import com.SystemException;
-import com.api.messaging.email.EmailMessageBean;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.DatabaseException;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
@@ -189,8 +183,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         TimesheetHistDto results = null;
         try {
             results = api.changeTimesheetStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, TimesheetConst.STATUS_SUBMITTED);
@@ -220,8 +213,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         TimesheetHistDto results = null;
         try {
             results = api.changeTimesheetStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, TimesheetConst.STATUS_DRAFT);
@@ -243,8 +235,7 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.changeTimesheetStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, TimesheetConst.STATUS_SUBMITTED);
             Assert.fail("Expected an exception to be thrown");
@@ -269,8 +260,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.changeTimesheetStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, TimesheetConst.STATUS_APPROVED);
             Assert.fail("Expected an exception to be thrown");
@@ -296,8 +287,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.changeTimesheetStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID,
                     ProjectTrackerMockDataFactory.TEST_INVALID_TIMESHEET_STATUS_ID);
@@ -324,8 +315,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.changeTimesheetStatus(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID, null);
             Assert.fail("Expected an exception to be thrown");
@@ -338,8 +329,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Change_Status_Null_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.changeTimesheetStatus(null, ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -352,8 +343,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Change_Status_Negative_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.changeTimesheetStatus(-1234, ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -366,8 +357,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Change_Status_Zero_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.changeTimesheetStatus(0, ProjectTrackerMockDataFactory.TEST_NEW_TIMESHEET_STATUS_HIST_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -424,8 +415,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch extended employee case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.approve(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -447,8 +438,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.approve(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -493,8 +484,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.approve(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -510,8 +501,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     @Test
     public void testValidation_Approve_Null_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.approve(null);
             Assert.fail("Expected an exception to be thrown");
@@ -524,8 +515,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Approve_Negative_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.approve(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -538,8 +529,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Approve_Zero_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.approve(0);
             Assert.fail("Expected an exception to be thrown");
@@ -595,8 +586,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch extended employee case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.decline(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -618,8 +609,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.decline(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -644,8 +635,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.decline(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -659,8 +650,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Decline_Null_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.decline(null);
             Assert.fail("Expected an exception to be thrown");
@@ -673,8 +664,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Decline_Negative_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.decline(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -687,8 +678,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Decline_Zero_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.decline(0);
             Assert.fail("Expected an exception to be thrown");
@@ -773,29 +764,28 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch single client case setup failed");
         }
         
-        // Mock and stub TimesheetTransmissionApi...no need to test its internals here.
-        TimesheetTransmissionApi mockTimesheetTransmissionApi = Mockito.mock(TimesheetTransmissionApi.class);
-        PowerMockito.mockStatic(TimesheetApiFactory.class);
-        when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
-        EmailMessageBean mockEmailMsgBean = new EmailMessageBean();
-        try {
-            when(mockTimesheetTransmissionApi.createSubmitMessage(
-                    isA(TimesheetDto.class), isA(EmployeeDto.class),
-                    isA(EmployeeDto.class), isA(ClientDto.class),
-                    isA(Map.class))).thenReturn(mockEmailMsgBean);    
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("The mocking of TimesheetTransmissionApi's createConfirmationMessage method failed");
-        }
-        try {
-            when(mockTimesheetTransmissionApi.send(eq(mockEmailMsgBean))).thenReturn(1);    
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
-        }
+//        // Mock and stub TimesheetTransmissionApi...no need to test its internals here.
+//        TimesheetTransmissionApi mockTimesheetTransmissionApi = Mockito.mock(TimesheetTransmissionApi.class);
+//        PowerMockito.mockStatic(TimesheetApiFactory.class);
+//        when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
+//        EmailMessageBean mockEmailMsgBean = new EmailMessageBean();
+//        try {
+//            when(mockTimesheetTransmissionApi.createSubmitMessage(
+//                    isA(TimesheetDto.class), isA(EmployeeDto.class),
+//                    isA(EmployeeDto.class), isA(ClientDto.class),
+//                    isA(Map.class))).thenReturn(mockEmailMsgBean);    
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("The mocking of TimesheetTransmissionApi's createConfirmationMessage method failed");
+//        }
+//        try {
+//            when(mockTimesheetTransmissionApi.send(eq(mockEmailMsgBean))).thenReturn(1);    
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
+//        }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -880,29 +870,29 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch single client case setup failed");
         }
         
-        // Mock and stub TimesheetTransmissionApi...no need to test its internals here.
-        TimesheetTransmissionApi mockTimesheetTransmissionApi = Mockito.mock(TimesheetTransmissionApi.class);
-        PowerMockito.mockStatic(TimesheetApiFactory.class);
-        when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
-        EmailMessageBean mockEmailMsgBean = new EmailMessageBean();
-        try {
-            when(mockTimesheetTransmissionApi.createSubmitMessage(
-                    isA(TimesheetDto.class), isA(EmployeeDto.class),
-                    isA(EmployeeDto.class), isA(ClientDto.class),
-                    isA(Map.class))).thenReturn(mockEmailMsgBean);    
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("The mocking of TimesheetTransmissionApi's createConfirmationMessage method failed");
-        }
-        try {
-            when(mockTimesheetTransmissionApi.send(eq(mockEmailMsgBean))).thenThrow(TimesheetTransmissionException.class);   
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
-        }
+//        // Mock and stub TimesheetTransmissionApi...no need to test its internals here.
+//        TimesheetTransmissionApi mockTimesheetTransmissionApi = Mockito.mock(TimesheetTransmissionApi.class);
+//        PowerMockito.mockStatic(TimesheetApiFactory.class);
+//        when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
+//        EmailMessageBean mockEmailMsgBean = new EmailMessageBean();
+//        try {
+//            when(mockTimesheetTransmissionApi.createSubmitMessage(
+//                    isA(TimesheetDto.class), isA(EmployeeDto.class),
+//                    isA(EmployeeDto.class), isA(ClientDto.class),
+//                    isA(Map.class))).thenReturn(mockEmailMsgBean);    
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("The mocking of TimesheetTransmissionApi's createConfirmationMessage method failed");
+//        }
+//        try {
+//            when(mockTimesheetTransmissionApi.send(eq(mockEmailMsgBean))).thenThrow(TimesheetTransmissionException.class);   
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("The mocking of TimesheetTransmissionApi's send method failed");
+//        }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
@@ -987,22 +977,22 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch single client case setup failed");
         }
         
-        // Mock and stub TimesheetTransmissionApi...no need to test its internals here.
-        TimesheetTransmissionApi mockTimesheetTransmissionApi = Mockito.mock(TimesheetTransmissionApi.class);
-        PowerMockito.mockStatic(TimesheetApiFactory.class);
-        when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
-        try {
-            when(mockTimesheetTransmissionApi.createSubmitMessage(
-                    isA(TimesheetDto.class), isA(EmployeeDto.class),
-                    isA(EmployeeDto.class), isA(ClientDto.class),
-                    isA(Map.class))).thenThrow(new TimesheetTransmissionException("Timesheet SMTP transmission validation error occurred"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("The mocking of TimesheetTransmissionApi's createConfirmationMessage method failed");
-        }
+//        // Mock and stub TimesheetTransmissionApi...no need to test its internals here.
+//        TimesheetTransmissionApi mockTimesheetTransmissionApi = Mockito.mock(TimesheetTransmissionApi.class);
+//        PowerMockito.mockStatic(TimesheetApiFactory.class);
+//        when(TimesheetApiFactory.createTransmissionApi()).thenReturn(mockTimesheetTransmissionApi);
+//        try {
+//            when(mockTimesheetTransmissionApi.createSubmitMessage(
+//                    isA(TimesheetDto.class), isA(EmployeeDto.class),
+//                    isA(EmployeeDto.class), isA(ClientDto.class),
+//                    isA(Map.class))).thenThrow(new TimesheetTransmissionException("Timesheet SMTP transmission validation error occurred"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Assert.fail("The mocking of TimesheetTransmissionApi's createConfirmationMessage method failed");
+//        }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
@@ -1087,8 +1077,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch single client case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
@@ -1164,8 +1154,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch employee and manager case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
@@ -1217,8 +1207,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch multiple extended timesheet data for timesheet load process case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
         } catch (Exception e) {
@@ -1231,8 +1221,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Submit_Null_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(null);
             Assert.fail("Expected an exception to be thrown");
@@ -1245,8 +1235,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Submit_Negative_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -1259,8 +1249,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Submit_Zero_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.submit(0);
             Assert.fail("Expected an exception to be thrown");
@@ -1354,8 +1344,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
@@ -1451,8 +1441,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert timesheet current history case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             TimesheetDto ts = this.buildTimesheetDto(false);
@@ -1475,8 +1465,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert timesheet case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
             Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
@@ -1492,8 +1482,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Timesheet_Null_Timesheet_Object() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             Map<ProjectTaskDto, List<EventDto>> hours = this.buildTimesheetHoursDtoMap(true); 
             api.updateTimesheet(null, hours);
@@ -1507,8 +1497,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Timesheet_ClientId_Negative() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
             ts.setClientId(-1234);
@@ -1524,8 +1514,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Timesheet_ClientId_Zero() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
             ts.setClientId(0);
@@ -1541,8 +1531,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Timesheet_EmployeeId_Negative() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
             ts.setEmpId(-1234);
@@ -1558,8 +1548,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Timesheet_EmployeeId_Zero() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
             ts.setEmpId(0);
@@ -1575,8 +1565,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Timesheet_Hours_Map_Null() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
             api.updateTimesheet(ts, null);
@@ -1590,8 +1580,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Timesheet_Hours_Map_Empty() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(true);
             Map<ProjectTaskDto, List<EventDto>> hours = new HashMap<>(); 
@@ -1615,8 +1605,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
         int results = 0;
         try {
@@ -1640,8 +1630,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
         try {
             api.updateProjectTask(projTask);
@@ -1657,8 +1647,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Project_Task_Null_ProjectTask_Object() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.updateProjectTask(null);
             Assert.fail("Expected an exception to be thrown");
@@ -1672,8 +1662,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Project_Task_Negative_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
         try {
             projTask.setProjectTaskId(-1234);
@@ -1689,8 +1679,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Project_Task_Negative_ProjectId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
         try {
             projTask.setProjId(-1234);
@@ -1706,8 +1696,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Project_Task_Zero_ProjectId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
         try {
             projTask.setProjId(0);
@@ -1723,8 +1713,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Project_Task_Negative_TaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
         try {
             projTask.setTaskId(-1234);
@@ -1740,8 +1730,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Project_Task_Zero_TaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         ProjectTaskDto projTask = ProjectObjectFactory.createProjectTaskDtoInstance(this.mockProjProjectTaskSingle.get(0));
         try {
             projTask.setTaskId(0);
@@ -1760,8 +1750,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
         when(this.mockPersistenceClient.insertRow(isA(ProjEvent.class), eq(true)))
             .thenReturn(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
         int results = 0;
         try {
@@ -1779,8 +1769,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     public void testSuccess_Update_Single_Event() {
         when(this.mockPersistenceClient.updateRow(isA(ProjEvent.class))).thenReturn(1);
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
         int results = 0;
         try {
@@ -1801,8 +1791,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Update event case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
         try {
             api.updateEvent(event);
@@ -1818,8 +1808,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Event_Null_Event_Object() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.updateEvent(null);
             Assert.fail("Expected an exception to be thrown");
@@ -1833,8 +1823,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Event_Negative_EventId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
         try {
             event.setEventId(-1234);
@@ -1850,8 +1840,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Event_Negative_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
         try {
             event.setProjectTaskId(-1234);
@@ -1867,8 +1857,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Event_Zero_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
         try {
             event.setProjectTaskId(0);
@@ -1884,8 +1874,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Event_Null_EventDate() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         EventDto event = ProjectObjectFactory.createEventDtoInstance(this.mockProjEventFetchSingle.get(0));
         try {
             event.setEventDate(null);
@@ -1924,8 +1914,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Insert event case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, true);
         int results = 0;
         try {
@@ -1958,8 +1948,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Update event case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
         int results = 0;
         try {
@@ -1986,8 +1976,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch single project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
         try {
             api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
@@ -2019,8 +2009,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Update event case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
         try {
             api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
@@ -2046,8 +2036,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch single project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, null);
             Assert.fail("Expected an exception to be thrown");
@@ -2071,8 +2061,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch single project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
         try {
             api.updateEvent(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, events);
@@ -2088,8 +2078,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Multiple_Events_Null_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
         try {
             api.updateEvent(null, events);
@@ -2103,8 +2093,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Multiple_Events_Negative_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
         try {
             api.updateEvent(-1234, events);
@@ -2119,8 +2109,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Update_Multiple_Events_Zero_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         List<EventDto> events = this.buildTimesheetEventDtoList(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID, false);
         try {
             api.updateEvent(0, events);
@@ -2142,8 +2132,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Delete single event case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.deleteEvent(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
@@ -2163,8 +2153,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Delete single event case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteEvent(ProjectTrackerMockDataFactory.TEST_EVENT_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -2178,8 +2168,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     @Test
     public void testValidation_Delete_Event_By_Event_id_Null_EventId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteEvent(null);
             Assert.fail("Expected an exception to be thrown");
@@ -2192,8 +2182,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_Event_By_Event_id_Negative_EventId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteEvent(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -2213,8 +2203,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Delete multiple events case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.deleteEvents(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
@@ -2227,8 +2217,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_Event_By_Event_id_Null_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteEvents(null);
             Assert.fail("Expected an exception to be thrown");
@@ -2241,8 +2231,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_Event_By_Event_id_Negative_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteEvents(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -2262,8 +2252,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Delete single event case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteEvents(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -2291,8 +2281,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Delete project task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.deleteProjectTask(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
@@ -2319,8 +2309,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Delete project task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteProjectTask(ProjectTrackerMockDataFactory.TEST_PROJECT_TASK_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -2334,8 +2324,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_ProjectTask_By_ProjectTaskId_Null_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteProjectTask(null);
             Assert.fail("Expected an exception to be thrown");
@@ -2348,8 +2338,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_ProjectTask_By_ProjectTaskId_Negative_ProjectTaskId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteProjectTask(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -2385,8 +2375,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch all project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.deleteProjectTasks(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -2422,8 +2412,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch all project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteProjectTasks(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -2437,8 +2427,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     @Test
     public void testValidation_Delete_ProjectTask_By_TimesheetId_Null_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteProjectTasks(null);
             Assert.fail("Expected an exception to be thrown");
@@ -2451,8 +2441,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_ProjectTask_By_TimesheetId_Negative_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteProjectTasks(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -2495,8 +2485,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch all project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.deleteTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
@@ -2539,8 +2529,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
             Assert.fail("Fetch all project-task case setup failed");
         }
         
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteTimesheet(ProjectTrackerMockDataFactory.TEST_TIMESHEET_ID);
             Assert.fail("Expected an exception to be thrown");
@@ -2554,8 +2544,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_Timesheet_Null_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteTimesheet(null);
             Assert.fail("Expected an exception to be thrown");
@@ -2568,8 +2558,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
     
     @Test
     public void testValidation_Delete_Timesheet_Negative_TimesheetId() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             api.deleteTimesheet(-1234);
             Assert.fail("Expected an exception to be thrown");
@@ -2582,8 +2572,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     @Test
     public void testSuccess_Send_Timesheet() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             results = api.send(null, null, null, null);
@@ -2596,8 +2586,8 @@ public class TimesheetUpdateApiTest extends TimesheetMockData {
 
     @Test
     public void testSuccess_Set_Current_Project_Id() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         api.setCurrentProjectId(ProjectTrackerMockDataFactory.TEST_PROJ_ID);
         Assert.assertEquals(ProjectTrackerMockDataFactory.TEST_PROJ_ID, api.getCurrentProjectId());
     }

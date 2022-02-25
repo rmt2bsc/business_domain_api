@@ -35,9 +35,6 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 @PrepareForTest({ AbstractDaoClientImpl.class, Rmt2OrmClientFactory.class, ResultSet.class, TimesheetApiFactory.class })
 public class AddMediaAttachmentToTimesheetUpdateApiTest extends TimesheetMockData {
 
-    private static final int APPROVE_STATUS_ID = 4;
-    private static final int DECLINE_STATUS_ID = 5;
-
     /**
      * @throws java.lang.Exception
      */
@@ -83,8 +80,7 @@ public class AddMediaAttachmentToTimesheetUpdateApiTest extends TimesheetMockDat
 
     @Test
     public void test_Success() {
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         int results = 0;
         try {
             TimesheetDto ts = this.buildTimesheetDto(false);
@@ -105,8 +101,7 @@ public class AddMediaAttachmentToTimesheetUpdateApiTest extends TimesheetMockDat
             Assert.fail("Fetch timesheet API Error mock setup failed");
         }
 
-        TimesheetApiFactory f = new TimesheetApiFactory();
-        TimesheetApi api = f.createApi(this.mockDaoClient);
+        TimesheetApi api = TimesheetApiFactory.createApi(this.mockDaoClient);
         try {
             TimesheetDto ts = this.buildTimesheetDto(false);
             api.updateTimesheet(ts);
