@@ -62,6 +62,32 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+          <executions>
+              <execution>
+                  <id>copy-resources</id>
+                  <phase>validate</phase>
+                  <goals>
+                      <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+								    <outputDirectory>${basedir}/target/classes/org/dao/mapping/orm/rmt2</outputDirectory>
+								    <includeEmptyDirs>true</includeEmptyDirs>
+								    <resources>
+								        <resource>
+								            <directory>${basedir}/src/main/java/org/dao/mapping/orm/rmt2</directory>
+								            <includes>
+										          <include>**/*.xml</include>
+										        </includes>
+								            <filtering>false</filtering>
+								        </resource>
+								    </resources>
+								</configuration>
+              </execution>
+          </executions>
+      </plugin>
 		</plugins>
 		<extensions>
       <!-- Enabling the use of FTP -->
