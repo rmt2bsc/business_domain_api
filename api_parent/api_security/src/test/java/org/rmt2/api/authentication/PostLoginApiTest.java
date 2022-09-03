@@ -236,14 +236,15 @@ public class PostLoginApiTest extends SecurityMockData {
     
     @Test
     public void test_Logout_UserNotLoggedIn() {
+        String UNKNOWN_USER = "Unknown_User"; 
         Authenticator api = AuthenticatorFactory.createApi(SecurityConstants.APP_NAME);
         try {
-            api.logout(TEST_UID);
+            api.logout(UNKNOWN_USER);
             Assert.fail("Expected LogoutException to be thrown...Test failed");
         } catch (LogoutException e) {
             e.printStackTrace();
             Assert.assertTrue(e instanceof LogoutException);
-            String msg = "User, " + TEST_UID + ", is not logged into the system";
+            String msg = "User, " + UNKNOWN_USER + ", is not logged into the system";
             Assert.assertEquals(msg, e.getMessage());
         }
     }
