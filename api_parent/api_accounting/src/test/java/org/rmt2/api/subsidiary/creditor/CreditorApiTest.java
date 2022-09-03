@@ -39,6 +39,7 @@ import org.rmt2.api.subsidiary.SubsidiaryApiTestData;
 import org.rmt2.jaxb.BusinessType;
 
 import com.InvalidDataException;
+import com.RMT2Exception;
 import com.api.persistence.AbstractDaoClientImpl;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 
@@ -942,7 +943,7 @@ public class CreditorApiTest extends SubsidiaryApiTestData {
         mockGLAcctCriteria.setName(AccountingConst.ACCT_NAME_ACCTPAY);
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockGLAcctCriteria))).thenThrow(
-                    new GeneralLedgerApiException("Database error occurred fetching GL Account data"));
+                    new Exception("Database error occurred fetching GL Account data"));
         } catch (Exception e) {
             e.printStackTrace();
         }
