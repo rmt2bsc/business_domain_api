@@ -977,8 +977,10 @@ class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implem
             body.append("\n");
         }
 
-        // TODO: Create global constant variable for referencing AppServer directory
-        RMT2File.outputFile(body.toString(), "/AppServer/log/media_import_error_report.txt");
+        // IS-70: Added logic to dynamically determine the context path of the
+        // AppServer configuration location.
+        String errorFile = this.getAppServerContextPath() + "AppServer/log/media_import_error_report.txt";
+        RMT2File.outputFile(body.toString(), errorFile);
         
         // // Setup bean that represents the email message.
         // EmailMessageBean bean = new EmailMessageBean();

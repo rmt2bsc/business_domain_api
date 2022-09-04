@@ -104,7 +104,11 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         ApplicationModuleBean mod = this.config.getModules().get(this.moduleId);
         StringBuffer wildcards = new StringBuffer();
         wildcards.append(mod.getFilePattern());
-        List<String> fileListing = RMT2File.getDirectoryListing(config.getInboundDir(), wildcards.toString());
+
+        // IS-70: Added logic that will prefix "inboundDir" with the appropriate
+        // AppServer configuration context path
+        String inboundDir = this.appServerContextPath + config.getInboundDir();
+        List<String> fileListing = RMT2File.getDirectoryListing(inboundDir, wildcards.toString());
         return fileListing;
     }
     
@@ -176,7 +180,10 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
                 try {
                     Verifier.verifyNotEmpty(files);
                     for (String fileName : files) {
-                        fullPathFileName = config.getInboundDir() + fileName;
+
+                        // IS-70: Added logic to prefix inboundDir with correct
+                        // AppServer context path
+                        fullPathFileName = this.appServerContextPath + config.getInboundDir() + fileName;
                         String fileMsg = null;
                         try {
                             logger.info("Begin proecessing file, "  + fullPathFileName);
@@ -468,7 +475,10 @@ public class BatchMediaFileProcessorImpl extends AbstractMediaFileProcessorImpl 
         String fileNameTs = fileToken.get(0) + timestampStr.toString() + fileToken.get(1);
 
         // Prepare for media file maintenance...
-        String toFile = this.config.getArchiveDir() + fileNameTs;
+
+        // IS-70: Added logic that will prefix "archiveDir" with the appropriate
+        // AppServer configuration context path
+        String toFile = this.appServerContextPath + this.config.getArchiveDir() + fileNameTs;
         try {
             // Rename and copy file to archive destination
             RMT2File.copyFile(fileName, toFile);

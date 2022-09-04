@@ -619,7 +619,10 @@ class CsvVideoMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implement
             body.append("\n");
         }
 
-        RMT2File.outputFile(body.toString(), "/AppServer/log/media_import_error_report.txt");
+        // IS-70: Added logic to dynamically determine the context path of the
+        // AppServer configuration location.
+        String errorFile = this.getAppServerContextPath() + "AppServer/log/media_import_error_report.txt";
+        RMT2File.outputFile(body.toString(), errorFile);
         return;
     }
     

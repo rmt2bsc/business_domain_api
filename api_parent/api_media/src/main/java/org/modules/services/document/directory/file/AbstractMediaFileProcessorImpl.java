@@ -11,6 +11,7 @@ import org.modules.document.DocumentContentApiFactory;
 
 import com.RMT2Constants;
 import com.api.BatchFileException;
+import com.api.config.ConfigConstants;
 import com.api.foundation.AbstractTransactionApiImpl;
 
 /**
@@ -26,6 +27,7 @@ abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl
 
     private static Logger logger = Logger.getLogger(AbstractMediaFileProcessorImpl.class);
     private List<String> errorMessages;
+    protected String appServerContextPath;
 
     /**
      * Creates a SingleMediaFileProcessorDaoImpl object.
@@ -35,6 +37,7 @@ abstract class AbstractMediaFileProcessorImpl extends AbstractTransactionApiImpl
         super();
         // Initialize MIME message collection
         this.errorMessages = new ArrayList<>();
+        this.appServerContextPath = System.getProperty(ConfigConstants.PROPNAME_APPSERVER_CONFIG_CONTEXTPATH);
         return;
     }
 

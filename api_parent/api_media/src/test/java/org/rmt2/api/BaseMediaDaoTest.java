@@ -16,6 +16,7 @@ import com.api.config.ConfigConstants;
 import com.api.persistence.DaoClient;
 import com.api.persistence.PersistenceClient;
 import com.api.persistence.db.orm.Rmt2OrmClientFactory;
+import com.api.util.RMT2SystemUtility;
 
 /**
  * Common functionality for mocking DAO classes
@@ -27,6 +28,7 @@ import com.api.persistence.db.orm.Rmt2OrmClientFactory;
 public class BaseMediaDaoTest {
     protected PersistenceClient mockPersistenceClient;
     protected DaoClient mockDaoClient;
+    protected String appServerContextPath;
 
     /**
      * 
@@ -47,6 +49,16 @@ public class BaseMediaDaoTest {
         MediaConfigurator configurator = new MediaConfigurator();
         configurator.start();
         
+        // IS-70: Determine the context path for AppServer configuration based
+        // on the operating system
+        if (RMT2SystemUtility.isMacOSNewGenerationArchitecture()) {
+            System.setProperty(ConfigConstants.PROPNAME_APPSERVER_CONFIG_CONTEXTPATH, "/System/Volumes/Data/");
+        }
+        else {
+            System.setProperty(ConfigConstants.PROPNAME_APPSERVER_CONFIG_CONTEXTPATH, "/");
+        }
+        this.appServerContextPath = System.getProperty(ConfigConstants.PROPNAME_APPSERVER_CONFIG_CONTEXTPATH);
+
         // Mock database connection since the common transaction Api expects
         // derived Api modules to obtain and pass in an instance of DaoClient.
         PowerMockito.mockStatic(Rmt2OrmClientFactory.class);

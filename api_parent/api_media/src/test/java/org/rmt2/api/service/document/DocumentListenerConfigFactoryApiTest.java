@@ -58,9 +58,12 @@ public class DocumentListenerConfigFactoryApiTest extends DocumentMediaMockData 
         Assert.assertNotNull(config);
         Assert.assertEquals("john.smith@gte.net", config.getEmailRecipients());
         Assert.assertTrue(config.isEmailResults());
-        Assert.assertEquals("/AppServer/test/mime/in/", config.getInboundDir());
-        Assert.assertEquals("/AppServer/test/mime/out/", config.getOutboundDir());
-        Assert.assertEquals("/AppServer/test/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals(this.appServerContextPath + "AppServer/test/mime/in/",
+                this.appServerContextPath + config.getInboundDir());
+        Assert.assertEquals(this.appServerContextPath + "AppServer/test/mime/out/",
+                this.appServerContextPath + config.getOutboundDir());
+        Assert.assertEquals(this.appServerContextPath + "AppServer/test/mime/archive/",
+                this.appServerContextPath + config.getArchiveDir());
         Assert.assertEquals(10000, config.getPollFreq());
         Assert.assertEquals(2, config.getModuleCount());
         
@@ -94,9 +97,12 @@ public class DocumentListenerConfigFactoryApiTest extends DocumentMediaMockData 
         Assert.assertNotNull(config);
         Assert.assertEquals("john.smith@gte.net", config.getEmailRecipients());
         Assert.assertTrue(config.isEmailResults());
-        Assert.assertEquals("/AppServer/test/mime/in/", config.getInboundDir());
-        Assert.assertEquals("/AppServer/test/mime/out/", config.getOutboundDir());
-        Assert.assertEquals("/AppServer/test/mime/archive/", config.getArchiveDir());
+        Assert.assertEquals(this.appServerContextPath + "AppServer/test/mime/in/",
+                this.appServerContextPath + config.getInboundDir());
+        Assert.assertEquals(this.appServerContextPath + "AppServer/test/mime/out/",
+                this.appServerContextPath + config.getOutboundDir());
+        Assert.assertEquals(this.appServerContextPath + "AppServer/test/mime/archive/",
+                this.appServerContextPath + config.getArchiveDir());
         Assert.assertEquals(10000, config.getPollFreq());
         Assert.assertEquals(2, config.getModuleCount());
         
