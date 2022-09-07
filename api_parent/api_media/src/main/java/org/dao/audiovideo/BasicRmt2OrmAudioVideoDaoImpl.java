@@ -405,7 +405,7 @@ class BasicRmt2OrmAudioVideoDaoImpl extends MediaDaoImpl implements AudioVideoDa
                 queryObj.addCriteria(AvGenre.PROP_GENREID, criteria.getUid());
             }
             if (criteria.getDescritpion() != null) {
-                queryObj.addCriteria(AvGenre.PROP_DESCRIPTION, criteria.getDescritpion());
+                queryObj.addLikeClause(AvGenre.PROP_DESCRIPTION, criteria.getDescritpion());
             }
         }
 
