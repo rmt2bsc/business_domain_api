@@ -297,12 +297,12 @@ class DocumentContentApiImpl extends AbstractTransactionApiImpl implements Docum
             throw new InvalidDataException(this.msg);
         }
 
-        logger.info("Validate file path");
-        if (dto.getFilepath() == null) {
-            this.msg = "File path is required to persist MIME type";
-            DocumentContentApiImpl.logger.error(this.msg);
-            throw new InvalidDataException(this.msg);
-        }
+        // logger.info("Validate file path");
+        // if (dto.getFilepath() == null) {
+        // this.msg = "File path is required to persist MIME type";
+        // DocumentContentApiImpl.logger.error(this.msg);
+        // throw new InvalidDataException(this.msg);
+        // }
         
         logger.info("Validate file extension");
         String ext = RMT2File.getFileExt(dto.getFilename());
