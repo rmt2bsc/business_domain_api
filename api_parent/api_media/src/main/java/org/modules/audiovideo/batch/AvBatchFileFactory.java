@@ -39,8 +39,8 @@ public class AvBatchFileFactory extends RMT2Base {
     }
 
     /**
-     * Creates an instance of the AvBatchFileProcessorApi using the remote batch
-     * file metadata importer implementation.
+     * Creates an instance of the AvBatchFileProcessorApi using the FTP server
+     * batch file metadata importer implementation.
      * 
      * @param parms
      *            an instance of {@link AvBatchImportParameters}
@@ -48,9 +48,9 @@ public class AvBatchFileFactory extends RMT2Base {
      * @throws BatchFileProcessException
      *             Unable to create AvBatchFileProcessorApi
      */
-    public static final AvBatchFileProcessorApi createRemoteAudioBatchImportApiInstance(AvBatchImportParameters parms)
+    public static final AvBatchFileProcessorApi createFtpAudioBatchImportApiProcessorInstance(AvBatchImportParameters parms)
             throws BatchFileProcessException {
-        AvBatchFileProcessorApi api = new RemoteAudioMetaDataLoaderApiImpl(parms);
+        AvBatchFileProcessorApi api = new FtpAudioMetaDataLoaderApiImpl(parms);
         return api;
     }
 

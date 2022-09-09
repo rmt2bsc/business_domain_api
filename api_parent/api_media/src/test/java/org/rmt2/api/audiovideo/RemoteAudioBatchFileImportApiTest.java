@@ -257,7 +257,7 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         parms.setPath(dir);
         parms.setSessionId(TEST_USER_SESSION_ID);
         try {
-            api = AvBatchFileFactory.createRemoteAudioBatchImportApiInstance(parms);
+            api = AvBatchFileFactory.createFtpAudioBatchImportApiProcessorInstance(parms);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         } catch (BatchFileException e) {
@@ -286,7 +286,7 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         parms.setPath(dir);
         parms.setSessionId(TEST_USER_SESSION_ID);
         try {
-            AvBatchFileFactory.createRemoteAudioBatchImportApiInstance(parms);
+            AvBatchFileFactory.createFtpAudioBatchImportApiProcessorInstance(parms);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -313,7 +313,7 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         parms.setPath(dir);
         parms.setSessionId(TEST_USER_SESSION_ID);
         try {
-            AvBatchFileFactory.createRemoteAudioBatchImportApiInstance(parms);
+            AvBatchFileFactory.createFtpAudioBatchImportApiProcessorInstance(parms);
             Assert.fail("An exception was expected to be thrown");
         }
         catch (Exception e) {
@@ -336,7 +336,7 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         parms.setSessionId(TEST_USER_SESSION_ID);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = AvBatchFileFactory.createRemoteAudioBatchImportApiInstance(parms);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createFtpAudioBatchImportApiProcessorInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -372,7 +372,7 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         parms.setSessionId(TEST_USER_SESSION_ID);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = AvBatchFileFactory.createRemoteAudioBatchImportApiInstance(parms);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createFtpAudioBatchImportApiProcessorInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -403,7 +403,7 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         parms.setSessionId(TEST_USER_SESSION_ID);
         AvBatchFileProcessorApi apiSpy = null;
         try {
-            AvBatchFileProcessorApi api = AvBatchFileFactory.createRemoteAudioBatchImportApiInstance(parms);
+            AvBatchFileProcessorApi api = AvBatchFileFactory.createFtpAudioBatchImportApiProcessorInstance(parms);
             apiSpy = Mockito.spy(api);
             Whitebox.setInternalState(apiSpy, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             
@@ -437,7 +437,7 @@ public class RemoteAudioBatchFileImportApiTest extends AvMediaMockData {
         int results = 0;
         AvBatchFileProcessorApi api = null;
         try {
-            api = AvBatchFileFactory.createRemoteAudioBatchImportApiInstance(parms);
+            api = AvBatchFileFactory.createFtpAudioBatchImportApiProcessorInstance(parms);
             Whitebox.setInternalState(api, PROP_NAME_MP3_READER_IMPL_TO_USE, null);
             results = api.processBatch();
         }

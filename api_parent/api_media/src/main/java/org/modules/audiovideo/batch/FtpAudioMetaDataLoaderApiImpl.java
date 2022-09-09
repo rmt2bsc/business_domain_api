@@ -44,7 +44,7 @@ import com.api.util.RMT2Money;
 import com.api.util.RMT2String;
 
 /**
- * A file loader implementation of {@link AudioVideoBatchFileProcessorApi} which
+ * A FTP file loader implementation of {@link AudioVideoBatchFileProcessorApi} which
  * extracts metadata from audio files located on a remote FTP server and imports
  * the data to various tables in the database.
  * <p>
@@ -54,9 +54,9 @@ import com.api.util.RMT2String;
  * @author Roy Terrell
  * 
  */
-class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements AvBatchFileProcessorApi {
+class FtpAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implements AvBatchFileProcessorApi {
 
-    private static Logger logger = Logger.getLogger(RemoteAudioMetaDataLoaderApiImpl.class);
+    private static Logger logger = Logger.getLogger(FtpAudioMetaDataLoaderApiImpl.class);
     
     private static Integer MP3_READER_IMPL_TO_USE;
 
@@ -92,18 +92,18 @@ class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implem
     private AvBatchImportParameters parms;
 
     /**
-     * Creates a RemoteAudioMetaDataLoaderApiImpl that does no point to a source
+     * Creates a FtpAudioMetaDataLoaderApiImpl that does no point to a source
      * directory for batch.
      * 
      * @throws BatchFileProcessException
      */
-    protected RemoteAudioMetaDataLoaderApiImpl() throws BatchFileProcessException {
+    protected FtpAudioMetaDataLoaderApiImpl() throws BatchFileProcessException {
         super();
         return;
     }
 
     /**
-     * Creates a RemoteAudioMetaDataLoaderApiImpl pointing to the source
+     * Creates a FtpAudioMetaDataLoaderApiImpl pointing to the source
      * directory for batch processing audio/video files.
      * <p>
      * User is responsible for providing the directory where batch processing
@@ -113,7 +113,7 @@ class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implem
      *            an instance of {@link AvBatchImportParameters}
      * @throws BatchFileProcessException
      */
-    protected RemoteAudioMetaDataLoaderApiImpl(AvBatchImportParameters parms) throws BatchFileProcessException {
+    protected FtpAudioMetaDataLoaderApiImpl(AvBatchImportParameters parms) throws BatchFileProcessException {
         super(MediaConstants.APP_NAME);
         this.initConnection(parms);
         REQUEST_REFRESH = false;
@@ -134,13 +134,13 @@ class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implem
     public void initConnection(Object parms) throws BatchFileProcessException {
         if (parms == null || !(parms instanceof AvBatchImportParameters)) {
             this.msg = "The audio/video batch import parameters are required";
-            RemoteAudioMetaDataLoaderApiImpl.logger.error(this.msg);
+            FtpAudioMetaDataLoaderApiImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
         this.parms = (AvBatchImportParameters) parms;
         if (this.parms.getPath() == null) {
             this.msg = "Path/Location value is required as an audio/video batch import parameter";
-            RemoteAudioMetaDataLoaderApiImpl.logger.error(this.msg);
+            FtpAudioMetaDataLoaderApiImpl.logger.error(this.msg);
             throw new InvalidBatchRootDirectoryException(this.msg);
         }
         
@@ -344,11 +344,11 @@ class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implem
      */
     protected MP3Reader getMp3ReaderInstance(File mp3Source) {
         // Determine the implementation to use for MP3Reader 
-        if (RemoteAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE == null) {
+        if (FtpAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE == null) {
             String val = null;
             try {
                 val = this.getConfig().getProperty(MediaConstants.MP3_READER_TO_USE_CONFIG_KEY);
-                RemoteAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE = Integer.valueOf(val);
+                FtpAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE = Integer.valueOf(val);
             }
             catch (NumberFormatException e) {
                 this.msg = "A non-numeric code was discovered to be configured for the MP3 reader implementation to use for this API [" + val + "]";
@@ -362,12 +362,12 @@ class RemoteAudioMetaDataLoaderApiImpl extends AbstractTransactionApiImpl implem
         
         // Create MP3Reader based on selected implementation
         MP3Reader api = null;
-        switch (RemoteAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE) {
+        switch (FtpAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE) {
             case MediaConstants.MP3_READER_IMPL_MP3AGIC:
                 api = AudioVideoFactory.createMp3agicInstance(mp3Source);
                 break;
             default:
-                this.msg = "An invalid MP3 reader implementation code was specified in configuration: " + RemoteAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE;
+                this.msg = "An invalid MP3 reader implementation code was specified in configuration: " + FtpAudioMetaDataLoaderApiImpl.MP3_READER_IMPL_TO_USE;
                 throw new Mp3ReaderIdentityNotConfiguredException(this.msg);
         }
         return api;
