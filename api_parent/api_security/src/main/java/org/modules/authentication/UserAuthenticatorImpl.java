@@ -159,7 +159,11 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         // logic to encrypt password before attempting to login
         String hashPassPw = null;
         try {
-            hashPassPw = CryptoUtils.byteArrayToHexString(CryptoUtils.computeHash(userName + password));
+            // UI-4: Added the exact password encryption logic as is in the
+            // UserApiImpl.encryptedPassword method in order to fix the
+            // authentication process when the user logs into the system
+            byte[] pwHash = CryptoUtils.computeHash(userName + password);
+            hashPassPw = CryptoUtils.byteArrayToHexString(pwHash);
         } catch (NoSuchAlgorithmException e) {
             throw new AuthenticationException("Unable to encrypt password during authentication", e);
         }
