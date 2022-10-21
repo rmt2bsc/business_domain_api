@@ -112,7 +112,7 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         try {
             list = dao.fetchUserAssignedRoles(criteria);
             this.msg = "Total assigned application roles found for user, " + criteria.getUsername() + ": "
-                    + list.size();
+                    + (list != null ? list.size() : 0);
             logger.info(this.msg);
             return list;
         } catch (Exception e) {
@@ -147,7 +147,7 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         try {
             list = dao.fetchUserRevokedRoles(criteria);
             this.msg = "Total revoked application roles found for user loginId, " + criteria.getLoginUid() + ": "
-                    + list.size();
+                    + (list != null ? list.size() : 0);
             logger.info(this.msg);
             return list;
         } catch (Exception e) {
