@@ -838,3 +838,6 @@ The Patriot|Roland Emmerich|500|12|2000||165||0|Mel Gibson, Heath Ledger, Joely 
 The Transporter Refueled|Camille Delamarre|500|12|2015||96||0|Ed Skrein, Ray Stevenson, Loan Chabanol, Gabriella Wright, Tatjana Pajkovic, Wenxia Yu, Radivoje Bukvic, Lenn Kudrjawizki, Anatole Taubman, Noémie Lenoir|1|1|The Transporter Refueled 2015.mkv
 This Is Where I Leave You|Shawn Levy|502|12|2014||103||0|Jason Bateman, Tina Fey, Adam Driver, Rose Byrne, Corey Stoll, Kathryn Hahn, Jane Fonda|1|1|This Is Where I Leave You (2014).mp4
 Uncharted|Ruben Fleischer|500|12|2022||116||0|Tom Holland, Mark Wahlberg, Sophia Ali, Tati Gabrielle, Antonio Banderas|1|1|Uncharted (2022).mp4
+Black Adam|Jaume Collet-Serra|508|12|2022||125||0|Dwayne Johnson, Aldis Hodge, Noah Centineo, Sarah Shahi, Marwan Kenzari, Quintessa Swindell, Pierce Brosnan|1|1|Black Adam (2022).mp4
+The Cabin in the Woods|Drew Goddard|506|12|2012||95||0|Kristen Connolly, Chris Hemsworth, Anna Hutchison, Fran Kranz, Jesse Williams, Richard Jenkins, Bradley Whitford|1|1|The Cabin in the Woods (2012).mp4
+The Guardian|Andrew Davis|500|12|2006||139||0|Kevin Costner, Ashton Kutcher, Neal McDonough, Melissa Sagemiller, Clancy Brown, Brian Geraghty, Sela Ward|1|1|The Guardian (2006).mp4
