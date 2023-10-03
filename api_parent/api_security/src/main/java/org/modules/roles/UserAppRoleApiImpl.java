@@ -196,8 +196,22 @@ class UserAppRoleApiImpl extends AbstractTransactionApiImpl implements UserAppRo
         // Get UserLogin object
         UserDto userDto = this.getUserDto(userAppDetails.getUsername());
 
-        // Delete all roles assoicated with a particular application for the user.
-        dao.deleteUserAppRoles(userDto, null);
+        // UI-12: Delete all roles assoicated with a particular application for
+        // the user.
+        CategoryDto uarCriteria = Rmt2OrmDtoFactory.getAppRoleDtoInstance(null, null);
+        uarCriteria.setUsername(userAppDetails.getUsername());
+        uarCriteria.setApplicationId(userAppDetails.getApplicationId());
+        List<CategoryDto> userAppRoleIdList = dao.fetchUserAppRole(uarCriteria);
+
+        // UI-12: Delete all user application roles based on username and
+        // application id.
+        if (userAppRoleIdList != null) {
+            String appRoles[] = new String[userAppRoleIdList.size()];
+            for (int ndx = 0; ndx < userAppRoleIdList.size(); ndx++) {
+                appRoles[ndx] = String.valueOf(userAppRoleIdList.get(ndx).getAppRoleId());
+            }
+            dao.deleteUserAppRoles(userDto, appRoles);
+        }
 
         // Use the list of application role code names to build an array of
         // equivalent role id's
