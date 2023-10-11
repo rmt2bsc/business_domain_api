@@ -4,6 +4,7 @@ import org.dao.mapping.orm.rmt2.UserResource;
 import org.dao.mapping.orm.rmt2.UserResourceSubtype;
 import org.dao.mapping.orm.rmt2.UserResourceType;
 import org.dao.mapping.orm.rmt2.VwResource;
+import org.dao.mapping.orm.rmt2.VwResourceType;
 import org.dto.ResourceDto;
 import org.dto.WebServiceDto;
 import org.modules.SecurityConstants;
@@ -154,9 +155,44 @@ public class ResourcesDaoFactory extends RMT2Base {
     }
     
     /**
+     * Build selection criteria for retrieving VwResourceType data
+     * 
+     * @param criteria
+     *            an instance of {@link ResourceDto}
+     * @return an instance of [{@link VwResourceType}
+     */
+    public static final VwResourceType createCriteriaVwResourceType(ResourceDto criteria) {
+        VwResourceType rsrc = new VwResourceType();
+
+        // Setup criteria
+        if (criteria != null) {
+            // Check for VwResourceType related predicates
+            if (criteria.getTypeId() > 0) {
+                rsrc.addCriteria(VwResourceType.PROP_RESRCTYPEID, criteria.getTypeId());
+            }
+            if (criteria.getTypeDescription() != null) {
+                rsrc.addLikeClause(VwResourceType.PROP_RESRCTYPENAME, criteria.getTypeDescription());
+            }
+
+            // Check for UserResourceSubtype related predicates
+            if (criteria.getSubTypeId() > 0) {
+                rsrc.addCriteria(VwResourceType.PROP_RESRCSUBTYPEID, criteria.getSubTypeId());
+            }
+            if (criteria.getSubTypeName() != null) {
+                rsrc.addLikeClause(VwResourceType.PROP_RESRCSUBTYPENAME, criteria.getSubTypeName());
+            }
+            if (criteria.getSubTypeDescription() != null) {
+                rsrc.addLikeClause(VwResourceType.PROP_RESRCSUBTYPEDESC, criteria.getSubTypeDescription());
+            }
+        }
+        return rsrc;
+    }
+
+    /**
      * Build selection criteria for retrieving UserResourceSubtype data
      * 
-     * @param criteria an instance of {@link ResourceDto}
+     * @param criteria
+     *            an instance of {@link ResourceDto}
      * @return an instance of [{@link UserResourceSubtype}
      */
     public static final UserResourceSubtype createCriteriaResourceSubtype(ResourceDto criteria) {

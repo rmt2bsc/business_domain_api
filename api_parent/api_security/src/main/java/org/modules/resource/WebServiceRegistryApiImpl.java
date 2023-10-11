@@ -414,4 +414,32 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         }
     }
 
+    /**
+     * Obtains a master list of resource sub type objects with extended data.
+     * 
+     * @param criteria
+     *            an instance of {@link ResourceDto} containing values to build
+     *            the selection criteria.
+     * @return List of {@link ResourceDto} objects containing the resource sub
+     *         type data or null if no data is found.
+     * @throws ResourceRegistryApiException
+     */
+    @Override
+    public List<ResourceDto> getResourceSubTypeExt(ResourceDto criteria) throws ResourceRegistryApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Selection criteria object is required for getResourceSubTypeExt Query", e);
+        }
+
+        try {
+            List<ResourceDto> results = dao.fetchVwResourceType(criteria);
+            return results;
+        } catch (Exception e) {
+            this.msg = "Unable to fetch master list of extended resource sub type objects";
+            logger.error(this.msg);
+            throw new ResourceRegistryApiException(this.msg, e);
+        }
+    }
+
 }
