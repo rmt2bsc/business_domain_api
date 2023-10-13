@@ -151,7 +151,7 @@ class WebServiceRegistryApiImpl extends AbstractTransactionApiImpl implements Re
         }
         
         try {
-            List<ResourceDto> results = dao.fetchResource(criteria);
+            List<ResourceDto> results = dao.fetchExtResource(criteria);
             return results;
         } catch (Exception e) {
             this.msg = "Unable to successfully fetch list of extended resource objects using resource DTO criteria";
