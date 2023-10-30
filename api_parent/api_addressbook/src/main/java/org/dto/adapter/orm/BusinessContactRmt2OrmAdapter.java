@@ -60,6 +60,7 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
             this.busExt.setBusEntityTypeGrpId(bus.getBusEntityTypeGrpId());
             this.busExt.setBusEntityTypeLongdesc(bus.getBusEntityTypeLongdesc());
             this.busExt.setBusEntityTypeShortdesc(bus.getBusEntityTypeShortdesc());
+            this.busExt.setAddrId(bus.getAddrId());
             this.busExt.setAddr1(bus.getAddr1());
             this.busExt.setAddr2(bus.getAddr2());
             this.busExt.setAddr3(bus.getAddr3());
@@ -105,6 +106,39 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
         this.bus = bus;
         this.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
         this.businessIdList = new ArrayList<Integer>();
+
+        // Get extended data
+        this.busExt = new VwBusinessAddress();
+        if (bus != null) {
+            this.busExt.setBusinessId(bus.getBusinessId());
+            this.busExt.setBusEntityTypeId(bus.getEntityTypeId());
+            this.busExt.setBusServTypeId(bus.getServTypeId());
+            this.busExt.setBusLongname(bus.getLongname());
+            this.busExt.setBusShortname(bus.getShortname());
+            this.busExt.setContactEmail(bus.getContactEmail());
+            this.busExt.setBusContactExt(bus.getContactExt());
+            this.busExt.setBusContactFirstname(bus.getContactFirstname());
+            this.busExt.setBusContactLastname(bus.getContactLastname());
+            this.busExt.setBusContactPhone(bus.getContactPhone());
+            this.busExt.setBusTaxId(bus.getTaxId());
+            this.busExt.setBusWebsite(bus.getWebsite());
+        }
+        if (addr != null) {
+            this.busExt.setAddrId(addr.getAddrId());
+            this.busExt.setAddr1(addr.getAddr1());
+            this.busExt.setAddr2(addr.getAddr2());
+            this.busExt.setAddr3(addr.getAddr3());
+            this.busExt.setAddr4(addr.getAddr4());
+            this.busExt.setAddrZip(addr.getZip());
+            this.busExt.setAddrZipext(addr.getZipext());
+            this.busExt.setAddrPhoneCell(addr.getPhoneCell());
+            this.busExt.setAddrPhoneExt(addr.getPhoneExt());
+            this.busExt.setAddrPhoneFax(addr.getPhoneFax());
+            this.busExt.setAddrPhoneHome(addr.getPhoneHome());
+            this.busExt.setAddrPhoneMain(addr.getPhoneMain());
+            this.busExt.setAddrPhonePager(addr.getPhonePager());
+            this.busExt.setAddrPhoneWork(addr.getPhoneWork());
+        }
     }
 
     /*
@@ -673,6 +707,26 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
     @Override
     public void setAddrId(int value) {
         this.busExt.setAddrId(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getAddr1()
+     */
+    @Override
+    public int getAddrId() {
+        return this.busExt.getAddrId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setAddr2(java.lang.String)
+     */
+    @Override
+    public void setAddr1(String value) {
+        this.busExt.setAddr1(value);
     }
 
     /*

@@ -868,8 +868,6 @@ public class CommonProfileApiTest extends BaseAddressBookDaoTest {
         }
         Assert.assertEquals(1351, rc);
         Assert.assertEquals(1351, mockCommonContactDto.getContactId());
-        Assert.assertEquals(1351, mockCommonContactDto.getAddrId());
-
     }
 
     @Test

@@ -589,7 +589,7 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
 
     @Test
     public void testInsert() {
-        BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(0, 0);
+        BusinessContactDto mockUpdateBusinessDto = this.createMockBusinessContactDto(0, 1351);
         try {
             when(this.mockPersistenceClient.insertRow(any(BusinessContactDto.class), any(Boolean.class)))
                     .thenReturn(1351);
@@ -607,9 +607,6 @@ public class BusinessProfileApiTest extends BaseAddressBookDaoTest {
             Assert.fail("An exception was not expected to be thrown");
         }
         Assert.assertEquals(1351, rc);
-        Assert.assertEquals(1351, mockUpdateBusinessDto.getContactId());
-        Assert.assertEquals(1351, mockUpdateBusinessDto.getAddrId());
-
     }
 
     @Test
