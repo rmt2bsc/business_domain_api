@@ -77,7 +77,8 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
      *            table columns: <i>state_id</i>, <i>abbr_code</i>,
      *            <i>country_id</i>, and <i>state_name</i>.
      * 
-     * @return a List of {@link RegionDto} or null if no data is found.
+     * @return a List of {@link RegionDto} or null if no data is found. Data is
+     *         ordered by Country_Id and State_Name in ascending order.
      * @throws RegionCountryDaoException
      */
     @Override
@@ -100,6 +101,9 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
         else {
             throw new RegionCountryDaoException("Region criteria object cannot be null");
         }
+
+        s.addOrderBy(State.PROP_COUNTRYID, State.ORDERBY_ASCENDING);
+        s.addOrderBy(State.PROP_STATENAME, State.ORDERBY_ASCENDING);
 
         List<State> results;
         try {
