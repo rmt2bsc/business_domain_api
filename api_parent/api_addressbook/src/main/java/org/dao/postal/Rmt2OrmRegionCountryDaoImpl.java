@@ -92,7 +92,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
                 s.addCriteria(State.PROP_COUNTRYID, criteria.getCountryId());
             }
             if (criteria.getStateCode() != null) {
-                s.addCriteria(State.PROP_ABBRCODE, criteria.getStateCode());
+                s.addLikeClause(State.PROP_ABBRCODE, criteria.getStateCode());
             }
             if (criteria.getStateName() != null) {
                 s.addLikeClause(State.PROP_STATENAME, criteria.getStateName());
@@ -235,7 +235,7 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
                 s.addCriteria(VwStateCountry.PROP_STATEID, criteria.getStateId());
             }
             if (criteria.getStateCode() != null) {
-                s.addCriteria(VwStateCountry.PROP_STATECODE, criteria.getStateCode());
+                s.addLikeClause(VwStateCountry.PROP_STATECODE, criteria.getStateCode());
             }
             if (criteria.getStateName() != null) {
                 s.addLikeClause(VwStateCountry.PROP_STATENAME, criteria.getStateName());
@@ -244,6 +244,9 @@ class Rmt2OrmRegionCountryDaoImpl extends AddressBookDaoImpl implements RegionCo
         else {
             throw new RegionCountryDaoException("Country/Region criteria object cannot be null");
         }
+
+        s.addOrderBy(VwStateCountry.PROP_COUNTRYNAME, VwStateCountry.ORDERBY_ASCENDING);
+        s.addOrderBy(VwStateCountry.PROP_STATENAME, VwStateCountry.ORDERBY_ASCENDING);
 
         List<VwStateCountry> results;
         try {
