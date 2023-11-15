@@ -141,7 +141,8 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         
         // Determine the query sequence for obtaining combined creditor/common contact data.
         // local-to-remote or remote-to-local.
-        if (useContactParms && !useCreditorParms) {
+        // UI-28: Added condition that will consider getting all creditors
+        if ((useContactParms && !useCreditorParms) || (!useContactParms && !useCreditorParms)) {
             // First, fetch common contact data and then creditor specifc data.
             contactResults = this.getContactInfo(criteria);
             // Get list of business id's to use for fetching creditor records.
