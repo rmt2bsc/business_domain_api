@@ -242,8 +242,11 @@ class UserAuthenticatorImpl extends AbstractTransactionApiImpl implements Authen
         try {
             roleDao = RoleDaoFactory.createRmt2OrmDao(SecurityConstants.APP_NAME);
             List<CategoryDto> roleList = roleDao.fetchUserAppRole(userProfile.getUsername());
-            for (CategoryDto role : roleList) {
-                tokenUser.addRole(role.getAppRoleCode());
+            // UI-12: Added condition to check if role list exist for the user
+            if (roleList != null) {
+                for (CategoryDto role : roleList) {
+                    tokenUser.addRole(role.getAppRoleCode());
+                }
             }
         } catch (SecurityDaoException e) {
             throw new AuthenticationException("Unable to retrieve user's application roles during authentication", e);

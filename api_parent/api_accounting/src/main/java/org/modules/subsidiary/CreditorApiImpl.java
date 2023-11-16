@@ -141,7 +141,8 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         
         // Determine the query sequence for obtaining combined creditor/common contact data.
         // local-to-remote or remote-to-local.
-        if (useContactParms && !useCreditorParms) {
+        // UI-28: Added condition that will consider getting all creditors
+        if ((useContactParms && !useCreditorParms) || (!useContactParms && !useCreditorParms)) {
             // First, fetch common contact data and then creditor specifc data.
             contactResults = this.getContactInfo(criteria);
             // Get list of business id's to use for fetching creditor records.
@@ -191,6 +192,10 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         catch (VerifyException e) {
             return null;
         }
+
+        // UI-28: Create a Map of all creditors and their balances
+        Map<Integer, Double> balances = this.dao.getBalances();
+
         List<CreditorDto> mergedCreditors = new ArrayList<CreditorDto>();
         for (CreditorDto creditor : subsidiaries) {
             SubsidiaryContactInfoDto contact = null;
@@ -217,6 +222,10 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             creditor.setZip(contact.getZip());
             creditor.setZipext(contact.getZipext());
             creditor.setShortName(contact.getShortName());
+
+            // UI-28: Get target creditor's balance from the Map
+            Double bal = balances.get(contact.getContactId());
+            creditor.setBalance(bal);
             mergedCreditors.add(creditor);
         }
 

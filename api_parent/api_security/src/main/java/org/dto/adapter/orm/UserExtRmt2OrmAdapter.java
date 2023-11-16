@@ -330,4 +330,24 @@ class UserExtRmt2OrmAdapter extends DefaultUserAdapter {
         this.u.setPassword(password);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.DefaultUserAdapter#getGrpDescription()
+     */
+    @Override
+    public String getGrpDescription() {
+        return this.u.getGrpName();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.DefaultUserAdapter#setGrpDescription(java.lang.String)
+     */
+    @Override
+    public void setGrpDescription(String value) {
+        this.u.setGrpName(value);
+    }
+
 }

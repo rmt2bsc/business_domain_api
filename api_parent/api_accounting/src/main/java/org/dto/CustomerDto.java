@@ -41,4 +41,17 @@ public interface CustomerDto extends SubsidiaryDto {
      */
     String getDescription();
 
+    /**
+     * Get customer's balance
+     * 
+     * @return
+     */
+    public Double getBalance();
+
+    /**
+     * Set customer's balance
+     * 
+     * @param balance
+     */
+    public void setBalance(Double balance);
 }

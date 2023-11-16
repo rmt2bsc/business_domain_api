@@ -2,12 +2,15 @@ package org.dao.subsidiary;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dao.AccountingSqlConst;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorActivity;
 import org.dao.mapping.orm.rmt2.CreditorType;
+import org.dao.mapping.orm.rmt2.VwCreditorBalance;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dto.CreditorDto;
 import org.dto.CreditorTypeDto;
@@ -28,8 +31,7 @@ import com.api.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
-        implements CreditorDao {
+class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl implements CreditorDao {
 
     /**
      * Construce a Rmt2OrmCreditorDaoImpl object initialized with a connection
@@ -339,5 +341,22 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
         } catch (DatabaseException e) {
             throw new CreditorDaoException(e);
         }
+    }
+
+    // UI-28: Added for fetching balances for all creditors
+    @Override
+    public Map<Integer, Double> getBalances() throws SubsidiaryDaoException {
+        // Retrieve balances for all creditors
+        VwCreditorBalance criteria = new VwCreditorBalance();
+        List<VwCreditorBalance> results = this.client.retrieveList(criteria);
+        if (results == null || results.isEmpty()) {
+            return null;
+        }
+
+        Map<Integer, Double> map = new HashMap<>();
+        for (VwCreditorBalance item : results) {
+            map.put(item.getBusinessId(), item.getBalance());
+        }
+        return map;
     }
 }

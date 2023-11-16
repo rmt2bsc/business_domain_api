@@ -9,6 +9,7 @@ import org.dao.mapping.orm.rmt2.UserResource;
 import org.dao.mapping.orm.rmt2.UserResourceSubtype;
 import org.dao.mapping.orm.rmt2.UserResourceType;
 import org.dao.mapping.orm.rmt2.VwResource;
+import org.dao.mapping.orm.rmt2.VwResourceType;
 import org.dto.ResourceDto;
 import org.dto.WebServiceDto;
 import org.dto.adapter.orm.Rmt2OrmDtoFactory;
@@ -186,6 +187,36 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
         List<ResourceDto> list = new ArrayList<ResourceDto>();
         for (UserResourceSubtype item : rsrcList) {
             ResourceDto dto = Rmt2OrmDtoFactory.getResourceDtoInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+
+    /**
+     * Query the user_resource_subtype table joined with data from the
+     * user_resource_type for the purpose of returning the entire data set.
+     * 
+     * @return List of {@link ResourceDto} objects containing the resource sub
+     *         type data or null if no data is found
+     * @throws ResourceDaoException
+     *             Database access error
+     */
+    @Override
+    public List<ResourceDto> fetchVwResourceType(ResourceDto criteria) throws ResourceDaoException {
+        VwResourceType rsrc = ResourcesDaoFactory.createCriteriaVwResourceType(criteria);
+        List<VwResourceType> rsrcList = null;
+        try {
+            rsrcList = this.client.retrieveList(rsrc);
+            if (rsrcList == null) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new ResourceDaoException(e);
+        }
+
+        List<ResourceDto> list = new ArrayList<ResourceDto>();
+        for (VwResourceType item : rsrcList) {
+            ResourceDto dto = Rmt2OrmDtoFactory.getVmResourceTypeDtoInstance(item);
             list.add(dto);
         }
         return list;
@@ -643,6 +674,4 @@ class Rmt2OrmWebServicesDaoImpl extends SecurityDaoImpl implements ResourceDao {
     public int deleteResourceSubType(String subTypeName) throws ResourceDaoException {
         throw new UnsupportedOperationException(RMT2Constants.MSG_METHOD_NOT_SUPPORTED);
     }
-
-    
 }

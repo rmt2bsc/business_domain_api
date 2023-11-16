@@ -2,6 +2,7 @@ package org.rmt2.api.transaction.purchases.creditor;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
@@ -12,11 +13,11 @@ import java.util.List;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.CreditorActivity;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
+import org.dao.mapping.orm.rmt2.VwCreditorBalance;
 import org.dao.mapping.orm.rmt2.VwXactCreditChargeList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.Xact;
 import org.dao.mapping.orm.rmt2.XactTypeItemActivity;
-import org.dao.transaction.XactDaoException;
 import org.dto.XactCreditChargeDto;
 import org.dto.XactDto;
 import org.dto.XactTypeItemActivityDto;
@@ -27,7 +28,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modules.transaction.XactApiException;
 import org.modules.transaction.XactConst;
 import org.modules.transaction.purchases.creditor.CreditorPurchasesApi;
 import org.modules.transaction.purchases.creditor.CreditorPurchasesApiException;
@@ -153,6 +153,15 @@ public class CreditorPurchaseUpdateApiTest extends CreditPurchaseApiTestData {
         try {
             when(this.mockPersistenceClient.retrieveList(eq(mockXactCriteria)))
                     .thenReturn(this.mockXactFetchSingleResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+        // UI-28: Added mock for fetching creditor balances.
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwCreditorBalance.class)))
+                    .thenReturn(this.mockCreditorBalance);
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail("Fetch single xact test case setup failed");

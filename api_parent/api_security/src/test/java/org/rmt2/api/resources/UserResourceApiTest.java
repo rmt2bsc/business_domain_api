@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.dao.mapping.orm.rmt2.UserResource;
+import org.dao.mapping.orm.rmt2.VwResource;
 import org.dao.resources.ResourceDaoException;
 import org.dto.ResourceDto;
 import org.dto.WebServiceDto;
@@ -53,6 +54,8 @@ public class UserResourceApiTest extends SecurityMockData {
                 .thenReturn(this.mockUserResourceData.get(0));
         when(this.mockPersistenceClient.retrieveList(any(UserResource.class)))
              .thenReturn(this.mockUserResourceData);
+        when(this.mockPersistenceClient.retrieveList(any(VwResource.class)))
+                .thenReturn(this.mockVwResourceData);
         when(this.mockPersistenceClient.insertRow(any(UserResource.class), eq(true)))
              .thenReturn(SecurityMockDataFactory.TEST_RESOURCE_ID);
         when(this.mockPersistenceClient.updateRow(any(UserResource.class)))
@@ -88,10 +91,10 @@ public class UserResourceApiTest extends SecurityMockData {
             ResourceDto item = results.get(ndx);
             int currentUid = SecurityMockDataFactory.TEST_RESOURCE_ID + ndx;
             Assert.assertEquals(currentUid, item.getUid());
-            Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID, item.getTypeId());
+            Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_TYPE_ID + ndx, item.getTypeId());
             Assert.assertEquals(SecurityMockDataFactory.TEST_RESOURCE_SUBTYPE_ID, item.getSubTypeId());
             Assert.assertEquals("URL_" + item.getUid(), ((WebServiceDto) item).getRequestUrl());
-            Assert.assertEquals("description_" + item.getUid(), item.getDescription());
+            Assert.assertEquals("ResourceDescription_" + item.getUid(), item.getDescription());
         }
     }
 

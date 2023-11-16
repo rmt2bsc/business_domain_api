@@ -201,7 +201,7 @@ public class AccountApiTest extends BaseAccountingDaoTest {
         GlAccountApi api = f.createApi(AddressBookConstants.APP_NAME);
         List<AccountDto> results = null;
         try {
-            results = api.getAccount(null);
+            results = api.getAccount((AccountDto) null);
         } catch (GeneralLedgerApiException e) {
             e.printStackTrace();
         }

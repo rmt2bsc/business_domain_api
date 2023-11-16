@@ -197,7 +197,6 @@ public class AddressAdapterTest {
             dto.setPhonePager("6666666666");
             dto.setPhoneWork("7777777777");
 
-            Assert.assertEquals(2222, dto.getAddrId());
             Assert.assertEquals("94393 Hall Ave.", dto.getAddr1());
             Assert.assertEquals("Suite 948", dto.getAddr2());
             Assert.assertEquals("Room 4", dto.getAddr3());

@@ -413,7 +413,7 @@ public class CashReceiptApiTest extends SalesApiTestData {
         // Mock Customer balance DAO query stub in Cash Receipts API.
         //  This mock is not used as of now...keep around for future use.
         VwCustomerBalance mockResults = new VwCustomerBalance();
-        mockResults.setCustomerId(200);
+        mockResults.setBusinessId(200);
         mockResults.setBalance(300.00);
         try {
             when(this.mockPersistenceClient.retrieveObject(isA(VwCustomerBalance.class)))

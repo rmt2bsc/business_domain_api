@@ -316,17 +316,29 @@ class Rmt2OrmDefaultContactDaoImpl extends AddressBookDaoImpl implements Contact
         if (criteriaDto.getContactName() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_BUSLONGNAME, criteriaDto.getContactName());
         }
+        if (criteriaDto.getContactFirstname() != null) {
+            criteria.addLikeClause(VwBusinessAddress.PROP_BUSCONTACTFIRSTNAME, criteriaDto.getContactFirstname());
+        }
+        if (criteriaDto.getContactLastname() != null) {
+            criteria.addLikeClause(VwBusinessAddress.PROP_BUSCONTACTLASTNAME, criteriaDto.getContactLastname());
+        }
         if (criteriaDto.getShortName() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_BUSSHORTNAME, criteriaDto.getShortName());
         }
         if (criteriaDto.getTaxId() != null) {
-            criteria.addCriteria(VwBusinessAddress.PROP_BUSTAXID, criteriaDto.getTaxId());
+            criteria.addLikeClause(VwBusinessAddress.PROP_BUSTAXID, criteriaDto.getTaxId());
         }
         if (criteriaDto.getContactEmail() != null) {
             criteria.addLikeClause(VwBusinessAddress.PROP_CONTACTEMAIL, criteriaDto.getContactEmail());
         }
+        if (criteriaDto.getContactPhone() != null) {
+            criteria.addLikeClause(VwBusinessAddress.PROP_BUSCONTACTPHONE, criteriaDto.getContactPhone());
+        }
         if (criteriaDto.getPhoneCompany() != null) {
             criteria.addCriteria(VwBusinessAddress.PROP_ADDRPHONEMAIN, criteriaDto.getPhoneCompany());
+        }
+        if (criteriaDto.getWebsite() != null) {
+            criteria.addCriteria(VwBusinessAddress.PROP_BUSWEBSITE, criteriaDto.getWebsite());
         }
         if (criteriaDto.getZip() > 0) {
             criteria.addCriteria(VwBusinessAddress.PROP_ADDRZIP, criteriaDto.getZip());
