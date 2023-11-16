@@ -21,15 +21,15 @@ public class VwCreditorBalance extends OrmBean {
 
 	// Property name constants that belong to respective DataSource, VwCreditorBalanceView
 
-/** The property name constant equivalent to property, CreditorId, of respective DataSource view. */
-  public static final String PROP_CREDITORID = "CreditorId";
+/** The property name constant equivalent to property, BusinessId, of respective DataSource view. */
+  public static final String PROP_BUSINESSID = "BusinessId";
 /** The property name constant equivalent to property, Balance, of respective DataSource view. */
   public static final String PROP_BALANCE = "Balance";
 
 
 
-	/** The javabean property equivalent of database column vw_creditor_balance.creditor_id */
-  private int creditorId;
+	/** The javabean property equivalent of database column vw_creditor_balance.business_id */
+  private int businessId;
 /** The javabean property equivalent of database column vw_creditor_balance.balance */
   private double balance;
 
@@ -44,16 +44,16 @@ public class VwCreditorBalance extends OrmBean {
 	super();
  }
 /**
- * Sets the value of member variable creditorId
+ * Sets the value of member variable businessId
  */
-  public void setCreditorId(int value) {
-    this.creditorId = value;
+  public void setBusinessId(int value) {
+    this.businessId = value;
   }
 /**
- * Gets the value of member variable creditorId
+ * Gets the value of member variable businessId
  */
-  public int getCreditorId() {
-    return this.creditorId;
+  public int getBusinessId() {
+    return this.businessId;
   }
 /**
  * Sets the value of member variable balance
@@ -80,7 +80,7 @@ public boolean equals(Object obj) {
       return false;
    }
    final VwCreditorBalance other = (VwCreditorBalance) obj; 
-   if (EqualityAssistant.notEqual(this.creditorId, other.creditorId)) {
+   if (EqualityAssistant.notEqual(this.businessId, other.businessId)) {
       return false;
    }
    if (EqualityAssistant.notEqual(this.balance, other.balance)) {
@@ -91,13 +91,13 @@ public boolean equals(Object obj) {
 
 @Override
 public int hashCode() {
-   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.creditorId),
+   return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.businessId),
                HashCodeAssistant.hashObject(this.balance));
 } 
 
 @Override
 public String toString() {
-   return "VwCreditorBalance [creditorId=" + creditorId + 
+   return "VwCreditorBalance [businessId=" + businessId + 
           ", balance=" + balance  + "]";
 }
 

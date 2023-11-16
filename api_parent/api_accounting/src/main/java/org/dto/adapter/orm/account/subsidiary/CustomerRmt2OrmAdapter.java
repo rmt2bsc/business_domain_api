@@ -15,6 +15,7 @@ class CustomerRmt2OrmAdapter extends BusinessContactJaxbAdapter implements
         CustomerDto {
 
     private Customer c;
+    private Double balance;
 
     /**
      * Create a CustomerRmt2OrmAdapter that adapts data coming from the creditor
@@ -238,6 +239,16 @@ class CustomerRmt2OrmAdapter extends BusinessContactJaxbAdapter implements
     @Override
     public String getDescription() {
         return this.c.getDescription();
+    }
+
+    @Override
+    public Double getBalance() {
+        return this.balance;
+    }
+
+    @Override
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
 }

@@ -3,6 +3,7 @@ package org.rmt2.api.transaction;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dao.mapping.orm.rmt2.VwCreditorBalance;
 import org.dao.mapping.orm.rmt2.VwGenericXactList;
 import org.dao.mapping.orm.rmt2.VwXactList;
 import org.dao.mapping.orm.rmt2.VwXactTypeItemActivity;
@@ -66,6 +67,8 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
     protected List<VwXactTypeItemActivity> mockVwXactTypeItemActivityFetchSingleResponse;
     
     protected List<Integer> mockXactIdList;
+
+    protected List<VwCreditorBalance> mockCreditorBalance;
 
     /**
      * @throws java.lang.Exception
@@ -131,6 +134,9 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
 
         this.mockXactIdList = this.createMockXactIdListResponse();
         
+        // UI-28: Creditor Balance
+        this.mockCreditorBalance = this.createMockCreditorBalance();
+
         return;
     }
 
@@ -492,6 +498,13 @@ public class TransactionApiTestData extends SubsidiaryApiTestData {
         XactCodes o = AccountingMockDataFactory.createMockOrmXactCode(200, 10,
                 "Transaction code 1");
         list.add(o);
+        return list;
+    }
+
+    private List<VwCreditorBalance> createMockCreditorBalance() {
+        List<VwCreditorBalance> list = new ArrayList<VwCreditorBalance>();
+        VwCreditorBalance bal = AccountingMockDataFactory.createVwCreditorBalance(200, 100.00);
+        list.add(bal);
         return list;
     }
 }

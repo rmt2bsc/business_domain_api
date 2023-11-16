@@ -13,6 +13,7 @@ import org.dao.inventory.InventoryDaoException;
 import org.dao.mapping.orm.rmt2.Creditor;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
+import org.dao.mapping.orm.rmt2.VwCreditorBalance;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.VendorItemDto;
 import org.dto.adapter.orm.inventory.Rmt2ItemMasterDtoFactory;
@@ -52,6 +53,7 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
     private List<VwVendorItems> mockNotFoundFetchResponse;
     private List<Creditor> mockCreditorFetchResponse;
     private List<VwBusinessAddress> mockBusinessContactFetchResponse;
+    private List<VwCreditorBalance> mockCreditorBalance;
 
     /**
      * @throws java.lang.Exception
@@ -69,6 +71,26 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
                 .createMockSingleCreditorFetchResponse();
         this.mockBusinessContactFetchResponse = this
                 .createMockSingleContactFetchResponse();
+
+        // UI-28: Added for mocking creditor balance.
+        this.mockCreditorBalance = this.createMockCreditorBalance();
+
+        // UI-28: Added mock for fetching creditor balances.
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwCreditorBalance.class)))
+                    .thenReturn(this.mockCreditorBalance);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+    }
+
+    // UI-28: Added for mocking creditor balance.
+    private List<VwCreditorBalance> createMockCreditorBalance() {
+        List<VwCreditorBalance> list = new ArrayList<VwCreditorBalance>();
+        VwCreditorBalance bal = AccountingMockDataFactory.createVwCreditorBalance(200, 100.00);
+        list.add(bal);
+        return list;
     }
 
     /**
@@ -407,4 +429,6 @@ public class VendorItemApiQueryUpdateTest extends BaseAccountingDaoTest {
             e.printStackTrace();
         }
     }
+
+
 }

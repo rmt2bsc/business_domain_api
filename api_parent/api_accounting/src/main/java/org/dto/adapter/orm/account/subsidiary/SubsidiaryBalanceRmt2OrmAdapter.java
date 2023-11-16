@@ -38,7 +38,7 @@ class SubsidiaryBalanceRmt2OrmAdapter implements SubsidiaryBalanceDto {
      */
     @Override
     public void setSubsidiaryId(int value) {
-        this.cust.setCustomerId(value);
+        this.cust.setBusinessId(value);
     }
 
     /**
@@ -46,7 +46,7 @@ class SubsidiaryBalanceRmt2OrmAdapter implements SubsidiaryBalanceDto {
      */
     @Override
     public int getSubsidiaryId() {
-        return this.cust.getCustomerId();
+        return this.cust.getBusinessId();
     }
 
 

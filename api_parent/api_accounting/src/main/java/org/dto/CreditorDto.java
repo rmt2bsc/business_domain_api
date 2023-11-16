@@ -47,4 +47,17 @@ public interface CreditorDto extends SubsidiaryDto {
      */
     String getExtAccountNumber();
 
+    /**
+     * Get creditor's balance
+     * 
+     * @return
+     */
+    public Double getBalance();
+
+    /**
+     * Set creditor's balance
+     * 
+     * @param balance
+     */
+    public void setBalance(Double balance);
 }

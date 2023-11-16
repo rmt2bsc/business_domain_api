@@ -192,6 +192,10 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         catch (VerifyException e) {
             return null;
         }
+
+        // UI-28: Create a Map of all creditors and their balances
+        Map<Integer, Double> balances = this.dao.getBalances();
+
         List<CreditorDto> mergedCreditors = new ArrayList<CreditorDto>();
         for (CreditorDto creditor : subsidiaries) {
             SubsidiaryContactInfoDto contact = null;
@@ -218,6 +222,10 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             creditor.setZip(contact.getZip());
             creditor.setZipext(contact.getZipext());
             creditor.setShortName(contact.getShortName());
+
+            // UI-28: Get target creditor's balance from the Map
+            Double bal = balances.get(contact.getContactId());
+            creditor.setBalance(bal);
             mergedCreditors.add(creditor);
         }
 

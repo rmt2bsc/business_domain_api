@@ -569,7 +569,7 @@ public class CustomerApiTest extends SubsidiaryApiTestData {
     @Test
     public void testGetCustomerBalance() {
         VwCustomerBalance mockResults = new VwCustomerBalance();
-        mockResults.setCustomerId(1350);
+        mockResults.setBusinessId(1350);
         mockResults.setBalance(7777777.77);
         try {
             when(this.mockPersistenceClient.retrieveObject(isA(VwCustomerBalance.class)))
