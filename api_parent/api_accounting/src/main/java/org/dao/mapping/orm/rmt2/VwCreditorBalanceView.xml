@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSource Name="VwCreditorBalanceView">
+   <Sql From="vw_creditor_balance" GroupBy="" Having="" OrderBy="" Select="creditor_id, &#xA;&#x9;&#x9;balance" Where="" />
+   <TableUsage DBName="vw_creditor_balance" Name="VwCreditorBalanceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="creditor_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="CreditorId" PrimaryKey="false" SqlType="integer" TableName="VwCreditorBalanceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="balance" DataValue="" DisplayHeader="" IsNull="false" JavaType="double" Name="Balance" PrimaryKey="false" SqlType="numeric" TableName="VwCreditorBalanceTable" Updateable="true" />
+</DataSource>
+
