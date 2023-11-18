@@ -189,10 +189,10 @@ class Rmt2OrmCreditorDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl implem
                 ormCred.addCriteria(Creditor.PROP_ACCTID, criteria.getAcctId());
             }
             if (criteria.getAccountNo() != null) {
-                ormCred.addCriteria(Creditor.PROP_ACCOUNTNUMBER, criteria.getAccountNo());
+                ormCred.addLikeClause(Creditor.PROP_ACCOUNTNUMBER, criteria.getAccountNo());
             }
             if (criteria.getExtAccountNumber() != null) {
-                ormCred.addCriteria(Creditor.PROP_EXTACCOUNTNUMBER, criteria.getExtAccountNumber());
+                ormCred.addLikeClause(Creditor.PROP_EXTACCOUNTNUMBER, criteria.getExtAccountNumber());
             }
             if (criteria.getCreditorTypeId() > 0) {
                 ormCred.addCriteria(Creditor.PROP_CREDITORTYPEID, criteria.getCreditorTypeId());
