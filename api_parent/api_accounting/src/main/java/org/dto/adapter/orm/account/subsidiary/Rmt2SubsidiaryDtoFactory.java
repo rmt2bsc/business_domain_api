@@ -198,6 +198,9 @@ public class Rmt2SubsidiaryDtoFactory extends RMT2Base {
                 item = (BusinessContactDto) contact;
                 SubsidiaryContactInfoDto dto = Rmt2SubsidiaryDtoFactory.createSubsidiaryInstance(null);
                 dto.setContactId(item.getContactId());
+                // UI-28: Added logic to capture address id. Address Id property
+                // value was not being passed downstream to client.
+                dto.setAddrId(item.getAddrId());
                 dto.setAddr1(item.getAddr1());
                 dto.setAddr2(item.getAddr2());
                 dto.setAddr3(item.getAddr3());
