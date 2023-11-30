@@ -174,13 +174,14 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
     }
 
     /**
-     * Combines the a list of creditor subsidiary data with a list of common contact data.
+     * Combines the a list of creditor subsidiary data with a list of common
+     * Addressbook contact data.
      * 
      * @param subsidiary
      * @param contact
-     * @return a List<CreditorDto> sorted by contact name or null when 
-     *          either <i>subsidiaries</i> or <i>contacts</i> equal null
-     *          or if there is nothing to merge.
+     * @return a List<CreditorDto> sorted by contact name or null when either
+     *         <i>subsidiaries</i> or <i>contacts</i> equal null or if there is
+     *         nothing to merge.
      */
     @Override
     protected List<CreditorDto> mergeContactInfo(List<CreditorDto> subsidiaries,
@@ -222,6 +223,11 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             creditor.setZip(contact.getZip());
             creditor.setZipext(contact.getZipext());
             creditor.setShortName(contact.getShortName());
+
+            // UI-28: Capture business entity type id and business service type
+            // id.
+            creditor.setEntityTypeId(contact.getEntityTypeId());
+            creditor.setServTypeId(contact.getServTypeId());
 
             // UI-28: Get target creditor's balance from the Map
             Double bal = balances.get(contact.getContactId());
