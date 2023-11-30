@@ -525,8 +525,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // TODO: In the future, add logic to update address book contact profile
-        // with data changes assoicated with this customer
     }
 
     private void prepareNewCustomer(CustomerDto customer) throws CustomerApiException {

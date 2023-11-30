@@ -646,9 +646,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             logger.error(this.msg, e);
             throw new CreditorApiException(e);
         }
-
-        // TODO: In the future, add logic to update address book contact profile
-        // with data changes assoicated with this creditor
     }
 
     private void prepareNewCreditor(CreditorDto creditor) throws CreditorApiException {
