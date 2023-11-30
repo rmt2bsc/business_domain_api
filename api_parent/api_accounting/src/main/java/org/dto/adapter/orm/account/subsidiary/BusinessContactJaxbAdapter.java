@@ -494,7 +494,9 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
     @Override
     public String getState() {
         if (zct != null) {
-            zct.getState();
+            // UI-28: Added return statement so that Zip State can be included
+            // in search results.
+            return zct.getState();
         }
         return null;
     }
