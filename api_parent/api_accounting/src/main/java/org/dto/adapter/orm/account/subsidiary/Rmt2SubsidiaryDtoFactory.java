@@ -225,6 +225,9 @@ public class Rmt2SubsidiaryDtoFactory extends RMT2Base {
                 dto.setPhoneWork(item.getPhoneWork());
                 dto.setEntityTypeId(item.getEntityTypeId());
                 dto.setServTypeId(item.getServTypeId());
+                // UI-28: Added logic to capture Tax Id and website.
+                dto.setTaxId(item.getTaxId());
+                dto.setWebsite(item.getWebsite());
                 map.put(dto.getContactId(), dto);
             }
         }

@@ -224,10 +224,14 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             creditor.setZipext(contact.getZipext());
             creditor.setShortName(contact.getShortName());
 
-            // UI-28: Capture business entity type id and business service type
-            // id.
+            // UI-28: Capture business entity type id, business service type
+            // id, contact email, contact main phone, contact fax, and website.
             creditor.setEntityTypeId(contact.getEntityTypeId());
             creditor.setServTypeId(contact.getServTypeId());
+            creditor.setContactEmail(contact.getContactEmail());
+            creditor.setWebsite(contact.getWebsite());
+            creditor.setPhoneCompany(contact.getPhoneCompany());
+            creditor.setPhoneFax(contact.getPhoneFax());
 
             // UI-28: Get target creditor's balance from the Map
             Double bal = balances.get(contact.getContactId());

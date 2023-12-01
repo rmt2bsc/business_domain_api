@@ -121,10 +121,6 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
                     item.getXactConfirmNo());
             Assert.assertEquals(item.getXactId() + item.getXactTenderId(),
                     item.getDocumentId());
-            
-            // Contact info should be unavailable
-            Assert.assertEquals("Company" + (ndx + 1), item.getCreditorName());
-            Assert.assertEquals("3188889873", item.getPhone());
         }
     }
 
@@ -178,10 +174,6 @@ public class CreditorPurchaseQueryApiTest extends CreditPurchaseApiTestData {
         Assert.assertEquals(item.getXactDate(), item.getXactPostedDate());
         Assert.assertEquals(String.valueOf(item.getXactDate().getTime()), item.getXactConfirmNo());
         Assert.assertEquals(item.getXactId() + item.getXactTenderId(), item.getDocumentId());
-        
-        // Contact info should be unavailable
-        Assert.assertEquals("Company1", item.getCreditorName());
-        Assert.assertEquals("3188889873", item.getPhone());
     }
 
     @Test

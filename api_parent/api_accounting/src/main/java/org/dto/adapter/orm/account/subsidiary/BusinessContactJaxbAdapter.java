@@ -508,7 +508,8 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public void setPhoneHome(String value) {
-        at.setPhoneMain(value);
+        // UI-28: Changed assignment to target phone home property
+        at.setPhoneHome(value);
     }
 
     /*
@@ -518,7 +519,8 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public String getPhoneHome() {
-        return at.getPhoneMain();
+        // UI-28: Changed assignment to target phone home property
+        return at.getPhoneHome();
     }
 
     /*
@@ -548,7 +550,9 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public void setPhoneExt(String value) {
-        b.setContactExt(value);
+        // UI-28: Changed logic to ignore the assignment
+        // at.setPhoneWorkExt(value);
+        return;
     }
 
     /*
@@ -558,7 +562,9 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public String getPhoneExt() {
-        return b.getContactExt();
+        // UI-28: Changed logic to return null by default
+        // return at.getPhoneWorkExt();
+        return null;
     }
 
     /*
@@ -568,7 +574,8 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public void setPhoneCompany(String value) {
-        this.b.setContactPhone(value);
+        // UI-28: Corrected assignment to target Address Phone Main
+        this.at.setPhoneMain(value);
     }
 
     /*
@@ -578,7 +585,8 @@ class BusinessContactJaxbAdapter extends AbstractSubsidiaryAdapter implements
      */
     @Override
     public String getPhoneCompany() {
-        return this.b.getContactPhone();
+        // UI-28: Corrected assignment to target Address Phone Main
+        return this.at.getPhoneMain();
     }
 
     /*

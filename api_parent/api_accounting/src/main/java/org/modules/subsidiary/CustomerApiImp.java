@@ -215,7 +215,16 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             customer.setZipext(contact.getZipext());
             customer.setShortName(contact.getShortName());
 
-            // UI-28: Get target creditor's balance from the Map
+            // UI-28: Capture business entity type id, business service type
+            // id, contact email, contact main phone, contact fax, and website.
+            customer.setEntityTypeId(contact.getEntityTypeId());
+            customer.setServTypeId(contact.getServTypeId());
+            customer.setContactEmail(contact.getContactEmail());
+            customer.setWebsite(contact.getWebsite());
+            customer.setPhoneCompany(contact.getPhoneCompany());
+            customer.setPhoneFax(contact.getPhoneFax());
+
+            // UI-28: Get target customer's balance from the Map
             Double bal = balances.get(contact.getContactId());
             customer.setBalance(bal);
 
