@@ -10,6 +10,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dao.mapping.orm.rmt2.VwItemMaster;
 import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.ItemAssociationDto;
@@ -150,6 +151,32 @@ public class Rmt2InventoryDaoImpl extends AccountingDaoImpl implements Inventory
 
         List<ItemMasterDto> list = new ArrayList<ItemMasterDto>();
         for (ItemMaster item : results) {
+            ItemMasterDto dto = Rmt2InventoryDtoFactory.createItemMasterInstance(item);
+            list.add(dto);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ItemMasterDto> fetchExt(ItemMasterDto criteria) throws InventoryDaoException {
+        VwItemMaster obj = InventoryDaoFactory.createCriteriaExt(criteria);
+        obj.addOrderBy(ItemMaster.PROP_DESCRIPTION, ItemMaster.ORDERBY_ASCENDING);
+
+        // Retrieve Data
+        List<VwItemMaster> results = null;
+        try {
+            results = this.client.retrieveList(obj);
+            if (results == null || results.isEmpty()) {
+                return null;
+            }
+        } catch (DatabaseException e) {
+            throw new CannotRetrieveException(
+                    "Database Error occurred fetching inventory item master using the following selection criteria: "
+                            + obj.toString(), e);
+        }
+
+        List<ItemMasterDto> list = new ArrayList<ItemMasterDto>();
+        for (VwItemMaster item : results) {
             ItemMasterDto dto = Rmt2InventoryDtoFactory.createItemMasterInstance(item);
             list.add(dto);
         }

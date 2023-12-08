@@ -50,6 +50,21 @@ public interface InventoryDao extends DaoClient {
             throws InventoryDaoException;
 
     /**
+     * Retrieves one or more extended data inventory items using the individual
+     * properties contained in <i>criteria</i> as selection criteria.
+     * 
+     * @param criteria
+     *            An instance of {@link ItemMasterDto} where each property
+     *            containing a value is used to build selection criteria for the
+     *            sake querying a data source.
+     * @return A List of ItemMasterDto objects representing one or more items or
+     *         null when no data is found.
+     * @throws InventoryDaoException
+     *             General data access errors
+     */
+    List<ItemMasterDto> fetchExt(ItemMasterDto criteria) throws InventoryDaoException;
+
+    /**
      * Retrieves one or more vendor inventory item objects using various
      * selection criteria.
      * 

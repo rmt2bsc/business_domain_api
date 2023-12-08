@@ -6,6 +6,7 @@ import org.dao.mapping.orm.rmt2.ItemMasterStatusHist;
 import org.dao.mapping.orm.rmt2.ItemMasterType;
 import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwItemAssociations;
+import org.dao.mapping.orm.rmt2.VwItemMaster;
 import org.dao.mapping.orm.rmt2.VwItemStatusHistory;
 import org.dao.mapping.orm.rmt2.VwVendorItems;
 import org.dto.ItemAssociationDto;
@@ -252,6 +253,54 @@ public class InventoryDaoFactory extends RMT2Base {
             if (criteria.getItemName() != null) {
                 obj.addLikeClause(ItemMaster.PROP_DESCRIPTION,
                         criteria.getItemName());
+                obj.setDescription(criteria.getItemName());
+            }
+        }
+        return obj;
+    }
+
+    /**
+     * Creates and returns an <i>VwItemMaster</i> object containing selection
+     * criteria obtained from an instance of <i>ItemMasterDto</i>.
+     * 
+     * @param criteria
+     *            an instance of {@link ItemMasterDto} which the following
+     *            properties are recognized:
+     *            <ul>
+     *            <li>itemId</li>
+     *            <li>itemSerialNo</li>
+     *            <li>itemTypeId</li>
+     *            <li>creditorId</li>
+     *            <li>vendorItemNo</li>
+     *            <li>description</li>
+     *            </ul>
+     * @return an instance of {@link ItemMaster}
+     */
+    public static final VwItemMaster createCriteriaExt(ItemMasterDto criteria) {
+        VwItemMaster obj = new VwItemMaster();
+        if (criteria != null) {
+            if (criteria.getItemId() > 0) {
+                obj.addCriteria(VwItemMaster.PROP_ID, criteria.getItemId());
+                obj.setId(criteria.getItemId());
+            }
+            if (criteria.getItemSerialNo() != null) {
+                obj.addLikeClause(VwItemMaster.PROP_ITEMSERIALNO, criteria.getItemSerialNo());
+                obj.setItemSerialNo(criteria.getItemSerialNo());
+            }
+            if (criteria.getItemTypeId() > 0) {
+                obj.addCriteria(VwItemMaster.PROP_ITEMTYPEID, criteria.getItemTypeId());
+                obj.setItemTypeId(criteria.getItemTypeId());
+            }
+            if (criteria.getVendorId() > 0) {
+                obj.addCriteria(VwItemMaster.PROP_VENDORID, criteria.getVendorId());
+                obj.setVendorId(criteria.getVendorId());
+            }
+            if (criteria.getVendorItemNo() != null) {
+                obj.addLikeClause(VwItemMaster.PROP_VENDORITEMNO, criteria.getVendorItemNo());
+                obj.setVendorItemNo(criteria.getVendorItemNo());
+            }
+            if (criteria.getItemName() != null) {
+                obj.addLikeClause(VwItemMaster.PROP_DESCRIPTION, criteria.getItemName());
                 obj.setDescription(criteria.getItemName());
             }
         }

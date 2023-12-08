@@ -33,6 +33,23 @@ public interface InventoryApi extends TransactionApi {
             throws InventoryApiException;
 
     /**
+     * Retrieves an ArrayList of of any inventory related object based on the
+     * base view, base class, and custom criteria supplied by the user. User is
+     * responsible for setting the base view and class so that the API will know
+     * what data to retrieve.
+     * 
+     * @param criteria
+     *            An instance of {@link ItemMasterDto} representing the
+     *            selection criteria.
+     * @returnA A List of {@link ItemMasterDto} objects which contains extended
+     *          inventory master item data.
+     * @throws InventoryApiException
+     *             <i>criteria</i> contains invalid predicate or general data
+     *             access error
+     */
+    List<ItemMasterDto> getItemExt(ItemMasterDto criteria) throws InventoryApiException;
+
+    /**
      * Retrieves an item object by item id.
      * 
      * @param itemId

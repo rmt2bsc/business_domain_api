@@ -103,6 +103,23 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         }
     }
     
+    @Override
+    public List<ItemMasterDto> getItemExt(ItemMasterDto criteria) throws InventoryApiException {
+        try {
+            Verifier.verifyNotNull(criteria);
+        } catch (VerifyException e) {
+            throw new InvalidDataException("Criteria object is required", e);
+        }
+        List<ItemMasterDto> results;
+        try {
+            results = dao.fetchExt(criteria);
+            return results;
+        } catch (Exception e) {
+            this.msg = "Error querying inventory item(s)";
+            throw new InventoryApiException(this.msg, e);
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -370,7 +387,6 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         return results;
     }
 
-    
     @Override
     public List<ItemMasterTypeDto> getItemType(ItemMasterTypeDto criteria)
             throws InventoryApiException {
@@ -1849,4 +1865,5 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             throw new InventoryApiException(this.msg, e);
         }
     }
+
 }
