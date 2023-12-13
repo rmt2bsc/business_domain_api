@@ -164,6 +164,8 @@ public class InventoryDaoFactory extends RMT2Base {
         obj.setItemStatusId(hist.getItemStatusId());
         obj.setUnitCost(hist.getUnitCost());
         obj.setMarkup(hist.getMarkup());
+        // UI-30: Capture change reason
+        obj.setReason(hist.getReason());
         obj.setEffectiveDate(hist.getEffectiveDate());
         obj.setDateCreated(hist.getDateCreated());
         obj.setUserId(hist.getUpdateUserId());

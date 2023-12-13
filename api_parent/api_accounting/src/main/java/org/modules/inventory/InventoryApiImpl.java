@@ -949,6 +949,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
         imDto.setOverrideRetail(item.getOverrideRetail());
         imDto.setActive(item.getActive());
 
+        // UI-30: Variable to hold item master's change reason
+        String mainChangeReasonText = item.getChangeReason();
+
         // Perform updates
         int rc;
         try {
@@ -959,6 +962,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             ItemMasterStatusHistDto imsh = null;
             if (isNewItem) {
                 // Indicate that item is in service
+                // UI-30: Set Change reason to "Created"
+                imDto.setChangeReason("Created");
                 this.changeItemStatus(imDto, InventoryConst.ITEM_STATUS_INSRVC);
                 item.setItemId(rc);
             }
@@ -973,6 +978,8 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
                 }
                 // Change the most recent item status, which should be
                 // 'Replaced'
+                // UI-30: Set Change reason to blank
+                imDto.setChangeReason("");
                 imsh = this.changeItemStatus(imDto, InventoryConst.ITEM_STATUS_REPLACE);
 
                 // User has requested system to activate vendor item override.
@@ -994,13 +1001,16 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             // Otherwise, 'Out of Stock'.
             int itemStatusId = imDto.getQtyOnHand() <= 0 ? InventoryConst.ITEM_STATUS_OUTSTOCK
                     : InventoryConst.ITEM_STATUS_AVAIL;
+
+            // UI-30: Set Change reason to the change reason text saved off
+            // above
+            imDto.setChangeReason(mainChangeReasonText);
             imsh = this.changeItemStatus(imDto, itemStatusId);
 
             // If item is no longer active, then put in out servive status
             if (!isNewItem) {
                 if (imDto.getActive() == 0) {
-                    imsh = this.changeItemStatus(imDto,
-                            InventoryConst.ITEM_STATUS_OUTSRVC);
+                    imsh = this.changeItemStatus(imDto, InventoryConst.ITEM_STATUS_OUTSRVC);
                 }
             }
             return rc;
@@ -1857,6 +1867,9 @@ class InventoryApiImpl extends AbstractTransactionApiImpl implements InventoryAp
             imsh.setItemStatusId(newItemStatusId);
             imsh.setUnitCost(item.getUnitCost());
             imsh.setMarkup(item.getMarkup());
+
+            // UI-30: Set change reason (if applicable)
+            imsh.setReason(item.getChangeReason());
             dao.maintain(imsh);
             return imsh;
         } catch (Exception e) {

@@ -14,8 +14,7 @@ import com.api.foundation.TransactionDtoImpl;
  * @author rterrell
  * 
  */
-public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements
-        ItemMasterDto {
+public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements ItemMasterDto {
 
     private ItemMaster i;
 
@@ -24,6 +23,9 @@ public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements
     private String unitCostPredicate;
 
     private String qtyOnHandPredicate;
+
+    // UI-30: Use to manage item master change reason text
+    private String changeReason;
 
     /**
      * Create a ItemMasterRmt2OrmAdapter without performing any data adaptations
@@ -511,6 +513,18 @@ public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements
     @Override
     public void setQtyOnHandPredicate(String predicate) {
         this.qtyOnHandPredicate = predicate;
+    }
+
+    // UI-30: Added
+    @Override
+    public void setChangeReason(String value) {
+        this.changeReason = value;
+    }
+
+    // UI-30: Added
+    @Override
+    public String getChangeReason() {
+        return this.changeReason;
     }
 
 }

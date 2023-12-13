@@ -143,6 +143,7 @@ public interface ItemMasterDto extends ItemMasterTypeDto {
      * 
      * @return String
      */
+    // UI-30: Added
     String getUnitCostPredicate();
 
     /**
@@ -151,6 +152,7 @@ public interface ItemMasterDto extends ItemMasterTypeDto {
      * @param predicate
      *            String
      */
+    // UI-30: Added
     void setUnitCostPredicate(String predicate);
 
     /**
@@ -158,6 +160,7 @@ public interface ItemMasterDto extends ItemMasterTypeDto {
      * 
      * @return String
      */
+    // UI-30: Added
     String getQtyOnHandPredicate();
 
     /**
@@ -166,5 +169,22 @@ public interface ItemMasterDto extends ItemMasterTypeDto {
      * @param predicate
      *            String
      */
+    // UI-30: Added
     void setQtyOnHandPredicate(String predicate);
+
+    /**
+     * Set the Change Reason
+     * 
+     * @param value
+     */
+    // UI-30: Added
+    void setChangeReason(String value);
+
+    /**
+     * Get the Change Reason
+     * 
+     * @return String
+     */
+    // UI-30: Added
+    String getChangeReason();
 }
