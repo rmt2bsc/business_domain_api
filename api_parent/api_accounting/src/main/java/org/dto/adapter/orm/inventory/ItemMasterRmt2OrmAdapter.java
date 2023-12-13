@@ -21,6 +21,10 @@ public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements
 
     private VwItemMaster v;
 
+    private String unitCostPredicate;
+
+    private String qtyOnHandPredicate;
+
     /**
      * Create a ItemMasterRmt2OrmAdapter without performing any data adaptations
      */
@@ -467,6 +471,46 @@ public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements
             return this.v.getItemStatus();
         }
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ItemMasterDto#getUnitCostPredicate()
+     */
+    @Override
+    public String getUnitCostPredicate() {
+        return this.unitCostPredicate;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ItemMasterDto#setUnitCostPredicate(java.lang.String)
+     */
+    @Override
+    public void setUnitCostPredicate(String predicate) {
+        this.unitCostPredicate = predicate;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ItemMasterDto#getQtyOnHandPredicate()
+     */
+    @Override
+    public String getQtyOnHandPredicate() {
+        return this.qtyOnHandPredicate;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ItemMasterDto#setQtyOnHandPredicate(java.lang.String)
+     */
+    @Override
+    public void setQtyOnHandPredicate(String predicate) {
+        this.qtyOnHandPredicate = predicate;
     }
 
 }

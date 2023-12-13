@@ -17,7 +17,9 @@ import org.dto.ItemMasterTypeDto;
 import org.dto.VendorItemDto;
 
 import com.RMT2Base;
+import com.api.constants.GeneralConst;
 import com.api.persistence.DaoClient;
+import com.api.util.RMT2String2;
 
 /**
  * Factory class for creating inventory DAO related objects.
@@ -302,6 +304,38 @@ public class InventoryDaoFactory extends RMT2Base {
             if (criteria.getItemName() != null) {
                 obj.addLikeClause(VwItemMaster.PROP_DESCRIPTION, criteria.getItemName());
                 obj.setDescription(criteria.getItemName());
+            }
+
+            // UI-30: Added unit cost and its predicate
+            if (criteria.getUnitCost() > 0) {
+                if (RMT2String2.isNotEmpty(criteria.getUnitCostPredicate())
+                        && !criteria.getUnitCostPredicate().equals(GeneralConst.COND_OPS_EQUALS)) {
+                    StringBuilder sql = new StringBuilder();
+                    sql.append(" unit_cost ");
+                    sql.append(GeneralConst.translateCondOps(criteria.getUnitCostPredicate()));
+                    sql.append(" ");
+                    sql.append(criteria.getUnitCost());
+                    obj.addCustomCriteria(sql.toString());
+                }
+                else {
+                    obj.addCriteria(VwItemMaster.PROP_UNITCOST, criteria.getUnitCost());
+                }
+            }
+
+            // UI-30: Added quantity on hand and its predicate
+            if (criteria.getQtyOnHand() > 0) {
+                if (RMT2String2.isNotEmpty(criteria.getQtyOnHandPredicate())
+                        && !criteria.getQtyOnHandPredicate().equals(GeneralConst.COND_OPS_EQUALS)) {
+                    StringBuilder sql = new StringBuilder();
+                    sql.append(" qty_on_hand ");
+                    sql.append(GeneralConst.translateCondOps(criteria.getQtyOnHandPredicate()));
+                    sql.append(" ");
+                    sql.append(criteria.getQtyOnHand());
+                    obj.addCustomCriteria(sql.toString());
+                }
+                else {
+                    obj.addCriteria(VwItemMaster.PROP_QTYONHAND, criteria.getQtyOnHand());
+                }
             }
         }
         return obj;

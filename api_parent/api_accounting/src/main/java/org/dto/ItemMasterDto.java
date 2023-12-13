@@ -137,4 +137,34 @@ public interface ItemMasterDto extends ItemMasterTypeDto {
      * Gets the value of item status description
      */
     String getItemStatusDescription();
+
+    /**
+     * Get the custom predicate for Unit Cost
+     * 
+     * @return String
+     */
+    String getUnitCostPredicate();
+
+    /**
+     * Set the custom predicate for Unit Cost
+     * 
+     * @param predicate
+     *            String
+     */
+    void setUnitCostPredicate(String predicate);
+
+    /**
+     * Get the custom predicate for Quantity on Hand
+     * 
+     * @return String
+     */
+    String getQtyOnHandPredicate();
+
+    /**
+     * Set the custom predicate for Quantity on Hand
+     * 
+     * @param predicate
+     *            String
+     */
+    void setQtyOnHandPredicate(String predicate);
 }
