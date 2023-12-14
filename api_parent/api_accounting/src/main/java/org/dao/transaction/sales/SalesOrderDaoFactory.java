@@ -186,6 +186,10 @@ public class SalesOrderDaoFactory extends RMT2Base {
                 obj.addLikeClause(VwSalesOrderInvoice.PROP_INVOICENO,
                         criteria.getInvoiceNo());
             }
+            // UI-31: Added customer to selection criteria
+            if (criteria.getCustomerId() > 0) {
+                obj.addCriteria(VwSalesOrderInvoice.PROP_CUSTOMERID, criteria.getCustomerId());
+            }
         }
         return obj;
     }
