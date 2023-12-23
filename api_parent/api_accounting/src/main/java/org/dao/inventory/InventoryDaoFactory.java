@@ -287,6 +287,11 @@ public class InventoryDaoFactory extends RMT2Base {
                 obj.addCriteria(VwItemMaster.PROP_ID, criteria.getItemId());
                 obj.setId(criteria.getItemId());
             }
+            // UI-31: Recofinze a list of item id's to perfrom query.
+            if (criteria.getItemIds() != null && criteria.getItemIds().length > 0) {
+                obj.addInClause(VwItemMaster.PROP_ID, criteria.getItemIds());
+                // obj.setItemId(criteria.getItemId());
+            }
             if (criteria.getItemSerialNo() != null) {
                 obj.addLikeClause(VwItemMaster.PROP_ITEMSERIALNO, criteria.getItemSerialNo());
                 obj.setItemSerialNo(criteria.getItemSerialNo());

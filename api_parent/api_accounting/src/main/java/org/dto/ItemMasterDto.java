@@ -19,6 +19,18 @@ public interface ItemMasterDto extends ItemMasterTypeDto {
     int getItemId();
 
     /**
+     * Set the item id collection
+     */
+    // UI-31: Track list of item id's
+    void setItemIds(Integer value[]);
+
+    /**
+     * Get the item id collection
+     */
+    // UI-31: Track list of item id's
+    Integer[] getItemIds();
+
+    /**
      * Set the item description
      */
     void setItemName(String value);

@@ -27,6 +27,9 @@ public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements Item
     // UI-30: Use to manage item master change reason text
     private String changeReason;
 
+    // UI-31: Track list of item id's
+    private Integer itemIds[];
+
     /**
      * Create a ItemMasterRmt2OrmAdapter without performing any data adaptations
      */
@@ -525,6 +528,29 @@ public class ItemMasterRmt2OrmAdapter extends TransactionDtoImpl implements Item
     @Override
     public String getChangeReason() {
         return this.changeReason;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ItemMasterDto#setItemIds(java.lang.Integer[])
+     */
+    // UI-31: Track list of item id's
+    @Override
+    public void setItemIds(Integer[] value) {
+        this.itemIds = value;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.ItemMasterDto#getItemIds()
+     */
+    // UI-31: Track list of item id's
+    @Override
+    public Integer[] getItemIds() {
+        return this.itemIds;
     }
 
 }
