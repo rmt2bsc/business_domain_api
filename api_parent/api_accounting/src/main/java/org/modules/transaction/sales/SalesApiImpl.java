@@ -638,6 +638,12 @@ public class SalesApiImpl extends AbstractXactApiImpl implements SalesApi {
         try {
             // Persist base sales order changes
             logger.info("Persisiting base sales orde changes.");
+
+            // UI-31: Calculate sales order total in memory and return with
+            // results.
+            double total = this.calculateTotal(order, items);
+            order.setOrderTotal(total);
+
             rc = dao.maintain(order);
             // Remove all existing items for sales order, if applicable
             logger.info("Deleting existing sales order items.");
