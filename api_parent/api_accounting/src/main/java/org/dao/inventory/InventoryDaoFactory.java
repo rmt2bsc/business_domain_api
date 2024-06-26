@@ -344,6 +344,11 @@ public class InventoryDaoFactory extends RMT2Base {
                     obj.addCriteria(VwItemMaster.PROP_QTYONHAND, criteria.getQtyOnHand());
                 }
             }
+
+            // UI-31: Capture custom criteria
+            if (criteria.getCriteria() != null) {
+                obj.addCustomCriteria(criteria.getCriteria());
+            }
         }
         return obj;
     }
