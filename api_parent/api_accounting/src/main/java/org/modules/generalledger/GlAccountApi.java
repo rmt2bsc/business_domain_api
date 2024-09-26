@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dto.AccountCategoryDto;
 import org.dto.AccountDto;
+import org.dto.AccountExtDto;
 import org.dto.AccountTypeDto;
 
 import com.api.foundation.TransactionApi;
@@ -16,6 +17,21 @@ import com.api.foundation.TransactionApi;
  * 
  */
 public interface GlAccountApi extends TransactionApi {
+
+    /**
+     * Returns one or more general ledger account objects based on various forms
+     * of selection criteria.
+     * <p>
+     * To select all accounts, pass <i>criteria</i> as a null value.
+     * 
+     * @param criteria
+     *            an instance of {@link AccountExtDto} to filter results or null
+     *            to fetch all accounts.
+     * @return A List of {@link AccountExtDto} or null if no data is found.
+     * @throws GeneralLedgerApiException
+     *             data access errors
+     */
+    List<AccountExtDto> getAccount(AccountExtDto criteria) throws GeneralLedgerApiException;
 
     /**
      * Returns one or more general ledger account objects based on various forms

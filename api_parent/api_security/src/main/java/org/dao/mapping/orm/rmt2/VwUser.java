@@ -25,6 +25,8 @@ public class VwUser extends OrmBean {
   public static final String PROP_LOGINID = "LoginId";
 /** The property name constant equivalent to property, GrpId, of respective DataSource view. */
   public static final String PROP_GRPID = "GrpId";
+/** The property name constant equivalent to property, GrpName, of respective DataSource view. */
+  public static final String PROP_GRPNAME = "GrpName";
 /** The property name constant equivalent to property, Username, of respective DataSource view. */
   public static final String PROP_USERNAME = "Username";
 /** The property name constant equivalent to property, Firstname, of respective DataSource view. */
@@ -66,6 +68,8 @@ public class VwUser extends OrmBean {
   private int loginId;
 /** The javabean property equivalent of database column vw_user.grp_id */
   private int grpId;
+/** The javabean property equivalent of database column vw_user.grp_name */
+  private String grpName;
 /** The javabean property equivalent of database column vw_user.username */
   private String username;
 /** The javabean property equivalent of database column vw_user.firstname */
@@ -134,6 +138,18 @@ public class VwUser extends OrmBean {
  */
   public int getGrpId() {
     return this.grpId;
+  }
+/**
+ * Sets the value of member variable grpName
+ */
+  public void setGrpName(String value) {
+    this.grpName = value;
+  }
+/**
+ * Gets the value of member variable grpName
+ */
+  public String getGrpName() {
+    return this.grpName;
   }
 /**
  * Sets the value of member variable username
@@ -358,6 +374,9 @@ public boolean equals(Object obj) {
    if (EqualityAssistant.notEqual(this.grpId, other.grpId)) {
       return false;
    }
+   if (EqualityAssistant.notEqual(this.grpName, other.grpName)) {
+      return false;
+   }
    if (EqualityAssistant.notEqual(this.username, other.username)) {
       return false;
    }
@@ -407,6 +426,7 @@ public boolean equals(Object obj) {
 public int hashCode() {
    return HashCodeAssistant.combineHashCodes(HashCodeAssistant.hashObject(this.loginId),
                HashCodeAssistant.hashObject(this.grpId),
+               HashCodeAssistant.hashObject(this.grpName),
                HashCodeAssistant.hashObject(this.username),
                HashCodeAssistant.hashObject(this.firstname),
                HashCodeAssistant.hashObject(this.lastname),
@@ -427,6 +447,7 @@ public int hashCode() {
 public String toString() {
    return "VwUser [loginId=" + loginId + 
           ", grpId=" + grpId + 
+          ", grpName=" + grpName + 
           ", username=" + username + 
           ", firstname=" + firstname + 
           ", lastname=" + lastname + 

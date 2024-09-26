@@ -141,7 +141,8 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         
         // Determine the query sequence for obtaining combined creditor/common contact data.
         // local-to-remote or remote-to-local.
-        if (useContactParms && !useCreditorParms) {
+        // UI-28: Added condition that will consider getting all creditors
+        if ((useContactParms && !useCreditorParms) || (!useContactParms && !useCreditorParms)) {
             // First, fetch common contact data and then creditor specifc data.
             contactResults = this.getContactInfo(criteria);
             // Get list of business id's to use for fetching creditor records.
@@ -173,13 +174,14 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
     }
 
     /**
-     * Combines the a list of creditor subsidiary data with a list of common contact data.
+     * Combines the a list of creditor subsidiary data with a list of common
+     * Addressbook contact data.
      * 
      * @param subsidiary
      * @param contact
-     * @return a List<CreditorDto> sorted by contact name or null when 
-     *          either <i>subsidiaries</i> or <i>contacts</i> equal null
-     *          or if there is nothing to merge.
+     * @return a List<CreditorDto> sorted by contact name or null when either
+     *         <i>subsidiaries</i> or <i>contacts</i> equal null or if there is
+     *         nothing to merge.
      */
     @Override
     protected List<CreditorDto> mergeContactInfo(List<CreditorDto> subsidiaries,
@@ -191,6 +193,10 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
         catch (VerifyException e) {
             return null;
         }
+
+        // UI-28: Create a Map of all creditors and their balances
+        Map<Integer, Double> balances = this.dao.getBalances();
+
         List<CreditorDto> mergedCreditors = new ArrayList<CreditorDto>();
         for (CreditorDto creditor : subsidiaries) {
             SubsidiaryContactInfoDto contact = null;
@@ -217,6 +223,19 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             creditor.setZip(contact.getZip());
             creditor.setZipext(contact.getZipext());
             creditor.setShortName(contact.getShortName());
+
+            // UI-28: Capture business entity type id, business service type
+            // id, contact email, contact main phone, contact fax, and website.
+            creditor.setEntityTypeId(contact.getEntityTypeId());
+            creditor.setServTypeId(contact.getServTypeId());
+            creditor.setContactEmail(contact.getContactEmail());
+            creditor.setWebsite(contact.getWebsite());
+            creditor.setPhoneCompany(contact.getPhoneCompany());
+            creditor.setPhoneFax(contact.getPhoneFax());
+
+            // UI-28: Get target creditor's balance from the Map
+            Double bal = balances.get(contact.getContactId());
+            creditor.setBalance(bal);
             mergedCreditors.add(creditor);
         }
 
@@ -631,9 +650,6 @@ class CreditorApiImpl extends AbstractSubsidiaryApiImpl<CreditorDto> implements 
             logger.error(this.msg, e);
             throw new CreditorApiException(e);
         }
-
-        // TODO: In the future, add logic to update address book contact profile
-        // with data changes assoicated with this creditor
     }
 
     private void prepareNewCreditor(CreditorDto creditor) throws CreditorApiException {

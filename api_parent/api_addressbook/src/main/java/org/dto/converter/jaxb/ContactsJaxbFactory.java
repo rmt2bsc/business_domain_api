@@ -209,15 +209,15 @@ public class ContactsJaxbFactory extends RMT2Base {
         BusinessType bt = f.createBusinessType();
         bt.setBusinessId(BigInteger.valueOf(contact.getContactId()));
 
-        try {
-            CodeDetailType cdt = this.getCodeDetail(contact.getEntityTypeId());
-            bt.setEntityType(cdt);
-            cdt = this.getCodeDetail(contact.getServTypeId());
-            bt.setServiceType(cdt);
-        } catch (LookupDataApiException e) {
-            // Do nothing...
-        }
+        // Setup business service type and entity type code objects
+        CodeDetailType cdt = this.getCodeDetail(contact.getEntityTypeId(), contact.getEntityTypeGrpId(),
+                contact.getEntityTypeShortdesc(), contact.getEntityTypeLongtdesc());
+        bt.setEntityType(cdt);
+        cdt = this.getCodeDetail(contact.getServTypeId(), contact.getServTypeGrpId(), contact.getServTypeShortdesc(),
+                contact.getServTypeLongtdesc());
+        bt.setServiceType(cdt);
 
+        // Setup business data
         bt.setLongName(contact.getContactName());
         bt.setShortName(contact.getShortName());
         bt.setContactFirstname(contact.getContactFirstname());
@@ -228,6 +228,7 @@ public class ContactsJaxbFactory extends RMT2Base {
         bt.setTaxId(contact.getTaxId());
         bt.setWebsite(contact.getWebsite());
 
+        // Setup business address data
         AddressType at = this.getAddress(contact);
         bt.setAddress(at);
         return bt;
@@ -382,6 +383,8 @@ public class ContactsJaxbFactory extends RMT2Base {
      * @return {@link com.xml.schema.bindings.CodeDetailType CodeDetailType} or
      *         null when code = zero.
      * @throws GeneralCodeException
+     * @deprecated
+     * 
      */
     public CodeDetailType getCodeDetail(int code) throws LookupDataApiException {
         if (code == 0) {
@@ -400,12 +403,32 @@ public class ContactsJaxbFactory extends RMT2Base {
     }
 
     /**
+     * Creates a CodeDetailType instance using various pieces of parameter data.
+     * 
+     * @param code
+     * @param grp
+     * @param shortName
+     * @param longName
+     * @return {@link CodeDetailType}
+     */
+    protected CodeDetailType getCodeDetail(int code, int grp, String shortName, String longName) {
+        ObjectFactory f = new ObjectFactory();
+        CodeDetailType cdt = f.createCodeDetailType();
+        cdt.setCodeId(BigInteger.valueOf(code));
+        cdt.setGroupId(BigInteger.valueOf(grp));
+        cdt.setLongdesc(longName);
+        cdt.setShortdesc(shortName);
+        return cdt;
+    }
+
+    /**
      * Creates a JAXB BusinessType instance that is initialized by
      * <i>VwBusinessAddress</i> data.
      * 
      * @param addr
      *            {@link com.bean.VwBusinessAddress VwBusinessAddress}
      * @return {@link com.xml.schema.bindings.AddressType AddressType}
+     * 
      */
     public AddressType getAddress(ContactDto contact) {
         ObjectFactory f = new ObjectFactory();
@@ -422,13 +445,7 @@ public class ContactsJaxbFactory extends RMT2Base {
         at.setAddr2(contact.getAddr2());
         at.setAddr3(contact.getAddr3());
         at.setAddr4(contact.getAddr4());
-        try {
-            ZipcodeType z = this.getZipcode(contact.getZip());
-            at.setZip(z);
-        } catch (PostalApiException e) {
-            // Do nothing...
-        }
-        at.setZipExt(BigInteger.valueOf(contact.getZipext()));
+
         at.setPhoneCell(contact.getPhoneCell());
         at.setPhoneFax(contact.getPhoneFax());
         at.setPhoneHome(contact.getPhoneHome());
@@ -436,10 +453,33 @@ public class ContactsJaxbFactory extends RMT2Base {
         at.setPhonePager(contact.getPhonePager());
         at.setPhoneWork(contact.getPhoneWork());
         at.setPhoneWorkExt(contact.getPhoneExt());
+
+        ZipcodeType z = this.getZipcode(contact);
+        at.setZip(z);
+        at.setZipExt(BigInteger.valueOf(contact.getZipext()));
+
         return at;
     }
 
-      /**
+    /**
+     * Creates a ZipcodeType instance from data obtained from an instance of
+     * ContactDto
+     * 
+     * @param z
+     *            {@link ContactDto}
+     * @return {@link ZipcodeType}
+     */
+    private ZipcodeType getZipcode(ContactDto z) {
+        ObjectFactory f = new ObjectFactory();
+        ZipcodeType zip = f.createZipcodeType();
+        BigInteger zipcodeVal = BigInteger.valueOf(z.getZip());
+        zip.setZipcode(zipcodeVal == BigInteger.ZERO ? null : zipcodeVal);
+        zip.setCity(z.getCity());
+        zip.setState(z.getState());
+        return zip;
+    }
+
+    /**
      * Creates a ZipcodeType instance from data obtained from the zipcode table
      * using <i>zipId</i> as the primary key. The parameter, <i>zipId</i>, is
      * used to fetch the record from the database and migrate the data to an
@@ -450,6 +490,7 @@ public class ContactsJaxbFactory extends RMT2Base {
      *            table
      * @return {@link com.xml.schema.bindings.ZipcodeType ZipcodeType}
      * @throws ZipcodeException
+     * @deprecated
      */
     public ZipcodeType getZipcode(int zipId) throws PostalApiException {
         if (zipId == 0) {

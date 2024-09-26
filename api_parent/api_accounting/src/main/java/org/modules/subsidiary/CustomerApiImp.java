@@ -133,7 +133,8 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         
         // Determine the query sequence for obtaining combined customer/common contact data.
         // local-to-remote or remote-to-local.
-        if (useContactParms && !useCustomerParms) {
+        // UI-28: Added condition that will consider getting all creditors
+        if ((useContactParms && !useCustomerParms) || (!useContactParms && !useCustomerParms)) {
             // First, fetch common contact data and then customer specifc data.
             contactResults = this.getContactInfo(criteria);
             // Get list of business id's to use for fetching customer records.
@@ -183,6 +184,10 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
         catch (VerifyException e) {
             return null;
         }
+
+        // UI-28: Create a Map of all creditors and their balances
+        Map<Integer, Double> balances = this.dao.getBalances();
+
         List<CustomerDto> mergedCustomers = new ArrayList<CustomerDto>();
         for (CustomerDto customer : subsidiaries) {
             SubsidiaryContactInfoDto contact = null;
@@ -209,6 +214,20 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             customer.setZip(contact.getZip());
             customer.setZipext(contact.getZipext());
             customer.setShortName(contact.getShortName());
+
+            // UI-28: Capture business entity type id, business service type
+            // id, contact email, contact main phone, contact fax, and website.
+            customer.setEntityTypeId(contact.getEntityTypeId());
+            customer.setServTypeId(contact.getServTypeId());
+            customer.setContactEmail(contact.getContactEmail());
+            customer.setWebsite(contact.getWebsite());
+            customer.setPhoneCompany(contact.getPhoneCompany());
+            customer.setPhoneFax(contact.getPhoneFax());
+
+            // UI-28: Get target customer's balance from the Map
+            Double bal = balances.get(contact.getContactId());
+            customer.setBalance(bal);
+
             mergedCustomers.add(customer);
         }
 
@@ -515,8 +534,6 @@ class CustomerApiImp extends AbstractSubsidiaryApiImpl<CustomerDto> implements C
             logger.error(this.msg, e);
             throw new CustomerApiException(e);
         }
-        // TODO: In the future, add logic to update address book contact profile
-        // with data changes assoicated with this customer
     }
 
     private void prepareNewCustomer(CustomerDto customer) throws CustomerApiException {

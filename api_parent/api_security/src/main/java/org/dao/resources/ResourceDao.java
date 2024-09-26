@@ -63,6 +63,15 @@ public interface ResourceDao extends DaoClient {
     List<ResourceDto> fetchResourceSubType(ResourceDto criteria) throws ResourceDaoException;
 
     /**
+     * Fetch all resource sub type records joined with Resource Type data.
+     * 
+     * @return A List of {@link ResourceDto} objects containting resource sub
+     *         type data.
+     * @throws ResourceDaoException
+     */
+    List<ResourceDto> fetchVwResourceType(ResourceDto criteria) throws ResourceDaoException;
+
+    /**
      * Fetch a single resource sub type record by its resource sub type id.
      * 
      * @param resourceSubTypeId

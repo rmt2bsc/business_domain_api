@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DataSource Name="VwCustomerBalanceView">
-   <Sql From="vw_customer_balance" GroupBy="" Having="" OrderBy="" Select="customer_id, &#xA;&#x9;&#x9;balance" Where="" />
+   <Sql From="vw_customer_balance" GroupBy="" Having="" OrderBy="" Select="business_id, &#xA;&#x9;&#x9;balance" Where="" />
    <TableUsage DBName="vw_customer_balance" Name="VwCustomerBalanceTable" Updateable="true" />
-   <ColAttr Computed="false" DBName="customer_id" DataValue="" DisplayHeader="" IsNull="false" JavaType="int" Name="CustomerId" PrimaryKey="false" SqlType="integer" TableName="VwCustomerBalanceTable" Updateable="true" />
+   <ColAttr Computed="false" DBName="business_id" DataValue="" DisplayHeader="" IsNull="true" JavaType="int" Name="BusinessId" PrimaryKey="false" SqlType="integer" TableName="VwCustomerBalanceTable" Updateable="true" />
    <ColAttr Computed="false" DBName="balance" DataValue="" DisplayHeader="" IsNull="false" JavaType="double" Name="Balance" PrimaryKey="false" SqlType="numeric" TableName="VwCustomerBalanceTable" Updateable="true" />
 </DataSource>
 

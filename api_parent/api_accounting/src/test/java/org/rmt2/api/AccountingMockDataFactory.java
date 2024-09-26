@@ -25,6 +25,7 @@ import org.dao.mapping.orm.rmt2.VendorItems;
 import org.dao.mapping.orm.rmt2.VwAccount;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
 import org.dao.mapping.orm.rmt2.VwCommonContact;
+import org.dao.mapping.orm.rmt2.VwCreditorBalance;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
 import org.dao.mapping.orm.rmt2.VwCustomerBalance;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
@@ -1251,9 +1252,22 @@ public class AccountingMockDataFactory {
      * @param balance
      * @return
      */
-    public static final VwCustomerBalance createVwCustomerBalance(int customerId, double balance) {
+    public static final VwCustomerBalance createVwCustomerBalance(int businessId, double balance) {
         VwCustomerBalance o = new VwCustomerBalance();
-        o.setCustomerId(customerId);
+        o.setBusinessId(businessId);
+        o.setBalance(balance);
+        return o;
+    }
+
+    /**
+     * 
+     * @param businessId
+     * @param balance
+     * @return
+     */
+    public static final VwCreditorBalance createVwCreditorBalance(int businessId, double balance) {
+        VwCreditorBalance o = new VwCreditorBalance();
+        o.setBusinessId(businessId);
         o.setBalance(balance);
         return o;
     }

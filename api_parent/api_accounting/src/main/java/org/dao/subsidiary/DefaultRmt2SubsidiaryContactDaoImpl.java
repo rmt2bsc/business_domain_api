@@ -1,6 +1,7 @@
 package org.dao.subsidiary;
 
 import java.util.List;
+import java.util.Map;
 
 import org.dto.SubsidiaryXactHistoryDto;
 
@@ -48,8 +49,13 @@ public class DefaultRmt2SubsidiaryContactDaoImpl extends
      * @see org.dao.subsidiary.SubsidiaryDao#fetchTransactionHistory(int)
      */
     @Override
-    public List<SubsidiaryXactHistoryDto> fetchTransactionHistory(
-            int subsidiaryId) throws SubsidiaryDaoException {
+    public List<SubsidiaryXactHistoryDto> fetchTransactionHistory(int subsidiaryId) throws SubsidiaryDaoException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Map<Integer, Double> getBalances() throws SubsidiaryDaoException {
         // TODO Auto-generated method stub
         return null;
     }

@@ -1,7 +1,9 @@
 package org.dao.subsidiary;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.CustomerActivity;
@@ -24,8 +26,7 @@ import com.api.util.UserTimestamp;
  * @author Roy Terrell
  * 
  */
-class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
-        implements CustomerDao {
+class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl implements CustomerDao {
 
     /**
      * Construce a Rmt2OrmCustomerDaoImpl object initialized with a connection
@@ -288,7 +289,6 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
     @Override
     public double calculateBalance(int customerId) throws SubsidiaryDaoException {
         VwCustomerBalance criteria = new VwCustomerBalance();
-        criteria.addCriteria(VwCustomerBalance.PROP_CUSTOMERID, customerId);
         Object results = this.client.retrieveObject(criteria);
         if (results == null) {
             return 0;
@@ -298,5 +298,22 @@ class Rmt2OrmCustomerDaoImpl extends AbstractRmt2SubsidiaryContactDaoImpl
             obj =(VwCustomerBalance) results; 
         }
         return obj.getBalance();
+    }
+
+    // UI-28: Added for fetching balances for all customers
+    @Override
+    public Map<Integer, Double> getBalances() throws SubsidiaryDaoException {
+        // Retrieve balances for all creditors
+        VwCustomerBalance criteria = new VwCustomerBalance();
+        List<VwCustomerBalance> results = this.client.retrieveList(criteria);
+        if (results == null || results.isEmpty()) {
+            return null;
+        }
+
+        Map<Integer, Double> map = new HashMap<>();
+        for (VwCustomerBalance item : results) {
+            map.put(item.getBusinessId(), item.getBalance());
+        }
+        return map;
     }
 }

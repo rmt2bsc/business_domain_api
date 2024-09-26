@@ -161,4 +161,9 @@ class DefaultResourceImpl extends SecurityDaoImpl implements ResourceDao {
     public List<ResourceDto> fetchResourceSubType(ResourceDto criteria) throws ResourceDaoException {
         return null;
     }
+
+    @Override
+    public List<ResourceDto> fetchVwResourceType(ResourceDto criteria) throws ResourceDaoException {
+        return null;
+    }
 }

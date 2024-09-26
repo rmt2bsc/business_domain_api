@@ -1,7 +1,7 @@
 package org.rmt2.api.subsidiary;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -13,7 +13,9 @@ import org.dao.mapping.orm.rmt2.CreditorType;
 import org.dao.mapping.orm.rmt2.Customer;
 import org.dao.mapping.orm.rmt2.GlAccounts;
 import org.dao.mapping.orm.rmt2.VwBusinessAddress;
+import org.dao.mapping.orm.rmt2.VwCreditorBalance;
 import org.dao.mapping.orm.rmt2.VwCreditorXactHist;
+import org.dao.mapping.orm.rmt2.VwCustomerBalance;
 import org.dao.mapping.orm.rmt2.VwCustomerXactHist;
 import org.junit.After;
 import org.junit.Assert;
@@ -47,6 +49,10 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
     protected List<GlAccounts> mockSingleCreditorGLAccountFetchResponse;
     protected List<GlAccounts> mockSingleCustomerGLAccountFetchResponse;
 
+    // UI-28: Decalred for testing creditor and customer balance fetching
+    protected List<VwCreditorBalance> mockCreditorBalance;
+    protected List<VwCustomerBalance> mockCustomerBalance;
+
     /**
      * @throws java.lang.Exception
      */
@@ -69,6 +75,43 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
         this.mockCustomerXactHistoryResponse = this.createMockFetchCustomerXactHistoryResponse();
         this.mockSingleCreditorGLAccountFetchResponse = this.createMockSingleCreditorGLAccountFetchResponse();
         this.mockSingleCustomerGLAccountFetchResponse = this.createMockSingleCustomerGLAccountFetchResponse();
+
+        // UI-28: Added for mocking creditor balance.
+        this.mockCreditorBalance = this.createMockCreditorBalance();
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwCreditorBalance.class)))
+                    .thenReturn(this.mockCreditorBalance);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+        // UI-28: Added for mocking customer balance.
+        this.mockCustomerBalance = this.createMockCustomerBalance();
+        try {
+            when(this.mockPersistenceClient.retrieveList(isA(VwCustomerBalance.class)))
+                    .thenReturn(this.mockCustomerBalance);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fetch single xact test case setup failed");
+        }
+
+    }
+
+    // UI-28: Added for mocking creditor balance.
+    private List<VwCreditorBalance> createMockCreditorBalance() {
+        List<VwCreditorBalance> list = new ArrayList<VwCreditorBalance>();
+        VwCreditorBalance bal = AccountingMockDataFactory.createVwCreditorBalance(200, 100.00);
+        list.add(bal);
+        return list;
+    }
+
+    // UI-28: Added for mocking customer balance.
+    private List<VwCustomerBalance> createMockCustomerBalance() {
+        List<VwCustomerBalance> list = new ArrayList<VwCustomerBalance>();
+        VwCustomerBalance bal = AccountingMockDataFactory.createVwCustomerBalance(200, 100.00);
+        list.add(bal);
+        return list;
     }
 
     /**
@@ -342,7 +385,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
         // matcher in order for this to work.
         try {
             when(this.mockPersistenceClient
-                    .retrieveList(any(VwBusinessAddress.class))).thenReturn(
+                    .retrieveList(isA(VwBusinessAddress.class))).thenReturn(
                     this.mockBusinessContactFetchSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,7 +416,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
             // contact id as criteria. The setContactIdList is directly
             // associated with the adapter and not the Customer ORM class. So
             // the eq matcher does not work here.
-            when(this.mockPersistenceClient.retrieveList(any(Customer.class)))
+            when(this.mockPersistenceClient.retrieveList(isA(Customer.class)))
                     .thenReturn(this.mockCustomerFetchSingleResponse);
         } catch (Exception e) {
             e.printStackTrace();
@@ -400,7 +443,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
             VwBusinessAddress busContactCriteria, Customer customerCriteria) {
         try {
             when(this.mockPersistenceClient
-                    .retrieveList(any(VwBusinessAddress.class))).thenReturn(
+                    .retrieveList(isA(VwBusinessAddress.class))).thenReturn(
                             this.mockBusinessContactFetchAllResponse);
         } catch (Exception e) {
             e.printStackTrace();
@@ -409,7 +452,7 @@ public class SubsidiaryApiTestData extends BaseAccountingDaoTest {
         }
 
         try {
-            when(this.mockPersistenceClient.retrieveList(eq(customerCriteria)))
+            when(this.mockPersistenceClient.retrieveList(isA(Customer.class)))
                     .thenReturn(this.mockCustomerFetchAllResponse);
         } catch (Exception e) {
             e.printStackTrace();

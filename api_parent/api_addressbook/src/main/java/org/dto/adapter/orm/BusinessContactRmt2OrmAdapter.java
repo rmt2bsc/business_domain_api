@@ -22,6 +22,7 @@ import com.api.util.assistants.HashCodeAssistant;
 class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements BusinessContactDto {
 
     private Business bus;
+    private VwBusinessAddress busExt;
     private List<Integer> businessIdList;
 
     /**
@@ -36,6 +37,7 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
     protected BusinessContactRmt2OrmAdapter(VwBusinessAddress bus) {
         super(bus);
         this.bus = new Business();
+        this.busExt = new VwBusinessAddress();
         if (bus != null) {
             this.bus.setBusinessId(bus.getBusinessId());
             this.bus.setEntityTypeId(bus.getBusEntityTypeId());
@@ -50,6 +52,31 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
             this.bus.setTaxId(bus.getBusTaxId());
             this.bus.setWebsite(bus.getBusWebsite());
             this.bus.setUserId("N/A");
+            
+            // Get extended data
+            this.busExt.setBusServTypeGrpId(bus.getBusServTypeGrpId());
+            this.busExt.setBusServTypeLongdesc(bus.getBusServTypeLongdesc());
+            this.busExt.setBusServTypeShortdesc(bus.getBusServTypeShortdesc());
+            this.busExt.setBusEntityTypeGrpId(bus.getBusEntityTypeGrpId());
+            this.busExt.setBusEntityTypeLongdesc(bus.getBusEntityTypeLongdesc());
+            this.busExt.setBusEntityTypeShortdesc(bus.getBusEntityTypeShortdesc());
+            this.busExt.setAddrId(bus.getAddrId());
+            this.busExt.setAddr1(bus.getAddr1());
+            this.busExt.setAddr2(bus.getAddr2());
+            this.busExt.setAddr3(bus.getAddr3());
+            this.busExt.setAddr4(bus.getAddr4());
+            this.busExt.setZipCity(bus.getZipCity());
+            this.busExt.setZipState(bus.getZipState());
+            this.busExt.setAddrZip(bus.getAddrZip());
+            this.busExt.setAddrZipext(bus.getAddrZipext());
+            this.busExt.setAddrPhoneCell(bus.getAddrPhoneCell());
+            this.busExt.setAddrPhoneExt(bus.getAddrPhoneExt());
+            this.busExt.setAddrPhoneFax(bus.getAddrPhoneFax());
+            this.busExt.setAddrPhoneHome(bus.getAddrPhoneHome());
+            this.busExt.setAddrPhoneMain(bus.getAddrPhoneMain());
+            this.busExt.setAddrPhonePager(bus.getAddrPhonePager());
+            this.busExt.setAddrPhoneWork(bus.getAddrPhoneWork());
+            
         }
 
         this.dateCreated = this.bus.getDateCreated();
@@ -79,6 +106,39 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
         this.bus = bus;
         this.setContactType(ContactsConst.CONTACT_TYPE_BUSINESS);
         this.businessIdList = new ArrayList<Integer>();
+
+        // Get extended data
+        this.busExt = new VwBusinessAddress();
+        if (bus != null) {
+            this.busExt.setBusinessId(bus.getBusinessId());
+            this.busExt.setBusEntityTypeId(bus.getEntityTypeId());
+            this.busExt.setBusServTypeId(bus.getServTypeId());
+            this.busExt.setBusLongname(bus.getLongname());
+            this.busExt.setBusShortname(bus.getShortname());
+            this.busExt.setContactEmail(bus.getContactEmail());
+            this.busExt.setBusContactExt(bus.getContactExt());
+            this.busExt.setBusContactFirstname(bus.getContactFirstname());
+            this.busExt.setBusContactLastname(bus.getContactLastname());
+            this.busExt.setBusContactPhone(bus.getContactPhone());
+            this.busExt.setBusTaxId(bus.getTaxId());
+            this.busExt.setBusWebsite(bus.getWebsite());
+        }
+        if (addr != null) {
+            this.busExt.setAddrId(addr.getAddrId());
+            this.busExt.setAddr1(addr.getAddr1());
+            this.busExt.setAddr2(addr.getAddr2());
+            this.busExt.setAddr3(addr.getAddr3());
+            this.busExt.setAddr4(addr.getAddr4());
+            this.busExt.setAddrZip(addr.getZip());
+            this.busExt.setAddrZipext(addr.getZipext());
+            this.busExt.setAddrPhoneCell(addr.getPhoneCell());
+            this.busExt.setAddrPhoneExt(addr.getPhoneExt());
+            this.busExt.setAddrPhoneFax(addr.getPhoneFax());
+            this.busExt.setAddrPhoneHome(addr.getPhoneHome());
+            this.busExt.setAddrPhoneMain(addr.getPhoneMain());
+            this.busExt.setAddrPhonePager(addr.getPhonePager());
+            this.busExt.setAddrPhoneWork(addr.getPhoneWork());
+        }
     }
 
     /*
@@ -366,11 +426,19 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
                 HashCodeAssistant.hashObject(this.getContactName()),
                 HashCodeAssistant.hashObject(this.getContactPhone()),
                 HashCodeAssistant.hashObject(this.getContactType()),
-                HashCodeAssistant.hashObject(this.getEntityTypeId()), HashCodeAssistant.hashObject(this.getPhoneCell()),
+                HashCodeAssistant.hashObject(this.getEntityTypeId()),
+                HashCodeAssistant.hashObject(this.getEntityTypeGrpId()),
+                HashCodeAssistant.hashObject(this.getEntityTypeLongtdesc()),
+                HashCodeAssistant.hashObject(this.getEntityTypeShortdesc()),
+                HashCodeAssistant.hashObject(this.getPhoneCell()),
                 HashCodeAssistant.hashObject(this.getPhoneCompany()), HashCodeAssistant.hashObject(this.getPhoneExt()),
                 HashCodeAssistant.hashObject(this.getPhoneFax()), HashCodeAssistant.hashObject(this.getPhoneHome()),
                 HashCodeAssistant.hashObject(this.getPhonePager()), HashCodeAssistant.hashObject(this.getPhoneWork()),
-                HashCodeAssistant.hashObject(this.getServTypeId()), HashCodeAssistant.hashObject(this.getShortName()),
+                HashCodeAssistant.hashObject(this.getServTypeId()),
+                HashCodeAssistant.hashObject(this.getServTypeGrpId()),
+                HashCodeAssistant.hashObject(this.getServTypeLongtdesc()),
+                HashCodeAssistant.hashObject(this.getServTypeShortdesc()),
+                HashCodeAssistant.hashObject(this.getShortName()),
                 HashCodeAssistant.hashObject(this.getState()), HashCodeAssistant.hashObject(this.getTaxId()),
                 HashCodeAssistant.hashObject(this.getWebsite()), HashCodeAssistant.hashObject(this.getZip()),
                 HashCodeAssistant.hashObject(this.getZipext()), HashCodeAssistant.hashObject(this.getUpdateUserId()),
@@ -439,6 +507,15 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
         if (EqualityAssistant.notEqual(this.getEntityTypeId(), other.getEntityTypeId())) {
             return false;
         }
+        if (EqualityAssistant.notEqual(this.getEntityTypeGrpId(), other.getEntityTypeGrpId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getEntityTypeLongtdesc(), other.getEntityTypeLongtdesc())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getEntityTypeShortdesc(), other.getEntityTypeShortdesc())) {
+            return false;
+        }
         if (EqualityAssistant.notEqual(this.getPhoneCell(), other.getPhoneCell())) {
             return false;
         }
@@ -461,6 +538,15 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
             return false;
         }
         if (EqualityAssistant.notEqual(this.getServTypeId(), other.getServTypeId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getServTypeGrpId(), other.getServTypeGrpId())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getServTypeLongtdesc(), other.getServTypeLongtdesc())) {
+            return false;
+        }
+        if (EqualityAssistant.notEqual(this.getServTypeShortdesc(), other.getServTypeShortdesc())) {
             return false;
         }
         if (EqualityAssistant.notEqual(this.getShortName(), other.getShortName())) {
@@ -491,6 +577,456 @@ class BusinessContactRmt2OrmAdapter extends AddressRmt2OrmAdapter implements Bus
             return false;
         }
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#setEntityTypeGrpId(int)
+     */
+    @Override
+    public void setEntityTypeGrpId(int value) {
+        this.busExt.setBusEntityTypeGrpId(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#getEntityTypeGrpId()
+     */
+    @Override
+    public int getEntityTypeGrpId() {
+        return this.busExt.getBusEntityTypeGrpId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#setEntityTypeShortdesc(java.lang.String)
+     */
+    @Override
+    public void setEntityTypeShortdesc(String value) {
+        this.busExt.setBusEntityTypeShortdesc(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#getEntityTypeShortdesc()
+     */
+    @Override
+    public String getEntityTypeShortdesc() {
+        return this.busExt.getBusEntityTypeShortdesc();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#setEntityTypeLongdesc(java.lang.String)
+     */
+    @Override
+    public void setEntityTypeLongdesc(String value) {
+        this.busExt.setBusEntityTypeLongdesc(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#getEntityTypeLongtdesc()
+     */
+    @Override
+    public String getEntityTypeLongtdesc() {
+        return this.busExt.getBusEntityTypeLongdesc();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#setServTypeGrpId(int)
+     */
+    @Override
+    public void setServTypeGrpId(int value) {
+        this.busExt.setBusServTypeGrpId(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#getServTypeGrpId()
+     */
+    @Override
+    public int getServTypeGrpId() {
+        return this.busExt.getBusServTypeGrpId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#setServTypeShortdesc(java.lang.String)
+     */
+    @Override
+    public void setServTypeShortdesc(String value) {
+        this.busExt.setBusServTypeShortdesc(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#getServTypeShortdesc()
+     */
+    @Override
+    public String getServTypeShortdesc() {
+        return this.busExt.getBusServTypeShortdesc();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#setServTypeLongdesc(java.lang.String)
+     */
+    @Override
+    public void setServTypeLongdesc(String value) {
+        this.busExt.setBusServTypeLongdesc(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.BusinessContactDto#getServTypeLongtdesc()
+     */
+    @Override
+    public String getServTypeLongtdesc() {
+        return this.busExt.getBusServTypeLongdesc();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setAddrId(int)
+     */
+    @Override
+    public void setAddrId(int value) {
+        this.busExt.setAddrId(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getAddr1()
+     */
+    @Override
+    public int getAddrId() {
+        return this.busExt.getAddrId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setAddr2(java.lang.String)
+     */
+    @Override
+    public void setAddr1(String value) {
+        this.busExt.setAddr1(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getAddr1()
+     */
+    @Override
+    public String getAddr1() {
+        return this.busExt.getAddr1();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setAddr2(java.lang.String)
+     */
+    @Override
+    public void setAddr2(String value) {
+        this.busExt.setAddr2(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getAddr2()
+     */
+    @Override
+    public String getAddr2() {
+        return this.busExt.getAddr2();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setAddr3(java.lang.String)
+     */
+    @Override
+    public void setAddr3(String value) {
+        this.busExt.setAddr3(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getAddr3()
+     */
+    @Override
+    public String getAddr3() {
+        return this.busExt.getAddr3();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setAddr4(java.lang.String)
+     */
+    @Override
+    public void setAddr4(String value) {
+        this.busExt.setAddr4(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getAddr4()
+     */
+    @Override
+    public String getAddr4() {
+        return this.busExt.getAddr4();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setZip(int)
+     */
+    @Override
+    public void setZip(int value) {
+        this.busExt.setAddrZip(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getZip()
+     */
+    @Override
+    public int getZip() {
+        return this.busExt.getAddrZip();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setZipext(int)
+     */
+    @Override
+    public void setZipext(int value) {
+        this.busExt.setAddrZipext(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getZipext()
+     */
+    @Override
+    public int getZipext() {
+        return this.busExt.getAddrZipext();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dto.adapter.orm.AddressRmt2OrmAdapter#setPhoneHome(java.lang.String)
+     */
+    @Override
+    public void setPhoneHome(String value) {
+        this.busExt.setAddrPhoneHome(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getPhoneHome()
+     */
+    @Override
+    public String getPhoneHome() {
+        return this.busExt.getAddrPhoneHome();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dto.adapter.orm.AddressRmt2OrmAdapter#setPhoneWork(java.lang.String)
+     */
+    @Override
+    public void setPhoneWork(String value) {
+        this.busExt.setAddrPhoneWork(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getPhoneWork()
+     */
+    @Override
+    public String getPhoneWork() {
+        return this.busExt.getAddrPhoneWork();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dto.adapter.orm.AddressRmt2OrmAdapter#setPhoneExt(java.lang.String)
+     */
+    @Override
+    public void setPhoneExt(String value) {
+        this.busExt.setAddrPhoneExt(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getPhoneExt()
+     */
+    @Override
+    public String getPhoneExt() {
+        return this.busExt.getAddrPhoneExt();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dto.adapter.orm.AddressRmt2OrmAdapter#setPhoneCompany(java.lang.String
+     * )
+     */
+    @Override
+    public void setPhoneCompany(String value) {
+        // TODO Auto-generated method stub
+        super.setPhoneCompany(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getPhoneCompany()
+     */
+    @Override
+    public String getPhoneCompany() {
+        // TODO Auto-generated method stub
+        return super.getPhoneCompany();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dto.adapter.orm.AddressRmt2OrmAdapter#setPhoneCell(java.lang.String)
+     */
+    @Override
+    public void setPhoneCell(String value) {
+        this.busExt.setAddrPhoneCell(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getPhoneCell()
+     */
+    @Override
+    public String getPhoneCell() {
+        return this.busExt.getAddrPhoneCell();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dto.adapter.orm.AddressRmt2OrmAdapter#setPhoneFax(java.lang.String)
+     */
+    @Override
+    public void setPhoneFax(String value) {
+        this.busExt.setAddrPhoneFax(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getPhoneFax()
+     */
+    @Override
+    public String getPhoneFax() {
+        return this.busExt.getAddrPhoneFax();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dto.adapter.orm.AddressRmt2OrmAdapter#setPhonePager(java.lang.String)
+     */
+    @Override
+    public void setPhonePager(String value) {
+        this.busExt.setAddrPhonePager(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getPhonePager()
+     */
+    @Override
+    public String getPhonePager() {
+        return this.busExt.getAddrPhonePager();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setCity(java.lang.String)
+     */
+    @Override
+    public void setCity(String value) {
+        this.busExt.setZipCity(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getCity()
+     */
+    @Override
+    public String getCity() {
+        return this.busExt.getZipCity();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#setState(java.lang.String)
+     */
+    @Override
+    public void setState(String value) {
+        this.busExt.setZipState(value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.dto.adapter.orm.AddressRmt2OrmAdapter#getState()
+     */
+    @Override
+    public String getState() {
+        return this.busExt.getZipState();
     }
 
 }

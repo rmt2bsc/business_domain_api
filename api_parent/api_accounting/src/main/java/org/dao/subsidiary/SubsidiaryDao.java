@@ -1,6 +1,7 @@
 package org.dao.subsidiary;
 
 import java.util.List;
+import java.util.Map;
 
 import org.dto.SubsidiaryContactInfoDto;
 import org.dto.SubsidiaryXactHistoryDto;
@@ -39,6 +40,15 @@ public interface SubsidiaryDao extends DaoClient {
      * @throws SubsidiaryDaoException
      */
     double calculateBalance(int subsidiaryId) throws SubsidiaryDaoException;
+
+    /**
+     * Retrieves the balances for a particular set of subsidiaries.
+     * 
+     * @return Map<Integer, Double> which the key is the id of the subsidiary
+     *         and value is the actual balance of the subsidiary.
+     * @throws SubsidiaryDaoException
+     */
+    Map<Integer, Double> getBalances() throws SubsidiaryDaoException;
 
 //    /**
 //     * Fetches common subsidiary contact data based on the selection criteria

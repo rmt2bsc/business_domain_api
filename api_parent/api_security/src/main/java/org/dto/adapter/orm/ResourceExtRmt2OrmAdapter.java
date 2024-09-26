@@ -130,7 +130,7 @@ class ResourceExtRmt2OrmAdapter extends DefaultResourceAdapter implements
      * @see org.dto.DefaultResourceRmt2OrmAdapter#getHost()
      */
     public String getHost() {
-        return null;
+        return this.r.getHost();
     }
 
     /*
@@ -139,7 +139,8 @@ class ResourceExtRmt2OrmAdapter extends DefaultResourceAdapter implements
      * @see org.dto.DefaultResourceRmt2OrmAdapter#setHost(java.lang.String)
      */
     public void setHost(String hostName) {
-        return;
+        this.r.setHost(hostName);
+        ;
     }
 
     /*

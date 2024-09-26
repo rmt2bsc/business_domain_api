@@ -7,6 +7,7 @@ import org.dao.generalledger.GeneralLedgerDao;
 import org.dao.generalledger.GeneralLedgerDaoFactory;
 import org.dto.AccountCategoryDto;
 import org.dto.AccountDto;
+import org.dto.AccountExtDto;
 import org.dto.AccountTypeDto;
 import org.dto.adapter.orm.account.generalledger.Rmt2AccountDtoFactory;
 import org.modules.TooManyItemsReturnedApiException;
@@ -43,6 +44,26 @@ class BasicAccountMaintApiImpl extends AbstractTransactionApiImpl implements GlA
         this.setSharedDao(dao);
         this.dao.setDaoUser(this.apiUser);
         this.appName = appName;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.modules.generalledger.GlAccountApi#getAccount(org.dto.AccountExtDto)
+     */
+    @Override
+    public List<AccountExtDto> getAccount(AccountExtDto criteria) throws GeneralLedgerApiException {
+        try {
+            List<AccountExtDto> results = dao.fetchAccountExt(criteria);
+            int count = (results == null ? 0 : results.size());
+            logger.info("Total number of Extended GL Account objects obtained: " + count);
+            return results;
+        } catch (Exception e) {
+            this.msg = "Error occurred retrieving GL Account objects";
+            logger.error(this.msg, e);
+            throw new GeneralLedgerApiException(this.msg, e);
+        }
     }
 
     /*

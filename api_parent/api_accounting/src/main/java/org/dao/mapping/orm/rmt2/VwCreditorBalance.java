@@ -10,16 +10,16 @@ import com.SystemException;
 
 
 /**
- * Peer object that maps to the vw_customer_balance database table/view.
+ * Peer object that maps to the vw_creditor_balance database table/view.
  *
  * @author auto generated.
  */
-public class VwCustomerBalance extends OrmBean {
+public class VwCreditorBalance extends OrmBean {
 
 
 
 
-	// Property name constants that belong to respective DataSource, VwCustomerBalanceView
+	// Property name constants that belong to respective DataSource, VwCreditorBalanceView
 
 /** The property name constant equivalent to property, BusinessId, of respective DataSource view. */
   public static final String PROP_BUSINESSID = "BusinessId";
@@ -28,9 +28,9 @@ public class VwCustomerBalance extends OrmBean {
 
 
 
-	/** The javabean property equivalent of database column vw_customer_balance.business_id */
+	/** The javabean property equivalent of database column vw_creditor_balance.business_id */
   private int businessId;
-/** The javabean property equivalent of database column vw_customer_balance.balance */
+/** The javabean property equivalent of database column vw_creditor_balance.balance */
   private double balance;
 
 
@@ -40,7 +40,7 @@ public class VwCustomerBalance extends OrmBean {
 /**
  * Default constructor.
  */
-  public VwCustomerBalance() throws SystemException {
+  public VwCreditorBalance() throws SystemException {
 	super();
  }
 /**
@@ -79,7 +79,7 @@ public boolean equals(Object obj) {
    if (getClass() != obj.getClass()) {
       return false;
    }
-   final VwCustomerBalance other = (VwCustomerBalance) obj; 
+   final VwCreditorBalance other = (VwCreditorBalance) obj; 
    if (EqualityAssistant.notEqual(this.businessId, other.businessId)) {
       return false;
    }
@@ -97,7 +97,7 @@ public int hashCode() {
 
 @Override
 public String toString() {
-   return "VwCustomerBalance [businessId=" + businessId + 
+   return "VwCreditorBalance [businessId=" + businessId + 
           ", balance=" + balance  + "]";
 }
 

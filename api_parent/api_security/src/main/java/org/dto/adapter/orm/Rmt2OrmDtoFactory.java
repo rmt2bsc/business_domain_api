@@ -11,6 +11,7 @@ import org.dao.mapping.orm.rmt2.UserResourceSubtype;
 import org.dao.mapping.orm.rmt2.UserResourceType;
 import org.dao.mapping.orm.rmt2.VwAppRoles;
 import org.dao.mapping.orm.rmt2.VwResource;
+import org.dao.mapping.orm.rmt2.VwResourceType;
 import org.dao.mapping.orm.rmt2.VwUser;
 import org.dao.mapping.orm.rmt2.VwUserAppRoles;
 import org.dao.mapping.orm.rmt2.VwUserGroup;
@@ -375,6 +376,18 @@ public class Rmt2OrmDtoFactory extends RMT2Base {
      */
     public static final WebServiceDto getResourceDtoInstance(VwResource rsrcExt) {
         WebServiceDto dto = new ResourceExtRmt2OrmAdapter(rsrcExt);
+        return dto;
+    }
+
+    /**
+     * Creates a WebServiceDto instance from an VwResource object.
+     * 
+     * @param rsrcExt
+     *            an instance of {@link VwResource}
+     * @return an instance of {@link ResourceDto}
+     */
+    public static final ResourceDto getVmResourceTypeDtoInstance(VwResourceType obj) {
+        ResourceDto dto = new VmResourceTypeOrmAdapter(obj);
         return dto;
     }
 }

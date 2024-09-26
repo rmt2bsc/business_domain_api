@@ -39,7 +39,7 @@ public class VwCustomerBalanceOrmTest {
         result = o1.equals(o2);
         Assert.assertFalse(result);
         
-        o2.setCustomerId(100);
+        o2.setBusinessId(100);
         result = o1.equals(o2);
         Assert.assertFalse(result);
         

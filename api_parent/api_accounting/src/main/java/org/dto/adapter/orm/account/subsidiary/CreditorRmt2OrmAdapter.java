@@ -15,6 +15,7 @@ class CreditorRmt2OrmAdapter extends BusinessContactJaxbAdapter implements
         CreditorDto {
 
     private Creditor c;
+    private Double balance;
 
     /**
      * Create a CreditorRmt2OrmAdapter that adapts data coming from the creditor
@@ -267,6 +268,21 @@ class CreditorRmt2OrmAdapter extends BusinessContactJaxbAdapter implements
             busId = this.c.getBusinessId();
         }
         return busId;
+    }
+
+    /**
+     * @return the balance
+     */
+    public Double getBalance() {
+        return this.balance;
+    }
+
+    /**
+     * @param balance
+     *            the balance to set
+     */
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
 }

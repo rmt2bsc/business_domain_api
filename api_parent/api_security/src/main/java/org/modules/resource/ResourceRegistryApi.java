@@ -38,6 +38,18 @@ public interface ResourceRegistryApi extends TransactionApi {
     List<ResourceDto> getResourceSubType(ResourceDto criteria) throws ResourceRegistryApiException;
 
     /**
+     * Obtains a master list of resource sub type objects with extended data.
+     * 
+     * @param criteria
+     *            an instance of {@link ResourceDto} containing values to build
+     *            the selection criteria.
+     * @return List of {@link ResourceDto} objects containing the resource sub
+     *         type data or null if no data is found.
+     * @throws ResourceRegistryApiException
+     */
+    List<ResourceDto> getResourceSubTypeExt(ResourceDto criteria) throws ResourceRegistryApiException;
+
+    /**
      * Obtains one or more extended resource objects based any combination
      * selection criteria contained in <i>criteria</i>.
      * <p>
