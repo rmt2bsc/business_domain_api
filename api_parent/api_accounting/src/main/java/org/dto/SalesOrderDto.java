@@ -2,6 +2,8 @@ package org.dto;
 
 import java.util.Date;
 
+import org.dao.mapping.orm.rmt2.SalesOrder;
+
 /**
  * Data Transfer Object (DTO) contract that represents a sales order entity.
  * 
@@ -9,6 +11,13 @@ import java.util.Date;
  * 
  */
 public interface SalesOrderDto extends SalesOrderStatusDto {
+
+    /**
+     * Get sales order instance.
+     * 
+     * @return {@link SalesOrder}
+     */
+    public SalesOrder getSalesOrder();
 
     /**
      * Sets the value of sales order id

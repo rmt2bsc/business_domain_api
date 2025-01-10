@@ -343,4 +343,9 @@ class SalesOrderRmt2OrmAdapter extends SalesOrderStatusRmt2OrmAdapter implements
         this.so.setEffectiveDate(value);
     }
 
+    @Override
+    public SalesOrder getSalesOrder() {
+        return this.so;
+    }
+
 }

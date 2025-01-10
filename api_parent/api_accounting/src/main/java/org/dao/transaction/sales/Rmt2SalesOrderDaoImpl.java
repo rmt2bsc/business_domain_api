@@ -119,6 +119,9 @@ public class Rmt2SalesOrderDaoImpl extends Rmt2XactDaoImpl implements
     public List<SalesInvoiceDto> fetchExtSalesInvoice(SalesInvoiceDto criteria) throws SalesInvoiceDaoException {
         VwSalesOrderInvoice obj = SalesOrderDaoFactory.createCriteriaSalesInvoiceExt(criteria);
         List<VwSalesOrderInvoice> results = null;
+        obj.addOrderBy(VwSalesOrderInvoice.PROP_SALESORDERDATE, VwSalesOrderInvoice.ORDERBY_DESCENDING);
+        obj.addOrderBy(VwSalesOrderInvoice.PROP_DATECREATED, VwSalesOrderInvoice.ORDERBY_DESCENDING);
+        obj.addOrderBy(VwSalesOrderInvoice.PROP_SALESORDERID, VwSalesOrderInvoice.ORDERBY_ASCENDING);
         try {
             results = this.client.retrieveList(obj);
             if (results == null) {

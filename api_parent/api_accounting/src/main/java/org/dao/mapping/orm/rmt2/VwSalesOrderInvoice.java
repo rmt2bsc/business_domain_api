@@ -31,6 +31,10 @@ public class VwSalesOrderInvoice extends OrmBean {
   public static final String PROP_ORDERSTATUSID = "OrderStatusId";
 /** The property name constant equivalent to property, OrderStatusDescr, of respective DataSource view. */
   public static final String PROP_ORDERSTATUSDESCR = "OrderStatusDescr";
+/** The property name constant equivalent to property, DateCreated, of respective DataSource view. */
+  public static final String PROP_DATECREATED = "DateCreated";
+/** The property name constant equivalent to property, DateUpdated, of respective DataSource view. */
+  public static final String PROP_DATEUPDATED = "DateUpdated";
 /** The property name constant equivalent to property, SalesOrderDate, of respective DataSource view. */
   public static final String PROP_SALESORDERDATE = "SalesOrderDate";
 /** The property name constant equivalent to property, InvoiceId, of respective DataSource view. */
@@ -64,6 +68,10 @@ public class VwSalesOrderInvoice extends OrmBean {
   private int orderStatusId;
 /** The javabean property equivalent of database column vw_sales_order_invoice.order_status_descr */
   private String orderStatusDescr;
+/** The javabean property equivalent of database column vw_sales_order_invoice.date_created */
+  private java.util.Date dateCreated;
+/** The javabean property equivalent of database column vw_sales_order_invoice.date_updated */
+  private java.util.Date dateUpdated;
 /** The javabean property equivalent of database column vw_sales_order_invoice.sales_order_date */
   private java.util.Date salesOrderDate;
 /** The javabean property equivalent of database column vw_sales_order_invoice.invoice_id */
@@ -154,6 +162,30 @@ public class VwSalesOrderInvoice extends OrmBean {
  */
   public String getOrderStatusDescr() {
     return this.orderStatusDescr;
+  }
+/**
+ * Sets the value of member variable dateCreated
+ */
+  public void setDateCreated(java.util.Date value) {
+    this.dateCreated = value;
+  }
+/**
+ * Gets the value of member variable dateCreated
+ */
+  public java.util.Date getDateCreated() {
+    return this.dateCreated;
+  }
+/**
+ * Sets the value of member variable dateUpdated
+ */
+  public void setDateUpdated(java.util.Date value) {
+    this.dateUpdated = value;
+  }
+/**
+ * Gets the value of member variable dateUpdated
+ */
+  public java.util.Date getDateUpdated() {
+    return this.dateUpdated;
   }
 /**
  * Sets the value of member variable salesOrderDate
